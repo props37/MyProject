@@ -151,6 +151,42 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:681359595971:android:3de856bfec15e0f0950576",
+        "android_client_info": {
+          "package_name": "ru.zarina.zarina.benchmark"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "681359595971-husgfosgdl6oqb3idtk276dvjp5dik9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyOj4fzMNQCGf-kYnjqLPtD_6OEYRkTWg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "681359595971-husgfosgdl6oqb3idtk276dvjp5dik9s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "681359595971-51foc7s5sujouvvvnsr99j2g8hj94aq4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ltst.zarina"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:681359595971:android:e8346b5a26fad279950576",
         "android_client_info": {
           "package_name": "ru.zarina.zarina.debug"
