@@ -1,11 +1,10 @@
-// TODO remove after upgrading to Gradle 8.1
-// https://github.com/gradle/gradle/issues/22797
-@Suppress("DSL_SCOPE_VIOLATION")
-
 plugins {
     id("zarina.android.application")
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.play.services)
+    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.firebase.performance)
 }
 
 android {
@@ -64,6 +63,9 @@ dependencies {
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.performance)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
