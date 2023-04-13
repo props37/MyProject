@@ -3,8 +3,9 @@
 @Suppress("DSL_SCOPE_VIOLATION")
 
 plugins {
-    alias(libs.plugins.com.android.application)
-    alias(libs.plugins.org.jetbrains.kotlin.android)
+    id("zarina.android.application")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -25,12 +26,12 @@ android {
     }
 
     buildTypes {
-        release {
-            isMinifyEnabled = false
+        all {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -55,19 +56,21 @@ android {
 
 dependencies {
 
-    implementation(libs.core.ktx)
-    implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.activity.compose)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.lifecycle.runtime)
+    implementation(libs.androidx.activity)
     implementation(platform(libs.compose.bom))
-    implementation(libs.ui)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
+    implementation(libs.compose.ui.core)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.material3)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.ui.test.junit4)
-    debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
+    androidTestImplementation(libs.compose.ui.test.junit4)
+
+    debugImplementation(libs.compose.ui.tooling.core)
+    debugImplementation(libs.compose.ui.test.manifest)
 }
