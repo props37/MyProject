@@ -1,4 +1,5 @@
 plugins {
+    id("zarina.android.application")
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
 }
@@ -21,12 +22,12 @@ android {
     }
 
     buildTypes {
-        release {
-            isMinifyEnabled = false
+        all {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {

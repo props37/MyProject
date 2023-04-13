@@ -1,0 +1,78 @@
+package ru.zarina.zarina
+
+import com.android.build.api.dsl.ApplicationBuildType
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.BuildType
+import com.android.build.api.dsl.CommonExtension
+import org.gradle.api.Project
+
+sealed interface ZarinaBuildType {
+
+    val name: String
+
+    val applicationName: String
+        get() = "$BASE_NAME $name"
+
+    val applicationIdSuffix: String?
+        get() = ".${name}"
+
+    val versionNameSuffix: String?
+        get() = "-$name"
+
+    val isDebuggable: Boolean
+        get() = false
+
+    val isMinifyEnabled: Boolean
+        get() = true
+
+    val isShrinkResources: Boolean
+        get() = true
+
+    object Debug : ZarinaBuildType {
+        override val name = "debug"
+        override val isDebuggable = true
+        override val isMinifyEnabled = false
+        override val isShrinkResources = false
+    }
+
+    object Qa : ZarinaBuildType {
+        override val name = "qa"
+    }
+
+    object Release : ZarinaBuildType {
+        override val name = "release"
+        override val applicationName = BASE_NAME
+        override val applicationIdSuffix = null
+        override val versionNameSuffix = null
+    }
+
+    companion object {
+        val values = listOf(Debug, Qa, Release)
+
+        private const val BASE_NAME = "Zarina"
+    }
+}
+
+@Suppress("UnusedReceiverParameter")
+fun Project.configureBuildTypes(
+    commonExtension: CommonExtension<*, *, *, *, *>,
+    buildTypeConfigurationBlock: BuildType.(ZarinaBuildType) -> Unit = {}
+) {
+    commonExtension.apply commonExtension@{
+        buildTypes {
+            ZarinaBuildType.values.forEach { buildType ->
+                maybeCreate(buildType.name).apply {
+                    if (this@commonExtension is ApplicationExtension && this is ApplicationBuildType) {
+                        resValue("string", "app_name", buildType.applicationName)
+                        applicationIdSuffix = buildType.applicationIdSuffix
+                        isDebuggable = buildType.isDebuggable
+                        isMinifyEnabled = buildType.isMinifyEnabled
+                        isShrinkResources = buildType.isShrinkResources
+                        versionNameSuffix = buildType.versionNameSuffix
+                    }
+                    buildTypeConfigurationBlock(this, buildType)
+                }
+            }
+        }
+    }
+}
