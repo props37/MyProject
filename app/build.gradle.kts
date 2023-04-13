@@ -5,18 +5,28 @@ plugins {
     alias(libs.plugins.google.play.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.firebase.performance)
+    alias(libs.plugins.gitVersioning)
+}
+
+androidGitVersion {
+    codeFormat = "MNNNPP"
+    format = "%tag%%-branch%%-count%"
 }
 
 android {
     namespace = "ru.zarina.zarina"
     compileSdk = 33
 
+    val tagVersionCode = androidGitVersion.code()
+    val tagVersionName = androidGitVersion.name()
+    println("tagVersionCode = $tagVersionCode, tagVersionName = $tagVersionName")
+
     defaultConfig {
         applicationId = "ru.zarina.zarina"
         minSdk = 24
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = tagVersionCode
+        versionName = tagVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

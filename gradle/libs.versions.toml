@@ -9,6 +9,7 @@ google-play-services-plugin = "4.3.15"
 firebase = "31.4.0"
 firebase-crashlytics = "2.9.4"
 firebase-performance = "1.4.2"
+gitVersioning = "0.4.14"
 
 junit = "4.13.2"
 androidx-junit = "1.1.5"
@@ -44,6 +45,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 google-play-services = { id = "com.google.gms.google-services", version.ref = "google-play-services-plugin" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 firebase-performance = { id = "com.google.firebase.firebase-perf", version.ref = "firebase-performance" }
+gitVersioning = { id = "com.gladed.androidgitversion", version.ref = "gitVersioning" }
 
 [bundles]
 
