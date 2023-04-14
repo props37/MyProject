@@ -20,6 +20,7 @@ object UiKitTheme {
 
 @Immutable
 data class UiKitColors(
+    val primaryContentColor: Color = Color.Black,
     val screenBackground: Color = Color.White,
     val primaryButtonBackground: Color = Mineshaft,
     val primaryButtonForeground: Color = Color.White,
@@ -38,6 +39,16 @@ data class UiKitTypography(
         fontSize = 17.sp,
         lineHeight = 20.sp,
         fontWeight = FontWeight.Bold,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val onboardingHeader: TextStyle = TextStyle(
+        fontSize = 20.sp,
+        lineHeight = 28.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val onboardingBody: TextStyle = TextStyle(
+        fontSize = 17.sp,
+        lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle
     ),
 )
