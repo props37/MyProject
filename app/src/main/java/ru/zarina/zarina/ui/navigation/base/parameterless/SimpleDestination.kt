@@ -10,4 +10,7 @@ open class SimpleDestination(baseRoute: BaseRoute) : Destination<Unit>() {
 
     override fun createRoute(args: Unit) = routeSchema
 
+    val route: String
+        get() = createRoute(Unit)
+
 }
