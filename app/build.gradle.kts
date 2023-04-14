@@ -3,6 +3,8 @@ plugins {
     id("zarina.compose.metrics")
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt)
     alias(libs.plugins.google.play.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.firebase.performance)
@@ -57,6 +59,9 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.5"
     }
+    kapt {
+        correctErrorTypes = true
+    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -76,6 +81,8 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(libs.accompanist.systemUi)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.performance)
