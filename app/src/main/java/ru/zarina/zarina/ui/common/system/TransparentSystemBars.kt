@@ -11,7 +11,8 @@ fun TransparentSystemBars() {
     SideEffect {
         systemUiController.setSystemBarsColor(
             color = Color.Transparent,
-            darkIcons = true
+            darkIcons = true,
+            isNavigationBarContrastEnforced = false
         )
     }
 }
