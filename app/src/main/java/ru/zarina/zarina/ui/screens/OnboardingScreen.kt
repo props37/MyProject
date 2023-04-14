@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -87,14 +89,15 @@ fun TopBar(
 fun Logo(
     modifier: Modifier = Modifier,
 ) {
-    // TODO vertical align
     Box(
-        contentAlignment = Alignment.Center,
+        contentAlignment = BiasAlignment(0f, 0.5f),
         modifier = modifier.fillMaxSize(),
     ) {
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+            colorFilter = ColorFilter.tint(Color.White),
             modifier = modifier.fillMaxWidth(0.65f)
         )
     }
