@@ -28,6 +28,12 @@ sealed interface ZarinaBuildType {
     val isShrinkResources: Boolean
         get() = true
 
+    val initializeWith: ZarinaBuildType?
+        get() = null
+
+    val matchingFallbacks: List<ZarinaBuildType>
+        get() = emptyList()
+
     object Debug : ZarinaBuildType {
         override val name = "debug"
         override val isDebuggable = true
@@ -46,8 +52,14 @@ sealed interface ZarinaBuildType {
         override val versionNameSuffix = null
     }
 
+    object _Benchmark : ZarinaBuildType {
+        override val name = "benchmark"
+        override val initializeWith = Release
+        override val matchingFallbacks = listOf(Release)
+    }
+
     companion object {
-        val values = listOf(Debug, Qa, Release)
+        val values = listOf(Debug, Qa, Release, _Benchmark)
 
         private const val BASE_NAME = "Zarina"
     }
@@ -56,13 +68,17 @@ sealed interface ZarinaBuildType {
 @Suppress("UnusedReceiverParameter")
 fun Project.configureBuildTypes(
     commonExtension: CommonExtension<*, *, *, *, *>,
-    buildTypeConfigurationBlock: BuildType.(ZarinaBuildType) -> Unit = {}
+    buildTypeConfigurationBlock: BuildType.(ZarinaBuildType) -> Unit = {},
 ) {
     commonExtension.apply commonExtension@{
         buildTypes {
             ZarinaBuildType.values.forEach { buildType ->
                 maybeCreate(buildType.name).apply {
                     if (this@commonExtension is ApplicationExtension && this is ApplicationBuildType) {
+                        buildType.initializeWith?.let { initWith(getByName(it.name)) }
+                        if (buildType.matchingFallbacks.isNotEmpty())
+                            matchingFallbacks += buildType.matchingFallbacks.map { it.name }
+
                         resValue("string", "app_name", buildType.applicationName)
                         applicationIdSuffix = buildType.applicationIdSuffix
                         isDebuggable = buildType.isDebuggable

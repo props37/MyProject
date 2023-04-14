@@ -15,6 +15,8 @@ gitVersioning = "0.4.14"
 
 junit = "4.13.2"
 androidx-junit = "1.1.5"
+androidx-benchmark = "1.1.1"
+androidx-uiautomator = "2.2.0"
 espresso = "3.5.1"
 
 [libraries]
@@ -37,7 +39,9 @@ firebase-performance = { group = "com.google.firebase", name = "firebase-perf-kt
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-junit" }
+androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "androidx-uiautomator" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
+androidx-benchmark = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "androidx-benchmark" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle" }
@@ -45,6 +49,7 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
+android-test = { id = "com.android.test", version.ref = "android-gradle" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 google-play-services = { id = "com.google.gms.google-services", version.ref = "google-play-services-plugin" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
