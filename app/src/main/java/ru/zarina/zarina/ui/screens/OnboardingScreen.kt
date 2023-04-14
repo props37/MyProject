@@ -78,7 +78,17 @@ fun TopBar(
 fun Logo(
     modifier: Modifier = Modifier,
 ) {
-    // TODO add logo
+    // TODO vertical align
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier.fillMaxSize(),
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = null,
+            modifier = modifier.fillMaxWidth(0.65f)
+        )
+    }
 }
 
 @Composable
