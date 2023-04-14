@@ -7,6 +7,7 @@ androidx-activity = "1.7.0"
 compose = "2023.04.00"
 firebase = "31.4.0"
 firebaseCrashlytics = "2.9.4"
+firebasePerformance = "1.4.2"
 
 junit = "4.13.2"
 androidx-junit = "1.1.5"
@@ -26,6 +27,7 @@ compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
+firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-junit" }
@@ -39,6 +41,7 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
+firebase-performance = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePerformance" }
 
 [bundles]
 

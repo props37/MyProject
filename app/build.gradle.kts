@@ -2,6 +2,7 @@ plugins {
     id("zarina.android.application")
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.firebase.performance)
 }
 
 android {
@@ -62,6 +63,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.performance)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
