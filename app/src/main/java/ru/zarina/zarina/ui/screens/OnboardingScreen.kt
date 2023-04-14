@@ -2,6 +2,8 @@ package ru.zarina.zarina.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
@@ -32,6 +35,7 @@ import ru.zarina.zarina.ui.common.tooling.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.utils.compose.minInteractionSize
 
 @Composable
 private fun OnboardingScreenContent() {
@@ -41,7 +45,9 @@ private fun OnboardingScreenContent() {
             .fillMaxSize()
             .systemBarsPadding(),
     ) {
-        TopBar()
+        CloseButton(
+            modifier = Modifier.align(Alignment.End),
+        )
         Logo(
             modifier = Modifier.weight(1f),
         )
@@ -79,10 +85,25 @@ fun Banner(
 }
 
 @Composable
-fun TopBar(
+fun CloseButton(
     modifier: Modifier = Modifier,
 ) {
-    // TODO close button
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .padding(end = 8.dp)
+            .minInteractionSize()
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = { },
+            )
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_close_24),
+            contentDescription = stringResource(id = R.string.skip)
+        )
+    }
 }
 
 @Composable
