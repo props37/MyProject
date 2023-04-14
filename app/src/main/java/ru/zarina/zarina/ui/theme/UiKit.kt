@@ -1,0 +1,39 @@
+package ru.zarina.zarina.ui.theme
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+
+object UiKitTheme {
+    val colors: UiKitColors
+        @Composable
+        get() = LocalUiKitColors.current
+
+    val typography: UiKitTypography
+        @Composable
+        get() = LocalUiKitTypography.current
+}
+
+@Immutable
+data class UiKitColors(
+    val screenBackground: Color = Color.White,
+)
+
+
+val LocalUiKitColors = staticCompositionLocalOf { UiKitColors() }
+
+@Immutable
+data class UiKitTypography(
+    val button: TextStyle = TextStyle(
+        fontSize = 17.sp,
+        lineHeight = 20.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = Fonts.Families.Circle
+    ),
+)
+
+val LocalUiKitTypography = staticCompositionLocalOf { UiKitTypography() }
