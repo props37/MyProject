@@ -5,6 +5,7 @@ androidx-core = "1.10.0"
 androidx-lifecycle = "2.6.1"
 androidx-activity = "1.7.0"
 compose = "2023.04.00"
+accompanist = "0.30.1"
 google-play-services-plugin = "4.3.15"
 firebase = "31.4.0"
 firebase-crashlytics = "2.9.4"
@@ -27,6 +28,7 @@ compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+accompanist-systemUi = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
 firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
