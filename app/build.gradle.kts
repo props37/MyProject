@@ -8,6 +8,11 @@ plugins {
     alias(libs.plugins.gitVersioning)
 }
 
+androidGitVersion {
+    codeFormat = "MNNNPP"
+    format = "%tag%%-branch%%-count%"
+}
+
 android {
     namespace = "ru.zarina.zarina"
     compileSdk = 33
