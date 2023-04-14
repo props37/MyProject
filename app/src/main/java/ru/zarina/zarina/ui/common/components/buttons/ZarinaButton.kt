@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common
+package ru.zarina.zarina.ui.common.components.buttons
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
