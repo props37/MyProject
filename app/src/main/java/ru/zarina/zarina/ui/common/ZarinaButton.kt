@@ -52,6 +52,19 @@ object ZarinaButtonDefaults {
         border = border,
         isRippleLight = isRippleLight,
     )
+
+    @Composable
+    fun secondaryColors(
+        background: Color = UiKitTheme.colors.secondaryButtonBackground,
+        foreground: Color = UiKitTheme.colors.secondaryButtonForeground,
+        border: Color = UiKitTheme.colors.secondaryButtonBorder,
+        isRippleLight: Boolean = true,
+    ) = ZarinaButtonColors(
+        background = background,
+        foreground = foreground,
+        border = border,
+        isRippleLight = isRippleLight,
+    )
 }
 
 data class ZarinaButtonColors(
@@ -62,14 +75,28 @@ data class ZarinaButtonColors(
 )
 
 
-@Preview
+@Preview(widthDp = 100, heightDp = 100, showBackground = true)
 @Composable
-private fun ZarinaButtonPreview() {
+private fun ZarinaButtonPrimaryPreview() {
+    ZarinaButtonPreview(colors = ZarinaButtonDefaults.primaryColors())
+}
+
+@Preview(widthDp = 100, heightDp = 100, showBackground = true)
+@Composable
+private fun ZarinaButtonSecondaryPreview() {
+    ZarinaButtonPreview(colors = ZarinaButtonDefaults.secondaryColors())
+}
+
+@Composable
+private fun ZarinaButtonPreview(
+    colors: ZarinaButtonColors,
+) {
     ZarinaTheme {
-        ZarinaButton(
-            onClick = {},
-            colors = ZarinaButtonDefaults.primaryColors(),
-            modifier = Modifier.padding(8.dp),
-        ) { }
+        Box(contentAlignment = Alignment.Center) {
+            ZarinaButton(
+                onClick = {},
+                colors = colors,
+            ) { }
+        }
     }
 }
