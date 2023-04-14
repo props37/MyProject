@@ -5,6 +5,7 @@ androidx-core = "1.10.0"
 androidx-lifecycle = "2.6.1"
 androidx-activity = "1.7.0"
 compose = "2023.04.00"
+google-play-services-plugin = "4.3.15"
 firebase = "31.4.0"
 firebaseCrashlytics = "2.9.4"
 firebasePerformance = "1.4.2"
@@ -40,6 +41,7 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-play-services = { id = "com.google.gms.google-services", version.ref = "google-play-services-plugin" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
 firebase-performance = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePerformance" }
 
