@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.splashScreen)
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui.core)
     implementation(libs.compose.ui.graphics)

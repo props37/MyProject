@@ -4,6 +4,7 @@ kotlin = "1.8.20"
 androidx-core = "1.10.0"
 androidx-lifecycle = "2.6.1"
 androidx-activity = "1.7.0"
+androidx-splashScreen = "1.0.0"
 compose = "2023.04.00"
 accompanist = "0.30.1"
 google-play-services-plugin = "4.3.15"
@@ -20,6 +21,7 @@ espresso = "3.5.1"
 androidx-core = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
 androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
 androidx-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
+androidx-splashScreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-splashScreen" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose" }
 compose-ui-core = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
