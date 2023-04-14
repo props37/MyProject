@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
-import ru.zarina.zarina.utils.compose.conditional
 
 
 @Composable
@@ -25,15 +24,12 @@ fun ZarinaButton(
     content: @Composable () -> Unit,
 ) {
     // TODO reverted ripple
-    val isBorderNecessary = colors.border != colors.background
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .clickable(onClick = onClick)
             .background(colors.background)
-            .conditional(isBorderNecessary) {
-                border(width = 1.dp, color = colors.border)
-            }
+            .border(width = 1.dp, color = colors.border)
             .padding(vertical = 12.dp, horizontal = 24.dp),
     ) {
         content()
@@ -59,7 +55,7 @@ object ZarinaButtonDefaults {
         background: Color = UiKitTheme.colors.secondaryButtonBackground,
         foreground: Color = UiKitTheme.colors.secondaryButtonForeground,
         border: Color = UiKitTheme.colors.secondaryButtonBorder,
-        isRippleLight: Boolean = true,
+        isRippleLight: Boolean = false,
     ) = ZarinaButtonColors(
         background = background,
         foreground = foreground,

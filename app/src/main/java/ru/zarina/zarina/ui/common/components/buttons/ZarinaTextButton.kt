@@ -20,14 +20,14 @@ fun ZarinaTextButton(
     ZarinaButton(
         colors = colors,
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Text(
             text = text,
             color = colors.foreground,
             style = UiKitTheme.typography.button,
             overflow = TextOverflow.Ellipsis,
-            maxLines = 1
+            maxLines = 1,
         )
     }
 }
