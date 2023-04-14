@@ -18,5 +18,9 @@ gradlePlugin {
             id = "zarina.android.application"
             implementationClass = "AndroidApplicationPlugin"
         }
+        register("composeMetrics") {
+            id = "zarina.compose.metrics"
+            implementationClass = "ComposeMetricsPlugin"
+        }
     }
 }
