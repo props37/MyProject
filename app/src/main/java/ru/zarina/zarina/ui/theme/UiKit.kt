@@ -21,6 +21,12 @@ object UiKitTheme {
 @Immutable
 data class UiKitColors(
     val screenBackground: Color = Color.White,
+    val primaryButtonBackground: Color = Mineshaft,
+    val primaryButtonForeground: Color = Color.White,
+    val primaryButtonBorder: Color = Mineshaft,
+    val secondaryButtonBackground: Color = Color.White,
+    val secondaryButtonForeground: Color = Color.Black,
+    val secondaryButtonBorder: Color = Mineshaft,
 )
 
 
