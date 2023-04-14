@@ -24,6 +24,7 @@ fun ZarinaButton(
     colors: ZarinaButtonColors = ZarinaButtonDefaults.primaryColors(),
     content: @Composable () -> Unit,
 ) {
+    // TODO reverted ripple
     val isBorderNecessary = colors.border != colors.background
     Box(
         contentAlignment = Alignment.Center,

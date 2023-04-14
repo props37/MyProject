@@ -18,6 +18,7 @@ fun ZarinaTextButton(
     colors: ZarinaButtonColors = ZarinaButtonDefaults.primaryColors(),
 ) {
     ZarinaButton(
+        colors = colors,
         modifier = modifier,
         onClick = onClick
     ) {
