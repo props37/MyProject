@@ -91,6 +91,7 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.compose)
     implementation(libs.timber)
+    implementation(libs.google.play.services.location)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.performance)
