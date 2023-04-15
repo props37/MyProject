@@ -17,7 +17,8 @@ class OnboardingViewModel @Inject constructor() : ViewModel(),
 
     fun onLocationPermissionResult(isGranted: Boolean) {
         Timber.v("Location permission is granted: $isGranted")
-        // TODO
+        // TODO if granted, detect city
+        // TODO if not granted, display error
     }
 
     fun onSelectClick() {}
