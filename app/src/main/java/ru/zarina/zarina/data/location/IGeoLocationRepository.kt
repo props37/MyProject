@@ -4,6 +4,6 @@ import ru.zarina.zarina.domain.GeoLocation
 
 interface IGeoLocationRepository {
 
-    suspend fun getCurrentLocation(): GeoLocation
+    suspend fun getCurrentLocation(): GeoLocation?
 
 }
