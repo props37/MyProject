@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
@@ -28,6 +29,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
@@ -38,7 +41,9 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.compose.minInteractionSize
 
 @Composable
-private fun OnboardingScreenContent() {
+private fun OnboardingScreenContent(
+    onCloseClick: () -> Unit,
+) {
     Banner()
     Column(
         modifier = Modifier
@@ -46,6 +51,7 @@ private fun OnboardingScreenContent() {
             .systemBarsPadding(),
     ) {
         CloseButton(
+            onClick = onCloseClick,
             modifier = Modifier.align(Alignment.End),
         )
         Logo(
@@ -86,6 +92,7 @@ fun Banner(
 
 @Composable
 fun CloseButton(
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -96,7 +103,7 @@ fun CloseButton(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = { },
+                onClick = onClick,
             )
     ) {
         Image(
@@ -170,8 +177,33 @@ fun CitySelection(
 }
 
 @Composable
-fun OnboardingScreen() {
-    OnboardingScreenContent()
+fun OnboardingScreen(
+    showHome: () -> Unit,
+) {
+    val viewModel = hiltViewModel<OnboardingViewModel>()
+
+    OnboardingScreenBehavior(
+        sideEffects = viewModel.sideEffects,
+        showHome = showHome,
+    )
+
+    OnboardingScreenContent(
+        onCloseClick = viewModel::onCloseClick,
+    )
+}
+
+@Composable
+fun OnboardingScreenBehavior(
+    sideEffects: Flow<OnboardingViewModel.SideEffect>,
+    showHome: () -> Unit,
+) {
+    LaunchedEffect(sideEffects, showHome) {
+        sideEffects.collect { effect ->
+            when (effect) {
+                OnboardingViewModel.SideEffect.ShowHome -> showHome()
+            }
+        }
+    }
 }
 
 @Preview
@@ -180,6 +212,8 @@ fun OnboardingScreen() {
 @Composable
 fun OnboardingScreenContentPreview() {
     ZarinaTheme {
-        OnboardingScreenContent()
+        OnboardingScreenContent(
+            onCloseClick = {},
+        )
     }
 }

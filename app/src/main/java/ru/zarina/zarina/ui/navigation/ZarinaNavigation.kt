@@ -15,7 +15,11 @@ fun ZarinaNavigation() {
     NavHost(navController, startDestination = BaseRoute.ONBOARDING.name) {
         composableDestination(SimpleDestination(BaseRoute.HOME)) { }
         composableDestination(SimpleDestination(BaseRoute.ONBOARDING)) {
-            OnboardingScreen()
+            OnboardingScreen(
+                showHome = {
+                    navController.navigate(BaseRoute.HOME.name) { popUpTo(0) }
+                }
+            )
         }
     }
 }
