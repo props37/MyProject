@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.Dp
 import kotlin.math.roundToInt
 
 @Composable
-fun IntrinsicSize(
+fun IntrinsicSizeOverride(
     minSize: Dp,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},

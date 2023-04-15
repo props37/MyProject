@@ -1,28 +1,31 @@
 package ru.zarina.zarina.ui.common.components.buttons
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
-import ru.zarina.zarina.utils.compose.layout.IntrinsicSize
+import ru.zarina.zarina.utils.compose.layout.IntrinsicSizeOverride
 
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ZarinaButton(
     onClick: () -> Unit,
@@ -42,18 +45,22 @@ fun ZarinaButton(
             )
             .background(colors.background)
             .border(width = 1.dp, color = colors.border)
-            .padding(vertical = 12.dp, horizontal = 24.dp),
+            .padding(vertical = 12.dp, horizontal = 24.dp)
+            .height(IntrinsicSize.Min),
     ) {
-        AnimatedContent(
-            targetState = isLoading,
-            label = "button contents"
-        ) { isLoading ->
-            if (isLoading)
-                Loader(
-                    color = colors.foreground
-                )
-            else
-                content()
+        val contentAlpha by animateFloatAsState(
+            targetValue = if (isLoading) 0f else 1f,
+            label = "content alpha"
+        )
+        val loaderAlpha = 1f - contentAlpha
+        Loader(
+            color = colors.foreground,
+            modifier = Modifier.graphicsLayer { alpha = loaderAlpha },
+        )
+        Box(
+            modifier = Modifier.graphicsLayer { alpha = contentAlpha },
+        ) {
+            content()
         }
     }
 }
@@ -63,11 +70,11 @@ private fun Loader(
     color: Color,
     modifier: Modifier = Modifier,
 ) {
-    IntrinsicSize(minSize = 10.dp) {
+    IntrinsicSizeOverride(minSize = 10.dp) {
         CircularProgressIndicator(
-            modifier = modifier,
+            modifier = modifier.size(16.dp),
             color = color,
-            strokeWidth = 4.dp,
+            strokeWidth = 2.dp,
         )
     }
 }

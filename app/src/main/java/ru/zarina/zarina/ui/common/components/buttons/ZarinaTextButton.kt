@@ -15,12 +15,14 @@ fun ZarinaTextButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
     colors: ZarinaButtonColors = ZarinaButtonDefaults.primaryColors(),
 ) {
     ZarinaButton(
-        colors = colors,
-        modifier = modifier,
         onClick = onClick,
+        colors = colors,
+        isLoading = isLoading,
+        modifier = modifier
     ) {
         Text(
             text = text,
