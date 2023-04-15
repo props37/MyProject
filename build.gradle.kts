@@ -1,4 +1,6 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+// Workaround for https://github.com/gradle/gradle/issues/22797; remove after Gradle 8.1 migration
+@file:Suppress("DSL_SCOPE_VIOLATION")
+
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.test) apply false

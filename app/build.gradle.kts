@@ -1,3 +1,6 @@
+// Workaround for https://github.com/gradle/gradle/issues/22797; remove after Gradle 8.1 migration
+@file:Suppress("DSL_SCOPE_VIOLATION")
+
 plugins {
     id("zarina.android.application")
     id("zarina.compose.metrics")
