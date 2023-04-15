@@ -14,10 +14,10 @@ data class CityDto(
 ) {
 
     fun toDomain(): City? {
-        return if (id != null && name != null)
-            City(AddressId(id), name)
-        else
+        return if (id.isNullOrBlank() || name.isNullOrBlank())
             null
+        else
+            City(AddressId(id), name)
     }
 
 }
