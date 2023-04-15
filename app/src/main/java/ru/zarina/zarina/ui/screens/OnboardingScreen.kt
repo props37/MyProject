@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
@@ -30,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.Flow
@@ -44,6 +46,7 @@ import ru.zarina.zarina.utils.compose.minInteractionSize
 
 @Composable
 private fun OnboardingScreenContent(
+    isDetectButtonLoading: Boolean,
     onDetectClick: () -> Unit,
     onCloseClick: () -> Unit,
 ) {
@@ -61,6 +64,7 @@ private fun OnboardingScreenContent(
             modifier = Modifier.weight(1f),
         )
         CitySelection(
+            isDetectButtonLoading = isDetectButtonLoading,
             onDetectClick = onDetectClick,
         )
     }
@@ -138,6 +142,7 @@ fun Logo(
 
 @Composable
 fun CitySelection(
+    isDetectButtonLoading: Boolean,
     onDetectClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -165,6 +170,7 @@ fun CitySelection(
         ZarinaTextButton(
             text = stringResource(id = R.string.select_automatically),
             onClick = onDetectClick,
+            isLoading = isDetectButtonLoading,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth(),
@@ -188,6 +194,8 @@ fun OnboardingScreen(
 ) {
     val viewModel = hiltViewModel<OnboardingViewModel>()
 
+    val isDetectButtonLoading by viewModel.isDetectButtonLoading.collectAsStateWithLifecycle()
+
     OnboardingScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showHome = showHome,
@@ -195,6 +203,7 @@ fun OnboardingScreen(
     )
 
     OnboardingScreenContent(
+        isDetectButtonLoading = isDetectButtonLoading,
         onDetectClick = viewModel::onDetectClick,
         onCloseClick = viewModel::onCloseClick,
     )
@@ -228,6 +237,7 @@ fun OnboardingScreenBehavior(
 fun OnboardingScreenContentPreview() {
     ZarinaTheme {
         OnboardingScreenContent(
+            isDetectButtonLoading = true,
             onDetectClick = {},
             onCloseClick = {},
         )
