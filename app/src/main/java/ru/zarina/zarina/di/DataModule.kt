@@ -8,6 +8,8 @@ import ru.zarina.zarina.data.geography.GeographyRepository
 import ru.zarina.zarina.data.geography.IGeographyRepository
 import ru.zarina.zarina.data.geography.remote.IGeographyRemoteSource
 import ru.zarina.zarina.data.geography.remote.KtorGeographyRemoteSource
+import ru.zarina.zarina.data.geography.remote.api.GeographyApi
+import ru.zarina.zarina.data.geography.remote.api.IGeographyApi
 import ru.zarina.zarina.data.location.GeoLocationRepository
 import ru.zarina.zarina.data.location.IGeoLocationRepository
 import ru.zarina.zarina.data.location.source.IGeoLocationSource
@@ -22,6 +24,9 @@ interface DataModule {
 
     @Binds
     fun bindsGeoLocationRepository(repository: GeoLocationRepository): IGeoLocationRepository
+
+    @Binds
+    fun bindsGeographyApi(api: GeographyApi): IGeographyApi
 
     @Binds
     fun bindsGeographyRemoteSource(source: KtorGeographyRemoteSource): IGeographyRemoteSource
