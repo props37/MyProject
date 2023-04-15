@@ -34,15 +34,20 @@ sealed interface ZarinaBuildType {
     val matchingFallbacks: List<ZarinaBuildType>
         get() = emptyList()
 
+    val backendUrl: String
+        get() = "https://zarina.ru"
+
     object Debug : ZarinaBuildType {
         override val name = "debug"
         override val isDebuggable = true
         override val isMinifyEnabled = false
         override val isShrinkResources = false
+        override val backendUrl = "https://test.zarina.ru"
     }
 
     object Qa : ZarinaBuildType {
         override val name = "qa"
+        override val backendUrl = "https://test.zarina.ru"
     }
 
     object Release : ZarinaBuildType {
@@ -56,6 +61,7 @@ sealed interface ZarinaBuildType {
         override val name = "benchmark"
         override val initializeWith = Release
         override val matchingFallbacks = listOf(Release)
+        override val backendUrl = "https://test.zarina.ru"
     }
 
     companion object {
@@ -85,6 +91,7 @@ fun Project.configureBuildTypes(
                         isMinifyEnabled = buildType.isMinifyEnabled
                         isShrinkResources = buildType.isShrinkResources
                         versionNameSuffix = buildType.versionNameSuffix
+                        fillBuildConfigFields(buildType)
                     }
                     buildTypeConfigurationBlock(this, buildType)
                 }
@@ -92,3 +99,15 @@ fun Project.configureBuildTypes(
         }
     }
 }
+
+private fun ApplicationBuildType.fillBuildConfigFields(buildType: ZarinaBuildType) {
+    buildConfigStringField("BACKEND_URL", buildType.backendUrl)
+}
+
+private fun ApplicationBuildType.buildConfigStringField(
+    name: String,
+    value: String,
+) {
+    buildConfigField("String", name, "\"$value\"")
+}
+
