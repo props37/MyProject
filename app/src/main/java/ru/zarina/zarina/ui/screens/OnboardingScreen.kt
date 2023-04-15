@@ -30,6 +30,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaButtonDefaults
@@ -42,6 +44,7 @@ import ru.zarina.zarina.utils.compose.minInteractionSize
 
 @Composable
 private fun OnboardingScreenContent(
+    onDetectClick: () -> Unit,
     onCloseClick: () -> Unit,
 ) {
     Banner()
@@ -57,7 +60,9 @@ private fun OnboardingScreenContent(
         Logo(
             modifier = Modifier.weight(1f),
         )
-        CitySelection()
+        CitySelection(
+            onDetectClick = onDetectClick,
+        )
     }
 }
 
@@ -133,6 +138,7 @@ fun Logo(
 
 @Composable
 fun CitySelection(
+    onDetectClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -158,7 +164,7 @@ fun CitySelection(
         Spacer(modifier = Modifier.height(40.dp))
         ZarinaTextButton(
             text = stringResource(id = R.string.select_automatically),
-            onClick = { /*TODO*/ },
+            onClick = onDetectClick,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth(),
@@ -185,22 +191,31 @@ fun OnboardingScreen(
     OnboardingScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showHome = showHome,
+        onLocationPermissionResult = viewModel::onLocationPermissionResult,
     )
 
     OnboardingScreenContent(
+        onDetectClick = viewModel::onDetectClick,
         onCloseClick = viewModel::onCloseClick,
     )
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun OnboardingScreenBehavior(
     sideEffects: Flow<OnboardingViewModel.SideEffect>,
     showHome: () -> Unit,
+    onLocationPermissionResult: (isGranted: Boolean) -> Unit,
 ) {
-    LaunchedEffect(sideEffects, showHome) {
+    val locationPermissionState = rememberPermissionState(
+        permission = android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        onPermissionResult = onLocationPermissionResult
+    )
+    LaunchedEffect(locationPermissionState, sideEffects, showHome) {
         sideEffects.collect { effect ->
             when (effect) {
                 OnboardingViewModel.SideEffect.ShowHome -> showHome()
+                OnboardingViewModel.SideEffect.RequestLocationPermission -> locationPermissionState.launchPermissionRequest()
             }
         }
     }
@@ -213,6 +228,7 @@ fun OnboardingScreenBehavior(
 fun OnboardingScreenContentPreview() {
     ZarinaTheme {
         OnboardingScreenContent(
+            onDetectClick = {},
             onCloseClick = {},
         )
     }
