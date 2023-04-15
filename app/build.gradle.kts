@@ -75,6 +75,7 @@ android {
 
 dependencies {
 
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.activity)
@@ -90,6 +91,9 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.compose)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.logging)
     implementation(libs.timber)
     implementation(libs.google.play.services.location)
     implementation(platform(libs.firebase.bom))
