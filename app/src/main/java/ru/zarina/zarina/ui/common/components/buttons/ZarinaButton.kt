@@ -53,10 +53,11 @@ fun ZarinaButton(
             label = "content alpha"
         )
         val loaderAlpha = 1f - contentAlpha
-        Loader(
-            color = colors.foreground,
-            modifier = Modifier.graphicsLayer { alpha = loaderAlpha },
-        )
+        if (loaderAlpha > 0f)
+            Loader(
+                color = colors.foreground,
+                modifier = Modifier.graphicsLayer { alpha = loaderAlpha },
+            )
         Box(
             modifier = Modifier.graphicsLayer { alpha = contentAlpha },
         ) {
