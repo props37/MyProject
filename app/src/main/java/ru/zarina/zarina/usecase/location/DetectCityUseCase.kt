@@ -7,6 +7,7 @@ import ru.zarina.zarina.data.location.IGeoLocationRepository
 import ru.zarina.zarina.di.Dispatcher
 import ru.zarina.zarina.di.ZarinaDispatcher
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.exception.ServiceUnavailableException
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -16,8 +17,8 @@ class DetectCityUseCase @Inject constructor(
     private val geographyRepository: GeographyRepository,
 ) : UseCase<Unit, City?>(dispatcher) {
     override suspend fun execute(params: Unit): City? {
-        val geoLocation = checkNotNull(geoLocationRepository.getCurrentLocation())
-        // TODO if geoLocation is null, show "location services are not available"
+        val geoLocation = geoLocationRepository.getCurrentLocation()
+            ?: throw ServiceUnavailableException("Location service is unavailable")
         val city = geographyRepository.getCity(geoLocation)
         Timber.v("Current location: $geoLocation, detected city: $city")
         return city

@@ -7,9 +7,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.exception.MissingPermissionException
+import ru.zarina.zarina.domain.exception.ServiceUnavailableException
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import timber.log.Timber
@@ -38,13 +42,18 @@ class OnboardingViewModel @Inject constructor(
                 operationTracker.track(Operation.DETECT_CITY) {
                     interactor.detectCity()
                         .onSuccess { _detectedCity.value = it }
-                        .onFailure {
-                            // TODO display error
+                        .onFailure { throwable ->
+                            val message = when (throwable) {
+                                is MissingPermissionException -> Text.Resource(R.string.cant_detect_city_without_permission)
+                                is ServiceUnavailableException -> Text.Resource(R.string.location_services_unavailable)
+                                else -> Text.Resource(R.string.cant_detect_city)
+                            }
+                            sideEffect(SideEffect.ShowError(message))
                         }
                 }
             }
         } else {
-            // TODO not granted, display error
+            sideEffect(SideEffect.ShowError(Text.Resource(R.string.cant_detect_city_without_permission)))
         }
     }
 
@@ -57,6 +66,7 @@ class OnboardingViewModel @Inject constructor(
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object ShowHome : SideEffect
         object RequestLocationPermission : SideEffect
+        class ShowError(val message: Text) : SideEffect
     }
 
     enum class Operation : OperationKey { DETECT_CITY }
