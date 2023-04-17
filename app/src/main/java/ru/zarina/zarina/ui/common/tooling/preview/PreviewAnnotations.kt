@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.tooling
+package ru.zarina.zarina.ui.common.tooling.preview
 
 import androidx.compose.ui.tooling.preview.Preview
 
