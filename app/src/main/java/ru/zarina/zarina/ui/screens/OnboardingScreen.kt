@@ -1,5 +1,7 @@
 package ru.zarina.zarina.ui.screens
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
@@ -49,8 +51,10 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.compose.minInteractionSize
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun OnboardingScreenContent(
+    step: OnboardingViewModel.OnboardingStep,
     isDetectButtonLoading: Boolean,
     onDetectClick: () -> Unit,
     onCloseClick: () -> Unit,
@@ -75,10 +79,21 @@ private fun OnboardingScreenContent(
             Logo(
                 modifier = Modifier.weight(1f),
             )
-            CitySelection(
-                isDetectButtonLoading = isDetectButtonLoading,
-                onDetectClick = onDetectClick,
-            )
+            AnimatedContent(
+                targetState = step,
+                label = "onboarding step",
+                modifier = Modifier.fillMaxWidth()
+            ) { step ->
+                when (step) {
+                    OnboardingViewModel.OnboardingStep.CITY_SELECTION_TYPE -> CitySelection(
+                        isDetectButtonLoading = isDetectButtonLoading,
+                        onDetectClick = onDetectClick,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    else -> {} // TODO
+                }
+            }
         }
 
         StateSnackbar(
@@ -216,6 +231,7 @@ fun OnboardingScreen(
 ) {
     val viewModel = hiltViewModel<OnboardingViewModel>()
 
+    val step by viewModel.step.collectAsStateWithLifecycle()
     val isDetectButtonLoading by viewModel.isDetectButtonLoading.collectAsStateWithLifecycle()
     val isSnackbarVisible by viewModel.isSnackbarVisible.collectAsStateWithLifecycle()
     val snackbarText by viewModel.snackbarText.collectAsStateWithLifecycle()
@@ -227,6 +243,7 @@ fun OnboardingScreen(
     )
 
     OnboardingScreenContent(
+        step = step,
         isDetectButtonLoading = isDetectButtonLoading,
         onDetectClick = viewModel::onDetectClick,
         onCloseClick = viewModel::onCloseClick,
@@ -263,6 +280,7 @@ fun OnboardingScreenBehavior(
 fun OnboardingScreenContentPreview() {
     ZarinaTheme {
         OnboardingScreenContent(
+            step = OnboardingViewModel.OnboardingStep.CITY_SELECTION_TYPE,
             isDetectButtonLoading = true,
             onDetectClick = {},
             onCloseClick = {},

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
@@ -28,6 +29,9 @@ class OnboardingViewModel @Inject constructor(
 
     private val operationTracker = OperationTracker()
     private val messageQueue = MessageQueue(viewModelScope)
+
+    private val _step = MutableStateFlow(OnboardingStep.CITY_SELECTION_TYPE)
+    val step = _step.asStateFlow()
     val isDetectButtonLoading = operationTracker
         .isOperationOngoing(Operation.DETECT_CITY)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
@@ -45,7 +49,10 @@ class OnboardingViewModel @Inject constructor(
             viewModelScope.launch {
                 operationTracker.track(Operation.DETECT_CITY) {
                     interactor.detectCity()
-                        .onSuccess { _detectedCity.value = it }
+                        .onSuccess {
+                            _detectedCity.value = it
+                            _step.value = OnboardingStep.DETECTION_RESULT
+                        }
                         .onFailure { throwable ->
                             val message = when (throwable) {
                                 is MissingPermissionException -> Text.Resource(R.string.cant_detect_city_without_permission)
@@ -66,6 +73,8 @@ class OnboardingViewModel @Inject constructor(
     fun onCloseClick() {
         sideEffect(SideEffect.ShowHome)
     }
+
+    enum class OnboardingStep { CITY_SELECTION_TYPE, DETECTION_RESULT }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object ShowHome : SideEffect
