@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.Url
 import ru.zarina.zarina.domain.exception.MissingPermissionException
 import ru.zarina.zarina.domain.exception.ServiceUnavailableException
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
@@ -33,6 +34,8 @@ class OnboardingViewModel @Inject constructor(
 
     private val _step = MutableStateFlow(OnboardingStep.CITY_SELECTION_TYPE)
     val step = _step.asStateFlow()
+    private val _splashUrl = MutableStateFlow<Url?>(null)
+    val splashUrl = _splashUrl.asStateFlow()
     val isDetectButtonLoading = operationTracker
         .isOperationOngoing(Operation.DETECT_CITY)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
@@ -41,6 +44,17 @@ class OnboardingViewModel @Inject constructor(
 
     val isSnackbarVisible = messageQueue.isMessageVisible
     val snackbarText = messageQueue.message
+
+    init {
+        fetchSplashUrl()
+    }
+
+    private fun fetchSplashUrl() {
+        viewModelScope.launch {
+            interactor.getOnboardingSplash()
+                .onSuccess { _splashUrl.value = it }
+        }
+    }
 
     fun onDetectClick() {
         sideEffect(SideEffect.RequestLocationPermission)
