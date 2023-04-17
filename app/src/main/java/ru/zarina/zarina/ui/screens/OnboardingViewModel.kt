@@ -12,6 +12,7 @@ import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.exception.MissingPermissionException
 import ru.zarina.zarina.domain.exception.ServiceUnavailableException
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
+import ru.zarina.zarina.ui.common.base.MessageQueue
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
@@ -26,9 +27,12 @@ class OnboardingViewModel @Inject constructor(
     ISideEffectSource<OnboardingViewModel.SideEffect> by SideEffectQueue() {
 
     private val operationTracker = OperationTracker()
+    private val messageQueue = MessageQueue(viewModelScope)
     val isDetectButtonLoading = operationTracker
         .isOperationOngoing(Operation.DETECT_CITY)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+    val isSnackbarVisible = messageQueue.isMessageVisible
+    val snackbarText = messageQueue.message
     private val _detectedCity = MutableStateFlow<City?>(null)
 
     fun onDetectClick() {
@@ -48,12 +52,12 @@ class OnboardingViewModel @Inject constructor(
                                 is ServiceUnavailableException -> Text.Resource(R.string.location_services_unavailable)
                                 else -> Text.Resource(R.string.cant_detect_city)
                             }
-                            sideEffect(SideEffect.ShowError(message))
+                            messageQueue.showMessage(message)
                         }
                 }
             }
         } else {
-            sideEffect(SideEffect.ShowError(Text.Resource(R.string.cant_detect_city_without_permission)))
+            messageQueue.showMessage(Text.Resource(R.string.cant_detect_city_without_permission))
         }
     }
 
@@ -66,7 +70,6 @@ class OnboardingViewModel @Inject constructor(
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object ShowHome : SideEffect
         object RequestLocationPermission : SideEffect
-        class ShowError(val message: Text) : SideEffect
     }
 
     enum class Operation : OperationKey { DETECT_CITY }

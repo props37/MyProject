@@ -1,5 +1,7 @@
 package ru.zarina.zarina.ui.screens
 
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,6 +38,9 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
+import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.components.StateSnackbar
+import ru.zarina.zarina.ui.common.components.StateSnackbarDefaults
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.tooling.DensityPreviews
@@ -49,23 +54,42 @@ private fun OnboardingScreenContent(
     isDetectButtonLoading: Boolean,
     onDetectClick: () -> Unit,
     onCloseClick: () -> Unit,
+    isSnackbarVisible: Boolean,
+    snackbarText: Text,
 ) {
-    Banner()
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .systemBarsPadding(),
-    ) {
-        CloseButton(
-            onClick = onCloseClick,
-            modifier = Modifier.align(Alignment.End),
+    Box(modifier = Modifier.fillMaxSize()) {
+        Banner(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min),
         )
-        Logo(
-            modifier = Modifier.weight(1f),
-        )
-        CitySelection(
-            isDetectButtonLoading = isDetectButtonLoading,
-            onDetectClick = onDetectClick,
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .systemBarsPadding(),
+        ) {
+            CloseButton(
+                onClick = onCloseClick,
+                modifier = Modifier.align(Alignment.End),
+            )
+            Logo(
+                modifier = Modifier.weight(1f),
+            )
+            CitySelection(
+                isDetectButtonLoading = isDetectButtonLoading,
+                onDetectClick = onDetectClick,
+            )
+        }
+
+        StateSnackbar(
+            isVisible = isSnackbarVisible,
+            text = snackbarText,
+            enter = slideInVertically(StateSnackbarDefaults.slideAnimationSpec) { -it * 2 },
+            exit = slideOutVertically(StateSnackbarDefaults.slideAnimationSpec) { -it * 2 },
+            modifier = Modifier
+                .systemBarsPadding()
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
         )
     }
 }
@@ -77,8 +101,6 @@ fun Banner(
     Box(
         contentAlignment = Alignment.TopCenter,
         modifier = modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)
     ) {
         Image(
             painter = painterResource(id = R.drawable.onboarding_default_banner),
@@ -195,6 +217,8 @@ fun OnboardingScreen(
     val viewModel = hiltViewModel<OnboardingViewModel>()
 
     val isDetectButtonLoading by viewModel.isDetectButtonLoading.collectAsStateWithLifecycle()
+    val isSnackbarVisible by viewModel.isSnackbarVisible.collectAsStateWithLifecycle()
+    val snackbarText by viewModel.snackbarText.collectAsStateWithLifecycle()
 
     OnboardingScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -206,6 +230,8 @@ fun OnboardingScreen(
         isDetectButtonLoading = isDetectButtonLoading,
         onDetectClick = viewModel::onDetectClick,
         onCloseClick = viewModel::onCloseClick,
+        isSnackbarVisible = isSnackbarVisible,
+        snackbarText = snackbarText,
     )
 }
 
@@ -240,6 +266,8 @@ fun OnboardingScreenContentPreview() {
             isDetectButtonLoading = true,
             onDetectClick = {},
             onCloseClick = {},
+            isSnackbarVisible = true,
+            snackbarText = Text.Resource(R.string.cant_detect_city),
         )
     }
 }
