@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens
+package ru.zarina.zarina.ui.screens.onboarding
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi

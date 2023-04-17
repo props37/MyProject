@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens
+package ru.zarina.zarina.ui.screens.onboarding
 
 import ru.zarina.zarina.usecase.location.DetectCityUseCase
 import ru.zarina.zarina.utils.clean.invoke
