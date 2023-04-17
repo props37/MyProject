@@ -9,5 +9,8 @@
     <string name="location_services_unavailable">Сервис определения локации недоступен. Проверьте, что локация включена в настройках системы</string>
     <string name="cant_detect_city">Не удалось определить город</string>
     <string name="network_error">Ошибка сети. Проверьте подключение к интернету</string>
+    <string name="is_your_city">Ваш город %1$s?</string>
+    <string name="yes_correct">Да, верно</string>
+    <string name="no_change">Нет, изменить</string>
     <string name="skip">Пропустить</string>
 </resources>

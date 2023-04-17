@@ -18,8 +18,8 @@ import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
+import ru.zarina.zarina.utils.isNetworkException
 import timber.log.Timber
-import java.net.SocketException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,9 +36,11 @@ class OnboardingViewModel @Inject constructor(
     val isDetectButtonLoading = operationTracker
         .isOperationOngoing(Operation.DETECT_CITY)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+    private val _detectedCity = MutableStateFlow<City?>(null)
+    val detectedCity = _detectedCity.asStateFlow()
+
     val isSnackbarVisible = messageQueue.isMessageVisible
     val snackbarText = messageQueue.message
-    private val _detectedCity = MutableStateFlow<City?>(null)
 
     fun onDetectClick() {
         sideEffect(SideEffect.RequestLocationPermission)
@@ -70,7 +72,13 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
-    fun onSelectClick() {}
+    fun onSelectManuallyClick() {
+        // TODO
+    }
+
+    fun onConfirmDetectedCityClick() {
+        // TODO
+    }
 
     fun onCloseClick() {
         sideEffect(SideEffect.ShowHome)

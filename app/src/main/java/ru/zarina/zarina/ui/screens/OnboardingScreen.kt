@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -40,6 +41,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.components.StateSnackbar
 import ru.zarina.zarina.ui.common.components.StateSnackbarDefaults
@@ -47,6 +49,7 @@ import ru.zarina.zarina.ui.common.components.buttons.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
+import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.CityProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.compose.minInteractionSize
@@ -57,7 +60,10 @@ private fun OnboardingScreenContent(
     step: OnboardingViewModel.OnboardingStep,
     isDetectButtonLoading: Boolean,
     onDetectClick: () -> Unit,
+    onSelectManuallyClick: () -> Unit,
     onCloseClick: () -> Unit,
+    detectedCity: City?,
+    onConfirmDetectedCity: () -> Unit,
     isSnackbarVisible: Boolean,
     snackbarText: Text,
 ) {
@@ -88,10 +94,16 @@ private fun OnboardingScreenContent(
                     OnboardingViewModel.OnboardingStep.CITY_SELECTION_TYPE -> CitySelection(
                         isDetectButtonLoading = isDetectButtonLoading,
                         onDetectClick = onDetectClick,
+                        onSelectManuallyClick = onSelectManuallyClick,
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    else -> {} // TODO
+                    else -> SelectionResult(
+                        city = detectedCity,
+                        onConfirmClick = onConfirmDetectedCity,
+                        onSelectManuallyClick = onSelectManuallyClick,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }
@@ -181,6 +193,7 @@ fun Logo(
 fun CitySelection(
     isDetectButtonLoading: Boolean,
     onDetectClick: () -> Unit,
+    onSelectManuallyClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -215,7 +228,47 @@ fun CitySelection(
         Spacer(modifier = Modifier.height(20.dp))
         ZarinaTextButton(
             text = stringResource(id = R.string.select_manually),
-            onClick = { /*TODO*/ },
+            onClick = onSelectManuallyClick,
+            colors = ZarinaButtonDefaults.secondaryColors(),
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
+fun SelectionResult(
+    city: City?,
+    onConfirmClick: () -> Unit,
+    onSelectManuallyClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.background(UiKitTheme.colors.screenBackground)
+    ) {
+        Spacer(modifier = Modifier.height(32.dp))
+        Text(
+            text = stringResource(R.string.is_your_city, city?.name.orEmpty()),
+            style = UiKitTheme.typography.onboardingHeader,
+            color = UiKitTheme.colors.primaryContentColor,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
+        Spacer(modifier = Modifier.height(40.dp))
+        ZarinaTextButton(
+            text = stringResource(id = R.string.yes_correct),
+            onClick = onConfirmClick,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        ZarinaTextButton(
+            text = stringResource(id = R.string.no_change),
+            onClick = onSelectManuallyClick,
             colors = ZarinaButtonDefaults.secondaryColors(),
             modifier = Modifier
                 .padding(horizontal = 16.dp)
@@ -234,6 +287,7 @@ fun OnboardingScreen(
     val step by viewModel.step.collectAsStateWithLifecycle()
     val isDetectButtonLoading by viewModel.isDetectButtonLoading.collectAsStateWithLifecycle()
     val isSnackbarVisible by viewModel.isSnackbarVisible.collectAsStateWithLifecycle()
+    val detectedCity by viewModel.detectedCity.collectAsStateWithLifecycle()
     val snackbarText by viewModel.snackbarText.collectAsStateWithLifecycle()
 
     OnboardingScreenBehavior(
@@ -246,7 +300,10 @@ fun OnboardingScreen(
         step = step,
         isDetectButtonLoading = isDetectButtonLoading,
         onDetectClick = viewModel::onDetectClick,
+        onSelectManuallyClick = viewModel::onSelectManuallyClick,
         onCloseClick = viewModel::onCloseClick,
+        detectedCity = detectedCity,
+        onConfirmDetectedCity = viewModel::onConfirmDetectedCityClick,
         isSnackbarVisible = isSnackbarVisible,
         snackbarText = snackbarText,
     )
@@ -277,13 +334,40 @@ fun OnboardingScreenBehavior(
 @FontScalePreviews
 @DensityPreviews
 @Composable
-fun OnboardingScreenContentPreview() {
+fun OnboardingScreenContentPreview(
+    @PreviewParameter(CityProvider::class, limit = 1)
+    city: City,
+) {
     ZarinaTheme {
         OnboardingScreenContent(
             step = OnboardingViewModel.OnboardingStep.CITY_SELECTION_TYPE,
             isDetectButtonLoading = true,
             onDetectClick = {},
+            onSelectManuallyClick = {},
             onCloseClick = {},
+            detectedCity = city,
+            onConfirmDetectedCity = {},
+            isSnackbarVisible = true,
+            snackbarText = Text.Resource(R.string.cant_detect_city),
+        )
+    }
+}
+
+@Preview
+@Composable
+fun OnboardingScreenDetectionResultContentPreview(
+    @PreviewParameter(CityProvider::class, limit = 1)
+    city: City,
+) {
+    ZarinaTheme {
+        OnboardingScreenContent(
+            step = OnboardingViewModel.OnboardingStep.DETECTION_RESULT,
+            isDetectButtonLoading = true,
+            onDetectClick = {},
+            onSelectManuallyClick = {},
+            onCloseClick = {},
+            detectedCity = city,
+            onConfirmDetectedCity = {},
             isSnackbarVisible = true,
             snackbarText = Text.Resource(R.string.cant_detect_city),
         )
