@@ -55,10 +55,10 @@ class OnboardingViewModel @Inject constructor(
                             _step.value = OnboardingStep.DETECTION_RESULT
                         }
                         .onFailure { throwable ->
-                            val message = when (throwable) {
-                                is SocketException -> Text.Resource(R.string.network_error)
-                                is MissingPermissionException -> Text.Resource(R.string.cant_detect_city_without_permission)
-                                is ServiceUnavailableException -> Text.Resource(R.string.location_services_unavailable)
+                            val message = when {
+                                throwable.isNetworkException() -> Text.Resource(R.string.network_error)
+                                throwable is MissingPermissionException -> Text.Resource(R.string.cant_detect_city_without_permission)
+                                throwable is ServiceUnavailableException -> Text.Resource(R.string.location_services_unavailable)
                                 else -> Text.Resource(R.string.cant_detect_city)
                             }
                             messageQueue.showMessage(message)
