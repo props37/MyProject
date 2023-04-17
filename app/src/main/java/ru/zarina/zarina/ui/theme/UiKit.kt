@@ -41,6 +41,12 @@ data class UiKitTypography(
         fontWeight = FontWeight.Bold,
         fontFamily = Fonts.Families.Circle
     ),
+    val snackbar: TextStyle = TextStyle(
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = Fonts.Families.Circle
+    ),
     val onboardingHeader: TextStyle = TextStyle(
         fontSize = 20.sp,
         lineHeight = 28.sp,
