@@ -6,7 +6,8 @@
     <string name="select_automatically">Выбрать автоматически</string>
     <string name="select_manually">Выбрать вручную</string>
     <string name="cant_detect_city_without_permission">Автоматическое определение города невозможно без доступа к локации</string>
-    <string name="location_services_unavailable">Сервис определения локации недоступен. Проверьте, что у вас включена локация в настройках системы</string>
+    <string name="location_services_unavailable">Сервис определения локации недоступен. Проверьте, что локация включена в настройках системы</string>
     <string name="cant_detect_city">Не удалось определить город</string>
+    <string name="network_error">Ошибка сети. Проверьте подключение к интернету</string>
     <string name="skip">Пропустить</string>
 </resources>

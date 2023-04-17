@@ -19,6 +19,7 @@ import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import timber.log.Timber
+import java.net.SocketException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,6 +56,7 @@ class OnboardingViewModel @Inject constructor(
                         }
                         .onFailure { throwable ->
                             val message = when (throwable) {
+                                is SocketException -> Text.Resource(R.string.network_error)
                                 is MissingPermissionException -> Text.Resource(R.string.cant_detect_city_without_permission)
                                 is ServiceUnavailableException -> Text.Resource(R.string.location_services_unavailable)
                                 else -> Text.Resource(R.string.cant_detect_city)
