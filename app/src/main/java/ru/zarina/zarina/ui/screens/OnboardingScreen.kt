@@ -2,8 +2,13 @@ package ru.zarina.zarina.ui.screens
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.with
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,11 +34,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,7 +61,6 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.compose.minInteractionSize
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun OnboardingScreenContent(
     step: OnboardingViewModel.OnboardingStep,
@@ -85,27 +91,14 @@ private fun OnboardingScreenContent(
             Logo(
                 modifier = Modifier.weight(1f),
             )
-            AnimatedContent(
-                targetState = step,
-                label = "onboarding step",
-                modifier = Modifier.fillMaxWidth()
-            ) { step ->
-                when (step) {
-                    OnboardingViewModel.OnboardingStep.CITY_SELECTION_TYPE -> CitySelection(
-                        isDetectButtonLoading = isDetectButtonLoading,
-                        onDetectClick = onDetectClick,
-                        onSelectManuallyClick = onSelectManuallyClick,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    else -> SelectionResult(
-                        city = detectedCity,
-                        onConfirmClick = onConfirmDetectedCity,
-                        onSelectManuallyClick = onSelectManuallyClick,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
+            BottomContent(
+                step = step,
+                isDetectButtonLoading = isDetectButtonLoading,
+                onDetectClick = onDetectClick,
+                onSelectManuallyClick = onSelectManuallyClick,
+                detectedCity = detectedCity,
+                onConfirmDetectedCity = onConfirmDetectedCity
+            )
         }
 
         StateSnackbar(
@@ -189,6 +182,73 @@ fun Logo(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun BottomContent(
+    step: OnboardingViewModel.OnboardingStep,
+    isDetectButtonLoading: Boolean,
+    onDetectClick: () -> Unit,
+    onSelectManuallyClick: () -> Unit,
+    detectedCity: City?,
+    onConfirmDetectedCity: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val citySelection = @Composable {
+        CitySelection(
+            isDetectButtonLoading = isDetectButtonLoading,
+            onDetectClick = onDetectClick,
+            onSelectManuallyClick = onSelectManuallyClick,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+
+    val selectionResult = @Composable {
+        SelectionResult(
+            city = detectedCity,
+            onConfirmClick = onConfirmDetectedCity,
+            onSelectManuallyClick = onSelectManuallyClick,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+
+    SubcomposeLayout(
+        modifier = modifier,
+    ) { constraints ->
+        val mainPlaceables = subcompose("main", citySelection).map {
+            it.measure(constraints)
+        }
+        val maxSize = mainPlaceables.fold(IntSize.Zero) { currentMax, placeable ->
+            IntSize(
+                width = maxOf(currentMax.width, placeable.width),
+                height = maxOf(currentMax.height, placeable.height)
+            )
+        }
+        val reducedConstraints = constraints.copy(maxHeight = maxSize.height)
+        layout(maxSize.width, maxSize.height) {
+            subcompose("dependent") {
+                AnimatedContent(
+                    targetState = step,
+                    label = "step",
+                    transitionSpec = {
+                        fadeIn() + slideInHorizontally { it } with fadeOut() + slideOutHorizontally { -it }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(UiKitTheme.colors.screenBackground)
+                ) { step ->
+                    when (step) {
+                        OnboardingViewModel.OnboardingStep.CITY_SELECTION_TYPE -> citySelection()
+                        OnboardingViewModel.OnboardingStep.DETECTION_RESULT -> selectionResult()
+                    }
+                }
+            }.forEach {
+                it.measure(reducedConstraints).placeRelative(0, 0)
+            }
+        }
+    }
+}
+
+
 @Composable
 fun CitySelection(
     isDetectButtonLoading: Boolean,
@@ -250,6 +310,7 @@ fun SelectionResult(
         modifier = modifier.background(UiKitTheme.colors.screenBackground)
     ) {
         Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.weight(1f))
         Text(
             text = stringResource(R.string.is_your_city, city?.name.orEmpty()),
             style = UiKitTheme.typography.onboardingHeader,
@@ -257,6 +318,7 @@ fun SelectionResult(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
+        Spacer(modifier = Modifier.weight(1f))
         Spacer(modifier = Modifier.height(40.dp))
         ZarinaTextButton(
             text = stringResource(id = R.string.yes_correct),
