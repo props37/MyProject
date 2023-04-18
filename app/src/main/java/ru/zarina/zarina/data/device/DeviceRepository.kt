@@ -21,4 +21,5 @@ class DeviceRepository @Inject constructor(
         return remoteToken
     }
 
+    override suspend fun setToken(token: AuthorizationToken.Device?) = local.setToken(token)
 }
