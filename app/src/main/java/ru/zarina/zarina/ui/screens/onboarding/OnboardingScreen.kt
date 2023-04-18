@@ -159,46 +159,49 @@ fun SplashBanner(
         modifier = modifier
     ) {
         var isUrlLoaded by remember(url) { mutableStateOf<Boolean?>(null) }
-        if (isUrlLoaded != false) {
-            val context = LocalContext.current
-            val model = remember(context, url) {
-                ImageRequest.Builder(context)
-                    .data(url?.value)
-                    .size(Size.ORIGINAL)
-                    .crossfade(true)
-                    .build()
-            }
-            AsyncImage(
-                model = model,
-                onState = { state ->
-                    Timber.v("$state")
-                    when (state) {
-                        is AsyncImagePainter.State.Success -> {
-                            onBannerLoaded()
-                            isUrlLoaded = true
-                        }
-
-                        is AsyncImagePainter.State.Error -> {
-                            onBannerLoaded()
-                            isUrlLoaded = false
-                        }
-
-                        else -> Unit
-                    }
-                },
-                alignment = Alignment.TopCenter,
-                contentScale = ContentScale.FillWidth,
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize()
-            )
-        } else
-            Image(
+        when {
+            url == null -> Unit
+            isUrlLoaded == false -> Image(
                 painter = painterResource(id = R.drawable.onboarding_default_banner),
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,
                 alignment = Alignment.TopCenter,
                 modifier = Modifier.fillMaxWidth(),
             )
+
+            else -> {
+                val context = LocalContext.current
+                val model = remember(context, url) {
+                    ImageRequest.Builder(context)
+                        .data(url.value)
+                        .size(Size.ORIGINAL)
+                        .build()
+                }
+                AsyncImage(
+                    model = model,
+                    onState = { state ->
+                        Timber.v("$state")
+                        when (state) {
+                            is AsyncImagePainter.State.Success -> {
+                                onBannerLoaded()
+                                isUrlLoaded = true
+                            }
+
+                            is AsyncImagePainter.State.Error -> {
+                                onBannerLoaded()
+                                isUrlLoaded = false
+                            }
+
+                            else -> Unit
+                        }
+                    },
+                    alignment = Alignment.TopCenter,
+                    contentScale = ContentScale.FillWidth,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
         val gradientBrush = Brush.verticalGradient(
             0f to Color.Transparent,
             1f to Color.Black.copy(alpha = 0.5f),
