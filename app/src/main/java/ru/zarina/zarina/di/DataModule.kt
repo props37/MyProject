@@ -4,6 +4,12 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.zarina.zarina.data.content.ContentRepository
+import ru.zarina.zarina.data.content.IContentRepository
+import ru.zarina.zarina.data.content.remote.ContentRemoteSource
+import ru.zarina.zarina.data.content.remote.IContentRemoteSource
+import ru.zarina.zarina.data.content.remote.api.ContentApi
+import ru.zarina.zarina.data.content.remote.api.IContentApi
 import ru.zarina.zarina.data.geography.GeographyRepository
 import ru.zarina.zarina.data.geography.IGeographyRepository
 import ru.zarina.zarina.data.geography.remote.IGeographyRemoteSource
@@ -33,5 +39,14 @@ interface DataModule {
 
     @Binds
     fun bindsGeographyRepository(repository: GeographyRepository): IGeographyRepository
+
+    @Binds
+    fun bindsContentApi(api: ContentApi): IContentApi
+
+    @Binds
+    fun bindsContentRemoteSource(source: ContentRemoteSource): IContentRemoteSource
+
+    @Binds
+    fun bindsContentRepository(repository: ContentRepository): IContentRepository
 
 }

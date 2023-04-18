@@ -100,6 +100,7 @@ dependencies {
     implementation(libs.ktor.client.contentNegotiation)
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.coil.compose)
     implementation(libs.timber)
     implementation(libs.google.play.services.location)
     implementation(platform(libs.firebase.bom))

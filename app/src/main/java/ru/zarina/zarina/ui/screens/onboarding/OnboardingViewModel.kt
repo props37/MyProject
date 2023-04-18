@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens
+package ru.zarina.zarina.ui.screens.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.Url
 import ru.zarina.zarina.domain.exception.MissingPermissionException
 import ru.zarina.zarina.domain.exception.ServiceUnavailableException
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
@@ -33,6 +34,8 @@ class OnboardingViewModel @Inject constructor(
 
     private val _step = MutableStateFlow(OnboardingStep.CITY_SELECTION_TYPE)
     val step = _step.asStateFlow()
+    private val _splashState = MutableStateFlow<SplashState>(SplashState.Loading)
+    val splashState = _splashState.asStateFlow()
     val isDetectButtonLoading = operationTracker
         .isOperationOngoing(Operation.DETECT_CITY)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
@@ -41,6 +44,18 @@ class OnboardingViewModel @Inject constructor(
 
     val isSnackbarVisible = messageQueue.isMessageVisible
     val snackbarText = messageQueue.message
+
+    init {
+        fetchRemoteSplash()
+    }
+
+    private fun fetchRemoteSplash() {
+        viewModelScope.launch {
+            interactor.getOnboardingSplash()
+                .onSuccess { _splashState.value = SplashState.Success(it) }
+                .onFailure { _splashState.value = SplashState.Error }
+        }
+    }
 
     fun onDetectClick() {
         sideEffect(SideEffect.RequestLocationPermission)
@@ -82,6 +97,12 @@ class OnboardingViewModel @Inject constructor(
 
     fun onCloseClick() {
         sideEffect(SideEffect.ShowHome)
+    }
+
+    sealed interface SplashState {
+        object Loading : SplashState
+        class Success(val url: Url) : SplashState
+        object Error : SplashState
     }
 
     enum class OnboardingStep { CITY_SELECTION_TYPE, DETECTION_RESULT }
