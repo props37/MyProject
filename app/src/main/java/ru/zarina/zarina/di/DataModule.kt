@@ -6,24 +6,24 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.zarina.zarina.data.content.ContentRepository
 import ru.zarina.zarina.data.content.IContentRepository
-import ru.zarina.zarina.data.content.remote.ContentRemoteSource
 import ru.zarina.zarina.data.content.remote.IContentRemoteSource
-import ru.zarina.zarina.data.content.remote.api.ContentApi
-import ru.zarina.zarina.data.content.remote.api.IContentApi
+import ru.zarina.zarina.data.content.remote.ZarinaContentRemoteSource
+import ru.zarina.zarina.data.content.remote.api.IZarinaContentApi
+import ru.zarina.zarina.data.content.remote.api.KtorZarinaContentApi
 import ru.zarina.zarina.data.device.DeviceRepository
 import ru.zarina.zarina.data.device.IDeviceRepository
 import ru.zarina.zarina.data.device.local.DeviceLocalSource
 import ru.zarina.zarina.data.device.local.IDeviceLocalSource
-import ru.zarina.zarina.data.device.remote.DeviceRemoteSource
 import ru.zarina.zarina.data.device.remote.IDeviceRemoteSource
-import ru.zarina.zarina.data.device.remote.api.DeviceApi
-import ru.zarina.zarina.data.device.remote.api.IDeviceApi
+import ru.zarina.zarina.data.device.remote.ZarinaDeviceRemoteSource
+import ru.zarina.zarina.data.device.remote.api.IZarinaDeviceApi
+import ru.zarina.zarina.data.device.remote.api.KtorZarinaDeviceApi
 import ru.zarina.zarina.data.geography.GeographyRepository
 import ru.zarina.zarina.data.geography.IGeographyRepository
 import ru.zarina.zarina.data.geography.remote.IGeographyRemoteSource
-import ru.zarina.zarina.data.geography.remote.KtorGeographyRemoteSource
-import ru.zarina.zarina.data.geography.remote.api.GeographyApi
-import ru.zarina.zarina.data.geography.remote.api.IGeographyApi
+import ru.zarina.zarina.data.geography.remote.ZarinaGeographyRemoteSource
+import ru.zarina.zarina.data.geography.remote.api.IZarinaGeographyApi
+import ru.zarina.zarina.data.geography.remote.api.KtorZarinaGeographyApi
 import ru.zarina.zarina.data.location.GeoLocationRepository
 import ru.zarina.zarina.data.location.IGeoLocationRepository
 import ru.zarina.zarina.data.location.source.IGeoLocationSource
@@ -34,10 +34,10 @@ import ru.zarina.zarina.data.location.source.PlayServicesGeoLocationSource
 interface DataModule {
 
     @Binds
-    fun bindsDeviceApi(api: DeviceApi): IDeviceApi
+    fun bindsZarinaDeviceApi(api: KtorZarinaDeviceApi): IZarinaDeviceApi
 
     @Binds
-    fun bindsDeviceRemoteSource(source: DeviceRemoteSource): IDeviceRemoteSource
+    fun bindsDeviceRemoteSource(source: ZarinaDeviceRemoteSource): IDeviceRemoteSource
 
     @Binds
     fun bindsDeviceLocalSource(source: DeviceLocalSource): IDeviceLocalSource
@@ -52,19 +52,19 @@ interface DataModule {
     fun bindsGeoLocationRepository(repository: GeoLocationRepository): IGeoLocationRepository
 
     @Binds
-    fun bindsGeographyApi(api: GeographyApi): IGeographyApi
+    fun bindsZarinaGeographyApi(api: KtorZarinaGeographyApi): IZarinaGeographyApi
 
     @Binds
-    fun bindsGeographyRemoteSource(source: KtorGeographyRemoteSource): IGeographyRemoteSource
+    fun bindsGeographyRemoteSource(source: ZarinaGeographyRemoteSource): IGeographyRemoteSource
 
     @Binds
     fun bindsGeographyRepository(repository: GeographyRepository): IGeographyRepository
 
     @Binds
-    fun bindsContentApi(api: ContentApi): IContentApi
+    fun bindsZarinaContentApi(api: KtorZarinaContentApi): IZarinaContentApi
 
     @Binds
-    fun bindsContentRemoteSource(source: ContentRemoteSource): IContentRemoteSource
+    fun bindsContentRemoteSource(source: ZarinaContentRemoteSource): IContentRemoteSource
 
     @Binds
     fun bindsContentRepository(repository: ContentRepository): IContentRepository

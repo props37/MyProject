@@ -6,9 +6,9 @@ import io.ktor.client.request.get
 import ru.zarina.zarina.data.content.remote.api.dto.SplashDto
 import javax.inject.Inject
 
-class ContentApi @Inject constructor(
+class KtorZarinaContentApi @Inject constructor(
     private val client: HttpClient,
-) : IContentApi {
+) : IZarinaContentApi {
     override suspend fun getOnboardingSplash(): SplashDto {
         val response = client.get("/api/main/splash")
         return response.body()

@@ -7,9 +7,9 @@ import io.ktor.client.request.parameter
 import ru.zarina.zarina.data.geography.remote.api.dto.CityDto
 import javax.inject.Inject
 
-class GeographyApi @Inject constructor(
+class KtorZarinaGeographyApi @Inject constructor(
     private val client: HttpClient,
-) : IGeographyApi {
+) : IZarinaGeographyApi {
 
     override suspend fun getCity(latitude: Double, longitude: Double): CityDto {
         val response = client.get("/api/location/city") {
