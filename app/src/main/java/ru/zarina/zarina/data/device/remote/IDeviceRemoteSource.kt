@@ -1,3 +1,7 @@
 package ru.zarina.zarina.data.device.remote
 
-interface IDeviceRemoteSource
+import ru.zarina.zarina.domain.AuthorizationToken
+
+interface IDeviceRemoteSource {
+    suspend fun getToken(): AuthorizationToken.Device
+}
