@@ -1,3 +1,9 @@
 package ru.zarina.zarina.data.user.remote
 
-interface IUserRemoteSource
+import ru.zarina.zarina.domain.City
+
+interface IUserRemoteSource {
+
+    suspend fun setCity(city: City)
+
+}

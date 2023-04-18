@@ -1,3 +1,9 @@
 package ru.zarina.zarina.data.user
 
-interface IUserRepository
+import ru.zarina.zarina.domain.City
+
+interface IUserRepository {
+
+    suspend fun setCity(city: City)
+
+}

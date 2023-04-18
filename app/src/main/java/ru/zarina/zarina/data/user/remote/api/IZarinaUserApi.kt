@@ -1,3 +1,9 @@
 package ru.zarina.zarina.data.user.remote.api
 
-interface IZarinaUserApi
+import ru.zarina.zarina.data.user.remote.api.dto.SetCityBody
+
+interface IZarinaUserApi {
+
+    suspend fun setCity(body: SetCityBody)
+
+}
