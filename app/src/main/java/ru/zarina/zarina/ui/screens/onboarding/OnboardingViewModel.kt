@@ -91,6 +91,7 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun onSelectManuallyClick() {
+        // TODO cancel city detection job
         // TODO
     }
 
