@@ -41,6 +41,9 @@ class OnboardingViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
     private val _detectedCity = MutableStateFlow<City?>(null)
     val detectedCity = _detectedCity.asStateFlow()
+    val isConfirmDetectedCityButtonLoading = operationTracker
+        .isOperationOngoing(Operation.FINISH_ONBOARDING)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
     val isSnackbarVisible = messageQueue.isMessageVisible
     val snackbarText = messageQueue.message
@@ -93,17 +96,26 @@ class OnboardingViewModel @Inject constructor(
 
     fun onConfirmDetectedCityClick() {
         viewModelScope.launch {
-            interactor.finishOnboarding(detectedCity.value)
-                .onSuccess { sideEffect(SideEffect.ShowHome) }
-                .onFailure { /* TODO show error */ }
+            operationTracker.track(Operation.FINISH_ONBOARDING) {
+                interactor.finishOnboarding(detectedCity.value)
+                    .onSuccess { sideEffect(SideEffect.ShowHome) }
+                    .onFailure { throwable ->
+                        val message = when {
+                            throwable.isNetworkException() -> Text.Resource(R.string.network_error)
+                            else -> Text.Resource(R.string.cant_save_selected_city)
+                        }
+                        messageQueue.showMessage(message)
+                    }
+            }
         }
     }
 
     fun onCloseClick() {
         viewModelScope.launch {
-            interactor.finishOnboarding(null)
-                .onSuccess { sideEffect(SideEffect.ShowHome) }
-                .onFailure { /* TODO show error */ }
+            operationTracker.track(Operation.FINISH_ONBOARDING) {
+                interactor.finishOnboarding(null)
+                    .onSuccess { sideEffect(SideEffect.ShowHome) }
+            }
         }
     }
 
@@ -120,6 +132,6 @@ class OnboardingViewModel @Inject constructor(
         object RequestLocationPermission : SideEffect
     }
 
-    enum class Operation : OperationKey { DETECT_CITY }
+    enum class Operation : OperationKey { DETECT_CITY, FINISH_ONBOARDING }
 
 }
