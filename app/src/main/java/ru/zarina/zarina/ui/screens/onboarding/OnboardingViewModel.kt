@@ -92,9 +92,8 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun onConfirmDetectedCityClick() {
-        // TODO save detected city
         viewModelScope.launch {
-            interactor.finishOnboarding()
+            interactor.finishOnboarding(detectedCity.value)
                 .onSuccess { sideEffect(SideEffect.ShowHome) }
                 .onFailure { /* TODO show error */ }
         }
@@ -102,7 +101,7 @@ class OnboardingViewModel @Inject constructor(
 
     fun onCloseClick() {
         viewModelScope.launch {
-            interactor.finishOnboarding()
+            interactor.finishOnboarding(null)
                 .onSuccess { sideEffect(SideEffect.ShowHome) }
                 .onFailure { /* TODO show error */ }
         }
