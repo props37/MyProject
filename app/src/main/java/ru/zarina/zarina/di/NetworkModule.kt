@@ -9,9 +9,7 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.engine.cio.CIOEngineConfig
 import io.ktor.client.plugins.DefaultRequest
-import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
-import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -21,6 +19,8 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import ru.zarina.zarina.BuildConfig
 import ru.zarina.zarina.data.UserAgentHeaderProvider
+import ru.zarina.zarina.data.ktor.plugins.auth.ZarinaAuth
+import ru.zarina.zarina.data.ktor.plugins.auth.bearer
 import ru.zarina.zarina.domain.AuthorizationToken
 import ru.zarina.zarina.usecase.authorization.ClearDeviceAuthorizationTokenUseCase
 import ru.zarina.zarina.usecase.authorization.GetAuthorizationTokenUseCase
@@ -60,7 +60,7 @@ class NetworkModule {
         headerProvider: UserAgentHeaderProvider,
     ) = HttpClient(CIO) {
         baseConfig(json, headerProvider)
-        install(Auth) {
+        install(ZarinaAuth) {
             bearer {
                 loadTokens {
                     getAuthorizationToken().getOrNull()?.toBearerTokens()
