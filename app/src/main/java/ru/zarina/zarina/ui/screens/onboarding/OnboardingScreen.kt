@@ -2,6 +2,10 @@ package ru.zarina.zarina.ui.screens.onboarding
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
@@ -15,7 +19,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,15 +29,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -44,11 +51,16 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.request.ImageRequest
+import coil.size.Size
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.Url
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.components.StateSnackbar
 import ru.zarina.zarina.ui.common.components.StateSnackbarDefaults
@@ -60,10 +72,12 @@ import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.CityProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.compose.minInteractionSize
+import timber.log.Timber
 
 @Composable
 private fun OnboardingScreenContent(
     step: OnboardingViewModel.OnboardingStep,
+    splashUrl: Url?,
     isDetectButtonLoading: Boolean,
     onDetectClick: () -> Unit,
     onSelectManuallyClick: () -> Unit,
@@ -73,11 +87,23 @@ private fun OnboardingScreenContent(
     isSnackbarVisible: Boolean,
     snackbarText: Text,
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Banner(
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme.colors.screenBackground)
+    ) {
+        var isBannerLoaded by remember(splashUrl) { mutableStateOf(false) }
+        val splashBannerAlpha by animateFloatAsState(
+            targetValue = if (isBannerLoaded) 1f else 0f,
+            animationSpec = spring(stiffness = Spring.StiffnessLow),
+            label = "banner alpha"
+        )
+        SplashBanner(
+            url = splashUrl,
+            onBannerLoaded = { isBannerLoaded = true },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(IntrinsicSize.Min),
+                .graphicsLayer { alpha = splashBannerAlpha },
         )
         Column(
             modifier = Modifier
@@ -88,7 +114,13 @@ private fun OnboardingScreenContent(
                 onClick = onCloseClick,
                 modifier = Modifier.align(Alignment.End),
             )
+            val logoColor by animateColorAsState(
+                targetValue = if (isBannerLoaded) Color.White else Color.Black,
+                animationSpec = spring(stiffness = Spring.StiffnessLow),
+                label = "logo color"
+            )
             Logo(
+                color = logoColor,
                 modifier = Modifier.weight(1f),
             )
             BottomContent(
@@ -115,19 +147,56 @@ private fun OnboardingScreenContent(
 }
 
 @Composable
-fun Banner(
+fun SplashBanner(
+    url: Url?,
+    onBannerLoaded: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
         contentAlignment = Alignment.TopCenter,
         modifier = modifier
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.onboarding_default_banner),
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier.fillMaxWidth(),
-        )
+        var isUrlLoaded by remember(url) { mutableStateOf<Boolean?>(null) }
+        if (isUrlLoaded != false) {
+            val context = LocalContext.current
+            val model = remember(context, url) {
+                ImageRequest.Builder(context)
+                    .data(url?.value)
+                    .size(Size.ORIGINAL)
+                    .crossfade(true)
+                    .build()
+            }
+            AsyncImage(
+                model = model,
+                onState = { state ->
+                    Timber.v("$state")
+                    when (state) {
+                        is AsyncImagePainter.State.Success -> {
+                            onBannerLoaded()
+                            isUrlLoaded = true
+                        }
+
+                        is AsyncImagePainter.State.Error -> {
+                            onBannerLoaded()
+                            isUrlLoaded = false
+                        }
+
+                        else -> Unit
+                    }
+                },
+                alignment = Alignment.TopCenter,
+                contentScale = ContentScale.FillWidth,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize()
+            )
+        } else
+            Image(
+                painter = painterResource(id = R.drawable.onboarding_default_banner),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                alignment = Alignment.TopCenter,
+                modifier = Modifier.fillMaxWidth(),
+            )
         val gradientBrush = Brush.verticalGradient(
             0f to Color.Transparent,
             1f to Color.Black.copy(alpha = 0.5f),
@@ -138,7 +207,6 @@ fun Banner(
                 .background(gradientBrush)
         )
     }
-    // TODO load current banner from backend
 }
 
 @Composable
@@ -166,6 +234,7 @@ fun CloseButton(
 
 @Composable
 fun Logo(
+    color: Color,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -176,7 +245,7 @@ fun Logo(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
-            colorFilter = ColorFilter.tint(Color.White),
+            colorFilter = ColorFilter.tint(color),
             modifier = modifier.fillMaxWidth(0.65f)
         )
     }
@@ -347,6 +416,7 @@ fun OnboardingScreen(
     val viewModel = hiltViewModel<OnboardingViewModel>()
 
     val step by viewModel.step.collectAsStateWithLifecycle()
+    val splashUrl by viewModel.splashUrl.collectAsStateWithLifecycle()
     val isDetectButtonLoading by viewModel.isDetectButtonLoading.collectAsStateWithLifecycle()
     val isSnackbarVisible by viewModel.isSnackbarVisible.collectAsStateWithLifecycle()
     val detectedCity by viewModel.detectedCity.collectAsStateWithLifecycle()
@@ -360,6 +430,7 @@ fun OnboardingScreen(
 
     OnboardingScreenContent(
         step = step,
+        splashUrl = splashUrl,
         isDetectButtonLoading = isDetectButtonLoading,
         onDetectClick = viewModel::onDetectClick,
         onSelectManuallyClick = viewModel::onSelectManuallyClick,
@@ -403,6 +474,7 @@ fun OnboardingScreenContentPreview(
     ZarinaTheme {
         OnboardingScreenContent(
             step = OnboardingViewModel.OnboardingStep.CITY_SELECTION_TYPE,
+            splashUrl = null,
             isDetectButtonLoading = true,
             onDetectClick = {},
             onSelectManuallyClick = {},
@@ -424,6 +496,7 @@ fun OnboardingScreenDetectionResultContentPreview(
     ZarinaTheme {
         OnboardingScreenContent(
             step = OnboardingViewModel.OnboardingStep.DETECTION_RESULT,
+            splashUrl = null,
             isDetectButtonLoading = true,
             onDetectClick = {},
             onSelectManuallyClick = {},
