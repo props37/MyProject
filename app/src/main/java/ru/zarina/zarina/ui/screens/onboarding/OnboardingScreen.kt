@@ -84,6 +84,7 @@ private fun OnboardingScreenContent(
     onSelectManuallyClick: () -> Unit,
     onCloseClick: () -> Unit,
     detectedCity: City?,
+    isConfirmDetectedCityButtonLoading: Boolean,
     onConfirmDetectedCity: () -> Unit,
     isSnackbarVisible: Boolean,
     snackbarText: Text,
@@ -140,6 +141,7 @@ private fun OnboardingScreenContent(
                 isDetectButtonLoading = isDetectButtonLoading,
                 onDetectClick = onDetectClick,
                 onSelectManuallyClick = onSelectManuallyClick,
+                isConfirmDetectedCityButtonLoading = isConfirmDetectedCityButtonLoading,
                 detectedCity = detectedCity,
                 onConfirmDetectedCity = onConfirmDetectedCity,
             )
@@ -278,6 +280,7 @@ fun BottomContent(
     onDetectClick: () -> Unit,
     onSelectManuallyClick: () -> Unit,
     detectedCity: City?,
+    isConfirmDetectedCityButtonLoading: Boolean,
     onConfirmDetectedCity: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -297,6 +300,7 @@ fun BottomContent(
     val selectionResult = @Composable {
         SelectionResult(
             city = detectedCity,
+            isConfirmButtonLoading = isConfirmDetectedCityButtonLoading,
             onConfirmClick = onConfirmDetectedCity,
             onSelectManuallyClick = onSelectManuallyClick,
             modifier = contentModifier,
@@ -393,6 +397,7 @@ fun CitySelection(
 @Composable
 fun SelectionResult(
     city: City?,
+    isConfirmButtonLoading: Boolean,
     onConfirmClick: () -> Unit,
     onSelectManuallyClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -415,6 +420,7 @@ fun SelectionResult(
         ZarinaTextButton(
             text = stringResource(id = R.string.yes_correct),
             onClick = onConfirmClick,
+            isLoading = isConfirmButtonLoading,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth(),
@@ -441,8 +447,9 @@ fun OnboardingScreen(
     val step by viewModel.step.collectAsStateWithLifecycle()
     val splashState by viewModel.splashState.collectAsStateWithLifecycle()
     val isDetectButtonLoading by viewModel.isDetectButtonLoading.collectAsStateWithLifecycle()
-    val isSnackbarVisible by viewModel.isSnackbarVisible.collectAsStateWithLifecycle()
     val detectedCity by viewModel.detectedCity.collectAsStateWithLifecycle()
+    val isConfirmDetectedCityButtonLoading by viewModel.isConfirmDetectedCityButtonLoading.collectAsStateWithLifecycle()
+    val isSnackbarVisible by viewModel.isSnackbarVisible.collectAsStateWithLifecycle()
     val snackbarText by viewModel.snackbarText.collectAsStateWithLifecycle()
 
     OnboardingScreenBehavior(
@@ -459,6 +466,7 @@ fun OnboardingScreen(
         onSelectManuallyClick = viewModel::onSelectManuallyClick,
         onCloseClick = viewModel::onCloseClick,
         detectedCity = detectedCity,
+        isConfirmDetectedCityButtonLoading = isConfirmDetectedCityButtonLoading,
         onConfirmDetectedCity = viewModel::onConfirmDetectedCityClick,
         isSnackbarVisible = isSnackbarVisible,
         snackbarText = snackbarText,
@@ -503,6 +511,7 @@ fun OnboardingScreenContentPreview(
             onSelectManuallyClick = {},
             onCloseClick = {},
             detectedCity = city,
+            isConfirmDetectedCityButtonLoading = false,
             onConfirmDetectedCity = {},
             isSnackbarVisible = true,
             snackbarText = Text.Resource(R.string.cant_detect_city),
@@ -525,6 +534,7 @@ fun OnboardingScreenDetectionResultContentPreview(
             onSelectManuallyClick = {},
             onCloseClick = {},
             detectedCity = city,
+            isConfirmDetectedCityButtonLoading = false,
             onConfirmDetectedCity = {},
             isSnackbarVisible = true,
             snackbarText = Text.Resource(R.string.cant_detect_city),
