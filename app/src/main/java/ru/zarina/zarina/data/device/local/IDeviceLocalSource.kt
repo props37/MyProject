@@ -9,4 +9,8 @@ interface IDeviceLocalSource {
 
     suspend fun setToken(token: AuthorizationToken.Device?)
 
+    fun getIsOnboardingCompleted(): Flow<Boolean>
+
+    suspend fun setIsOnboardingCompleted(isOnboardingCompleted: Boolean)
+
 }

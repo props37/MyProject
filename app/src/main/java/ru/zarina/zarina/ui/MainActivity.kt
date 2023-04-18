@@ -12,7 +12,8 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { true }
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -20,7 +21,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             ZarinaTheme {
                 TransparentSystemBars()
-                ZarinaApp()
+                ZarinaApp(
+                    splashScreen = splashScreen,
+                )
             }
         }
     }
