@@ -23,7 +23,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -108,7 +110,7 @@ private fun OnboardingScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .systemBarsPadding(),
+                .statusBarsPadding(),
         ) {
             CloseButton(
                 onClick = onCloseClick,
@@ -129,7 +131,7 @@ private fun OnboardingScreenContent(
                 onDetectClick = onDetectClick,
                 onSelectManuallyClick = onSelectManuallyClick,
                 detectedCity = detectedCity,
-                onConfirmDetectedCity = onConfirmDetectedCity
+                onConfirmDetectedCity = onConfirmDetectedCity,
             )
         }
 
@@ -262,12 +264,16 @@ fun BottomContent(
     onConfirmDetectedCity: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val contentModifier = Modifier
+        .fillMaxWidth()
+        .background(color = UiKitTheme.colors.screenBackground)
+        .navigationBarsPadding()
     val citySelection = @Composable {
         CitySelection(
             isDetectButtonLoading = isDetectButtonLoading,
             onDetectClick = onDetectClick,
             onSelectManuallyClick = onSelectManuallyClick,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = contentModifier,
         )
     }
 
@@ -276,7 +282,7 @@ fun BottomContent(
             city = detectedCity,
             onConfirmClick = onConfirmDetectedCity,
             onSelectManuallyClick = onSelectManuallyClick,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = contentModifier,
         )
     }
 
@@ -327,7 +333,7 @@ fun CitySelection(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.background(UiKitTheme.colors.screenBackground)
+        modifier = modifier
     ) {
         Spacer(modifier = Modifier.height(32.dp))
         Text(
@@ -376,7 +382,7 @@ fun SelectionResult(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.background(UiKitTheme.colors.screenBackground)
+        modifier = modifier
     ) {
         Spacer(modifier = Modifier.height(32.dp))
         Spacer(modifier = Modifier.weight(1f))
