@@ -22,4 +22,10 @@ class DeviceRepository @Inject constructor(
     }
 
     override suspend fun setToken(token: AuthorizationToken.Device?) = local.setToken(token)
+
+    override fun getIsOnboardingCompleted() = local.getIsOnboardingCompleted()
+
+    override suspend fun setIsOnboardingCompleted(isOnboardingCompleted: Boolean) =
+        local.setIsOnboardingCompleted(isOnboardingCompleted)
+
 }
