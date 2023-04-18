@@ -10,6 +10,14 @@ import ru.zarina.zarina.data.content.remote.ContentRemoteSource
 import ru.zarina.zarina.data.content.remote.IContentRemoteSource
 import ru.zarina.zarina.data.content.remote.api.ContentApi
 import ru.zarina.zarina.data.content.remote.api.IContentApi
+import ru.zarina.zarina.data.device.DeviceRepository
+import ru.zarina.zarina.data.device.IDeviceRepository
+import ru.zarina.zarina.data.device.local.DeviceLocalSource
+import ru.zarina.zarina.data.device.local.IDeviceLocalSource
+import ru.zarina.zarina.data.device.remote.DeviceRemoteSource
+import ru.zarina.zarina.data.device.remote.IDeviceRemoteSource
+import ru.zarina.zarina.data.device.remote.api.DeviceApi
+import ru.zarina.zarina.data.device.remote.api.IDeviceApi
 import ru.zarina.zarina.data.geography.GeographyRepository
 import ru.zarina.zarina.data.geography.IGeographyRepository
 import ru.zarina.zarina.data.geography.remote.IGeographyRemoteSource
@@ -24,6 +32,18 @@ import ru.zarina.zarina.data.location.source.PlayServicesGeoLocationSource
 @Module
 @InstallIn(SingletonComponent::class)
 interface DataModule {
+
+    @Binds
+    fun bindsDeviceApi(api: DeviceApi): IDeviceApi
+
+    @Binds
+    fun bindsDeviceRemoteSource(source: DeviceRemoteSource): IDeviceRemoteSource
+
+    @Binds
+    fun bindsDeviceLocalSource(source: DeviceLocalSource): IDeviceLocalSource
+
+    @Binds
+    fun bindsDeviceRepository(repository: DeviceRepository): IDeviceRepository
 
     @Binds
     fun bindGeoLocationSource(source: PlayServicesGeoLocationSource): IGeoLocationSource
