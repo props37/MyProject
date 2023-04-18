@@ -62,7 +62,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.Url
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.components.StateSnackbar
 import ru.zarina.zarina.ui.common.components.StateSnackbarDefaults
@@ -79,7 +78,7 @@ import timber.log.Timber
 @Composable
 private fun OnboardingScreenContent(
     step: OnboardingViewModel.OnboardingStep,
-    splashUrl: Url?,
+    splashState: OnboardingViewModel.SplashState,
     isDetectButtonLoading: Boolean,
     onDetectClick: () -> Unit,
     onSelectManuallyClick: () -> Unit,
@@ -94,14 +93,14 @@ private fun OnboardingScreenContent(
             .fillMaxSize()
             .background(UiKitTheme.colors.screenBackground)
     ) {
-        var isBannerLoaded by remember(splashUrl) { mutableStateOf(false) }
+        var isBannerLoaded by remember(splashState) { mutableStateOf(false) }
         val splashBannerAlpha by animateFloatAsState(
             targetValue = if (isBannerLoaded) 1f else 0f,
             animationSpec = spring(stiffness = Spring.StiffnessLow),
             label = "banner alpha"
         )
         SplashBanner(
-            url = splashUrl,
+            splashState = splashState,
             onBannerLoaded = { isBannerLoaded = true },
             modifier = Modifier
                 .fillMaxWidth()
@@ -150,7 +149,7 @@ private fun OnboardingScreenContent(
 
 @Composable
 fun SplashBanner(
-    url: Url?,
+    splashState: OnboardingViewModel.SplashState,
     onBannerLoaded: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -158,10 +157,14 @@ fun SplashBanner(
         contentAlignment = Alignment.TopCenter,
         modifier = modifier
     ) {
-        var isUrlLoaded by remember(url) { mutableStateOf<Boolean?>(null) }
+        LaunchedEffect(splashState) {
+            if (splashState is OnboardingViewModel.SplashState.Error) onBannerLoaded()
+        }
+
+        var isUrlLoaded by remember(splashState) { mutableStateOf<Boolean?>(null) }
         when {
-            url == null -> Unit
-            isUrlLoaded == false -> Image(
+            splashState is OnboardingViewModel.SplashState.Loading -> Unit
+            splashState is OnboardingViewModel.SplashState.Error || isUrlLoaded == false -> Image(
                 painter = painterResource(id = R.drawable.onboarding_default_banner),
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,
@@ -169,11 +172,11 @@ fun SplashBanner(
                 modifier = Modifier.fillMaxWidth(),
             )
 
-            else -> {
+            splashState is OnboardingViewModel.SplashState.Success -> {
                 val context = LocalContext.current
-                val model = remember(context, url) {
+                val model = remember(context, splashState) {
                     ImageRequest.Builder(context)
-                        .data(url.value)
+                        .data(splashState.url.value)
                         .size(Size.ORIGINAL)
                         .build()
                 }
@@ -425,7 +428,7 @@ fun OnboardingScreen(
     val viewModel = hiltViewModel<OnboardingViewModel>()
 
     val step by viewModel.step.collectAsStateWithLifecycle()
-    val splashUrl by viewModel.splashUrl.collectAsStateWithLifecycle()
+    val splashState by viewModel.splashState.collectAsStateWithLifecycle()
     val isDetectButtonLoading by viewModel.isDetectButtonLoading.collectAsStateWithLifecycle()
     val isSnackbarVisible by viewModel.isSnackbarVisible.collectAsStateWithLifecycle()
     val detectedCity by viewModel.detectedCity.collectAsStateWithLifecycle()
@@ -439,7 +442,7 @@ fun OnboardingScreen(
 
     OnboardingScreenContent(
         step = step,
-        splashUrl = splashUrl,
+        splashState = splashState,
         isDetectButtonLoading = isDetectButtonLoading,
         onDetectClick = viewModel::onDetectClick,
         onSelectManuallyClick = viewModel::onSelectManuallyClick,
@@ -483,7 +486,7 @@ fun OnboardingScreenContentPreview(
     ZarinaTheme {
         OnboardingScreenContent(
             step = OnboardingViewModel.OnboardingStep.CITY_SELECTION_TYPE,
-            splashUrl = null,
+            splashState = OnboardingViewModel.SplashState.Error,
             isDetectButtonLoading = true,
             onDetectClick = {},
             onSelectManuallyClick = {},
@@ -505,7 +508,7 @@ fun OnboardingScreenDetectionResultContentPreview(
     ZarinaTheme {
         OnboardingScreenContent(
             step = OnboardingViewModel.OnboardingStep.DETECTION_RESULT,
-            splashUrl = null,
+            splashState = OnboardingViewModel.SplashState.Error,
             isDetectButtonLoading = true,
             onDetectClick = {},
             onSelectManuallyClick = {},

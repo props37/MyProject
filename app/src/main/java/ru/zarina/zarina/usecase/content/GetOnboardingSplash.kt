@@ -11,6 +11,7 @@ import javax.inject.Inject
 class GetOnboardingSplashUseCase @Inject constructor(
     @Dispatcher(ZarinaDispatcher.IO) dispatcher: CoroutineDispatcher,
     private val contentRepository: ContentRepository,
-) : UseCase<Unit, Url?>(dispatcher) {
-    override suspend fun execute(params: Unit): Url? = contentRepository.getOnboardingSplash()
+) : UseCase<Unit, Url>(dispatcher) {
+    override suspend fun execute(params: Unit): Url =
+        checkNotNull(contentRepository.getOnboardingSplash())
 }
