@@ -6,12 +6,16 @@ import ru.zarina.zarina.data.content.ContentRepository
 import ru.zarina.zarina.di.Dispatcher
 import ru.zarina.zarina.di.ZarinaDispatcher
 import ru.zarina.zarina.domain.Url
+import timber.log.Timber
 import javax.inject.Inject
 
 class GetOnboardingSplashUseCase @Inject constructor(
     @Dispatcher(ZarinaDispatcher.IO) dispatcher: CoroutineDispatcher,
     private val contentRepository: ContentRepository,
 ) : UseCase<Unit, Url>(dispatcher) {
-    override suspend fun execute(params: Unit): Url =
-        checkNotNull(contentRepository.getOnboardingSplash())
+    override suspend fun execute(params: Unit): Url {
+        val url = checkNotNull(contentRepository.getOnboardingSplash())
+        Timber.v("Onboarding splash url: $url")
+        return url
+    }
 }

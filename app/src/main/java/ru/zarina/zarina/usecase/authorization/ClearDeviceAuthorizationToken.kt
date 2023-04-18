@@ -5,6 +5,7 @@ import ru.zarina.zarina.base.clean.UseCase
 import ru.zarina.zarina.data.device.DeviceRepository
 import ru.zarina.zarina.di.Dispatcher
 import ru.zarina.zarina.di.ZarinaDispatcher
+import timber.log.Timber
 import javax.inject.Inject
 
 class ClearDeviceAuthorizationTokenUseCase @Inject constructor(
@@ -13,5 +14,6 @@ class ClearDeviceAuthorizationTokenUseCase @Inject constructor(
 ) : UseCase<Unit, Unit>(dispatcher) {
     override suspend fun execute(params: Unit) {
         deviceRepository.setToken(null)
+        Timber.v("Cleared device authorization token")
     }
 }
