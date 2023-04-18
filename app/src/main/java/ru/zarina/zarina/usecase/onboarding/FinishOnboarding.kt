@@ -17,7 +17,7 @@ class FinishOnboardingUseCase @Inject constructor(
     override suspend fun execute(params: Params) {
         val (city) = params
 
-        if (city != null) setCity(city)
+        if (city != null) setCity(city).getOrThrow()
         deviceRepository.setIsOnboardingCompleted(true)
     }
 

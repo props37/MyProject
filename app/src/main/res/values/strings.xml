@@ -12,5 +12,6 @@
     <string name="is_your_city">Ваш город %1$s?</string>
     <string name="yes_correct">Да, верно</string>
     <string name="no_change">Нет, изменить</string>
+    <string name="cant_save_selected_city">Не удалось сохранить выбранный город</string>
     <string name="skip">Пропустить</string>
 </resources>

@@ -95,7 +95,13 @@ class OnboardingViewModel @Inject constructor(
         viewModelScope.launch {
             interactor.finishOnboarding(detectedCity.value)
                 .onSuccess { sideEffect(SideEffect.ShowHome) }
-                .onFailure { /* TODO show error */ }
+                .onFailure { throwable ->
+                    val message = when {
+                        throwable.isNetworkException() -> Text.Resource(R.string.network_error)
+                        else -> Text.Resource(R.string.cant_save_selected_city)
+                    }
+                    messageQueue.showMessage(message)
+                }
         }
     }
 
@@ -103,7 +109,6 @@ class OnboardingViewModel @Inject constructor(
         viewModelScope.launch {
             interactor.finishOnboarding(null)
                 .onSuccess { sideEffect(SideEffect.ShowHome) }
-                .onFailure { /* TODO show error */ }
         }
     }
 
