@@ -22,3 +22,8 @@
 
 # ktor logging
 -dontwarn org.slf4j.impl.StaticLoggerBinder
+
+# okhttp via coil
+-dontwarn org.conscrypt.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.openjsse.**
