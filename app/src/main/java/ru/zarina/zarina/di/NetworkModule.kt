@@ -16,9 +16,11 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import ru.zarina.zarina.BuildConfig
+import ru.zarina.zarina.data.UserAgentHeaderProvider
 import ru.zarina.zarina.domain.AuthorizationToken
 import ru.zarina.zarina.usecase.authorization.ClearDeviceAuthorizationTokenUseCase
 import ru.zarina.zarina.usecase.authorization.GetAuthorizationTokenUseCase
@@ -43,8 +45,9 @@ class NetworkModule {
     @Provides
     fun providesHttpClient(
         json: Json,
+        headerProvider: UserAgentHeaderProvider,
     ) = HttpClient(CIO) {
-        baseConfig(json)
+        baseConfig(json, headerProvider)
     }
 
     @Authorization(Authorization.Type.TOKEN)
@@ -54,8 +57,9 @@ class NetworkModule {
         getAuthorizationToken: GetAuthorizationTokenUseCase,
         clearDeviceAuthorizationToken: ClearDeviceAuthorizationTokenUseCase,
         json: Json,
+        headerProvider: UserAgentHeaderProvider,
     ) = HttpClient(CIO) {
-        baseConfig(json)
+        baseConfig(json, headerProvider)
         install(Auth) {
             bearer {
                 loadTokens {
@@ -69,10 +73,18 @@ class NetworkModule {
         }
     }
 
-    private fun HttpClientConfig<CIOEngineConfig>.baseConfig(json: Json) {
+    private fun HttpClientConfig<CIOEngineConfig>.baseConfig(
+        json: Json,
+        headerProvider: UserAgentHeaderProvider,
+    ) {
         expectSuccess = true
         install(DefaultRequest) {
             url(BuildConfig.BACKEND_URL)
+            headers {
+                headerProvider.getHeaders().forEach { (key, value) ->
+                    append(key, value)
+                }
+            }
         }
         install(ContentNegotiation) {
             json(json)
