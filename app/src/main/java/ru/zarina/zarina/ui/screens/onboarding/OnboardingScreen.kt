@@ -99,31 +99,42 @@ private fun OnboardingScreenContent(
             animationSpec = spring(stiffness = Spring.StiffnessLow),
             label = "banner alpha"
         )
-        SplashBanner(
-            splashState = splashState,
-            onBannerLoaded = { isBannerLoaded = true },
-            modifier = Modifier
-                .fillMaxWidth()
-                .graphicsLayer { alpha = splashBannerAlpha },
-        )
+
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding(),
+            modifier = Modifier.fillMaxSize(),
         ) {
-            CloseButton(
-                onClick = onCloseClick,
-                modifier = Modifier.align(Alignment.End),
-            )
-            val logoColor by animateColorAsState(
-                targetValue = if (isBannerLoaded) Color.White else Color.Black,
-                animationSpec = spring(stiffness = Spring.StiffnessLow),
-                label = "logo color"
-            )
-            Logo(
-                color = logoColor,
-                modifier = Modifier.weight(1f),
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                SplashBanner(
+                    splashState = splashState,
+                    onBannerLoaded = { isBannerLoaded = true },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .graphicsLayer { alpha = splashBannerAlpha },
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                ) {
+                    CloseButton(
+                        onClick = onCloseClick,
+                        modifier = Modifier.align(Alignment.End),
+                    )
+                    val logoColor by animateColorAsState(
+                        targetValue = if (isBannerLoaded) Color.White else Color.Black,
+                        animationSpec = spring(stiffness = Spring.StiffnessLow),
+                        label = "logo color"
+                    )
+                    Logo(
+                        color = logoColor,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
             BottomContent(
                 step = step,
                 isDetectButtonLoading = isDetectButtonLoading,
@@ -154,7 +165,7 @@ fun SplashBanner(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        contentAlignment = Alignment.TopCenter,
+        contentAlignment = Alignment.Center,
         modifier = modifier
     ) {
         LaunchedEffect(splashState) {
@@ -167,8 +178,8 @@ fun SplashBanner(
             splashState is OnboardingViewModel.SplashState.Error || isUrlLoaded == false -> Image(
                 painter = painterResource(id = R.drawable.onboarding_default_banner),
                 contentDescription = null,
-                contentScale = ContentScale.FillWidth,
-                alignment = Alignment.TopCenter,
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -198,8 +209,8 @@ fun SplashBanner(
                             else -> Unit
                         }
                     },
-                    alignment = Alignment.TopCenter,
-                    contentScale = ContentScale.FillWidth,
+                    alignment = Alignment.Center,
+                    contentScale = ContentScale.Crop,
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize()
                 )
