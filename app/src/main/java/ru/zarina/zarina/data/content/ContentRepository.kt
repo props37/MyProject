@@ -8,4 +8,3 @@ class ContentRepository @Inject constructor(
 ) : IContentRepository {
     override suspend fun getOnboardingSplash() = remoteSource.getOnboardingSplash()
 }
-

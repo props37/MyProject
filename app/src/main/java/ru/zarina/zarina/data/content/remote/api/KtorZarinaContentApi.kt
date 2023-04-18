@@ -8,7 +8,7 @@ import ru.zarina.zarina.di.Authorization
 import javax.inject.Inject
 
 class KtorZarinaContentApi @Inject constructor(
-    @Authorization(Authorization.Type.NONE)
+    @Authorization(Authorization.Type.TOKEN)
     private val client: HttpClient,
 ) : IZarinaContentApi {
     override suspend fun getOnboardingSplash(): SplashDto {
