@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screens.onboarding
 
+import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.usecase.content.GetOnboardingSplashUseCase
 import ru.zarina.zarina.usecase.location.DetectCityUseCase
 import ru.zarina.zarina.usecase.onboarding.FinishOnboardingUseCase
@@ -13,5 +14,7 @@ class OnboardingInteractor @Inject constructor(
 ) {
     suspend fun getOnboardingSplash() = getOnboardingSplashUseCase()
     suspend fun detectCity() = detectCityUseCase()
-    suspend fun finishOnboarding() = finishOnboardingUseCase()
+    suspend fun finishOnboarding(selectedCity: City?) = finishOnboardingUseCase(
+        FinishOnboardingUseCase.Params(selectedCity)
+    )
 }
