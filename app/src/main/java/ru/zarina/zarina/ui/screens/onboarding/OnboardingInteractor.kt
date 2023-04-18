@@ -6,9 +6,9 @@ import ru.zarina.zarina.utils.clean.invoke
 import javax.inject.Inject
 
 class OnboardingInteractor @Inject constructor(
-    private val getOnboardingSpash: GetOnboardingSplashUseCase,
+    private val getOnboardingSplashUseCase: GetOnboardingSplashUseCase,
     private val detectCityUseCase: DetectCityUseCase,
 ) {
-    suspend fun getOnboardingSplash() = getOnboardingSpash()
+    suspend fun getOnboardingSplash() = getOnboardingSplashUseCase()
     suspend fun detectCity() = detectCityUseCase()
 }
