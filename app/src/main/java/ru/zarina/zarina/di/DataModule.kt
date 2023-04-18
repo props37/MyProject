@@ -28,6 +28,12 @@ import ru.zarina.zarina.data.location.GeoLocationRepository
 import ru.zarina.zarina.data.location.IGeoLocationRepository
 import ru.zarina.zarina.data.location.source.IGeoLocationSource
 import ru.zarina.zarina.data.location.source.PlayServicesGeoLocationSource
+import ru.zarina.zarina.data.user.IUserRepository
+import ru.zarina.zarina.data.user.UserRepository
+import ru.zarina.zarina.data.user.remote.IUserRemoteSource
+import ru.zarina.zarina.data.user.remote.ZarinaUserRemoteSource
+import ru.zarina.zarina.data.user.remote.api.IZarinaUserApi
+import ru.zarina.zarina.data.user.remote.api.KtorZarinaUserApi
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -68,5 +74,14 @@ interface DataModule {
 
     @Binds
     fun bindsContentRepository(repository: ContentRepository): IContentRepository
+
+    @Binds
+    fun bindsKtorZarinaUserApi(api: KtorZarinaUserApi): IZarinaUserApi
+
+    @Binds
+    fun bindsUserRemoteSource(source: ZarinaUserRemoteSource): IUserRemoteSource
+
+    @Binds
+    fun bindsUserRepository(repository: UserRepository): IUserRepository
 
 }
