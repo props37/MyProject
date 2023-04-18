@@ -120,10 +120,10 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
-    sealed interface SplashState {
-        object Loading : SplashState
-        class Success(val url: Url) : SplashState
-        object Error : SplashState
+    sealed class SplashState {
+        object Loading : SplashState()
+        data class Success(val url: Url) : SplashState()
+        object Error : SplashState()
     }
 
     enum class OnboardingStep { CITY_SELECTION_TYPE, DETECTION_RESULT }
