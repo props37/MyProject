@@ -4,17 +4,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class CitySelectionViewModel @Inject constructor(
     private val interactor: CitySelectionInteractor,
@@ -29,30 +34,32 @@ class CitySelectionViewModel @Inject constructor(
     val isRegionVisible = _isRegionVisible.asStateFlow()
 
     init {
-        fetchCities(null)
+        viewModelScope.launch {
+            _query
+                .debounce(QUERY_DEBOUNCE_DURATION)
+                .collectLatest { fetchCities(it) }
+        }
     }
 
     fun onQueryChange(query: String) {
         _query.value = query
-        fetchCities(query)
     }
 
-    private fun fetchCities(query: String?) {
-        // TODO cancel previous fetch
+    private suspend fun fetchCities(query: String?) {
         // TODO operation tracking
-        viewModelScope.launch {
-            interactor.getCities(query)
-                .onSuccess {
-                    withContext(Dispatchers.IO) {
-                        val isBaseList = query.isNullOrEmpty()
-                        withContext(NonCancellable) {
-                            _isRegionVisible.value = !isBaseList
-                            _cities.value = it.toCityListItems(priorityCitiesAtTop = isBaseList)
-                        }
+        interactor.getCities(query)
+            .onSuccess {
+                withContext(Dispatchers.IO) {
+                    val isBaseList = query.isNullOrEmpty()
+                    withContext(NonCancellable) {
+                        _isRegionVisible.value = !isBaseList
+                        _cities.value = it.toCityListItems(priorityCitiesAtTop = isBaseList)
                     }
                 }
-                .onFailure { /* TODO display some error */ }
-        }
+            }
+            .onFailure {
+                /* TODO display some error */
+            }
     }
 
     private fun List<City>.toCityListItems(
@@ -82,5 +89,9 @@ class CitySelectionViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect
+
+    companion object {
+        private val QUERY_DEBOUNCE_DURATION = 200.milliseconds
+    }
 
 }
