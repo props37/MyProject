@@ -52,9 +52,9 @@ class CitySelectionViewModel @Inject constructor(
         }
     }
 
-    sealed class CityListItem {
-        data class Header(val letter: String) : CityListItem()
-        data class Item(val city: City) : CityListItem()
+    sealed class CityListItem(val key: String, val contentType: String) {
+        data class Header(val letter: String) : CityListItem(letter, "header")
+        data class Item(val city: City) : CityListItem(city.id.id, "item")
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect

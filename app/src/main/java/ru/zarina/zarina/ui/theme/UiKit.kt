@@ -59,6 +59,11 @@ data class UiKitTypography(
         lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle
     ),
+    val listHeaderItem: TextStyle = TextStyle(
+        fontSize = 20.sp,
+        lineHeight = 26.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
 )
 
 val LocalUiKitTypography = staticCompositionLocalOf { UiKitTypography() }
