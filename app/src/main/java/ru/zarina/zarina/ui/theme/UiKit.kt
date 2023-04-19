@@ -30,6 +30,7 @@ data class UiKitColors(
     val secondaryButtonBorder: Color = Mineshaft,
     val snackbarBackground: Color = Color.White,
     val snackbarForeground: Color = Color.Black,
+    val listDivider: Color = Mercury,
 )
 
 

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,6 +43,13 @@ fun CitySelectionScreenContent(
                     key = item.key,
                     contentType = item.contentType,
                 ) {
+                    Divider(
+                        color = UiKitTheme.colors.listDivider,
+                        thickness = Dp.Hairline,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    )
                     CityHeader(
                         text = item.letter,
                         modifier = Modifier.fillMaxWidth(),
@@ -51,6 +60,13 @@ fun CitySelectionScreenContent(
                     key = item.key,
                     contentType = item.contentType,
                 ) {
+                    Divider(
+                        color = UiKitTheme.colors.listDivider,
+                        thickness = Dp.Hairline,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    )
                     CityItem(
                         city = item.city,
                         modifier = Modifier.fillMaxWidth(),
