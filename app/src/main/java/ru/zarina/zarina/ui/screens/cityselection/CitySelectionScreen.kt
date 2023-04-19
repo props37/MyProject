@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
@@ -52,6 +53,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.components.StateSnackbar
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -71,6 +74,8 @@ fun CitySelectionScreenContent(
     isRegionVisible: Boolean,
     error: ErrorState?,
     onRefreshClick: () -> Unit,
+    isSnackbarVisible: Boolean,
+    snackbarText: Text,
 ) {
     Column(
         modifier = Modifier
@@ -157,6 +162,14 @@ fun CitySelectionScreenContent(
                         }
                     }
             }
+            StateSnackbar(
+                isVisible = isSnackbarVisible,
+                text = snackbarText,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .systemBarsPadding()
+            )
         }
     }
 }
@@ -359,6 +372,8 @@ fun CitySelectionScreen(
     val cityItems by viewModel.cities.collectAsStateWithLifecycle()
     val isRegionVisible by viewModel.isRegionVisible.collectAsStateWithLifecycle()
     val error by viewModel.error.collectAsStateWithLifecycle()
+    val isSnackbarVisible by viewModel.isSnackbarVisible.collectAsStateWithLifecycle()
+    val snackbarText by viewModel.snackbarText.collectAsStateWithLifecycle()
 
     CitySelectionScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -374,6 +389,8 @@ fun CitySelectionScreen(
         isRegionVisible = isRegionVisible,
         error = error,
         onRefreshClick = viewModel::onRefreshClick,
+        isSnackbarVisible = isSnackbarVisible,
+        snackbarText = snackbarText,
     )
 }
 
@@ -409,6 +426,8 @@ fun CitySelectionScreenContentPreview(
             onCityClick = {},
             isRegionVisible = true,
             onRefreshClick = {},
+            isSnackbarVisible = false,
+            snackbarText = Text.Empty,
         )
     }
 }

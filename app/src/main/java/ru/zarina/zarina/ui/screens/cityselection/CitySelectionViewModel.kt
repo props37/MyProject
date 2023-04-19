@@ -17,9 +17,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
+import ru.zarina.zarina.ui.common.base.MessageQueue
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.utils.isNetworkException
@@ -34,6 +37,7 @@ class CitySelectionViewModel @Inject constructor(
     ISideEffectSource<CitySelectionViewModel.SideEffect> by SideEffectQueue() {
 
     private val operationTracker = OperationTracker()
+    private val messageQueue = MessageQueue(viewModelScope)
 
     val isSearchLoadingVisible = operationTracker.isOperationOngoing(Operation.CITY_LOAD)
         .debounce(LOADER_STATE_DEBOUNCE_DURATION)
@@ -46,6 +50,8 @@ class CitySelectionViewModel @Inject constructor(
     val isRegionVisible = _isRegionVisible.asStateFlow()
     private val _errorState = MutableStateFlow<ErrorState?>(null)
     val error = _errorState.asStateFlow()
+    val isSnackbarVisible = messageQueue.isMessageVisible
+    val snackbarText = messageQueue.message
 
     init {
         viewModelScope.launch {
@@ -64,7 +70,14 @@ class CitySelectionViewModel @Inject constructor(
         viewModelScope.launch {
             interactor.finishOnboarding(city)
                 .onSuccess { sideEffect(SideEffect.ShowHome) }
-                .onFailure { /* TODO show error */ }
+                .onFailure { throwable ->
+                    val message = when {
+                        throwable is CancellationException -> return@onFailure
+                        throwable.isNetworkException() -> Text.Resource(R.string.network_error)
+                        else -> Text.Resource(R.string.cant_save_selected_city)
+                    }
+                    messageQueue.showMessage(message)
+                }
         }
     }
 
