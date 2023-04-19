@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
@@ -35,7 +36,8 @@ fun CitySelectionScreenContent(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.screenBackground),
+            .background(UiKitTheme.colors.screenBackground)
+            .systemBarsPadding(),
     ) {
         cityItems.forEach { item ->
             when (item) {
@@ -87,7 +89,9 @@ private fun CityHeader(
         style = UiKitTheme.typography.listHeaderItem,
         color = UiKitTheme.colors.primaryContentColor,
         textAlign = TextAlign.Start,
-        modifier = modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 8.dp),
+        modifier = modifier
+            .background(UiKitTheme.colors.screenBackground)
+            .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 8.dp),
     )
 }
 
