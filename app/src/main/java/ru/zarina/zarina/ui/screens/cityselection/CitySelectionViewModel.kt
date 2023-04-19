@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -45,7 +46,9 @@ class CitySelectionViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _query.collectLatest { fetchCities(it) }
+            _query
+                .map { it.trim() }
+                .collectLatest { fetchCities(it) }
         }
     }
 
