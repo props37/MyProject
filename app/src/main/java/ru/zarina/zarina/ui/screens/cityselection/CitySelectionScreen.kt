@@ -1,11 +1,13 @@
 package ru.zarina.zarina.ui.screens.cityselection
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -235,6 +237,17 @@ private fun SearchBar(
                 textStyle = UiKitTheme.typography.input.copy(color = UiKitTheme.colors.primaryContentColor),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
+            )
+        }
+        AnimatedVisibility(
+            visible = query.isNotEmpty(),
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_close_24),
+                contentDescription = stringResource(R.string.clear),
+                modifier = Modifier
+                    .padding(start = 12.dp)
+                    .clickable(onClick = { onQueryChange("") }),
             )
         }
     }
