@@ -6,6 +6,7 @@ import ru.zarina.zarina.data.geography.IGeographyRepository
 import ru.zarina.zarina.di.Dispatcher
 import ru.zarina.zarina.di.ZarinaDispatcher
 import ru.zarina.zarina.domain.City
+import timber.log.Timber
 import javax.inject.Inject
 
 class GetCititesUseCase @Inject constructor(
@@ -14,9 +15,11 @@ class GetCititesUseCase @Inject constructor(
 ) : UseCase<GetCititesUseCase.Params, List<City>>(dispatcher) {
 
     override suspend fun execute(params: Params): List<City> {
-        val searchTerm = params.query?.trim()?.takeIf { it.isNotBlank() }
+        val query = params.query?.trim()?.takeIf { it.isNotBlank() }
 
-        return geographyRepository.getCities(searchTerm)
+        val cities = geographyRepository.getCities(query)
+        Timber.v("Found ${cities.size} cities with query \"$query\"")
+        return cities
     }
 
     data class Params(
