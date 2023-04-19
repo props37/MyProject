@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.zarina.zarina.domain.City
@@ -41,16 +42,26 @@ class CitySelectionViewModel @Inject constructor(
             interactor.getCities(query)
                 .onSuccess {
                     withContext(Dispatchers.IO) {
-                        _cities.value = it.toCityListItems()
+                        val priorityCitiesAtTop = query.isNullOrEmpty()
+                        _cities.value = it.toCityListItems(priorityCitiesAtTop)
                     }
                 }
                 .onFailure { /* TODO display some error */ }
         }
     }
 
-    private fun List<City>.toCityListItems(): List<CityListItem> = buildList {
+    private fun List<City>.toCityListItems(
+        priorityCitiesAtTop: Boolean,
+    ): List<CityListItem> = buildList {
         var previousStartingLetter: Char? = null
-        this@toCityListItems.sortedBy { it.name }.forEach { city ->
+        val (priorityCities, regularCities) = if (priorityCitiesAtTop)
+            this@toCityListItems.partition { it.priority != null }
+        else
+            emptyList<City>() to this@toCityListItems
+
+        addAll(priorityCities.sortedBy { it.priority }.map { CityListItem.Item(it) })
+
+        regularCities.sortedBy { it.name }.forEach { city ->
             if (city.name.isEmpty()) return@forEach
             if (city.name.first() != previousStartingLetter) {
                 previousStartingLetter = city.name.first()
