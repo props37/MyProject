@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
@@ -52,6 +53,7 @@ fun CitySelectionScreenContent(
     query: String,
     onQueryChange: (String) -> Unit,
     cityItems: List<CitySelectionViewModel.CityListItem>,
+    isRegionVisible: Boolean,
 ) {
     Column(
         modifier = Modifier
@@ -98,10 +100,16 @@ fun CitySelectionScreenContent(
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
                         )
-                        CityItem(
-                            city = item.city,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
+                        if (isRegionVisible)
+                            CityExtendedItem(
+                                city = item.city,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        else
+                            CitySimpleItem(
+                                city = item.city,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
                     }
                 }
             }
@@ -126,7 +134,7 @@ private fun CityHeader(
 }
 
 @Composable
-private fun CityItem(
+private fun CitySimpleItem(
     city: City,
     modifier: Modifier = Modifier,
 ) {
@@ -138,6 +146,29 @@ private fun CityItem(
         modifier = modifier.padding(16.dp),
     )
 }
+
+@Composable
+private fun CityExtendedItem(
+    city: City,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.padding(16.dp)) {
+        Text(
+            text = city.name,
+            style = UiKitTheme.typography.listRegularItem,
+            color = UiKitTheme.colors.primaryContentColor,
+            textAlign = TextAlign.Start,
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = city.region,
+            style = UiKitTheme.typography.listRegularItemSubtitle,
+            color = UiKitTheme.colors.listItemSubtitle,
+            textAlign = TextAlign.Start,
+        )
+    }
+}
+
 
 @Composable
 private fun SearchBar(
@@ -192,6 +223,7 @@ fun CitySelectionScreen() {
 
     val query by viewModel.query.collectAsStateWithLifecycle()
     val cityItems by viewModel.cities.collectAsStateWithLifecycle()
+    val isRegionVisible by viewModel.isRegionVisible.collectAsStateWithLifecycle()
 
     CitySelectionScreenBehavior(
         sideEffects = viewModel.sideEffects
@@ -200,7 +232,8 @@ fun CitySelectionScreen() {
     CitySelectionScreenContent(
         query = query,
         onQueryChange = viewModel::onQueryChange,
-        cityItems = cityItems
+        cityItems = cityItems,
+        isRegionVisible = isRegionVisible
     )
 }
 
@@ -230,6 +263,7 @@ fun CitySelectionScreenContentPreview(
             query = "",
             onQueryChange = {},
             cityItems = cityItems,
+            isRegionVisible = true,
         )
     }
 }

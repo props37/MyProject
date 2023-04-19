@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.zarina.zarina.domain.City
@@ -25,6 +25,8 @@ class CitySelectionViewModel @Inject constructor(
     val query: StateFlow<String> = _query.asStateFlow()
     private val _cities = MutableStateFlow<List<CityListItem>>(emptyList())
     val cities: StateFlow<List<CityListItem>> = _cities
+    private val _isRegionVisible = MutableStateFlow(true)
+    val isRegionVisible = _isRegionVisible.asStateFlow()
 
     init {
         fetchCities(null)
@@ -42,8 +44,11 @@ class CitySelectionViewModel @Inject constructor(
             interactor.getCities(query)
                 .onSuccess {
                     withContext(Dispatchers.IO) {
-                        val priorityCitiesAtTop = query.isNullOrEmpty()
-                        _cities.value = it.toCityListItems(priorityCitiesAtTop)
+                        val isBaseList = query.isNullOrEmpty()
+                        withContext(NonCancellable) {
+                            _isRegionVisible.value = !isBaseList
+                            _cities.value = it.toCityListItems(priorityCitiesAtTop = isBaseList)
+                        }
                     }
                 }
                 .onFailure { /* TODO display some error */ }

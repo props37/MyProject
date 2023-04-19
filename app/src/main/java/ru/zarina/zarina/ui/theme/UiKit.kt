@@ -32,6 +32,7 @@ data class UiKitColors(
     val snackbarForeground: Color = Color.Black,
     val hint: Color = RollingStone,
     val listDivider: Color = Mercury,
+    val listItemSubtitle: Color = RollingStone,
 )
 
 
@@ -77,8 +78,13 @@ data class UiKitTypography(
         fontFamily = Fonts.Families.Circle
     ),
     val listRegularItem: TextStyle = TextStyle(
-        fontSize = 17.sp,
+        fontSize = 16.sp,
         lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val listRegularItemSubtitle: TextStyle = TextStyle(
+        fontSize = 13.sp,
+        lineHeight = 16.sp,
         fontFamily = Fonts.Families.Circle
     ),
 )
