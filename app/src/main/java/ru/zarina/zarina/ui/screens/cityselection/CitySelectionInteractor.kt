@@ -1,11 +1,11 @@
 package ru.zarina.zarina.ui.screens.cityselection
 
-import ru.zarina.zarina.usecase.geography.GetCititesUseCase
+import ru.zarina.zarina.usecase.geography.GetCitiesUseCase
 import javax.inject.Inject
 
 class CitySelectionInteractor @Inject constructor(
-    private val getCitiesUseCase: GetCititesUseCase,
+    private val getCitiesUseCase: GetCitiesUseCase,
 ) {
     suspend fun getCities(query: String?) =
-        getCitiesUseCase(GetCititesUseCase.Params(query))
+        getCitiesUseCase(GetCitiesUseCase.Params(query))
 }

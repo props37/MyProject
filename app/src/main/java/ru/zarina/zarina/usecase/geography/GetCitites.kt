@@ -9,10 +9,10 @@ import ru.zarina.zarina.domain.City
 import timber.log.Timber
 import javax.inject.Inject
 
-class GetCititesUseCase @Inject constructor(
+class GetCitiesUseCase @Inject constructor(
     @Dispatcher(ZarinaDispatcher.IO) dispatcher: CoroutineDispatcher,
     private val geographyRepository: IGeographyRepository,
-) : UseCase<GetCititesUseCase.Params, List<City>>(dispatcher) {
+) : UseCase<GetCitiesUseCase.Params, List<City>>(dispatcher) {
 
     override suspend fun execute(params: Params): List<City> {
         val query = params.query?.trim()?.takeIf { it.isNotBlank() }
