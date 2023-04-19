@@ -56,6 +56,15 @@ class CitySelectionViewModel @Inject constructor(
         _query.value = query
     }
 
+    fun onCityClick(city: City) {
+        // TODO loader
+        viewModelScope.launch {
+            interactor.finishOnboarding(city)
+                .onSuccess { sideEffect(SideEffect.ShowHome) }
+                .onFailure { /* TODO show error */ }
+        }
+    }
+
     private suspend fun fetchCities(query: String?) {
         operationTracker.track(Operation.CITY_LOAD) {
             interactor.getCities(query)
@@ -101,7 +110,9 @@ class CitySelectionViewModel @Inject constructor(
         data class Item(val city: City) : CityListItem(city.id.id, "item")
     }
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        object ShowHome : SideEffect
+    }
 
     enum class Operation : OperationKey { CITY_LOAD }
 

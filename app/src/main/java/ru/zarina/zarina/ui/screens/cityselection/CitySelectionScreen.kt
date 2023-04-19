@@ -60,6 +60,7 @@ fun CitySelectionScreenContent(
     query: String,
     onQueryChange: (String) -> Unit,
     cityItems: List<CitySelectionViewModel.CityListItem>,
+    onCityClick: (City) -> Unit,
     isRegionVisible: Boolean,
 ) {
     Column(
@@ -108,15 +109,18 @@ fun CitySelectionScreenContent(
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
                         )
+                        val cityModifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(onClick = { onCityClick(item.city) })
                         if (isRegionVisible)
                             CityExtendedItem(
                                 city = item.city,
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = cityModifier,
                             )
                         else
                             CitySimpleItem(
                                 city = item.city,
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = cityModifier,
                             )
                     }
                 }
@@ -271,6 +275,7 @@ fun CitySelectionScreen() {
         query = query,
         onQueryChange = viewModel::onQueryChange,
         cityItems = cityItems,
+        onCityClick = viewModel::onCityClick,
         isRegionVisible = isRegionVisible
     )
 }
@@ -302,6 +307,7 @@ fun CitySelectionScreenContentPreview(
             query = "",
             onQueryChange = {},
             cityItems = cityItems,
+            onCityClick = {},
             isRegionVisible = true,
         )
     }
