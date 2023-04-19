@@ -1,6 +1,8 @@
 package ru.zarina.zarina.ui.screens.cityselection
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -17,10 +19,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -50,6 +54,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CitySelectionScreenContent(
+    isSearchLoadingVisible: Boolean,
     query: String,
     onQueryChange: (String) -> Unit,
     cityItems: List<CitySelectionViewModel.CityListItem>,
@@ -62,6 +67,7 @@ fun CitySelectionScreenContent(
             .statusBarsPadding(),
     ) {
         SearchBar(
+            isSearchLoadingVisible = isSearchLoadingVisible,
             query = query,
             onQueryChange = onQueryChange,
             modifier = Modifier.fillMaxWidth()
@@ -170,8 +176,10 @@ private fun CityExtendedItem(
 }
 
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun SearchBar(
+    isSearchLoadingVisible: Boolean,
     query: String,
     onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -182,10 +190,25 @@ private fun SearchBar(
             .background(UiKitTheme.colors.screenBackground)
             .padding(horizontal = 16.dp),
     ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_search_24),
-            contentDescription = null,
-        )
+        AnimatedContent(
+            targetState = isSearchLoadingVisible,
+            label = "search loader visibility"
+        ) { isLoadingVisible ->
+            if (isLoadingVisible)
+                CircularProgressIndicator(
+                    color = UiKitTheme.colors.primaryContentColor,
+                    strokeWidth = 2.dp,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(2.dp),
+                )
+            else
+                Icon(
+                    painter = painterResource(R.drawable.ic_search_24),
+                    contentDescription = null,
+                )
+        }
+
         Spacer(modifier = Modifier.width(12.dp))
         Box(
             modifier = Modifier
@@ -221,6 +244,7 @@ private fun SearchBar(
 fun CitySelectionScreen() {
     val viewModel = hiltViewModel<CitySelectionViewModel>()
 
+    val isSearchLoadingVisible by viewModel.isSearchLoadingVisible.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
     val cityItems by viewModel.cities.collectAsStateWithLifecycle()
     val isRegionVisible by viewModel.isRegionVisible.collectAsStateWithLifecycle()
@@ -230,6 +254,7 @@ fun CitySelectionScreen() {
     )
 
     CitySelectionScreenContent(
+        isSearchLoadingVisible = isSearchLoadingVisible,
         query = query,
         onQueryChange = viewModel::onQueryChange,
         cityItems = cityItems,
@@ -260,6 +285,7 @@ fun CitySelectionScreenContentPreview(
 ) {
     ZarinaTheme {
         CitySelectionScreenContent(
+            isSearchLoadingVisible = true,
             query = "",
             onQueryChange = {},
             cityItems = cityItems,

@@ -3,19 +3,24 @@ package ru.zarina.zarina.ui.screens.cityselection
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.base.operation.OperationKey
+import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -26,6 +31,11 @@ class CitySelectionViewModel @Inject constructor(
 ) : ViewModel(),
     ISideEffectSource<CitySelectionViewModel.SideEffect> by SideEffectQueue() {
 
+    private val operationTracker = OperationTracker()
+
+    val isSearchLoadingVisible = operationTracker.isOperationOngoing(Operation.CITY_LOAD)
+        .debounce(LOADER_STATE_DEBOUNCE_DURATION)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
     private val _query = MutableStateFlow("")
     val query: StateFlow<String> = _query.asStateFlow()
     private val _cities = MutableStateFlow<List<CityListItem>>(emptyList())
@@ -35,9 +45,7 @@ class CitySelectionViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _query
-                .debounce(QUERY_DEBOUNCE_DURATION)
-                .collectLatest { fetchCities(it) }
+            _query.collectLatest { fetchCities(it) }
         }
     }
 
@@ -46,20 +54,22 @@ class CitySelectionViewModel @Inject constructor(
     }
 
     private suspend fun fetchCities(query: String?) {
-        // TODO operation tracking
-        interactor.getCities(query)
-            .onSuccess {
-                withContext(Dispatchers.IO) {
-                    val isBaseList = query.isNullOrEmpty()
-                    withContext(NonCancellable) {
-                        _isRegionVisible.value = !isBaseList
-                        _cities.value = it.toCityListItems(priorityCitiesAtTop = isBaseList)
+        operationTracker.track(Operation.CITY_LOAD) {
+            interactor.getCities(query)
+                .onSuccess {
+                    withContext(Dispatchers.IO) {
+                        val isBaseList = query.isNullOrEmpty()
+                        withContext(NonCancellable) {
+                            _isRegionVisible.value = !isBaseList
+                            _cities.value = it.toCityListItems(priorityCitiesAtTop = isBaseList)
+                        }
                     }
                 }
-            }
-            .onFailure {
-                /* TODO display some error */
-            }
+                .onFailure {
+                    if (it is CancellationException) return@onFailure
+                    /* TODO display some error */
+                }
+        }
     }
 
     private fun List<City>.toCityListItems(
@@ -90,8 +100,10 @@ class CitySelectionViewModel @Inject constructor(
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect
 
+    enum class Operation : OperationKey { CITY_LOAD }
+
     companion object {
-        private val QUERY_DEBOUNCE_DURATION = 200.milliseconds
+        private val LOADER_STATE_DEBOUNCE_DURATION = 250.milliseconds
     }
 
 }
