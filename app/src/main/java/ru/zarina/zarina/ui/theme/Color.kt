@@ -12,3 +12,4 @@ val Pink40 = Color(0xFF7D5260)
 
 val Mercury = Color(0xFFE7E5E5)
 val Mineshaft = Color(0xFF373737)
+val RollingStone = Color(0xFF727577)

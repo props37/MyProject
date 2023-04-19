@@ -14,4 +14,5 @@
     <string name="no_change">Нет, изменить</string>
     <string name="cant_save_selected_city">Не удалось сохранить выбранный город</string>
     <string name="skip">Пропустить</string>
+    <string name="city_search">Поиск по городам</string>
 </resources>

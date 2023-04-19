@@ -30,6 +30,7 @@ data class UiKitColors(
     val secondaryButtonBorder: Color = Mineshaft,
     val snackbarBackground: Color = Color.White,
     val snackbarForeground: Color = Color.Black,
+    val hint: Color = RollingStone,
     val listDivider: Color = Mercury,
 )
 
@@ -57,6 +58,16 @@ data class UiKitTypography(
     ),
     val onboardingBody: TextStyle = TextStyle(
         fontSize = 17.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val input: TextStyle = TextStyle(
+        fontSize = 15.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val hint: TextStyle = TextStyle(
+        fontSize = 15.sp,
         lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle
     ),

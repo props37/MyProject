@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.zarina.zarina.domain.City
@@ -19,11 +20,18 @@ class CitySelectionViewModel @Inject constructor(
 ) : ViewModel(),
     ISideEffectSource<CitySelectionViewModel.SideEffect> by SideEffectQueue() {
 
+    private val _query = MutableStateFlow("")
+    val query: StateFlow<String> = _query.asStateFlow()
     private val _cities = MutableStateFlow<List<CityListItem>>(emptyList())
     val cities: StateFlow<List<CityListItem>> = _cities
 
     init {
         fetchCities(null)
+    }
+
+    fun onQueryChange(query: String) {
+        _query.value = query
+        fetchCities(query)
     }
 
     private fun fetchCities(query: String?) {
