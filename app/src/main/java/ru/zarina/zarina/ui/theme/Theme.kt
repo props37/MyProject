@@ -1,6 +1,8 @@
 package ru.zarina.zarina.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -31,14 +33,26 @@ fun ZarinaTheme(
     val uiKitColors = UiKitColors()
     val uiKitTypography = UiKitTypography()
 
+
+
     CompositionLocalProvider(
         LocalUiKitColors provides uiKitColors,
-        LocalUiKitTypography provides uiKitTypography
+        LocalUiKitTypography provides uiKitTypography,
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = Typography,
-            content = content
+            content = {
+                val textSelectionColors = TextSelectionColors(
+                    handleColor = uiKitColors.primaryContentColor,
+                    backgroundColor = uiKitColors.primaryContentColor.copy(alpha = 0.2f),
+                )
+                CompositionLocalProvider(
+                    LocalTextSelectionColors provides textSelectionColors,
+                ) {
+                    content()
+                }
+            }
         )
     }
 }
