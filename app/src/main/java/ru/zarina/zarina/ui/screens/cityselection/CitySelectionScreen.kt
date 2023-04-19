@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -59,6 +61,7 @@ fun CitySelectionScreenContent(
     isSearchLoadingVisible: Boolean,
     query: String,
     onQueryChange: (String) -> Unit,
+    isCityNotFoundVisible: Boolean,
     cityItems: List<CitySelectionViewModel.CityListItem>,
     onCityClick: (City) -> Unit,
     isRegionVisible: Boolean,
@@ -75,53 +78,75 @@ fun CitySelectionScreenContent(
             onQueryChange = onQueryChange,
             modifier = Modifier.fillMaxWidth()
         )
-        LazyColumn(
-            contentPadding = WindowInsets.ime.add(WindowInsets.navigationBars).asPaddingValues(),
-            modifier = Modifier.weight(1f),
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         ) {
-            cityItems.forEach { item ->
-                when (item) {
-                    is CitySelectionViewModel.CityListItem.Header -> stickyHeader(
-                        key = item.key,
-                        contentType = item.contentType,
-                    ) {
-                        Divider(
-                            color = UiKitTheme.colors.listDivider,
-                            thickness = Dp.Hairline,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                        )
-                        CityHeader(
-                            text = item.letter,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                    }
+            this@Column.AnimatedVisibility(
+                visible = isCityNotFoundVisible,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.align(Alignment.Center)
+            ) {
+                Text(
+                    text = stringResource(R.string.city_not_found),
+                    textAlign = TextAlign.Center,
+                    style = UiKitTheme.typography.onboardingBody,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .imePadding()
+                )
+            }
+            LazyColumn(
+                contentPadding = WindowInsets.ime.add(WindowInsets.navigationBars)
+                    .asPaddingValues(),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                cityItems.forEach { item ->
+                    when (item) {
+                        is CitySelectionViewModel.CityListItem.Header -> stickyHeader(
+                            key = item.key,
+                            contentType = item.contentType,
+                        ) {
+                            Divider(
+                                color = UiKitTheme.colors.listDivider,
+                                thickness = Dp.Hairline,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                            )
+                            CityHeader(
+                                text = item.letter,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        }
 
-                    is CitySelectionViewModel.CityListItem.Item -> item(
-                        key = item.key,
-                        contentType = item.contentType,
-                    ) {
-                        Divider(
-                            color = UiKitTheme.colors.listDivider,
-                            thickness = Dp.Hairline,
-                            modifier = Modifier
+                        is CitySelectionViewModel.CityListItem.Item -> item(
+                            key = item.key,
+                            contentType = item.contentType,
+                        ) {
+                            Divider(
+                                color = UiKitTheme.colors.listDivider,
+                                thickness = Dp.Hairline,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                            )
+                            val cityModifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                        )
-                        val cityModifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(onClick = { onCityClick(item.city) })
-                        if (isRegionVisible)
-                            CityExtendedItem(
-                                city = item.city,
-                                modifier = cityModifier,
-                            )
-                        else
-                            CitySimpleItem(
-                                city = item.city,
-                                modifier = cityModifier,
-                            )
+                                .clickable(onClick = { onCityClick(item.city) })
+                            if (isRegionVisible)
+                                CityExtendedItem(
+                                    city = item.city,
+                                    modifier = cityModifier,
+                                )
+                            else
+                                CitySimpleItem(
+                                    city = item.city,
+                                    modifier = cityModifier,
+                                )
+                        }
                     }
                 }
             }
@@ -265,6 +290,7 @@ fun CitySelectionScreen(
 
     val isSearchLoadingVisible by viewModel.isSearchLoadingVisible.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
+    val isCityNotFoundVisible by viewModel.isCityNotFoundVisible.collectAsStateWithLifecycle()
     val cityItems by viewModel.cities.collectAsStateWithLifecycle()
     val isRegionVisible by viewModel.isRegionVisible.collectAsStateWithLifecycle()
 
@@ -277,6 +303,7 @@ fun CitySelectionScreen(
         isSearchLoadingVisible = isSearchLoadingVisible,
         query = query,
         onQueryChange = viewModel::onQueryChange,
+        isCityNotFoundVisible = isCityNotFoundVisible,
         cityItems = cityItems,
         onCityClick = viewModel::onCityClick,
         isRegionVisible = isRegionVisible
@@ -310,6 +337,7 @@ fun CitySelectionScreenContentPreview(
             isSearchLoadingVisible = true,
             query = "",
             onQueryChange = {},
+            isCityNotFoundVisible = false,
             cityItems = cityItems,
             onCityClick = {},
             isRegionVisible = true,

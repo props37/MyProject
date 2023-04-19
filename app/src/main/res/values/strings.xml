@@ -16,4 +16,5 @@
     <string name="skip">Пропустить</string>
     <string name="city_search">Поиск по городам</string>
     <string name="clear">Очистить</string>
+    <string name="city_not_found">Город с таким названием не найден</string>
 </resources>

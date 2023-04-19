@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -43,6 +44,9 @@ class CitySelectionViewModel @Inject constructor(
     val cities: StateFlow<List<CityListItem>> = _cities
     private val _isRegionVisible = MutableStateFlow(true)
     val isRegionVisible = _isRegionVisible.asStateFlow()
+    val isCityNotFoundVisible = combine(_query, _cities) { query, cities ->
+        query.isNotBlank() && cities.isEmpty()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
     init {
         viewModelScope.launch {
