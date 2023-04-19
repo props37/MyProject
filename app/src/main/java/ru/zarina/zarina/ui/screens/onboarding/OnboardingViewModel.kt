@@ -92,7 +92,7 @@ class OnboardingViewModel @Inject constructor(
 
     fun onSelectManuallyClick() {
         // TODO cancel city detection job
-        // TODO
+        sideEffect(SideEffect.ShowCitySelection)
     }
 
     fun onConfirmDetectedCityClick() {
@@ -130,6 +130,7 @@ class OnboardingViewModel @Inject constructor(
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object ShowHome : SideEffect
+        object ShowCitySelection : SideEffect
         object RequestLocationPermission : SideEffect
     }
 

@@ -441,6 +441,7 @@ fun SelectionResult(
 @Composable
 fun OnboardingScreen(
     showHome: () -> Unit,
+    showCitySelection: () -> Unit,
 ) {
     val viewModel = hiltViewModel<OnboardingViewModel>()
 
@@ -455,7 +456,8 @@ fun OnboardingScreen(
     OnboardingScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showHome = showHome,
-        onLocationPermissionResult = viewModel::onLocationPermissionResult,
+        showCitySelection = showCitySelection,
+        onLocationPermissionResult = viewModel::onLocationPermissionResult
     )
 
     OnboardingScreenContent(
@@ -478,16 +480,18 @@ fun OnboardingScreen(
 fun OnboardingScreenBehavior(
     sideEffects: Flow<OnboardingViewModel.SideEffect>,
     showHome: () -> Unit,
+    showCitySelection: () -> Unit,
     onLocationPermissionResult: (isGranted: Boolean) -> Unit,
 ) {
     val locationPermissionState = rememberPermissionState(
         permission = android.Manifest.permission.ACCESS_COARSE_LOCATION,
         onPermissionResult = onLocationPermissionResult
     )
-    LaunchedEffect(locationPermissionState, sideEffects, showHome) {
+    LaunchedEffect(locationPermissionState, sideEffects, showHome, showCitySelection) {
         sideEffects.collect { effect ->
             when (effect) {
                 OnboardingViewModel.SideEffect.ShowHome -> showHome()
+                OnboardingViewModel.SideEffect.ShowCitySelection -> showCitySelection()
                 OnboardingViewModel.SideEffect.RequestLocationPermission -> locationPermissionState.launchPermissionRequest()
             }
         }

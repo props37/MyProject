@@ -24,6 +24,9 @@ fun ZarinaNavigation(
             OnboardingScreen(
                 showHome = {
                     navController.navigate(Destinations.HOME.route) { popUpTo(0) }
+                },
+                showCitySelection = {
+                    navController.navigate(Destinations.CITY_SELECTION.route)
                 }
             )
         }
