@@ -42,11 +42,11 @@ class CitySelectionViewModel @Inject constructor(
 
     private fun List<City>.toCityListItems(): List<CityListItem> = buildList {
         var previousStartingLetter: Char? = null
-        this@toCityListItems.forEach { city ->
+        this@toCityListItems.sortedBy { it.name }.forEach { city ->
             if (city.name.isEmpty()) return@forEach
             if (city.name.first() != previousStartingLetter) {
-                add(CityListItem.Header(previousStartingLetter.toString()))
                 previousStartingLetter = city.name.first()
+                add(CityListItem.Header(previousStartingLetter.toString()))
             }
             add(CityListItem.Item(city))
         }
