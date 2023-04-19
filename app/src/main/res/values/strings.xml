@@ -17,4 +17,9 @@
     <string name="city_search">Поиск по городам</string>
     <string name="clear">Очистить</string>
     <string name="city_not_found">Город с таким названием не найден</string>
+    <string name="something_went_wrong">Что-то пошло не так</string>
+    <string name="try_again_later">Попробуйте повторить позднее</string>
+    <string name="loading_error">Ошибка загрузки</string>
+    <string name="check_connection_and_try_again_later">Проверьте соединение с интернетом и попробуйте позже</string>
+    <string name="refresh">Обновить</string>
 </resources>

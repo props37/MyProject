@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -23,6 +22,7 @@ import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
+import ru.zarina.zarina.utils.isNetworkException
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -44,9 +44,8 @@ class CitySelectionViewModel @Inject constructor(
     val cities: StateFlow<List<CityListItem>> = _cities
     private val _isRegionVisible = MutableStateFlow(true)
     val isRegionVisible = _isRegionVisible.asStateFlow()
-    val isCityNotFoundVisible = combine(_query, _cities) { query, cities ->
-        query.isNotBlank() && cities.isEmpty()
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+    private val _errorState = MutableStateFlow<ErrorState?>(null)
+    val error = _errorState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -69,6 +68,12 @@ class CitySelectionViewModel @Inject constructor(
         }
     }
 
+    fun onRefreshClick() {
+        viewModelScope.launch {
+            fetchCities(_query.value)
+        }
+    }
+
     private suspend fun fetchCities(query: String?) {
         operationTracker.track(Operation.CITY_LOAD) {
             interactor.getCities(query)
@@ -76,14 +81,18 @@ class CitySelectionViewModel @Inject constructor(
                     withContext(Dispatchers.IO) {
                         val isBaseList = query.isNullOrEmpty()
                         withContext(NonCancellable) {
+                            _errorState.value = if (it.isEmpty()) ErrorState.NO_RESULTS else null
                             _isRegionVisible.value = !isBaseList
                             _cities.value = it.toCityListItems(priorityCitiesAtTop = isBaseList)
                         }
                     }
                 }
-                .onFailure {
-                    if (it is CancellationException) return@onFailure
-                    /* TODO display some error */
+                .onFailure { throwable ->
+                    when {
+                        throwable is CancellationException -> return@onFailure
+                        throwable.isNetworkException() -> _errorState.value = ErrorState.NETWORK
+                        else -> _errorState.value = ErrorState.GENERIC
+                    }
                 }
         }
     }
@@ -119,6 +128,8 @@ class CitySelectionViewModel @Inject constructor(
     }
 
     enum class Operation : OperationKey { CITY_LOAD }
+
+    enum class ErrorState { NO_RESULTS, NETWORK, GENERIC }
 
     companion object {
         private val LOADER_STATE_DEBOUNCE_DURATION = 250.milliseconds

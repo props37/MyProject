@@ -87,6 +87,17 @@ data class UiKitTypography(
         lineHeight = 16.sp,
         fontFamily = Fonts.Families.Circle
     ),
+    val errorPlaceholderTitle: TextStyle = TextStyle(
+        fontSize = 17.sp,
+        lineHeight = 20.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val errorPlaceholderBody: TextStyle = TextStyle(
+        fontSize = 15.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
 )
 
 val LocalUiKitTypography = staticCompositionLocalOf { UiKitTypography() }
