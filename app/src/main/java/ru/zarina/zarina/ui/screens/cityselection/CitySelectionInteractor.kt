@@ -6,6 +6,6 @@ import javax.inject.Inject
 class CitySelectionInteractor @Inject constructor(
     private val getCitiesUseCase: GetCititesUseCase,
 ) {
-    suspend fun getCities(searchTerm: String?) =
-        getCitiesUseCase(GetCititesUseCase.Params(searchTerm))
+    suspend fun getCities(query: String?) =
+        getCitiesUseCase(GetCititesUseCase.Params(query))
 }

@@ -24,11 +24,11 @@ class CitySelectionViewModel @Inject constructor(
         fetchCities(null)
     }
 
-    private fun fetchCities(searchTerm: String?) {
+    private fun fetchCities(query: String?) {
         // TODO cancel previous fetch
         // TODO operation tracking
         viewModelScope.launch {
-            interactor.getCities(searchTerm)
+            interactor.getCities(query)
                 .onSuccess { _cities.value = it }
                 .onFailure { /* TODO display some error */ }
         }

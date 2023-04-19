@@ -14,13 +14,13 @@ class GetCititesUseCase @Inject constructor(
 ) : UseCase<GetCititesUseCase.Params, List<City>>(dispatcher) {
 
     override suspend fun execute(params: Params): List<City> {
-        val searchTerm = params.searchTerm?.trim()?.takeIf { it.isNotBlank() }
+        val searchTerm = params.query?.trim()?.takeIf { it.isNotBlank() }
 
         return geographyRepository.getCities(searchTerm)
     }
 
     data class Params(
-        val searchTerm: String?,
+        val query: String?,
     )
 
 }
