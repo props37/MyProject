@@ -64,6 +64,11 @@ data class UiKitTypography(
         lineHeight = 26.sp,
         fontFamily = Fonts.Families.Circle
     ),
+    val listRegularItem: TextStyle = TextStyle(
+        fontSize = 17.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
 )
 
 val LocalUiKitTypography = staticCompositionLocalOf { UiKitTypography() }

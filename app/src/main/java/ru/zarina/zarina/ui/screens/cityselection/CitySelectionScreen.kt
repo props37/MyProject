@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.ui.CityListItemProvider
@@ -46,7 +47,15 @@ fun CitySelectionScreenContent(
                     )
                 }
 
-                is CitySelectionViewModel.CityListItem.Item -> {}
+                is CitySelectionViewModel.CityListItem.Item -> item(
+                    key = item.key,
+                    contentType = item.contentType,
+                ) {
+                    CityItem(
+                        city = item.city,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
             }
         }
     }
@@ -63,6 +72,20 @@ private fun CityHeader(
         color = UiKitTheme.colors.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 8.dp),
+    )
+}
+
+@Composable
+private fun CityItem(
+    city: City,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = city.name,
+        style = UiKitTheme.typography.listRegularItem,
+        color = UiKitTheme.colors.primaryContentColor,
+        textAlign = TextAlign.Start,
+        modifier = modifier.padding(16.dp),
     )
 }
 
