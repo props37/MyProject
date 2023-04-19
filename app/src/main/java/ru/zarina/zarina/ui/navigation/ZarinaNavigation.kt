@@ -30,6 +30,12 @@ fun ZarinaNavigation(
                 }
             )
         }
-        composableDestination(Destinations.CITY_SELECTION) { CitySelectionScreen() }
+        composableDestination(Destinations.CITY_SELECTION) {
+            CitySelectionScreen(
+                showHome = {
+                    navController.navigate(Destinations.HOME.route) { popUpTo(0) }
+                }
+            )
+        }
     }
 }

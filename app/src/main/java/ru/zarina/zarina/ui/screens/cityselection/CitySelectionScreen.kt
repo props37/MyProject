@@ -258,7 +258,9 @@ private fun SearchBar(
 }
 
 @Composable
-fun CitySelectionScreen() {
+fun CitySelectionScreen(
+    showHome: () -> Unit,
+) {
     val viewModel = hiltViewModel<CitySelectionViewModel>()
 
     val isSearchLoadingVisible by viewModel.isSearchLoadingVisible.collectAsStateWithLifecycle()
@@ -267,7 +269,8 @@ fun CitySelectionScreen() {
     val isRegionVisible by viewModel.isRegionVisible.collectAsStateWithLifecycle()
 
     CitySelectionScreenBehavior(
-        sideEffects = viewModel.sideEffects
+        sideEffects = viewModel.sideEffects,
+        showHome = showHome,
     )
 
     CitySelectionScreenContent(
@@ -283,11 +286,12 @@ fun CitySelectionScreen() {
 @Composable
 fun CitySelectionScreenBehavior(
     sideEffects: Flow<CitySelectionViewModel.SideEffect>,
+    showHome: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                else -> TODO()
+                CitySelectionViewModel.SideEffect.ShowHome -> showHome()
             }
         }
     }
