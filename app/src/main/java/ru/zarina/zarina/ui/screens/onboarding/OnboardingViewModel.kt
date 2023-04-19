@@ -3,6 +3,8 @@ package ru.zarina.zarina.ui.screens.onboarding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,6 +33,8 @@ class OnboardingViewModel @Inject constructor(
 
     private val operationTracker = OperationTracker()
     private val messageQueue = MessageQueue(viewModelScope)
+
+    private var cityDetectionJob: Job? = null
 
     private val _step = MutableStateFlow(OnboardingStep.CITY_SELECTION_TYPE)
     val step = _step.asStateFlow()
@@ -67,7 +71,7 @@ class OnboardingViewModel @Inject constructor(
     fun onLocationPermissionResult(isGranted: Boolean) {
         Timber.v("Location permission is granted: $isGranted")
         if (isGranted) {
-            viewModelScope.launch {
+            cityDetectionJob = viewModelScope.launch {
                 operationTracker.track(Operation.DETECT_CITY) {
                     interactor.detectCity()
                         .onSuccess {
@@ -75,6 +79,7 @@ class OnboardingViewModel @Inject constructor(
                             _step.value = OnboardingStep.DETECTION_RESULT
                         }
                         .onFailure { throwable ->
+                            if (throwable is CancellationException) return@onFailure
                             val message = when {
                                 throwable.isNetworkException() -> Text.Resource(R.string.network_error)
                                 throwable is MissingPermissionException -> Text.Resource(R.string.cant_detect_city_without_permission)
@@ -91,7 +96,7 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun onSelectManuallyClick() {
-        // TODO cancel city detection job
+        cityDetectionJob?.cancel()
         sideEffect(SideEffect.ShowCitySelection)
     }
 
