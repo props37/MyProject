@@ -13,4 +13,8 @@ class ZarinaGeographyRemoteSource @Inject constructor(
         return api.getCity(location.latitude, location.longitude).toDomain()
     }
 
+    override suspend fun getCities(name: String?): List<City> {
+        return api.getCities(name).mapNotNull { it.toDomain() }
+    }
+
 }

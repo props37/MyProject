@@ -7,5 +7,9 @@ import javax.inject.Inject
 class GeographyRepository @Inject constructor(
     private val remoteSource: IGeographyRemoteSource,
 ) : IGeographyRepository {
+
     override suspend fun getCity(location: GeoLocation) = remoteSource.getCity(location)
+
+    override suspend fun getCities(name: String?) = remoteSource.getCities(name)
+
 }
