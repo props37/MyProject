@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,6 +30,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,6 +50,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.components.ScreenToolbar
 import ru.zarina.zarina.ui.common.components.StateSnackbar
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -71,15 +72,26 @@ fun CitySelectionScreenContent(
     isRegionVisible: Boolean,
     error: ErrorState?,
     onRefreshClick: () -> Unit,
+    onCloseClick: () -> Unit,
     isSnackbarVisible: Boolean,
     snackbarText: Text,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.screenBackground)
-            .statusBarsPadding(),
+            .background(UiKitTheme.colors.screenBackground),
     ) {
+        ScreenToolbar(
+            title = stringResource(id = R.string.city),
+            endIcon = {
+                IconButton(onClick = onCloseClick) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_close_24),
+                        contentDescription = stringResource(id = R.string.skip),
+                    )
+                }
+            }
+        )
         SearchBar(
             isSearchLoadingVisible = isSearchLoadingVisible,
             query = query,
@@ -385,6 +397,7 @@ fun CitySelectionScreen(
         isRegionVisible = isRegionVisible,
         error = error,
         onRefreshClick = viewModel::onRefreshClick,
+        onCloseClick = viewModel::onCloseClick,
         isSnackbarVisible = isSnackbarVisible,
         snackbarText = snackbarText,
     )
@@ -422,6 +435,7 @@ fun CitySelectionScreenContentPreview(
             onCityClick = {},
             isRegionVisible = true,
             onRefreshClick = {},
+            onCloseClick = {},
             isSnackbarVisible = false,
             snackbarText = Text.Empty,
         )

@@ -89,6 +89,13 @@ class CitySelectionViewModel @Inject constructor(
         }
     }
 
+    fun onCloseClick() {
+        viewModelScope.launch {
+            interactor.finishOnboarding(null)
+                .onSuccess { sideEffect(SideEffect.ShowHome) }
+        }
+    }
+
     private suspend fun fetchCities(query: String?) {
         operationTracker.track(Operation.CITY_LOAD) {
             interactor.getCities(query)

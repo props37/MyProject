@@ -71,6 +71,11 @@ data class UiKitTypography(
         lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle
     ),
+    val screenToolbarTitle: TextStyle = TextStyle(
+        fontSize = 17.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
     val listHeaderItem: TextStyle = TextStyle(
         fontSize = 20.sp,
         lineHeight = 26.sp,
