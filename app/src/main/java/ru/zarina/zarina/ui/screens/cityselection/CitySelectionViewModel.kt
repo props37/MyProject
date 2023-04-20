@@ -27,6 +27,7 @@ import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.utils.isNetworkException
 import javax.inject.Inject
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(FlowPreview::class)
@@ -41,7 +42,9 @@ class CitySelectionViewModel @Inject constructor(
 
     val isSearchLoadingVisible =
         operationTracker.isOperationOngoing(Operation.CITY_LOAD, Operation.ONBOARDING_FINISH)
-            .debounce(LOADER_STATE_DEBOUNCE_DURATION)
+            .debounce {
+                if (it) LOADER_STATE_DEBOUNCE_DURATION else Duration.ZERO
+            }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
     private val _query = MutableStateFlow("")
     val query: StateFlow<String> = _query.asStateFlow()
