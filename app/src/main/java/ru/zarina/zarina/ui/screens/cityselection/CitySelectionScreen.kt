@@ -135,16 +135,11 @@ fun CitySelectionScreenContent(
                                     key = item.key,
                                     contentType = item.contentType,
                                 ) {
-                                    Divider(
-                                        color = UiKitTheme.colors.listDivider,
-                                        thickness = Dp.Hairline,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(horizontal = 16.dp),
-                                    )
                                     CityHeader(
                                         text = item.letter,
-                                        modifier = Modifier.fillMaxWidth(),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .animateItemPlacement(),
                                     )
                                 }
 
@@ -152,16 +147,11 @@ fun CitySelectionScreenContent(
                                     key = item.key,
                                     contentType = item.contentType,
                                 ) {
-                                    Divider(
-                                        color = UiKitTheme.colors.listDivider,
-                                        thickness = Dp.Hairline,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(horizontal = 16.dp),
-                                    )
                                     val cityModifier = Modifier
                                         .fillMaxWidth()
+                                        .background(UiKitTheme.colors.screenBackground)
                                         .clickable(onClick = { onCityClick(item.city) })
+                                        .animateItemPlacement()
                                     if (isRegionVisible)
                                         CityExtendedItem(
                                             city = item.city,
@@ -194,6 +184,13 @@ private fun CityHeader(
     text: String,
     modifier: Modifier = Modifier,
 ) {
+    Divider(
+        color = UiKitTheme.colors.listDivider,
+        thickness = Dp.Hairline,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+    )
     Text(
         text = text,
         style = UiKitTheme.typography.listHeaderItem,
@@ -210,6 +207,13 @@ private fun CitySimpleItem(
     city: City,
     modifier: Modifier = Modifier,
 ) {
+    Divider(
+        color = UiKitTheme.colors.listDivider,
+        thickness = Dp.Hairline,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+    )
     Text(
         text = city.name,
         style = UiKitTheme.typography.listRegularItem,
