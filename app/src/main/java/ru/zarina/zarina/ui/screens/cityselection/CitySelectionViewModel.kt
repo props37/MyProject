@@ -39,9 +39,10 @@ class CitySelectionViewModel @Inject constructor(
     private val operationTracker = OperationTracker()
     private val messageQueue = MessageQueue(viewModelScope)
 
-    val isSearchLoadingVisible = operationTracker.isOperationOngoing(Operation.CITY_LOAD)
-        .debounce(LOADER_STATE_DEBOUNCE_DURATION)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
+    val isSearchLoadingVisible =
+        operationTracker.isOperationOngoing(Operation.CITY_LOAD, Operation.ONBOARDING_FINISH)
+            .debounce(LOADER_STATE_DEBOUNCE_DURATION)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
     private val _query = MutableStateFlow("")
     val query: StateFlow<String> = _query.asStateFlow()
     private val _cities = MutableStateFlow<List<CityListItem>>(emptyList())
@@ -66,18 +67,19 @@ class CitySelectionViewModel @Inject constructor(
     }
 
     fun onCityClick(city: City) {
-        // TODO loader
         viewModelScope.launch {
-            interactor.finishOnboarding(city)
-                .onSuccess { sideEffect(SideEffect.ShowHome) }
-                .onFailure { throwable ->
-                    val message = when {
-                        throwable is CancellationException -> return@onFailure
-                        throwable.isNetworkException() -> Text.Resource(R.string.network_error)
-                        else -> Text.Resource(R.string.cant_save_selected_city)
+            operationTracker.track(Operation.ONBOARDING_FINISH) {
+                interactor.finishOnboarding(city)
+                    .onSuccess { sideEffect(SideEffect.ShowHome) }
+                    .onFailure { throwable ->
+                        val message = when {
+                            throwable is CancellationException -> return@onFailure
+                            throwable.isNetworkException() -> Text.Resource(R.string.network_error)
+                            else -> Text.Resource(R.string.cant_save_selected_city)
+                        }
+                        messageQueue.showMessage(message)
                     }
-                    messageQueue.showMessage(message)
-                }
+            }
         }
     }
 
@@ -140,7 +142,7 @@ class CitySelectionViewModel @Inject constructor(
         object ShowHome : SideEffect
     }
 
-    enum class Operation : OperationKey { CITY_LOAD }
+    enum class Operation : OperationKey { CITY_LOAD, ONBOARDING_FINISH }
 
     enum class ErrorState { NO_RESULTS, NETWORK, GENERIC }
 
