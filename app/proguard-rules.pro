@@ -20,6 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+# ktor general
+-keepclassmembers class io.ktor.http.** { *; }
+
 # ktor logging
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 
