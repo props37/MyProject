@@ -11,13 +11,15 @@ data class CityDto(
     val id: String?,
     @SerialName("name")
     val name: String?,
+    @SerialName("region")
+    val region: String?,
 ) {
 
     fun toDomain(): City? {
-        return if (id.isNullOrBlank() || name.isNullOrBlank())
+        return if (id.isNullOrBlank() || name.isNullOrBlank() || region.isNullOrBlank())
             null
         else
-            City(AddressId(id), name)
+            City(AddressId(id), name, region)
     }
 
 }

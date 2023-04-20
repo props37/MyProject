@@ -21,4 +21,10 @@ class KtorZarinaGeographyApi @Inject constructor(
         return response.body()
     }
 
+    override suspend fun getCities(name: String?): List<CityDto> {
+        val response = client.get("/api/location/city/list") {
+            name?.let { parameter("name", name) }
+        }
+        return response.body()
+    }
 }

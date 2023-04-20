@@ -15,8 +15,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.with
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +25,9 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -63,6 +64,8 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.components.ScreenToolbar
+import ru.zarina.zarina.ui.common.components.ScreenToolbarDefaults
 import ru.zarina.zarina.ui.common.components.StateSnackbar
 import ru.zarina.zarina.ui.common.components.StateSnackbarDefaults
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaButtonDefaults
@@ -72,9 +75,9 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.CityProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
-import ru.zarina.zarina.utils.compose.minInteractionSize
 import timber.log.Timber
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun OnboardingScreenContent(
     step: OnboardingViewModel.OnboardingStep,
@@ -121,9 +124,12 @@ private fun OnboardingScreenContent(
                         .fillMaxWidth()
                         .statusBarsPadding()
                 ) {
-                    CloseButton(
-                        onClick = onCloseClick,
-                        modifier = Modifier.align(Alignment.End),
+                    ScreenToolbar(
+                        title = "",
+                        colors = ScreenToolbarDefaults.colors(
+                            containerColor = Color.Transparent,
+                        ),
+                        endIcon = { CloseButton(onClick = onCloseClick) }
                     )
                     val logoColor by animateColorAsState(
                         targetValue = if (isBannerLoaded) Color.White else Color.Black,
@@ -235,18 +241,11 @@ fun CloseButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        contentAlignment = Alignment.Center,
+    IconButton(
+        onClick = onClick,
         modifier = modifier
-            .padding(end = 8.dp)
-            .minInteractionSize()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onClick,
-            )
     ) {
-        Image(
+        Icon(
             painter = painterResource(id = R.drawable.ic_close_24),
             contentDescription = stringResource(id = R.string.skip)
         )
@@ -441,6 +440,7 @@ fun SelectionResult(
 @Composable
 fun OnboardingScreen(
     showHome: () -> Unit,
+    showCitySelection: () -> Unit,
 ) {
     val viewModel = hiltViewModel<OnboardingViewModel>()
 
@@ -455,7 +455,8 @@ fun OnboardingScreen(
     OnboardingScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showHome = showHome,
-        onLocationPermissionResult = viewModel::onLocationPermissionResult,
+        showCitySelection = showCitySelection,
+        onLocationPermissionResult = viewModel::onLocationPermissionResult
     )
 
     OnboardingScreenContent(
@@ -478,16 +479,18 @@ fun OnboardingScreen(
 fun OnboardingScreenBehavior(
     sideEffects: Flow<OnboardingViewModel.SideEffect>,
     showHome: () -> Unit,
+    showCitySelection: () -> Unit,
     onLocationPermissionResult: (isGranted: Boolean) -> Unit,
 ) {
     val locationPermissionState = rememberPermissionState(
         permission = android.Manifest.permission.ACCESS_COARSE_LOCATION,
         onPermissionResult = onLocationPermissionResult
     )
-    LaunchedEffect(locationPermissionState, sideEffects, showHome) {
+    LaunchedEffect(locationPermissionState, sideEffects, showHome, showCitySelection) {
         sideEffects.collect { effect ->
             when (effect) {
                 OnboardingViewModel.SideEffect.ShowHome -> showHome()
+                OnboardingViewModel.SideEffect.ShowCitySelection -> showCitySelection()
                 OnboardingViewModel.SideEffect.RequestLocationPermission -> locationPermissionState.launchPermissionRequest()
             }
         }
