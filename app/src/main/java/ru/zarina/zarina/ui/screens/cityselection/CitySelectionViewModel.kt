@@ -43,7 +43,7 @@ class CitySelectionViewModel @Inject constructor(
     val isSearchLoadingVisible =
         operationTracker.isOperationOngoing(Operation.CITY_LOAD, Operation.ONBOARDING_FINISH)
             .debounce {
-                if (it) LOADER_STATE_DEBOUNCE_DURATION else Duration.ZERO
+                if (it) Duration.ZERO else LOADER_STATE_DEBOUNCE_DURATION
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
     private val _query = MutableStateFlow("")
