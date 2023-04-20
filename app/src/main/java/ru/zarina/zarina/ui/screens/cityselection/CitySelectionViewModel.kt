@@ -61,6 +61,9 @@ class CitySelectionViewModel @Inject constructor(
         viewModelScope.launch {
             _query
                 .map { it.trim() }
+                // This artificial delay is a workaround for ktor CIO incorrectly throwing SocketException
+                // when request is cancelled very early in it's lifecycle
+                .debounce(CITY_FETCH_DEBOUNCE_DURATION)
                 .collectLatest { fetchCities(it) }
         }
     }
@@ -157,6 +160,7 @@ class CitySelectionViewModel @Inject constructor(
     enum class ErrorState { NO_RESULTS, NETWORK, GENERIC }
 
     companion object {
+        private val CITY_FETCH_DEBOUNCE_DURATION = 100.milliseconds
         private val LOADER_STATE_DEBOUNCE_DURATION = 250.milliseconds
     }
 
