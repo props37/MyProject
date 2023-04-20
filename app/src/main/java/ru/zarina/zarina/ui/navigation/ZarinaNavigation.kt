@@ -9,6 +9,7 @@ import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.screens.cityselection.CitySelectionScreen
 import ru.zarina.zarina.ui.screens.home.HomeScreen
 import ru.zarina.zarina.ui.screens.onboarding.OnboardingScreen
+import ru.zarina.zarina.ui.screens.product.ProductScreen
 
 @Composable
 fun ZarinaNavigation(
@@ -22,7 +23,9 @@ fun ZarinaNavigation(
     ) {
         composableDestination(Destinations.HOME) {
             HomeScreen(
-                showProduct = {}
+                showProduct = { productId ->
+                    navController.navigate(Destinations.PRODUCT.createRoute(productId))
+                }
             )
         }
         composableDestination(Destinations.ONBOARDING) {
@@ -41,6 +44,9 @@ fun ZarinaNavigation(
                     navController.navigate(Destinations.HOME.route) { popUpTo(0) }
                 }
             )
+        }
+        composableDestination(Destinations.PRODUCT) {
+            ProductScreen()
         }
     }
 }

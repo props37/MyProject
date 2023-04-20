@@ -37,7 +37,7 @@ fun HomeScreenContent(
 
 @Composable
 fun HomeScreen(
-    showProduct: (String) -> Unit,
+    showProduct: (productId: String) -> Unit,
 ) {
     val viewModel = hiltViewModel<HomeViewModel>()
 
