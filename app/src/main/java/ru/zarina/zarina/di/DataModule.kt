@@ -20,6 +20,8 @@ import ru.zarina.zarina.data.device.remote.api.IZarinaDeviceApi
 import ru.zarina.zarina.data.device.remote.api.KtorZarinaDeviceApi
 import ru.zarina.zarina.data.geography.GeographyRepository
 import ru.zarina.zarina.data.geography.IGeographyRepository
+import ru.zarina.zarina.data.geography.local.IGeographyLocalSource
+import ru.zarina.zarina.data.geography.local.MemoryGeographyLocalSource
 import ru.zarina.zarina.data.geography.remote.IGeographyRemoteSource
 import ru.zarina.zarina.data.geography.remote.ZarinaGeographyRemoteSource
 import ru.zarina.zarina.data.geography.remote.api.IZarinaGeographyApi
@@ -59,6 +61,9 @@ interface DataModule {
 
     @Binds
     fun bindsZarinaGeographyApi(api: KtorZarinaGeographyApi): IZarinaGeographyApi
+
+    @Binds
+    fun bindsGeographyLocalSource(source: MemoryGeographyLocalSource): IGeographyLocalSource
 
     @Binds
     fun bindsGeographyRemoteSource(source: ZarinaGeographyRemoteSource): IGeographyRemoteSource
