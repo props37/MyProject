@@ -11,6 +11,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -304,12 +306,16 @@ private fun SearchBar(
         AnimatedVisibility(
             visible = query.isNotEmpty(),
         ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_close_24),
+            Image(
+                painter = painterResource(R.drawable.ic_clear_24),
                 contentDescription = stringResource(R.string.clear),
                 modifier = Modifier
                     .padding(start = 12.dp)
-                    .clickable(onClick = { onQueryChange("") }),
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = { onQueryChange("") }
+                    ),
             )
         }
     }
