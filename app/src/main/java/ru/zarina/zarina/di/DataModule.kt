@@ -30,6 +30,12 @@ import ru.zarina.zarina.data.location.GeoLocationRepository
 import ru.zarina.zarina.data.location.IGeoLocationRepository
 import ru.zarina.zarina.data.location.source.IGeoLocationSource
 import ru.zarina.zarina.data.location.source.PlayServicesGeoLocationSource
+import ru.zarina.zarina.data.product.IProductRepository
+import ru.zarina.zarina.data.product.ProductRepository
+import ru.zarina.zarina.data.product.remote.IProductRemoteSource
+import ru.zarina.zarina.data.product.remote.ZarinaProductRemoteSource
+import ru.zarina.zarina.data.product.remote.api.IZarinaProductApi
+import ru.zarina.zarina.data.product.remote.api.KtorZarinaProductApi
 import ru.zarina.zarina.data.user.IUserRepository
 import ru.zarina.zarina.data.user.UserRepository
 import ru.zarina.zarina.data.user.remote.IUserRemoteSource
@@ -88,5 +94,14 @@ interface DataModule {
 
     @Binds
     fun bindsUserRepository(repository: UserRepository): IUserRepository
+
+    @Binds
+    fun bindZarinaProductApi(api: KtorZarinaProductApi): IZarinaProductApi
+
+    @Binds
+    fun bindsProductRemoteSource(source: ZarinaProductRemoteSource): IProductRemoteSource
+
+    @Binds
+    fun bindsProductRepository(repository: ProductRepository): IProductRepository
 
 }
