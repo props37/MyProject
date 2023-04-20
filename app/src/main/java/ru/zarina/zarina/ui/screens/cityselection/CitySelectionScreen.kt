@@ -137,9 +137,7 @@ fun CitySelectionScreenContent(
                                 ) {
                                     CityHeader(
                                         text = item.letter,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .animateItemPlacement(),
+                                        modifier = Modifier.fillMaxWidth(),
                                     )
                                 }
 
