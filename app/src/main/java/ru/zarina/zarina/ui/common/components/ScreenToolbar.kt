@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -15,6 +17,7 @@ fun ScreenToolbar(
     title: String,
     modifier: Modifier = Modifier,
     endIcon: @Composable (() -> Unit)? = null,
+    colors: TopAppBarColors = ScreenToolbarDefaults.colors(),
 ) {
     CenterAlignedTopAppBar(
         title = {
@@ -28,12 +31,24 @@ fun ScreenToolbar(
         actions = {
             if (endIcon != null) endIcon()
         },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = UiKitTheme.colors.screenBackground,
-            actionIconContentColor = UiKitTheme.colors.primaryContentColor,
-            navigationIconContentColor = UiKitTheme.colors.primaryContentColor,
-            titleContentColor = UiKitTheme.colors.primaryContentColor,
-        ),
+        colors = colors,
         modifier = modifier.fillMaxWidth(),
+    )
+}
+
+object ScreenToolbarDefaults {
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun colors(
+        containerColor: Color = UiKitTheme.colors.screenBackground,
+        actionIconContentColor: Color = UiKitTheme.colors.primaryContentColor,
+        navigationIconContentColor: Color = UiKitTheme.colors.primaryContentColor,
+        titleContentColor: Color = UiKitTheme.colors.primaryContentColor,
+    ) = TopAppBarDefaults.centerAlignedTopAppBarColors(
+        containerColor = containerColor,
+        actionIconContentColor = actionIconContentColor,
+        navigationIconContentColor = navigationIconContentColor,
+        titleContentColor = titleContentColor,
     )
 }
