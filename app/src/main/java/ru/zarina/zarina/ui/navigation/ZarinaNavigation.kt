@@ -21,7 +21,9 @@ fun ZarinaNavigation(
         startDestination = startDestination.routeSchema,
     ) {
         composableDestination(Destinations.HOME) {
-            HomeScreen()
+            HomeScreen(
+                showProduct = {}
+            )
         }
         composableDestination(Destinations.ONBOARDING) {
             OnboardingScreen(

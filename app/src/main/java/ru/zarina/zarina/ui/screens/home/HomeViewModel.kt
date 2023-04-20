@@ -12,6 +12,12 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel(),
     ISideEffectSource<HomeViewModel.SideEffect> by SideEffectQueue() {
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
+    fun onProductClick() {
+        sideEffect(SideEffect.ShowProduct("1329404704-50"))
+    }
+
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        class ShowProduct(val id: String) : SideEffect
+    }
 
 }
