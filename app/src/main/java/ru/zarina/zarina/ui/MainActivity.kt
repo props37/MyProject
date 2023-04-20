@@ -5,12 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import dagger.hilt.android.AndroidEntryPoint
 import ru.zarina.zarina.ui.common.system.TransparentSystemBars
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { true }
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -18,7 +21,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             ZarinaTheme {
                 TransparentSystemBars()
-                ZarinaApp()
+                ZarinaApp(
+                    splashScreen = splashScreen,
+                )
             }
         }
     }
