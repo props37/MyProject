@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.AddressId
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.utils.kotlin.isNotNull
 
 @Serializable
 data class CityDto(
@@ -16,10 +17,12 @@ data class CityDto(
 ) {
 
     fun toDomain(): City? {
-        return if (id.isNullOrBlank() || name.isNullOrBlank() || region.isNullOrBlank())
-            null
-        else
-            City(AddressId(id), name, region)
+        if (
+            isNotNull(id, "id")
+            && isNotNull(name, "name")
+            && isNotNull(region, "region")
+        ) return City(AddressId(id), name, region)
+        return null
     }
 
 }

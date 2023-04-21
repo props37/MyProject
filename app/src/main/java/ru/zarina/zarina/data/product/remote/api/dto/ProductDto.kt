@@ -2,6 +2,7 @@ package ru.zarina.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.utils.kotlin.isNotNull
 
 @Serializable
 data class ProductDto(
@@ -9,12 +10,10 @@ data class ProductDto(
     val media: List<MediaDto>?,
 ) {
     fun toDomain(): Product? {
-        return if (id == null)
-            null
-        else
-            Product(
-                id = id,
-                media = media?.mapNotNull { it.toDomain() }.orEmpty()
-            )
+        if (isNotNull(id, "id")) return Product(
+            id = id,
+            media = media?.mapNotNull { it.toDomain() }.orEmpty()
+        )
+        return null
     }
 }

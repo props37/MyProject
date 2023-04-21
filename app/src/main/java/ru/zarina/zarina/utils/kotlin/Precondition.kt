@@ -6,7 +6,7 @@ import kotlin.contracts.contract
 
 
 @OptIn(ExperimentalContracts::class)
-fun <T> tryCheckNotNull(
+fun <T> isNotNull(
     value: T?,
     fieldName: String? = null,
 ): Boolean {
@@ -21,5 +21,3 @@ fun <T> tryCheckNotNull(
         true
     }
 }
-
-fun all(vararg values: Boolean): Boolean = values.all { it }
