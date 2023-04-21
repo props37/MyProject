@@ -1,3 +1,7 @@
 package ru.zarina.zarina.data.product.remote
 
-interface IProductRemoteSource
+import ru.zarina.zarina.domain.Product
+
+interface IProductRemoteSource {
+    suspend fun getProduct(id: String): Product
+}

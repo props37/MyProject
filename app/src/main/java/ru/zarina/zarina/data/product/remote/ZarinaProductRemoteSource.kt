@@ -5,4 +5,8 @@ import javax.inject.Inject
 
 class ZarinaProductRemoteSource @Inject constructor(
     private val api: IZarinaProductApi,
-) : IProductRemoteSource
+) : IProductRemoteSource {
+
+    override suspend fun getProduct(id: String) = checkNotNull(api.getProduct(id).toDomain())
+
+}

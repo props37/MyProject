@@ -1,3 +1,7 @@
 package ru.zarina.zarina.data.product
 
-interface IProductRepository
+import ru.zarina.zarina.domain.Product
+
+interface IProductRepository {
+    suspend fun getProduct(id: String): Product
+}
