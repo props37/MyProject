@@ -86,6 +86,8 @@ dependencies {
     implementation(libs.androidx.splashScreen)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui.core)
     implementation(libs.compose.ui.graphics)
