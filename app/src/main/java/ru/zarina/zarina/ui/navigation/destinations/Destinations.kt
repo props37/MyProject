@@ -15,7 +15,7 @@ object Destinations {
 
 object ProductDestination : Destination<String>() {
 
-    private const val ARGUMENT_PRODUCT_ID = "product_id"
+    const val ARGUMENT_PRODUCT_ID = "product_id"
 
     override val routeSchema = RouteUtils.generateRouteSchema(
         baseRoute = BaseRoute.PRODUCT,
