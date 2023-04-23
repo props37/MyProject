@@ -63,7 +63,7 @@ private fun Dot(
                 indication = null,
                 onClick = onClick
             )
-            .padding(3.dp)
+            .padding(vertical = 16.dp, horizontal = 3.dp)
             .size(size)
             .clip(CircleShape)
             .background(color),
