@@ -15,6 +15,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
@@ -55,9 +57,15 @@ fun ProductScreenContent(
                     state = pagerState,
                     modifier = Modifier.fillMaxWidth(),
                 )
+                val coroutineScope = rememberCoroutineScope()
                 PageDots(
                     count = product?.media?.size ?: 0,
                     activeIndex = pagerState.currentPage,
+                    onDotClick = { index ->
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    },
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 16.dp)
