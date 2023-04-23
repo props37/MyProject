@@ -33,6 +33,7 @@ data class UiKitColors(
     val hint: Color = RollingStone,
     val listDivider: Color = Mercury,
     val listItemSubtitle: Color = RollingStone,
+    val dotColor: Color = Color.White,
 )
 
 

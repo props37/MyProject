@@ -4,6 +4,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
@@ -19,11 +21,13 @@ fun MediaPager(
     media: List<Media>,
     cache: State<Cache?>,
     modifier: Modifier = Modifier,
+    state: PagerState = rememberPagerState(),
 ) {
     HorizontalPager(
         pageCount = media.size,
         beyondBoundsPageCount = 1,
         key = { media[it].url.value },
+        state = state,
         modifier = modifier
     ) { pageIndex ->
         val item = media[pageIndex]
