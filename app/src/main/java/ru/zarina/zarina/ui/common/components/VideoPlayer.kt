@@ -115,11 +115,10 @@ fun VideoPlayer(
             modifier = Modifier
                 .graphicsLayer { alpha = playerAlpha }
         )
-        CircularProgressIndicator(
-            color = UiKitTheme.colors.primaryContentColor,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .graphicsLayer { alpha = 1 - playerAlpha }
-        )
+        if (!isLoaded)
+            CircularProgressIndicator(
+                color = UiKitTheme.colors.primaryContentColor,
+                modifier = Modifier.align(Alignment.Center)
+            )
     }
 }
