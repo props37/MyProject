@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -42,7 +43,7 @@ fun VideoPlayer(
     cache: State<Cache?>,
     modifier: Modifier = Modifier,
 ) {
-    val isLoaded = remember { mutableStateOf(false) }
+    var isLoaded by remember(media) { mutableStateOf(false) }
     val context = LocalContext.current
     val player = remember(context, cache) {
         ExoPlayer.Builder(context)
@@ -63,7 +64,7 @@ fun VideoPlayer(
                 repeatMode = Player.REPEAT_MODE_ONE
                 addListener(object : Player.Listener {
                     override fun onPlaybackStateChanged(playbackState: Int) {
-                        if (playbackState == Player.STATE_READY) isLoaded.value = true
+                        if (playbackState == Player.STATE_READY) isLoaded = true
                     }
                 })
                 prepare()
@@ -94,7 +95,7 @@ fun VideoPlayer(
         }
     }
     val playerAlpha by animateFloatAsState(
-        targetValue = if (isLoaded.value) 1f else 0f,
+        targetValue = if (isLoaded) 1f else 0f,
         label = "player alpha"
     )
     Box(modifier = modifier) {
