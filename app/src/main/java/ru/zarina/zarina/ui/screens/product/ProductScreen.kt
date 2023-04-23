@@ -1,6 +1,10 @@
 package ru.zarina.zarina.ui.screens.product
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -20,6 +24,7 @@ import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @Composable
@@ -27,12 +32,23 @@ fun ProductScreenContent(
     product: Product?,
     cache: State<Cache?>,
 ) {
-    MediaPager(
-        media = product?.media.orEmpty(),
-        cache = cache,
-        modifier = Modifier.fillMaxWidth(),
-    )
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme.colors.screenBackground)
+            .statusBarsPadding(),
+    ) {
+        item(contentType = ProductScreenSection.MEDIA) {
+            MediaPager(
+                media = product?.media.orEmpty(),
+                cache = cache,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
 }
+
+private enum class ProductScreenSection { MEDIA }
 
 @Composable
 fun ProductScreen() {
