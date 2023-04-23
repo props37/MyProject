@@ -22,6 +22,7 @@ fun MediaPager(
 ) {
     HorizontalPager(
         pageCount = media.size,
+        beyondBoundsPageCount = 1,
         modifier = modifier
     ) { pageIndex ->
         val item = media[pageIndex]
