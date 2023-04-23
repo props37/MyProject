@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -22,6 +23,9 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.cache.Cache
+import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.AspectRatioFrameLayout
@@ -34,6 +38,7 @@ import timber.log.Timber
 @Composable
 fun MediaPager(
     media: List<Media>,
+    cache: State<Cache?>,
     modifier: Modifier = Modifier,
 ) {
     HorizontalPager(
@@ -52,6 +57,7 @@ fun MediaPager(
 
             Media.Type.VIDEO -> VideoItem(
                 media = item,
+                cache = cache,
                 modifier = itemModifier,
             )
         }
@@ -77,16 +83,24 @@ private fun ImageItem(
 @Composable
 private fun VideoItem(
     media: Media,
+    cache: State<Cache?>,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val player = remember(context) {
+    val player = remember(context, cache) {
         ExoPlayer.Builder(context)
             .build()
             .apply {
-                val dataSourceFactory = DefaultDataSource.Factory(context)
+                val cacheValue = cache.value
+                val factory = if (cacheValue != null) {
+                    CacheDataSource.Factory()
+                        .setCache(cacheValue)
+                        .setUpstreamDataSourceFactory(DefaultHttpDataSource.Factory())
+                } else {
+                    DefaultDataSource.Factory(context)
+                }
                 val source = ProgressiveMediaSource
-                    .Factory(dataSourceFactory)
+                    .Factory(factory)
                     .createMediaSource(MediaItem.fromUri(media.url.value))
                 setMediaSource(source)
                 playWhenReady = true
