@@ -23,6 +23,7 @@ fun MediaPager(
     HorizontalPager(
         pageCount = media.size,
         beyondBoundsPageCount = 1,
+        key = { media[it].url.value },
         modifier = modifier
     ) { pageIndex ->
         val item = media[pageIndex]
