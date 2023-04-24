@@ -3,6 +3,7 @@ package ru.zarina.zarina.data.product.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.Url
 import ru.zarina.zarina.utils.kotlin.isNotNull
 
 @Serializable
@@ -17,6 +18,8 @@ data class ProductDto(
     val colors: List<ColorDto>,
     @SerialName("description")
     val description: List<DescriptionItemDto>,
+    @SerialName("share_url")
+    val url: String?,
 ) {
     fun toDomain(): Product? {
         val price = price.toDomain()
@@ -30,7 +33,8 @@ data class ProductDto(
             colorVariants = colors
                 .mapNotNull { it.toDomain() }
                 .associate { (color, variant) -> color to variant },
-            description = description.mapNotNull { it.toDomain() }
+            description = description.mapNotNull { it.toDomain() },
+            url = url?.let { Url(it) },
         )
         return null
     }
