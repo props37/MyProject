@@ -11,7 +11,6 @@ import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Price
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import kotlin.math.roundToInt
 
 @Composable
 fun DiscountBadge(
@@ -27,7 +26,7 @@ fun DiscountBadge(
             Text(
                 text = stringResource(
                     R.string.discount_percentage,
-                    (price.discount * 100f).roundToInt()
+                    (price.discount * 100f).toInt()
                 ),
                 style = UiKitTheme.typography.discountBadge,
                 color = UiKitTheme.colors.discountBadgeForeground,
