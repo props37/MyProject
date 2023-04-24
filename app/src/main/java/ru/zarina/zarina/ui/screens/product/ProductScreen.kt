@@ -25,6 +25,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
@@ -34,7 +35,6 @@ import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvid
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductScreenContent(
     product: Product?,
@@ -47,27 +47,41 @@ fun ProductScreenContent(
             .statusBarsPadding(),
     ) {
         item(contentType = ProductScreenSection.MEDIA) {
-            Box {
-                val pagerState = rememberPagerState()
-                MediaPager(
-                    media = product?.media.orEmpty(),
-                    cache = cache,
-                    state = pagerState,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                val coroutineScope = rememberCoroutineScope()
-                PageDots(
-                    count = product?.media?.size ?: 0,
-                    activeIndex = pagerState.currentPage,
-                    onDotClick = { index ->
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(index)
-                        }
-                    },
-                    modifier = Modifier.align(Alignment.BottomCenter)
-                )
-            }
+            MediaSection(
+                media = product?.media,
+                cache = cache,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun MediaSection(
+    media: List<Media>?,
+    cache: State<Cache?>,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier) {
+        val pagerState = rememberPagerState()
+        MediaPager(
+            media = media.orEmpty(),
+            cache = cache,
+            state = pagerState,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        val coroutineScope = rememberCoroutineScope()
+        PageDots(
+            count = media?.size ?: 0,
+            activeIndex = pagerState.currentPage,
+            onDotClick = { index ->
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(index)
+                }
+            },
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 
