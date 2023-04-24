@@ -5,9 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.datasource.cache.Cache
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
@@ -16,32 +19,28 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val interactor: ProductInteractor,
     cache: Cache,
 ) : ViewModel(),
     ISideEffectSource<ProductViewModel.SideEffect> by SideEffectQueue() {
 
     val cache = MutableStateFlow(cache).asStateFlow()
-    private val productId = savedStateHandle.get<String>(Destinations.PRODUCT.ARGUMENT_PRODUCT_ID)
-    val product = MutableStateFlow<Product?>(null)
+    private val productId = savedStateHandle.getStateFlow(
+        key = Destinations.PRODUCT.ARGUMENT_PRODUCT_ID,
+        initialValue = ""
+    )
 
-    init {
-        getProduct()
-    }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val product = productId
+        .mapLatest { id ->
+            // TODO show loading error
+            interactor.getProduct(id).getOrNull()
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     fun onVariantClick(variant: Product.Variant) {
-        // TODO
-    }
-
-    private fun getProduct() {
-        // TODO go back when product id is null
-        if (productId == null) return
-        viewModelScope.launch {
-            interactor.getProduct(productId)
-                .onSuccess { product.value = it }
-                .onFailure { /* TODO show error */ }
-        }
+        savedStateHandle[Destinations.PRODUCT.ARGUMENT_PRODUCT_ID] = variant.id
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect
