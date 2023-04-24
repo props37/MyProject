@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -74,6 +75,15 @@ fun ProductScreenContent(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
+            item(contentType = ProductScreenSection.DIVIDER) {
+                Divider(
+                    color = UiKitTheme.colors.listDivider,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+            }
+
         }
 }
 
@@ -144,7 +154,7 @@ private fun ColorsSection(
     )
 }
 
-private enum class ProductScreenSection { MEDIA, PRICE, COLORS }
+private enum class ProductScreenSection { MEDIA, PRICE, COLORS, DETAILS, DIVIDER }
 
 @Composable
 fun ProductScreen() {
