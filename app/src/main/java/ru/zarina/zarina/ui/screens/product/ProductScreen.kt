@@ -72,7 +72,9 @@ fun ProductScreenContent(
                 ColorsSection(
                     product = product,
                     onVariantClick = onVariantClick,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 12.dp)
                 )
             }
             item(contentType = ProductScreenSection.DIVIDER) {
