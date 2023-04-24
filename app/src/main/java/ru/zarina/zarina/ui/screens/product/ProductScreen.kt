@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.Price
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.ui.common.components.ColorPicker
 import ru.zarina.zarina.ui.common.components.DiscountBadge
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
@@ -63,6 +64,12 @@ fun ProductScreenContent(
                 PriceSection(
                     price = product.price,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                )
+            }
+            item(contentType = ProductScreenSection.COLORS) {
+                ColorsSection(
+                    product = product,
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
         }
@@ -114,7 +121,24 @@ private fun PriceSection(
     )
 }
 
-private enum class ProductScreenSection { MEDIA, PRICE }
+@Composable
+private fun ColorsSection(
+    product: Product,
+    modifier: Modifier = Modifier,
+) {
+    val colors = remember(product) { product.colorVariants.map { it.key } }
+    val selectedColor = remember(product) {
+        product.colorVariants.entries.firstOrNull { it.value.isCurrent }?.key
+    }
+    ColorPicker(
+        colors = colors,
+        onColorSelected = { color -> /* TODO */ },
+        selectedColor = selectedColor,
+        modifier = modifier
+    )
+}
+
+private enum class ProductScreenSection { MEDIA, PRICE, COLORS }
 
 @Composable
 fun ProductScreen() {

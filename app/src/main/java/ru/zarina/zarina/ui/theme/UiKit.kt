@@ -38,6 +38,8 @@ data class UiKitColors(
     val retiredPrice: Color = RollingStone,
     val discountBadgeBackground: Color = Mineshaft,
     val discountBadgeForeground: Color = Color.White,
+    val colorPickerCircleBorder: Color = Mercury,
+    val colorPickerCircleSelectionBorder: Color = Color.Black,
 )
 
 
