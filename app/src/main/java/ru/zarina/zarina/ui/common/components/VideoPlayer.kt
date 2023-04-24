@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
@@ -42,7 +43,9 @@ fun VideoPlayer(
     media: Media,
     cache: State<Cache?>,
     modifier: Modifier = Modifier,
+    isPreview: Boolean = LocalInspectionMode.current,
 ) {
+    if (isPreview) return
     var isLoaded by remember(media) { mutableStateOf(false) }
     val context = LocalContext.current
     val player = remember(context, cache) {
