@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screens.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @Composable
@@ -23,7 +25,9 @@ fun HomeScreenContent(
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme.colors.screenBackground)
     ) {
         ZarinaTextButton(
             text = "Тестовый продукт",
