@@ -36,6 +36,8 @@ data class UiKitColors(
     val pagerDot: Color = Color.White,
     val price: Color = SolidPink,
     val retiredPrice: Color = RollingStone,
+    val discountBadgeBackground: Color = Mineshaft,
+    val discountBadgeForeground: Color = Color.White,
 )
 
 
@@ -108,6 +110,11 @@ data class UiKitTypography(
     val productPrice: TextStyle = TextStyle(
         fontSize = 20.sp,
         lineHeight = 28.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val discountBadge: TextStyle = TextStyle(
+        fontSize = 10.sp,
+        lineHeight = 12.sp,
         fontFamily = Fonts.Families.Circle
     ),
 )

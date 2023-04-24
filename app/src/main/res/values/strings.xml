@@ -24,4 +24,5 @@
     <string name="refresh">Обновить</string>
     <string name="city">Город</string>
     <string name="currency_amount_rubles">%1$d ₽</string>
+    <string name="discount_percentage">-%1$d%%</string>
 </resources>

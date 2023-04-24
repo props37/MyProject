@@ -27,9 +27,9 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Price
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.ui.common.components.DiscountBadge
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
 import ru.zarina.zarina.ui.common.components.ProductPrice
@@ -54,7 +54,7 @@ fun ProductScreenContent(
         ) {
             item(contentType = ProductScreenSection.MEDIA) {
                 MediaSection(
-                    media = product.media,
+                    product = product,
                     cache = cache,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -71,21 +71,21 @@ fun ProductScreenContent(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MediaSection(
-    media: List<Media>,
+    product: Product,
     cache: State<Cache?>,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
         val pagerState = rememberPagerState()
         MediaPager(
-            media = media,
+            media = product.media,
             cache = cache,
             state = pagerState,
             modifier = Modifier.fillMaxWidth(),
         )
         val coroutineScope = rememberCoroutineScope()
         PageDots(
-            count = media.size,
+            count = product.media.size,
             activeIndex = pagerState.currentPage,
             onDotClick = { index ->
                 coroutineScope.launch {
@@ -93,6 +93,12 @@ private fun MediaSection(
                 }
             },
             modifier = Modifier.align(Alignment.BottomCenter)
+        )
+        DiscountBadge(
+            price = product.price,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(16.dp)
         )
     }
 }
