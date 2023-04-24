@@ -13,9 +13,15 @@ data class ProductDto(
     val media: List<MediaDto>?,
     @SerialName("price")
     val price: PriceDto,
+    @SerialName("colors")
+    val colors: List<ColorDto>,
 ) {
     fun toDomain(): Product? {
         val price = price.toDomain()
+        val colorVariants = colors
+            .mapNotNull { it.toDomain() }
+            .associate { (color, variant) -> color to variant }
+
         if (
             isNotNull(id, "id")
             && isNotNull(price, "price")
@@ -23,7 +29,9 @@ data class ProductDto(
             id = id,
             media = media?.mapNotNull { it.toDomain() }.orEmpty(),
             price = price,
+            colorVariants = colorVariants,
         )
         return null
     }
 }
+

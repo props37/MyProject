@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.common.tooling.preview.providers.domain
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import ru.zarina.zarina.domain.Color
 import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Price
 import ru.zarina.zarina.domain.Product
@@ -25,6 +26,24 @@ class ProductProvider : PreviewParameterProvider<Product> {
                 ),
             ),
             price = Price(current = 1699, original = 2399),
+            colorVariants = mapOf(
+                Color(
+                    id = "109",
+                    name = "Темно-серый деним",
+                    code = Color.Code("#858585")
+                ) to Product.Variant(
+                    id = "1329404704-109",
+                    isCurrent = false,
+                ),
+                Color(
+                    id = "50",
+                    name = "Чёрный",
+                    code = Color.Code("#000000")
+                ) to Product.Variant(
+                    id = "1329404704-50",
+                    isCurrent = true,
+                ),
+            )
         )
     )
 }
