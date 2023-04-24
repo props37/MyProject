@@ -35,6 +35,7 @@ fun CollapsibleContainer(
             .animateContentSize(),
     ) {
         Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
@@ -46,21 +47,22 @@ fun CollapsibleContainer(
         ) {
             header()
             Box {
-                val secondIconRotationDegrees by animateFloatAsState(
+                val iconRotationDegrees by animateFloatAsState(
                     targetValue = if (isCollapsed) 90f else 0f,
-                    label = "second icon rotation degrees"
-                )
-                Icon(
-                    painter = painterResource(R.drawable.ic_minus_24),
-                    contentDescription = null,
-                    modifier = Modifier
+                    label = "icon rotation degrees"
                 )
                 Icon(
                     painter = painterResource(R.drawable.ic_minus_24),
                     contentDescription = null,
                     modifier = Modifier.graphicsLayer {
-                        rotationX = secondIconRotationDegrees
-                        rotationY = secondIconRotationDegrees
+                        rotationZ = iconRotationDegrees * 2
+                    }
+                )
+                Icon(
+                    painter = painterResource(R.drawable.ic_minus_24),
+                    contentDescription = null,
+                    modifier = Modifier.graphicsLayer {
+                        rotationZ = iconRotationDegrees
                     }
                 )
             }
