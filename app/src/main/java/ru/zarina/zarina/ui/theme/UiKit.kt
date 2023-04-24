@@ -119,6 +119,16 @@ data class UiKitTypography(
         lineHeight = 12.sp,
         fontFamily = Fonts.Families.Circle
     ),
+    val productDetailsHeader: TextStyle = TextStyle(
+        fontSize = 17.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val productDetailsContent: TextStyle = TextStyle(
+        fontSize = 15.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
 )
 
 val LocalUiKitTypography = staticCompositionLocalOf { UiKitTypography() }

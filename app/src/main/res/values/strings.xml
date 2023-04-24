@@ -25,4 +25,6 @@
     <string name="city">Город</string>
     <string name="currency_amount_rubles">%1$d ₽</string>
     <string name="discount_percentage">-%1$d%%</string>
+    <string name="details">Детали</string>
+    <string name="key_value">%1$s: %2$s</string>
 </resources>

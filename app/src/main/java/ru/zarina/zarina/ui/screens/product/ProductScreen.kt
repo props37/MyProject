@@ -2,7 +2,9 @@ package ru.zarina.zarina.ui.screens.product
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -19,6 +22,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -28,8 +33,10 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Price
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.ui.common.components.CollapsibleContainer
 import ru.zarina.zarina.ui.common.components.ColorPicker
 import ru.zarina.zarina.ui.common.components.DiscountBadge
 import ru.zarina.zarina.ui.common.components.MediaPager
@@ -85,7 +92,12 @@ fun ProductScreenContent(
                         .padding(horizontal = 16.dp)
                 )
             }
-
+            item(contentType = ProductScreenSection.DETAILS) {
+                DetailsSection(
+                    description = product.description,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
 }
 
@@ -154,6 +166,37 @@ private fun ColorsSection(
         selectedColor = selectedColor,
         modifier = modifier
     )
+}
+
+@Composable
+private fun DetailsSection(
+    description: List<Pair<String, String>>,
+    modifier: Modifier = Modifier,
+) {
+    CollapsibleContainer(
+        header = {
+            Text(
+                text = stringResource(id = R.string.details),
+                style = UiKitTheme.typography.productDetailsHeader,
+                color = UiKitTheme.colors.primaryContentColor,
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
+        },
+        modifier = modifier.padding(horizontal = 16.dp),
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            description.forEach {
+                Text(
+                    text = stringResource(R.string.key_value, it.first, it.second),
+                    style = UiKitTheme.typography.productDetailsContent,
+                    color = UiKitTheme.colors.primaryContentColor,
+                    textAlign = TextAlign.Start,
+                )
+            }
+        }
+    }
 }
 
 private enum class ProductScreenSection { MEDIA, PRICE, COLORS, DETAILS, DIVIDER }
