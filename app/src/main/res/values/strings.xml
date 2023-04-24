@@ -23,4 +23,5 @@
     <string name="check_connection_and_try_again_later">Проверьте соединение с интернетом и попробуйте позже</string>
     <string name="refresh">Обновить</string>
     <string name="city">Город</string>
+    <string name="currency_amount_rubles">%1$d ₽</string>
 </resources>

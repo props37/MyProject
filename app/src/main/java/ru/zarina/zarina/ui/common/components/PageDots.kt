@@ -51,9 +51,9 @@ private fun Dot(
     )
     val color by animateColorAsState(
         targetValue = if (isActive)
-            UiKitTheme.colors.dotColor
+            UiKitTheme.colors.pagerDot
         else
-            UiKitTheme.colors.dotColor.copy(0.5f),
+            UiKitTheme.colors.pagerDot.copy(0.5f),
         label = "dot color"
     )
     Box(

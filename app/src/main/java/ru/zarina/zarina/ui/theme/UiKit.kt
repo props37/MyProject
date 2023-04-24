@@ -33,7 +33,9 @@ data class UiKitColors(
     val hint: Color = RollingStone,
     val listDivider: Color = Mercury,
     val listItemSubtitle: Color = RollingStone,
-    val dotColor: Color = Color.White,
+    val pagerDot: Color = Color.White,
+    val price: Color = SolidPink,
+    val retiredPrice: Color = RollingStone,
 )
 
 
@@ -101,6 +103,11 @@ data class UiKitTypography(
     val errorPlaceholderBody: TextStyle = TextStyle(
         fontSize = 15.sp,
         lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val productPrice: TextStyle = TextStyle(
+        fontSize = 20.sp,
+        lineHeight = 28.sp,
         fontFamily = Fonts.Families.Circle
     ),
 )

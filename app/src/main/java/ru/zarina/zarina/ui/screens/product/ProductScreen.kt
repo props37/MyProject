@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.rememberPagerState
@@ -19,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
@@ -26,9 +28,11 @@ import androidx.media3.datasource.cache.Cache
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.Media
+import ru.zarina.zarina.domain.Price
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
+import ru.zarina.zarina.ui.common.components.ProductPrice
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
@@ -40,40 +44,48 @@ fun ProductScreenContent(
     product: Product?,
     cache: State<Cache?>,
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.screenBackground)
-            .statusBarsPadding(),
-    ) {
-        item(contentType = ProductScreenSection.MEDIA) {
-            MediaSection(
-                media = product?.media,
-                cache = cache,
-                modifier = Modifier.fillMaxWidth()
-            )
+    if (product != null)
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(UiKitTheme.colors.screenBackground)
+                .statusBarsPadding(),
+        ) {
+            item(contentType = ProductScreenSection.MEDIA) {
+                MediaSection(
+                    media = product.media,
+                    cache = cache,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            item(contentType = ProductScreenSection.PRICE) {
+                PriceSection(
+                    price = product.price,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                )
+            }
         }
-    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MediaSection(
-    media: List<Media>?,
+    media: List<Media>,
     cache: State<Cache?>,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
         val pagerState = rememberPagerState()
         MediaPager(
-            media = media.orEmpty(),
+            media = media,
             cache = cache,
             state = pagerState,
             modifier = Modifier.fillMaxWidth(),
         )
         val coroutineScope = rememberCoroutineScope()
         PageDots(
-            count = media?.size ?: 0,
+            count = media.size,
             activeIndex = pagerState.currentPage,
             onDotClick = { index ->
                 coroutineScope.launch {
@@ -85,7 +97,18 @@ private fun MediaSection(
     }
 }
 
-private enum class ProductScreenSection { MEDIA }
+@Composable
+private fun PriceSection(
+    price: Price,
+    modifier: Modifier = Modifier,
+) {
+    ProductPrice(
+        price = price,
+        modifier = modifier
+    )
+}
+
+private enum class ProductScreenSection { MEDIA, PRICE }
 
 @Composable
 fun ProductScreen() {

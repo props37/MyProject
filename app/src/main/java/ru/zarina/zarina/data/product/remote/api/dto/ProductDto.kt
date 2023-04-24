@@ -21,7 +21,8 @@ data class ProductDto(
             && isNotNull(price, "price")
         ) return Product(
             id = id,
-            media = media?.mapNotNull { it.toDomain() }.orEmpty()
+            media = media?.mapNotNull { it.toDomain() }.orEmpty(),
+            price = price,
         )
         return null
     }
