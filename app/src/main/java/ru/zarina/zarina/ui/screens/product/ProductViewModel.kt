@@ -30,6 +30,10 @@ class ProductViewModel @Inject constructor(
         getProduct()
     }
 
+    fun onVariantClick(variant: Product.Variant) {
+        // TODO
+    }
+
     private fun getProduct() {
         // TODO go back when product id is null
         if (productId == null) return

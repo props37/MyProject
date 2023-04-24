@@ -43,6 +43,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @Composable
 fun ProductScreenContent(
     product: Product?,
+    onVariantClick: (Product.Variant) -> Unit,
     cache: State<Cache?>,
 ) {
     if (product != null)
@@ -69,6 +70,7 @@ fun ProductScreenContent(
             item(contentType = ProductScreenSection.COLORS) {
                 ColorsSection(
                     product = product,
+                    onVariantClick = onVariantClick,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
@@ -124,6 +126,7 @@ private fun PriceSection(
 @Composable
 private fun ColorsSection(
     product: Product,
+    onVariantClick: (Product.Variant) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val colors = remember(product) { product.colorVariants.map { it.key } }
@@ -132,7 +135,10 @@ private fun ColorsSection(
     }
     ColorPicker(
         colors = colors,
-        onColorSelected = { color -> /* TODO */ },
+        onColorSelected = { color ->
+            val variant = product.colorVariants[color]
+            if (variant != null) onVariantClick(variant)
+        },
         selectedColor = selectedColor,
         modifier = modifier
     )
@@ -148,11 +154,12 @@ fun ProductScreen() {
     val product by viewModel.product.collectAsStateWithLifecycle()
 
     ProductScreenBehavior(
-        sideEffects = viewModel.sideEffects
+        sideEffects = viewModel.sideEffects,
     )
 
     ProductScreenContent(
         product = product,
+        onVariantClick = viewModel::onVariantClick,
         cache = cache,
     )
 }
@@ -182,6 +189,7 @@ fun ProductScreenContentPreview(
     ZarinaTheme {
         ProductScreenContent(
             product = product,
+            onVariantClick = {},
             cache = remember { mutableStateOf(null) },
         )
     }
