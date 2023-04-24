@@ -19,7 +19,7 @@ fun ProductPrice(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
         if (price.isDiscounted) {
