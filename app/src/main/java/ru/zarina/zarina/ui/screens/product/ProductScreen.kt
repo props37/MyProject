@@ -98,6 +98,14 @@ fun ProductScreenContent(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+            item(contentType = ProductScreenSection.DIVIDER) {
+                Divider(
+                    color = UiKitTheme.colors.listDivider,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+            }
         }
 }
 
@@ -185,7 +193,8 @@ private fun DetailsSection(
         modifier = modifier.padding(horizontal = 16.dp),
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.padding(bottom = 16.dp)
         ) {
             description.forEach {
                 Text(
