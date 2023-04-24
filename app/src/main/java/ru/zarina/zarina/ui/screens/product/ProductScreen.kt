@@ -5,13 +5,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +47,8 @@ import ru.zarina.zarina.ui.common.components.DiscountBadge
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
 import ru.zarina.zarina.ui.common.components.ProductPrice
+import ru.zarina.zarina.ui.common.components.buttons.ZarinaButton
+import ru.zarina.zarina.ui.common.components.buttons.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
@@ -101,6 +108,13 @@ fun ProductScreenContent(
             item(contentType = ProductScreenSection.DIVIDER) {
                 Divider(
                     color = UiKitTheme.colors.listDivider,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+            }
+            item(contentType = ProductScreenSection.SHARE) {
+                ShareSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
@@ -208,7 +222,34 @@ private fun DetailsSection(
     }
 }
 
-private enum class ProductScreenSection { MEDIA, PRICE, COLORS, DETAILS, DIVIDER }
+@Composable
+private fun ShareSection(
+    modifier: Modifier = Modifier,
+) {
+    ZarinaButton(
+        onClick = { /*TODO*/ },
+        colors = ZarinaButtonDefaults.secondaryColors(),
+        modifier = modifier,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_share_24),
+                contentDescription = null,
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = stringResource(id = R.string.share_product),
+                style = UiKitTheme.typography.button,
+                color = UiKitTheme.colors.secondaryButtonForeground,
+                maxLines = 1,
+            )
+        }
+    }
+}
+
+private enum class ProductScreenSection { MEDIA, PRICE, COLORS, DETAILS, SHARE, DIVIDER }
 
 @Composable
 fun ProductScreen() {
