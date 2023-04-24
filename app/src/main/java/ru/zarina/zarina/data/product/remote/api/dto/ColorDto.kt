@@ -9,18 +9,18 @@ import ru.zarina.zarina.utils.kotlin.isNotNull
 @Serializable
 data class ColorDto(
     @SerialName("id")
-    val id: String?,
+    val id: String? = null,
     @SerialName("title")
-    val name: String?,
+    val name: String? = null,
     @SerialName("code")
-    val code: String?,
+    val code: String? = null,
     @SerialName("product_id")
-    val productId: String?,
+    val productId: String? = null,
     // This field is always `true` according to the backend developer
     @SerialName("product_is_available")
-    val productIsAvailable: Boolean?,
+    val productIsAvailable: Boolean? = null,
     @SerialName("is_current")
-    val isCurrent: Boolean?,
+    val isCurrent: Boolean? = null,
 ) {
     fun toDomain(): Pair<Color, Product.Variant>? {
         val color = toColor()

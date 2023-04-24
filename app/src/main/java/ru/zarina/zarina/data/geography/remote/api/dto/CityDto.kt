@@ -9,11 +9,11 @@ import ru.zarina.zarina.utils.kotlin.isNotNull
 @Serializable
 data class CityDto(
     @SerialName("kladr_id")
-    val id: String?,
+    val id: String? = null,
     @SerialName("name")
-    val name: String?,
+    val name: String? = null,
     @SerialName("region")
-    val region: String?,
+    val region: String? = null,
 ) {
 
     fun toDomain(): City? {

@@ -8,7 +8,7 @@ import ru.zarina.zarina.utils.kotlin.isNotNull
 @Serializable
 data class SplashDto(
     @SerialName("image")
-    val url: String?,
+    val url: String? = null,
 ) {
     fun toDomain(): Url? {
         if (isNotNull(url)) return Url(url)

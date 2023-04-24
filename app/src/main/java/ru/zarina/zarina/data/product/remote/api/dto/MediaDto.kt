@@ -9,9 +9,9 @@ import ru.zarina.zarina.utils.kotlin.isNotNull
 @Serializable
 data class MediaDto(
     @SerialName("type")
-    val type: MediaTypeDto?,
+    val type: MediaTypeDto? = null,
     @SerialName("media_url")
-    val url: String?,
+    val url: String? = null,
 ) {
     fun toDomain(): Media? {
         val mediaType = type?.toDomain()

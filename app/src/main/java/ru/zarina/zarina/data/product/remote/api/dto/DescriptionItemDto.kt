@@ -7,9 +7,9 @@ import ru.zarina.zarina.utils.kotlin.isNotNull
 @Serializable
 data class DescriptionItemDto(
     @SerialName("title")
-    val title: String?,
+    val title: String? = null,
     @SerialName("text")
-    val text: String?,
+    val text: String? = null,
 ) {
 
     fun toDomain(): Pair<String, String>? {

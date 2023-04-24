@@ -8,13 +8,13 @@ import ru.zarina.zarina.utils.kotlin.isNotNull
 @Serializable
 data class PriceDto(
     @SerialName("common_price")
-    val regularPrice: Int?,
+    val regularPrice: Int? = null,
     @SerialName("has_discount")
-    val isDiscount: Boolean?,
+    val isDiscount: Boolean? = null,
     @SerialName("discount")
-    val discountPercentage: Int?,
+    val discountPercentage: Int? = null,
     @SerialName("discount_price")
-    val discountedPrice: Int?,
+    val discountedPrice: Int? = null,
 ) {
 
     fun toDomain(): Price? {
