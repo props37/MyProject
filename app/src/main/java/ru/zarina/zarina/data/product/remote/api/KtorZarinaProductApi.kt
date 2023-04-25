@@ -3,6 +3,7 @@ package ru.zarina.zarina.data.product.remote.api
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import ru.zarina.zarina.data.product.remote.api.dto.CompleteLookDto
 import ru.zarina.zarina.data.product.remote.api.dto.ProductDto
 import ru.zarina.zarina.di.Authorization
@@ -19,7 +20,9 @@ class KtorZarinaProductApi @Inject constructor(
     }
 
     override suspend fun getCompleteLook(id: String): CompleteLookDto {
-        val response = client.get("/api/products/$id/total_look")
+        val response = client.get("/api/products/$id/total_look") {
+            parameter("with-articles", "")
+        }
         return response.body()
     }
 }
