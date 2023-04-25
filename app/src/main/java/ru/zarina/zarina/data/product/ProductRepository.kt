@@ -1,6 +1,7 @@
 package ru.zarina.zarina.data.product
 
 import ru.zarina.zarina.data.product.remote.IProductRemoteSource
+import ru.zarina.zarina.domain.Product
 import javax.inject.Inject
 
 class ProductRepository @Inject constructor(
@@ -9,4 +10,5 @@ class ProductRepository @Inject constructor(
 
     override suspend fun getProduct(id: String) = remote.getProduct(id)
 
+    override suspend fun getCompleteLook(product: Product) = remote.getCompleteLook(product)
 }
