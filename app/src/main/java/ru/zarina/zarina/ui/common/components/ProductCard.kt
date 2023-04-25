@@ -50,6 +50,10 @@ fun ProductCard(
             )
         }
         Spacer(modifier = Modifier.height(4.dp))
+        Tag(
+            text = product.attributes.firstOrNull().orEmpty(),
+            modifier = Modifier
+        )
         Text(
             text = product.name,
             color = UiKitTheme.colors.primaryContentColor,
@@ -63,6 +67,19 @@ fun ProductCard(
             textStyle = UiKitTheme.typography.productCardPrice,
         )
     }
+}
+
+@Composable
+private fun Tag(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = text.uppercase(),
+        color = UiKitTheme.colors.primaryContentColor,
+        style = UiKitTheme.typography.productCardTag,
+        modifier = modifier
+    )
 }
 
 @Preview
