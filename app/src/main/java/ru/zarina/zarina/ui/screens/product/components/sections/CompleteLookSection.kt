@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.screens.product.components.sections
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,12 +21,14 @@ fun CompleteLookSection(
         pageCount = products.size,
         beyondBoundsPageCount = 1,
         key = { products[it].id },
-        contentPadding = PaddingValues(horizontal = 64.dp),
+        contentPadding = PaddingValues(horizontal = 32.dp),
         modifier = modifier
     ) { index ->
         ProductCard(
             product = products[index],
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
         )
     }
 }
