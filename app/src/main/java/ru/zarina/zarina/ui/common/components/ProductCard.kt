@@ -12,10 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
@@ -62,6 +64,9 @@ fun ProductCard(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
+        ColorCount(
+            count = product.colorVariants.size
+        )
         ProductPrice(
             price = product.price,
             textStyle = UiKitTheme.typography.productCardPrice,
@@ -78,6 +83,20 @@ private fun Tag(
         text = text.uppercase(),
         color = UiKitTheme.colors.primaryContentColor,
         style = UiKitTheme.typography.productCardTag,
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun ColorCount(
+    count: Int,
+    modifier: Modifier = Modifier,
+) {
+    val text = if (count > 1) pluralStringResource(R.plurals.color_count, count, count) else ""
+    Text(
+        text = text,
+        color = UiKitTheme.colors.primaryContentColor,
+        style = UiKitTheme.typography.productCardColorCount,
         modifier = modifier
     )
 }

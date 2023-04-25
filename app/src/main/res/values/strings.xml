@@ -28,4 +28,12 @@
     <string name="details">Детали</string>
     <string name="key_value">%1$s: %2$s</string>
     <string name="share_product">Поделиться товаром</string>
+    <plurals name="color_count">
+        <item quantity="zero">%1$d цветов</item>
+        <item quantity="one">%1$d цвет</item>
+        <item quantity="two">%1$d цвета</item>
+        <item quantity="few">%1$d цвета</item>
+        <item quantity="many">%1$d цветов</item>
+        <item quantity="other">%1$d цветов</item>
+    </plurals>
 </resources>
