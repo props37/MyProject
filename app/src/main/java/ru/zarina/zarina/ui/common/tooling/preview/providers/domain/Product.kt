@@ -50,7 +50,8 @@ class ProductProvider : PreviewParameterProvider<Product> {
                 "Уход" to "Бережная стирка при максимальной температуре 30ºС, Не отбеливать, Машинная сушка запрещена, Глажение при 150ºС, Сухая чистка запрещена",
                 "Арт." to "1329404704",
             ),
-            url = Url("https://zarina.ru/catalog/product/1329404704-50/")
+            url = Url("https://zarina.ru/catalog/product/1329404704-50/"),
+            isLookPart = true
         )
     )
 }
