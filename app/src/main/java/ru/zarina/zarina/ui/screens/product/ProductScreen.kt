@@ -1,12 +1,6 @@
 package ru.zarina.zarina.ui.screens.product
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,25 +8,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -41,21 +27,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
-import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Price
 import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.ui.common.components.CollapsibleContainer
-import ru.zarina.zarina.ui.common.components.ColorPicker
-import ru.zarina.zarina.ui.common.components.DiscountBadge
-import ru.zarina.zarina.ui.common.components.MediaPager
-import ru.zarina.zarina.ui.common.components.PageDots
-import ru.zarina.zarina.ui.common.components.ProductPrice
-import ru.zarina.zarina.ui.common.components.buttons.ZarinaButton
-import ru.zarina.zarina.ui.common.components.buttons.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
+import ru.zarina.zarina.ui.screens.product.components.sections.ColorsSection
+import ru.zarina.zarina.ui.screens.product.components.sections.DetailsSection
+import ru.zarina.zarina.ui.screens.product.components.sections.MediaSection
+import ru.zarina.zarina.ui.screens.product.components.sections.PriceSection
+import ru.zarina.zarina.ui.screens.product.components.sections.ShareSection
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.android.share
@@ -130,133 +110,6 @@ fun ProductScreenContent(
                     )
                 }
         }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun MediaSection(
-    product: Product,
-    cache: State<Cache?>,
-    modifier: Modifier = Modifier,
-) {
-    Box(modifier = modifier) {
-        val pagerState = rememberPagerState()
-        MediaPager(
-            media = product.media,
-            cache = cache,
-            state = pagerState,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        val coroutineScope = rememberCoroutineScope()
-        PageDots(
-            count = product.media.size,
-            activeIndex = pagerState.currentPage,
-            onDotClick = { index ->
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(index)
-                }
-            },
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
-        DiscountBadge(
-            price = product.price,
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(16.dp)
-        )
-    }
-}
-
-@Composable
-private fun PriceSection(
-    price: Price,
-    modifier: Modifier = Modifier,
-) {
-    ProductPrice(
-        price = price,
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun ColorsSection(
-    product: Product,
-    onVariantClick: (Product.Variant) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val colors = remember(product) { product.colorVariants.map { it.key } }
-    val selectedColor = remember(product) {
-        product.colorVariants.entries.firstOrNull { it.value.isCurrent }?.key
-    }
-    ColorPicker(
-        colors = colors,
-        onColorSelected = { color ->
-            val variant = product.colorVariants[color]
-            if (variant != null) onVariantClick(variant)
-        },
-        selectedColor = selectedColor,
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun DetailsSection(
-    description: List<Pair<String, String>>,
-    modifier: Modifier = Modifier,
-) {
-    CollapsibleContainer(
-        header = {
-            Text(
-                text = stringResource(id = R.string.details),
-                style = UiKitTheme.typography.productDetailsHeader,
-                color = UiKitTheme.colors.primaryContentColor,
-                modifier = Modifier.padding(vertical = 16.dp)
-            )
-        },
-        modifier = modifier.padding(horizontal = 16.dp),
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier.padding(bottom = 16.dp)
-        ) {
-            description.forEach {
-                Text(
-                    text = stringResource(R.string.key_value, it.first, it.second),
-                    style = UiKitTheme.typography.productDetailsContent,
-                    color = UiKitTheme.colors.primaryContentColor,
-                    textAlign = TextAlign.Start,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ShareSection(
-    onShareClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    ZarinaButton(
-        onClick = onShareClick,
-        colors = ZarinaButtonDefaults.secondaryColors(),
-        modifier = modifier,
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_share_24),
-                contentDescription = null,
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = stringResource(id = R.string.share_product),
-                style = UiKitTheme.typography.button,
-                color = UiKitTheme.colors.secondaryButtonForeground,
-                maxLines = 1,
-            )
-        }
-    }
 }
 
 private enum class ProductScreenSection { MEDIA, PRICE, COLORS, DETAILS, SHARE, DIVIDER }
