@@ -32,7 +32,7 @@ fun MediaPager(
         val item = media[pageIndex]
         val itemModifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(3f / 4f)
+            .aspectRatio(Media.Defaults.PRODUCT_MEDIA_ASPECT_RATIO)
         when (item.type) {
             Media.Type.IMAGE -> ImageItem(
                 media = item,

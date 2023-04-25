@@ -5,4 +5,8 @@ data class Media(
     val type: Type,
 ) {
     enum class Type { IMAGE, VIDEO }
+
+    object Defaults {
+        val PRODUCT_MEDIA_ASPECT_RATIO = 3f / 4f
+    }
 }
