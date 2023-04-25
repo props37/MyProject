@@ -18,6 +18,8 @@ data class ProductDto(
     val colors: List<ColorDto>? = null,
     @SerialName("description")
     val description: List<DescriptionItemDto>? = null,
+    @SerialName("has_total_look")
+    val isLookPart: Boolean? = null,
     @SerialName("share_url")
     val url: String? = null,
 ) {
@@ -36,6 +38,7 @@ data class ProductDto(
                 .orEmpty(),
             description = description?.mapNotNull { it.toDomain() }.orEmpty(),
             url = url?.let { Url(it) },
+            isLookPart = isLookPart == true,
         )
         return null
     }
