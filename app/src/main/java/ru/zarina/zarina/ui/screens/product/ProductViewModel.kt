@@ -43,6 +43,13 @@ class ProductViewModel @Inject constructor(
         savedStateHandle[Destinations.PRODUCT.ARGUMENT_PRODUCT_ID] = variant.id
     }
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
+    fun onShareClick() {
+        val url = product.value?.url
+        if (url != null) sideEffect(SideEffect.ShareText(url.value))
+    }
+
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        data class ShareText(val text: String) : SideEffect
+    }
 
 }

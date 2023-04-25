@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -57,11 +58,13 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.utils.android.share
 
 @Composable
 fun ProductScreenContent(
     product: Product?,
     onVariantClick: (Product.Variant) -> Unit,
+    onShareClick: () -> Unit,
     cache: State<Cache?>,
 ) {
     if (product != null)
@@ -117,13 +120,15 @@ fun ProductScreenContent(
                         .padding(horizontal = 16.dp)
                 )
             }
-            item(contentType = ProductScreenSection.SHARE) {
-                ShareSection(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-            }
+            if (product.url != null)
+                item(contentType = ProductScreenSection.SHARE) {
+                    ShareSection(
+                        onShareClick = onShareClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                }
         }
 }
 
@@ -228,10 +233,11 @@ private fun DetailsSection(
 
 @Composable
 private fun ShareSection(
+    onShareClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ZarinaButton(
-        onClick = { /*TODO*/ },
+        onClick = onShareClick,
         colors = ZarinaButtonDefaults.secondaryColors(),
         modifier = modifier,
     ) {
@@ -269,6 +275,7 @@ fun ProductScreen() {
     ProductScreenContent(
         product = product,
         onVariantClick = viewModel::onVariantClick,
+        onShareClick = viewModel::onShareClick,
         cache = cache,
     )
 }
@@ -277,10 +284,11 @@ fun ProductScreen() {
 fun ProductScreenBehavior(
     sideEffects: Flow<ProductViewModel.SideEffect>,
 ) {
-    LaunchedEffect(sideEffects) {
+    val context = LocalContext.current
+    LaunchedEffect(context, sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                else -> TODO()
+                is ProductViewModel.SideEffect.ShareText -> context.share(effect.text)
             }
         }
     }
@@ -299,6 +307,7 @@ fun ProductScreenContentPreview(
         ProductScreenContent(
             product = product,
             onVariantClick = {},
+            onShareClick = {},
             cache = remember { mutableStateOf(null) },
         )
     }
