@@ -32,6 +32,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.screens.product.components.sections.ColorsSection
+import ru.zarina.zarina.ui.screens.product.components.sections.CompleteLookSection
 import ru.zarina.zarina.ui.screens.product.components.sections.DetailsSection
 import ru.zarina.zarina.ui.screens.product.components.sections.MediaSection
 import ru.zarina.zarina.ui.screens.product.components.sections.PriceSection
@@ -45,6 +46,7 @@ fun ProductScreenContent(
     product: Product?,
     onVariantClick: (Product.Variant) -> Unit,
     onShareClick: () -> Unit,
+    completeLookProducts: List<Product>,
     cache: State<Cache?>,
 ) {
     if (product != null)
@@ -109,10 +111,16 @@ fun ProductScreenContent(
                             .padding(horizontal = 16.dp)
                     )
                 }
+            item(contentType = ProductScreenSection.COMPLETE_LOOK) {
+                CompleteLookSection(
+                    products = completeLookProducts,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
 }
 
-private enum class ProductScreenSection { MEDIA, PRICE, COLORS, DETAILS, SHARE, DIVIDER }
+private enum class ProductScreenSection { MEDIA, PRICE, COLORS, DETAILS, SHARE, COMPLETE_LOOK, DIVIDER }
 
 @Composable
 fun ProductScreen() {
@@ -120,6 +128,7 @@ fun ProductScreen() {
 
     val cache = viewModel.cache.collectAsStateWithLifecycle()
     val product by viewModel.product.collectAsStateWithLifecycle()
+    val completeLookProducts by viewModel.completeLookProducts.collectAsStateWithLifecycle()
 
     ProductScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -129,6 +138,7 @@ fun ProductScreen() {
         product = product,
         onVariantClick = viewModel::onVariantClick,
         onShareClick = viewModel::onShareClick,
+        completeLookProducts = completeLookProducts,
         cache = cache,
     )
 }
@@ -161,6 +171,7 @@ fun ProductScreenContentPreview(
             product = product,
             onVariantClick = {},
             onShareClick = {},
+            completeLookProducts = List(5) { product },
             cache = remember { mutableStateOf(null) },
         )
     }

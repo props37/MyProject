@@ -40,7 +40,7 @@ class ProductViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val completeLook = product
+    val completeLookProducts = product
         .mapLatest { product ->
             // TODO show loading error
             if (product?.isLookPart == true)
