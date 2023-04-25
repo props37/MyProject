@@ -39,6 +39,17 @@ class ProductViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val completeLook = product
+        .mapLatest { product ->
+            // TODO show loading error
+            if (product?.isLookPart == true)
+                interactor.getCompeleteLook(product).getOrDefault(emptyList())
+            else
+                emptyList()
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
     fun onVariantClick(variant: Product.Variant) {
         savedStateHandle[Destinations.PRODUCT.ARGUMENT_PRODUCT_ID] = variant.id
     }
