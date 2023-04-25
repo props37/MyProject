@@ -38,7 +38,7 @@ fun ProductCard(
         ) {
             val image = product.media.firstOrNull { it.type == Media.Type.IMAGE }
             AsyncImageLoader(
-                model = image?.url,
+                model = image?.url?.value,
                 modifier = Modifier.fillMaxSize()
             )
 
