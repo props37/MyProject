@@ -58,6 +58,10 @@ fun ProductCard(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
+        ProductPrice(
+            price = product.price,
+            textStyle = UiKitTheme.typography.productCardPrice,
+        )
     }
 }
 
