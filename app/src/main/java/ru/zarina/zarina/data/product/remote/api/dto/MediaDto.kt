@@ -2,9 +2,9 @@ package ru.zarina.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.data.ApiContract
 import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Url
-import ru.zarina.zarina.utils.kotlin.isNotNull
 
 @Serializable
 data class MediaDto(
@@ -17,8 +17,8 @@ data class MediaDto(
         val mediaType = type?.toDomain()
         val url = url?.let { Url(it) }
         if (
-            isNotNull(mediaType, "type")
-            && isNotNull(url, "url")
+            ApiContract.isNotNull(mediaType, "type")
+            && ApiContract.isNotNull(url, "url")
         ) return Media(url = url, type = mediaType)
         return null
     }

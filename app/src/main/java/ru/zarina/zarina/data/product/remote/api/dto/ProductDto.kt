@@ -2,9 +2,9 @@ package ru.zarina.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.data.ApiContract
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Url
-import ru.zarina.zarina.utils.kotlin.isNotNull
 
 @Serializable
 data class ProductDto(
@@ -28,9 +28,9 @@ data class ProductDto(
     fun toDomain(): Product? {
         val price = price?.toDomain()
         if (
-            isNotNull(id, "id")
-            && isNotNull(price, "price")
-            && isNotNull(name, "name")
+            ApiContract.isNotNull(id, "id")
+            && ApiContract.isNotNull(price, "price")
+            && ApiContract.isNotNull(name, "name")
         ) return Product(
             id = id,
             name = name,

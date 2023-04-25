@@ -2,7 +2,7 @@ package ru.zarina.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.utils.kotlin.isNotNull
+import ru.zarina.zarina.data.ApiContract
 
 @Serializable
 data class DescriptionItemDto(
@@ -13,7 +13,7 @@ data class DescriptionItemDto(
 ) {
 
     fun toDomain(): Pair<String, String>? {
-        return if (isNotNull(title, "title") && isNotNull(text, "text"))
+        return if (ApiContract.isNotNull(title, "title") && ApiContract.isNotNull(text, "text"))
             title to text
         else
             null

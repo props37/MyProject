@@ -2,8 +2,8 @@ package ru.zarina.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.data.ApiContract
 import ru.zarina.zarina.domain.Price
-import ru.zarina.zarina.utils.kotlin.isNotNull
 
 @Serializable
 data class PriceDto(
@@ -19,8 +19,8 @@ data class PriceDto(
 
     fun toDomain(): Price? {
         return if (
-            isNotNull(discountedPrice, "discount_price")
-            && isNotNull(regularPrice, "common_price")
+            ApiContract.isNotNull(discountedPrice, "discount_price")
+            && ApiContract.isNotNull(regularPrice, "common_price")
         )
             Price(
                 current = discountedPrice,

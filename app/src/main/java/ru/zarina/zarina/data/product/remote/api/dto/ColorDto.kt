@@ -2,9 +2,9 @@ package ru.zarina.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.data.ApiContract
 import ru.zarina.zarina.domain.Color
 import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.utils.kotlin.isNotNull
 
 @Serializable
 data class ColorDto(
@@ -33,9 +33,9 @@ data class ColorDto(
 
     private fun toColor(): Color? {
         return if (
-            isNotNull(id, "id")
-            && isNotNull(name, "title")
-            && isNotNull(code, "code")
+            ApiContract.isNotNull(id, "id")
+            && ApiContract.isNotNull(name, "title")
+            && ApiContract.isNotNull(code, "code")
         )
             Color(
                 id = id,
@@ -48,8 +48,8 @@ data class ColorDto(
 
     private fun toProductVariant(): Product.Variant? {
         return if (
-            isNotNull(productId, "product_id")
-            && isNotNull(isCurrent, "is_current")
+            ApiContract.isNotNull(productId, "product_id")
+            && ApiContract.isNotNull(isCurrent, "is_current")
         )
             Product.Variant(
                 id = productId,
