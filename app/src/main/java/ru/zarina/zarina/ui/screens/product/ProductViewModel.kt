@@ -59,8 +59,13 @@ class ProductViewModel @Inject constructor(
         if (url != null) sideEffect(SideEffect.ShareText(url.value))
     }
 
+    fun onProductClick(product: Product) {
+        sideEffect(SideEffect.ShowProduct(product))
+    }
+
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         data class ShareText(val text: String) : SideEffect
+        data class ShowProduct(val product: Product) : SideEffect
     }
 
 }

@@ -15,6 +15,7 @@ import ru.zarina.zarina.ui.common.components.ProductCard
 @Composable
 fun CompleteLookSection(
     products: List<Product>,
+    onProductClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     HorizontalPager(
@@ -24,8 +25,10 @@ fun CompleteLookSection(
         contentPadding = PaddingValues(horizontal = 32.dp),
         modifier = modifier
     ) { index ->
+        val product = products[index]
         ProductCard(
-            product = products[index],
+            product = product,
+            onClick = { onProductClick(product) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp),

@@ -47,6 +47,7 @@ fun ProductScreenContent(
     onVariantClick: (Product.Variant) -> Unit,
     onShareClick: () -> Unit,
     completeLookProducts: List<Product>,
+    onProductClick: (Product) -> Unit,
     cache: State<Cache?>,
 ) {
     if (product != null)
@@ -114,6 +115,7 @@ fun ProductScreenContent(
             item(contentType = ProductScreenSection.COMPLETE_LOOK) {
                 CompleteLookSection(
                     products = completeLookProducts,
+                    onProductClick = onProductClick,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -123,7 +125,9 @@ fun ProductScreenContent(
 private enum class ProductScreenSection { MEDIA, PRICE, COLORS, DETAILS, SHARE, COMPLETE_LOOK, DIVIDER }
 
 @Composable
-fun ProductScreen() {
+fun ProductScreen(
+    showProduct: (String) -> Unit,
+) {
     val viewModel = hiltViewModel<ProductViewModel>()
 
     val cache = viewModel.cache.collectAsStateWithLifecycle()
@@ -132,6 +136,7 @@ fun ProductScreen() {
 
     ProductScreenBehavior(
         sideEffects = viewModel.sideEffects,
+        showProduct = showProduct,
     )
 
     ProductScreenContent(
@@ -139,6 +144,7 @@ fun ProductScreen() {
         onVariantClick = viewModel::onVariantClick,
         onShareClick = viewModel::onShareClick,
         completeLookProducts = completeLookProducts,
+        onProductClick = viewModel::onProductClick,
         cache = cache,
     )
 }
@@ -146,12 +152,14 @@ fun ProductScreen() {
 @Composable
 fun ProductScreenBehavior(
     sideEffects: Flow<ProductViewModel.SideEffect>,
+    showProduct: (String) -> Unit,
 ) {
     val context = LocalContext.current
     LaunchedEffect(context, sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
                 is ProductViewModel.SideEffect.ShareText -> context.share(effect.text)
+                is ProductViewModel.SideEffect.ShowProduct -> showProduct(effect.product.id)
             }
         }
     }
@@ -172,6 +180,7 @@ fun ProductScreenContentPreview(
             onVariantClick = {},
             onShareClick = {},
             completeLookProducts = List(5) { product },
+            onProductClick = {},
             cache = remember { mutableStateOf(null) },
         )
     }

@@ -46,7 +46,11 @@ fun ZarinaNavigation(
             )
         }
         composableDestination(Destinations.PRODUCT) {
-            ProductScreen()
+            ProductScreen(
+                showProduct = { productId ->
+                    navController.navigate(Destinations.PRODUCT.createRoute(productId))
+                }
+            )
         }
     }
 }
