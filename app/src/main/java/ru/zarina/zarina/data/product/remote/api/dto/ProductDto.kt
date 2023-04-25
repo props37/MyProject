@@ -24,6 +24,8 @@ data class ProductDto(
     val isLookPart: Boolean? = null,
     @SerialName("share_url")
     val url: String? = null,
+    @SerialName("attributes")
+    val attributes: List<String>? = null,
 ) {
     fun toDomain(): Product? {
         val price = price?.toDomain()
@@ -43,6 +45,7 @@ data class ProductDto(
             description = description?.mapNotNull { it.toDomain() }.orEmpty(),
             url = url?.let { Url(it) },
             isLookPart = isLookPart == true,
+            attributes = attributes.orEmpty(),
         )
         return null
     }

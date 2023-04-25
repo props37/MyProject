@@ -8,6 +8,7 @@ data class Product(
     val colorVariants: Map<Color, Variant>,
     val description: List<Pair<String, String>>,
     val url: Url?,
+    val attributes: List<String>,
     /** Whether this product is a part of "complete look" ("образ целиком") bundle */
     val isLookPart: Boolean,
 ) {

@@ -52,7 +52,8 @@ class ProductProvider : PreviewParameterProvider<Product> {
                 "Арт." to "1329404704",
             ),
             url = Url("https://zarina.ru/catalog/product/1329404704-50/"),
-            isLookPart = true
+            isLookPart = true,
+            attributes = listOf("эксклюзивно онлайн")
         )
     )
 }
