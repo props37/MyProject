@@ -11,6 +11,7 @@ class ProductProvider : PreviewParameterProvider<Product> {
     override val values = sequenceOf(
         Product(
             id = "1329404704-50",
+            name = "Джинсы mom fit",
             media = listOf(
                 Media(
                     url = Url("https://imgcdn.zarina.ru/upload/images/13294/thumb/450_9999/1329404704_50_1.jpg?t=1631575743"),

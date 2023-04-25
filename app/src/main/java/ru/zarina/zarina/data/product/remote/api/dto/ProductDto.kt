@@ -10,6 +10,8 @@ import ru.zarina.zarina.utils.kotlin.isNotNull
 data class ProductDto(
     @SerialName("id")
     val id: String? = null,
+    @SerialName("name")
+    val name: String? = null,
     @SerialName("media")
     val media: List<MediaDto>? = null,
     @SerialName("price")
@@ -28,8 +30,10 @@ data class ProductDto(
         if (
             isNotNull(id, "id")
             && isNotNull(price, "price")
+            && isNotNull(name, "name")
         ) return Product(
             id = id,
+            name = name,
             media = media?.mapNotNull { it.toDomain() }.orEmpty(),
             price = price,
             colorVariants = colors
