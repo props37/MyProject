@@ -73,8 +73,13 @@ fun ProductCard(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
-        ColorCount(
-            count = product.colorVariants.size
+        val colors = remember(product) { product.colorVariants.map { it.key } }
+        val selectedColor = remember(product) {
+            product.colorVariants.entries.firstOrNull { it.value.isCurrent }?.key
+        }
+        SmallColorPicker(
+            colors = colors,
+            selectedColor = selectedColor,
         )
         ProductPrice(
             price = product.price,
@@ -110,7 +115,9 @@ private fun ColorCount(
     )
 }
 
-@Preview
+@Preview(
+    showBackground = true,
+)
 @Composable
 fun ProductCardPreview(
     @PreviewParameter(ProductProvider::class, limit = 1)
