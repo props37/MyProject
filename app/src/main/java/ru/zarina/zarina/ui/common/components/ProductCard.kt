@@ -71,14 +71,16 @@ fun ProductCard(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
-        val colors = remember(product) { product.colorVariants.map { it.key } }
-        val selectedColor = remember(product) {
-            product.colorVariants.entries.firstOrNull { it.value.isCurrent }?.key
+        if (product.colorVariants.size > 1) {
+            val colors = remember(product) { product.colorVariants.map { it.key } }
+            val selectedColor = remember(product) {
+                product.colorVariants.entries.firstOrNull { it.value.isCurrent }?.key
+            }
+            SmallColorPicker(
+                colors = colors,
+                selectedColor = selectedColor,
+            )
         }
-        SmallColorPicker(
-            colors = colors,
-            selectedColor = selectedColor,
-        )
         ProductPrice(
             price = product.price,
             textStyle = UiKitTheme.typography.productCardPrice,
