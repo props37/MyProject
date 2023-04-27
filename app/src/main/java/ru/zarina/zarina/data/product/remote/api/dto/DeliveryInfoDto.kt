@@ -3,7 +3,7 @@ package ru.zarina.zarina.data.product.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
-import ru.zarina.zarina.domain.Delivery
+import ru.zarina.zarina.domain.DeliveryAvailability
 
 @Serializable
 data class DeliveryInfoDto(
@@ -13,11 +13,11 @@ data class DeliveryInfoDto(
     val deliveries: List<DeliveryOptionDto>? = null,
 ) {
 
-    fun toDomain(): Delivery? {
+    fun toDomain(): DeliveryAvailability? {
         return if (
             ApiContract.isNotNull(cityName, "cityName")
         ) {
-            return Delivery(
+            return DeliveryAvailability(
                 cityName = cityName,
                 options = deliveries?.mapNotNull { it.toDomain() }.orEmpty(),
             )

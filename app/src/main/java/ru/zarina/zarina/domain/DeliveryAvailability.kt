@@ -1,6 +1,6 @@
 package ru.zarina.zarina.domain
 
-data class Delivery(
+data class DeliveryAvailability(
     val cityName: String,
     val options: List<Option>,
 ) {

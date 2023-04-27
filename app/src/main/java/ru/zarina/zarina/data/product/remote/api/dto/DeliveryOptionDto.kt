@@ -3,7 +3,7 @@ package ru.zarina.zarina.data.product.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
-import ru.zarina.zarina.domain.Delivery
+import ru.zarina.zarina.domain.DeliveryAvailability
 
 @Serializable
 data class DeliveryOptionDto(
@@ -15,14 +15,14 @@ data class DeliveryOptionDto(
     val estimationDays: Int? = null,
 ) {
 
-    fun toDomain(): Delivery.Option? {
+    fun toDomain(): DeliveryAvailability.Option? {
         val type = type?.toDomain()
         return if (
             ApiContract.isNotNull(type, "type")
             && ApiContract.isNotNull(title, "title")
             && ApiContract.isNotNull(estimationDays, "estimationDays")
         ) {
-            Delivery.Option(
+            DeliveryAvailability.Option(
                 type = type,
                 name = title,
                 estimatedTimeDays = estimationDays
@@ -36,10 +36,10 @@ data class DeliveryOptionDto(
     @JvmInline
     value class Type(val value: String) {
         fun toDomain() = when (this.value) {
-            "express" -> Delivery.Option.Type.EXPRESS
-            "post" -> Delivery.Option.Type.POST
-            "pickup" -> Delivery.Option.Type.PICKUP
-            "retail" -> Delivery.Option.Type.RETAIL
+            "express" -> DeliveryAvailability.Option.Type.EXPRESS
+            "post" -> DeliveryAvailability.Option.Type.POST
+            "pickup" -> DeliveryAvailability.Option.Type.PICKUP
+            "retail" -> DeliveryAvailability.Option.Type.RETAIL
             else -> null
         }
     }
