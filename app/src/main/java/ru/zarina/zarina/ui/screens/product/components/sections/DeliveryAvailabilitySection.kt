@@ -139,8 +139,15 @@ private fun DeliveryOption(
                 textAlign = TextAlign.Start,
             )
             Spacer(modifier = Modifier.height(2.dp))
+            val timeResource = when (option.estimatedTimeDays) {
+                0 -> R.string.today
+                1 -> R.string.tomorrow
+                2 -> R.string.day_after_tomorrow
+                else -> R.string.three_days_or_more
+            }
+            // TODO add price
             Text(
-                text = "", // TODO
+                text = stringResource(timeResource),
                 style = UiKitTheme.typography.deliveryInformationBody,
                 color = UiKitTheme.colors.primaryContentColor,
                 textAlign = TextAlign.Start,

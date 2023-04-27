@@ -30,4 +30,8 @@
     <string name="share_product">Поделиться товаром</string>
     <string name="complete_look">Образ целиком</string>
     <string name="delivery_to">Доставка в %1$s</string>
+    <string name="today">Сегодня</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="day_after_tomorrow">Послезавтра</string>
+    <string name="three_days_or_more">От двух дней</string>
 </resources>

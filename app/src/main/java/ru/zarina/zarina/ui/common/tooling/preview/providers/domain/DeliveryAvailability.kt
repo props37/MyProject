@@ -16,7 +16,7 @@ class DeliveryAvailabilityProvider : PreviewParameterProvider<DeliveryAvailabili
                 DeliveryAvailability.Option(
                     type = DeliveryAvailability.Option.Type.POST,
                     name = "Почта России",
-                    estimatedTimeDays = 4
+                    estimatedTimeDays = 3
                 ),
                 DeliveryAvailability.Option(
                     type = DeliveryAvailability.Option.Type.PICKUP,
@@ -26,7 +26,7 @@ class DeliveryAvailabilityProvider : PreviewParameterProvider<DeliveryAvailabili
                 DeliveryAvailability.Option(
                     type = DeliveryAvailability.Option.Type.RETAIL,
                     name = "Забрать из магазина",
-                    estimatedTimeDays = 3
+                    estimatedTimeDays = 0
                 ),
             )
         )
