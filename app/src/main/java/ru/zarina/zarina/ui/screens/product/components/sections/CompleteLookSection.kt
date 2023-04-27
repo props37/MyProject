@@ -1,13 +1,17 @@
 package ru.zarina.zarina.ui.screens.product.components.sections
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.components.ProductCard
 
@@ -18,20 +22,28 @@ fun CompleteLookSection(
     onProductClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    HorizontalPager(
-        pageCount = products.size,
-        beyondBoundsPageCount = 1,
-        key = { products[it].id },
-        contentPadding = PaddingValues(horizontal = 32.dp),
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-    ) { index ->
-        val product = products[index]
-        ProductCard(
-            product = product,
-            onClick = { onProductClick(product) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
+    ) {
+        SectionHeader(
+            text = stringResource(R.string.complete_look).uppercase(),
         )
+        HorizontalPager(
+            pageCount = products.size,
+            beyondBoundsPageCount = 1,
+            key = { products[it].id },
+            contentPadding = PaddingValues(horizontal = 32.dp),
+            modifier = Modifier.fillMaxWidth(),
+        ) { index ->
+            val product = products[index]
+            ProductCard(
+                product = product,
+                onClick = { onProductClick(product) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+            )
+        }
     }
 }
