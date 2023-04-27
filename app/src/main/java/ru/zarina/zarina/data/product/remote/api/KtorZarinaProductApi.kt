@@ -5,6 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import ru.zarina.zarina.data.product.remote.api.dto.CompleteLookDto
+import ru.zarina.zarina.data.product.remote.api.dto.DeliveryInfoDto
 import ru.zarina.zarina.data.product.remote.api.dto.ProductDto
 import ru.zarina.zarina.di.Authorization
 import javax.inject.Inject
@@ -23,6 +24,11 @@ class KtorZarinaProductApi @Inject constructor(
         val response = client.get("/api/products/$id/total_look") {
             parameter("with-articles", "")
         }
+        return response.body()
+    }
+
+    override suspend fun getDeliveryInfo(id: String): DeliveryInfoDto {
+        val response = client.get("/api/products/$id/delivery-info")
         return response.body()
     }
 }

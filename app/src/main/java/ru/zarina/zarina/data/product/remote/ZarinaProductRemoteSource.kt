@@ -12,4 +12,7 @@ class ZarinaProductRemoteSource @Inject constructor(
 
     override suspend fun getCompleteLook(product: Product) =
         api.getCompleteLook(product.id).toDomain()
+
+    override suspend fun getDeliveryAvailability(product: Product) =
+        checkNotNull(api.getDeliveryInfo(product.id).toDomain())
 }

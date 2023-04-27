@@ -11,4 +11,7 @@ class ProductRepository @Inject constructor(
     override suspend fun getProduct(id: String) = remote.getProduct(id)
 
     override suspend fun getCompleteLook(product: Product) = remote.getCompleteLook(product)
+
+    override suspend fun getDeliveryAvailability(product: Product) =
+        remote.getDeliveryAvailability(product)
 }
