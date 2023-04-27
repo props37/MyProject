@@ -33,6 +33,7 @@ fun CompleteLookSection(
             pageCount = products.size,
             beyondBoundsPageCount = 1,
             key = { products[it].id },
+            verticalAlignment = Alignment.Top,
             contentPadding = PaddingValues(horizontal = 32.dp),
             modifier = Modifier.fillMaxWidth(),
         ) { index ->
