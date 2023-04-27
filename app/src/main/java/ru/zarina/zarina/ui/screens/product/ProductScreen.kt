@@ -103,6 +103,13 @@ fun ProductScreenContent(
                         .padding(horizontal = 16.dp)
                 )
             }
+            item(contentType = ProductScreenSection.COMPLETE_LOOK) {
+                CompleteLookSection(
+                    products = completeLookProducts,
+                    onProductClick = onProductClick,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             if (product.url != null)
                 item(contentType = ProductScreenSection.SHARE) {
                     ShareSection(
@@ -112,13 +119,6 @@ fun ProductScreenContent(
                             .padding(horizontal = 16.dp)
                     )
                 }
-            item(contentType = ProductScreenSection.COMPLETE_LOOK) {
-                CompleteLookSection(
-                    products = completeLookProducts,
-                    onProductClick = onProductClick,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
         }
 }
 
