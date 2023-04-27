@@ -35,6 +35,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.DeliveryAvail
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.screens.product.components.sections.ColorsSection
 import ru.zarina.zarina.ui.screens.product.components.sections.CompleteLookSection
+import ru.zarina.zarina.ui.screens.product.components.sections.DeliveryAvailabilitySection
 import ru.zarina.zarina.ui.screens.product.components.sections.DetailsSection
 import ru.zarina.zarina.ui.screens.product.components.sections.MediaSection
 import ru.zarina.zarina.ui.screens.product.components.sections.PriceSection
@@ -125,7 +126,12 @@ fun ProductScreenContent(
                     )
                 }
             item(contentType = ProductScreenSection.DELIVERY) {
-
+                DeliveryAvailabilitySection(
+                    deliveryAvailability = deliveryAvailability,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                )
             }
         }
 }

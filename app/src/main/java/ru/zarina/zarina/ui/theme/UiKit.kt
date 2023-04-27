@@ -25,6 +25,8 @@ data class UiKitColors(
     val primaryButtonBackground: Color = Mineshaft,
     val primaryButtonForeground: Color = Color.White,
     val primaryButtonBorder: Color = Mineshaft,
+    val primaryBorderColor: Color = Mercury,
+    val primaryAccentColor: Color = SolidPink,
     val secondaryButtonBackground: Color = Color.White,
     val secondaryButtonForeground: Color = Color.Black,
     val secondaryButtonBorder: Color = Mineshaft,
@@ -152,6 +154,12 @@ data class UiKitTypography(
     val productSectionHeader: TextStyle = TextStyle(
         fontSize = 20.sp,
         lineHeight = 26.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val deliveryInformationHeader: TextStyle = TextStyle(
+        fontSize = 17.sp,
+        lineHeight = 20.sp,
+        fontWeight = FontWeight.Bold,
         fontFamily = Fonts.Families.Circle
     ),
 )

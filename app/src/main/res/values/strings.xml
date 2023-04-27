@@ -29,4 +29,5 @@
     <string name="key_value">%1$s: %2$s</string>
     <string name="share_product">Поделиться товаром</string>
     <string name="complete_look">Образ целиком</string>
+    <string name="delivery_to">Доставка в %1$s</string>
 </resources>
