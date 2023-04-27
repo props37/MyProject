@@ -27,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.domain.DeliveryAvailability
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -49,6 +50,7 @@ fun ProductScreenContent(
     completeLookProducts: List<Product>,
     onProductClick: (Product) -> Unit,
     cache: State<Cache?>,
+    deliveryAvailability: DeliveryAvailability?,
 ) {
     if (product != null)
         LazyColumn(
@@ -121,10 +123,13 @@ fun ProductScreenContent(
                             .padding(horizontal = 16.dp)
                     )
                 }
+            item(contentType = ProductScreenSection.DELIVERY) {
+
+            }
         }
 }
 
-private enum class ProductScreenSection { MEDIA, PRICE, COLORS, DETAILS, SHARE, COMPLETE_LOOK, DIVIDER }
+private enum class ProductScreenSection { MEDIA, PRICE, COLORS, DETAILS, SHARE, COMPLETE_LOOK, DELIVERY, DIVIDER }
 
 @Composable
 fun ProductScreen(
@@ -135,6 +140,7 @@ fun ProductScreen(
     val cache = viewModel.cache.collectAsStateWithLifecycle()
     val product by viewModel.product.collectAsStateWithLifecycle()
     val completeLookProducts by viewModel.completeLookProducts.collectAsStateWithLifecycle()
+    val deliveryAvailability by viewModel.deliveryAvailability.collectAsStateWithLifecycle()
 
     ProductScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -147,6 +153,7 @@ fun ProductScreen(
         onShareClick = viewModel::onShareClick,
         completeLookProducts = completeLookProducts,
         onProductClick = viewModel::onProductClick,
+        deliveryAvailability = deliveryAvailability,
         cache = cache,
     )
 }
@@ -184,6 +191,31 @@ fun ProductScreenContentPreview(
             completeLookProducts = List(5) { product },
             onProductClick = {},
             cache = remember { mutableStateOf(null) },
+            deliveryAvailability = DeliveryAvailability(
+                cityName = "Санкт-Петербург",
+                options = listOf(
+                    DeliveryAvailability.Option(
+                        type = DeliveryAvailability.Option.Type.EXPRESS,
+                        name = "Курьерская доставка",
+                        estimatedTimeDays = 1
+                    ),
+                    DeliveryAvailability.Option(
+                        type = DeliveryAvailability.Option.Type.POST,
+                        name = "Почта России",
+                        estimatedTimeDays = 4
+                    ),
+                    DeliveryAvailability.Option(
+                        type = DeliveryAvailability.Option.Type.PICKUP,
+                        name = "Пункт самовывоза",
+                        estimatedTimeDays = 2
+                    ),
+                    DeliveryAvailability.Option(
+                        type = DeliveryAvailability.Option.Type.RETAIL,
+                        name = "Забрать из магазина",
+                        estimatedTimeDays = 3
+                    ),
+                )
+            ),
         )
     }
 }
