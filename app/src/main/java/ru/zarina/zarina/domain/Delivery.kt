@@ -10,7 +10,7 @@ data class Delivery(
         val name: String,
         val estimatedTimeDays: Int,
     ) {
-        enum class Type { EXPRESS, POST, PICKUP }
+        enum class Type { EXPRESS, POST, PICKUP, RETAIL }
     }
 
 }
