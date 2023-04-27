@@ -107,7 +107,9 @@ fun ProductScreenContent(
                 CompleteLookSection(
                     products = completeLookProducts,
                     onProductClick = onProductClick,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
                 )
             }
             if (product.url != null)
