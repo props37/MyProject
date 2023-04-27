@@ -1,16 +1,23 @@
 package ru.zarina.zarina.ui.screens.product.components.sections
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -65,11 +72,17 @@ private fun DeliveryInformation(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.Start,
         modifier = modifier
     ) {
         DeliveryInformationHeader(deliveryAvailability = deliveryAvailability)
+        // TODO handle zero delivery options
+        deliveryAvailability.options.forEach { option ->
+            DeliveryOption(
+                option,
+            )
+        }
     }
 }
 
@@ -99,6 +112,51 @@ private fun DeliveryInformationHeader(
         textAlign = TextAlign.Start,
         modifier = modifier
     )
+}
+
+@Composable
+private fun DeliveryOption(
+    option: DeliveryAvailability.Option,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+    ) {
+        val drawable = option.type.getDrawable()
+        Icon(
+            painter = painterResource(id = drawable),
+            contentDescription = null,
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        Column(
+            modifier = Modifier.weight(1f),
+        ) {
+            Text(
+                text = option.name,
+                style = UiKitTheme.typography.deliveryInformationBody,
+                color = UiKitTheme.colors.primaryContentColor,
+                textAlign = TextAlign.Start,
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = "", // TODO
+                style = UiKitTheme.typography.deliveryInformationBody,
+                color = UiKitTheme.colors.primaryContentColor,
+                textAlign = TextAlign.Start,
+            )
+        }
+    }
+}
+
+@DrawableRes
+private fun DeliveryAvailability.Option.Type.getDrawable(): Int {
+    return when (this) {
+        DeliveryAvailability.Option.Type.EXPRESS -> R.drawable.ic_scooter_24
+        DeliveryAvailability.Option.Type.POST -> R.drawable.ic_box_24
+        DeliveryAvailability.Option.Type.PICKUP -> R.drawable.ic_map_marker_24
+        DeliveryAvailability.Option.Type.RETAIL -> R.drawable.ic_z_24
+    }
 }
 
 @Preview(showBackground = true)

@@ -162,6 +162,11 @@ data class UiKitTypography(
         fontWeight = FontWeight.Bold,
         fontFamily = Fonts.Families.Circle
     ),
+    val deliveryInformationBody: TextStyle = TextStyle(
+        fontSize = 15.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
 )
 
 val LocalUiKitTypography = staticCompositionLocalOf { UiKitTypography() }
