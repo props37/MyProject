@@ -10,3 +10,4 @@ class CityProvider : PreviewParameterProvider<City> {
         City(AddressId("7700000000000"), "Москва", "г. Москва"),
     )
 }
+

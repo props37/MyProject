@@ -31,6 +31,7 @@ import ru.zarina.zarina.domain.DeliveryAvailability
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
+import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.DeliveryAvailabilityProvider
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.screens.product.components.sections.ColorsSection
 import ru.zarina.zarina.ui.screens.product.components.sections.CompleteLookSection
@@ -183,6 +184,7 @@ fun ProductScreenContentPreview(
     @PreviewParameter(ProductProvider::class, limit = 1)
     product: Product,
 ) {
+    val deliveryAvailability = remember { DeliveryAvailabilityProvider().values.first() }
     ZarinaTheme {
         ProductScreenContent(
             product = product,
@@ -191,31 +193,7 @@ fun ProductScreenContentPreview(
             completeLookProducts = List(5) { product },
             onProductClick = {},
             cache = remember { mutableStateOf(null) },
-            deliveryAvailability = DeliveryAvailability(
-                cityName = "Санкт-Петербург",
-                options = listOf(
-                    DeliveryAvailability.Option(
-                        type = DeliveryAvailability.Option.Type.EXPRESS,
-                        name = "Курьерская доставка",
-                        estimatedTimeDays = 1
-                    ),
-                    DeliveryAvailability.Option(
-                        type = DeliveryAvailability.Option.Type.POST,
-                        name = "Почта России",
-                        estimatedTimeDays = 4
-                    ),
-                    DeliveryAvailability.Option(
-                        type = DeliveryAvailability.Option.Type.PICKUP,
-                        name = "Пункт самовывоза",
-                        estimatedTimeDays = 2
-                    ),
-                    DeliveryAvailability.Option(
-                        type = DeliveryAvailability.Option.Type.RETAIL,
-                        name = "Забрать из магазина",
-                        estimatedTimeDays = 3
-                    ),
-                )
-            ),
+            deliveryAvailability = deliveryAvailability,
         )
     }
 }
