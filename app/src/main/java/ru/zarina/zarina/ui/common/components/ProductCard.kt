@@ -71,6 +71,7 @@ fun ProductCard(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
+        Spacer(modifier = Modifier.height(4.dp))
         if (product.colorVariants.size > 1) {
             val colors = remember(product) { product.colorVariants.map { it.key } }
             val selectedColor = remember(product) {
@@ -80,6 +81,7 @@ fun ProductCard(
                 colors = colors,
                 selectedColor = selectedColor,
             )
+            Spacer(modifier = Modifier.height(4.dp))
         }
         ProductPrice(
             price = product.price,

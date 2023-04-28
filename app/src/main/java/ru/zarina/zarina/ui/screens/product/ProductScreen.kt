@@ -111,9 +111,15 @@ fun ProductScreenContent(
                 CompleteLookSection(
                     products = completeLookProducts,
                     onProductClick = onProductClick,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            item(contentType = ProductScreenSection.DELIVERY) {
+                DeliveryAvailabilitySection(
+                    deliveryAvailability = deliveryAvailability,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp)
+                        .padding(horizontal = 16.dp, vertical = 24.dp),
                 )
             }
             if (product.url != null)
@@ -122,17 +128,9 @@ fun ProductScreenContent(
                         onShareClick = onShareClick,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }
-            item(contentType = ProductScreenSection.DELIVERY) {
-                DeliveryAvailabilitySection(
-                    deliveryAvailability = deliveryAvailability,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                )
-            }
         }
 }
 
