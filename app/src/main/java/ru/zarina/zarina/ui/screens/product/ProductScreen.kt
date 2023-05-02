@@ -78,20 +78,29 @@ fun ProductScreenContent(
                 contentPadding = WindowInsets.navigationBars.asPaddingValues(),
                 modifier = Modifier.fillMaxSize(),
             ) {
-                item(contentType = ProductScreenSection.MEDIA) {
+                item(
+                    key = ProductScreenSection.MEDIA,
+                    contentType = ProductScreenSection.MEDIA,
+                ) {
                     MediaSection(
                         product = product,
                         cache = cache,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-                item(contentType = ProductScreenSection.PRICE) {
+                item(
+                    key = ProductScreenSection.PRICE,
+                    contentType = ProductScreenSection.PRICE,
+                ) {
                     PriceSection(
                         price = product.price,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
                     )
                 }
-                item(contentType = ProductScreenSection.COLORS) {
+                item(
+                    key = ProductScreenSection.COLORS,
+                    contentType = ProductScreenSection.COLORS,
+                ) {
                     ColorsSection(
                         product = product,
                         onVariantClick = onVariantClick,
@@ -108,7 +117,10 @@ fun ProductScreenContent(
                             .padding(horizontal = 16.dp)
                     )
                 }
-                item(contentType = ProductScreenSection.DETAILS) {
+                item(
+                    key = ProductScreenSection.DETAILS,
+                    contentType = ProductScreenSection.DETAILS,
+                ) {
                     DetailsSection(
                         description = product.description,
                         modifier = Modifier.fillMaxWidth()
@@ -123,7 +135,10 @@ fun ProductScreenContent(
                     )
                 }
                 if (completeLookProducts.isNotEmpty())
-                    item(contentType = ProductScreenSection.COMPLETE_LOOK) {
+                    item(
+                        key = ProductScreenSection.COMPLETE_LOOK,
+                        contentType = ProductScreenSection.COMPLETE_LOOK,
+                    ) {
                         ProductHorizontalSection(
                             title = stringResource(R.string.complete_look),
                             products = completeLookProducts,
@@ -134,7 +149,10 @@ fun ProductScreenContent(
                         )
                     }
                 if (similarProducts.isNotEmpty())
-                    item(contentType = ProductScreenSection.SIMILAR) {
+                    item(
+                        key = ProductScreenSection.SIMILAR,
+                        contentType = ProductScreenSection.SIMILAR,
+                    ) {
                         ProductHorizontalSection(
                             title = stringResource(R.string.similar_products),
                             products = similarProducts,
@@ -144,7 +162,10 @@ fun ProductScreenContent(
                                 .animateItemPlacement()
                         )
                     }
-                item(contentType = ProductScreenSection.DELIVERY) {
+                item(
+                    key = ProductScreenSection.DELIVERY,
+                    contentType = ProductScreenSection.DELIVERY,
+                ) {
                     DeliveryAvailabilitySection(
                         deliveryAvailability = deliveryAvailability,
                         modifier = Modifier
@@ -153,7 +174,10 @@ fun ProductScreenContent(
                     )
                 }
                 if (product.url != null)
-                    item(contentType = ProductScreenSection.SHARE) {
+                    item(
+                        key = ProductScreenSection.SHARE,
+                        contentType = ProductScreenSection.SHARE
+                    ) {
                         ShareSection(
                             onShareClick = onShareClick,
                             modifier = Modifier
