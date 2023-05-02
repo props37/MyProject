@@ -21,11 +21,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
@@ -69,7 +71,10 @@ fun ProductScreenContent(
     ) {
         ScreenToolbar(
             title = { ToolbarTitle(product = product) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .zIndex(1f)
+                .shadow(4.dp)
         )
         if (product != null) {
             Column(
@@ -125,7 +130,6 @@ fun ProductScreenContent(
                         onProductClick = onProductClick,
                         modifier = Modifier.fillMaxWidth()
                     )
-
                 DeliveryAvailabilitySection(
                     deliveryAvailability = deliveryAvailability,
                     modifier = Modifier
