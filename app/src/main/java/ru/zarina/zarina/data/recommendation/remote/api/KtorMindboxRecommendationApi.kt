@@ -7,6 +7,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import ru.zarina.zarina.BuildConfig
 import ru.zarina.zarina.data.recommendation.remote.api.dto.RecommendationRequestDto
 import ru.zarina.zarina.data.recommendation.remote.api.dto.RecommendationsResponseDto
 import ru.zarina.zarina.di.Authorization
@@ -22,6 +23,7 @@ class KtorMindboxRecommendationApi @Inject constructor(
     ): RecommendationsResponseDto {
         val response = client.post {
             parameter(KEY_OPERATION, VALUE_OPERATION_SIMILAR)
+            parameter(KEY_ENDPOINT_ID, BuildConfig.MINDBOX_ENDPOINT)
             contentType(ContentType.Application.Json)
             setBody(body)
         }
@@ -30,6 +32,7 @@ class KtorMindboxRecommendationApi @Inject constructor(
 
     companion object {
         private const val KEY_OPERATION = "operation"
+        private const val KEY_ENDPOINT_ID = "endpointId"
         private const val VALUE_OPERATION_SIMILAR = "similar"
     }
 
