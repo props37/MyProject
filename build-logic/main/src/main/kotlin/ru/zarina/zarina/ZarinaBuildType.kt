@@ -37,6 +37,12 @@ sealed interface ZarinaBuildType {
     val backendUrl: String
         get() = "https://zarina.ru"
 
+    val mindboxEndpoint: String
+        get() = "zarina-android-sandbox"
+
+    val mindboxSecret: String
+        get() = "ofzs2DsV9J5PYHAUOrxO"
+
     object Debug : ZarinaBuildType {
         override val name = "debug"
         override val isDebuggable = true
@@ -55,6 +61,8 @@ sealed interface ZarinaBuildType {
         override val applicationName = BASE_NAME
         override val applicationIdSuffix = null
         override val versionNameSuffix = null
+        override val mindboxEndpoint = "ZarinaAppAndroid"
+        override val mindboxSecret = "GvAwDWq8TZ8eRh340LsM"
     }
 
     object _Benchmark : ZarinaBuildType {
@@ -102,6 +110,8 @@ fun Project.configureBuildTypes(
 
 private fun ApplicationBuildType.fillBuildConfigFields(buildType: ZarinaBuildType) {
     buildConfigStringField("BACKEND_URL", buildType.backendUrl)
+    buildConfigStringField("MINDBOX_ENDPOINT", buildType.mindboxEndpoint)
+    buildConfigStringField("MINDBOX_SECRET", buildType.mindboxSecret)
 }
 
 private fun ApplicationBuildType.buildConfigStringField(
