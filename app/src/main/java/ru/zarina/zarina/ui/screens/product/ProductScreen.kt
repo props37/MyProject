@@ -54,6 +54,7 @@ import ru.zarina.zarina.ui.screens.product.components.sections.ShareSection
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.android.share
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -254,8 +255,20 @@ fun ProductScreenContentPreview(
             product = product,
             onVariantClick = {},
             onShareClick = {},
-            completeLookProducts = List(5) { product },
-            similarProducts = List(5) { product },
+            completeLookProducts = List(5) {
+                product.copy(
+                    id = Product.Id(
+                        UUID.randomUUID().toString()
+                    )
+                )
+            },
+            similarProducts = List(5) {
+                product.copy(
+                    id = Product.Id(
+                        UUID.randomUUID().toString()
+                    )
+                )
+            },
             onProductClick = {},
             deliveryAvailability = deliveryAvailability,
             onBackClick = {},
