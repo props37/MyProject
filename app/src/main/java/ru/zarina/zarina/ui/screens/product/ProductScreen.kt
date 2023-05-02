@@ -2,15 +2,18 @@ package ru.zarina.zarina.ui.screens.product
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -32,6 +35,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.DeliveryAvailability
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.ui.common.components.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.DeliveryAvailabilityProvider
@@ -47,7 +51,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.android.share
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ProductScreenContent(
     product: Product?,
@@ -59,99 +63,134 @@ fun ProductScreenContent(
     cache: State<Cache?>,
     deliveryAvailability: DeliveryAvailability?,
 ) {
-    if (product != null)
-        LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = WindowInsets.navigationBars.asPaddingValues(),
-            modifier = Modifier
-                .fillMaxSize()
-                .background(UiKitTheme.colors.screenBackground)
-                .statusBarsPadding(),
-        ) {
-            item(contentType = ProductScreenSection.MEDIA) {
-                MediaSection(
-                    product = product,
-                    cache = cache,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-            item(contentType = ProductScreenSection.PRICE) {
-                PriceSection(
-                    price = product.price,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
-                )
-            }
-            item(contentType = ProductScreenSection.COLORS) {
-                ColorsSection(
-                    product = product,
-                    onVariantClick = onVariantClick,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 12.dp)
-                )
-            }
-            item(contentType = ProductScreenSection.DIVIDER) {
-                Divider(
-                    color = UiKitTheme.colors.listDivider,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-            }
-            item(contentType = ProductScreenSection.DETAILS) {
-                DetailsSection(
-                    description = product.description,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-            item(contentType = ProductScreenSection.DIVIDER) {
-                Divider(
-                    color = UiKitTheme.colors.listDivider,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-            }
-            if (completeLookProducts.isNotEmpty())
-                item(contentType = ProductScreenSection.COMPLETE_LOOK) {
-                    ProductHorizontalSection(
-                        title = stringResource(R.string.complete_look),
-                        products = completeLookProducts,
-                        onProductClick = onProductClick,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .animateItemPlacement()
+    Column(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        ScreenToolbar(
+            title = { ToolbarTitle(product = product) },
+            modifier = Modifier.fillMaxWidth()
+        )
+        if (product != null)
+            LazyColumn(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(UiKitTheme.colors.screenBackground),
+            ) {
+                item(contentType = ProductScreenSection.MEDIA) {
+                    MediaSection(
+                        product = product,
+                        cache = cache,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
-            if (similarProducts.isNotEmpty())
-                item(contentType = ProductScreenSection.SIMILAR) {
-                    ProductHorizontalSection(
-                        title = stringResource(R.string.similar_products),
-                        products = similarProducts,
-                        onProductClick = onProductClick,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .animateItemPlacement()
+                item(contentType = ProductScreenSection.PRICE) {
+                    PriceSection(
+                        price = product.price,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
                     )
                 }
-            item(contentType = ProductScreenSection.DELIVERY) {
-                DeliveryAvailabilitySection(
-                    deliveryAvailability = deliveryAvailability,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 24.dp),
-                )
+                item(contentType = ProductScreenSection.COLORS) {
+                    ColorsSection(
+                        product = product,
+                        onVariantClick = onVariantClick,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .padding(bottom = 12.dp)
+                    )
+                }
+                item(contentType = ProductScreenSection.DIVIDER) {
+                    Divider(
+                        color = UiKitTheme.colors.listDivider,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                }
+                item(contentType = ProductScreenSection.DETAILS) {
+                    DetailsSection(
+                        description = product.description,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                item(contentType = ProductScreenSection.DIVIDER) {
+                    Divider(
+                        color = UiKitTheme.colors.listDivider,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                }
+                if (completeLookProducts.isNotEmpty())
+                    item(contentType = ProductScreenSection.COMPLETE_LOOK) {
+                        ProductHorizontalSection(
+                            title = stringResource(R.string.complete_look),
+                            products = completeLookProducts,
+                            onProductClick = onProductClick,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .animateItemPlacement()
+                        )
+                    }
+                if (similarProducts.isNotEmpty())
+                    item(contentType = ProductScreenSection.SIMILAR) {
+                        ProductHorizontalSection(
+                            title = stringResource(R.string.similar_products),
+                            products = similarProducts,
+                            onProductClick = onProductClick,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .animateItemPlacement()
+                        )
+                    }
+                item(contentType = ProductScreenSection.DELIVERY) {
+                    DeliveryAvailabilitySection(
+                        deliveryAvailability = deliveryAvailability,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 24.dp),
+                    )
+                }
+                if (product.url != null)
+                    item(contentType = ProductScreenSection.SHARE) {
+                        ShareSection(
+                            onShareClick = onShareClick,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
+                    }
             }
-            if (product.url != null)
-                item(contentType = ProductScreenSection.SHARE) {
-                    ShareSection(
-                        onShareClick = onShareClick,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                    )
-                }
+    }
+}
+
+@Composable
+private fun ToolbarTitle(
+    product: Product?,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = modifier
+    ) {
+        Text(
+            text = product?.name.orEmpty(),
+            style = UiKitTheme.typography.screenToolbarTitle,
+            color = UiKitTheme.colors.primaryContentColor,
+            maxLines = 1,
+        )
+        val attribute = product?.attributes?.firstOrNull()
+        if (attribute != null) {
+            Text(
+                text = attribute.uppercase(),
+                style = UiKitTheme.typography.screenToolbarSubtitle,
+                color = UiKitTheme.colors.primaryContentColor,
+                maxLines = 1,
+            )
         }
+    }
 }
 
 private enum class ProductScreenSection { MEDIA, PRICE, COLORS, DETAILS, SHARE, COMPLETE_LOOK, SIMILAR, DELIVERY, DIVIDER }
