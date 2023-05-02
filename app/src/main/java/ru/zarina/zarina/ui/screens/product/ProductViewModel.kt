@@ -75,7 +75,7 @@ class ProductViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     fun onVariantClick(variant: Product.Variant) {
-        savedStateHandle[Destinations.PRODUCT.ARGUMENT_PRODUCT_ID] = variant.id
+        savedStateHandle[Destinations.PRODUCT.ARGUMENT_PRODUCT_ID] = variant.id.value
     }
 
     fun onShareClick() {
