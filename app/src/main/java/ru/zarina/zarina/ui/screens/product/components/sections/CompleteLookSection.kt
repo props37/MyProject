@@ -32,7 +32,7 @@ fun CompleteLookSection(
         HorizontalPager(
             pageCount = products.size,
             beyondBoundsPageCount = 1,
-            key = { products[it].id },
+            key = { products[it].id.value },
             verticalAlignment = Alignment.Top,
             contentPadding = PaddingValues(horizontal = 32.dp),
             modifier = Modifier.fillMaxWidth(),
