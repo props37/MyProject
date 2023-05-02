@@ -87,9 +87,14 @@ class ProductViewModel @Inject constructor(
         sideEffect(SideEffect.ShowProduct(product))
     }
 
+    fun onBackClick() {
+        sideEffect(SideEffect.GoBack)
+    }
+
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         data class ShareText(val text: String) : SideEffect
         data class ShowProduct(val product: Product) : SideEffect
+        object GoBack : SideEffect
     }
 
 }

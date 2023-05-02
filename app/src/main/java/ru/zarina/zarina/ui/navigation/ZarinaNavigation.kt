@@ -49,6 +49,9 @@ fun ZarinaNavigation(
             ProductScreen(
                 showProduct = { productId ->
                     navController.navigate(Destinations.PRODUCT.createRoute(productId.value))
+                },
+                goBack = {
+                    navController.popBackStack(Destinations.PRODUCT.routeSchema, true)
                 }
             )
         }

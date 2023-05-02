@@ -192,6 +192,7 @@ private fun ToolbarTitle(
 @Composable
 fun ProductScreen(
     showProduct: (Product.Id) -> Unit,
+    goBack: () -> Unit,
 ) {
     val viewModel = hiltViewModel<ProductViewModel>()
 
@@ -204,6 +205,7 @@ fun ProductScreen(
     ProductScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showProduct = showProduct,
+        goBack = goBack,
     )
 
     ProductScreenContent(
@@ -214,7 +216,7 @@ fun ProductScreen(
         similarProducts = similarProducts,
         onProductClick = viewModel::onProductClick,
         deliveryAvailability = deliveryAvailability,
-        onBackClick = {}, // TODO
+        onBackClick = viewModel::onBackClick,
         cache = cache
     )
 }
@@ -223,6 +225,7 @@ fun ProductScreen(
 fun ProductScreenBehavior(
     sideEffects: Flow<ProductViewModel.SideEffect>,
     showProduct: (Product.Id) -> Unit,
+    goBack: () -> Unit,
 ) {
     val context = LocalContext.current
     LaunchedEffect(context, sideEffects) {
@@ -230,6 +233,7 @@ fun ProductScreenBehavior(
             when (effect) {
                 is ProductViewModel.SideEffect.ShareText -> context.share(effect.text)
                 is ProductViewModel.SideEffect.ShowProduct -> showProduct(effect.product.id)
+                ProductViewModel.SideEffect.GoBack -> goBack()
             }
         }
     }
