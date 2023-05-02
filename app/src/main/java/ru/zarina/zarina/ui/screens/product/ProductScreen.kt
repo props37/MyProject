@@ -64,7 +64,9 @@ fun ProductScreenContent(
     deliveryAvailability: DeliveryAvailability?,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme.colors.screenBackground),
     ) {
         ScreenToolbar(
             title = { ToolbarTitle(product = product) },
@@ -74,9 +76,7 @@ fun ProductScreenContent(
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 contentPadding = WindowInsets.navigationBars.asPaddingValues(),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(UiKitTheme.colors.screenBackground),
+                modifier = Modifier.fillMaxSize(),
             ) {
                 item(contentType = ProductScreenSection.MEDIA) {
                     MediaSection(
