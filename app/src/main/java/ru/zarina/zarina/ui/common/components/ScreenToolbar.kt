@@ -16,6 +16,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 fun ScreenToolbar(
     title: String,
     modifier: Modifier = Modifier,
+    startIcon: @Composable (() -> Unit)? = null,
     endIcon: @Composable (() -> Unit)? = null,
     colors: TopAppBarColors = ScreenToolbarDefaults.colors(),
 ) {
@@ -29,6 +30,7 @@ fun ScreenToolbar(
             )
         },
         modifier = modifier,
+        startIcon = startIcon,
         endIcon = endIcon,
         colors = colors,
     )
@@ -39,14 +41,14 @@ fun ScreenToolbar(
 fun ScreenToolbar(
     title: @Composable (() -> Unit),
     modifier: Modifier = Modifier,
+    startIcon: @Composable (() -> Unit)? = null,
     endIcon: @Composable (() -> Unit)? = null,
     colors: TopAppBarColors = ScreenToolbarDefaults.colors(),
 ) {
     CenterAlignedTopAppBar(
         title = title,
-        actions = {
-            if (endIcon != null) endIcon()
-        },
+        navigationIcon = { if (startIcon != null) startIcon() },
+        actions = { if (endIcon != null) endIcon() },
         colors = colors,
         modifier = modifier.fillMaxWidth(),
     )

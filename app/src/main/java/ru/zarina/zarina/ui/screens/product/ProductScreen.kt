@@ -12,6 +12,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -61,8 +64,9 @@ fun ProductScreenContent(
     completeLookProducts: List<Product>,
     similarProducts: List<Product>,
     onProductClick: (Product) -> Unit,
-    cache: State<Cache?>,
     deliveryAvailability: DeliveryAvailability?,
+    onBackClick: () -> Unit,
+    cache: State<Cache?>,
 ) {
     Column(
         modifier = Modifier
@@ -71,6 +75,14 @@ fun ProductScreenContent(
     ) {
         ScreenToolbar(
             title = { ToolbarTitle(product = product) },
+            startIcon = {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_back_24),
+                        contentDescription = stringResource(id = R.string.back)
+                    )
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .zIndex(1f)
@@ -202,7 +214,8 @@ fun ProductScreen(
         similarProducts = similarProducts,
         onProductClick = viewModel::onProductClick,
         deliveryAvailability = deliveryAvailability,
-        cache = cache,
+        onBackClick = {}, // TODO
+        cache = cache
     )
 }
 
@@ -240,8 +253,9 @@ fun ProductScreenContentPreview(
             completeLookProducts = List(5) { product },
             similarProducts = List(5) { product },
             onProductClick = {},
-            cache = remember { mutableStateOf(null) },
             deliveryAvailability = deliveryAvailability,
+            onBackClick = {},
+            cache = remember { mutableStateOf(null) },
         )
     }
 }
