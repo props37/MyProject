@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.DeliveryAvailability
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -34,11 +36,11 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.DeliveryAvailabilityProvider
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.screens.product.components.sections.ColorsSection
-import ru.zarina.zarina.ui.screens.product.components.sections.CompleteLookSection
 import ru.zarina.zarina.ui.screens.product.components.sections.DeliveryAvailabilitySection
 import ru.zarina.zarina.ui.screens.product.components.sections.DetailsSection
 import ru.zarina.zarina.ui.screens.product.components.sections.MediaSection
 import ru.zarina.zarina.ui.screens.product.components.sections.PriceSection
+import ru.zarina.zarina.ui.screens.product.components.sections.ProductHorizontalSection
 import ru.zarina.zarina.ui.screens.product.components.sections.ShareSection
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
@@ -50,6 +52,7 @@ fun ProductScreenContent(
     onVariantClick: (Product.Variant) -> Unit,
     onShareClick: () -> Unit,
     completeLookProducts: List<Product>,
+    similarProducts: List<Product>,
     onProductClick: (Product) -> Unit,
     cache: State<Cache?>,
     deliveryAvailability: DeliveryAvailability?,
@@ -108,8 +111,17 @@ fun ProductScreenContent(
                 )
             }
             item(contentType = ProductScreenSection.COMPLETE_LOOK) {
-                CompleteLookSection(
+                ProductHorizontalSection(
+                    title = stringResource(R.string.complete_look),
                     products = completeLookProducts,
+                    onProductClick = onProductClick,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            item(contentType = ProductScreenSection.SIMILAR) {
+                ProductHorizontalSection(
+                    title = stringResource(R.string.similar_products),
+                    products = similarProducts,
                     onProductClick = onProductClick,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -134,7 +146,7 @@ fun ProductScreenContent(
         }
 }
 
-private enum class ProductScreenSection { MEDIA, PRICE, COLORS, DETAILS, SHARE, COMPLETE_LOOK, DELIVERY, DIVIDER }
+private enum class ProductScreenSection { MEDIA, PRICE, COLORS, DETAILS, SHARE, COMPLETE_LOOK, SIMILAR, DELIVERY, DIVIDER }
 
 @Composable
 fun ProductScreen(
@@ -145,6 +157,7 @@ fun ProductScreen(
     val cache = viewModel.cache.collectAsStateWithLifecycle()
     val product by viewModel.product.collectAsStateWithLifecycle()
     val completeLookProducts by viewModel.completeLookProducts.collectAsStateWithLifecycle()
+    val similarProducts by viewModel.similarProducts.collectAsStateWithLifecycle()
     val deliveryAvailability by viewModel.deliveryAvailability.collectAsStateWithLifecycle()
 
     ProductScreenBehavior(
@@ -157,6 +170,7 @@ fun ProductScreen(
         onVariantClick = viewModel::onVariantClick,
         onShareClick = viewModel::onShareClick,
         completeLookProducts = completeLookProducts,
+        similarProducts = similarProducts,
         onProductClick = viewModel::onProductClick,
         deliveryAvailability = deliveryAvailability,
         cache = cache,
@@ -195,6 +209,7 @@ fun ProductScreenContentPreview(
             onVariantClick = {},
             onShareClick = {},
             completeLookProducts = List(5) { product },
+            similarProducts = List(5) { product },
             onProductClick = {},
             cache = remember { mutableStateOf(null) },
             deliveryAvailability = deliveryAvailability,
