@@ -18,6 +18,7 @@ import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import ru.zarina.zarina.BuildConfig
+import ru.zarina.zarina.data.MindboxHeaderProvider
 import ru.zarina.zarina.data.UserAgentHeaderProvider
 import ru.zarina.zarina.data.ktor.plugins.auth.ZarinaAuth
 import ru.zarina.zarina.data.ktor.plugins.auth.bearer
@@ -75,6 +76,24 @@ class NetworkModule {
         }
     }
 
+    @Authorization(Authorization.Type.MINDBOX_SECRET)
+    @Singleton
+    @Provides
+    fun providesMindboxSecretHttpClient(
+        json: Json,
+        headerProvider: MindboxHeaderProvider,
+    ) = HttpClient(CIO) {
+        baseConfig(json)
+        install(DefaultRequest) {
+            url("https://api.mindbox.ru/v3/operations/sync/")
+            headers {
+                headerProvider.getHeaders().forEach { (key, value) ->
+                    append(key, value)
+                }
+            }
+        }
+    }
+
     private fun HttpClientConfig<CIOEngineConfig>.baseConfig(
         json: Json,
     ) {
@@ -111,5 +130,5 @@ class NetworkModule {
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Authorization(@Suppress("unused") val type: Type) {
-    enum class Type { NONE, TOKEN }
+    enum class Type { NONE, TOKEN, MINDBOX_SECRET }
 }

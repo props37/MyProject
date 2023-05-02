@@ -24,7 +24,7 @@ class MindboxExtension @Inject constructor() : ApplicationExtension {
         .build()
 
     companion object {
-        private const val DOMAIN = "api.mindbox.ru"
+        const val DOMAIN = "api.mindbox.ru"
     }
 
 }
