@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screens.product
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -46,6 +47,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.android.share
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductScreenContent(
     product: Product?,
@@ -110,22 +112,28 @@ fun ProductScreenContent(
                         .padding(horizontal = 16.dp)
                 )
             }
-            item(contentType = ProductScreenSection.COMPLETE_LOOK) {
-                ProductHorizontalSection(
-                    title = stringResource(R.string.complete_look),
-                    products = completeLookProducts,
-                    onProductClick = onProductClick,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-            item(contentType = ProductScreenSection.SIMILAR) {
-                ProductHorizontalSection(
-                    title = stringResource(R.string.similar_products),
-                    products = similarProducts,
-                    onProductClick = onProductClick,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+            if (completeLookProducts.isNotEmpty())
+                item(contentType = ProductScreenSection.COMPLETE_LOOK) {
+                    ProductHorizontalSection(
+                        title = stringResource(R.string.complete_look),
+                        products = completeLookProducts,
+                        onProductClick = onProductClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateItemPlacement()
+                    )
+                }
+            if (similarProducts.isNotEmpty())
+                item(contentType = ProductScreenSection.SIMILAR) {
+                    ProductHorizontalSection(
+                        title = stringResource(R.string.similar_products),
+                        products = similarProducts,
+                        onProductClick = onProductClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateItemPlacement()
+                    )
+                }
             item(contentType = ProductScreenSection.DELIVERY) {
                 DeliveryAvailabilitySection(
                     deliveryAvailability = deliveryAvailability,
