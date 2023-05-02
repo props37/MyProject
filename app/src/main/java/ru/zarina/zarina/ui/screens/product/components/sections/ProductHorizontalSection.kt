@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.screens.product.components.sections
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.components.ProductCard
+import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -23,7 +25,7 @@ fun ProductHorizontalSection(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier.background(UiKitTheme.colors.screenBackground)
     ) {
         SectionHeader(
             text = title.uppercase(),
