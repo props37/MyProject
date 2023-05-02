@@ -108,9 +108,7 @@ fun ProductScreenContent(
                 ColorsSection(
                     product = product,
                     onVariantClick = onVariantClick,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 12.dp)
+                    modifier = Modifier.padding(bottom = 12.dp)
                 )
                 Divider(
                     color = UiKitTheme.colors.listDivider,
