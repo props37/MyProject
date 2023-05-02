@@ -47,7 +47,8 @@ class NetworkModule {
         json: Json,
         headerProvider: UserAgentHeaderProvider,
     ) = HttpClient(CIO) {
-        baseConfig(json, headerProvider)
+        baseConfig(json)
+        baseZarinaConfig(headerProvider)
     }
 
     @Authorization(Authorization.Type.TOKEN)
@@ -59,7 +60,8 @@ class NetworkModule {
         json: Json,
         headerProvider: UserAgentHeaderProvider,
     ) = HttpClient(CIO) {
-        baseConfig(json, headerProvider)
+        baseConfig(json)
+        baseZarinaConfig(headerProvider)
         install(ZarinaAuth) {
             bearer {
                 loadTokens {
@@ -75,17 +77,8 @@ class NetworkModule {
 
     private fun HttpClientConfig<CIOEngineConfig>.baseConfig(
         json: Json,
-        headerProvider: UserAgentHeaderProvider,
     ) {
         expectSuccess = true
-        install(DefaultRequest) {
-            url(BuildConfig.BACKEND_URL)
-            headers {
-                headerProvider.getHeaders().forEach { (key, value) ->
-                    append(key, value)
-                }
-            }
-        }
         install(ContentNegotiation) {
             json(json)
         }
@@ -93,6 +86,19 @@ class NetworkModule {
             level = LogLevel.ALL
             logger = object : Logger {
                 override fun log(message: String) = Timber.tag("ktor").v(message)
+            }
+        }
+    }
+
+    private fun HttpClientConfig<CIOEngineConfig>.baseZarinaConfig(
+        headerProvider: UserAgentHeaderProvider,
+    ) {
+        install(DefaultRequest) {
+            url(BuildConfig.BACKEND_URL)
+            headers {
+                headerProvider.getHeaders().forEach { (key, value) ->
+                    append(key, value)
+                }
             }
         }
     }
