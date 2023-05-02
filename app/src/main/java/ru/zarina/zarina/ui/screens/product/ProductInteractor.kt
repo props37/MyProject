@@ -11,7 +11,7 @@ class ProductInteractor @Inject constructor(
     private val getCompleteLookUseCase: GetCompleteLookUseCase,
     private val getDeliveryAvailabilityUseCase: GetDeliveryAvailabilityUseCase,
 ) {
-    suspend fun getProduct(id: String) = getProductUseCase(id)
+    suspend fun getProduct(id: Product.Id) = getProductUseCase(GetProductUseCase.Params(id))
 
     suspend fun getCompleteLook(product: Product) =
         getCompleteLookUseCase(GetCompleteLookUseCase.Params(product))

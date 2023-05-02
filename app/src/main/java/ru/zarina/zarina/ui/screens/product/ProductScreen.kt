@@ -138,7 +138,7 @@ private enum class ProductScreenSection { MEDIA, PRICE, COLORS, DETAILS, SHARE, 
 
 @Composable
 fun ProductScreen(
-    showProduct: (String) -> Unit,
+    showProduct: (Product.Id) -> Unit,
 ) {
     val viewModel = hiltViewModel<ProductViewModel>()
 
@@ -166,7 +166,7 @@ fun ProductScreen(
 @Composable
 fun ProductScreenBehavior(
     sideEffects: Flow<ProductViewModel.SideEffect>,
-    showProduct: (String) -> Unit,
+    showProduct: (Product.Id) -> Unit,
 ) {
     val context = LocalContext.current
     LaunchedEffect(context, sideEffects) {

@@ -52,7 +52,7 @@ data class ColorDto(
             && ApiContract.isNotNull(isCurrent, "is_current")
         )
             Product.Variant(
-                id = productId,
+                id = Product.Id(productId),
                 isCurrent = isCurrent,
             )
         else

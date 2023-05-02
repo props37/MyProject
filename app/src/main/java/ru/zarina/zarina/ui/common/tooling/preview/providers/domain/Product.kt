@@ -10,7 +10,7 @@ import ru.zarina.zarina.domain.Url
 class ProductProvider : PreviewParameterProvider<Product> {
     override val values = sequenceOf(
         Product(
-            id = "1329404704-50",
+            id = Product.Id("1329404704-50"),
             name = "Джинсы mom fit",
             media = listOf(
                 Media(
@@ -33,7 +33,7 @@ class ProductProvider : PreviewParameterProvider<Product> {
                     name = "Темно-серый деним",
                     code = Color.Code("#858585")
                 ) to Product.Variant(
-                    id = "1329404704-109",
+                    id = Product.Id("1329404704-109"),
                     isCurrent = false,
                 ),
                 Color(
@@ -41,7 +41,7 @@ class ProductProvider : PreviewParameterProvider<Product> {
                     name = "Чёрный",
                     code = Color.Code("#000000")
                 ) to Product.Variant(
-                    id = "1329404704-50",
+                    id = Product.Id("1329404704-50"),
                     isCurrent = true,
                 ),
             ),

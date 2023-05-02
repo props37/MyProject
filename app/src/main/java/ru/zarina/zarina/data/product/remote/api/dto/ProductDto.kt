@@ -34,7 +34,7 @@ data class ProductDto(
             && ApiContract.isNotNull(price, "price")
             && ApiContract.isNotNull(name, "name")
         ) return Product(
-            id = id,
+            id = Product.Id(id),
             name = name,
             media = media?.mapNotNull { it.toDomain() }.orEmpty(),
             price = price,

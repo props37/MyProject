@@ -24,7 +24,7 @@ fun ZarinaNavigation(
         composableDestination(Destinations.HOME) {
             HomeScreen(
                 showProduct = { productId ->
-                    navController.navigate(Destinations.PRODUCT.createRoute(productId))
+                    navController.navigate(Destinations.PRODUCT.createRoute(productId.value))
                 }
             )
         }
@@ -48,7 +48,7 @@ fun ZarinaNavigation(
         composableDestination(Destinations.PRODUCT) {
             ProductScreen(
                 showProduct = { productId ->
-                    navController.navigate(Destinations.PRODUCT.createRoute(productId))
+                    navController.navigate(Destinations.PRODUCT.createRoute(productId.value))
                 }
             )
         }
