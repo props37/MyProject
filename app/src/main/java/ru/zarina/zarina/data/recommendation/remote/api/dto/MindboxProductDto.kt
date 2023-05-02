@@ -12,6 +12,6 @@ data class MindboxProductDto(
 
 fun Product.toMindboxProductDto(): MindboxProductDto = MindboxProductDto(
     ids = RecommendationIdsDto(
-        catalog = "" // TODO
+        catalog = this.offers.first().barcode,
     )
 )

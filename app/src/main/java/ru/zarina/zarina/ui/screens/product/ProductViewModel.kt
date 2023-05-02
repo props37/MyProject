@@ -52,6 +52,17 @@ class ProductViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     @OptIn(ExperimentalCoroutinesApi::class)
+    val similarProducts = product
+        .mapLatest { product ->
+            // TODO show loading error
+            if (product != null)
+                interactor.getRecommendations(product).getOrDefault(emptyList())
+            else
+                emptyList()
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     val deliveryAvailability = product
         .mapLatest { product ->
             // TODO show loader
