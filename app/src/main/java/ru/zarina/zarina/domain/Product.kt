@@ -6,6 +6,7 @@ data class Product(
     val media: List<Media>,
     val price: Price,
     val colorVariants: Map<Color, Variant>,
+    val offers: List<Offer>,
     val description: List<Pair<String, String>>,
     val url: Url?,
     val attributes: List<String>,
