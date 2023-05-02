@@ -1,7 +1,7 @@
 package ru.zarina.zarina.data.recommendation.remote
 
 import ru.zarina.zarina.data.recommendation.remote.api.IMindboxRecommendationApi
-import ru.zarina.zarina.data.recommendation.remote.api.dto.RecommendationRequestDto
+import ru.zarina.zarina.data.recommendation.remote.api.dto.RecommendationRequestBody
 import ru.zarina.zarina.data.recommendation.remote.api.dto.toMindboxProductDto
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.RecommendationType
@@ -19,7 +19,7 @@ class MindboxRecommendationRemoteSource @Inject constructor(
 
     private suspend fun getSimilarRecommendations(product: Product): List<Product.Id> {
         val productDto = product.toMindboxProductDto()
-        val body = RecommendationRequestDto(
+        val body = RecommendationRequestBody(
             limit = DEFAULT_RECOMMENDATION_COUNT,
             product = productDto,
         )

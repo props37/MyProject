@@ -8,7 +8,7 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import ru.zarina.zarina.BuildConfig
-import ru.zarina.zarina.data.recommendation.remote.api.dto.RecommendationRequestDto
+import ru.zarina.zarina.data.recommendation.remote.api.dto.RecommendationRequestBody
 import ru.zarina.zarina.data.recommendation.remote.api.dto.RecommendationsResponseDto
 import ru.zarina.zarina.di.Authorization
 import javax.inject.Inject
@@ -19,7 +19,7 @@ class KtorMindboxRecommendationApi @Inject constructor(
 ) : IMindboxRecommendationApi {
 
     override suspend fun getProductRecommendations(
-        body: RecommendationRequestDto,
+        body: RecommendationRequestBody,
     ): RecommendationsResponseDto {
         val response = client.post {
             parameter(KEY_OPERATION, VALUE_OPERATION_SIMILAR)
