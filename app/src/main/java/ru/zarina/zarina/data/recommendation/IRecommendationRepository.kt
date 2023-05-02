@@ -1,3 +1,10 @@
 package ru.zarina.zarina.data.recommendation
 
-interface IRecommendationRepository
+import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.RecommendationType
+
+interface IRecommendationRepository {
+
+    suspend fun getRecommendations(type: RecommendationType): List<Product.Id>
+
+}
