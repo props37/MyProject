@@ -110,6 +110,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.performance)
+    implementation(libs.mindbox)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
