@@ -11,10 +11,16 @@ import javax.inject.Inject
 class GetProductUseCase @Inject constructor(
     @Dispatcher(ZarinaDispatcher.IO) dispatcher: CoroutineDispatcher,
     private val productRepository: IProductRepository,
-) : UseCase<String, Product>(dispatcher) {
+) : UseCase<GetProductUseCase.Params, Product>(dispatcher) {
 
-    override suspend fun execute(params: String): Product {
-        return productRepository.getProduct(params)
+    override suspend fun execute(params: Params): Product {
+        val (id) = params
+
+        return productRepository.getProduct(id)
     }
+
+    data class Params(
+        val id: Product.Id,
+    )
 
 }

@@ -145,7 +145,6 @@ private fun DeliveryOption(
                 2 -> R.string.day_after_tomorrow
                 else -> R.string.three_days_or_more
             }
-            // TODO add price
             Text(
                 text = stringResource(timeResource),
                 style = UiKitTheme.typography.deliveryInformationBody,

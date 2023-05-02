@@ -3,14 +3,16 @@ package ru.zarina.zarina.ui.common.tooling.preview.providers.domain
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import ru.zarina.zarina.domain.Color
 import ru.zarina.zarina.domain.Media
+import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Price
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.Size
 import ru.zarina.zarina.domain.Url
 
 class ProductProvider : PreviewParameterProvider<Product> {
     override val values = sequenceOf(
         Product(
-            id = "1329404704-50",
+            id = Product.Id("1329404704-50"),
             name = "Джинсы mom fit",
             media = listOf(
                 Media(
@@ -33,7 +35,7 @@ class ProductProvider : PreviewParameterProvider<Product> {
                     name = "Темно-серый деним",
                     code = Color.Code("#858585")
                 ) to Product.Variant(
-                    id = "1329404704-109",
+                    id = Product.Id("1329404704-109"),
                     isCurrent = false,
                 ),
                 Color(
@@ -41,9 +43,29 @@ class ProductProvider : PreviewParameterProvider<Product> {
                     name = "Чёрный",
                     code = Color.Code("#000000")
                 ) to Product.Variant(
-                    id = "1329404704-50",
+                    id = Product.Id("1329404704-50"),
                     isCurrent = true,
                 ),
+            ),
+            offers = listOf(
+                Offer(
+                    id = "110160",
+                    barcode = "4640078695058",
+                    isAvailable = true,
+                    size = Size(
+                        id = "XS",
+                        name = "XS (RU 42)"
+                    ),
+                ),
+                Offer(
+                    id = "110161",
+                    barcode = "4640078695072",
+                    isAvailable = false,
+                    size = Size(
+                        id = "S",
+                        name = "S (RU 44)"
+                    ),
+                )
             ),
             description = listOf(
                 "Состав" to "99% хлопок, 1% эластан",

@@ -8,11 +8,12 @@ class ZarinaProductRemoteSource @Inject constructor(
     private val api: IZarinaProductApi,
 ) : IProductRemoteSource {
 
-    override suspend fun getProduct(id: String) = checkNotNull(api.getProduct(id).toDomain())
+    override suspend fun getProduct(id: Product.Id) =
+        checkNotNull(api.getProduct(id.value).toDomain())
 
     override suspend fun getCompleteLook(product: Product) =
-        api.getCompleteLook(product.id).toDomain()
+        api.getCompleteLook(product.id.value).toDomain()
 
     override suspend fun getDeliveryAvailability(product: Product) =
-        checkNotNull(api.getDeliveryInfo(product.id).toDomain())
+        checkNotNull(api.getDeliveryInfo(product.id.value).toDomain())
 }

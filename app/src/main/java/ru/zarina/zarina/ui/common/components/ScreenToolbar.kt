@@ -19,7 +19,7 @@ fun ScreenToolbar(
     endIcon: @Composable (() -> Unit)? = null,
     colors: TopAppBarColors = ScreenToolbarDefaults.colors(),
 ) {
-    CenterAlignedTopAppBar(
+    ScreenToolbar(
         title = {
             Text(
                 text = title,
@@ -28,6 +28,22 @@ fun ScreenToolbar(
                 maxLines = 1,
             )
         },
+        modifier = modifier,
+        endIcon = endIcon,
+        colors = colors,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ScreenToolbar(
+    title: @Composable (() -> Unit),
+    modifier: Modifier = Modifier,
+    endIcon: @Composable (() -> Unit)? = null,
+    colors: TopAppBarColors = ScreenToolbarDefaults.colors(),
+) {
+    CenterAlignedTopAppBar(
+        title = title,
         actions = {
             if (endIcon != null) endIcon()
         },

@@ -9,6 +9,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.Product
@@ -29,7 +30,7 @@ class ProductViewModel @Inject constructor(
     private val productId = savedStateHandle.getStateFlow(
         key = Destinations.PRODUCT.ARGUMENT_PRODUCT_ID,
         initialValue = ""
-    )
+    ).map { Product.Id(it) }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val product = productId
@@ -51,6 +52,17 @@ class ProductViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     @OptIn(ExperimentalCoroutinesApi::class)
+    val similarProducts = product
+        .mapLatest { product ->
+            // TODO show loading error
+            if (product != null)
+                interactor.getRecommendations(product).getOrDefault(emptyList())
+            else
+                emptyList()
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     val deliveryAvailability = product
         .mapLatest { product ->
             // TODO show loader
@@ -63,7 +75,7 @@ class ProductViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     fun onVariantClick(variant: Product.Variant) {
-        savedStateHandle[Destinations.PRODUCT.ARGUMENT_PRODUCT_ID] = variant.id
+        savedStateHandle[Destinations.PRODUCT.ARGUMENT_PRODUCT_ID] = variant.id.value
     }
 
     fun onShareClick() {

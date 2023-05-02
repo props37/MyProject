@@ -36,6 +36,12 @@ import ru.zarina.zarina.data.product.remote.IProductRemoteSource
 import ru.zarina.zarina.data.product.remote.ZarinaProductRemoteSource
 import ru.zarina.zarina.data.product.remote.api.IZarinaProductApi
 import ru.zarina.zarina.data.product.remote.api.KtorZarinaProductApi
+import ru.zarina.zarina.data.recommendation.IRecommendationRepository
+import ru.zarina.zarina.data.recommendation.RecommendationRepository
+import ru.zarina.zarina.data.recommendation.remote.IRecommendationRemoteSource
+import ru.zarina.zarina.data.recommendation.remote.MindboxRecommendationRemoteSource
+import ru.zarina.zarina.data.recommendation.remote.api.IMindboxRecommendationApi
+import ru.zarina.zarina.data.recommendation.remote.api.KtorMindboxRecommendationApi
 import ru.zarina.zarina.data.user.IUserRepository
 import ru.zarina.zarina.data.user.UserRepository
 import ru.zarina.zarina.data.user.remote.IUserRemoteSource
@@ -103,5 +109,14 @@ interface DataModule {
 
     @Binds
     fun bindsProductRepository(repository: ProductRepository): IProductRepository
+
+    @Binds
+    fun bindsMindboxRecommendationApi(api: KtorMindboxRecommendationApi): IMindboxRecommendationApi
+
+    @Binds
+    fun bindsRecommendationRemoteSource(source: MindboxRecommendationRemoteSource): IRecommendationRemoteSource
+
+    @Binds
+    fun bindsRecommendationRepository(repository: RecommendationRepository): IRecommendationRepository
 
 }

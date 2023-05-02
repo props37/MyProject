@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -41,7 +42,7 @@ fun HomeScreenContent(
 
 @Composable
 fun HomeScreen(
-    showProduct: (productId: String) -> Unit,
+    showProduct: (id: Product.Id) -> Unit,
 ) {
     val viewModel = hiltViewModel<HomeViewModel>()
 
@@ -58,7 +59,7 @@ fun HomeScreen(
 @Composable
 fun HomeScreenBehavior(
     sideEffects: Flow<HomeViewModel.SideEffect>,
-    showProduct: (String) -> Unit,
+    showProduct: (Product.Id) -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->

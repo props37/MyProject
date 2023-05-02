@@ -18,6 +18,7 @@ import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import ru.zarina.zarina.BuildConfig
+import ru.zarina.zarina.data.MindboxHeaderProvider
 import ru.zarina.zarina.data.UserAgentHeaderProvider
 import ru.zarina.zarina.data.ktor.plugins.auth.ZarinaAuth
 import ru.zarina.zarina.data.ktor.plugins.auth.bearer
@@ -47,7 +48,8 @@ class NetworkModule {
         json: Json,
         headerProvider: UserAgentHeaderProvider,
     ) = HttpClient(CIO) {
-        baseConfig(json, headerProvider)
+        baseConfig(json)
+        baseZarinaConfig(headerProvider)
     }
 
     @Authorization(Authorization.Type.TOKEN)
@@ -59,7 +61,8 @@ class NetworkModule {
         json: Json,
         headerProvider: UserAgentHeaderProvider,
     ) = HttpClient(CIO) {
-        baseConfig(json, headerProvider)
+        baseConfig(json)
+        baseZarinaConfig(headerProvider)
         install(ZarinaAuth) {
             bearer {
                 loadTokens {
@@ -73,19 +76,28 @@ class NetworkModule {
         }
     }
 
-    private fun HttpClientConfig<CIOEngineConfig>.baseConfig(
+    @Authorization(Authorization.Type.MINDBOX_SECRET)
+    @Singleton
+    @Provides
+    fun providesMindboxSecretHttpClient(
         json: Json,
-        headerProvider: UserAgentHeaderProvider,
-    ) {
-        expectSuccess = true
+        headerProvider: MindboxHeaderProvider,
+    ) = HttpClient(CIO) {
+        baseConfig(json)
         install(DefaultRequest) {
-            url(BuildConfig.BACKEND_URL)
+            url("https://api.mindbox.ru/v3/operations/sync/")
             headers {
                 headerProvider.getHeaders().forEach { (key, value) ->
                     append(key, value)
                 }
             }
         }
+    }
+
+    private fun HttpClientConfig<CIOEngineConfig>.baseConfig(
+        json: Json,
+    ) {
+        expectSuccess = true
         install(ContentNegotiation) {
             json(json)
         }
@@ -93,6 +105,19 @@ class NetworkModule {
             level = LogLevel.ALL
             logger = object : Logger {
                 override fun log(message: String) = Timber.tag("ktor").v(message)
+            }
+        }
+    }
+
+    private fun HttpClientConfig<CIOEngineConfig>.baseZarinaConfig(
+        headerProvider: UserAgentHeaderProvider,
+    ) {
+        install(DefaultRequest) {
+            url(BuildConfig.BACKEND_URL)
+            headers {
+                headerProvider.getHeaders().forEach { (key, value) ->
+                    append(key, value)
+                }
             }
         }
     }
@@ -105,5 +130,5 @@ class NetworkModule {
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Authorization(@Suppress("unused") val type: Type) {
-    enum class Type { NONE, TOKEN }
+    enum class Type { NONE, TOKEN, MINDBOX_SECRET }
 }

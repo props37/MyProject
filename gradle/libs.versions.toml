@@ -21,6 +21,7 @@ google-play-services-location = "21.0.1"
 firebase = "31.4.0"
 firebase-crashlytics = "2.9.4"
 firebase-performance = "1.4.2"
+mindbox = "2.5.0"
 gitVersioning = "0.4.14"
 
 junit = "4.13.2"
@@ -69,6 +70,7 @@ google-play-services-location = { group = "com.google.android.gms", name = "play
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
 firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
+mindbox = { group = "cloud.mindbox", name = "mobile-sdk", version.ref = "mindbox" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-junit" }

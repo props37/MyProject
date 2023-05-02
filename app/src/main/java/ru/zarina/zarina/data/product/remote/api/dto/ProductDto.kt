@@ -26,6 +26,8 @@ data class ProductDto(
     val url: String? = null,
     @SerialName("attributes")
     val attributes: List<String>? = null,
+    @SerialName("sizes")
+    val sizes: List<SizeDto>? = null,
 ) {
     fun toDomain(): Product? {
         val price = price?.toDomain()
@@ -34,15 +36,22 @@ data class ProductDto(
             && ApiContract.isNotNull(price, "price")
             && ApiContract.isNotNull(name, "name")
         ) return Product(
-            id = id,
+            id = Product.Id(id),
             name = name,
-            media = media?.mapNotNull { it.toDomain() }.orEmpty(),
+            media = media
+                ?.mapNotNull { it.toDomain() }
+                .orEmpty(),
             price = price,
             colorVariants = colors
                 ?.mapNotNull { it.toDomain() }
                 ?.associate { (color, variant) -> color to variant }
                 .orEmpty(),
-            description = description?.mapNotNull { it.toDomain() }.orEmpty(),
+            offers = sizes
+                ?.mapNotNull { it.toDomain() }
+                .orEmpty(),
+            description = description
+                ?.mapNotNull { it.toDomain() }
+                .orEmpty(),
             url = url?.let { Url(it) },
             isLookPart = isLookPart == true,
             attributes = attributes.orEmpty(),
