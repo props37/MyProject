@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.screens.product
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,6 +37,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.DeliveryAvailability
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.ui.common.components.ModalLoader
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -65,88 +67,97 @@ fun ProductScreenContent(
     onProductClick: (Product) -> Unit,
     deliveryAvailability: DeliveryAvailability?,
     onBackClick: () -> Unit,
+    isProductLoaderVisible: Boolean,
     cache: State<Cache?>,
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.screenBackground),
+            .background(UiKitTheme.colors.screenBackground)
     ) {
-        ScreenToolbar(
-            title = { ToolbarTitle(product = product) },
-            startIcon = {
-                BackButton(onBackClick)
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-        if (product != null) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
-            ) {
-                MediaSection(
-                    product = product,
-                    cache = cache,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                PriceSection(
-                    price = product.price,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
-                )
-                ColorsSection(
-                    product = product,
-                    onVariantClick = onVariantClick,
-                    modifier = Modifier.padding(bottom = 12.dp)
-                )
-                Divider(
-                    color = UiKitTheme.colors.listDivider,
+        Column(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            ScreenToolbar(
+                title = { ToolbarTitle(product = product) },
+                startIcon = {
+                    BackButton(onBackClick)
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+            if (product != null) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-                DetailsSection(
-                    description = product.description,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Divider(
-                    color = UiKitTheme.colors.listDivider,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-                if (completeLookProducts.isNotEmpty())
-                    ProductHorizontalSection(
-                        title = stringResource(R.string.complete_look),
-                        products = completeLookProducts,
-                        onProductClick = onProductClick,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                if (similarProducts.isNotEmpty())
-                    ProductHorizontalSection(
-                        title = stringResource(R.string.similar_products),
-                        products = similarProducts,
-                        onProductClick = onProductClick,
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
+                ) {
+                    MediaSection(
+                        product = product,
+                        cache = cache,
                         modifier = Modifier.fillMaxWidth()
                     )
-                DeliveryAvailabilitySection(
-                    deliveryAvailability = deliveryAvailability,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 24.dp),
-                )
-                if (product.url != null)
-                    ShareSection(
-                        onShareClick = onShareClick,
+                    PriceSection(
+                        price = product.price,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                    )
+                    ColorsSection(
+                        product = product,
+                        onVariantClick = onVariantClick,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                    Divider(
+                        color = UiKitTheme.colors.listDivider,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .padding(horizontal = 16.dp)
                     )
-                Spacer(modifier = Modifier.navigationBarsPadding())
+                    DetailsSection(
+                        description = product.description,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Divider(
+                        color = UiKitTheme.colors.listDivider,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                    if (completeLookProducts.isNotEmpty())
+                        ProductHorizontalSection(
+                            title = stringResource(R.string.complete_look),
+                            products = completeLookProducts,
+                            onProductClick = onProductClick,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                    if (similarProducts.isNotEmpty())
+                        ProductHorizontalSection(
+                            title = stringResource(R.string.similar_products),
+                            products = similarProducts,
+                            onProductClick = onProductClick,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    DeliveryAvailabilitySection(
+                        deliveryAvailability = deliveryAvailability,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 24.dp),
+                    )
+                    if (product.url != null)
+                        ShareSection(
+                            onShareClick = onShareClick,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
+                    Spacer(modifier = Modifier.navigationBarsPadding())
+                }
             }
         }
+        ModalLoader(
+            isVisible = isProductLoaderVisible,
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }
 
@@ -190,6 +201,7 @@ fun ProductScreen(
     val completeLookProducts by viewModel.completeLookProducts.collectAsStateWithLifecycle()
     val similarProducts by viewModel.similarProducts.collectAsStateWithLifecycle()
     val deliveryAvailability by viewModel.deliveryAvailability.collectAsStateWithLifecycle()
+    val isProductLoaderVisible by viewModel.isProductLoaderVisible.collectAsStateWithLifecycle()
 
     ProductScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -206,6 +218,7 @@ fun ProductScreen(
         onProductClick = viewModel::onProductClick,
         deliveryAvailability = deliveryAvailability,
         onBackClick = viewModel::onBackClick,
+        isProductLoaderVisible = isProductLoaderVisible,
         cache = cache
     )
 }
@@ -260,6 +273,7 @@ fun ProductScreenContentPreview(
             onProductClick = {},
             deliveryAvailability = deliveryAvailability,
             onBackClick = {},
+            isProductLoaderVisible = false,
             cache = remember { mutableStateOf(null) },
         )
     }

@@ -17,7 +17,10 @@ import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.base.operation.OperationKey
+import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
+import ru.zarina.zarina.utils.isNetworkException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,6 +31,8 @@ class ProductViewModel @Inject constructor(
 ) : ViewModel(),
     ISideEffectSource<ProductViewModel.SideEffect> by SideEffectQueue() {
 
+    private val operationTracker = OperationTracker()
+
     val cache = MutableStateFlow(cache).asStateFlow()
     private val productId = savedStateHandle.getStateFlow(
         key = Destinations.PRODUCT.ARGUMENT_PRODUCT_ID,
@@ -37,44 +42,72 @@ class ProductViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val product = productId
         .mapLatest { id ->
-            // TODO show loading error
-            interactor.getProduct(id).getOrNull()
+            operationTracker.track(Operation.LOADING_PRODUCT) {
+                interactor.getProduct(id)
+                    .onSuccess {
+                        setNetworkErrorState(isVisible = false)
+                    }
+                    .getOrElse { throwable ->
+                        when {
+                            throwable.isNetworkException() -> setNetworkErrorState(isVisible = true)
+                            // TODO check what happens when product is not found
+                        }
+                        null
+                    }
+            }
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val completeLookProducts = product
         .mapLatest { product ->
-            // TODO show loading error
-            if (product?.isLookPart == true)
-                interactor.getCompleteLook(product).getOrDefault(emptyList()).toPersistentList()
-            else
-                persistentListOf()
+            operationTracker.track(Operation.LOADING_COMPLETE_LOOK) {
+                if (product?.isLookPart == true) {
+                    interactor.getCompleteLook(product)
+                        .getOrDefault(emptyList())
+                        .toPersistentList()
+                } else {
+                    persistentListOf()
+                }
+            }
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val similarProducts = product
         .mapLatest { product ->
-            // TODO show loading error
-            if (product != null)
-                interactor.getRecommendations(product).getOrDefault(emptyList()).toPersistentList()
-            else
-                persistentListOf()
+            operationTracker.track(Operation.LOADING_RECOMMENDATIONS) {
+                if (product != null) {
+                    interactor.getRecommendations(product)
+                        .getOrDefault(emptyList())
+                        .toPersistentList()
+                } else {
+                    persistentListOf()
+                }
+            }
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val deliveryAvailability = product
         .mapLatest { product ->
-            // TODO show loader
-            // TODO show loading error
-            if (product != null)
-                interactor.getDeliveryAvailability(product).getOrNull()
-            else
-                null
+            operationTracker.track(Operation.LOADING_DELIVERY_AVAILABILITY) {
+                if (product != null)
+                    interactor.getDeliveryAvailability(product).getOrNull()
+                else
+                    null
+            }
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    val isProductLoaderVisible = operationTracker
+        .isOperationOngoing(
+            Operation.LOADING_PRODUCT,
+            Operation.LOADING_COMPLETE_LOOK,
+            Operation.LOADING_RECOMMENDATIONS,
+            Operation.LOADING_DELIVERY_AVAILABILITY
+        )
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     fun onVariantClick(variant: Product.Variant) {
         savedStateHandle[Destinations.PRODUCT.ARGUMENT_PRODUCT_ID] = variant.id.value
@@ -93,10 +126,21 @@ class ProductViewModel @Inject constructor(
         sideEffect(SideEffect.GoBack)
     }
 
+    private fun setNetworkErrorState(isVisible: Boolean) {
+        // TODO
+    }
+
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         data class ShareText(val text: String) : SideEffect
         data class ShowProduct(val product: Product) : SideEffect
         object GoBack : SideEffect
+    }
+
+    enum class Operation : OperationKey {
+        LOADING_PRODUCT,
+        LOADING_COMPLETE_LOOK,
+        LOADING_RECOMMENDATIONS,
+        LOADING_DELIVERY_AVAILABILITY
     }
 
 }
