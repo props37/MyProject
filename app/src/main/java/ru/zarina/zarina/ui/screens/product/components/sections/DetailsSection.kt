@@ -9,13 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.components.CollapsibleContainer
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun DetailsSection(
-    description: List<Pair<String, String>>,
+    description: ImmutableList<Pair<String, String>>,
     modifier: Modifier = Modifier,
 ) {
     CollapsibleContainer(

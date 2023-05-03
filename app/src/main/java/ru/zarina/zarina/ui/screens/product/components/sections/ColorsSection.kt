@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.screens.product.components.sections
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import kotlinx.collections.immutable.toImmutableList
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.components.ColorPicker
 
@@ -12,7 +13,7 @@ fun ColorsSection(
     onVariantClick: (Product.Variant) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val colors = remember(product) { product.colorVariants.map { it.key } }
+    val colors = remember(product) { product.colorVariants.map { it.key }.toImmutableList() }
     val selectedColor = remember(product) {
         product.colorVariants.entries.firstOrNull { it.value.isCurrent }?.key
     }

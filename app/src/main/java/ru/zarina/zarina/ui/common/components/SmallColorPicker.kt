@@ -18,13 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.ui.common.utils.domain.toColorOr
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.domain.Color as ZarinaColor
 
 @Composable
 fun SmallColorPicker(
-    colors: List<ZarinaColor>,
+    colors: ImmutableList<ZarinaColor>,
     selectedColor: ZarinaColor?,
     modifier: Modifier = Modifier,
 ) {

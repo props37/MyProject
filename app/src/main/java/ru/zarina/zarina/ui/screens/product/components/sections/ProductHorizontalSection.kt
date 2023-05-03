@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.components.ProductCard
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -19,7 +20,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 @Composable
 fun ProductHorizontalSection(
     title: String,
-    products: List<Product>,
+    products: ImmutableList<Product>,
     onProductClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {

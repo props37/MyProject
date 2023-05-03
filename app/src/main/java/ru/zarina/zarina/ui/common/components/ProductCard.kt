@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.toImmutableList
 import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
@@ -72,7 +73,7 @@ fun ProductCard(
             modifier = Modifier.padding(horizontal = 8.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
-        val colors = remember(product) { product.colorVariants.map { it.key } }
+        val colors = remember(product) { product.colorVariants.map { it.key }.toImmutableList() }
         val selectedColor = remember(product) {
             product.colorVariants.entries.firstOrNull { it.value.isCurrent }?.key
         }
