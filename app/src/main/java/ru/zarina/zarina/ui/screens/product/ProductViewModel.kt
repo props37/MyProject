@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.exception.NotFoundException
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
@@ -50,7 +51,8 @@ class ProductViewModel @Inject constructor(
                     .getOrElse { throwable ->
                         when {
                             throwable.isNetworkException() -> setNetworkErrorState(isVisible = true)
-                            // TODO check what happens when product is not found
+                            throwable is NotFoundException -> { /* TODO show not found error */
+                            }
                         }
                         null
                     }

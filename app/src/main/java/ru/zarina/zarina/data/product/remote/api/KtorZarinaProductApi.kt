@@ -2,12 +2,15 @@ package ru.zarina.zarina.data.product.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.http.HttpStatusCode
 import ru.zarina.zarina.data.product.remote.api.dto.CompleteLookDto
 import ru.zarina.zarina.data.product.remote.api.dto.DeliveryInfoDto
 import ru.zarina.zarina.data.product.remote.api.dto.ProductDto
 import ru.zarina.zarina.di.Authorization
+import ru.zarina.zarina.domain.exception.NotFoundException
 import javax.inject.Inject
 
 class KtorZarinaProductApi @Inject constructor(
@@ -16,8 +19,15 @@ class KtorZarinaProductApi @Inject constructor(
 ) : IZarinaProductApi {
 
     override suspend fun getProduct(id: String): ProductDto {
-        val response = client.get("/api/products/$id")
-        return response.body()
+        try {
+            val response = client.get("/api/products/$id")
+            return response.body()
+        } catch (exception: ClientRequestException) {
+            if (exception.response.status == HttpStatusCode.NotFound)
+                throw NotFoundException("Product $id not found")
+            else
+                throw exception
+        }
     }
 
     override suspend fun getCompleteLook(id: String): CompleteLookDto {
