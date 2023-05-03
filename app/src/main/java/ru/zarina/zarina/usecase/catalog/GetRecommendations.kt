@@ -22,7 +22,13 @@ class GetRecommendationsUseCase @Inject constructor(
 
         val recommendationIds = recommendationRepository.getRecommendations(type)
 
-        val recommendations = recommendationIds.mapAsync { productRepository.getProduct(it) }
+        val recommendations = recommendationIds
+            .mapAsync { id ->
+                runCatching { productRepository.getProduct(id) }
+                    .onFailure { Timber.w(it, "Product with id $id failed to load") }
+                    .getOrNull()
+            }
+            .filterNotNull()
 
         Timber.v("Loaded ${recommendations.size} recommendations for type $type")
 
