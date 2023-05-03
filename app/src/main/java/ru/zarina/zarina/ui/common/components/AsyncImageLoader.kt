@@ -18,20 +18,20 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun AsyncImageLoader(
-    model: Any?,
+    url: String?,
     modifier: Modifier = Modifier,
     alignment: Alignment = Alignment.Center,
     contentScale: ContentScale = ContentScale.Crop,
     contentDescription: String? = null,
 ) {
-    var isLoaded by remember(model) { mutableStateOf(false) }
+    var isLoaded by remember(url) { mutableStateOf(false) }
     val contentAlpha by animateFloatAsState(
         targetValue = if (isLoaded) 1f else 0f,
         label = "content alpha"
     )
     Box(modifier = modifier) {
         AsyncImage(
-            model = model,
+            model = url,
             onSuccess = { isLoaded = true },
             alignment = alignment,
             contentScale = contentScale,

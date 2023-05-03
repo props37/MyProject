@@ -55,7 +55,7 @@ private fun ImageItem(
     modifier: Modifier = Modifier,
 ) {
     AsyncImageLoader(
-        model = media.url.value,
+        url = media.url.value,
         alignment = Alignment.Center,
         contentScale = ContentScale.FillWidth,
         contentDescription = null,
