@@ -33,7 +33,7 @@ class OperationTracker {
      * @param operation operation to track.
      * @return result of the [operation].
      */
-    suspend fun <R : Any> track(key: OperationKey, operation: suspend () -> R): R {
+    suspend fun <R> track(key: OperationKey, operation: suspend () -> R): R {
         val request = Operation(UUID.randomUUID().toString(), key)
         try {
             ongoingOperations.update { it + request }
