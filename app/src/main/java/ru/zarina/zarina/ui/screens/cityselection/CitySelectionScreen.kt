@@ -52,15 +52,14 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.components.ErrorState
 import ru.zarina.zarina.ui.common.components.ModalError
 import ru.zarina.zarina.ui.common.components.StateSnackbar
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.ui.CityListItemProvider
-import ru.zarina.zarina.ui.screens.cityselection.CitySelectionViewModel.ErrorType
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.compose.navigationOrIme
@@ -78,7 +77,7 @@ fun CitySelectionScreenContent(
     cityItems: ImmutableList<CitySelectionViewModel.CityListItem>,
     onCityClick: (City) -> Unit,
     isRegionVisible: Boolean,
-    errorType: ErrorType?,
+    errorState: ErrorState?,
     onRefreshClick: () -> Unit,
     onCloseClick: () -> Unit,
     isSnackbarVisible: Boolean,
@@ -112,14 +111,14 @@ fun CitySelectionScreenContent(
                 .weight(1f)
         ) {
             AnimatedContent(
-                targetState = errorType,
+                targetState = errorState,
                 transitionSpec = { fadeIn() with fadeOut() },
                 label = "error state",
                 modifier = Modifier.fillMaxSize()
             ) { error ->
                 if (error != null)
-                    ErrorPlaceholder(
-                        errorType = error,
+                    ModalError(
+                        state = error,
                         onRefreshClick = onRefreshClick,
                         modifier = Modifier
                             .fillMaxSize()
@@ -325,43 +324,6 @@ private fun SearchBar(
 }
 
 @Composable
-fun ErrorPlaceholder(
-    errorType: ErrorType,
-    onRefreshClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val icon = when (errorType) {
-        ErrorType.NO_RESULTS -> null
-        ErrorType.NETWORK -> R.drawable.ic_no_network_96
-        ErrorType.GENERIC -> R.drawable.ic_broken_heart_96
-    }
-    val title = when (errorType) {
-        ErrorType.NO_RESULTS -> null
-        ErrorType.NETWORK -> R.string.loading_error
-        ErrorType.GENERIC -> R.string.something_went_wrong
-    }
-    val subtitle = when (errorType) {
-        ErrorType.NO_RESULTS -> R.string.city_not_found
-        ErrorType.NETWORK -> R.string.check_connection_and_try_again_later
-        ErrorType.GENERIC -> R.string.try_again_later
-    }
-    val isRefreshButtonVisible = errorType != ErrorType.NO_RESULTS
-
-    val state = ErrorState(
-        icon = icon,
-        title = title?.let { stringResource(it) },
-        subtitle = stringResource(subtitle),
-        isRefreshButtonVisible = isRefreshButtonVisible,
-    )
-
-    ModalError(
-        state = state,
-        onRefreshClick = onRefreshClick,
-        modifier = modifier
-    )
-}
-
-@Composable
 fun CitySelectionScreen(
     showHome: () -> Unit,
 ) {
@@ -371,7 +333,7 @@ fun CitySelectionScreen(
     val query by viewModel.query.collectAsStateWithLifecycle()
     val cityItems by viewModel.cities.collectAsStateWithLifecycle()
     val isRegionVisible by viewModel.isRegionVisible.collectAsStateWithLifecycle()
-    val error by viewModel.errorType.collectAsStateWithLifecycle()
+    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
     val isSnackbarVisible by viewModel.isSnackbarVisible.collectAsStateWithLifecycle()
     val snackbarText by viewModel.snackbarText.collectAsStateWithLifecycle()
 
@@ -387,7 +349,7 @@ fun CitySelectionScreen(
         cityItems = cityItems,
         onCityClick = viewModel::onCityClick,
         isRegionVisible = isRegionVisible,
-        errorType = error,
+        errorState = errorState,
         onRefreshClick = viewModel::onRefreshClick,
         onCloseClick = viewModel::onCloseClick,
         isSnackbarVisible = isSnackbarVisible,
@@ -422,7 +384,7 @@ fun CitySelectionScreenContentPreview(
             isSearchLoadingVisible = true,
             query = "",
             onQueryChange = {},
-            errorType = null,
+            errorState = null,
             cityItems = cityItems,
             onCityClick = {},
             isRegionVisible = true,

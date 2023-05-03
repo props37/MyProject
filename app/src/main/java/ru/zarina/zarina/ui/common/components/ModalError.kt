@@ -1,6 +1,5 @@
 package ru.zarina.zarina.ui.common.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +18,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
+import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -65,14 +67,14 @@ private fun ErrorContent(
             )
         if (state.title != null)
             Text(
-                text = state.title,
+                text = textString(state.title),
                 style = UiKitTheme.typography.errorPlaceholderTitle,
                 color = UiKitTheme.colors.primaryContentColor,
                 textAlign = TextAlign.Center,
             )
         if (state.subtitle != null)
             Text(
-                text = state.subtitle,
+                text = textString(state.subtitle),
                 style = UiKitTheme.typography.errorPlaceholderBody,
                 color = UiKitTheme.colors.primaryContentColor,
                 textAlign = TextAlign.Center,
@@ -96,14 +98,6 @@ private fun RefreshButton(
         )
 }
 
-data class ErrorState(
-    @DrawableRes
-    val icon: Int?,
-    val title: String?,
-    val subtitle: String?,
-    val isRefreshButtonVisible: Boolean = false,
-)
-
 @Preview(
     showSystemUi = true,
     showBackground = true,
@@ -116,8 +110,8 @@ fun ModalErrorPreview() {
         ModalError(
             state = ErrorState(
                 icon = R.drawable.ic_no_network_96,
-                title = "Error title",
-                subtitle = "Error subtitle",
+                title = Text.String("Error title"),
+                subtitle = Text.String("Error subtitle"),
                 isRefreshButtonVisible = true,
             ),
             modifier = Modifier.fillMaxSize(),
