@@ -4,20 +4,19 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
@@ -32,47 +31,17 @@ fun ModalError(
     modifier: Modifier = Modifier,
     onRefreshClick: () -> Unit = {},
 ) {
-    Layout(
-        content = {
-            ErrorContent(
-                state = state,
-                modifier = Modifier.layoutId(LayoutId.CONTENT),
-            )
-            RefreshButton(
-                state = state,
-                onClick = onRefreshClick,
-                modifier = Modifier.layoutId(LayoutId.BUTTON),
-            )
-        },
-        modifier = modifier,
-    ) { measurables, constraints ->
-        val buttonPlaceable = measurables
-            .first { it.layoutId == LayoutId.BUTTON }
-            .measure(constraints.copy(minHeight = 0))
-
-        val maxHeightContent = if (constraints.maxHeight == Constraints.Infinity)
-            constraints.maxHeight
-        else
-            (constraints.maxHeight - buttonPlaceable.height).coerceAtLeast(0)
-
-        val contentPlaceable = measurables
-            .first { it.layoutId == LayoutId.CONTENT }
-            .measure(constraints.copy(minHeight = 0, maxHeight = maxHeightContent))
-
-        layout(
-            constraints.maxWidth,
-            constraints.maxHeight,
-        ) {
-            contentPlaceable.placeRelative(
-                x = (constraints.maxWidth - contentPlaceable.width) / 2,
-                y = (constraints.maxHeight - contentPlaceable.height) / 2
-            )
-
-            buttonPlaceable.placeRelative(
-                x = (constraints.maxWidth - buttonPlaceable.width) / 2,
-                y = constraints.maxHeight - buttonPlaceable.height
-            )
-        }
+    Column(modifier = modifier) {
+        Spacer(modifier = Modifier.weight(1f))
+        ErrorContent(
+            state = state
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.weight(1f))
+        RefreshButton(
+            state = state,
+            onClick = onRefreshClick
+        )
     }
 }
 
@@ -133,8 +102,6 @@ data class ErrorState(
     val subtitle: String?,
     val isRefreshButtonVisible: Boolean = false,
 )
-
-private enum class LayoutId { CONTENT, BUTTON }
 
 @Preview(
     showSystemUi = true,
