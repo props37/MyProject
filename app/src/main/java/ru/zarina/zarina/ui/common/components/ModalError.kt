@@ -42,6 +42,7 @@ fun ModalError(
             state = state,
             onClick = onRefreshClick
         )
+        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 
