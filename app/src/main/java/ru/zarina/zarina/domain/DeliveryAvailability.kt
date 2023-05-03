@@ -1,8 +1,10 @@
 package ru.zarina.zarina.domain
 
+import kotlinx.collections.immutable.ImmutableList
+
 data class DeliveryAvailability(
     val cityName: String,
-    val options: List<Option>,
+    val options: ImmutableList<Option>,
 ) {
 
     data class Option(

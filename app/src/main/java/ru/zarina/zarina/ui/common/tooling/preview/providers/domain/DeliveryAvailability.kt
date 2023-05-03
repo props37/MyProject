@@ -1,13 +1,14 @@
 package ru.zarina.zarina.ui.common.tooling.preview.providers.domain
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import kotlinx.collections.immutable.persistentListOf
 import ru.zarina.zarina.domain.DeliveryAvailability
 
 class DeliveryAvailabilityProvider : PreviewParameterProvider<DeliveryAvailability> {
     override val values = sequenceOf(
         DeliveryAvailability(
             cityName = "Санкт-Петербург",
-            options = listOf(
+            options = persistentListOf(
                 DeliveryAvailability.Option(
                     type = DeliveryAvailability.Option.Type.EXPRESS,
                     name = "Курьерская доставка",

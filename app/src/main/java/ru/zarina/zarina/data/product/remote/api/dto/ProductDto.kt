@@ -1,5 +1,7 @@
 package ru.zarina.zarina.data.product.remote.api.dto
 
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
@@ -40,21 +42,27 @@ data class ProductDto(
             name = name,
             media = media
                 ?.mapNotNull { it.toDomain() }
-                .orEmpty(),
+                .orEmpty()
+                .toImmutableList(),
             price = price,
             colorVariants = colors
                 ?.mapNotNull { it.toDomain() }
                 ?.associate { (color, variant) -> color to variant }
-                .orEmpty(),
+                .orEmpty()
+                .toImmutableMap(),
             offers = sizes
                 ?.mapNotNull { it.toDomain() }
-                .orEmpty(),
+                .orEmpty()
+                .toImmutableList(),
             description = description
                 ?.mapNotNull { it.toDomain() }
-                .orEmpty(),
+                .orEmpty()
+                .toImmutableList(),
             url = url?.let { Url(it) },
             isLookPart = isLookPart == true,
-            attributes = attributes.orEmpty(),
+            attributes = attributes
+                .orEmpty()
+                .toImmutableList(),
         )
         return null
     }

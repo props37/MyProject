@@ -1,5 +1,6 @@
 package ru.zarina.zarina.data.product.remote.api.dto
 
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
@@ -19,7 +20,7 @@ data class DeliveryInfoDto(
         ) {
             return DeliveryAvailability(
                 cityName = cityName,
-                options = deliveries?.mapNotNull { it.toDomain() }.orEmpty(),
+                options = deliveries?.mapNotNull { it.toDomain() }.orEmpty().toImmutableList(),
             )
         } else {
             null
