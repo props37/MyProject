@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
@@ -74,7 +75,7 @@ fun CitySelectionScreenContent(
     isSearchLoadingVisible: Boolean,
     query: String,
     onQueryChange: (String) -> Unit,
-    cityItems: List<CitySelectionViewModel.CityListItem>,
+    cityItems: ImmutableList<CitySelectionViewModel.CityListItem>,
     onCityClick: (City) -> Unit,
     isRegionVisible: Boolean,
     error: ErrorState?,
@@ -436,7 +437,7 @@ fun CitySelectionScreenBehavior(
 @Composable
 fun CitySelectionScreenContentPreview(
     @PreviewParameter(CityListItemProvider::class, limit = 1)
-    cityItems: List<CitySelectionViewModel.CityListItem>,
+    cityItems: ImmutableList<CitySelectionViewModel.CityListItem>,
 ) {
     ZarinaTheme {
         CitySelectionScreenContent(

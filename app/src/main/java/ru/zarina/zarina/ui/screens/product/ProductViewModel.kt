@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.datasource.cache.Cache
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -45,22 +47,22 @@ class ProductViewModel @Inject constructor(
         .mapLatest { product ->
             // TODO show loading error
             if (product?.isLookPart == true)
-                interactor.getCompleteLook(product).getOrDefault(emptyList())
+                interactor.getCompleteLook(product).getOrDefault(emptyList()).toPersistentList()
             else
-                emptyList()
+                persistentListOf()
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val similarProducts = product
         .mapLatest { product ->
             // TODO show loading error
             if (product != null)
-                interactor.getRecommendations(product).getOrDefault(emptyList())
+                interactor.getRecommendations(product).getOrDefault(emptyList()).toPersistentList()
             else
-                emptyList()
+                persistentListOf()
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val deliveryAvailability = product

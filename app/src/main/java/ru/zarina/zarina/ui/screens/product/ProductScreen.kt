@@ -30,6 +30,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.DeliveryAvailability
@@ -58,8 +60,8 @@ fun ProductScreenContent(
     product: Product?,
     onVariantClick: (Product.Variant) -> Unit,
     onShareClick: () -> Unit,
-    completeLookProducts: List<Product>,
-    similarProducts: List<Product>,
+    completeLookProducts: ImmutableList<Product>,
+    similarProducts: ImmutableList<Product>,
     onProductClick: (Product) -> Unit,
     deliveryAvailability: DeliveryAvailability?,
     onBackClick: () -> Unit,
@@ -247,14 +249,14 @@ fun ProductScreenContentPreview(
                         UUID.randomUUID().toString()
                     )
                 )
-            },
+            }.toPersistentList(),
             similarProducts = List(5) {
                 product.copy(
                     id = Product.Id(
                         UUID.randomUUID().toString()
                     )
                 )
-            },
+            }.toPersistentList(),
             onProductClick = {},
             deliveryAvailability = deliveryAvailability,
             onBackClick = {},

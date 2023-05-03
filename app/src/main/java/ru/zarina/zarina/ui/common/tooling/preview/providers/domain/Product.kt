@@ -1,6 +1,8 @@
 package ru.zarina.zarina.ui.common.tooling.preview.providers.domain
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 import ru.zarina.zarina.domain.Color
 import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Offer
@@ -14,7 +16,7 @@ class ProductProvider : PreviewParameterProvider<Product> {
         Product(
             id = Product.Id("1329404704-50"),
             name = "Джинсы mom fit",
-            media = listOf(
+            media = persistentListOf(
                 Media(
                     url = Url("https://imgcdn.zarina.ru/upload/images/13294/thumb/450_9999/1329404704_50_1.jpg?t=1631575743"),
                     type = Media.Type.IMAGE,
@@ -29,7 +31,7 @@ class ProductProvider : PreviewParameterProvider<Product> {
                 ),
             ),
             price = Price(current = 1699, original = 2399),
-            colorVariants = mapOf(
+            colorVariants = persistentMapOf(
                 Color(
                     id = "109",
                     name = "Темно-серый деним",
@@ -47,7 +49,7 @@ class ProductProvider : PreviewParameterProvider<Product> {
                     isCurrent = true,
                 ),
             ),
-            offers = listOf(
+            offers = persistentListOf(
                 Offer(
                     id = "110160",
                     barcode = "4640078695058",
@@ -67,7 +69,7 @@ class ProductProvider : PreviewParameterProvider<Product> {
                     ),
                 )
             ),
-            description = listOf(
+            description = persistentListOf(
                 "Состав" to "99% хлопок, 1% эластан",
                 "Страна-производитель" to "ВЬЕТНАМ",
                 "Уход" to "Бережная стирка при максимальной температуре 30ºС, Не отбеливать, Машинная сушка запрещена, Глажение при 150ºС, Сухая чистка запрещена",
@@ -75,7 +77,7 @@ class ProductProvider : PreviewParameterProvider<Product> {
             ),
             url = Url("https://zarina.ru/catalog/product/1329404704-50/"),
             isLookPart = true,
-            attributes = listOf("эксклюзивно онлайн")
+            attributes = persistentListOf("эксклюзивно онлайн")
         )
     )
 }

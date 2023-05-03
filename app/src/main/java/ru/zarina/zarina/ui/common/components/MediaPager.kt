@@ -12,12 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.media3.datasource.cache.Cache
+import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.domain.Media
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MediaPager(
-    media: List<Media>,
+    media: ImmutableList<Media>,
     cache: State<Cache?>,
     modifier: Modifier = Modifier,
     state: PagerState = rememberPagerState(),
