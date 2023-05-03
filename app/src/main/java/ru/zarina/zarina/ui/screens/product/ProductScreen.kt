@@ -12,8 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -39,7 +36,8 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.DeliveryAvailability
 import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.ui.common.components.ScreenToolbar
+import ru.zarina.zarina.ui.common.components.toolbar.BackButton
+import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.DeliveryAvailabilityProvider
@@ -77,12 +75,7 @@ fun ProductScreenContent(
         ScreenToolbar(
             title = { ToolbarTitle(product = product) },
             startIcon = {
-                IconButton(onClick = onBackClick) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_back_24),
-                        contentDescription = stringResource(id = R.string.back)
-                    )
-                }
+                BackButton(onBackClick)
             },
             modifier = Modifier
                 .fillMaxWidth()

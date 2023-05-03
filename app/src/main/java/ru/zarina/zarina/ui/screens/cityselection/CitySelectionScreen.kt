@@ -53,9 +53,9 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.components.ScreenToolbar
 import ru.zarina.zarina.ui.common.components.StateSnackbar
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
+import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.ui.CityListItemProvider

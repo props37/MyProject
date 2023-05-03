@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.components
+package ru.zarina.zarina.ui.common.components.toolbar
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CenterAlignedTopAppBar

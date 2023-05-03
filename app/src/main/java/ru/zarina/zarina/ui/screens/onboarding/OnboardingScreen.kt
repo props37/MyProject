@@ -26,8 +26,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -64,12 +62,13 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.components.ScreenToolbar
-import ru.zarina.zarina.ui.common.components.ScreenToolbarDefaults
 import ru.zarina.zarina.ui.common.components.StateSnackbar
 import ru.zarina.zarina.ui.common.components.StateSnackbarDefaults
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
+import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
+import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
+import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbarDefaults
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.CityProvider
@@ -232,22 +231,6 @@ fun SplashBanner(
             modifier = Modifier
                 .fillMaxSize()
                 .background(gradientBrush)
-        )
-    }
-}
-
-@Composable
-fun CloseButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    IconButton(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_close_24),
-            contentDescription = stringResource(id = R.string.skip)
         )
     }
 }
