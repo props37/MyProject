@@ -42,6 +42,8 @@ data class UiKitColors(
     val discountBadgeForeground: Color = Color.White,
     val colorPickerCircleBorder: Color = Mercury,
     val colorPickerCircleSelectionBorder: Color = Color.Black,
+    val modalLoaderProgress: Color = Color.White,
+    val modalLoaderOverlay: Color = Color.Black.copy(0.4f),
 )
 
 
