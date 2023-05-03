@@ -10,12 +10,13 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.exception.NotFoundException
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
@@ -40,19 +41,22 @@ class ProductViewModel @Inject constructor(
         initialValue = ""
     ).map { Product.Id(it) }
 
+    private val _errorState = MutableStateFlow<ErrorState?>(null)
+    val errorState: StateFlow<ErrorState?> = _errorState.asStateFlow()
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val product = productId
         .mapLatest { id ->
             operationTracker.track(Operation.LOADING_PRODUCT) {
                 interactor.getProduct(id)
                     .onSuccess {
-                        setNetworkErrorState(isVisible = false)
+                        _errorState.value = null
                     }
                     .getOrElse { throwable ->
-                        when {
-                            throwable.isNetworkException() -> setNetworkErrorState(isVisible = true)
-                            throwable is NotFoundException -> { /* TODO show not found error */
-                            }
+                        _errorState.value = when {
+                            throwable.isNetworkException() -> ErrorState.NETWORK
+                            // TODO show not found error
+                            else -> ErrorState.GENERIC
                         }
                         null
                     }
@@ -126,10 +130,6 @@ class ProductViewModel @Inject constructor(
 
     fun onBackClick() {
         sideEffect(SideEffect.GoBack)
-    }
-
-    private fun setNetworkErrorState(isVisible: Boolean) {
-        // TODO
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {

@@ -1,5 +1,10 @@
 package ru.zarina.zarina.ui.screens.product
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +42,8 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.DeliveryAvailability
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.components.ModalError
 import ru.zarina.zarina.ui.common.components.ModalLoader
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
@@ -56,7 +63,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.android.share
 import java.util.UUID
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun ProductScreenContent(
     product: Product?,
@@ -68,6 +75,7 @@ fun ProductScreenContent(
     deliveryAvailability: DeliveryAvailability?,
     onBackClick: () -> Unit,
     isProductLoaderVisible: Boolean,
+    errorState: ErrorState?,
     cache: State<Cache?>,
 ) {
     Box(
@@ -153,6 +161,20 @@ fun ProductScreenContent(
                     Spacer(modifier = Modifier.navigationBarsPadding())
                 }
             }
+            AnimatedContent(
+                targetState = errorState,
+                transitionSpec = { fadeIn() with fadeOut() },
+                label = "error state",
+                modifier = Modifier.fillMaxSize()
+            ) { state ->
+                if (state != null)
+                    ModalError(
+                        state = state,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .navigationBarsPadding()
+                    )
+            }
         }
         ModalLoader(
             isVisible = isProductLoaderVisible,
@@ -202,6 +224,7 @@ fun ProductScreen(
     val similarProducts by viewModel.similarProducts.collectAsStateWithLifecycle()
     val deliveryAvailability by viewModel.deliveryAvailability.collectAsStateWithLifecycle()
     val isProductLoaderVisible by viewModel.isProductLoaderVisible.collectAsStateWithLifecycle()
+    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
 
     ProductScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -219,6 +242,7 @@ fun ProductScreen(
         deliveryAvailability = deliveryAvailability,
         onBackClick = viewModel::onBackClick,
         isProductLoaderVisible = isProductLoaderVisible,
+        errorState = errorState,
         cache = cache
     )
 }
@@ -274,6 +298,7 @@ fun ProductScreenContentPreview(
             deliveryAvailability = deliveryAvailability,
             onBackClick = {},
             isProductLoaderVisible = false,
+            errorState = null,
             cache = remember { mutableStateOf(null) },
         )
     }
