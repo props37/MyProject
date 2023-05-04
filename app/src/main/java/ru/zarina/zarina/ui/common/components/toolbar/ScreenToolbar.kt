@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.components
+package ru.zarina.zarina.ui.common.components.toolbar
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -16,10 +16,11 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 fun ScreenToolbar(
     title: String,
     modifier: Modifier = Modifier,
+    startIcon: @Composable (() -> Unit)? = null,
     endIcon: @Composable (() -> Unit)? = null,
     colors: TopAppBarColors = ScreenToolbarDefaults.colors(),
 ) {
-    CenterAlignedTopAppBar(
+    ScreenToolbar(
         title = {
             Text(
                 text = title,
@@ -28,9 +29,26 @@ fun ScreenToolbar(
                 maxLines = 1,
             )
         },
-        actions = {
-            if (endIcon != null) endIcon()
-        },
+        modifier = modifier,
+        startIcon = startIcon,
+        endIcon = endIcon,
+        colors = colors,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ScreenToolbar(
+    title: @Composable (() -> Unit),
+    modifier: Modifier = Modifier,
+    startIcon: @Composable (() -> Unit)? = null,
+    endIcon: @Composable (() -> Unit)? = null,
+    colors: TopAppBarColors = ScreenToolbarDefaults.colors(),
+) {
+    CenterAlignedTopAppBar(
+        title = title,
+        navigationIcon = { if (startIcon != null) startIcon() },
+        actions = { if (endIcon != null) endIcon() },
         colors = colors,
         modifier = modifier.fillMaxWidth(),
     )

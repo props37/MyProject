@@ -77,6 +77,7 @@ android {
 dependencies {
 
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.collections.immutable)
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime.core)
     implementation(libs.androidx.lifecycle.runtime.compose)
@@ -86,6 +87,8 @@ dependencies {
     implementation(libs.androidx.splashScreen)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui.core)
     implementation(libs.compose.ui.graphics)
@@ -108,6 +111,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.performance)
+    implementation(libs.mindbox)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

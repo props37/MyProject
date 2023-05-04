@@ -23,4 +23,19 @@
     <string name="check_connection_and_try_again_later">Проверьте соединение с интернетом и попробуйте позже</string>
     <string name="refresh">Обновить</string>
     <string name="city">Город</string>
+    <string name="currency_amount_rubles">%1$d ₽</string>
+    <string name="discount_percentage">-%1$d%%</string>
+    <string name="details">Детали</string>
+    <string name="key_value">%1$s: %2$s</string>
+    <string name="share_product">Поделиться товаром</string>
+    <string name="complete_look">Образ целиком</string>
+    <string name="similar_products">Похожие товары</string>
+    <string name="delivery_to">Доставка в %1$s</string>
+    <string name="today">Сегодня</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="day_after_tomorrow">Послезавтра</string>
+    <string name="three_days_or_more">От двух дней</string>
+    <string name="back">Назад</string>
+    <string name="out_of_stock">Нет в наличии</string>
+    <string name="buy_complete_look">Купить образ</string>
 </resources>

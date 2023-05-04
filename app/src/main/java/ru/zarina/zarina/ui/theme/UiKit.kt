@@ -25,6 +25,8 @@ data class UiKitColors(
     val primaryButtonBackground: Color = Mineshaft,
     val primaryButtonForeground: Color = Color.White,
     val primaryButtonBorder: Color = Mineshaft,
+    val primaryBorderColor: Color = Mercury,
+    val primaryAccentColor: Color = SolidPink,
     val secondaryButtonBackground: Color = Color.White,
     val secondaryButtonForeground: Color = Color.Black,
     val secondaryButtonBorder: Color = Mineshaft,
@@ -33,6 +35,16 @@ data class UiKitColors(
     val hint: Color = RollingStone,
     val listDivider: Color = Mercury,
     val listItemSubtitle: Color = RollingStone,
+    val pagerDot: Color = Color.White,
+    val price: Color = SolidPink,
+    val retiredPrice: Color = RollingStone,
+    val productBadgeBackground: Color = Mineshaft,
+    val productBadgeForeground: Color = Color.White,
+    val colorPickerCircleBorder: Color = Mercury,
+    val colorPickerCircleSelectionBorder: Color = Color.Black,
+    val modalLoaderProgress: Color = Color.White,
+    val modalLoaderOverlay: Color = Color.Black.copy(0.4f),
+    val inactiveOverlay: Color = Color.White.copy(0.6f),
 )
 
 
@@ -76,6 +88,11 @@ data class UiKitTypography(
         lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle
     ),
+    val screenToolbarSubtitle: TextStyle = TextStyle(
+        fontSize = 8.sp,
+        lineHeight = 11.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
     val listHeaderItem: TextStyle = TextStyle(
         fontSize = 20.sp,
         lineHeight = 26.sp,
@@ -98,6 +115,62 @@ data class UiKitTypography(
         fontFamily = Fonts.Families.Circle
     ),
     val errorPlaceholderBody: TextStyle = TextStyle(
+        fontSize = 15.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val productPrice: TextStyle = TextStyle(
+        fontSize = 20.sp,
+        lineHeight = 28.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val productBadge: TextStyle = TextStyle(
+        fontSize = 10.sp,
+        lineHeight = 12.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val productDetailsHeader: TextStyle = TextStyle(
+        fontSize = 17.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val productDetailsContent: TextStyle = TextStyle(
+        fontSize = 15.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val productCardName: TextStyle = TextStyle(
+        fontSize = 15.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val productCardPrice: TextStyle = TextStyle(
+        fontSize = 16.sp,
+        lineHeight = 14.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val productCardTag: TextStyle = TextStyle(
+        fontSize = 8.sp,
+        lineHeight = 11.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val productCardColorCount: TextStyle = TextStyle(
+        fontSize = 15.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val productSectionHeader: TextStyle = TextStyle(
+        fontSize = 20.sp,
+        lineHeight = 26.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val deliveryInformationHeader: TextStyle = TextStyle(
+        fontSize = 17.sp,
+        lineHeight = 20.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val deliveryInformationBody: TextStyle = TextStyle(
         fontSize = 15.sp,
         lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle

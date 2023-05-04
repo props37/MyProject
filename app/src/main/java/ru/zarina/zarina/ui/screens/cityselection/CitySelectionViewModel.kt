@@ -3,6 +3,9 @@ package ru.zarina.zarina.ui.screens.cityselection
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -19,6 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.MessageQueue
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
@@ -48,12 +52,12 @@ class CitySelectionViewModel @Inject constructor(
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
     private val _query = MutableStateFlow("")
     val query: StateFlow<String> = _query.asStateFlow()
-    private val _cities = MutableStateFlow<List<CityListItem>>(emptyList())
-    val cities: StateFlow<List<CityListItem>> = _cities
+    private val _cities = MutableStateFlow<ImmutableList<CityListItem>>(persistentListOf())
+    val cities: StateFlow<ImmutableList<CityListItem>> = _cities
     private val _isRegionVisible = MutableStateFlow(true)
     val isRegionVisible = _isRegionVisible.asStateFlow()
     private val _errorState = MutableStateFlow<ErrorState?>(null)
-    val error = _errorState.asStateFlow()
+    val errorState: StateFlow<ErrorState?> = _errorState.asStateFlow()
     val isSnackbarVisible = messageQueue.isMessageVisible
     val snackbarText = messageQueue.message
 
@@ -127,7 +131,7 @@ class CitySelectionViewModel @Inject constructor(
 
     private fun List<City>.toCityListItems(
         priorityCitiesAtTop: Boolean,
-    ): List<CityListItem> = buildList {
+    ): ImmutableList<CityListItem> = buildList {
         var previousStartingLetter: Char? = null
         val (priorityCities, regularCities) = if (priorityCitiesAtTop)
             this@toCityListItems.partition { it.priority != null }
@@ -144,7 +148,7 @@ class CitySelectionViewModel @Inject constructor(
             }
             add(CityListItem.Item(city))
         }
-    }
+    }.toPersistentList()
 
     sealed class CityListItem(val key: String, val contentType: String) {
         data class Header(val letter: String) : CityListItem(letter, "header")
@@ -157,7 +161,10 @@ class CitySelectionViewModel @Inject constructor(
 
     enum class Operation : OperationKey { CITY_LOAD, ONBOARDING_FINISH }
 
-    enum class ErrorState { NO_RESULTS, NETWORK, GENERIC }
+    private val ErrorState.Companion.NO_RESULTS
+        get() = ErrorState(
+            subtitle = Text.Resource(R.string.city_not_found),
+        )
 
     companion object {
         private val CITY_FETCH_DEBOUNCE_DURATION = 100.milliseconds

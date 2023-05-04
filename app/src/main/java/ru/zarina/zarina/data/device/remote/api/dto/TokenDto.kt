@@ -7,7 +7,7 @@ import ru.zarina.zarina.domain.AuthorizationToken
 @Serializable
 data class TokenDto(
     @SerialName("token")
-    val token: String?,
+    val token: String? = null,
 ) {
     fun toDomain() = AuthorizationToken.Device(checkNotNull(token))
 }
