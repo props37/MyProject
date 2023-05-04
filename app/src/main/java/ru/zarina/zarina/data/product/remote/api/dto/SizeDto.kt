@@ -14,7 +14,7 @@ data class SizeDto(
     val name: String? = null,
     @SerialName("size_ru")
     val localSize: String? = null,
-    @SerialName("isAvailable")
+    @SerialName("is_available")
     val isAvailable: Boolean? = null,
     @SerialName("offer_id")
     val offerId: String? = null,
