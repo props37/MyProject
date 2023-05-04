@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -34,6 +35,7 @@ fun ProductCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val inactiveOverlayColor = UiKitTheme.colors.inactiveOverlay
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -42,6 +44,10 @@ fun ProductCard(
                 indication = null,
                 onClick = onClick,
             )
+            .drawWithContent {
+                drawContent()
+                if (!product.isAvailable) drawRect(inactiveOverlayColor)
+            }
     ) {
         Box(
             modifier = Modifier

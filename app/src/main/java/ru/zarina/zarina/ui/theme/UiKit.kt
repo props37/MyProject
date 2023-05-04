@@ -44,6 +44,7 @@ data class UiKitColors(
     val colorPickerCircleSelectionBorder: Color = Color.Black,
     val modalLoaderProgress: Color = Color.White,
     val modalLoaderOverlay: Color = Color.Black.copy(0.4f),
+    val inactiveOverlay: Color = Color.White.copy(0.6f),
 )
 
 
