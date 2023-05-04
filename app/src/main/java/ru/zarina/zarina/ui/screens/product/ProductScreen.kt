@@ -60,6 +60,7 @@ import ru.zarina.zarina.ui.screens.product.components.sections.ColorsSection
 import ru.zarina.zarina.ui.screens.product.components.sections.DeliveryAvailabilitySection
 import ru.zarina.zarina.ui.screens.product.components.sections.DetailsSection
 import ru.zarina.zarina.ui.screens.product.components.sections.MediaSection
+import ru.zarina.zarina.ui.screens.product.components.sections.PickupSection
 import ru.zarina.zarina.ui.screens.product.components.sections.PriceSection
 import ru.zarina.zarina.ui.screens.product.components.sections.ProductHorizontalSection
 import ru.zarina.zarina.ui.screens.product.components.sections.ShareSection
@@ -128,6 +129,13 @@ fun ProductScreenContent(
                         product = product,
                         onVariantClick = onVariantClick,
                         modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                    PickupSection(
+                        onPickupClick = { /*TODO*/ },
+                        modifier = Modifier
+                            .padding(bottom = 24.dp)
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth()
                     )
                     Divider(
                         color = UiKitTheme.colors.listDivider,
