@@ -2,8 +2,10 @@ package ru.zarina.zarina.ui.common.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,12 +54,19 @@ fun ProductCard(
                 modifier = Modifier.fillMaxSize()
             )
 
-            DiscountBadge(
-                price = product.price,
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(8.dp)
-            )
+            ) {
+                DiscountBadge(
+                    price = product.price,
+                )
+                if (!product.isAvailable)
+                    OutOfStockBadge()
+            }
         }
         Spacer(modifier = Modifier.height(4.dp))
         Tag(

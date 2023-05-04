@@ -16,6 +16,9 @@ data class Product(
     /** Whether this product is a part of "complete look" ("образ целиком") bundle */
     val isLookPart: Boolean,
 ) {
+
+    val isAvailable by lazy { offers.any { it.isAvailable } }
+
     @JvmInline
     value class Id(val value: String)
 
