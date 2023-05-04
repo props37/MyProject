@@ -66,12 +66,13 @@ fun MediaSection(
                 .align(Alignment.BottomStart)
                 .padding(16.dp)
         )
-        BuyCompleteLookButton(
-            onClick = onBuyCompleteLookClick,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-        )
+        if (product.isLookPart)
+            BuyCompleteLookButton(
+                onClick = onBuyCompleteLookClick,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+            )
     }
 }
 

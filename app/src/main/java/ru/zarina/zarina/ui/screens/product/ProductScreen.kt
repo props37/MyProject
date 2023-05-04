@@ -5,6 +5,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
@@ -25,6 +28,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +43,7 @@ import androidx.media3.datasource.cache.Cache
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.DeliveryAvailability
 import ru.zarina.zarina.domain.Product
@@ -63,7 +68,10 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.android.share
 import java.util.UUID
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun ProductScreenContent(
     product: Product?,
@@ -100,9 +108,15 @@ fun ProductScreenContent(
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState()),
                 ) {
+                    val coroutineScope = rememberCoroutineScope()
+                    val completeLookRequester = remember { BringIntoViewRequester() }
                     MediaSection(
                         product = product,
-                        onBuyCompleteLookClick = { }, // TODO
+                        onBuyCompleteLookClick = {
+                            coroutineScope.launch {
+                                completeLookRequester.bringIntoView()
+                            }
+                        },
                         cache = cache,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -138,6 +152,8 @@ fun ProductScreenContent(
                             onProductClick = onProductClick,
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .bringIntoViewRequester(completeLookRequester)
+//                                .focusTarget()
                         )
                     if (similarProducts.isNotEmpty())
                         ProductHorizontalSection(
