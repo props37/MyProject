@@ -75,7 +75,7 @@ sealed interface ZarinaBuildType {
     companion object {
         val values = listOf(Debug, Qa, Release, _Benchmark)
 
-        private const val BASE_NAME = "Zarina"
+        private const val BASE_NAME = "Zarina 2"
     }
 }
 
