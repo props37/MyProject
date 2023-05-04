@@ -102,6 +102,7 @@ fun ProductScreenContent(
                 ) {
                     MediaSection(
                         product = product,
+                        onBuyCompleteLookClick = { }, // TODO
                         cache = cache,
                         modifier = Modifier.fillMaxWidth()
                     )
