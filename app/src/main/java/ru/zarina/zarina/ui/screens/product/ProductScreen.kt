@@ -153,7 +153,6 @@ fun ProductScreenContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .bringIntoViewRequester(completeLookRequester)
-//                                .focusTarget()
                         )
                     if (similarProducts.isNotEmpty())
                         ProductHorizontalSection(
