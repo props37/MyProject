@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.Size
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
@@ -25,6 +26,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @Composable
 fun HorizontalProductCard(
     product: Product,
+    selectedSize: Size?,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -41,6 +43,7 @@ fun HorizontalProductCard(
         )
         Information(
             product = product,
+            selectedSize = selectedSize,
             modifier = Modifier.weight(2f)
         )
     }
@@ -62,6 +65,7 @@ private fun Media(
 @Composable
 private fun Information(
     product: Product,
+    selectedSize: Size?,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -76,6 +80,10 @@ private fun Information(
         ProductColor(
             product = product
         )
+        if (product.offers.size == 1)
+            SingleProductSize(
+                selectedSize = selectedSize,
+            )
         Spacer(
             modifier = Modifier.height(12.dp)
         )
@@ -110,7 +118,7 @@ private fun ProductColor(
     Text(
         text = stringResource(R.string.key_value, stringResource(R.string.color), colorName),
         color = UiKitTheme.colors.primaryContentColor,
-        style = UiKitTheme.typography.productCardHorizontalColor,
+        style = UiKitTheme.typography.productCardHorizontalKeyValue,
         maxLines = 1,
         textAlign = TextAlign.Start,
         modifier = modifier,
@@ -136,8 +144,28 @@ private fun ProductPrice(
     }
 }
 
+@Composable
+private fun SingleProductSize(
+    selectedSize: Size?,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = stringResource(
+            R.string.key_value,
+            stringResource(R.string.size),
+            selectedSize?.name.orEmpty()
+        ),
+        color = UiKitTheme.colors.primaryContentColor,
+        style = UiKitTheme.typography.productCardHorizontalKeyValue,
+        maxLines = 1,
+        textAlign = TextAlign.Start,
+        modifier = modifier,
+    )
+}
+
 @Preview(
     showBackground = true,
+    name = "multiple sizes",
 )
 @Composable
 fun HorizontalProductCardPreview(
@@ -147,6 +175,25 @@ fun HorizontalProductCardPreview(
     ZarinaTheme {
         HorizontalProductCard(
             product = product,
+            selectedSize = product.offers.first().size,
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    name = "single size",
+)
+@Composable
+fun HorizontalProductSingleSizeCardPreview(
+    @PreviewParameter(ProductProvider::class, limit = 1)
+    product: Product,
+) {
+    val singleSizeProduct = product.copy(offers = product.offers.subList(0, 1))
+    ZarinaTheme {
+        HorizontalProductCard(
+            product = singleSizeProduct,
+            selectedSize = singleSizeProduct.offers.first().size,
         )
     }
 }

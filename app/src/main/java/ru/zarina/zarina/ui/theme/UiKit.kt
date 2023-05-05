@@ -159,7 +159,7 @@ data class UiKitTypography(
         lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle
     ),
-    val productCardHorizontalColor: TextStyle = TextStyle(
+    val productCardHorizontalKeyValue: TextStyle = TextStyle(
         fontSize = 13.sp,
         lineHeight = 16.sp,
         fontFamily = Fonts.Families.Circle
