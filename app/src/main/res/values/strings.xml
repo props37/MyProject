@@ -41,4 +41,6 @@
     <string name="find_and_pickup">Найти и забрать в магазине</string>
     <string name="product_not_on_sale">Этот товар больше не продаётся</string>
     <string name="dont_fret_catalog">Не расстраивайтесь! В нашем каталоге обязательно найдется альтернатива</string>
+    <string name="color_colon">Цвет: %1$s</string>
+    <string name="unknown">Неизвестен</string>
 </resources>

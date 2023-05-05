@@ -1,8 +1,8 @@
 package ru.zarina.zarina.ui.screens.pickup
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,13 +45,12 @@ fun PickupScreenContent(
         if (product != null)
             Column(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CityPicker()
                 HorizontalProductCard(
                     product = product,
-                    onClick = { /*TODO*/ }
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
     }

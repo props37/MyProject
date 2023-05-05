@@ -159,6 +159,16 @@ data class UiKitTypography(
         lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle
     ),
+    val productCardHorizontalColor: TextStyle = TextStyle(
+        fontSize = 13.sp,
+        lineHeight = 16.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
+    val productCardHorizontalPrice: TextStyle = TextStyle(
+        fontSize = 16.sp,
+        lineHeight = 14.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
     val productSectionHeader: TextStyle = TextStyle(
         fontSize = 20.sp,
         lineHeight = 26.sp,
