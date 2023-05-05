@@ -44,4 +44,5 @@
     <string name="color">Цвет</string>
     <string name="size">Размер</string>
     <string name="unknown">Неизвестен</string>
+    <string name="dropdown">Выпадающее меню</string>
 </resources>
