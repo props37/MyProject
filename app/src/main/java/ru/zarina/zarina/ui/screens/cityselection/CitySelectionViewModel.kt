@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.MessageQueue
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
@@ -56,8 +55,8 @@ class CitySelectionViewModel @Inject constructor(
     val cities: StateFlow<ImmutableList<CityListItem>> = _cities
     private val _isRegionVisible = MutableStateFlow(true)
     val isRegionVisible = _isRegionVisible.asStateFlow()
-    private val _errorState = MutableStateFlow<ErrorState?>(null)
-    val errorState: StateFlow<ErrorState?> = _errorState.asStateFlow()
+    private val _errorType = MutableStateFlow<ErrorType?>(null)
+    val errorType = _errorType.asStateFlow()
     val isSnackbarVisible = messageQueue.isMessageVisible
     val snackbarText = messageQueue.message
 
@@ -93,7 +92,10 @@ class CitySelectionViewModel @Inject constructor(
         }
     }
 
-    fun onRefreshClick() {
+    fun onErrorButtonClick(
+        @Suppress("UNUSED_PARAMETER")
+        type: ErrorType,
+    ) {
         viewModelScope.launch {
             fetchCities(_query.value)
         }
@@ -113,7 +115,7 @@ class CitySelectionViewModel @Inject constructor(
                     withContext(Dispatchers.IO) {
                         val isBaseList = query.isNullOrEmpty()
                         withContext(NonCancellable) {
-                            _errorState.value = if (it.isEmpty()) ErrorState.NO_RESULTS else null
+                            _errorType.value = if (it.isEmpty()) ErrorType.NO_RESULTS else null
                             _isRegionVisible.value = !isBaseList
                             _cities.value = it.toCityListItems(priorityCitiesAtTop = isBaseList)
                         }
@@ -122,8 +124,8 @@ class CitySelectionViewModel @Inject constructor(
                 .onFailure { throwable ->
                     when {
                         throwable is CancellationException -> return@onFailure
-                        throwable.isNetworkException() -> _errorState.value = ErrorState.NETWORK
-                        else -> _errorState.value = ErrorState.GENERIC
+                        throwable.isNetworkException() -> _errorType.value = ErrorType.NETWORK
+                        else -> _errorType.value = ErrorType.GENERIC
                     }
                 }
         }
@@ -161,10 +163,7 @@ class CitySelectionViewModel @Inject constructor(
 
     enum class Operation : OperationKey { CITY_LOAD, ONBOARDING_FINISH }
 
-    private val ErrorState.Companion.NO_RESULTS
-        get() = ErrorState(
-            subtitle = Text.Resource(R.string.city_not_found),
-        )
+    enum class ErrorType { NETWORK, NO_RESULTS, GENERIC }
 
     companion object {
         private val CITY_FETCH_DEBOUNCE_DURATION = 100.milliseconds

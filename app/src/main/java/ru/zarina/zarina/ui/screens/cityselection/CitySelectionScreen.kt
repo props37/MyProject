@@ -60,6 +60,7 @@ import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.ui.CityListItemProvider
+import ru.zarina.zarina.ui.screens.cityselection.CitySelectionViewModel.ErrorType.*
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.compose.navigationOrIme
@@ -77,8 +78,8 @@ fun CitySelectionScreenContent(
     cityItems: ImmutableList<CitySelectionViewModel.CityListItem>,
     onCityClick: (City) -> Unit,
     isRegionVisible: Boolean,
-    errorState: ErrorState?,
-    onRefreshClick: () -> Unit,
+    errorType: CitySelectionViewModel.ErrorType?,
+    onErrorButtonClick: (CitySelectionViewModel.ErrorType) -> Unit,
     onCloseClick: () -> Unit,
     isSnackbarVisible: Boolean,
     snackbarText: Text,
@@ -111,20 +112,28 @@ fun CitySelectionScreenContent(
                 .weight(1f)
         ) {
             AnimatedContent(
-                targetState = errorState,
+                targetState = errorType,
                 transitionSpec = { fadeIn() with fadeOut() },
                 label = "error state",
                 modifier = Modifier.fillMaxSize()
-            ) { error ->
-                if (error != null)
+            ) { type ->
+                if (type != null) {
+                    val state = when (type) {
+                        NETWORK -> ErrorState.NETWORK
+                        NO_RESULTS -> ErrorState(
+                            subtitle = Text.Resource(R.string.city_not_found),
+                        )
+
+                        GENERIC -> ErrorState.GENERIC
+                    }
                     ModalError(
-                        state = error,
-                        onButtonClick = onRefreshClick,
+                        state = state,
+                        onButtonClick = { onErrorButtonClick(type) },
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(WindowInsets.navigationOrIme.asPaddingValues())
                     )
-                else
+                } else
                     LazyColumn(
                         contentPadding = WindowInsets.navigationOrIme.asPaddingValues(),
                         modifier = Modifier.fillMaxSize()
@@ -333,7 +342,7 @@ fun CitySelectionScreen(
     val query by viewModel.query.collectAsStateWithLifecycle()
     val cityItems by viewModel.cities.collectAsStateWithLifecycle()
     val isRegionVisible by viewModel.isRegionVisible.collectAsStateWithLifecycle()
-    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
+    val errorType by viewModel.errorType.collectAsStateWithLifecycle()
     val isSnackbarVisible by viewModel.isSnackbarVisible.collectAsStateWithLifecycle()
     val snackbarText by viewModel.snackbarText.collectAsStateWithLifecycle()
 
@@ -349,8 +358,8 @@ fun CitySelectionScreen(
         cityItems = cityItems,
         onCityClick = viewModel::onCityClick,
         isRegionVisible = isRegionVisible,
-        errorState = errorState,
-        onRefreshClick = viewModel::onRefreshClick,
+        errorType = errorType,
+        onErrorButtonClick = viewModel::onErrorButtonClick,
         onCloseClick = viewModel::onCloseClick,
         isSnackbarVisible = isSnackbarVisible,
         snackbarText = snackbarText,
@@ -384,11 +393,11 @@ fun CitySelectionScreenContentPreview(
             isSearchLoadingVisible = true,
             query = "",
             onQueryChange = {},
-            errorState = null,
+            errorType = null,
             cityItems = cityItems,
             onCityClick = {},
             isRegionVisible = true,
-            onRefreshClick = {},
+            onErrorButtonClick = {},
             onCloseClick = {},
             isSnackbarVisible = false,
             snackbarText = Text.Empty,
