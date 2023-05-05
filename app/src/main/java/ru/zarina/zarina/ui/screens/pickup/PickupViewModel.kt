@@ -57,7 +57,10 @@ class PickupViewModel @Inject constructor(
     private fun setupSizeUpdates() {
         product
             .onEach { product ->
-                _selectedSize.value = product?.offers?.firstOrNull { it.isAvailable }?.size
+                _selectedSize.value = (product?.offers
+                    ?.find { it.isAvailable }
+                    ?: product?.offers?.firstOrNull())
+                    ?.size
             }
             .launchIn(viewModelScope)
     }
