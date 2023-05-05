@@ -29,6 +29,7 @@ fun HorizontalProductCard(
     product: Product,
     selectedSize: Size?,
     modifier: Modifier = Modifier,
+    onSelectSizeClick: () -> Unit,
 ) {
     Row(
         modifier = modifier.padding(16.dp)
@@ -45,6 +46,7 @@ fun HorizontalProductCard(
         Information(
             product = product,
             selectedSize = selectedSize,
+            onSelectSizeClick = onSelectSizeClick,
             modifier = Modifier.weight(2f)
         )
     }
@@ -67,6 +69,7 @@ private fun Media(
 private fun Information(
     product: Product,
     selectedSize: Size?,
+    onSelectSizeClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -96,7 +99,7 @@ private fun Information(
         )
         PickSizeButton(
             selectedSize = selectedSize,
-            onClick = { /*TODO*/ }
+            onClick = onSelectSizeClick,
         )
     }
 }
@@ -205,6 +208,7 @@ fun HorizontalProductCardPreview(
         HorizontalProductCard(
             product = product,
             selectedSize = product.offers.first().size,
+            onSelectSizeClick = {},
         )
     }
 }
@@ -223,6 +227,7 @@ fun HorizontalProductSingleSizeCardPreview(
         HorizontalProductCard(
             product = singleSizeProduct,
             selectedSize = singleSizeProduct.offers.first().size,
+            onSelectSizeClick = {},
         )
     }
 }

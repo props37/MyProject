@@ -31,6 +31,7 @@ fun PickupScreenContent(
     product: Product?,
     selectedSize: Size?,
     onBackClick: () -> Unit,
+    onSelectSizeClick: () -> Unit,
 ) {
     ZarinaScaffold(
         toolbar = {
@@ -51,6 +52,7 @@ fun PickupScreenContent(
                 HorizontalProductCard(
                     product = product,
                     selectedSize = selectedSize,
+                    onSelectSizeClick = onSelectSizeClick,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -82,6 +84,7 @@ fun PickupScreen(
         product = product,
         selectedSize = selectedSize,
         onBackClick = viewModel::onBackClick,
+        onSelectSizeClick = viewModel::onSelectSizeClick,
     )
 }
 
@@ -94,6 +97,7 @@ fun PickupScreenBehavior(
         sideEffects.collect { effect ->
             when (effect) {
                 PickupViewModel.SideEffect.GoBack -> goBack()
+                PickupViewModel.SideEffect.ShowSizeSelection -> {} // TODO
             }
         }
     }
@@ -108,8 +112,9 @@ fun PickupScreenContentPreview(
     ZarinaTheme {
         PickupScreenContent(
             product = product,
-            onBackClick = {},
             selectedSize = product.offers.first().size,
+            onBackClick = {},
+            onSelectSizeClick = {},
         )
     }
 }
