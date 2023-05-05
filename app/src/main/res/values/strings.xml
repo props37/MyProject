@@ -39,4 +39,6 @@
     <string name="out_of_stock">Нет в наличии</string>
     <string name="buy_complete_look">Купить образ</string>
     <string name="find_and_pickup">Найти и забрать в магазине</string>
+    <string name="product_not_on_sale">Этот товар больше не продаётся</string>
+    <string name="dont_fret_catalog">Не расстраивайтесь! В нашем каталоге обязательно найдется альтернатива</string>
 </resources>

@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -88,9 +87,9 @@ private fun RefreshButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (state.isRefreshButtonVisible)
+    if (state.isButtonVisible && state.buttonText != null)
         ZarinaTextButton(
-            text = stringResource(id = R.string.refresh),
+            text = textString(state.buttonText),
             onClick = onClick,
             modifier = modifier
                 .fillMaxWidth()
@@ -112,7 +111,7 @@ fun ModalErrorPreview() {
                 icon = R.drawable.ic_no_network_96,
                 title = Text.String("Error title"),
                 subtitle = Text.String("Error subtitle"),
-                isRefreshButtonVisible = true,
+                isButtonVisible = true,
             ),
             modifier = Modifier.fillMaxSize(),
         )

@@ -15,10 +15,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.exception.NotFoundException
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
@@ -143,7 +146,7 @@ class ProductViewModel @Inject constructor(
                 .getOrElse { throwable ->
                     _errorState.value = when {
                         throwable.isNetworkException() -> ErrorState.NETWORK
-                        // TODO show not found error
+                        throwable is NotFoundException -> ErrorState.NOT_FOUND
                         else -> ErrorState.GENERIC
                     }
                     null
@@ -164,5 +167,12 @@ class ProductViewModel @Inject constructor(
         LOADING_RECOMMENDATIONS,
         LOADING_DELIVERY_AVAILABILITY
     }
+
+    private val ErrorState.Companion.NOT_FOUND
+        get() = ErrorState(
+            icon = R.drawable.ic_magnifying_glass_96,
+            title = Text.Resource(R.string.product_not_on_sale),
+            subtitle = Text.Resource(R.string.dont_fret_catalog),
+        )
 
 }
