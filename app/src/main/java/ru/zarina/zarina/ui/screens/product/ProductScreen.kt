@@ -1,14 +1,7 @@
 package ru.zarina.zarina.ui.screens.product
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.with
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -48,8 +41,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.DeliveryAvailability
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.ErrorState
-import ru.zarina.zarina.ui.common.components.ModalError
-import ru.zarina.zarina.ui.common.components.ModalLoader
+import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -70,7 +62,7 @@ import ru.zarina.zarina.utils.android.share
 import java.util.UUID
 
 @OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class,
+    ExperimentalMaterial3Api::class,
     ExperimentalFoundationApi::class
 )
 @Composable
@@ -89,14 +81,8 @@ fun ProductScreenContent(
     onRefreshClick: () -> Unit,
     cache: State<Cache?>,
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.screenBackground)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-        ) {
+    ZarinaScaffold(
+        toolbar = {
             ScreenToolbar(
                 title = { ToolbarTitle(product = product) },
                 startIcon = {
@@ -104,110 +90,94 @@ fun ProductScreenContent(
                 },
                 modifier = Modifier.fillMaxWidth()
             )
-            if (product != null) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+        },
+        errorState = errorState,
+        isModalLoaderVisible = isProductLoaderVisible,
+        onErrorButtonClick = onRefreshClick,
+    ) {
+        if (product != null) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                val coroutineScope = rememberCoroutineScope()
+                val completeLookRequester = remember { BringIntoViewRequester() }
+                MediaSection(
+                    product = product,
+                    onBuyCompleteLookClick = {
+                        coroutineScope.launch {
+                            completeLookRequester.bringIntoView()
+                        }
+                    },
+                    cache = cache,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                PriceSection(
+                    price = product.price,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                )
+                ColorsSection(
+                    product = product,
+                    onVariantClick = onVariantClick,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
+                PickupSection(
+                    onPickupClick = { onPickupClick(product) },
                     modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState()),
-                ) {
-                    val coroutineScope = rememberCoroutineScope()
-                    val completeLookRequester = remember { BringIntoViewRequester() }
-                    MediaSection(
-                        product = product,
-                        onBuyCompleteLookClick = {
-                            coroutineScope.launch {
-                                completeLookRequester.bringIntoView()
-                            }
-                        },
-                        cache = cache,
+                        .padding(bottom = 24.dp)
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth()
+                )
+                Divider(
+                    color = UiKitTheme.colors.listDivider,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+                DetailsSection(
+                    description = product.description,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Divider(
+                    color = UiKitTheme.colors.listDivider,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+                if (completeLookProducts.isNotEmpty())
+                    ProductHorizontalSection(
+                        title = stringResource(R.string.complete_look),
+                        products = completeLookProducts,
+                        onProductClick = onProductClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .bringIntoViewRequester(completeLookRequester)
+                    )
+                if (similarProducts.isNotEmpty())
+                    ProductHorizontalSection(
+                        title = stringResource(R.string.similar_products),
+                        products = similarProducts,
+                        onProductClick = onProductClick,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    PriceSection(
-                        price = product.price,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
-                    )
-                    ColorsSection(
-                        product = product,
-                        onVariantClick = onVariantClick,
-                        modifier = Modifier.padding(bottom = 12.dp)
-                    )
-                    PickupSection(
-                        onPickupClick = { onPickupClick(product) },
-                        modifier = Modifier
-                            .padding(bottom = 24.dp)
-                            .padding(horizontal = 16.dp)
-                            .fillMaxWidth()
-                    )
-                    Divider(
-                        color = UiKitTheme.colors.listDivider,
+                DeliveryAvailabilitySection(
+                    deliveryAvailability = deliveryAvailability,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 24.dp),
+                )
+                if (product.url != null)
+                    ShareSection(
+                        onShareClick = onShareClick,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
                     )
-                    DetailsSection(
-                        description = product.description,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Divider(
-                        color = UiKitTheme.colors.listDivider,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    )
-                    if (completeLookProducts.isNotEmpty())
-                        ProductHorizontalSection(
-                            title = stringResource(R.string.complete_look),
-                            products = completeLookProducts,
-                            onProductClick = onProductClick,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .bringIntoViewRequester(completeLookRequester)
-                        )
-                    if (similarProducts.isNotEmpty())
-                        ProductHorizontalSection(
-                            title = stringResource(R.string.similar_products),
-                            products = similarProducts,
-                            onProductClick = onProductClick,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    DeliveryAvailabilitySection(
-                        deliveryAvailability = deliveryAvailability,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 24.dp),
-                    )
-                    if (product.url != null)
-                        ShareSection(
-                            onShareClick = onShareClick,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                        )
-                    Spacer(modifier = Modifier.navigationBarsPadding())
-                }
-            }
-            AnimatedContent(
-                targetState = errorState,
-                transitionSpec = { fadeIn() with fadeOut() },
-                contentAlignment = Alignment.Center,
-                label = "error state",
-                modifier = Modifier.fillMaxSize()
-            ) { state ->
-                if (state != null)
-                    ModalError(
-                        state = state,
-                        onButtonClick = { onRefreshClick() },
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .navigationBarsPadding()
-                    )
+                Spacer(modifier = Modifier.navigationBarsPadding())
             }
         }
-        ModalLoader(
-            isVisible = isProductLoaderVisible,
-            modifier = Modifier.fillMaxSize(),
-        )
     }
 }
 
