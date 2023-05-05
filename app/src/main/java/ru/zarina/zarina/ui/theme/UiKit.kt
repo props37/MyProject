@@ -185,6 +185,11 @@ data class UiKitTypography(
         lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle
     ),
+    val dropdownButton: TextStyle = TextStyle(
+        fontSize = 17.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
 )
 
 val LocalUiKitTypography = staticCompositionLocalOf { UiKitTypography() }

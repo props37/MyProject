@@ -19,6 +19,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Size
+import ru.zarina.zarina.ui.common.components.buttons.DropdownButton
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
@@ -85,10 +86,17 @@ private fun Information(
                 selectedSize = selectedSize,
             )
         Spacer(
-            modifier = Modifier.height(12.dp)
+            modifier = Modifier.height(8.dp)
         )
         ProductPrice(
             product = product
+        )
+        Spacer(
+            modifier = Modifier.height(8.dp)
+        )
+        PickSizeButton(
+            selectedSize = selectedSize,
+            onClick = { /*TODO*/ }
         )
     }
 }
@@ -161,6 +169,27 @@ private fun SingleProductSize(
         textAlign = TextAlign.Start,
         modifier = modifier,
     )
+}
+
+@Composable
+fun PickSizeButton(
+    selectedSize: Size?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    DropdownButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        val text = selectedSize?.name ?: stringResource(R.string.select_size)
+        Text(
+            text = text,
+            color = UiKitTheme.colors.primaryContentColor,
+            style = UiKitTheme.typography.dropdownButton,
+            maxLines = 1,
+            textAlign = TextAlign.Start,
+        )
+    }
 }
 
 @Preview(
