@@ -78,6 +78,7 @@ fun ProductScreenContent(
     product: Product?,
     onVariantClick: (Product.Variant) -> Unit,
     onShareClick: () -> Unit,
+    onPickupClick: (Product) -> Unit,
     completeLookProducts: ImmutableList<Product>,
     similarProducts: ImmutableList<Product>,
     onProductClick: (Product) -> Unit,
@@ -131,7 +132,7 @@ fun ProductScreenContent(
                         modifier = Modifier.padding(bottom = 12.dp)
                     )
                     PickupSection(
-                        onPickupClick = { /*TODO*/ },
+                        onPickupClick = { onPickupClick(product) },
                         modifier = Modifier
                             .padding(bottom = 24.dp)
                             .padding(horizontal = 16.dp)
@@ -238,6 +239,7 @@ private fun ToolbarTitle(
 @Composable
 fun ProductScreen(
     showProduct: (Product.Id) -> Unit,
+    showPickup: (Product.Id) -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel = hiltViewModel<ProductViewModel>()
@@ -253,6 +255,7 @@ fun ProductScreen(
     ProductScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showProduct = showProduct,
+        showPickup = showPickup,
         goBack = goBack,
     )
 
@@ -260,6 +263,7 @@ fun ProductScreen(
         product = product,
         onVariantClick = viewModel::onVariantClick,
         onShareClick = viewModel::onShareClick,
+        onPickupClick = viewModel::onPickupClick,
         completeLookProducts = completeLookProducts,
         similarProducts = similarProducts,
         onProductClick = viewModel::onProductClick,
@@ -275,6 +279,7 @@ fun ProductScreen(
 fun ProductScreenBehavior(
     sideEffects: Flow<ProductViewModel.SideEffect>,
     showProduct: (Product.Id) -> Unit,
+    showPickup: (Product.Id) -> Unit,
     goBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -283,6 +288,7 @@ fun ProductScreenBehavior(
             when (effect) {
                 is ProductViewModel.SideEffect.ShareText -> context.share(effect.text)
                 is ProductViewModel.SideEffect.ShowProduct -> showProduct(effect.product.id)
+                is ProductViewModel.SideEffect.ShowPickup -> showPickup(effect.product.id)
                 ProductViewModel.SideEffect.GoBack -> goBack()
             }
         }
@@ -319,6 +325,7 @@ fun ProductScreenContentPreview(
                 )
             }.toPersistentList(),
             onProductClick = {},
+            onPickupClick = {},
             deliveryAvailability = deliveryAvailability,
             onBackClick = {},
             isProductLoaderVisible = false,

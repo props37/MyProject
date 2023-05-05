@@ -4,5 +4,6 @@ enum class BaseRoute {
     HOME,
     ONBOARDING,
     CITY_SELECTION,
-    PRODUCT
+    PRODUCT,
+    PICKUP,
 }

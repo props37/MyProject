@@ -132,9 +132,14 @@ class ProductViewModel @Inject constructor(
         sideEffect(SideEffect.GoBack)
     }
 
+    fun onPickupClick(product: Product) {
+        sideEffect(SideEffect.ShowPickup(product))
+    }
+
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         data class ShareText(val text: String) : SideEffect
         data class ShowProduct(val product: Product) : SideEffect
+        data class ShowPickup(val product: Product) : SideEffect
         object GoBack : SideEffect
     }
 
