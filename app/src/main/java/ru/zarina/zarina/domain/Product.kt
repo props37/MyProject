@@ -2,6 +2,7 @@ package ru.zarina.zarina.domain
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
+import timber.log.Timber
 
 data class Product(
     val id: Id,
@@ -18,6 +19,13 @@ data class Product(
 ) {
 
     val isAvailable by lazy { offers.any { it.isAvailable } }
+    val color by lazy {
+        colorVariants
+            .entries
+            .firstOrNull { (_, variant) -> variant.isCurrent }
+            .also { if (it == null) Timber.w("Product doesn't have a current color") }
+            ?.key
+    }
 
     @JvmInline
     value class Id(val value: String)

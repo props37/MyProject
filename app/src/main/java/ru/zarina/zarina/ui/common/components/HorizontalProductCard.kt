@@ -105,12 +105,7 @@ private fun ProductColor(
     product: Product,
     modifier: Modifier = Modifier,
 ) {
-    val color = product.colorVariants
-        .entries
-        .firstOrNull { (_, variant) -> variant.isCurrent }
-        ?.key
-
-    val colorName = color?.name ?: stringResource(R.string.unknown).lowercase()
+    val colorName = product.color?.name ?: stringResource(R.string.unknown).lowercase()
 
     Text(
         text = stringResource(R.string.key_value, stringResource(R.string.color), colorName),
