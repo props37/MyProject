@@ -30,7 +30,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 fun ModalError(
     state: ErrorState,
     modifier: Modifier = Modifier,
-    onRefreshClick: () -> Unit = {},
+    onButtonClick: () -> Unit = {},
 ) {
     Column(modifier = modifier) {
         Spacer(modifier = Modifier.weight(1f))
@@ -41,7 +41,7 @@ fun ModalError(
         Spacer(modifier = Modifier.weight(1f))
         RefreshButton(
             state = state,
-            onClick = onRefreshClick
+            onClick = onButtonClick
         )
         Spacer(modifier = Modifier.height(12.dp))
     }

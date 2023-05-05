@@ -119,7 +119,7 @@ fun CitySelectionScreenContent(
                 if (error != null)
                     ModalError(
                         state = error,
-                        onRefreshClick = onRefreshClick,
+                        onButtonClick = onRefreshClick,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(WindowInsets.navigationOrIme.asPaddingValues())

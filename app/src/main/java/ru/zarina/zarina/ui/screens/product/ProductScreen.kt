@@ -197,7 +197,7 @@ fun ProductScreenContent(
                 if (state != null)
                     ModalError(
                         state = state,
-                        onRefreshClick = { onRefreshClick() },
+                        onButtonClick = { onRefreshClick() },
                         modifier = Modifier
                             .fillMaxSize()
                             .navigationBarsPadding()
