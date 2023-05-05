@@ -30,13 +30,14 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @Composable
 fun PickupScreenContent(
     product: Product?,
+    onBackClick: () -> Unit,
 ) {
     ZarinaScaffold(
         toolbar = {
             ScreenToolbar(
                 title = stringResource(R.string.find_and_pickup),
                 endIcon = {
-                    CloseButton(onClick = { /*TODO*/ })
+                    CloseButton(onClick = onBackClick)
                 }
             )
         },
@@ -64,28 +65,33 @@ private fun CityPicker(
 }
 
 @Composable
-fun PickupScreen() {
+fun PickupScreen(
+    goBack: () -> Unit,
+) {
     val viewModel = hiltViewModel<PickupViewModel>()
 
     val product by viewModel.product.collectAsStateWithLifecycle()
 
     PickupScreenBehavior(
         sideEffects = viewModel.sideEffects,
+        goBack = goBack,
     )
 
     PickupScreenContent(
         product = product,
+        onBackClick = viewModel::onBackClick,
     )
 }
 
 @Composable
 fun PickupScreenBehavior(
     sideEffects: Flow<PickupViewModel.SideEffect>,
+    goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                else -> TODO()
+                PickupViewModel.SideEffect.GoBack -> goBack()
             }
         }
     }
@@ -102,6 +108,7 @@ fun PickupScreenContentPreview(
     ZarinaTheme {
         PickupScreenContent(
             product = product,
+            onBackClick = {},
         )
     }
 }

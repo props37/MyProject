@@ -71,7 +71,11 @@ fun ZarinaNavigation(
             )
         }
         composableDestination(Destinations.PICKUP) {
-            PickupScreen()
+            PickupScreen(
+                goBack = {
+                    navController.popBackStack(Destinations.PICKUP.routeSchema, true)
+                }
+            )
         }
     }
 }

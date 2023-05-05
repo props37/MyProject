@@ -38,6 +38,12 @@ class PickupViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
+    fun onBackClick() {
+        sideEffect(SideEffect.GoBack)
+    }
+
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        object GoBack : SideEffect
+    }
 
 }
