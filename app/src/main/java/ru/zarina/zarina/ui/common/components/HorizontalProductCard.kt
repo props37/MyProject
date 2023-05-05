@@ -113,7 +113,7 @@ private fun ProductColor(
     val colorName = color?.name ?: stringResource(R.string.unknown).lowercase()
 
     Text(
-        text = stringResource(R.string.color_colon, colorName),
+        text = stringResource(R.string.key_value, stringResource(R.string.color), colorName),
         color = UiKitTheme.colors.primaryContentColor,
         style = UiKitTheme.typography.productCardHorizontalColor,
         maxLines = 1,
