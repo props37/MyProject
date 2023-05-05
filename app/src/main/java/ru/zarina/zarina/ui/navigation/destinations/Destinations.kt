@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.navigation.destinations
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.RouteUtils
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
@@ -14,7 +15,7 @@ object Destinations {
     val PICKUP = PickupDestination
 }
 
-object ProductDestination : Destination<String>() {
+object ProductDestination : Destination<ProductDestination.Arguments>() {
 
     const val ARGUMENT_PRODUCT_ID = "product_id"
 
@@ -27,14 +28,18 @@ object ProductDestination : Destination<String>() {
         navArgument(ARGUMENT_PRODUCT_ID) { type = NavType.StringType }
     )
 
-    override fun createRoute(args: String) = RouteUtils.generateRoute(
+    override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
         baseRoute = BaseRoute.PRODUCT,
-        args = arrayOf(args)
+        args = arrayOf(args.productId.value)
+    )
+
+    data class Arguments(
+        val productId: Product.Id,
     )
 
 }
 
-object PickupDestination : Destination<String>() {
+object PickupDestination : Destination<PickupDestination.Arguments>() {
 
     const val ARGUMENT_PRODUCT_ID = "product_id"
 
@@ -47,9 +52,13 @@ object PickupDestination : Destination<String>() {
         navArgument(ARGUMENT_PRODUCT_ID) { type = NavType.StringType }
     )
 
-    override fun createRoute(args: String) = RouteUtils.generateRoute(
+    override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
         baseRoute = BaseRoute.PICKUP,
-        args = arrayOf(args)
+        args = arrayOf(args.productId.value)
+    )
+
+    data class Arguments(
+        val productId: Product.Id,
     )
 
 }
