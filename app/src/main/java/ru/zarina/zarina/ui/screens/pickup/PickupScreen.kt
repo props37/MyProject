@@ -17,12 +17,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.Size
 import ru.zarina.zarina.ui.common.components.HorizontalProductCard
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
-import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
-import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
@@ -30,6 +29,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @Composable
 fun PickupScreenContent(
     product: Product?,
+    selectedSize: Size?,
     onBackClick: () -> Unit,
 ) {
     ZarinaScaffold(
@@ -50,6 +50,7 @@ fun PickupScreenContent(
                 CityPicker()
                 HorizontalProductCard(
                     product = product,
+                    selectedSize = selectedSize,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -70,6 +71,7 @@ fun PickupScreen(
     val viewModel = hiltViewModel<PickupViewModel>()
 
     val product by viewModel.product.collectAsStateWithLifecycle()
+    val selectedSize by viewModel.selectedSize.collectAsStateWithLifecycle()
 
     PickupScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -78,6 +80,7 @@ fun PickupScreen(
 
     PickupScreenContent(
         product = product,
+        selectedSize = selectedSize,
         onBackClick = viewModel::onBackClick,
     )
 }
@@ -96,9 +99,7 @@ fun PickupScreenBehavior(
     }
 }
 
-@Preview
-@FontScalePreviews
-@DensityPreviews
+@Preview("multiple sizes")
 @Composable
 fun PickupScreenContentPreview(
     @PreviewParameter(ProductProvider::class, limit = 1)
@@ -108,6 +109,7 @@ fun PickupScreenContentPreview(
         PickupScreenContent(
             product = product,
             onBackClick = {},
+            selectedSize = product.offers.first().size,
         )
     }
 }
