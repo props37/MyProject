@@ -10,18 +10,14 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.exception.NotFoundException
-import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
-import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
@@ -46,8 +42,8 @@ class ProductViewModel @Inject constructor(
         initialValue = ""
     ).mapState(viewModelScope) { Product.Id(it) }
 
-    private val _errorState = MutableStateFlow<ErrorState?>(null)
-    val errorState: StateFlow<ErrorState?> = _errorState.asStateFlow()
+    private val _errorType = MutableStateFlow<ErrorType?>(null)
+    val errorType = _errorType.asStateFlow()
 
     private val _product = MutableStateFlow<Product?>(null)
     val product = _product.asStateFlow()
@@ -141,13 +137,13 @@ class ProductViewModel @Inject constructor(
             interactor.getProduct(id)
                 .onSuccess {
                     _product.value = it
-                    _errorState.value = null
+                    _errorType.value = null
                 }
                 .getOrElse { throwable ->
-                    _errorState.value = when {
-                        throwable.isNetworkException() -> ErrorState.NETWORK
-                        throwable is NotFoundException -> ErrorState.NOT_FOUND
-                        else -> ErrorState.GENERIC
+                    _errorType.value = when {
+                        throwable.isNetworkException() -> ErrorType.NETWORK
+                        throwable is NotFoundException -> ErrorType.NOT_FOUND
+                        else -> ErrorType.GENERIC
                     }
                     null
                 }
@@ -168,11 +164,10 @@ class ProductViewModel @Inject constructor(
         LOADING_DELIVERY_AVAILABILITY
     }
 
-    private val ErrorState.Companion.NOT_FOUND
-        get() = ErrorState(
-            icon = R.drawable.ic_magnifying_glass_96,
-            title = Text.Resource(R.string.product_not_on_sale),
-            subtitle = Text.Resource(R.string.dont_fret_catalog),
-        )
+    enum class ErrorType {
+        NETWORK,
+        NOT_FOUND,
+        GENERIC
+    }
 
 }

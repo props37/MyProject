@@ -77,10 +77,21 @@ fun ProductScreenContent(
     deliveryAvailability: DeliveryAvailability?,
     onBackClick: () -> Unit,
     isProductLoaderVisible: Boolean,
-    errorState: ErrorState?,
+    errorType: ProductViewModel.ErrorType?,
     onRefreshClick: () -> Unit,
     cache: State<Cache?>,
 ) {
+    val errorState = when (errorType) {
+        ProductViewModel.ErrorType.NETWORK -> ErrorState.NETWORK
+        ProductViewModel.ErrorType.NOT_FOUND -> ErrorState(
+            icon = R.drawable.ic_magnifying_glass_96,
+            title = ru.zarina.zarina.ui.common.base.Text.Resource(R.string.product_not_on_sale),
+            subtitle = ru.zarina.zarina.ui.common.base.Text.Resource(R.string.dont_fret_catalog),
+        )
+
+        ProductViewModel.ErrorType.GENERIC -> ErrorState.NETWORK
+        null -> null
+    }
     ZarinaScaffold(
         toolbar = {
             ScreenToolbar(
@@ -223,7 +234,7 @@ fun ProductScreen(
     val similarProducts by viewModel.similarProducts.collectAsStateWithLifecycle()
     val deliveryAvailability by viewModel.deliveryAvailability.collectAsStateWithLifecycle()
     val isProductLoaderVisible by viewModel.isProductLoaderVisible.collectAsStateWithLifecycle()
-    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
+    val errorType by viewModel.errorType.collectAsStateWithLifecycle()
 
     ProductScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -243,7 +254,7 @@ fun ProductScreen(
         deliveryAvailability = deliveryAvailability,
         onBackClick = viewModel::onBackClick,
         isProductLoaderVisible = isProductLoaderVisible,
-        errorState = errorState,
+        errorType = errorType,
         onRefreshClick = viewModel::onRefreshClick,
         cache = cache
     )
@@ -303,7 +314,7 @@ fun ProductScreenContentPreview(
             deliveryAvailability = deliveryAvailability,
             onBackClick = {},
             isProductLoaderVisible = false,
-            errorState = null,
+            errorType = null,
             onRefreshClick = {},
             cache = remember { mutableStateOf(null) },
         )
