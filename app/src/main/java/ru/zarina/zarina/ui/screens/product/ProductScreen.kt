@@ -86,6 +86,7 @@ fun ProductScreenContent(
     onBackClick: () -> Unit,
     isProductLoaderVisible: Boolean,
     errorState: ErrorState?,
+    onRefreshClick: () -> Unit,
     cache: State<Cache?>,
 ) {
     Box(
@@ -196,6 +197,7 @@ fun ProductScreenContent(
                 if (state != null)
                     ModalError(
                         state = state,
+                        onRefreshClick = { onRefreshClick() },
                         modifier = Modifier
                             .fillMaxSize()
                             .navigationBarsPadding()
@@ -272,6 +274,7 @@ fun ProductScreen(
         onBackClick = viewModel::onBackClick,
         isProductLoaderVisible = isProductLoaderVisible,
         errorState = errorState,
+        onRefreshClick = viewModel::onRefreshClick,
         cache = cache
     )
 }
@@ -331,6 +334,7 @@ fun ProductScreenContentPreview(
             onBackClick = {},
             isProductLoaderVisible = false,
             errorState = null,
+            onRefreshClick = {},
             cache = remember { mutableStateOf(null) },
         )
     }

@@ -12,9 +12,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
@@ -22,9 +22,11 @@ import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
+import ru.zarina.zarina.utils.coroutine.mapState
 import ru.zarina.zarina.utils.isNetworkException
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ProductViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
@@ -39,30 +41,13 @@ class ProductViewModel @Inject constructor(
     private val productId = savedStateHandle.getStateFlow(
         key = Destinations.PRODUCT.ARGUMENT_PRODUCT_ID,
         initialValue = ""
-    ).map { Product.Id(it) }
+    ).mapState(viewModelScope) { Product.Id(it) }
 
     private val _errorState = MutableStateFlow<ErrorState?>(null)
     val errorState: StateFlow<ErrorState?> = _errorState.asStateFlow()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val product = productId
-        .mapLatest { id ->
-            operationTracker.track(Operation.LOADING_PRODUCT) {
-                interactor.getProduct(id)
-                    .onSuccess {
-                        _errorState.value = null
-                    }
-                    .getOrElse { throwable ->
-                        _errorState.value = when {
-                            throwable.isNetworkException() -> ErrorState.NETWORK
-                            // TODO show not found error
-                            else -> ErrorState.GENERIC
-                        }
-                        null
-                    }
-            }
-        }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    private val _product = MutableStateFlow<Product?>(null)
+    val product = _product.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val completeLookProducts = product
@@ -115,6 +100,12 @@ class ProductViewModel @Inject constructor(
         )
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
+    init {
+        productId
+            .mapLatest { id -> loadProduct(id) }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    }
+
     fun onVariantClick(variant: Product.Variant) {
         savedStateHandle[Destinations.PRODUCT.ARGUMENT_PRODUCT_ID] = variant.id.value
     }
@@ -134,6 +125,30 @@ class ProductViewModel @Inject constructor(
 
     fun onPickupClick(product: Product) {
         sideEffect(SideEffect.ShowPickup(product))
+    }
+
+    fun onRefreshClick() {
+        viewModelScope.launch {
+            loadProduct(productId.value)
+        }
+    }
+
+    private suspend fun loadProduct(id: Product.Id) {
+        operationTracker.track(Operation.LOADING_PRODUCT) {
+            interactor.getProduct(id)
+                .onSuccess {
+                    _product.value = it
+                    _errorState.value = null
+                }
+                .getOrElse { throwable ->
+                    _errorState.value = when {
+                        throwable.isNetworkException() -> ErrorState.NETWORK
+                        // TODO show not found error
+                        else -> ErrorState.GENERIC
+                    }
+                    null
+                }
+        }
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
