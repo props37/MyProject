@@ -189,6 +189,7 @@ fun ProductScreenContent(
             AnimatedContent(
                 targetState = errorState,
                 transitionSpec = { fadeIn() with fadeOut() },
+                contentAlignment = Alignment.Center,
                 label = "error state",
                 modifier = Modifier.fillMaxSize()
             ) { state ->
