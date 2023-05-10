@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.pickup
+package ru.zarina.zarina.ui.screens.pickup.pickup
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

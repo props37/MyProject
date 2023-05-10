@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.pickup
+package ru.zarina.zarina.ui.screens.pickup.pickup
 
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.usecase.catalog.GetProductUseCase

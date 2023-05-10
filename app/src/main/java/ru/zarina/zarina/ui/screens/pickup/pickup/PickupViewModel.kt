@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.pickup
+package ru.zarina.zarina.ui.screens.pickup.pickup
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -16,7 +16,7 @@ import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Size
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
-import ru.zarina.zarina.ui.navigation.destinations.Destinations
+import ru.zarina.zarina.ui.navigation.destinations.PickupGraph
 import ru.zarina.zarina.utils.coroutine.mapState
 import javax.inject.Inject
 
@@ -29,7 +29,7 @@ class PickupViewModel @Inject constructor(
 
     private val productId = savedStateHandle
         .getStateFlow(
-            key = Destinations.PICKUP.ARGUMENT_PRODUCT_ID,
+            key = PickupGraph.PickupDestination.ARGUMENT_PRODUCT_ID,
             initialValue = ""
         )
         .mapState(viewModelScope) { Product.Id(it) }

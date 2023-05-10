@@ -5,6 +5,7 @@ enum class BaseRoute {
     ONBOARDING,
     CITY_SELECTION,
     PRODUCT,
+    GRAPH_PICKUP,
     PICKUP,
     SELECT_SIZE,
 }

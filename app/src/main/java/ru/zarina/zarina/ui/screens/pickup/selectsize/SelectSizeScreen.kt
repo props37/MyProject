@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.selectsize
+package ru.zarina.zarina.ui.screens.pickup.selectsize
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
