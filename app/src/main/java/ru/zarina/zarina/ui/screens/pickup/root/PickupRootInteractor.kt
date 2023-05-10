@@ -1,10 +1,10 @@
-package ru.zarina.zarina.ui.screens.pickup.pickup
+package ru.zarina.zarina.ui.screens.pickup.root
 
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.usecase.catalog.GetProductUseCase
 import javax.inject.Inject
 
-class PickupInteractor @Inject constructor(
+class PickupRootInteractor @Inject constructor(
     private val getProductUseCase: GetProductUseCase,
 ) {
 

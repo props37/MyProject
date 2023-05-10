@@ -14,7 +14,7 @@ import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
 import ru.zarina.zarina.ui.screens.home.HomeScreen
 import ru.zarina.zarina.ui.screens.onboarding.OnboardingScreen
-import ru.zarina.zarina.ui.screens.pickup.pickup.PickupScreen
+import ru.zarina.zarina.ui.screens.pickup.root.PickupRootScreen
 import ru.zarina.zarina.ui.screens.pickup.selectsize.SelectSizeScreen
 import ru.zarina.zarina.ui.screens.product.ProductScreen
 import ru.zarina.zarina.ui.screens.selectcity.SelectCityScreen
@@ -80,7 +80,7 @@ fun ZarinaNavigation(
             }
             navigationGraph(Pickup) {
                 composableDestination(Pickup.Root) {
-                    PickupScreen(
+                    PickupRootScreen(
                         showSelectSize = { productId ->
                             val arguments = Pickup.SelectSize.Arguments(
                                 productId = productId,

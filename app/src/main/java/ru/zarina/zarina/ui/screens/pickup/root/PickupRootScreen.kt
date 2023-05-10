@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.pickup.pickup
+package ru.zarina.zarina.ui.screens.pickup.root
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +27,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PickupScreenContent(
+fun PickupRootScreenContent(
     product: Product?,
     selectedSize: Size?,
     onBackClick: () -> Unit,
@@ -67,22 +67,22 @@ private fun CityPicker(
 }
 
 @Composable
-fun PickupScreen(
+fun PickupRootScreen(
     showSelectSize: (Product.Id) -> Unit,
     goBack: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<PickupViewModel>()
+    val viewModel = hiltViewModel<PickupRootViewModel>()
 
     val product by viewModel.product.collectAsStateWithLifecycle()
     val selectedSize by viewModel.selectedSize.collectAsStateWithLifecycle()
 
-    PickupScreenBehavior(
+    PickupRootScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showSelectSize = showSelectSize,
         goBack = goBack,
     )
 
-    PickupScreenContent(
+    PickupRootScreenContent(
         product = product,
         selectedSize = selectedSize,
         onBackClick = viewModel::onBackClick,
@@ -91,16 +91,16 @@ fun PickupScreen(
 }
 
 @Composable
-fun PickupScreenBehavior(
-    sideEffects: Flow<PickupViewModel.SideEffect>,
+fun PickupRootScreenBehavior(
+    sideEffects: Flow<PickupRootViewModel.SideEffect>,
     showSelectSize: (Product.Id) -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                PickupViewModel.SideEffect.GoBack -> goBack()
-                is PickupViewModel.SideEffect.ShowSelectSize -> showSelectSize(effect.product.id)
+                PickupRootViewModel.SideEffect.GoBack -> goBack()
+                is PickupRootViewModel.SideEffect.ShowSelectSize -> showSelectSize(effect.product.id)
             }
         }
     }
@@ -108,12 +108,12 @@ fun PickupScreenBehavior(
 
 @Preview("multiple sizes")
 @Composable
-fun PickupScreenContentPreview(
+fun PickupRootScreenContentPreview(
     @PreviewParameter(ProductProvider::class, limit = 1)
     product: Product,
 ) {
     ZarinaTheme {
-        PickupScreenContent(
+        PickupRootScreenContent(
             product = product,
             selectedSize = product.offers.first().size,
             onBackClick = {},

@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.pickup.pickup
+package ru.zarina.zarina.ui.screens.pickup.root
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -21,11 +21,11 @@ import ru.zarina.zarina.utils.coroutine.mapState
 import javax.inject.Inject
 
 @HiltViewModel
-class PickupViewModel @Inject constructor(
+class PickupRootViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val interactor: PickupInteractor,
+    private val interactor: PickupRootInteractor,
 ) : ViewModel(),
-    ISideEffectSource<PickupViewModel.SideEffect> by SideEffectQueue() {
+    ISideEffectSource<PickupRootViewModel.SideEffect> by SideEffectQueue() {
 
     private val productId = savedStateHandle
         .getStateFlow(
