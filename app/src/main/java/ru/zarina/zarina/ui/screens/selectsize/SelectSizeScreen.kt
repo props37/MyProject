@@ -38,20 +38,21 @@ fun SelectSizeScreenContent(
     sizes: List<Size>,
     onSizeClick: (Size) -> Unit,
 ) {
-    Box(
-        modifier = Modifier.fillMaxWidth()
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(UiKitTheme.colors.screenBackground)
     ) {
+        Header(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .padding(top = 24.dp, bottom = 8.dp),
+        )
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(UiKitTheme.colors.screenBackground)
                 .verticalScroll(rememberScrollState()),
         ) {
-            Header(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 24.dp, bottom = 8.dp),
-            )
             sizes.forEach { size ->
                 SizeItem(
                     size = size,
