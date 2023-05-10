@@ -13,6 +13,7 @@ object Destinations {
     val CITY_SELECTION = SimpleDestination(BaseRoute.CITY_SELECTION)
     val PRODUCT = ProductDestination
     val PICKUP = PickupDestination
+    val SELECT_SIZE = SelectSizeDestination
 }
 
 object ProductDestination : Destination<ProductDestination.Arguments>() {
@@ -50,6 +51,30 @@ object PickupDestination : Destination<PickupDestination.Arguments>() {
 
     override val arguments = listOf(
         navArgument(ARGUMENT_PRODUCT_ID) { type = NavType.StringType }
+    )
+
+    override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
+        baseRoute = BaseRoute.PICKUP,
+        args = arrayOf(args.productId.value)
+    )
+
+    data class Arguments(
+        val productId: Product.Id,
+    )
+
+}
+
+object SelectSizeDestination : Destination<SelectSizeDestination.Arguments>() {
+
+    const val ARGUMENT_PRODUCT_ID = "product_id"
+
+    override val routeSchema = RouteUtils.generateRouteSchema(
+        baseRoute = BaseRoute.SELECT_SIZE,
+        argNames = arrayOf(ARGUMENT_PRODUCT_ID)
+    )
+
+    override val arguments = listOf(
+        navArgument(PickupDestination.ARGUMENT_PRODUCT_ID) { type = NavType.StringType }
     )
 
     override fun createRoute(args: Arguments) = RouteUtils.generateRoute(

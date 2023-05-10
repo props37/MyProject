@@ -6,4 +6,5 @@ enum class BaseRoute {
     CITY_SELECTION,
     PRODUCT,
     PICKUP,
+    SELECT_SIZE,
 }
