@@ -40,7 +40,7 @@ class SelectSizeViewModel @Inject constructor(
                 // TODO if empty, navigate back
                 .orEmpty()
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     fun onSizeClick(size: Size) {
         // TODO
