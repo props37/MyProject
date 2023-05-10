@@ -12,6 +12,7 @@ import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.navigation.destinations.PickupDestination
 import ru.zarina.zarina.ui.navigation.destinations.ProductDestination
+import ru.zarina.zarina.ui.navigation.destinations.SelectSizeDestination
 import ru.zarina.zarina.ui.screens.cityselection.CitySelectionScreen
 import ru.zarina.zarina.ui.screens.home.HomeScreen
 import ru.zarina.zarina.ui.screens.onboarding.OnboardingScreen
@@ -80,6 +81,12 @@ fun ZarinaNavigation(
             }
             composableDestination(Destinations.PICKUP) {
                 PickupScreen(
+                    showSelectSize = { productId ->
+                        val arguments = SelectSizeDestination.Arguments(
+                            productId = productId,
+                        )
+                        navController.navigate(Destinations.SELECT_SIZE.createRoute(arguments))
+                    },
                     goBack = {
                         navController.popBackStack(Destinations.PICKUP.routeSchema, true)
                     }

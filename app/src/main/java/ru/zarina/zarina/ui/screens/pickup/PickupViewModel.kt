@@ -54,8 +54,8 @@ class PickupViewModel @Inject constructor(
         sideEffect(SideEffect.GoBack)
     }
 
-    fun onSelectSizeClick() {
-        sideEffect(SideEffect.ShowSizeSelection)
+    fun onSelectSizeClick(product: Product) {
+        sideEffect(SideEffect.ShowSizeSelection(product))
     }
 
     private fun setupSizeUpdates() {
@@ -71,7 +71,7 @@ class PickupViewModel @Inject constructor(
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object GoBack : SideEffect
-        object ShowSizeSelection : SideEffect
+        data class ShowSizeSelection(val product: Product) : SideEffect
     }
 
 }

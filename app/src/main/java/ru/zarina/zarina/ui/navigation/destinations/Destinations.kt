@@ -78,7 +78,7 @@ object SelectSizeDestination : Destination<SelectSizeDestination.Arguments>() {
     )
 
     override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
-        baseRoute = BaseRoute.PICKUP,
+        baseRoute = BaseRoute.SELECT_SIZE,
         args = arrayOf(args.productId.value)
     )
 

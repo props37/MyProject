@@ -31,7 +31,7 @@ fun PickupScreenContent(
     product: Product?,
     selectedSize: Size?,
     onBackClick: () -> Unit,
-    onSelectSizeClick: () -> Unit,
+    onSelectSizeClick: (Product) -> Unit,
 ) {
     ZarinaScaffold(
         toolbar = {
@@ -52,7 +52,7 @@ fun PickupScreenContent(
                 HorizontalProductCard(
                     product = product,
                     selectedSize = selectedSize,
-                    onSelectSizeClick = onSelectSizeClick,
+                    onSelectSizeClick = { onSelectSizeClick(product) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -68,6 +68,7 @@ private fun CityPicker(
 
 @Composable
 fun PickupScreen(
+    showSelectSize: (Product.Id) -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel = hiltViewModel<PickupViewModel>()
@@ -77,6 +78,7 @@ fun PickupScreen(
 
     PickupScreenBehavior(
         sideEffects = viewModel.sideEffects,
+        showSelectSize = showSelectSize,
         goBack = goBack,
     )
 
@@ -91,13 +93,14 @@ fun PickupScreen(
 @Composable
 fun PickupScreenBehavior(
     sideEffects: Flow<PickupViewModel.SideEffect>,
+    showSelectSize: (Product.Id) -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
                 PickupViewModel.SideEffect.GoBack -> goBack()
-                PickupViewModel.SideEffect.ShowSizeSelection -> {} // TODO
+                is PickupViewModel.SideEffect.ShowSizeSelection -> showSelectSize(effect.product.id)
             }
         }
     }
