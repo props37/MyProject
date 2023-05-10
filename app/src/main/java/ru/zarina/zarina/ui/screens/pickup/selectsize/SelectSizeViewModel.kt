@@ -12,7 +12,7 @@ import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Size
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
-import ru.zarina.zarina.ui.navigation.destinations.PickupGraph
+import ru.zarina.zarina.ui.navigation.destinations.Pickup
 import ru.zarina.zarina.utils.coroutine.mapState
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ class SelectSizeViewModel @Inject constructor(
     ISideEffectSource<SelectSizeViewModel.SideEffect> by SideEffectQueue() {
 
     private val productId = savedStateHandle.getStateFlow(
-        key = PickupGraph.SelectSizeDestination.ARGUMENT_PRODUCT_ID,
+        key = Pickup.SelectSize.ARGUMENT_PRODUCT_ID,
         initialValue = ""
     ).mapState(viewModelScope) { Product.Id(it) }
 

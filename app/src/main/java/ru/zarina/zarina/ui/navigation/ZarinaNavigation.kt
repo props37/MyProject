@@ -11,8 +11,7 @@ import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
-import ru.zarina.zarina.ui.navigation.destinations.PickupGraph
-import ru.zarina.zarina.ui.navigation.destinations.ProductDestination
+import ru.zarina.zarina.ui.navigation.destinations.Pickup
 import ru.zarina.zarina.ui.screens.cityselection.CitySelectionScreen
 import ru.zarina.zarina.ui.screens.home.HomeScreen
 import ru.zarina.zarina.ui.screens.onboarding.OnboardingScreen
@@ -33,71 +32,71 @@ fun ZarinaNavigation(
             navController = navController,
             startDestination = startDestination.routeSchema,
         ) {
-            composableDestination(Destinations.HOME) {
+            composableDestination(Destinations.Home) {
                 HomeScreen(
                     showProduct = { productId ->
-                        val arguments = ProductDestination.Arguments(
+                        val arguments = Destinations.Product.Arguments(
                             productId = productId,
                         )
-                        navController.navigate(Destinations.PRODUCT.createRoute(arguments))
+                        navController.navigate(Destinations.Product.createRoute(arguments))
                     }
                 )
             }
-            composableDestination(Destinations.ONBOARDING) {
+            composableDestination(Destinations.Onboarding) {
                 OnboardingScreen(
                     showHome = {
-                        navController.navigate(Destinations.HOME.route) { popUpTo(0) }
+                        navController.navigate(Destinations.Home.route) { popUpTo(0) }
                     },
                     showCitySelection = {
-                        navController.navigate(Destinations.CITY_SELECTION.route)
+                        navController.navigate(Destinations.CitySelection.route)
                     }
                 )
             }
-            composableDestination(Destinations.CITY_SELECTION) {
+            composableDestination(Destinations.CitySelection) {
                 CitySelectionScreen(
                     showHome = {
-                        navController.navigate(Destinations.HOME.route) { popUpTo(0) }
+                        navController.navigate(Destinations.Home.route) { popUpTo(0) }
                     }
                 )
             }
-            composableDestination(Destinations.PRODUCT) {
+            composableDestination(Destinations.Product) {
                 ProductScreen(
                     showProduct = { productId ->
-                        val arguments = ProductDestination.Arguments(
+                        val arguments = Destinations.Product.Arguments(
                             productId = productId,
                         )
-                        navController.navigate(Destinations.PRODUCT.createRoute(arguments))
+                        navController.navigate(Destinations.Product.createRoute(arguments))
                     },
                     showPickup = { productId ->
-                        val arguments = PickupGraph.Arguments(
+                        val arguments = Pickup.Arguments(
                             productId = productId,
                         )
-                        navController.navigate(PickupGraph.createRoute(arguments))
+                        navController.navigate(Pickup.createRoute(arguments))
                     },
                     goBack = {
-                        navController.popBackStack(Destinations.PRODUCT.routeSchema, true)
+                        navController.popBackStack(Destinations.Product.routeSchema, true)
                     }
                 )
             }
-            navigationGraph(PickupGraph) {
-                composableDestination(PickupGraph.PickupDestination) {
+            navigationGraph(Pickup) {
+                composableDestination(Pickup.Root) {
                     PickupScreen(
                         showSelectSize = { productId ->
-                            val arguments = PickupGraph.SelectSizeDestination.Arguments(
+                            val arguments = Pickup.SelectSize.Arguments(
                                 productId = productId,
                             )
                             navController.navigate(
-                                PickupGraph.SelectSizeDestination.createRoute(
+                                Pickup.SelectSize.createRoute(
                                     arguments
                                 )
                             )
                         },
                         goBack = {
-                            navController.popBackStack(PickupGraph.routeSchema, true)
+                            navController.popBackStack(Pickup.routeSchema, true)
                         }
                     )
                 }
-                bottomSheetDestination(PickupGraph.SelectSizeDestination) {
+                bottomSheetDestination(Pickup.SelectSize) {
                     SelectSizeScreen()
                 }
             }

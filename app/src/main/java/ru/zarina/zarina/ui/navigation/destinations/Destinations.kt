@@ -9,37 +9,38 @@ import ru.zarina.zarina.ui.navigation.base.RouteUtils
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
 
 object Destinations {
-    val HOME = SimpleDestination(BaseRoute.HOME)
-    val ONBOARDING = SimpleDestination(BaseRoute.ONBOARDING)
-    val CITY_SELECTION = SimpleDestination(BaseRoute.CITY_SELECTION)
-    val PRODUCT = ProductDestination
+    object Home : SimpleDestination(BaseRoute.HOME)
+
+    object Onboarding : SimpleDestination(BaseRoute.ONBOARDING)
+
+    object CitySelection : SimpleDestination(BaseRoute.CITY_SELECTION)
+
+    object Product : Destination<Product.Arguments>() {
+
+        const val ARGUMENT_PRODUCT_ID = "product_id"
+
+        override val routeSchema = RouteUtils.generateRouteSchema(
+            baseRoute = BaseRoute.PRODUCT,
+            argNames = arrayOf(ARGUMENT_PRODUCT_ID)
+        )
+
+        override val arguments = listOf(
+            navArgument(ARGUMENT_PRODUCT_ID) { type = NavType.StringType }
+        )
+
+        override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
+            baseRoute = BaseRoute.PRODUCT,
+            args = arrayOf(args.productId.value)
+        )
+
+        data class Arguments(
+            val productId: ru.zarina.zarina.domain.Product.Id,
+        )
+    }
 }
 
-object ProductDestination : Destination<ProductDestination.Arguments>() {
 
-    const val ARGUMENT_PRODUCT_ID = "product_id"
-
-    override val routeSchema = RouteUtils.generateRouteSchema(
-        baseRoute = BaseRoute.PRODUCT,
-        argNames = arrayOf(ARGUMENT_PRODUCT_ID)
-    )
-
-    override val arguments = listOf(
-        navArgument(ARGUMENT_PRODUCT_ID) { type = NavType.StringType }
-    )
-
-    override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
-        baseRoute = BaseRoute.PRODUCT,
-        args = arrayOf(args.productId.value)
-    )
-
-    data class Arguments(
-        val productId: Product.Id,
-    )
-
-}
-
-object PickupGraph : Graph<PickupGraph.Arguments>() {
+object Pickup : Graph<Pickup.Arguments>() {
 
     const val ARGUMENT_PRODUCT_ID = "product_id"
 
@@ -47,7 +48,7 @@ object PickupGraph : Graph<PickupGraph.Arguments>() {
         baseRoute = BaseRoute.GRAPH_PICKUP,
         argNames = arrayOf(ARGUMENT_PRODUCT_ID)
     )
-    override val startDestination = PickupDestination
+    override val startDestination = Root
 
     override val arguments = listOf(
         navArgument(ARGUMENT_PRODUCT_ID) { type = NavType.StringType }
@@ -62,7 +63,7 @@ object PickupGraph : Graph<PickupGraph.Arguments>() {
         val productId: Product.Id,
     )
 
-    object PickupDestination : Destination<PickupDestination.Arguments>() {
+    object Root : Destination<Root.Arguments>() {
 
         const val ARGUMENT_PRODUCT_ID = "product_id"
 
@@ -86,7 +87,7 @@ object PickupGraph : Graph<PickupGraph.Arguments>() {
 
     }
 
-    object SelectSizeDestination : Destination<SelectSizeDestination.Arguments>() {
+    object SelectSize : Destination<SelectSize.Arguments>() {
 
         const val ARGUMENT_PRODUCT_ID = "product_id"
 
@@ -96,7 +97,7 @@ object PickupGraph : Graph<PickupGraph.Arguments>() {
         )
 
         override val arguments = listOf(
-            navArgument(PickupDestination.ARGUMENT_PRODUCT_ID) { type = NavType.StringType }
+            navArgument(Root.ARGUMENT_PRODUCT_ID) { type = NavType.StringType }
         )
 
         override fun createRoute(args: Arguments) = RouteUtils.generateRoute(

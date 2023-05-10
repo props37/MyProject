@@ -38,7 +38,7 @@ class ProductViewModel @Inject constructor(
 
     val cache = MutableStateFlow(cache).asStateFlow()
     private val productId = savedStateHandle.getStateFlow(
-        key = Destinations.PRODUCT.ARGUMENT_PRODUCT_ID,
+        key = Destinations.Product.ARGUMENT_PRODUCT_ID,
         initialValue = ""
     ).mapState(viewModelScope) { Product.Id(it) }
 
@@ -106,7 +106,7 @@ class ProductViewModel @Inject constructor(
     }
 
     fun onVariantClick(variant: Product.Variant) {
-        savedStateHandle[Destinations.PRODUCT.ARGUMENT_PRODUCT_ID] = variant.id.value
+        savedStateHandle[Destinations.Product.ARGUMENT_PRODUCT_ID] = variant.id.value
     }
 
     fun onShareClick() {

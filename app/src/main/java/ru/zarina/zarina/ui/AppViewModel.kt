@@ -16,7 +16,7 @@ class AppViewModel @Inject constructor(
     val startDestination: Destination<*> = runBlocking {
         val isOnboardingCompleted = interactor.isOnboardingCompleted()
             .first()
-        if (isOnboardingCompleted) Destinations.HOME else Destinations.ONBOARDING
+        if (isOnboardingCompleted) Destinations.Home else Destinations.Onboarding
     }
 
 }
