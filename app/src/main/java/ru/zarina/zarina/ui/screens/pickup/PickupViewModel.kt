@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,31 +14,31 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Size
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
 import ru.zarina.zarina.utils.coroutine.mapState
+import ru.zarina.zarina.utils.isNetworkException
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class PickupViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val interactor: PickupInteractor,
 ) : ViewModel() {
 
+    private val _errorType = MutableStateFlow<ErrorType?>(null)
+    val errorType = _errorType.asStateFlow()
+
     private val productId = savedStateHandle.getStateFlow(
         key = Pickup.ARGUMENT_PRODUCT_ID,
         initialValue = ""
     ).mapState(viewModelScope) { Product.Id(it) }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val product = productId
-        .mapLatest {
-            // TODO loader
-            // TODO errors
-            interactor.getProduct(it).getOrNull()
-        }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    private val _product = MutableStateFlow<Product?>(null)
+    val product = _product.asStateFlow()
 
     val sizes = product
         .map { product ->
@@ -53,10 +54,33 @@ class PickupViewModel @Inject constructor(
 
     init {
         setupSizeUpdates()
+        setupProductLoading()
     }
 
     fun onSizeClick(size: Size) {
         _selectedSize.value = size
+    }
+
+    fun onRefreshClick() {
+        loadProduct(productId.value)
+    }
+
+    private fun loadProduct(id: Product.Id) {
+        viewModelScope.launch {
+            // TODO loader
+            interactor.getProduct(id)
+                .onSuccess {
+                    _product.value = it
+                    _errorType.value = null
+                }
+                .onFailure { throwable ->
+                    _errorType.value = when {
+                        throwable is CancellationException -> return@onFailure
+                        throwable.isNetworkException() -> ErrorType.NETWORK
+                        else -> ErrorType.GENERIC
+                    }
+                }
+        }
     }
 
     private fun setupSizeUpdates() {
@@ -69,5 +93,13 @@ class PickupViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
     }
+
+    private fun setupProductLoading() {
+        productId
+            .mapLatest { id -> loadProduct(id) }
+            .launchIn(viewModelScope)
+    }
+
+    enum class ErrorType { NETWORK, GENERIC }
 
 }

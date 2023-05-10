@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Size
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.components.HorizontalProductCard
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
@@ -34,7 +35,14 @@ fun PickupRootScreenContent(
     selectedSize: Size?,
     onBackClick: () -> Unit,
     onSelectSizeClick: () -> Unit,
+    errorType: PickupViewModel.ErrorType?,
+    onRefreshClick: () -> Unit,
 ) {
+    val errorState = when (errorType) {
+        PickupViewModel.ErrorType.NETWORK -> ErrorState.NETWORK
+        PickupViewModel.ErrorType.GENERIC -> ErrorState.GENERIC
+        null -> null
+    }
     ZarinaScaffold(
         toolbar = {
             ScreenToolbar(
@@ -44,6 +52,8 @@ fun PickupRootScreenContent(
                 }
             )
         },
+        errorState = errorState,
+        onErrorButtonClick = onRefreshClick,
     ) {
         if (product != null)
             Column(
@@ -79,6 +89,7 @@ fun PickupRootScreen(
 
     val product by parentViewModel.product.collectAsStateWithLifecycle()
     val selectedSize by parentViewModel.selectedSize.collectAsStateWithLifecycle()
+    val errorType by parentViewModel.errorType.collectAsStateWithLifecycle()
 
     PickupRootScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -91,6 +102,8 @@ fun PickupRootScreen(
         selectedSize = selectedSize,
         onBackClick = viewModel::onBackClick,
         onSelectSizeClick = viewModel::onSelectSizeClick,
+        onRefreshClick = parentViewModel::onRefreshClick,
+        errorType = errorType,
     )
 }
 
@@ -122,6 +135,8 @@ fun PickupRootScreenContentPreview(
             selectedSize = product.offers.first().size,
             onBackClick = {},
             onSelectSizeClick = {},
+            onRefreshClick = {},
+            errorType = null,
         )
     }
 }
