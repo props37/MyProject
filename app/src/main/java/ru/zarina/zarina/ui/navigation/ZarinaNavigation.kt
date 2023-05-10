@@ -12,12 +12,12 @@ import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
-import ru.zarina.zarina.ui.screens.cityselection.CitySelectionScreen
 import ru.zarina.zarina.ui.screens.home.HomeScreen
 import ru.zarina.zarina.ui.screens.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screens.pickup.pickup.PickupScreen
 import ru.zarina.zarina.ui.screens.pickup.selectsize.SelectSizeScreen
 import ru.zarina.zarina.ui.screens.product.ProductScreen
+import ru.zarina.zarina.ui.screens.selectcity.SelectCityScreen
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
@@ -47,13 +47,13 @@ fun ZarinaNavigation(
                     showHome = {
                         navController.navigate(Destinations.Home.route) { popUpTo(0) }
                     },
-                    showCitySelection = {
-                        navController.navigate(Destinations.CitySelection.route)
+                    showSelectCity = {
+                        navController.navigate(Destinations.SelectCity.route)
                     }
                 )
             }
-            composableDestination(Destinations.CitySelection) {
-                CitySelectionScreen(
+            composableDestination(Destinations.SelectCity) {
+                SelectCityScreen(
                     showHome = {
                         navController.navigate(Destinations.Home.route) { popUpTo(0) }
                     }

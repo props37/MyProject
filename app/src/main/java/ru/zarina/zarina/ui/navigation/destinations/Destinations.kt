@@ -13,7 +13,7 @@ object Destinations {
 
     object Onboarding : SimpleDestination(BaseRoute.ONBOARDING)
 
-    object CitySelection : SimpleDestination(BaseRoute.CITY_SELECTION)
+    object SelectCity : SimpleDestination(BaseRoute.SELECT_CITY)
 
     object Product : Destination<Product.Arguments>() {
 

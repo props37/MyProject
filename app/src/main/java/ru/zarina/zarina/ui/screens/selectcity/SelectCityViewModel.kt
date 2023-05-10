@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.cityselection
+package ru.zarina.zarina.ui.screens.selectcity
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,10 +35,10 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
-class CitySelectionViewModel @Inject constructor(
-    private val interactor: CitySelectionInteractor,
+class SelectCityViewModel @Inject constructor(
+    private val interactor: SelectCityInteractor,
 ) : ViewModel(),
-    ISideEffectSource<CitySelectionViewModel.SideEffect> by SideEffectQueue() {
+    ISideEffectSource<SelectCityViewModel.SideEffect> by SideEffectQueue() {
 
     private val operationTracker = OperationTracker()
     private val messageQueue = MessageQueue(viewModelScope)

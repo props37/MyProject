@@ -100,7 +100,7 @@ fun PickupScreenBehavior(
         sideEffects.collect { effect ->
             when (effect) {
                 PickupViewModel.SideEffect.GoBack -> goBack()
-                is PickupViewModel.SideEffect.ShowSizeSelection -> showSelectSize(effect.product.id)
+                is PickupViewModel.SideEffect.ShowSelectSize -> showSelectSize(effect.product.id)
             }
         }
     }

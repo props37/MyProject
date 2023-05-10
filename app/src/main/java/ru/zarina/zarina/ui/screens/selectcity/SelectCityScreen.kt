@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.cityselection
+package ru.zarina.zarina.ui.screens.selectcity
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -60,7 +60,7 @@ import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.ui.CityListItemProvider
-import ru.zarina.zarina.ui.screens.cityselection.CitySelectionViewModel.ErrorType.*
+import ru.zarina.zarina.ui.screens.selectcity.SelectCityViewModel.ErrorType.*
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.compose.navigationOrIme
@@ -71,15 +71,15 @@ import ru.zarina.zarina.utils.compose.navigationOrIme
     ExperimentalMaterial3Api::class
 )
 @Composable
-fun CitySelectionScreenContent(
+fun SelectCityScreenContent(
     isSearchLoadingVisible: Boolean,
     query: String,
     onQueryChange: (String) -> Unit,
-    cityItems: ImmutableList<CitySelectionViewModel.CityListItem>,
+    cityItems: ImmutableList<SelectCityViewModel.CityListItem>,
     onCityClick: (City) -> Unit,
     isRegionVisible: Boolean,
-    errorType: CitySelectionViewModel.ErrorType?,
-    onErrorButtonClick: (CitySelectionViewModel.ErrorType) -> Unit,
+    errorType: SelectCityViewModel.ErrorType?,
+    onErrorButtonClick: (SelectCityViewModel.ErrorType) -> Unit,
     onCloseClick: () -> Unit,
     isSnackbarVisible: Boolean,
     snackbarText: Text,
@@ -140,7 +140,7 @@ fun CitySelectionScreenContent(
                     ) {
                         cityItems.forEach { item ->
                             when (item) {
-                                is CitySelectionViewModel.CityListItem.Header -> stickyHeader(
+                                is SelectCityViewModel.CityListItem.Header -> stickyHeader(
                                     key = item.key,
                                     contentType = item.contentType,
                                 ) {
@@ -150,7 +150,7 @@ fun CitySelectionScreenContent(
                                     )
                                 }
 
-                                is CitySelectionViewModel.CityListItem.Item -> item(
+                                is SelectCityViewModel.CityListItem.Item -> item(
                                     key = item.key,
                                     contentType = item.contentType,
                                 ) {
@@ -333,10 +333,10 @@ private fun SearchBar(
 }
 
 @Composable
-fun CitySelectionScreen(
+fun SelectCityScreen(
     showHome: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<CitySelectionViewModel>()
+    val viewModel = hiltViewModel<SelectCityViewModel>()
 
     val isSearchLoadingVisible by viewModel.isSearchLoadingVisible.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
@@ -346,12 +346,12 @@ fun CitySelectionScreen(
     val isSnackbarVisible by viewModel.isSnackbarVisible.collectAsStateWithLifecycle()
     val snackbarText by viewModel.snackbarText.collectAsStateWithLifecycle()
 
-    CitySelectionScreenBehavior(
+    SelectCityScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showHome = showHome,
     )
 
-    CitySelectionScreenContent(
+    SelectCityScreenContent(
         isSearchLoadingVisible = isSearchLoadingVisible,
         query = query,
         onQueryChange = viewModel::onQueryChange,
@@ -367,14 +367,14 @@ fun CitySelectionScreen(
 }
 
 @Composable
-fun CitySelectionScreenBehavior(
-    sideEffects: Flow<CitySelectionViewModel.SideEffect>,
+fun SelectCityScreenBehavior(
+    sideEffects: Flow<SelectCityViewModel.SideEffect>,
     showHome: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                CitySelectionViewModel.SideEffect.ShowHome -> showHome()
+                SelectCityViewModel.SideEffect.ShowHome -> showHome()
             }
         }
     }
@@ -384,12 +384,12 @@ fun CitySelectionScreenBehavior(
 @FontScalePreviews
 @DensityPreviews
 @Composable
-fun CitySelectionScreenContentPreview(
+fun SelectCityScreenContentPreview(
     @PreviewParameter(CityListItemProvider::class, limit = 1)
-    cityItems: ImmutableList<CitySelectionViewModel.CityListItem>,
+    cityItems: ImmutableList<SelectCityViewModel.CityListItem>,
 ) {
     ZarinaTheme {
-        CitySelectionScreenContent(
+        SelectCityScreenContent(
             isSearchLoadingVisible = true,
             query = "",
             onQueryChange = {},

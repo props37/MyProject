@@ -3,7 +3,7 @@ package ru.zarina.zarina.ui.navigation.destinations
 enum class BaseRoute {
     HOME,
     ONBOARDING,
-    CITY_SELECTION,
+    SELECT_CITY,
     PRODUCT,
     GRAPH_PICKUP,
     PICKUP,
