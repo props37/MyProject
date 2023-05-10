@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Product
@@ -23,6 +24,7 @@ import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
+import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,7 +33,7 @@ fun PickupRootScreenContent(
     product: Product?,
     selectedSize: Size?,
     onBackClick: () -> Unit,
-    onSelectSizeClick: (Product) -> Unit,
+    onSelectSizeClick: () -> Unit,
 ) {
     ZarinaScaffold(
         toolbar = {
@@ -52,7 +54,7 @@ fun PickupRootScreenContent(
                 HorizontalProductCard(
                     product = product,
                     selectedSize = selectedSize,
-                    onSelectSizeClick = { onSelectSizeClick(product) },
+                    onSelectSizeClick = onSelectSizeClick,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -68,13 +70,15 @@ private fun CityPicker(
 
 @Composable
 fun PickupRootScreen(
-    showSelectSize: (Product.Id) -> Unit,
+    parentEntry: NavBackStackEntry,
+    showSelectSize: () -> Unit,
     goBack: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<PickupRootViewModel>()
+    val viewModel: PickupRootViewModel = hiltViewModel()
+    val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
 
-    val product by viewModel.product.collectAsStateWithLifecycle()
-    val selectedSize by viewModel.selectedSize.collectAsStateWithLifecycle()
+    val product by parentViewModel.product.collectAsStateWithLifecycle()
+    val selectedSize by parentViewModel.selectedSize.collectAsStateWithLifecycle()
 
     PickupRootScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -93,14 +97,14 @@ fun PickupRootScreen(
 @Composable
 fun PickupRootScreenBehavior(
     sideEffects: Flow<PickupRootViewModel.SideEffect>,
-    showSelectSize: (Product.Id) -> Unit,
+    showSelectSize: () -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
                 PickupRootViewModel.SideEffect.GoBack -> goBack()
-                is PickupRootViewModel.SideEffect.ShowSelectSize -> showSelectSize(effect.product.id)
+                PickupRootViewModel.SideEffect.ShowSelectSize -> showSelectSize()
             }
         }
     }

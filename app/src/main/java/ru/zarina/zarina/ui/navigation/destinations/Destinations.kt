@@ -87,27 +87,5 @@ object Pickup : Graph<Pickup.Arguments>() {
 
     }
 
-    object SelectSize : Destination<SelectSize.Arguments>() {
-
-        const val ARGUMENT_PRODUCT_ID = "product_id"
-
-        override val routeSchema = RouteUtils.generateRouteSchema(
-            baseRoute = BaseRoute.SELECT_SIZE,
-            argNames = arrayOf(ARGUMENT_PRODUCT_ID)
-        )
-
-        override val arguments = listOf(
-            navArgument(Root.ARGUMENT_PRODUCT_ID) { type = NavType.StringType }
-        )
-
-        override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
-            baseRoute = BaseRoute.SELECT_SIZE,
-            args = arrayOf(args.productId.value)
-        )
-
-        data class Arguments(
-            val productId: Product.Id,
-        )
-
-    }
+    object SelectSize : SimpleDestination(BaseRoute.SELECT_SIZE)
 }

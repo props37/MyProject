@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
@@ -80,16 +81,12 @@ fun ZarinaNavigation(
             }
             navigationGraph(Pickup) {
                 composableDestination(Pickup.Root) {
+                    val parentEntry =
+                        remember(it) { navController.getBackStackEntry(Pickup.routeSchema) }
                     PickupRootScreen(
-                        showSelectSize = { productId ->
-                            val arguments = Pickup.SelectSize.Arguments(
-                                productId = productId,
-                            )
-                            navController.navigate(
-                                Pickup.SelectSize.createRoute(
-                                    arguments
-                                )
-                            )
+                        parentEntry = parentEntry,
+                        showSelectSize = {
+                            navController.navigate(Pickup.SelectSize.route)
                         },
                         goBack = {
                             navController.popBackStack(Pickup.routeSchema, true)
@@ -97,7 +94,11 @@ fun ZarinaNavigation(
                     )
                 }
                 bottomSheetDestination(Pickup.SelectSize) {
-                    SelectSizeScreen()
+                    val parentEntry =
+                        remember(it) { navController.getBackStackEntry(Pickup.routeSchema) }
+                    SelectSizeScreen(
+                        parentEntry = parentEntry,
+                    )
                 }
             }
         }

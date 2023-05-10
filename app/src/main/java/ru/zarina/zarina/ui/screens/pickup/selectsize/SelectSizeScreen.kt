@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Product
@@ -30,6 +31,7 @@ import ru.zarina.zarina.domain.Size
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
+import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
@@ -99,10 +101,13 @@ private fun SizeItem(
 }
 
 @Composable
-fun SelectSizeScreen() {
+fun SelectSizeScreen(
+    parentEntry: NavBackStackEntry,
+) {
+    val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
     val viewModel = hiltViewModel<SelectSizeViewModel>()
 
-    val sizes by viewModel.sizes.collectAsStateWithLifecycle()
+    val sizes by parentViewModel.sizes.collectAsStateWithLifecycle()
 
     SelectSizeScreenBehavior(
         sideEffects = viewModel.sideEffects
