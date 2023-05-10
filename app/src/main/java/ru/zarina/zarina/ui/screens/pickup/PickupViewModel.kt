@@ -55,6 +55,9 @@ class PickupViewModel @Inject constructor(
         setupSizeUpdates()
     }
 
+    fun onSizeClick(size: Size) {
+        _selectedSize.value = size
+    }
 
     private fun setupSizeUpdates() {
         product

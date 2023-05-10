@@ -103,6 +103,7 @@ private fun SizeItem(
 @Composable
 fun SelectSizeScreen(
     parentEntry: NavBackStackEntry,
+    goBack: () -> Unit,
 ) {
     val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
     val viewModel = hiltViewModel<SelectSizeViewModel>()
@@ -110,23 +111,28 @@ fun SelectSizeScreen(
     val sizes by parentViewModel.sizes.collectAsStateWithLifecycle()
 
     SelectSizeScreenBehavior(
-        sideEffects = viewModel.sideEffects
+        sideEffects = viewModel.sideEffects,
+        goBack = goBack,
     )
 
     SelectSizeScreenContent(
         sizes = sizes,
-        onSizeClick = viewModel::onSizeClick,
+        onSizeClick = {
+            parentViewModel.onSizeClick(it)
+            viewModel.onSizeClick()
+        },
     )
 }
 
 @Composable
 fun SelectSizeScreenBehavior(
     sideEffects: Flow<SelectSizeViewModel.SideEffect>,
+    goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                else -> TODO()
+                SelectSizeViewModel.SideEffect.GoBack -> goBack()
             }
         }
     }
