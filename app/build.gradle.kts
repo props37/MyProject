@@ -96,6 +96,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.accompanist.systemUi)
     implementation(libs.accompanist.permissions)
+    implementation(libs.accompanist.navigation.material)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.compose)
