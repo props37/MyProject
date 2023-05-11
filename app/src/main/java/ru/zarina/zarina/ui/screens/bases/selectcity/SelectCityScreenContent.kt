@@ -69,11 +69,11 @@ fun SelectCityScreenContent(
     isSearchLoadingVisible: Boolean,
     query: String,
     onQueryChange: (String) -> Unit,
-    cityItems: ImmutableList<CityListItem>,
+    cityItems: ImmutableList<SelectCityComponent.CityListItem>,
     onCityClick: (City) -> Unit,
     isRegionVisible: Boolean,
-    errorType: ErrorType?,
-    onErrorButtonClick: (ErrorType) -> Unit,
+    errorType: SelectCityComponent.ErrorType?,
+    onErrorButtonClick: (SelectCityComponent.ErrorType) -> Unit,
     onCloseClick: () -> Unit,
     isSnackbarVisible: Boolean,
     snackbarText: Text,
@@ -113,12 +113,12 @@ fun SelectCityScreenContent(
             ) { type ->
                 if (type != null) {
                     val state = when (type) {
-                        ErrorType.NETWORK -> ErrorState.NETWORK
-                        ErrorType.NO_RESULTS -> ErrorState(
+                        SelectCityComponent.ErrorType.NETWORK -> ErrorState.NETWORK
+                        SelectCityComponent.ErrorType.NO_RESULTS -> ErrorState(
                             subtitle = Text.Resource(R.string.city_not_found),
                         )
 
-                        ErrorType.GENERIC -> ErrorState.GENERIC
+                        SelectCityComponent.ErrorType.GENERIC -> ErrorState.GENERIC
                     }
                     ModalError(
                         state = state,
@@ -134,7 +134,7 @@ fun SelectCityScreenContent(
                     ) {
                         cityItems.forEach { item ->
                             when (item) {
-                                is CityListItem.Header -> stickyHeader(
+                                is SelectCityComponent.CityListItem.Header -> stickyHeader(
                                     key = item.key,
                                     contentType = item.contentType,
                                 ) {
@@ -144,7 +144,7 @@ fun SelectCityScreenContent(
                                     )
                                 }
 
-                                is CityListItem.Item -> item(
+                                is SelectCityComponent.CityListItem.Item -> item(
                                     key = item.key,
                                     contentType = item.contentType,
                                 ) {
@@ -332,7 +332,7 @@ private fun SearchBar(
 @Composable
 fun SelectCityScreenContentPreview(
     @PreviewParameter(CityListItemProvider::class, limit = 1)
-    cityItems: ImmutableList<CityListItem>,
+    cityItems: ImmutableList<SelectCityComponent.CityListItem>,
 ) {
     ZarinaTheme {
         SelectCityScreenContent(
