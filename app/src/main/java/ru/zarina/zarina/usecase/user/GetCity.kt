@@ -3,7 +3,7 @@ package ru.zarina.zarina.usecase.user
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import ru.zarina.zarina.base.clean.UseCase
-import ru.zarina.zarina.data.user.UserRepository
+import ru.zarina.zarina.data.user.IUserRepository
 import ru.zarina.zarina.di.Dispatcher
 import ru.zarina.zarina.di.ZarinaDispatcher
 import ru.zarina.zarina.domain.City
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class GetCityUseCase @Inject constructor(
     @Dispatcher(ZarinaDispatcher.IO) dispatcher: CoroutineDispatcher,
-    private val userRepository: UserRepository,
+    private val userRepository: IUserRepository,
 ) : UseCase<Unit, City>(dispatcher) {
     override suspend fun execute(params: Unit): City {
         val city = userRepository.getCity().first()
