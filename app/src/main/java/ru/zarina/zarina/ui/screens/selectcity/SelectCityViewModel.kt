@@ -29,6 +29,7 @@ import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.screens.bases.selectcity.CityListItem
+import ru.zarina.zarina.ui.screens.bases.selectcity.ErrorType
 import ru.zarina.zarina.utils.isNetworkException
 import javax.inject.Inject
 import kotlin.time.Duration
@@ -158,8 +159,6 @@ class SelectCityViewModel @Inject constructor(
     }
 
     enum class Operation : OperationKey { CITY_LOAD, ONBOARDING_FINISH }
-
-    enum class ErrorType { NETWORK, NO_RESULTS, GENERIC }
 
     companion object {
         private val CITY_FETCH_DEBOUNCE_DURATION = 100.milliseconds

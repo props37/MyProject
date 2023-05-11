@@ -61,7 +61,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.ui.CityListItemProvider
 import ru.zarina.zarina.ui.screens.bases.selectcity.CityListItem
-import ru.zarina.zarina.ui.screens.selectcity.SelectCityViewModel.ErrorType.*
+import ru.zarina.zarina.ui.screens.bases.selectcity.ErrorType
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.compose.navigationOrIme
@@ -79,8 +79,8 @@ fun SelectCityScreenContent(
     cityItems: ImmutableList<CityListItem>,
     onCityClick: (City) -> Unit,
     isRegionVisible: Boolean,
-    errorType: SelectCityViewModel.ErrorType?,
-    onErrorButtonClick: (SelectCityViewModel.ErrorType) -> Unit,
+    errorType: ErrorType?,
+    onErrorButtonClick: (ErrorType) -> Unit,
     onCloseClick: () -> Unit,
     isSnackbarVisible: Boolean,
     snackbarText: Text,
@@ -120,12 +120,12 @@ fun SelectCityScreenContent(
             ) { type ->
                 if (type != null) {
                     val state = when (type) {
-                        NETWORK -> ErrorState.NETWORK
-                        NO_RESULTS -> ErrorState(
+                        ErrorType.NETWORK -> ErrorState.NETWORK
+                        ErrorType.NO_RESULTS -> ErrorState(
                             subtitle = Text.Resource(R.string.city_not_found),
                         )
 
-                        GENERIC -> ErrorState.GENERIC
+                        ErrorType.GENERIC -> ErrorState.GENERIC
                     }
                     ModalError(
                         state = state,
