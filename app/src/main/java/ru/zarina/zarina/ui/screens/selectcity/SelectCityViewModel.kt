@@ -28,6 +28,7 @@ import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
+import ru.zarina.zarina.ui.screens.bases.selectcity.CityListItem
 import ru.zarina.zarina.utils.isNetworkException
 import javax.inject.Inject
 import kotlin.time.Duration
@@ -151,11 +152,6 @@ class SelectCityViewModel @Inject constructor(
             add(CityListItem.Item(city))
         }
     }.toPersistentList()
-
-    sealed class CityListItem(val key: String, val contentType: String) {
-        data class Header(val letter: String) : CityListItem(letter, "header")
-        data class Item(val city: City) : CityListItem(city.id.id, "item")
-    }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object ShowHome : SideEffect

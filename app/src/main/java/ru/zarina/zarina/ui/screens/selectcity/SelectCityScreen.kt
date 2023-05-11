@@ -60,6 +60,7 @@ import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.ui.CityListItemProvider
+import ru.zarina.zarina.ui.screens.bases.selectcity.CityListItem
 import ru.zarina.zarina.ui.screens.selectcity.SelectCityViewModel.ErrorType.*
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
@@ -75,7 +76,7 @@ fun SelectCityScreenContent(
     isSearchLoadingVisible: Boolean,
     query: String,
     onQueryChange: (String) -> Unit,
-    cityItems: ImmutableList<SelectCityViewModel.CityListItem>,
+    cityItems: ImmutableList<CityListItem>,
     onCityClick: (City) -> Unit,
     isRegionVisible: Boolean,
     errorType: SelectCityViewModel.ErrorType?,
@@ -140,7 +141,7 @@ fun SelectCityScreenContent(
                     ) {
                         cityItems.forEach { item ->
                             when (item) {
-                                is SelectCityViewModel.CityListItem.Header -> stickyHeader(
+                                is CityListItem.Header -> stickyHeader(
                                     key = item.key,
                                     contentType = item.contentType,
                                 ) {
@@ -150,7 +151,7 @@ fun SelectCityScreenContent(
                                     )
                                 }
 
-                                is SelectCityViewModel.CityListItem.Item -> item(
+                                is CityListItem.Item -> item(
                                     key = item.key,
                                     contentType = item.contentType,
                                 ) {
@@ -386,7 +387,7 @@ fun SelectCityScreenBehavior(
 @Composable
 fun SelectCityScreenContentPreview(
     @PreviewParameter(CityListItemProvider::class, limit = 1)
-    cityItems: ImmutableList<SelectCityViewModel.CityListItem>,
+    cityItems: ImmutableList<CityListItem>,
 ) {
     ZarinaTheme {
         SelectCityScreenContent(
