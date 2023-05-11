@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.common.components.buttons
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -29,7 +30,8 @@ fun DropdownButton(
                 width = 1.dp,
                 color = UiKitTheme.colors.primaryBorderColor,
             )
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
+            .animateContentSize(),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

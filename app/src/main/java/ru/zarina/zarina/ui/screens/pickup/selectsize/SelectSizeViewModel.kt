@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.selectsize
+package ru.zarina.zarina.ui.screens.pickup.selectsize
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +12,12 @@ class SelectSizeViewModel @Inject constructor(
 ) : ViewModel(),
     ISideEffectSource<SelectSizeViewModel.SideEffect> by SideEffectQueue() {
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
+    fun onSizeClick() {
+        sideEffect(SideEffect.GoBack)
+    }
+
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        object GoBack : SideEffect
+    }
 
 }

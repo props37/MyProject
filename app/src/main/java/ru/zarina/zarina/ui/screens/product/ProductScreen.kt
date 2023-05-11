@@ -89,7 +89,7 @@ fun ProductScreenContent(
             subtitle = ru.zarina.zarina.ui.common.base.Text.Resource(R.string.dont_fret_catalog),
         )
 
-        ProductViewModel.ErrorType.GENERIC -> ErrorState.NETWORK
+        ProductViewModel.ErrorType.GENERIC -> ErrorState.GENERIC
         null -> null
     }
     ZarinaScaffold(

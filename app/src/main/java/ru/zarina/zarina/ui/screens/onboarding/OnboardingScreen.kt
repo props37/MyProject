@@ -270,8 +270,8 @@ fun BottomContent(
         .fillMaxWidth()
         .background(color = UiKitTheme.colors.screenBackground)
         .navigationBarsPadding()
-    val citySelection = @Composable {
-        CitySelection(
+    val selectCity = @Composable {
+        SelectCity(
             isDetectButtonLoading = isDetectButtonLoading,
             onDetectClick = onDetectClick,
             onSelectManuallyClick = onSelectManuallyClick,
@@ -292,7 +292,7 @@ fun BottomContent(
     SubcomposeLayout(
         modifier = modifier,
     ) { constraints ->
-        val mainPlaceables = subcompose("main", citySelection).map {
+        val mainPlaceables = subcompose("main", selectCity).map {
             it.measure(constraints)
         }
         val maxSize = mainPlaceables.fold(IntSize.Zero) { currentMax, placeable ->
@@ -315,7 +315,7 @@ fun BottomContent(
                         .background(UiKitTheme.colors.screenBackground)
                 ) { step ->
                     when (step) {
-                        OnboardingViewModel.OnboardingStep.CITY_SELECTION_TYPE -> citySelection()
+                        OnboardingViewModel.OnboardingStep.SELECT_CITY_TYPE -> selectCity()
                         OnboardingViewModel.OnboardingStep.DETECTION_RESULT -> selectionResult()
                     }
                 }
@@ -328,7 +328,7 @@ fun BottomContent(
 
 
 @Composable
-fun CitySelection(
+fun SelectCity(
     isDetectButtonLoading: Boolean,
     onDetectClick: () -> Unit,
     onSelectManuallyClick: () -> Unit,
@@ -423,7 +423,7 @@ fun SelectionResult(
 @Composable
 fun OnboardingScreen(
     showHome: () -> Unit,
-    showCitySelection: () -> Unit,
+    showSelectCity: () -> Unit,
 ) {
     val viewModel = hiltViewModel<OnboardingViewModel>()
 
@@ -438,7 +438,7 @@ fun OnboardingScreen(
     OnboardingScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showHome = showHome,
-        showCitySelection = showCitySelection,
+        showSelectCity = showSelectCity,
         onLocationPermissionResult = viewModel::onLocationPermissionResult
     )
 
@@ -462,18 +462,18 @@ fun OnboardingScreen(
 fun OnboardingScreenBehavior(
     sideEffects: Flow<OnboardingViewModel.SideEffect>,
     showHome: () -> Unit,
-    showCitySelection: () -> Unit,
+    showSelectCity: () -> Unit,
     onLocationPermissionResult: (isGranted: Boolean) -> Unit,
 ) {
     val locationPermissionState = rememberPermissionState(
         permission = android.Manifest.permission.ACCESS_COARSE_LOCATION,
         onPermissionResult = onLocationPermissionResult
     )
-    LaunchedEffect(locationPermissionState, sideEffects, showHome, showCitySelection) {
+    LaunchedEffect(locationPermissionState, sideEffects, showHome, showSelectCity) {
         sideEffects.collect { effect ->
             when (effect) {
                 OnboardingViewModel.SideEffect.ShowHome -> showHome()
-                OnboardingViewModel.SideEffect.ShowCitySelection -> showCitySelection()
+                OnboardingViewModel.SideEffect.ShowSelectCity -> showSelectCity()
                 OnboardingViewModel.SideEffect.RequestLocationPermission -> locationPermissionState.launchPermissionRequest()
             }
         }
@@ -490,7 +490,7 @@ fun OnboardingScreenContentPreview(
 ) {
     ZarinaTheme {
         OnboardingScreenContent(
-            step = OnboardingViewModel.OnboardingStep.CITY_SELECTION_TYPE,
+            step = OnboardingViewModel.OnboardingStep.SELECT_CITY_TYPE,
             splashState = OnboardingViewModel.SplashState.Error,
             isDetectButtonLoading = true,
             onDetectClick = {},

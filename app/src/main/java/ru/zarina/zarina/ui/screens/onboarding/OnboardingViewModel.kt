@@ -36,7 +36,7 @@ class OnboardingViewModel @Inject constructor(
 
     private var cityDetectionJob: Job? = null
 
-    private val _step = MutableStateFlow(OnboardingStep.CITY_SELECTION_TYPE)
+    private val _step = MutableStateFlow(OnboardingStep.SELECT_CITY_TYPE)
     val step = _step.asStateFlow()
     private val _splashState = MutableStateFlow<SplashState>(SplashState.Loading)
     val splashState = _splashState.asStateFlow()
@@ -97,7 +97,7 @@ class OnboardingViewModel @Inject constructor(
 
     fun onSelectManuallyClick() {
         cityDetectionJob?.cancel()
-        sideEffect(SideEffect.ShowCitySelection)
+        sideEffect(SideEffect.ShowSelectCity)
     }
 
     fun onConfirmDetectedCityClick() {
@@ -131,11 +131,11 @@ class OnboardingViewModel @Inject constructor(
         object Error : SplashState()
     }
 
-    enum class OnboardingStep { CITY_SELECTION_TYPE, DETECTION_RESULT }
+    enum class OnboardingStep { SELECT_CITY_TYPE, DETECTION_RESULT }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object ShowHome : SideEffect
-        object ShowCitySelection : SideEffect
+        object ShowSelectCity : SideEffect
         object RequestLocationPermission : SideEffect
     }
 

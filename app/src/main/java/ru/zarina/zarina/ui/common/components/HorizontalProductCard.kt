@@ -1,5 +1,7 @@
 package ru.zarina.zarina.ui.common.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -174,6 +176,7 @@ private fun SingleProductSize(
     )
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PickSizeButton(
     selectedSize: Size?,
@@ -185,13 +188,18 @@ fun PickSizeButton(
         modifier = modifier
     ) {
         val text = selectedSize?.name ?: stringResource(R.string.select_size)
-        Text(
-            text = text,
-            color = UiKitTheme.colors.primaryContentColor,
-            style = UiKitTheme.typography.dropdownButton,
-            maxLines = 1,
-            textAlign = TextAlign.Start,
-        )
+        AnimatedContent(
+            targetState = text,
+            label = "pick size button text"
+        ) { state ->
+            Text(
+                text = state,
+                color = UiKitTheme.colors.primaryContentColor,
+                style = UiKitTheme.typography.dropdownButton,
+                maxLines = 1,
+                textAlign = TextAlign.Start,
+            )
+        }
     }
 }
 

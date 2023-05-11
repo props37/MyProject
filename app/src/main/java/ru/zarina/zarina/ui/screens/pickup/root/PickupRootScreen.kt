@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.pickup
+package ru.zarina.zarina.ui.screens.pickup.root
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,25 +14,35 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Size
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.components.HorizontalProductCard
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
+import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PickupScreenContent(
+fun PickupRootScreenContent(
     product: Product?,
     selectedSize: Size?,
     onBackClick: () -> Unit,
     onSelectSizeClick: () -> Unit,
+    errorType: PickupViewModel.ErrorType?,
+    onRefreshClick: () -> Unit,
 ) {
+    val errorState = when (errorType) {
+        PickupViewModel.ErrorType.NETWORK -> ErrorState.NETWORK
+        PickupViewModel.ErrorType.GENERIC -> ErrorState.GENERIC
+        null -> null
+    }
     ZarinaScaffold(
         toolbar = {
             ScreenToolbar(
@@ -42,6 +52,8 @@ fun PickupScreenContent(
                 }
             )
         },
+        errorState = errorState,
+        onErrorButtonClick = onRefreshClick,
     ) {
         if (product != null)
             Column(
@@ -67,37 +79,45 @@ private fun CityPicker(
 }
 
 @Composable
-fun PickupScreen(
+fun PickupRootScreen(
+    parentEntry: NavBackStackEntry,
+    showSelectSize: () -> Unit,
     goBack: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<PickupViewModel>()
+    val viewModel: PickupRootViewModel = hiltViewModel()
+    val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
 
-    val product by viewModel.product.collectAsStateWithLifecycle()
-    val selectedSize by viewModel.selectedSize.collectAsStateWithLifecycle()
+    val product by parentViewModel.product.collectAsStateWithLifecycle()
+    val selectedSize by parentViewModel.selectedSize.collectAsStateWithLifecycle()
+    val errorType by parentViewModel.errorType.collectAsStateWithLifecycle()
 
-    PickupScreenBehavior(
+    PickupRootScreenBehavior(
         sideEffects = viewModel.sideEffects,
+        showSelectSize = showSelectSize,
         goBack = goBack,
     )
 
-    PickupScreenContent(
+    PickupRootScreenContent(
         product = product,
         selectedSize = selectedSize,
         onBackClick = viewModel::onBackClick,
         onSelectSizeClick = viewModel::onSelectSizeClick,
+        onRefreshClick = parentViewModel::onRefreshClick,
+        errorType = errorType,
     )
 }
 
 @Composable
-fun PickupScreenBehavior(
-    sideEffects: Flow<PickupViewModel.SideEffect>,
+fun PickupRootScreenBehavior(
+    sideEffects: Flow<PickupRootViewModel.SideEffect>,
+    showSelectSize: () -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                PickupViewModel.SideEffect.GoBack -> goBack()
-                PickupViewModel.SideEffect.ShowSizeSelection -> {} // TODO
+                PickupRootViewModel.SideEffect.GoBack -> goBack()
+                PickupRootViewModel.SideEffect.ShowSelectSize -> showSelectSize()
             }
         }
     }
@@ -105,16 +125,18 @@ fun PickupScreenBehavior(
 
 @Preview("multiple sizes")
 @Composable
-fun PickupScreenContentPreview(
+fun PickupRootScreenContentPreview(
     @PreviewParameter(ProductProvider::class, limit = 1)
     product: Product,
 ) {
     ZarinaTheme {
-        PickupScreenContent(
+        PickupRootScreenContent(
             product = product,
             selectedSize = product.offers.first().size,
             onBackClick = {},
             onSelectSizeClick = {},
+            onRefreshClick = {},
+            errorType = null,
         )
     }
 }
