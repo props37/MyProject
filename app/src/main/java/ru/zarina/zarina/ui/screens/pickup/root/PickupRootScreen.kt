@@ -41,6 +41,7 @@ fun PickupRootScreenContent(
     product: Product?,
     selectedSize: Size?,
     onBackClick: () -> Unit,
+    onSelectCityClick: () -> Unit,
     onSelectSizeClick: () -> Unit,
     errorType: PickupViewModel.ErrorType?,
     onRefreshClick: () -> Unit,
@@ -69,6 +70,7 @@ fun PickupRootScreenContent(
             ) {
                 CityPicker(
                     city = city,
+                    onClick = onSelectCityClick,
                 )
                 HorizontalProductCard(
                     product = product,
@@ -83,10 +85,11 @@ fun PickupRootScreenContent(
 @Composable
 private fun CityPicker(
     city: City?,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     DropdownBar(
-        onClick = { /*TODO*/ },
+        onClick = onClick,
         modifier = modifier.fillMaxWidth()
     ) {
         Text(
@@ -125,6 +128,7 @@ fun PickupRootScreen(
         product = product,
         selectedSize = selectedSize,
         onBackClick = viewModel::onBackClick,
+        onSelectCityClick = viewModel::onSelectCityClick,
         onSelectSizeClick = viewModel::onSelectSizeClick,
         onRefreshClick = parentViewModel::onRefreshClick,
         errorType = errorType,
@@ -142,6 +146,7 @@ fun PickupRootScreenBehavior(
             when (effect) {
                 PickupRootViewModel.SideEffect.GoBack -> goBack()
                 PickupRootViewModel.SideEffect.ShowSelectSize -> showSelectSize()
+                PickupRootViewModel.SideEffect.ShowSelectCity -> TODO()
             }
         }
     }
@@ -159,6 +164,7 @@ fun PickupRootScreenContentPreview(
             product = product,
             selectedSize = product.offers.first().size,
             onBackClick = {},
+            onSelectCityClick = {},
             onSelectSizeClick = {},
             onRefreshClick = {},
             errorType = null,

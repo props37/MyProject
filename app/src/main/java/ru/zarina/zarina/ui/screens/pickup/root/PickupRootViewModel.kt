@@ -20,9 +20,14 @@ class PickupRootViewModel @Inject constructor(
         sideEffect(SideEffect.ShowSelectSize)
     }
 
+    fun onSelectCityClick() {
+        sideEffect(SideEffect.ShowSelectCity)
+    }
+
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object GoBack : SideEffect
         object ShowSelectSize : SideEffect
+        object ShowSelectCity : SideEffect
     }
 
 }
