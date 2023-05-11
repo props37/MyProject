@@ -4,12 +4,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,20 +20,24 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Size
 import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.components.DropdownBar
 import ru.zarina.zarina.ui.common.components.HorizontalProductCard
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PickupRootScreenContent(
+    city: City?,
     product: Product?,
     selectedSize: Size?,
     onBackClick: () -> Unit,
@@ -60,7 +67,9 @@ fun PickupRootScreenContent(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CityPicker()
+                CityPicker(
+                    city = city,
+                )
                 HorizontalProductCard(
                     product = product,
                     selectedSize = selectedSize,
@@ -73,9 +82,22 @@ fun PickupRootScreenContent(
 
 @Composable
 private fun CityPicker(
+    city: City?,
     modifier: Modifier = Modifier,
 ) {
-
+    DropdownBar(
+        onClick = { /*TODO*/ },
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = city?.name.orEmpty(),
+            style = UiKitTheme.typography.dropdownButton,
+            color = UiKitTheme.colors.primaryContentColor,
+            textAlign = TextAlign.Start,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
 }
 
 @Composable
@@ -87,6 +109,7 @@ fun PickupRootScreen(
     val viewModel: PickupRootViewModel = hiltViewModel()
     val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
 
+    val city by parentViewModel.city.collectAsStateWithLifecycle()
     val product by parentViewModel.product.collectAsStateWithLifecycle()
     val selectedSize by parentViewModel.selectedSize.collectAsStateWithLifecycle()
     val errorType by parentViewModel.errorType.collectAsStateWithLifecycle()
@@ -98,6 +121,7 @@ fun PickupRootScreen(
     )
 
     PickupRootScreenContent(
+        city = city,
         product = product,
         selectedSize = selectedSize,
         onBackClick = viewModel::onBackClick,
@@ -131,6 +155,7 @@ fun PickupRootScreenContentPreview(
 ) {
     ZarinaTheme {
         PickupRootScreenContent(
+            city = City.DEFAULT,
             product = product,
             selectedSize = product.offers.first().size,
             onBackClick = {},
