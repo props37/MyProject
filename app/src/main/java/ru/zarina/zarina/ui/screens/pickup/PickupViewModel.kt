@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Size
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
@@ -37,6 +38,9 @@ class PickupViewModel @Inject constructor(
         initialValue = ""
     ).mapState(viewModelScope) { Product.Id(it) }
 
+    private val _city = MutableStateFlow<City?>(null)
+    val city = _city.asStateFlow()
+
     private val _product = MutableStateFlow<Product?>(null)
     val product = _product.asStateFlow()
 
@@ -53,6 +57,7 @@ class PickupViewModel @Inject constructor(
     val selectedSize = _selectedSize.asStateFlow()
 
     init {
+        loadUserCity()
         setupSizeUpdates()
         setupProductLoading()
     }
@@ -80,6 +85,14 @@ class PickupViewModel @Inject constructor(
                         else -> ErrorType.GENERIC
                     }
                 }
+        }
+    }
+
+    private fun loadUserCity() {
+        // TODO loader
+        // TODO error
+        viewModelScope.launch {
+            _city.value = interactor.getCity().getOrNull()
         }
     }
 
