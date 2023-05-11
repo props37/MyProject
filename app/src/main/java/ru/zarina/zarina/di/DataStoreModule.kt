@@ -14,7 +14,6 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import ru.zarina.zarina.data.geography.remote.api.dto.CityDto
 import ru.zarina.zarina.data.user.local.entity.CityDataEntity
 import ru.zarina.zarina.utils.datastore.Serializer
 import javax.inject.Singleton
@@ -35,7 +34,7 @@ class DataStoreModule {
     @Provides
     fun provideUserCitySerializer(
         json: Json,
-    ) = Serializer<CityDto?>(
+    ) = Serializer<CityDataEntity?>(
         defaultValueProducer = { null },
         decodeFromString = { json.decodeFromString(it) },
         encodeToString = { json.encodeToString(it) }
