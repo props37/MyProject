@@ -13,10 +13,15 @@ import javax.inject.Inject
 class GetCityUseCase @Inject constructor(
     @Dispatcher(ZarinaDispatcher.IO) dispatcher: CoroutineDispatcher,
     private val userRepository: UserRepository,
-) : UseCase<Unit, City?>(dispatcher) {
-    override suspend fun execute(params: Unit): City? {
+) : UseCase<Unit, City>(dispatcher) {
+    override suspend fun execute(params: Unit): City {
         val city = userRepository.getCity().first()
-        Timber.v("Current user city: $city")
-        return city
+        Timber.v(
+            buildString {
+                append("Current user city: $city")
+                if (city == null) append(", using default city ${City.DEFAULT}")
+            }
+        )
+        return city ?: City.DEFAULT
     }
 }

@@ -13,4 +13,13 @@ data class City(
             else -> null
         }
 
+    companion object {
+        val DEFAULT
+            get() = City(
+                id = AddressId.SAINT_PETERSBURG,
+                name = "Санкт-Петербург",
+                region = "г. Санкт-Петербург",
+            )
+    }
+
 }
