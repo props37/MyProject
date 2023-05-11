@@ -3,7 +3,7 @@ package ru.zarina.zarina.data.shop.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
-import ru.zarina.zarina.domain.shop.ShopCountry
+import ru.zarina.zarina.domain.Country
 
 @Serializable
 data class ShopCountryDto(
@@ -14,12 +14,12 @@ data class ShopCountryDto(
     @SerialName("cities")
     val cities: List<ShopCityDto>? = null,
 ) {
-    fun toDomain(): ShopCountry? {
+    fun toDomain(): Country? {
         return if (
             ApiContract.isNotNull(id, "id")
             && ApiContract.isNotNull(name, "name")
         )
-            ShopCountry(
+            Country(
                 id = id.toString(),
                 name = name,
                 cities = cities?.mapNotNull { it.toDomain() }.orEmpty()

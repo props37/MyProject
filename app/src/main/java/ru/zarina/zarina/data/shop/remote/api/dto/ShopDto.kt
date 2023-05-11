@@ -2,7 +2,7 @@ package ru.zarina.zarina.data.shop.remote.api.dto
 
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
-import ru.zarina.zarina.domain.shop.Shop
+import ru.zarina.zarina.domain.Shop
 
 @Serializable
 data class ShopDto(

@@ -244,7 +244,7 @@ private fun CityExtendedItem(
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = city.region,
+            text = city.region.orEmpty(),
             style = UiKitTheme.typography.listRegularItemSubtitle,
             color = UiKitTheme.colors.listItemSubtitle,
             textAlign = TextAlign.Start,
