@@ -5,12 +5,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.screens.bases.selectcity.SelectCityScreenContent
+import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 
 @Composable
-fun SelectPickupCityScreen() {
+fun SelectPickupCityScreen(
+    parentEntry: NavBackStackEntry,
+) {
+    val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
     val viewModel = hiltViewModel<SelectPickupCityViewModel>()
 
     val query by viewModel.query.collectAsStateWithLifecycle()
@@ -26,7 +31,10 @@ fun SelectPickupCityScreen() {
         query = query,
         onQueryChange = viewModel::onQueryChange,
         cityItems = cityItems,
-        onCityClick = viewModel::onCityClick,
+        onCityClick = {
+            viewModel.onCityClick(it)
+            parentViewModel.onCityClick(it)
+        },
         isRegionVisible = false,
         errorType = errorType,
         onErrorButtonClick = viewModel::onErrorButtonClick,

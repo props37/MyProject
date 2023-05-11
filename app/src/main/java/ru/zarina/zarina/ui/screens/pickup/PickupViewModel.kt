@@ -70,6 +70,10 @@ class PickupViewModel @Inject constructor(
         loadProduct(productId.value)
     }
 
+    fun onCityClick(city: City) {
+        _city.value = city
+    }
+
     private fun loadProduct(id: Product.Id) {
         viewModelScope.launch {
             // TODO loader
