@@ -190,6 +190,11 @@ data class UiKitTypography(
         lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle
     ),
+    val tabsHeader: TextStyle = TextStyle(
+        fontSize = 17.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle
+    ),
     val sizePickerHeader: TextStyle = TextStyle(
         fontSize = 17.sp,
         lineHeight = 18.sp,

@@ -8,6 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,14 +21,18 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.Stock
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.components.DropdownBar
 import ru.zarina.zarina.ui.common.components.HorizontalProductCard
+import ru.zarina.zarina.ui.common.components.Tabs
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
@@ -78,6 +85,10 @@ fun PickupRootScreenContent(
                     onSelectSizeClick = onSelectSizeClick,
                     modifier = Modifier.fillMaxWidth()
                 )
+                ShopListPager(
+                    stocks = persistentListOf(),
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
     }
 }
@@ -102,6 +113,23 @@ private fun CityPicker(
         )
     }
 }
+
+@Composable
+private fun ShopListPager(
+    stocks: ImmutableList<Stock>,
+    modifier: Modifier = Modifier,
+) {
+    var selectedTab by remember { mutableStateOf(ShopListTabs.LIST) }
+    Tabs(
+        options = persistentListOf(ShopListTabs.LIST, ShopListTabs.MAP),
+        selectedOption = selectedTab,
+        textResolver = { stringResource(it.stringResource) },
+        onOptionClick = { selectedTab = it },
+        modifier = modifier
+    )
+}
+
+private enum class ShopListTabs(val stringResource: Int) { LIST(R.string.list), MAP(R.string.map) }
 
 @Composable
 fun PickupRootScreen(
