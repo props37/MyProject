@@ -1,16 +1,17 @@
 package ru.zarina.zarina.ui.screens.pickup.root
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,6 +25,7 @@ import androidx.navigation.NavBackStackEntry
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
@@ -114,22 +116,68 @@ private fun CityPicker(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ShopListPager(
     stocks: ImmutableList<Stock>,
     modifier: Modifier = Modifier,
 ) {
-    var selectedTab by remember { mutableStateOf(ShopListTabs.LIST) }
+    val coroutineScope = rememberCoroutineScope()
+    val tabs = persistentListOf(*ShopListTab.values())
+    val pagerState = rememberPagerState()
     Tabs(
-        options = persistentListOf(ShopListTabs.LIST, ShopListTabs.MAP),
-        selectedOption = selectedTab,
-        textResolver = { stringResource(it.stringResource) },
-        onOptionClick = { selectedTab = it },
+        options = tabs,
+        selectedOption = tabs[pagerState.currentPage],
+        textResolver = {
+            val resource = when (it) {
+                ShopListTab.LIST -> R.string.list
+                ShopListTab.MAP -> R.string.map
+            }
+            stringResource(resource)
+        },
+        onOptionClick = {
+            coroutineScope.launch {
+                pagerState.animateScrollToPage(tabs.indexOf(it))
+            }
+        },
         modifier = modifier
     )
+    HorizontalPager(
+        pageCount = tabs.size,
+        state = pagerState,
+        userScrollEnabled = false,
+    ) {
+        when (it) {
+            ShopListTab.LIST.ordinal -> ShopList(
+                stocks = stocks,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            ShopListTab.MAP.ordinal -> ShopMap(
+                stocks = stocks,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
 }
 
-private enum class ShopListTabs(val stringResource: Int) { LIST(R.string.list), MAP(R.string.map) }
+private enum class ShopListTab { LIST, MAP }
+
+@Composable
+private fun ShopList(
+    stocks: List<Stock>,
+    modifier: Modifier = Modifier,
+) {
+
+}
+
+@Composable
+private fun ShopMap(
+    stocks: List<Stock>,
+    modifier: Modifier = Modifier,
+) {
+
+}
 
 @Composable
 fun PickupRootScreen(
