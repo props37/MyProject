@@ -59,18 +59,20 @@ class SelectPickupCityViewModel @Inject constructor(
         }
     }
 
-    fun onCityClick(city: City) {
-        TODO("Not yet implemented")
+    fun onCityClick() {
+        sideEffect(SideEffect.GoBack)
     }
 
-    fun onErrorButtonClick(errorType: SelectCityComponent.ErrorType) {
-        TODO("Not yet implemented")
+    fun onErrorButtonClick() {
+        loadPickupCities()
     }
 
     fun onCloseClick() {
-        TODO("Not yet implemented")
+        sideEffect(SideEffect.GoBack)
     }
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        object GoBack : SideEffect
+    }
 
 }

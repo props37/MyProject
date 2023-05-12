@@ -112,6 +112,9 @@ fun ZarinaNavigation(
                         remember(it) { navController.getBackStackEntry(Pickup.routeSchema) }
                     SelectPickupCityScreen(
                         parentEntry = parentEntry,
+                        goBack = {
+                            navController.popBackStack(Pickup.SelectCity.routeSchema, true)
+                        }
                     )
                 }
             }

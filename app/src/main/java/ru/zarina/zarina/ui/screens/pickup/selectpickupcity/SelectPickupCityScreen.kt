@@ -14,6 +14,7 @@ import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 @Composable
 fun SelectPickupCityScreen(
     parentEntry: NavBackStackEntry,
+    goBack: () -> Unit,
 ) {
     val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
     val viewModel = hiltViewModel<SelectPickupCityViewModel>()
@@ -24,6 +25,7 @@ fun SelectPickupCityScreen(
 
     SelectPickupCityScreenBehavior(
         sideEffects = viewModel.sideEffects,
+        goBack = goBack,
     )
 
     SelectCityScreenContent(
@@ -32,12 +34,12 @@ fun SelectPickupCityScreen(
         onQueryChange = viewModel::onQueryChange,
         cityItems = cityItems,
         onCityClick = {
-            viewModel.onCityClick(it)
+            viewModel.onCityClick()
             parentViewModel.onCityClick(it)
         },
         isRegionVisible = false,
         errorType = errorType,
-        onErrorButtonClick = viewModel::onErrorButtonClick,
+        onErrorButtonClick = { viewModel.onErrorButtonClick() },
         onCloseClick = viewModel::onCloseClick,
         isSnackbarVisible = false,
         snackbarText = Text.Empty,
@@ -47,11 +49,12 @@ fun SelectPickupCityScreen(
 @Composable
 fun SelectPickupCityScreenBehavior(
     sideEffects: Flow<SelectPickupCityViewModel.SideEffect>,
+    goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                else -> Unit // TODO
+                SelectPickupCityViewModel.SideEffect.GoBack -> goBack()
             }
         }
     }
