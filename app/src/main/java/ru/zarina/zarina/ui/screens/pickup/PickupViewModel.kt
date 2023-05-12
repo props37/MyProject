@@ -4,11 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
@@ -16,6 +19,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Size
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
@@ -44,14 +48,14 @@ class PickupViewModel @Inject constructor(
     private val _product = MutableStateFlow<Product?>(null)
     val product = _product.asStateFlow()
 
-    val sizes = product
-        .map { product ->
-            product
-                ?.offers
-                ?.map { it.size }
-                .orEmpty()
+    private val _offers = MutableStateFlow<List<Offer>>(emptyList())
+    val sizes = _offers
+        .map { offers ->
+            offers
+                .map { offer -> offer.size }
+                .toPersistentList()
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
     private val _selectedSize = MutableStateFlow<Size?>(null)
     val selectedSize = _selectedSize.asStateFlow()
@@ -101,12 +105,22 @@ class PickupViewModel @Inject constructor(
     }
 
     private fun setupSizeUpdates() {
-        product
-            .onEach { product ->
-                _selectedSize.value = (product?.offers
-                    ?.find { it.isAvailable }
-                    ?: product?.offers?.firstOrNull())
-                    ?.size
+        combine(_product, _city) { product, city ->
+            if (product == null || city == null) return@combine
+            // TODO loader
+            // TODO error
+            interactor.getOffers(product, city)
+                .onSuccess { _offers.value = it }
+        }
+            .launchIn(viewModelScope)
+
+        _offers
+            .onEach { offers ->
+                val selectedSizeName = _selectedSize.value?.name
+                val sameNameOffer = offers.find { it.size.name == selectedSizeName }
+                val availableOffer = offers.find { it.isAvailable }
+                val firstOffer = offers.firstOrNull()
+                _selectedSize.value = (sameNameOffer ?: availableOffer ?: firstOffer)?.size
             }
             .launchIn(viewModelScope)
     }
