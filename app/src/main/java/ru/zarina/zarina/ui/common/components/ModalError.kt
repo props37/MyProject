@@ -67,14 +67,14 @@ private fun ErrorContent(
         if (state.title != null)
             Text(
                 text = textString(state.title),
-                style = UiKitTheme.typography.errorPlaceholderTitle,
+                style = UiKitTheme.typography.circle1720bold,
                 color = UiKitTheme.colors.primaryContentColor,
                 textAlign = TextAlign.Center,
             )
         if (state.subtitle != null)
             Text(
                 text = textString(state.subtitle),
-                style = UiKitTheme.typography.errorPlaceholderBody,
+                style = UiKitTheme.typography.circle1518,
                 color = UiKitTheme.colors.primaryContentColor,
                 textAlign = TextAlign.Center,
             )

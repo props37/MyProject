@@ -114,7 +114,7 @@ private fun ProductName(
     Text(
         text = product.name,
         color = UiKitTheme.colors.primaryContentColor,
-        style = UiKitTheme.typography.productCardName,
+        style = UiKitTheme.typography.circle1518,
         maxLines = 2,
         textAlign = TextAlign.Start,
         modifier = modifier,
@@ -131,7 +131,7 @@ private fun ProductColor(
     Text(
         text = stringResource(R.string.key_value, stringResource(R.string.color), colorName),
         color = UiKitTheme.colors.primaryContentColor,
-        style = UiKitTheme.typography.productCardHorizontalKeyValue,
+        style = UiKitTheme.typography.circle1316,
         maxLines = 1,
         textAlign = TextAlign.Start,
         modifier = modifier,
@@ -148,7 +148,7 @@ private fun ProductPrice(
     ) {
         ProductPrice(
             price = product.price,
-            textStyle = UiKitTheme.typography.productCardHorizontalPrice,
+            textStyle = UiKitTheme.typography.circle1614,
         )
         Spacer(modifier = Modifier.width(8.dp))
         DiscountBadge(
@@ -169,7 +169,7 @@ private fun SingleProductSize(
             selectedSize?.name.orEmpty()
         ),
         color = UiKitTheme.colors.primaryContentColor,
-        style = UiKitTheme.typography.productCardHorizontalKeyValue,
+        style = UiKitTheme.typography.circle1316,
         maxLines = 1,
         textAlign = TextAlign.Start,
         modifier = modifier,
@@ -195,7 +195,7 @@ fun PickSizeButton(
             Text(
                 text = state,
                 color = UiKitTheme.colors.primaryContentColor,
-                style = UiKitTheme.typography.dropdownButton,
+                style = UiKitTheme.typography.circle1718,
                 maxLines = 1,
                 textAlign = TextAlign.Start,
             )

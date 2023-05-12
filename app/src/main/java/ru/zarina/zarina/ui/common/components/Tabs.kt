@@ -49,7 +49,7 @@ fun <T> Tabs(
             Text(
                 text = textResolver(item),
                 color = UiKitTheme.colors.primaryContentColor,
-                style = UiKitTheme.typography.tabsHeader,
+                style = UiKitTheme.typography.circle1718,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()

@@ -73,7 +73,7 @@ private fun Header(
 ) {
     Text(
         text = stringResource(id = R.string.select_size_appeal),
-        style = UiKitTheme.typography.sizePickerHeader,
+        style = UiKitTheme.typography.circle1718bold,
         textAlign = TextAlign.Start,
         modifier = modifier
     )
@@ -94,7 +94,7 @@ private fun SizeItem(
     ) {
         Text(
             text = size.name,
-            style = UiKitTheme.typography.sizePickerItem,
+            style = UiKitTheme.typography.circle1718,
             textAlign = TextAlign.Start,
             modifier = modifier
         )

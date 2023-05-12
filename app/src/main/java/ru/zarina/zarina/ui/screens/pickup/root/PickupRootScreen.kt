@@ -107,7 +107,7 @@ private fun CityPicker(
     ) {
         Text(
             text = city?.name.orEmpty(),
-            style = UiKitTheme.typography.dropdownButton,
+            style = UiKitTheme.typography.circle1718,
             color = UiKitTheme.colors.primaryContentColor,
             textAlign = TextAlign.Start,
             maxLines = 1,

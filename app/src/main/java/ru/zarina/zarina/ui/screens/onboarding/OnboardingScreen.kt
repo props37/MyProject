@@ -341,7 +341,7 @@ fun SelectCity(
         Spacer(modifier = Modifier.height(32.dp))
         Text(
             text = stringResource(R.string.select_your_city),
-            style = UiKitTheme.typography.onboardingHeader,
+            style = UiKitTheme.typography.circle2028,
             color = UiKitTheme.colors.primaryContentColor,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -349,7 +349,7 @@ fun SelectCity(
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = stringResource(R.string.to_see_in_your_city),
-            style = UiKitTheme.typography.onboardingBody,
+            style = UiKitTheme.typography.circle1718,
             color = UiKitTheme.colors.primaryContentColor,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -392,7 +392,7 @@ fun SelectionResult(
         Spacer(modifier = Modifier.weight(1f))
         Text(
             text = stringResource(R.string.is_your_city, city?.name.orEmpty()),
-            style = UiKitTheme.typography.onboardingHeader,
+            style = UiKitTheme.typography.circle2028,
             color = UiKitTheme.colors.primaryContentColor,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp),

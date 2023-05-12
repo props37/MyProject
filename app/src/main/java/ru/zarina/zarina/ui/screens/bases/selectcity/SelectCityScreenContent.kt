@@ -194,7 +194,7 @@ private fun CityHeader(
     )
     Text(
         text = text,
-        style = UiKitTheme.typography.listHeaderItem,
+        style = UiKitTheme.typography.circle2026,
         color = UiKitTheme.colors.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = modifier
@@ -217,7 +217,7 @@ private fun CitySimpleItem(
     )
     Text(
         text = city.name,
-        style = UiKitTheme.typography.listRegularItem,
+        style = UiKitTheme.typography.circle1618,
         color = UiKitTheme.colors.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = modifier.padding(16.dp),
@@ -232,14 +232,14 @@ private fun CityExtendedItem(
     Column(modifier = modifier.padding(16.dp)) {
         Text(
             text = city.name,
-            style = UiKitTheme.typography.listRegularItem,
+            style = UiKitTheme.typography.circle1618,
             color = UiKitTheme.colors.primaryContentColor,
             textAlign = TextAlign.Start,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = city.region.orEmpty(),
-            style = UiKitTheme.typography.listRegularItemSubtitle,
+            style = UiKitTheme.typography.circle1316,
             color = UiKitTheme.colors.listItemSubtitle,
             textAlign = TextAlign.Start,
         )
@@ -294,7 +294,7 @@ private fun SearchBar(
             ) {
                 Text(
                     text = stringResource(R.string.city_search),
-                    style = UiKitTheme.typography.hint,
+                    style = UiKitTheme.typography.circle1518,
                     color = UiKitTheme.colors.hint,
                     textAlign = TextAlign.Start,
                     maxLines = 1,
@@ -303,7 +303,7 @@ private fun SearchBar(
             BasicTextField(
                 value = query,
                 onValueChange = { onQueryChange(it) },
-                textStyle = UiKitTheme.typography.input.copy(color = UiKitTheme.colors.primaryContentColor),
+                textStyle = UiKitTheme.typography.circle1518.copy(color = UiKitTheme.colors.primaryContentColor),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
             )
