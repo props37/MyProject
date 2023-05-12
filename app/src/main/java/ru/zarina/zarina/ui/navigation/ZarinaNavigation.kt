@@ -16,7 +16,7 @@ import ru.zarina.zarina.ui.navigation.destinations.Pickup
 import ru.zarina.zarina.ui.screens.home.HomeScreen
 import ru.zarina.zarina.ui.screens.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screens.pickup.root.PickupRootScreen
-import ru.zarina.zarina.ui.screens.pickup.selectshopcity.SelectPickupCityScreen
+import ru.zarina.zarina.ui.screens.pickup.selectpickupcity.SelectPickupCityScreen
 import ru.zarina.zarina.ui.screens.pickup.selectsize.SelectSizeScreen
 import ru.zarina.zarina.ui.screens.product.ProductScreen
 import ru.zarina.zarina.ui.screens.selectcity.SelectCityScreen

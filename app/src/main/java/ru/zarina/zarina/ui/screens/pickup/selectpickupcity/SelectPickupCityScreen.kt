@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.pickup.selectshopcity
+package ru.zarina.zarina.ui.screens.pickup.selectpickupcity
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

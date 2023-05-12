@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.pickup.selectshopcity
+package ru.zarina.zarina.ui.screens.pickup.selectpickupcity
 
 import ru.zarina.zarina.usecase.shop.GetPickupCitiesUseCase
 import ru.zarina.zarina.utils.clean.invoke
