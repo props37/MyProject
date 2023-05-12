@@ -1,6 +1,7 @@
 package ru.zarina.zarina.data.product.remote
 
 import ru.zarina.zarina.data.product.remote.api.IZarinaProductApi
+import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Product
 import javax.inject.Inject
 
@@ -16,4 +17,8 @@ class ZarinaProductRemoteSource @Inject constructor(
 
     override suspend fun getDeliveryAvailability(product: Product) =
         checkNotNull(api.getDeliveryInfo(product.id.value).toDomain())
+
+    override suspend fun getOffers(product: Product, city: City) =
+        api.getSizes(product.id.value, city.id.id).mapNotNull { it.toDomain() }
+
 }

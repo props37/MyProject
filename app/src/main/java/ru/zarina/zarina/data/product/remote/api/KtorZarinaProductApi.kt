@@ -9,6 +9,7 @@ import io.ktor.http.HttpStatusCode
 import ru.zarina.zarina.data.product.remote.api.dto.CompleteLookDto
 import ru.zarina.zarina.data.product.remote.api.dto.DeliveryInfoDto
 import ru.zarina.zarina.data.product.remote.api.dto.ProductDto
+import ru.zarina.zarina.data.product.remote.api.dto.SizeDto
 import ru.zarina.zarina.di.Authorization
 import ru.zarina.zarina.domain.exception.NotFoundException
 import javax.inject.Inject
@@ -39,6 +40,11 @@ class KtorZarinaProductApi @Inject constructor(
 
     override suspend fun getDeliveryInfo(id: String): DeliveryInfoDto {
         val response = client.get("/api/products/$id/delivery-info")
+        return response.body()
+    }
+
+    override suspend fun getSizes(productId: String, cityId: String): List<SizeDto> {
+        val response = client.get("/api/products/stock/$productId/city/$cityId")
         return response.body()
     }
 }
