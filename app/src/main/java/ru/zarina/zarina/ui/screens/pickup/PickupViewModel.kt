@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.Stock
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
 import ru.zarina.zarina.utils.coroutine.mapState
 import ru.zarina.zarina.utils.isNetworkException
@@ -57,8 +58,13 @@ class PickupViewModel @Inject constructor(
     private val _selectedOffer = MutableStateFlow<Offer?>(null)
     val selectedOffer = _selectedOffer.asStateFlow()
 
+    private val _stocks = MutableStateFlow<List<Stock>>(emptyList())
+    val stocks = _stocks
+        .mapState(viewModelScope) { it.toPersistentList() }
+
     init {
         loadUserCity()
+        setupStockLoading()
         setupSizeUpdates()
         setupProductLoading()
     }
@@ -99,6 +105,17 @@ class PickupViewModel @Inject constructor(
         viewModelScope.launch {
             _city.value = interactor.getCity().getOrNull()
         }
+    }
+
+    private fun setupStockLoading() {
+        combine(_selectedOffer, _city) { offer, city ->
+            if (offer == null || city == null) return@combine
+            // TODO loader
+            // TODO error
+            interactor.getStocks(offer, city)
+                .onSuccess { _stocks.value = it }
+        }
+            .launchIn(viewModelScope)
     }
 
     private fun setupSizeUpdates() {
