@@ -1,6 +1,8 @@
 package ru.zarina.zarina.data.shop.remote
 
 import ru.zarina.zarina.data.shop.remote.api.IZarinaShopApi
+import ru.zarina.zarina.data.shop.remote.api.dto.toCountries
+import ru.zarina.zarina.data.shop.remote.api.dto.toShops
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Country
 import ru.zarina.zarina.domain.Shop

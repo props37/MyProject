@@ -1,7 +1,7 @@
 package ru.zarina.zarina.data.shop.remote.api
 
-import ru.zarina.zarina.data.shop.remote.api.dto.ShopsResponseDto
+import ru.zarina.zarina.data.shop.remote.api.dto.ShopCountryDto
 
 interface IZarinaShopApi {
-    suspend fun getShops(): ShopsResponseDto
+    suspend fun getShops(): List<ShopCountryDto>
 }

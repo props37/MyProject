@@ -5,7 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import ru.zarina.zarina.data.shop.remote.api.dto.ShopsResponseDto
+import ru.zarina.zarina.data.shop.remote.api.dto.ShopCountryDto
 import ru.zarina.zarina.di.Authorization
 import javax.inject.Inject
 
@@ -15,16 +15,16 @@ class KtorZarinaShopApi @Inject constructor(
 ) : IZarinaShopApi {
 
     private val shopsRequestMutex = Mutex()
-    private var cachedShopsResponse: ShopsResponseDto? = null
+    private var cachedShopsResponse: List<ShopCountryDto>? = null
 
-    override suspend fun getShops(): ShopsResponseDto {
+    override suspend fun getShops(): List<ShopCountryDto> {
         shopsRequestMutex.withLock {
             cachedShopsResponse?.let { return it }
 
             val response = client.get("/api/shops")
-            val body = response.body<ShopsResponseDto>()
+            val body = response.body<List<ShopCountryDto>?>()
             cachedShopsResponse = body
-            return body
+            return body.orEmpty()
         }
     }
 
