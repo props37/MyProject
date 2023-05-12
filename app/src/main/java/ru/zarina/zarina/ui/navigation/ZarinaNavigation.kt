@@ -89,6 +89,9 @@ fun ZarinaNavigation(
                         showSelectSize = {
                             navController.navigate(Pickup.SelectSize.route)
                         },
+                        showSelectCity = {
+                            navController.navigate(Pickup.SelectCity.route)
+                        },
                         goBack = {
                             navController.popBackStack(Pickup.routeSchema, true)
                         }

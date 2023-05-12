@@ -107,6 +107,7 @@ private fun CityPicker(
 fun PickupRootScreen(
     parentEntry: NavBackStackEntry,
     showSelectSize: () -> Unit,
+    showSelectCity: () -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel: PickupRootViewModel = hiltViewModel()
@@ -120,6 +121,7 @@ fun PickupRootScreen(
     PickupRootScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showSelectSize = showSelectSize,
+        showSelectCity = showSelectCity,
         goBack = goBack,
     )
 
@@ -139,6 +141,7 @@ fun PickupRootScreen(
 fun PickupRootScreenBehavior(
     sideEffects: Flow<PickupRootViewModel.SideEffect>,
     showSelectSize: () -> Unit,
+    showSelectCity: () -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
@@ -146,7 +149,7 @@ fun PickupRootScreenBehavior(
             when (effect) {
                 PickupRootViewModel.SideEffect.GoBack -> goBack()
                 PickupRootViewModel.SideEffect.ShowSelectSize -> showSelectSize()
-                PickupRootViewModel.SideEffect.ShowSelectCity -> TODO()
+                PickupRootViewModel.SideEffect.ShowSelectCity -> showSelectCity()
             }
         }
     }
