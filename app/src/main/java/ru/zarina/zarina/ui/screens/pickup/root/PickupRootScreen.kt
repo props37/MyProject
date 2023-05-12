@@ -21,8 +21,8 @@ import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.Size
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.components.DropdownBar
 import ru.zarina.zarina.ui.common.components.HorizontalProductCard
@@ -39,7 +39,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 fun PickupRootScreenContent(
     city: City?,
     product: Product?,
-    selectedSize: Size?,
+    selectedOffer: Offer?,
     onBackClick: () -> Unit,
     onSelectCityClick: () -> Unit,
     onSelectSizeClick: () -> Unit,
@@ -74,7 +74,7 @@ fun PickupRootScreenContent(
                 )
                 HorizontalProductCard(
                     product = product,
-                    selectedSize = selectedSize,
+                    selectedSize = selectedOffer?.size,
                     onSelectSizeClick = onSelectSizeClick,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -115,7 +115,7 @@ fun PickupRootScreen(
 
     val city by parentViewModel.city.collectAsStateWithLifecycle()
     val product by parentViewModel.product.collectAsStateWithLifecycle()
-    val selectedSize by parentViewModel.selectedSize.collectAsStateWithLifecycle()
+    val selectedOffer by parentViewModel.selectedOffer.collectAsStateWithLifecycle()
     val errorType by parentViewModel.errorType.collectAsStateWithLifecycle()
 
     PickupRootScreenBehavior(
@@ -128,7 +128,7 @@ fun PickupRootScreen(
     PickupRootScreenContent(
         city = city,
         product = product,
-        selectedSize = selectedSize,
+        selectedOffer = selectedOffer,
         onBackClick = viewModel::onBackClick,
         onSelectCityClick = viewModel::onSelectCityClick,
         onSelectSizeClick = viewModel::onSelectSizeClick,
@@ -165,7 +165,7 @@ fun PickupRootScreenContentPreview(
         PickupRootScreenContent(
             city = City.DEFAULT,
             product = product,
-            selectedSize = product.offers.first().size,
+            selectedOffer = product.offers.first(),
             onBackClick = {},
             onSelectCityClick = {},
             onSelectSizeClick = {},

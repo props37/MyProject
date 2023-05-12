@@ -26,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Size
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -37,8 +38,8 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @Composable
 fun SelectSizeScreenContent(
-    sizes: List<Size>,
-    onSizeClick: (Size) -> Unit,
+    offers: List<Offer>,
+    onOfferClick: (Offer) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -55,10 +56,10 @@ fun SelectSizeScreenContent(
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState()),
         ) {
-            sizes.forEach { size ->
+            offers.forEach { offer ->
                 SizeItem(
-                    size = size,
-                    onClick = { onSizeClick(size) },
+                    size = offer.size,
+                    onClick = { onOfferClick(offer) },
                 )
             }
             Spacer(modifier = Modifier.navigationBarsPadding())
@@ -108,7 +109,7 @@ fun SelectSizeScreen(
     val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
     val viewModel = hiltViewModel<SelectSizeViewModel>()
 
-    val sizes by parentViewModel.sizes.collectAsStateWithLifecycle()
+    val sizes by parentViewModel.offers.collectAsStateWithLifecycle()
 
     SelectSizeScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -116,9 +117,9 @@ fun SelectSizeScreen(
     )
 
     SelectSizeScreenContent(
-        sizes = sizes,
-        onSizeClick = {
-            parentViewModel.onSizeClick(it)
+        offers = sizes,
+        onOfferClick = {
+            parentViewModel.onOfferClick(it)
             viewModel.onSizeClick()
         },
     )
@@ -146,11 +147,10 @@ fun SelectSizeScreenContentPreview(
     @PreviewParameter(ProductProvider::class, limit = 1)
     product: Product,
 ) {
-    val sizes = product.offers.map { it.size }.toList()
     ZarinaTheme {
         SelectSizeScreenContent(
-            sizes = sizes,
-            onSizeClick = {},
+            offers = product.offers,
+            onOfferClick = {},
         )
     }
 }

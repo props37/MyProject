@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.Size
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
 import ru.zarina.zarina.utils.coroutine.mapState
 import ru.zarina.zarina.utils.isNetworkException
@@ -49,16 +48,14 @@ class PickupViewModel @Inject constructor(
     val product = _product.asStateFlow()
 
     private val _offers = MutableStateFlow<List<Offer>>(emptyList())
-    val sizes = _offers
+    val offers = _offers
         .map { offers ->
-            offers
-                .map { offer -> offer.size }
-                .toPersistentList()
+            offers.toPersistentList()
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
-    private val _selectedSize = MutableStateFlow<Size?>(null)
-    val selectedSize = _selectedSize.asStateFlow()
+    private val _selectedOffer = MutableStateFlow<Offer?>(null)
+    val selectedOffer = _selectedOffer.asStateFlow()
 
     init {
         loadUserCity()
@@ -66,8 +63,8 @@ class PickupViewModel @Inject constructor(
         setupProductLoading()
     }
 
-    fun onSizeClick(size: Size) {
-        _selectedSize.value = size
+    fun onOfferClick(offer: Offer) {
+        _selectedOffer.value = offer
     }
 
     fun onRefreshClick() {
@@ -116,11 +113,11 @@ class PickupViewModel @Inject constructor(
 
         _offers
             .onEach { offers ->
-                val selectedSizeName = _selectedSize.value?.name
+                val selectedSizeName = _selectedOffer.value?.size?.name
                 val sameNameOffer = offers.find { it.size.name == selectedSizeName }
                 val availableOffer = offers.find { it.isAvailable }
                 val firstOffer = offers.firstOrNull()
-                _selectedSize.value = (sameNameOffer ?: availableOffer ?: firstOffer)?.size
+                _selectedOffer.value = sameNameOffer ?: availableOffer ?: firstOffer
             }
             .launchIn(viewModelScope)
     }
