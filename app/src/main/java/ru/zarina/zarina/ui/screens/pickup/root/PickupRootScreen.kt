@@ -151,6 +151,7 @@ private fun ShopListPager(
     HorizontalPager(
         pageCount = tabs.size,
         state = pagerState,
+        beyondBoundsPageCount = 1,
         userScrollEnabled = false,
     ) {
         when (it) {
