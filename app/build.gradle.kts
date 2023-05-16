@@ -109,6 +109,8 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.timber)
     implementation(libs.google.play.services.location)
+    implementation(libs.google.play.services.maps.core)
+    implementation(libs.google.play.services.maps.compose)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.performance)
