@@ -54,4 +54,5 @@
     <string name="few">Мало</string>
     <string name="enough">Достаточно</string>
     <string name="many">Много</string>
+    <string name="pickup_at_shop">Забрать в магазине</string>
 </resources>

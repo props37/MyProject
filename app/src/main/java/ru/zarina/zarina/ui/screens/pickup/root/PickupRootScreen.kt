@@ -55,6 +55,7 @@ fun PickupRootScreenContent(
     onBackClick: () -> Unit,
     onSelectCityClick: () -> Unit,
     onSelectSizeClick: () -> Unit,
+    onStockPickupClick: (Stock) -> Unit,
     errorType: PickupViewModel.ErrorType?,
     onRefreshClick: () -> Unit,
 ) {
@@ -92,6 +93,7 @@ fun PickupRootScreenContent(
                 )
                 ShopListPager(
                     stocks = stocks,
+                    onStockPickupClick = onStockPickupClick,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -123,6 +125,7 @@ private fun CityPicker(
 @Composable
 private fun ShopListPager(
     stocks: ImmutableList<Stock>,
+    onStockPickupClick: (Stock) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -153,6 +156,7 @@ private fun ShopListPager(
         when (it) {
             ShopListTab.LIST.ordinal -> ShopList(
                 stocks = stocks,
+                onStockClick = onStockPickupClick,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -197,6 +201,7 @@ fun PickupRootScreen(
         onBackClick = viewModel::onBackClick,
         onSelectCityClick = viewModel::onSelectCityClick,
         onSelectSizeClick = viewModel::onSelectSizeClick,
+        onStockPickupClick = parentViewModel::onStockPickupClick,
         onRefreshClick = parentViewModel::onRefreshClick,
         errorType = errorType,
     )
@@ -235,6 +240,7 @@ fun PickupRootScreenContentPreview(
             onBackClick = {},
             onSelectCityClick = {},
             onSelectSizeClick = {},
+            onStockPickupClick = {},
             onRefreshClick = {},
             errorType = null,
         )

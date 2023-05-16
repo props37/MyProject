@@ -73,6 +73,10 @@ class PickupViewModel @Inject constructor(
         _selectedOffer.value = offer
     }
 
+    fun onStockPickupClick(stock: Stock) {
+        // TODO
+    }
+
     fun onRefreshClick() {
         loadProduct(productId.value)
     }
