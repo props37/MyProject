@@ -49,4 +49,5 @@
     <string name="select_size_appeal">Выберите размер</string>
     <string name="list">Список</string>
     <string name="map">Карта</string>
+    <string name="working_schedule_template">Время работы: %1$s</string>
 </resources>
