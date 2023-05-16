@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Stock
+import ru.zarina.zarina.ui.common.utils.domain.getStringResource
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
@@ -54,9 +55,16 @@ private fun ShopItem(
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = stringResource(R.string.working_schedule_template, stock.shop.address),
+            text = stringResource(R.string.working_schedule_template, stock.shop.schedule),
             style = UiKitTheme.typography.circle1518,
             color = UiKitTheme.colors.listItemSubtitle,
+            textAlign = TextAlign.Start,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(stock.amount.getStringResource()),
+            style = UiKitTheme.typography.circle1718,
+            color = UiKitTheme.colors.primaryAccentColor,
             textAlign = TextAlign.Start,
         )
     }

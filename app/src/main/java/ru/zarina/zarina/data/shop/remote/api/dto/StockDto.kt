@@ -10,7 +10,7 @@ data class StockDto(
     @SerialName("shop")
     val shop: ShopDto? = null,
     @SerialName("amount")
-    val amount: String? = null,
+    val amount: StockAmountDto = StockAmountDto.LAST_CHANCE,
 ) {
     fun toDomain(): Stock? {
         val shop = shop?.toDomain()
@@ -18,7 +18,7 @@ data class StockDto(
             ApiContract.isNotNull(shop, "shop")
             && ApiContract.isNotNull(amount, "amount")
         )
-            return Stock(shop, amount)
+            return Stock(shop, amount.toDomain())
         else
             null
     }

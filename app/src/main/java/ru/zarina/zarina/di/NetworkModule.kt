@@ -44,6 +44,7 @@ class NetworkModule {
     fun providesJson() = Json {
         isLenient = true
         ignoreUnknownKeys = true
+        coerceInputValues = true
     }
 
     @Authorization(Authorization.Type.NONE)
