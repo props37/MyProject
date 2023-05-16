@@ -3,11 +3,15 @@ package ru.zarina.zarina.ui.screens.pickup.root.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,6 +33,7 @@ fun ShopList(
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
+        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
         modifier = modifier,
     ) {
         itemsIndexed(stocks) { index, stock ->
@@ -36,6 +41,12 @@ fun ShopList(
                 stock = stock,
                 onClick = { onStockClick(stock) },
             )
+            if (index != stocks.lastIndex)
+                Divider(
+                    thickness = 1.dp,
+                    color = UiKitTheme.colors.listDivider,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
         }
     }
 }
