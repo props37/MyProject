@@ -161,10 +161,13 @@ private fun ShopListPager(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            ShopListTab.MAP.ordinal -> ShopMap(
-                stocks = stocks,
-                modifier = Modifier.fillMaxWidth()
-            )
+            ShopListTab.MAP.ordinal -> {
+                ShopMap(
+                    stocks = stocks,
+                    isVisibleForUser = pagerState.currentPage == ShopListTab.MAP.ordinal,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }
