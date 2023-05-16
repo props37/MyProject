@@ -19,8 +19,8 @@ class KtorZarinaShopApi @Inject constructor(
         return body.orEmpty()
     }
 
-    override suspend fun getStocks(offerId: String, cityId: String): List<StockDto> {
-        val response = client.get("/api/products/stock/$offerId/city/$cityId")
+    override suspend fun getStocks(offerBarcode: String, cityId: String): List<StockDto> {
+        val response = client.get("/api/products/stock/offers/$offerBarcode/city/$cityId")
         val body = response.body<List<StockDto>?>()
         return body.orEmpty()
     }
