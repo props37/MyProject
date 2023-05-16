@@ -19,6 +19,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Stock
 import ru.zarina.zarina.ui.common.utils.domain.toLatLng
@@ -27,7 +28,7 @@ import ru.zarina.zarina.utils.maps.getBitmapDescriptor
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ShopMap(
-    stocks: List<Stock>,
+    stocks: ImmutableList<Stock>,
     isVisibleForUser: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -49,7 +50,6 @@ fun ShopMap(
         modifier = modifier.fillMaxSize()
     ) {
         val properties = MapProperties(
-            isBuildingEnabled = true,
             isMyLocationEnabled = anyLocationPermissionState.permissions.any { it.status.isGranted }
         )
         GoogleMap(
