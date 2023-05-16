@@ -1,40 +1,61 @@
 package ru.zarina.zarina.ui.screens.pickup.root
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.Size
+import ru.zarina.zarina.domain.Stock
 import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.components.DropdownBar
 import ru.zarina.zarina.ui.common.components.HorizontalProductCard
+import ru.zarina.zarina.ui.common.components.Tabs
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
+import ru.zarina.zarina.ui.screens.pickup.root.components.ShopList
+import ru.zarina.zarina.ui.screens.pickup.root.components.ShopMap
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PickupRootScreenContent(
+    city: City?,
     product: Product?,
-    selectedSize: Size?,
+    selectedOffer: Offer?,
+    stocks: ImmutableList<Stock>,
     onBackClick: () -> Unit,
+    onSelectCityClick: () -> Unit,
     onSelectSizeClick: () -> Unit,
+    onStockPickupClick: (Stock) -> Unit,
     errorType: PickupViewModel.ErrorType?,
     onRefreshClick: () -> Unit,
 ) {
@@ -60,11 +81,19 @@ fun PickupRootScreenContent(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CityPicker()
+                CityPicker(
+                    city = city,
+                    onClick = onSelectCityClick,
+                )
                 HorizontalProductCard(
                     product = product,
-                    selectedSize = selectedSize,
+                    selectedSize = selectedOffer?.size,
                     onSelectSizeClick = onSelectSizeClick,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                ShopListPager(
+                    stocks = stocks,
+                    onStockPickupClick = onStockPickupClick,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -73,35 +102,106 @@ fun PickupRootScreenContent(
 
 @Composable
 private fun CityPicker(
+    city: City?,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
+    DropdownBar(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = city?.name.orEmpty(),
+            style = UiKitTheme.typography.circle1718,
+            color = UiKitTheme.colors.primaryContentColor,
+            textAlign = TextAlign.Start,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
 }
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ShopListPager(
+    stocks: ImmutableList<Stock>,
+    onStockPickupClick: (Stock) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val tabs = persistentListOf(*ShopListTab.values())
+    val pagerState = rememberPagerState()
+    Tabs(
+        options = tabs,
+        selectedOption = tabs[pagerState.currentPage],
+        textResolver = {
+            val resource = when (it) {
+                ShopListTab.LIST -> R.string.list
+                ShopListTab.MAP -> R.string.map
+            }
+            stringResource(resource)
+        },
+        onOptionClick = {
+            coroutineScope.launch {
+                pagerState.animateScrollToPage(tabs.indexOf(it))
+            }
+        },
+        modifier = modifier
+    )
+    HorizontalPager(
+        pageCount = tabs.size,
+        state = pagerState,
+        userScrollEnabled = false,
+    ) {
+        when (it) {
+            ShopListTab.LIST.ordinal -> ShopList(
+                stocks = stocks,
+                onStockClick = onStockPickupClick,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            ShopListTab.MAP.ordinal -> ShopMap(
+                stocks = stocks,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+private enum class ShopListTab { LIST, MAP }
 
 @Composable
 fun PickupRootScreen(
     parentEntry: NavBackStackEntry,
     showSelectSize: () -> Unit,
+    showSelectCity: () -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel: PickupRootViewModel = hiltViewModel()
     val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
 
+    val city by parentViewModel.city.collectAsStateWithLifecycle()
     val product by parentViewModel.product.collectAsStateWithLifecycle()
-    val selectedSize by parentViewModel.selectedSize.collectAsStateWithLifecycle()
+    val selectedOffer by parentViewModel.selectedOffer.collectAsStateWithLifecycle()
+    val stocks by parentViewModel.stocks.collectAsStateWithLifecycle()
     val errorType by parentViewModel.errorType.collectAsStateWithLifecycle()
 
     PickupRootScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showSelectSize = showSelectSize,
+        showSelectCity = showSelectCity,
         goBack = goBack,
     )
 
     PickupRootScreenContent(
+        city = city,
         product = product,
-        selectedSize = selectedSize,
+        selectedOffer = selectedOffer,
+        stocks = stocks,
         onBackClick = viewModel::onBackClick,
+        onSelectCityClick = viewModel::onSelectCityClick,
         onSelectSizeClick = viewModel::onSelectSizeClick,
+        onStockPickupClick = parentViewModel::onStockPickupClick,
         onRefreshClick = parentViewModel::onRefreshClick,
         errorType = errorType,
     )
@@ -111,6 +211,7 @@ fun PickupRootScreen(
 fun PickupRootScreenBehavior(
     sideEffects: Flow<PickupRootViewModel.SideEffect>,
     showSelectSize: () -> Unit,
+    showSelectCity: () -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
@@ -118,6 +219,7 @@ fun PickupRootScreenBehavior(
             when (effect) {
                 PickupRootViewModel.SideEffect.GoBack -> goBack()
                 PickupRootViewModel.SideEffect.ShowSelectSize -> showSelectSize()
+                PickupRootViewModel.SideEffect.ShowSelectCity -> showSelectCity()
             }
         }
     }
@@ -131,10 +233,14 @@ fun PickupRootScreenContentPreview(
 ) {
     ZarinaTheme {
         PickupRootScreenContent(
+            city = City.DEFAULT,
             product = product,
-            selectedSize = product.offers.first().size,
+            selectedOffer = product.offers.first(),
+            stocks = persistentListOf(),
             onBackClick = {},
+            onSelectCityClick = {},
             onSelectSizeClick = {},
+            onStockPickupClick = {},
             onRefreshClick = {},
             errorType = null,
         )

@@ -1,6 +1,7 @@
 package ru.zarina.zarina.data.product
 
 import ru.zarina.zarina.data.product.remote.IProductRemoteSource
+import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Product
 import javax.inject.Inject
 
@@ -14,4 +15,7 @@ class ProductRepository @Inject constructor(
 
     override suspend fun getDeliveryAvailability(product: Product) =
         remote.getDeliveryAvailability(product)
+
+    override suspend fun getOffers(product: Product, city: City) = remote.getOffers(product, city)
+
 }

@@ -107,7 +107,7 @@ private fun DeliveryInformationHeader(
     }
     Text(
         text = headerColored,
-        style = UiKitTheme.typography.deliveryInformationHeader,
+        style = UiKitTheme.typography.circle1720bold,
         color = UiKitTheme.colors.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = modifier
@@ -134,7 +134,7 @@ private fun DeliveryOption(
         ) {
             Text(
                 text = option.name,
-                style = UiKitTheme.typography.deliveryInformationBody,
+                style = UiKitTheme.typography.circle1518,
                 color = UiKitTheme.colors.primaryContentColor,
                 textAlign = TextAlign.Start,
             )
@@ -147,7 +147,7 @@ private fun DeliveryOption(
             }
             Text(
                 text = stringResource(timeResource),
-                style = UiKitTheme.typography.deliveryInformationBody,
+                style = UiKitTheme.typography.circle1518,
                 color = UiKitTheme.colors.primaryContentColor,
                 textAlign = TextAlign.Start,
             )

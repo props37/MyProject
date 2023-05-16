@@ -88,4 +88,7 @@ object Pickup : Graph<Pickup.Arguments>() {
     }
 
     object SelectSize : SimpleDestination(BaseRoute.SELECT_SIZE)
+
+    object SelectCity : SimpleDestination(BaseRoute.SELECT_PICKUP_CITY)
+
 }

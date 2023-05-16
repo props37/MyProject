@@ -52,154 +52,67 @@ val LocalUiKitColors = staticCompositionLocalOf { UiKitColors() }
 
 @Immutable
 data class UiKitTypography(
-    val button: TextStyle = TextStyle(
+    val circle1720bold: TextStyle = TextStyle(
         fontSize = 17.sp,
         lineHeight = 20.sp,
         fontWeight = FontWeight.Bold,
         fontFamily = Fonts.Families.Circle
     ),
-    val snackbar: TextStyle = TextStyle(
+    val circle1420: TextStyle = TextStyle(
         fontSize = 14.sp,
         lineHeight = 20.sp,
         fontFamily = Fonts.Families.Circle
     ),
-    val onboardingHeader: TextStyle = TextStyle(
+    val circle2028: TextStyle = TextStyle(
         fontSize = 20.sp,
         lineHeight = 28.sp,
         fontFamily = Fonts.Families.Circle
     ),
-    val onboardingBody: TextStyle = TextStyle(
+    val circle1718: TextStyle = TextStyle(
         fontSize = 17.sp,
         lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle
     ),
-    val input: TextStyle = TextStyle(
+    val circle1518: TextStyle = TextStyle(
         fontSize = 15.sp,
         lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle
     ),
-    val hint: TextStyle = TextStyle(
-        fontSize = 15.sp,
-        lineHeight = 18.sp,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val screenToolbarTitle: TextStyle = TextStyle(
-        fontSize = 17.sp,
-        lineHeight = 18.sp,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val screenToolbarSubtitle: TextStyle = TextStyle(
+    val circle811: TextStyle = TextStyle(
         fontSize = 8.sp,
         lineHeight = 11.sp,
         fontFamily = Fonts.Families.Circle
     ),
-    val listHeaderItem: TextStyle = TextStyle(
+    val circle2026: TextStyle = TextStyle(
         fontSize = 20.sp,
         lineHeight = 26.sp,
         fontFamily = Fonts.Families.Circle
     ),
-    val listRegularItem: TextStyle = TextStyle(
+    val circle1618: TextStyle = TextStyle(
         fontSize = 16.sp,
         lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle
     ),
-    val listRegularItemSubtitle: TextStyle = TextStyle(
+    val circle1316: TextStyle = TextStyle(
         fontSize = 13.sp,
         lineHeight = 16.sp,
         fontFamily = Fonts.Families.Circle
     ),
-    val errorPlaceholderTitle: TextStyle = TextStyle(
-        fontSize = 17.sp,
-        lineHeight = 20.sp,
-        fontWeight = FontWeight.Bold,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val errorPlaceholderBody: TextStyle = TextStyle(
-        fontSize = 15.sp,
-        lineHeight = 18.sp,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val productPrice: TextStyle = TextStyle(
-        fontSize = 20.sp,
-        lineHeight = 28.sp,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val productBadge: TextStyle = TextStyle(
+    val circle1012: TextStyle = TextStyle(
         fontSize = 10.sp,
         lineHeight = 12.sp,
         fontFamily = Fonts.Families.Circle
     ),
-    val productDetailsHeader: TextStyle = TextStyle(
-        fontSize = 17.sp,
-        lineHeight = 18.sp,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val productDetailsContent: TextStyle = TextStyle(
-        fontSize = 15.sp,
-        lineHeight = 18.sp,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val productCardName: TextStyle = TextStyle(
-        fontSize = 15.sp,
-        lineHeight = 18.sp,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val productCardPrice: TextStyle = TextStyle(
+    val circle1614: TextStyle = TextStyle(
         fontSize = 16.sp,
         lineHeight = 14.sp,
         fontFamily = Fonts.Families.Circle
     ),
-    val productCardTag: TextStyle = TextStyle(
-        fontSize = 8.sp,
-        lineHeight = 11.sp,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val productCardColorCount: TextStyle = TextStyle(
-        fontSize = 15.sp,
-        lineHeight = 18.sp,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val productCardHorizontalKeyValue: TextStyle = TextStyle(
-        fontSize = 13.sp,
-        lineHeight = 16.sp,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val productCardHorizontalPrice: TextStyle = TextStyle(
-        fontSize = 16.sp,
-        lineHeight = 14.sp,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val productSectionHeader: TextStyle = TextStyle(
-        fontSize = 20.sp,
-        lineHeight = 26.sp,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val deliveryInformationHeader: TextStyle = TextStyle(
-        fontSize = 17.sp,
-        lineHeight = 20.sp,
-        fontWeight = FontWeight.Bold,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val deliveryInformationBody: TextStyle = TextStyle(
-        fontSize = 15.sp,
-        lineHeight = 18.sp,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val dropdownButton: TextStyle = TextStyle(
-        fontSize = 17.sp,
-        lineHeight = 18.sp,
-        fontFamily = Fonts.Families.Circle
-    ),
-    val sizePickerHeader: TextStyle = TextStyle(
+    val circle1718bold: TextStyle = TextStyle(
         fontSize = 17.sp,
         lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle,
         fontWeight = FontWeight.Bold,
-    ),
-    val sizePickerItem: TextStyle = TextStyle(
-        fontSize = 17.sp,
-        lineHeight = 18.sp,
-        fontFamily = Fonts.Families.Circle,
     ),
 )
 

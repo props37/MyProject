@@ -204,7 +204,7 @@ private fun ToolbarTitle(
     ) {
         Text(
             text = product?.name.orEmpty(),
-            style = UiKitTheme.typography.screenToolbarTitle,
+            style = UiKitTheme.typography.circle1718,
             color = UiKitTheme.colors.primaryContentColor,
             maxLines = 1,
         )
@@ -212,7 +212,7 @@ private fun ToolbarTitle(
         if (attribute != null) {
             Text(
                 text = attribute.uppercase(),
-                style = UiKitTheme.typography.screenToolbarSubtitle,
+                style = UiKitTheme.typography.circle811,
                 color = UiKitTheme.colors.primaryContentColor,
                 maxLines = 1,
             )

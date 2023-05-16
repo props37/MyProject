@@ -16,6 +16,7 @@ import ru.zarina.zarina.ui.navigation.destinations.Pickup
 import ru.zarina.zarina.ui.screens.home.HomeScreen
 import ru.zarina.zarina.ui.screens.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screens.pickup.root.PickupRootScreen
+import ru.zarina.zarina.ui.screens.pickup.selectpickupcity.SelectPickupCityScreen
 import ru.zarina.zarina.ui.screens.pickup.selectsize.SelectSizeScreen
 import ru.zarina.zarina.ui.screens.product.ProductScreen
 import ru.zarina.zarina.ui.screens.selectcity.SelectCityScreen
@@ -88,6 +89,9 @@ fun ZarinaNavigation(
                         showSelectSize = {
                             navController.navigate(Pickup.SelectSize.route)
                         },
+                        showSelectCity = {
+                            navController.navigate(Pickup.SelectCity.route)
+                        },
                         goBack = {
                             navController.popBackStack(Pickup.routeSchema, true)
                         }
@@ -100,6 +104,16 @@ fun ZarinaNavigation(
                         parentEntry = parentEntry,
                         goBack = {
                             navController.popBackStack(Pickup.SelectSize.routeSchema, true)
+                        }
+                    )
+                }
+                composableDestination(Pickup.SelectCity) {
+                    val parentEntry =
+                        remember(it) { navController.getBackStackEntry(Pickup.routeSchema) }
+                    SelectPickupCityScreen(
+                        parentEntry = parentEntry,
+                        goBack = {
+                            navController.popBackStack(Pickup.SelectCity.routeSchema, true)
                         }
                     )
                 }

@@ -8,4 +8,5 @@ enum class BaseRoute {
     GRAPH_PICKUP,
     PICKUP,
     SELECT_SIZE,
+    SELECT_PICKUP_CITY,
 }

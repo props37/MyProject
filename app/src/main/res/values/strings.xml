@@ -47,4 +47,12 @@
     <string name="dropdown">Выпадающее меню</string>
     <string name="select_size">Выбрать размер</string>
     <string name="select_size_appeal">Выберите размер</string>
+    <string name="list">Список</string>
+    <string name="map">Карта</string>
+    <string name="working_schedule_template">Время работы: %1$s</string>
+    <string name="last_chance">Последний шанс</string>
+    <string name="few">Мало</string>
+    <string name="enough">Достаточно</string>
+    <string name="many">Много</string>
+    <string name="pickup_at_shop">Забрать в магазине</string>
 </resources>

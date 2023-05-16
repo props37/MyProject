@@ -14,7 +14,7 @@ fun SectionHeader(
 ) {
     Text(
         text = text.uppercase(),
-        style = UiKitTheme.typography.productCardName,
+        style = UiKitTheme.typography.circle1518,
         modifier = modifier.padding(vertical = 16.dp),
     )
 }

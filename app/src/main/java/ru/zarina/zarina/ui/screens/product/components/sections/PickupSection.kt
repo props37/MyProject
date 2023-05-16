@@ -36,7 +36,7 @@ fun PickupSection(
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = stringResource(id = R.string.find_and_pickup),
-                style = UiKitTheme.typography.button,
+                style = UiKitTheme.typography.circle1720bold,
                 color = UiKitTheme.colors.secondaryButtonForeground,
                 maxLines = 1,
             )

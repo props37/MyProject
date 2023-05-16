@@ -1,8 +1,10 @@
 package ru.zarina.zarina.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
@@ -10,6 +12,8 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.client.engine.cio.CIOEngineConfig
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.auth.providers.BearerTokens
+import io.ktor.client.plugins.cache.HttpCache
+import io.ktor.client.plugins.cache.storage.FileStorage
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -27,6 +31,7 @@ import ru.zarina.zarina.usecase.authorization.ClearDeviceAuthorizationTokenUseCa
 import ru.zarina.zarina.usecase.authorization.GetAuthorizationTokenUseCase
 import ru.zarina.zarina.utils.clean.invoke
 import timber.log.Timber
+import java.io.File
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -39,30 +44,33 @@ class NetworkModule {
     fun providesJson() = Json {
         isLenient = true
         ignoreUnknownKeys = true
+        coerceInputValues = true
     }
 
     @Authorization(Authorization.Type.NONE)
     @Singleton
     @Provides
     fun providesHttpClient(
+        @ApplicationContext context: Context,
         json: Json,
         headerProvider: UserAgentHeaderProvider,
     ) = HttpClient(CIO) {
         baseConfig(json)
-        baseZarinaConfig(headerProvider)
+        baseZarinaConfig(context, headerProvider)
     }
 
     @Authorization(Authorization.Type.TOKEN)
     @Singleton
     @Provides
     fun providesTokenAuthorizationHttpClient(
+        @ApplicationContext context: Context,
         getAuthorizationToken: GetAuthorizationTokenUseCase,
         clearDeviceAuthorizationToken: ClearDeviceAuthorizationTokenUseCase,
         json: Json,
         headerProvider: UserAgentHeaderProvider,
     ) = HttpClient(CIO) {
         baseConfig(json)
-        baseZarinaConfig(headerProvider)
+        baseZarinaConfig(context, headerProvider)
         install(ZarinaAuth) {
             bearer {
                 loadTokens {
@@ -80,6 +88,7 @@ class NetworkModule {
     @Singleton
     @Provides
     fun providesMindboxSecretHttpClient(
+        @ApplicationContext context: Context,
         json: Json,
         headerProvider: MindboxHeaderProvider,
     ) = HttpClient(CIO) {
@@ -91,6 +100,10 @@ class NetworkModule {
                     append(key, value)
                 }
             }
+        }
+        install(HttpCache) {
+            val cacheFile = File(context.cacheDir, CACHE_DIR_MINDBOX)
+            privateStorage(FileStorage(cacheFile))
         }
     }
 
@@ -110,6 +123,7 @@ class NetworkModule {
     }
 
     private fun HttpClientConfig<CIOEngineConfig>.baseZarinaConfig(
+        context: Context,
         headerProvider: UserAgentHeaderProvider,
     ) {
         install(DefaultRequest) {
@@ -120,10 +134,19 @@ class NetworkModule {
                 }
             }
         }
+        install(HttpCache) {
+            val cacheFile = File(context.cacheDir, CACHE_DIR_ZARINA)
+            privateStorage(FileStorage(cacheFile))
+        }
     }
 
     private fun AuthorizationToken.toBearerTokens(): BearerTokens {
         return BearerTokens(this.token, "")
+    }
+
+    companion object {
+        private const val CACHE_DIR_ZARINA = "ktor-zarina-cache"
+        private const val CACHE_DIR_MINDBOX = "ktor-mindbox-cache"
     }
 }
 
