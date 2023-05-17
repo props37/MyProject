@@ -1,5 +1,5 @@
 [versions]
-android-gradle = "8.1.0-beta02"
+android-gradle = "8.1.0-beta03"
 kotlin = "1.8.20"
 kotlinx-serialization = "1.5.0"
 kotlinx-collections-immutable = "0.3.5"
