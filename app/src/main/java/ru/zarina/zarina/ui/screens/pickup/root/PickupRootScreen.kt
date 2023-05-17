@@ -1,9 +1,14 @@
 package ru.zarina.zarina.ui.screens.pickup.root
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
@@ -128,45 +134,50 @@ private fun ShopListPager(
     onStockPickupClick: (Stock) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val tabs = persistentListOf(*ShopListTab.values())
-    val pagerState = rememberPagerState()
-    Tabs(
-        options = tabs,
-        selectedOption = tabs[pagerState.currentPage],
-        textResolver = {
-            val resource = when (it) {
-                ShopListTab.LIST -> R.string.list
-                ShopListTab.MAP -> R.string.map
-            }
-            stringResource(resource)
-        },
-        onOptionClick = {
-            coroutineScope.launch {
-                pagerState.animateScrollToPage(tabs.indexOf(it))
-            }
-        },
+    Column(
         modifier = modifier
-    )
-    HorizontalPager(
-        pageCount = tabs.size,
-        state = pagerState,
-        beyondBoundsPageCount = 1,
-        userScrollEnabled = false,
     ) {
-        when (it) {
-            ShopListTab.LIST.ordinal -> ShopList(
-                stocks = stocks,
-                onStockClick = onStockPickupClick,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            ShopListTab.MAP.ordinal -> {
-                ShopMap(
+        val coroutineScope = rememberCoroutineScope()
+        val tabs = persistentListOf(*ShopListTab.values())
+        val pagerState = rememberPagerState()
+        Tabs(
+            options = tabs,
+            selectedOption = tabs[pagerState.currentPage],
+            textResolver = {
+                val resource = when (it) {
+                    ShopListTab.LIST -> R.string.list
+                    ShopListTab.MAP -> R.string.map
+                }
+                stringResource(resource)
+            },
+            onOptionClick = {
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(tabs.indexOf(it))
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+        HorizontalPager(
+            pageCount = tabs.size,
+            state = pagerState,
+            beyondBoundsPageCount = 1,
+            verticalAlignment = Alignment.Top,
+            userScrollEnabled = false,
+        ) {
+            when (it) {
+                ShopListTab.LIST.ordinal -> ShopList(
                     stocks = stocks,
-                    isVisibleForUser = pagerState.currentPage == ShopListTab.MAP.ordinal,
+                    onStockClick = onStockPickupClick,
                     modifier = Modifier.fillMaxWidth()
                 )
+
+                ShopListTab.MAP.ordinal -> {
+                    ShopMap(
+                        stocks = stocks,
+                        isVisibleForUser = pagerState.currentPage == ShopListTab.MAP.ordinal,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }
@@ -187,6 +198,7 @@ fun PickupRootScreen(
     val city by parentViewModel.city.collectAsStateWithLifecycle()
     val product by parentViewModel.product.collectAsStateWithLifecycle()
     val selectedOffer by parentViewModel.selectedOffer.collectAsStateWithLifecycle()
+    val isNoStockResultsVisible by parentViewModel.isNoStockResultsVisible.collectAsStateWithLifecycle()
     val stocks by parentViewModel.stocks.collectAsStateWithLifecycle()
     val errorType by parentViewModel.errorType.collectAsStateWithLifecycle()
 
@@ -201,6 +213,7 @@ fun PickupRootScreen(
         city = city,
         product = product,
         selectedOffer = selectedOffer,
+        isNoStockResultsVisible = isNoStockResultsVisible,
         stocks = stocks,
         onBackClick = viewModel::onBackClick,
         onSelectCityClick = viewModel::onSelectCityClick,
@@ -241,6 +254,7 @@ fun PickupRootScreenContentPreview(
             product = product,
             selectedOffer = product.offers.first(),
             stocks = persistentListOf(),
+            isNoStockResultsVisible = false,
             onBackClick = {},
             onSelectCityClick = {},
             onSelectSizeClick = {},
