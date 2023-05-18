@@ -104,11 +104,11 @@ fun PickupRootScreenContent(
                 )
 
                 AnimatedContent(
-                    targetState = stocks,
+                    targetState = stocks?.isEmpty() == true,
                     label = "stocks animated content",
                     transitionSpec = { fadeIn() with fadeOut() }
-                ) { stocks ->
-                    if (stocks?.isEmpty() == true) {
+                ) { isNoResults ->
+                    if (isNoResults) {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
