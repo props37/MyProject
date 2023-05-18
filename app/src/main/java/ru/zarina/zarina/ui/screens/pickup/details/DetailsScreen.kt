@@ -8,6 +8,7 @@ import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
+import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @Composable
@@ -19,6 +20,7 @@ fun DetailsScreenContent() {
 fun DetailsScreen(
     parentEntry: NavBackStackEntry,
 ) {
+    val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
     val viewModel = hiltViewModel<DetailsViewModel>()
 
     DetailsScreenBehavior(

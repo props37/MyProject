@@ -220,6 +220,7 @@ fun PickupRootScreen(
     parentEntry: NavBackStackEntry,
     showSelectSize: () -> Unit,
     showSelectCity: () -> Unit,
+    showDetails: () -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel: PickupRootViewModel = hiltViewModel()
@@ -236,6 +237,7 @@ fun PickupRootScreen(
         sideEffects = viewModel.sideEffects,
         showSelectSize = showSelectSize,
         showSelectCity = showSelectCity,
+        showDetails = showDetails,
         goBack = goBack,
     )
 
@@ -248,7 +250,10 @@ fun PickupRootScreen(
         onBackClick = viewModel::onBackClick,
         onSelectCityClick = viewModel::onSelectCityClick,
         onSelectSizeClick = viewModel::onSelectSizeClick,
-        onStockPickupClick = parentViewModel::onStockPickupClick,
+        onStockPickupClick = {
+            parentViewModel.onStockPickupClick(it)
+            viewModel.onStockPickupClick()
+        },
         onRefreshClick = parentViewModel::onRefreshClick,
         errorType = errorType,
     )
@@ -259,6 +264,7 @@ fun PickupRootScreenBehavior(
     sideEffects: Flow<PickupRootViewModel.SideEffect>,
     showSelectSize: () -> Unit,
     showSelectCity: () -> Unit,
+    showDetails: () -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
@@ -267,6 +273,7 @@ fun PickupRootScreenBehavior(
                 PickupRootViewModel.SideEffect.GoBack -> goBack()
                 PickupRootViewModel.SideEffect.ShowSelectSize -> showSelectSize()
                 PickupRootViewModel.SideEffect.ShowSelectCity -> showSelectCity()
+                PickupRootViewModel.SideEffect.ShowDetails -> showDetails()
             }
         }
     }
