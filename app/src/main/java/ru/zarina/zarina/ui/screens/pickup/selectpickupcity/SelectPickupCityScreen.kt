@@ -22,6 +22,7 @@ fun SelectPickupCityScreen(
     val query by viewModel.query.collectAsStateWithLifecycle()
     val cityItems by viewModel.cities.collectAsStateWithLifecycle()
     val errorType by viewModel.errorType.collectAsStateWithLifecycle()
+    val isSearchLoadingVisible by viewModel.isLoaderVisible.collectAsStateWithLifecycle()
 
     SelectPickupCityScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -29,7 +30,7 @@ fun SelectPickupCityScreen(
     )
 
     SelectCityScreenContent(
-        isSearchLoadingVisible = false,
+        isSearchLoadingVisible = isSearchLoadingVisible,
         query = query,
         onQueryChange = viewModel::onQueryChange,
         cityItems = cityItems,

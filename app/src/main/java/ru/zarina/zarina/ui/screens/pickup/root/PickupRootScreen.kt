@@ -1,9 +1,17 @@
 package ru.zarina.zarina.ui.screens.pickup.root
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
@@ -45,13 +54,14 @@ import ru.zarina.zarina.ui.screens.pickup.root.components.ShopMap
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun PickupRootScreenContent(
     city: City?,
     product: Product?,
     selectedOffer: Offer?,
-    stocks: ImmutableList<Stock>,
+    stocks: ImmutableList<Stock>?,
+    isLoaderVisible: Boolean,
     onBackClick: () -> Unit,
     onSelectCityClick: () -> Unit,
     onSelectSizeClick: () -> Unit,
@@ -73,6 +83,7 @@ fun PickupRootScreenContent(
                 }
             )
         },
+        isModalLoaderVisible = isLoaderVisible,
         errorState = errorState,
         onErrorButtonClick = onRefreshClick,
     ) {
@@ -91,11 +102,36 @@ fun PickupRootScreenContent(
                     onSelectSizeClick = onSelectSizeClick,
                     modifier = Modifier.fillMaxWidth()
                 )
-                ShopListPager(
-                    stocks = stocks,
-                    onStockPickupClick = onStockPickupClick,
-                    modifier = Modifier.fillMaxWidth()
-                )
+
+                AnimatedContent(
+                    targetState = stocks,
+                    label = "stocks animated content",
+                    transitionSpec = { fadeIn() with fadeOut() }
+                ) { stocks ->
+                    if (stocks?.isEmpty() == true) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(UiKitTheme.colors.screenBackground)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.product_not_available_in_city),
+                                style = UiKitTheme.typography.circle1518,
+                                color = UiKitTheme.colors.primaryContentColor,
+                                textAlign = TextAlign.Start,
+                                modifier = Modifier.padding(16.dp),
+                            )
+                        }
+                    } else {
+                        ShopListPager(
+                            stocks = stocks ?: persistentListOf(),
+                            onStockPickupClick = onStockPickupClick,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(UiKitTheme.colors.screenBackground)
+                        )
+                    }
+                }
             }
     }
 }
@@ -128,42 +164,51 @@ private fun ShopListPager(
     onStockPickupClick: (Stock) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val tabs = persistentListOf(*ShopListTab.values())
-    val pagerState = rememberPagerState()
-    Tabs(
-        options = tabs,
-        selectedOption = tabs[pagerState.currentPage],
-        textResolver = {
-            val resource = when (it) {
-                ShopListTab.LIST -> R.string.list
-                ShopListTab.MAP -> R.string.map
-            }
-            stringResource(resource)
-        },
-        onOptionClick = {
-            coroutineScope.launch {
-                pagerState.animateScrollToPage(tabs.indexOf(it))
-            }
-        },
+    Column(
         modifier = modifier
-    )
-    HorizontalPager(
-        pageCount = tabs.size,
-        state = pagerState,
-        userScrollEnabled = false,
     ) {
-        when (it) {
-            ShopListTab.LIST.ordinal -> ShopList(
-                stocks = stocks,
-                onStockClick = onStockPickupClick,
-                modifier = Modifier.fillMaxWidth()
-            )
+        val coroutineScope = rememberCoroutineScope()
+        val tabs = persistentListOf(*ShopListTab.values())
+        val pagerState = rememberPagerState()
+        Tabs(
+            options = tabs,
+            selectedOption = tabs[pagerState.currentPage],
+            textResolver = {
+                val resource = when (it) {
+                    ShopListTab.LIST -> R.string.list
+                    ShopListTab.MAP -> R.string.map
+                }
+                stringResource(resource)
+            },
+            onOptionClick = {
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(tabs.indexOf(it))
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+        HorizontalPager(
+            pageCount = tabs.size,
+            state = pagerState,
+            beyondBoundsPageCount = 1,
+            verticalAlignment = Alignment.Top,
+            userScrollEnabled = false,
+        ) {
+            when (it) {
+                ShopListTab.LIST.ordinal -> ShopList(
+                    stocks = stocks,
+                    onStockClick = onStockPickupClick,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            ShopListTab.MAP.ordinal -> ShopMap(
-                stocks = stocks,
-                modifier = Modifier.fillMaxWidth()
-            )
+                ShopListTab.MAP.ordinal -> {
+                    ShopMap(
+                        stocks = stocks,
+                        isVisibleForUser = pagerState.currentPage == ShopListTab.MAP.ordinal,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
         }
     }
 }
@@ -185,6 +230,7 @@ fun PickupRootScreen(
     val selectedOffer by parentViewModel.selectedOffer.collectAsStateWithLifecycle()
     val stocks by parentViewModel.stocks.collectAsStateWithLifecycle()
     val errorType by parentViewModel.errorType.collectAsStateWithLifecycle()
+    val isLoaderVisible by parentViewModel.isStocksLoaderVisible.collectAsStateWithLifecycle()
 
     PickupRootScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -198,6 +244,7 @@ fun PickupRootScreen(
         product = product,
         selectedOffer = selectedOffer,
         stocks = stocks,
+        isLoaderVisible = isLoaderVisible,
         onBackClick = viewModel::onBackClick,
         onSelectCityClick = viewModel::onSelectCityClick,
         onSelectSizeClick = viewModel::onSelectSizeClick,
@@ -237,6 +284,7 @@ fun PickupRootScreenContentPreview(
             product = product,
             selectedOffer = product.offers.first(),
             stocks = persistentListOf(),
+            isLoaderVisible = false,
             onBackClick = {},
             onSelectCityClick = {},
             onSelectSizeClick = {},

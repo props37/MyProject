@@ -40,6 +40,7 @@ fun ShopList(
             ShopItem(
                 stock = stock,
                 onClick = { onStockClick(stock) },
+                modifier = Modifier.padding(16.dp)
             )
             if (index != stocks.lastIndex)
                 Divider(
@@ -52,13 +53,14 @@ fun ShopList(
 }
 
 @Composable
-private fun ShopItem(
+fun ShopItem(
     stock: Stock,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isButtonVisible: Boolean = true,
 ) {
     Column(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier,
     ) {
         Text(
             text = stock.shop.name,
@@ -87,17 +89,19 @@ private fun ShopItem(
             color = UiKitTheme.colors.primaryAccentColor,
             textAlign = TextAlign.Start,
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        ZarinaButton(
-            onClick = onClick,
-            padding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
-            modifier = Modifier.wrapContentSize(align = Alignment.Center),
-        ) {
-            Text(
-                text = stringResource(R.string.pickup_at_shop),
-                style = UiKitTheme.typography.circle1720bold,
-                color = UiKitTheme.colors.primaryButtonForeground,
-            )
+        if (isButtonVisible) {
+            Spacer(modifier = Modifier.height(8.dp))
+            ZarinaButton(
+                onClick = onClick,
+                padding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+                modifier = Modifier.wrapContentSize(align = Alignment.Center),
+            ) {
+                Text(
+                    text = stringResource(R.string.pickup_at_shop),
+                    style = UiKitTheme.typography.circle1720bold,
+                    color = UiKitTheme.colors.primaryButtonForeground,
+                )
+            }
         }
     }
 }

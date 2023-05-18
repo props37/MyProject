@@ -55,4 +55,5 @@
     <string name="enough">Достаточно</string>
     <string name="many">Много</string>
     <string name="pickup_at_shop">Забрать в магазине</string>
+    <string name="product_not_available_in_city">Выбранного товара нет в наличии в магазинах вашего города</string>
 </resources>

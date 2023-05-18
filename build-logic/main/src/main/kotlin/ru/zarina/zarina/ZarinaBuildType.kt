@@ -43,6 +43,9 @@ sealed interface ZarinaBuildType {
     val mindboxSecret: String
         get() = "ofzs2DsV9J5PYHAUOrxO"
 
+    val googleMapsSecret: String
+        get() = "AIzaSyCExG0HOLTEB7-Ysg1wsfvWcWcuHnDxak4"
+
     object Debug : ZarinaBuildType {
         override val name = "debug"
         override val isDebuggable = true
@@ -100,6 +103,7 @@ fun Project.configureBuildTypes(
                         isShrinkResources = buildType.isShrinkResources
                         versionNameSuffix = buildType.versionNameSuffix
                         fillBuildConfigFields(buildType)
+                        fillManifestPlaceholders(buildType)
                     }
                     buildTypeConfigurationBlock(this, buildType)
                 }
@@ -112,6 +116,10 @@ private fun ApplicationBuildType.fillBuildConfigFields(buildType: ZarinaBuildTyp
     buildConfigStringField("BACKEND_URL", buildType.backendUrl)
     buildConfigStringField("MINDBOX_ENDPOINT", buildType.mindboxEndpoint)
     buildConfigStringField("MINDBOX_SECRET", buildType.mindboxSecret)
+}
+
+private fun ApplicationBuildType.fillManifestPlaceholders(buildType: ZarinaBuildType) {
+    manifestPlaceholders["GOOGLE_MAPS_SECRET"] = buildType.googleMapsSecret
 }
 
 private fun ApplicationBuildType.buildConfigStringField(

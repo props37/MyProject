@@ -15,6 +15,8 @@ import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.base.operation.OperationKey
+import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.screens.bases.selectcity.SelectCityComponent
 import javax.inject.Inject
 
@@ -24,6 +26,8 @@ class SelectPickupCityViewModel @Inject constructor(
     private val selectCityComponent: SelectCityComponent,
 ) : ViewModel(),
     ISideEffectSource<SelectPickupCityViewModel.SideEffect> by SideEffectQueue() {
+
+    private val operationTracker = OperationTracker()
 
     private val _cities = MutableStateFlow<List<City>>(persistentListOf())
 
@@ -42,6 +46,10 @@ class SelectPickupCityViewModel @Inject constructor(
     private val _errorType = MutableStateFlow<SelectCityComponent.ErrorType?>(null)
     val errorType = _errorType.asStateFlow()
 
+    val isLoaderVisible = operationTracker
+        .isOperationOngoing(Operation.LOADING_CITIES)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
     init {
         loadPickupCities()
     }
@@ -52,10 +60,11 @@ class SelectPickupCityViewModel @Inject constructor(
 
     private fun loadPickupCities() {
         viewModelScope.launch {
-            // TODO loader
             // TODO errors
-            interactor.getPickupCities()
-                .onSuccess { _cities.value = it }
+            operationTracker.track(Operation.LOADING_CITIES) {
+                interactor.getPickupCities()
+                    .onSuccess { _cities.value = it }
+            }
         }
     }
 
@@ -74,5 +83,7 @@ class SelectPickupCityViewModel @Inject constructor(
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object GoBack : SideEffect
     }
+
+    enum class Operation : OperationKey { LOADING_CITIES }
 
 }
