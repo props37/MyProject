@@ -32,6 +32,7 @@ data class UiKitColors(
     val secondaryButtonBorder: Color = Mineshaft,
     val snackbarBackground: Color = Color.White,
     val snackbarForeground: Color = Color.Black,
+    val disabled: Color = RollingStone,
     val hint: Color = RollingStone,
     val listDivider: Color = Mercury,
     val listItemSubtitle: Color = RollingStone,
