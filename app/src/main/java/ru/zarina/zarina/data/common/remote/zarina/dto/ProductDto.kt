@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.product.remote.api.dto
+package ru.zarina.zarina.data.common.remote.zarina.dto
 
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap

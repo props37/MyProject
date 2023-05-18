@@ -5,6 +5,6 @@ import ru.zarina.zarina.domain.RecommendationType
 
 interface IRecommendationRemoteSource {
 
-    suspend fun getRecommendations(type: RecommendationType): List<Product.Id>
+    suspend fun getRecommendations(type: RecommendationType): List<Product>
 
 }
