@@ -63,8 +63,6 @@ class PickupViewModel @Inject constructor(
             it?.getOrNull()?.toPersistentList() ?: persistentListOf()
         }
 
-    val selectedOffer = savedStateHandle.getStateFlow<Offer?>(KEY_SELECTED_OFFER, null)
-
     private val stockReloadTrigger = MutableSharedFlow<Unit>(
         replay = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
@@ -101,6 +99,9 @@ class PickupViewModel @Inject constructor(
     }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
+    val selectedOffer = savedStateHandle.getStateFlow<Offer?>(KEY_SELECTED_OFFER, null)
+    val selectedShop = savedStateHandle.getStateFlow<Stock?>(KEY_SELECTED_SHOP, null)
+
     init {
         loadUserCity()
         setupStockLoading()
@@ -113,7 +114,7 @@ class PickupViewModel @Inject constructor(
     }
 
     fun onStockPickupClick(stock: Stock) {
-        // TODO
+        savedStateHandle[KEY_SELECTED_SHOP] = stock.shop
     }
 
     fun onRefreshClick() {
@@ -192,6 +193,7 @@ class PickupViewModel @Inject constructor(
 
     companion object {
         private const val KEY_SELECTED_OFFER = "selected_offer"
+        private const val KEY_SELECTED_SHOP = "selected_shop"
     }
 
 }
