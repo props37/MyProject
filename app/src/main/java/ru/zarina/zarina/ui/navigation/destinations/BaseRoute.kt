@@ -9,4 +9,5 @@ enum class BaseRoute {
     PICKUP,
     SELECT_SIZE,
     SELECT_PICKUP_CITY,
+    PICKUP_DETAILS,
 }

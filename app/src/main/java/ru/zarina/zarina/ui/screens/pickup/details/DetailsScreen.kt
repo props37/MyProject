@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -15,7 +16,9 @@ fun DetailsScreenContent() {
 }
 
 @Composable
-fun DetailsScreen() {
+fun DetailsScreen(
+    parentEntry: NavBackStackEntry,
+) {
     val viewModel = hiltViewModel<DetailsViewModel>()
 
     DetailsScreenBehavior(
