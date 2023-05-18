@@ -73,7 +73,8 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 google-play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "google-play-services-location" }
 google-play-services-maps-core = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "google-play-services-maps" }
-google-play-services-maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "google-play-services-maps-compose" }
+google-play-services-maps-compose-core = { group = "com.google.maps.android", name = "maps-compose", version.ref = "google-play-services-maps-compose" }
+google-play-services-maps-compose-utils = { group = "com.google.maps.android", name = "maps-compose-utils", version.ref = "google-play-services-maps-compose" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
 firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
