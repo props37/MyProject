@@ -6,10 +6,10 @@ import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.HttpStatusCode
-import ru.zarina.zarina.data.product.remote.api.dto.CompleteLookDto
+import ru.zarina.zarina.data.common.remote.zarina.dto.ProductBatchDto
+import ru.zarina.zarina.data.common.remote.zarina.dto.ProductDto
+import ru.zarina.zarina.data.common.remote.zarina.dto.SizeDto
 import ru.zarina.zarina.data.product.remote.api.dto.DeliveryInfoDto
-import ru.zarina.zarina.data.product.remote.api.dto.ProductDto
-import ru.zarina.zarina.data.product.remote.api.dto.SizeDto
 import ru.zarina.zarina.di.Authorization
 import ru.zarina.zarina.domain.exception.NotFoundException
 import javax.inject.Inject
@@ -31,7 +31,7 @@ class KtorZarinaProductApi @Inject constructor(
         }
     }
 
-    override suspend fun getCompleteLook(id: String): CompleteLookDto {
+    override suspend fun getCompleteLook(id: String): ProductBatchDto {
         val response = client.get("/api/products/$id/total_look") {
             parameter("with-articles", "")
         }
