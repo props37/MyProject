@@ -174,7 +174,12 @@ class PickupViewModel @Inject constructor(
         _offers
             .onEach { offersResult ->
                 val offers = offersResult?.getOrNull() ?: return@onEach
-                if (selectedOffer.value !in offers) savedStateHandle[KEY_SELECTED_OFFER] = null
+                val selectedOffer = selectedOffer.value
+                if (selectedOffer !in offers || selectedOffer == null) {
+                    val availableOffer = offers.find { it.isAvailable }
+                    val firstOffer = offers.firstOrNull()
+                    savedStateHandle[KEY_SELECTED_OFFER] = availableOffer ?: firstOffer
+                }
             }
             .launchIn(viewModelScope)
     }
