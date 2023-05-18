@@ -101,6 +101,9 @@ class PickupViewModel @Inject constructor(
     val selectedShop = savedStateHandle.getStateFlow<Stock?>(KEY_SELECTED_SHOP, null)
 
     val surname = savedStateHandle.getStateFlow(KEY_SURNAME, "")
+    val name = savedStateHandle.getStateFlow(KEY_NAME, "")
+    val phone = savedStateHandle.getStateFlow(KEY_PHONE, "")
+    val email = savedStateHandle.getStateFlow(KEY_EMAIL, "")
 
     init {
         loadUserCity()
@@ -131,6 +134,18 @@ class PickupViewModel @Inject constructor(
 
     fun onSurnameChange(surname: String) {
         savedStateHandle[KEY_SURNAME] = surname
+    }
+
+    fun onNameChange(name: String) {
+        savedStateHandle[KEY_NAME] = name
+    }
+
+    fun onPhoneChange(phone: String) {
+        savedStateHandle[KEY_PHONE] = phone
+    }
+
+    fun onEmailChange(email: String) {
+        savedStateHandle[KEY_EMAIL] = email
     }
 
     private fun loadProduct(id: Product.Id) {
@@ -206,6 +221,9 @@ class PickupViewModel @Inject constructor(
         private const val KEY_SELECTED_OFFER = "selected_offer"
         private const val KEY_SELECTED_SHOP = "selected_shop"
         private const val KEY_SURNAME = "surname"
+        private const val KEY_NAME = "name"
+        private const val KEY_PHONE = "phone"
+        private const val KEY_EMAIL = "email"
     }
 
 }

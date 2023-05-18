@@ -35,6 +35,12 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 fun DetailsScreenContent(
     surname: String,
     onSurnameChange: (String) -> Unit,
+    name: String,
+    onNameChange: (String) -> Unit,
+    phone: String,
+    onPhoneChange: (String) -> Unit,
+    email: String,
+    onEmailChange: (String) -> Unit,
     onBackClick: () -> Unit,
 ) {
     ZarinaScaffold(
@@ -55,6 +61,12 @@ fun DetailsScreenContent(
             RecipientInformation(
                 surname = surname,
                 onSurnameChange = onSurnameChange,
+                name = name,
+                onNameChange = onNameChange,
+                phone = phone,
+                onPhoneChange = onPhoneChange,
+                email = email,
+                onEmailChange = onEmailChange,
             )
         }
     }
@@ -64,6 +76,12 @@ fun DetailsScreenContent(
 private fun ColumnScope.RecipientInformation(
     surname: String,
     onSurnameChange: (String) -> Unit,
+    name: String,
+    onNameChange: (String) -> Unit,
+    phone: String,
+    onPhoneChange: (String) -> Unit,
+    email: String,
+    onEmailChange: (String) -> Unit,
 ) {
     SectionHeader(
         text = stringResource(id = R.string.recipient_information),
@@ -75,6 +93,34 @@ private fun ColumnScope.RecipientInformation(
         hint = stringResource(id = R.string.surname),
         modifier = Modifier
             .padding(horizontal = 16.dp)
+            .padding(top = 4.dp, bottom = 12.dp)
+            .fillMaxWidth(),
+    )
+    Input(
+        value = name,
+        onValueChange = onNameChange,
+        hint = stringResource(id = R.string.name),
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .padding(top = 4.dp, bottom = 12.dp)
+            .fillMaxWidth(),
+    )
+    Input(
+        value = phone,
+        onValueChange = onPhoneChange,
+        hint = stringResource(id = R.string.phone),
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .padding(top = 4.dp, bottom = 12.dp)
+            .fillMaxWidth(),
+    )
+    Input(
+        value = email,
+        onValueChange = onEmailChange,
+        hint = stringResource(id = R.string.email),
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .padding(top = 4.dp, bottom = 12.dp)
             .fillMaxWidth(),
     )
 }
@@ -88,6 +134,9 @@ fun DetailsScreen(
     val viewModel = hiltViewModel<DetailsViewModel>()
 
     val surname by parentViewModel.surname.collectAsStateWithLifecycle()
+    val name by parentViewModel.name.collectAsStateWithLifecycle()
+    val phone by parentViewModel.phone.collectAsStateWithLifecycle()
+    val email by parentViewModel.email.collectAsStateWithLifecycle()
 
     DetailsScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -97,6 +146,12 @@ fun DetailsScreen(
     DetailsScreenContent(
         surname = surname,
         onSurnameChange = parentViewModel::onSurnameChange,
+        name = name,
+        onNameChange = parentViewModel::onNameChange,
+        phone = phone,
+        onPhoneChange = parentViewModel::onPhoneChange,
+        email = email,
+        onEmailChange = parentViewModel::onEmailChange,
         onBackClick = viewModel::onBackClick,
     )
 }
@@ -122,8 +177,14 @@ fun DetailsScreenBehavior(
 fun DetailsScreenContentPreview() {
     ZarinaTheme {
         DetailsScreenContent(
-            surname = "Пржевальский",
+            surname = "Петров",
             onSurnameChange = {},
+            name = "Иван",
+            onNameChange = {},
+            phone = "123-456-7890",
+            onPhoneChange = {},
+            email = "ivan@gmail.com",
+            onEmailChange = {},
             onBackClick = {},
         )
     }

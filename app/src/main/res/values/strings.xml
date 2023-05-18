@@ -58,4 +58,7 @@
     <string name="product_not_available_in_city">Выбранного товара нет в наличии в магазинах вашего города</string>
     <string name="recipient_information">Информация о получателе</string>
     <string name="surname">Фамилия</string>
+    <string name="name">Имя</string>
+    <string name="phone">Телефон</string>
+    <string name="email">E-mail</string>
 </resources>
