@@ -1,12 +1,12 @@
 package ru.zarina.zarina.ui.screens.pickup
 
+import android.content.res.Resources.NotFoundException
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,9 +38,6 @@ class PickupViewModel @Inject constructor(
 
     private val operationTracker = OperationTracker()
 
-    private val _errorType = MutableStateFlow<ErrorType?>(null)
-    val errorType = _errorType.asStateFlow()
-
     private val productId = savedStateHandle.getStateFlow(
         key = Pickup.ARGUMENT_PRODUCT_ID,
         initialValue = ""
@@ -49,15 +46,15 @@ class PickupViewModel @Inject constructor(
     private val _city = MutableStateFlow<City?>(null)
     val city = _city.asStateFlow()
 
-    private val _product = MutableStateFlow<Product?>(null)
-    val product = _product.asStateFlow()
+    private val _product = MutableStateFlow<Result<Product?>?>(null)
+    val product = _product
+        .mapState(viewModelScope) { it?.getOrNull() }
 
-    private val _offers = MutableStateFlow<List<Offer>>(emptyList())
+    private val _offers = MutableStateFlow<Result<List<Offer>>?>(null)
     val offers = _offers
-        .map { offers ->
-            offers.toPersistentList()
+        .mapState(viewModelScope) {
+            it?.getOrNull()?.toPersistentList() ?: persistentListOf()
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
     private val _selectedOffer = MutableStateFlow<Offer?>(null)
     val selectedOffer = _selectedOffer.asStateFlow()
@@ -75,6 +72,23 @@ class PickupViewModel @Inject constructor(
             Operation.LOADING_STOCKS,
         )
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    val errorType = combine(
+        _product,
+        _offers,
+        _stocks,
+    ) { product, offers, stocks ->
+
+        val exception = listOf(product, offers, stocks)
+            .firstNotNullOfOrNull { it?.exceptionOrNull() }
+
+        when {
+            exception == null -> null
+            exception.isNetworkException() -> ErrorType.NETWORK
+            else -> ErrorType.GENERIC
+        }
+    }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     init {
         loadUserCity()
@@ -102,24 +116,12 @@ class PickupViewModel @Inject constructor(
     private fun loadProduct(id: Product.Id) {
         viewModelScope.launch {
             operationTracker.track(Operation.LOADING_PRODUCT) {
-                interactor.getProduct(id)
-                    .onSuccess {
-                        _product.value = it
-                        _errorType.value = null
-                    }
-                    .onFailure { throwable ->
-                        _errorType.value = when {
-                            throwable is CancellationException -> return@onFailure
-                            throwable.isNetworkException() -> ErrorType.NETWORK
-                            else -> ErrorType.GENERIC
-                        }
-                    }
+                _product.value = interactor.getProduct(id)
             }
         }
     }
 
     private fun loadUserCity() {
-        // TODO error
         viewModelScope.launch {
             operationTracker.track(Operation.LOADING_CITY) {
                 _city.value = interactor.getCity().getOrNull()
@@ -130,33 +132,41 @@ class PickupViewModel @Inject constructor(
     private fun setupStockLoading() {
         combine(_selectedOffer, _city) { offer, city ->
             if (offer == null || city == null) return@combine
-            // TODO error
             operationTracker.track(Operation.LOADING_STOCKS) {
                 _stocks.value = interactor.getStocks(offer, city)
-                    .recover { persistentListOf() }
+                    .recover { throwable ->
+                        when (throwable) {
+                            is NotFoundException -> persistentListOf()
+                            else -> throw throwable
+                        }
+                    }
             }
         }
             .launchIn(viewModelScope)
     }
 
     private fun setupSizeUpdates() {
-        combine(_product, _city) { product, city ->
+        combine(_product, _city) { productResult, city ->
+            val product = productResult?.getOrNull()
             if (product == null || city == null) return@combine
-            // TODO error
             operationTracker.track(Operation.LOADING_SIZES) {
-                interactor.getOffers(product, city)
-                    .onSuccess { _offers.value = it }
+                _offers.value = interactor.getOffers(product, city)
             }
         }
             .launchIn(viewModelScope)
 
         _offers
-            .onEach { offers ->
-                val selectedSizeName = _selectedOffer.value?.size?.name
-                val sameNameOffer = offers.find { it.size.name == selectedSizeName }
-                val availableOffer = offers.find { it.isAvailable }
-                val firstOffer = offers.firstOrNull()
-                _selectedOffer.value = sameNameOffer ?: availableOffer ?: firstOffer
+            .onEach { offersResult ->
+                val offers = offersResult?.getOrNull()
+                _selectedOffer.value = if (offers == null) {
+                    null
+                } else {
+                    val selectedSizeName = _selectedOffer.value?.size?.name
+                    val sameNameOffer = offers.find { it.size.name == selectedSizeName }
+                    val availableOffer = offers.find { it.isAvailable }
+                    val firstOffer = offers.firstOrNull()
+                    sameNameOffer ?: availableOffer ?: firstOffer
+                }
             }
             .launchIn(viewModelScope)
     }
@@ -169,7 +179,8 @@ class PickupViewModel @Inject constructor(
 
     enum class ErrorType { NETWORK, GENERIC }
 
-    enum class Operation :
-        OperationKey { LOADING_CITY, LOADING_PRODUCT, LOADING_SIZES, LOADING_STOCKS }
+    enum class Operation : OperationKey {
+        LOADING_CITY, LOADING_PRODUCT, LOADING_SIZES, LOADING_STOCKS
+    }
 
 }
