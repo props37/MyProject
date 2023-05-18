@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -109,7 +110,9 @@ fun PickupRootScreenContent(
                 ) { stocks ->
                     if (stocks?.isEmpty() == true) {
                         Box(
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(UiKitTheme.colors.screenBackground)
                         ) {
                             Text(
                                 text = stringResource(R.string.product_not_available_in_city),
@@ -123,7 +126,9 @@ fun PickupRootScreenContent(
                         ShopListPager(
                             stocks = stocks ?: persistentListOf(),
                             onStockPickupClick = onStockPickupClick,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(UiKitTheme.colors.screenBackground)
                         )
                     }
                 }
