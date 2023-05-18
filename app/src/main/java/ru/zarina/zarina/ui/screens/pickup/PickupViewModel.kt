@@ -34,7 +34,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class PickupViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val interactor: PickupInteractor,
 ) : ViewModel() {
 
@@ -63,8 +63,7 @@ class PickupViewModel @Inject constructor(
             it?.getOrNull()?.toPersistentList() ?: persistentListOf()
         }
 
-    private val _selectedOffer = MutableStateFlow<Offer?>(null)
-    val selectedOffer = _selectedOffer.asStateFlow()
+    val selectedOffer = savedStateHandle.getStateFlow<Offer?>(KEY_SELECTED_OFFER, null)
 
     private val stockReloadTrigger = MutableSharedFlow<Unit>(
         replay = 1,
@@ -110,7 +109,7 @@ class PickupViewModel @Inject constructor(
     }
 
     fun onOfferClick(offer: Offer) {
-        _selectedOffer.value = offer
+        savedStateHandle[KEY_SELECTED_OFFER] = offer
     }
 
     fun onStockPickupClick(stock: Stock) {
@@ -146,7 +145,7 @@ class PickupViewModel @Inject constructor(
     }
 
     private fun setupStockLoading() {
-        combine(_selectedOffer, _city, stockReloadTrigger) { offer, city, _ ->
+        combine(selectedOffer, _city, stockReloadTrigger) { offer, city, _ ->
             if (offer == null || city == null) return@combine
             operationTracker.track(Operation.LOADING_STOCKS) {
                 _stocks.value = interactor.getStocks(offer, city)
@@ -173,16 +172,8 @@ class PickupViewModel @Inject constructor(
 
         _offers
             .onEach { offersResult ->
-                val offers = offersResult?.getOrNull()
-                _selectedOffer.value = if (offers == null) {
-                    null
-                } else {
-                    val selectedSizeName = _selectedOffer.value?.size?.name
-                    val sameNameOffer = offers.find { it.size.name == selectedSizeName }
-                    val availableOffer = offers.find { it.isAvailable }
-                    val firstOffer = offers.firstOrNull()
-                    sameNameOffer ?: availableOffer ?: firstOffer
-                }
+                val offers = offersResult?.getOrNull() ?: return@onEach
+                if (selectedOffer.value !in offers) savedStateHandle[KEY_SELECTED_OFFER] = null
             }
             .launchIn(viewModelScope)
     }
@@ -197,6 +188,10 @@ class PickupViewModel @Inject constructor(
 
     enum class Operation : OperationKey {
         LOADING_CITY, LOADING_PRODUCT, LOADING_SIZES, LOADING_STOCKS
+    }
+
+    companion object {
+        private const val KEY_SELECTED_OFFER = "selected_offer"
     }
 
 }
