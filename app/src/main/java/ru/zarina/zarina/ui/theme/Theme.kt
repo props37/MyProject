@@ -33,15 +33,16 @@ fun ZarinaTheme(
     val uiKitColors = UiKitColors()
     val uiKitTypography = UiKitTypography()
 
-
-
     CompositionLocalProvider(
         LocalUiKitColors provides uiKitColors,
         LocalUiKitTypography provides uiKitTypography,
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = Typography,
+            typography = Typography.copy(
+                bodyLarge = UiKitTheme.typography.circle1718,
+                bodySmall = UiKitTheme.typography.circle1316
+            ),
             content = {
                 val textSelectionColors = TextSelectionColors(
                     handleColor = uiKitColors.primaryContentColor,
