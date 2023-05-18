@@ -1,9 +1,9 @@
 package ru.zarina.zarina.data.product.remote.api
 
+import ru.zarina.zarina.data.common.remote.zarina.dto.ProductDto
+import ru.zarina.zarina.data.common.remote.zarina.dto.SizeDto
 import ru.zarina.zarina.data.product.remote.api.dto.CompleteLookDto
 import ru.zarina.zarina.data.product.remote.api.dto.DeliveryInfoDto
-import ru.zarina.zarina.data.product.remote.api.dto.ProductDto
-import ru.zarina.zarina.data.product.remote.api.dto.SizeDto
 
 interface IZarinaProductApi {
     suspend fun getProduct(id: String): ProductDto
