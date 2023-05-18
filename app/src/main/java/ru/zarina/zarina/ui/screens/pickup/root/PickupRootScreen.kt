@@ -1,8 +1,10 @@
 package ru.zarina.zarina.ui.screens.pickup.root
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,13 +53,13 @@ import ru.zarina.zarina.ui.screens.pickup.root.components.ShopMap
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun PickupRootScreenContent(
     city: City?,
     product: Product?,
     selectedOffer: Offer?,
-    stocks: ImmutableList<Stock>,
+    stocks: ImmutableList<Stock>?,
     onBackClick: () -> Unit,
     onSelectCityClick: () -> Unit,
     onSelectSizeClick: () -> Unit,
@@ -97,11 +99,32 @@ fun PickupRootScreenContent(
                     onSelectSizeClick = onSelectSizeClick,
                     modifier = Modifier.fillMaxWidth()
                 )
-                ShopListPager(
-                    stocks = stocks,
-                    onStockPickupClick = onStockPickupClick,
-                    modifier = Modifier.fillMaxWidth()
-                )
+
+                AnimatedContent(
+                    targetState = stocks,
+                    label = "stocks animated content",
+                    transitionSpec = { fadeIn() with fadeOut() }
+                ) { stocks ->
+                    if (stocks?.isEmpty() == true) {
+                        Box(
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Text(
+                                text = stringResource(R.string.product_not_available_in_city),
+                                style = UiKitTheme.typography.circle1518,
+                                color = UiKitTheme.colors.primaryContentColor,
+                                textAlign = TextAlign.Start,
+                                modifier = Modifier.padding(16.dp),
+                            )
+                        }
+                    } else {
+                        ShopListPager(
+                            stocks = stocks ?: persistentListOf(),
+                            onStockPickupClick = onStockPickupClick,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
             }
     }
 }
@@ -198,7 +221,6 @@ fun PickupRootScreen(
     val city by parentViewModel.city.collectAsStateWithLifecycle()
     val product by parentViewModel.product.collectAsStateWithLifecycle()
     val selectedOffer by parentViewModel.selectedOffer.collectAsStateWithLifecycle()
-    val isNoStockResultsVisible by parentViewModel.isNoStockResultsVisible.collectAsStateWithLifecycle()
     val stocks by parentViewModel.stocks.collectAsStateWithLifecycle()
     val errorType by parentViewModel.errorType.collectAsStateWithLifecycle()
 
@@ -213,7 +235,6 @@ fun PickupRootScreen(
         city = city,
         product = product,
         selectedOffer = selectedOffer,
-        isNoStockResultsVisible = isNoStockResultsVisible,
         stocks = stocks,
         onBackClick = viewModel::onBackClick,
         onSelectCityClick = viewModel::onSelectCityClick,
@@ -254,7 +275,6 @@ fun PickupRootScreenContentPreview(
             product = product,
             selectedOffer = product.offers.first(),
             stocks = persistentListOf(),
-            isNoStockResultsVisible = false,
             onBackClick = {},
             onSelectCityClick = {},
             onSelectSizeClick = {},

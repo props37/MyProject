@@ -58,9 +58,10 @@ class PickupViewModel @Inject constructor(
     private val _selectedOffer = MutableStateFlow<Offer?>(null)
     val selectedOffer = _selectedOffer.asStateFlow()
 
-    private val _stocks = MutableStateFlow<List<Stock>>(emptyList())
+    private val _stocks = MutableStateFlow<Result<List<Stock>>?>(null)
     val stocks = _stocks
-        .mapState(viewModelScope) { it.toPersistentList() }
+        .map { it?.getOrNull()?.toPersistentList() }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     init {
         loadUserCity()
@@ -116,8 +117,8 @@ class PickupViewModel @Inject constructor(
             if (offer == null || city == null) return@combine
             // TODO loader
             // TODO error
-            interactor.getStocks(offer, city)
-                .onSuccess { _stocks.value = it }
+            _stocks.value = interactor.getStocks(offer, city)
+                .recover { persistentListOf() }
         }
             .launchIn(viewModelScope)
     }
