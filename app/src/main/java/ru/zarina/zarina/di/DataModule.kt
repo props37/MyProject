@@ -39,9 +39,9 @@ import ru.zarina.zarina.data.product.remote.api.KtorZarinaProductApi
 import ru.zarina.zarina.data.recommendation.IRecommendationRepository
 import ru.zarina.zarina.data.recommendation.RecommendationRepository
 import ru.zarina.zarina.data.recommendation.remote.IRecommendationRemoteSource
-import ru.zarina.zarina.data.recommendation.remote.MindboxRecommendationRemoteSource
-import ru.zarina.zarina.data.recommendation.remote.mindbox.IMindboxRecommendationApi
-import ru.zarina.zarina.data.recommendation.remote.mindbox.KtorMindboxRecommendationApi
+import ru.zarina.zarina.data.recommendation.remote.ZarinaRecommendationRemoteSource
+import ru.zarina.zarina.data.recommendation.remote.zarina.IZarinaRecommendationApi
+import ru.zarina.zarina.data.recommendation.remote.zarina.KtorZarinaRecommendationApi
 import ru.zarina.zarina.data.shop.IShopRepository
 import ru.zarina.zarina.data.shop.ShopRepository
 import ru.zarina.zarina.data.shop.remote.IShopRemoteSource
@@ -122,10 +122,10 @@ interface DataModule {
     fun bindsProductRepository(repository: ProductRepository): IProductRepository
 
     @Binds
-    fun bindsMindboxRecommendationApi(api: KtorMindboxRecommendationApi): IMindboxRecommendationApi
+    fun bindsZarinaRecommendationApi(api: KtorZarinaRecommendationApi): IZarinaRecommendationApi
 
     @Binds
-    fun bindsRecommendationRemoteSource(source: MindboxRecommendationRemoteSource): IRecommendationRemoteSource
+    fun bindsRecommendationRemoteSource(source: ZarinaRecommendationRemoteSource): IRecommendationRemoteSource
 
     @Binds
     fun bindsRecommendationRepository(repository: RecommendationRepository): IRecommendationRepository
