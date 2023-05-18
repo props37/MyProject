@@ -1,10 +1,14 @@
 package ru.zarina.zarina.domain
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class City(
     val id: AddressId,
     val name: String,
     val region: String?,
-) {
+) : Parcelable {
 
     val priority: Int?
         get() = when (id) {

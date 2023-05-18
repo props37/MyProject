@@ -11,7 +11,6 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -45,8 +44,7 @@ class PickupViewModel @Inject constructor(
         initialValue = ""
     ).mapState(viewModelScope) { Product.Id(it) }
 
-    private val _city = MutableStateFlow<City?>(null)
-    val city = _city.asStateFlow()
+    val city = savedStateHandle.getStateFlow<City?>(KEY_SELECTED_CITY, null)
 
     private val _product = MutableStateFlow<Result<Product?>?>(null)
     val product = _product
@@ -126,7 +124,7 @@ class PickupViewModel @Inject constructor(
     }
 
     fun onCityClick(city: City) {
-        _city.value = city
+        savedStateHandle[KEY_SELECTED_CITY] = city
     }
 
     private fun loadProduct(id: Product.Id) {
@@ -138,15 +136,16 @@ class PickupViewModel @Inject constructor(
     }
 
     private fun loadUserCity() {
-        viewModelScope.launch {
-            operationTracker.track(Operation.LOADING_CITY) {
-                _city.value = interactor.getCity().getOrNull()
+        if (city.value == null)
+            viewModelScope.launch {
+                operationTracker.track(Operation.LOADING_CITY) {
+                    savedStateHandle[KEY_SELECTED_CITY] = interactor.getCity().getOrNull()
+                }
             }
-        }
     }
 
     private fun setupStockLoading() {
-        combine(selectedOffer, _city, stockReloadTrigger) { offer, city, _ ->
+        combine(selectedOffer, city, stockReloadTrigger) { offer, city, _ ->
             if (offer == null || city == null) return@combine
             operationTracker.track(Operation.LOADING_STOCKS) {
                 _stocks.value = interactor.getStocks(offer, city)
@@ -162,7 +161,7 @@ class PickupViewModel @Inject constructor(
     }
 
     private fun setupSizeUpdates() {
-        combine(_product, _city, offersReloadTrigger) { productResult, city, _ ->
+        combine(_product, city, offersReloadTrigger) { productResult, city, _ ->
             val product = productResult?.getOrNull()
             if (product == null || city == null) return@combine
             operationTracker.track(Operation.LOADING_SIZES) {
@@ -197,6 +196,7 @@ class PickupViewModel @Inject constructor(
     }
 
     companion object {
+        private const val KEY_SELECTED_CITY = "selected_city"
         private const val KEY_SELECTED_OFFER = "selected_offer"
         private const val KEY_SELECTED_SHOP = "selected_shop"
     }
