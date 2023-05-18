@@ -1,6 +1,5 @@
 package ru.zarina.zarina.ui.screens.pickup
 
-import android.content.res.Resources.NotFoundException
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,6 +21,7 @@ import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Stock
+import ru.zarina.zarina.domain.exception.NotFoundException
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
@@ -134,7 +134,7 @@ class PickupViewModel @Inject constructor(
             if (offer == null || city == null) return@combine
             operationTracker.track(Operation.LOADING_STOCKS) {
                 _stocks.value = interactor.getStocks(offer, city)
-                    .recover { throwable ->
+                    .recoverCatching { throwable ->
                         when (throwable) {
                             is NotFoundException -> persistentListOf()
                             else -> throw throwable
