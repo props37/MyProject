@@ -7,6 +7,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -50,6 +52,11 @@ class PickupViewModel @Inject constructor(
     val product = _product
         .mapState(viewModelScope) { it?.getOrNull() }
 
+    private val offersReloadTrigger = MutableSharedFlow<Unit>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+        .apply { tryEmit(Unit) }
     private val _offers = MutableStateFlow<Result<List<Offer>>?>(null)
     val offers = _offers
         .mapState(viewModelScope) {
@@ -59,6 +66,11 @@ class PickupViewModel @Inject constructor(
     private val _selectedOffer = MutableStateFlow<Offer?>(null)
     val selectedOffer = _selectedOffer.asStateFlow()
 
+    private val stockReloadTrigger = MutableSharedFlow<Unit>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+        .apply { tryEmit(Unit) }
     private val _stocks = MutableStateFlow<Result<List<Stock>>?>(null)
     val stocks = _stocks
         .map { it?.getOrNull()?.toPersistentList() }
@@ -106,7 +118,11 @@ class PickupViewModel @Inject constructor(
     }
 
     fun onRefreshClick() {
-        loadProduct(productId.value)
+        when {
+            _product.value?.isFailure == true -> loadProduct(productId.value)
+            _offers.value?.isFailure == true -> offersReloadTrigger.tryEmit(Unit)
+            _stocks.value?.isFailure == true -> stockReloadTrigger.tryEmit(Unit)
+        }
     }
 
     fun onCityClick(city: City) {
@@ -130,7 +146,7 @@ class PickupViewModel @Inject constructor(
     }
 
     private fun setupStockLoading() {
-        combine(_selectedOffer, _city) { offer, city ->
+        combine(_selectedOffer, _city, stockReloadTrigger) { offer, city, _ ->
             if (offer == null || city == null) return@combine
             operationTracker.track(Operation.LOADING_STOCKS) {
                 _stocks.value = interactor.getStocks(offer, city)
@@ -146,7 +162,7 @@ class PickupViewModel @Inject constructor(
     }
 
     private fun setupSizeUpdates() {
-        combine(_product, _city) { productResult, city ->
+        combine(_product, _city, offersReloadTrigger) { productResult, city, _ ->
             val product = productResult?.getOrNull()
             if (product == null || city == null) return@combine
             operationTracker.track(Operation.LOADING_SIZES) {
