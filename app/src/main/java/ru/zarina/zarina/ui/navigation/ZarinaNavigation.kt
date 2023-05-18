@@ -126,6 +126,9 @@ fun ZarinaNavigation(
                         remember(it) { navController.getBackStackEntry(Pickup.routeSchema) }
                     DetailsScreen(
                         parentEntry = parentEntry,
+                        goBack = {
+                            navController.popBackStack(Pickup.Details.routeSchema, true)
+                        }
                     )
                 }
             }
