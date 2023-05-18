@@ -61,4 +61,11 @@
     <string name="name">Имя</string>
     <string name="phone">Телефон</string>
     <string name="email">E-mail</string>
+    <string name="order_information">Информация о заказе</string>
+    <string name="shop">Магазин</string>
+    <string name="reservation_period">Срок резерва</string>
+    <string name="two_days">2 дня</string>
+    <string name="payment_method">Способ оплаты</string>
+    <string name="in_cash_or_by_card_upon_receiving">Наличными или картой при получении</string>
+    <string name="you_ll_be_able_to_pickup_after_sms">Вы сможете забрать заказ после получения смс о готовности заказа</string>
 </resources>

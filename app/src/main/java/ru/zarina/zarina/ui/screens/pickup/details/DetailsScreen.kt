@@ -2,13 +2,16 @@ package ru.zarina.zarina.ui.screens.pickup.details
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,13 +22,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.Shop
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.form.Input
 import ru.zarina.zarina.ui.common.components.form.SectionHeader
@@ -33,7 +39,9 @@ import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
+import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ShopProvider
 import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.compose.autofill
 
@@ -48,6 +56,7 @@ fun DetailsScreenContent(
     onPhoneChange: (String) -> Unit,
     email: String,
     onEmailChange: (String) -> Unit,
+    shop: Shop?,
     onBackClick: () -> Unit,
 ) {
     ZarinaScaffold(
@@ -74,6 +83,9 @@ fun DetailsScreenContent(
                 onPhoneChange = onPhoneChange,
                 email = email,
                 onEmailChange = onEmailChange,
+            )
+            OrderInformation(
+                shop = shop
             )
         }
     }
@@ -154,6 +166,81 @@ private fun ColumnScope.RecipientInformation(
 }
 
 @Composable
+private fun ColumnScope.OrderInformation(
+    shop: Shop?,
+) {
+    SectionHeader(
+        text = stringResource(R.string.order_information),
+        modifier = Modifier.fillMaxWidth(),
+    )
+    if (shop != null) {
+        Text(
+            text = stringResource(R.string.shop),
+            style = UiKitTheme.typography.circle1518bold,
+            color = UiKitTheme.colors.primaryContentColor,
+            textAlign = TextAlign.Start,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "${shop.name}, ${shop.address}",
+            style = UiKitTheme.typography.circle1718,
+            color = UiKitTheme.colors.primaryContentColor,
+            textAlign = TextAlign.Start,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = stringResource(R.string.working_schedule_template, shop.schedule),
+            style = UiKitTheme.typography.circle1718,
+            color = UiKitTheme.colors.primaryContentColor,
+            textAlign = TextAlign.Start,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+    }
+    Text(
+        text = stringResource(R.string.reservation_period),
+        style = UiKitTheme.typography.circle1518bold,
+        color = UiKitTheme.colors.primaryContentColor,
+        textAlign = TextAlign.Start,
+        modifier = Modifier.padding(horizontal = 16.dp),
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    Text(
+        text = stringResource(R.string.two_days),
+        style = UiKitTheme.typography.circle1718,
+        color = UiKitTheme.colors.primaryContentColor,
+        textAlign = TextAlign.Start,
+        modifier = Modifier.padding(horizontal = 16.dp),
+    )
+    Spacer(modifier = Modifier.height(12.dp))
+    Text(
+        text = stringResource(R.string.payment_method),
+        style = UiKitTheme.typography.circle1518bold,
+        color = UiKitTheme.colors.primaryContentColor,
+        textAlign = TextAlign.Start,
+        modifier = Modifier.padding(horizontal = 16.dp),
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    Text(
+        text = stringResource(R.string.in_cash_or_by_card_upon_receiving),
+        style = UiKitTheme.typography.circle1718,
+        color = UiKitTheme.colors.primaryContentColor,
+        textAlign = TextAlign.Start,
+        modifier = Modifier.padding(horizontal = 16.dp),
+    )
+    Spacer(modifier = Modifier.height(16.dp))
+    Text(
+        text = stringResource(R.string.you_ll_be_able_to_pickup_after_sms),
+        style = UiKitTheme.typography.circle1720bold,
+        color = UiKitTheme.colors.primaryContentColor,
+        textAlign = TextAlign.Start,
+        modifier = Modifier.padding(horizontal = 16.dp),
+    )
+}
+
+@Composable
 fun DetailsScreen(
     parentEntry: NavBackStackEntry,
     goBack: () -> Unit,
@@ -165,6 +252,7 @@ fun DetailsScreen(
     val name by parentViewModel.name.collectAsStateWithLifecycle()
     val phone by parentViewModel.phone.collectAsStateWithLifecycle()
     val email by parentViewModel.email.collectAsStateWithLifecycle()
+    val shop by parentViewModel.selectedShop.collectAsStateWithLifecycle()
 
     DetailsScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -180,6 +268,7 @@ fun DetailsScreen(
         onPhoneChange = parentViewModel::onPhoneChange,
         email = email,
         onEmailChange = parentViewModel::onEmailChange,
+        shop = shop?.shop,
         onBackClick = viewModel::onBackClick,
     )
 }
@@ -202,7 +291,10 @@ fun DetailsScreenBehavior(
 @FontScalePreviews
 @DensityPreviews
 @Composable
-fun DetailsScreenContentPreview() {
+fun DetailsScreenContentPreview(
+    @PreviewParameter(ShopProvider::class)
+    shop: Shop,
+) {
     ZarinaTheme {
         DetailsScreenContent(
             surname = "Петров",
@@ -213,6 +305,7 @@ fun DetailsScreenContentPreview() {
             onPhoneChange = {},
             email = "ivan@gmail.com",
             onEmailChange = {},
+            shop = shop,
             onBackClick = {},
         )
     }

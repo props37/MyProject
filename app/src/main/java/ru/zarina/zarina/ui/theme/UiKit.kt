@@ -79,6 +79,12 @@ data class UiKitTypography(
         lineHeight = 18.sp,
         fontFamily = Fonts.Families.Circle
     ),
+    val circle1518bold: TextStyle = TextStyle(
+        fontSize = 15.sp,
+        lineHeight = 18.sp,
+        fontFamily = Fonts.Families.Circle,
+        fontWeight = FontWeight.Bold
+    ),
     val circle811: TextStyle = TextStyle(
         fontSize = 8.sp,
         lineHeight = 11.sp,
