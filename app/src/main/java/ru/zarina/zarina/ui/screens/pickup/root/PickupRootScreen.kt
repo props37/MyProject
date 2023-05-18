@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -54,7 +55,10 @@ import ru.zarina.zarina.ui.screens.pickup.root.components.ShopMap
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun PickupRootScreenContent(
     city: City?,
@@ -103,6 +107,7 @@ fun PickupRootScreenContent(
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                val pagerState = rememberPagerState()
                 AnimatedContent(
                     targetState = stocks?.isEmpty() == true,
                     label = "stocks animated content",
@@ -126,6 +131,7 @@ fun PickupRootScreenContent(
                         ShopListPager(
                             stocks = stocks ?: persistentListOf(),
                             onStockPickupClick = onStockPickupClick,
+                            pagerState = pagerState,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(UiKitTheme.colors.screenBackground)
@@ -163,13 +169,13 @@ private fun ShopListPager(
     stocks: ImmutableList<Stock>,
     onStockPickupClick: (Stock) -> Unit,
     modifier: Modifier = Modifier,
+    pagerState: PagerState = rememberPagerState(),
 ) {
     Column(
         modifier = modifier
     ) {
         val coroutineScope = rememberCoroutineScope()
         val tabs = persistentListOf(*ShopListTab.values())
-        val pagerState = rememberPagerState()
         Tabs(
             options = tabs,
             selectedOption = tabs[pagerState.currentPage],
