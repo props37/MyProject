@@ -24,7 +24,7 @@ fun ScreenToolbar(
         title = {
             Text(
                 text = title,
-                style = UiKitTheme.typography.screenToolbarTitle,
+                style = UiKitTheme.typography.circle1718,
                 color = UiKitTheme.colors.primaryContentColor,
                 maxLines = 1,
             )

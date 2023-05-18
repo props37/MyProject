@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,6 +31,7 @@ import ru.zarina.zarina.utils.compose.layout.IntrinsicSizeOverride
 fun ZarinaButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    padding: PaddingValues = PaddingValues(vertical = 12.dp, horizontal = 24.dp),
     isLoading: Boolean = false,
     colors: ZarinaButtonColors = ZarinaButtonDefaults.primaryColors(),
     content: @Composable () -> Unit,
@@ -45,7 +47,7 @@ fun ZarinaButton(
             )
             .background(colors.background)
             .border(width = 1.dp, color = colors.border)
-            .padding(vertical = 12.dp, horizontal = 24.dp)
+            .padding(padding)
             .height(IntrinsicSize.Min),
     ) {
         val contentAlpha by animateFloatAsState(

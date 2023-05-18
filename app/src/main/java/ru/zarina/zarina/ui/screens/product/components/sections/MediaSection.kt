@@ -96,7 +96,7 @@ private fun BuyCompleteLookButton(
                 Text(
                     text = stringResource(R.string.buy_complete_look),
                     color = UiKitTheme.colors.productBadgeForeground,
-                    style = UiKitTheme.typography.productBadge,
+                    style = UiKitTheme.typography.circle1012,
                     maxLines = 2,
                     textAlign = TextAlign.Center,
                     modifier = Modifier

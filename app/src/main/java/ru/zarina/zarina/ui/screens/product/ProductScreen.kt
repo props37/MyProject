@@ -1,14 +1,7 @@
 package ru.zarina.zarina.ui.screens.product
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.with
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -48,8 +41,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.DeliveryAvailability
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.ErrorState
-import ru.zarina.zarina.ui.common.components.ModalError
-import ru.zarina.zarina.ui.common.components.ModalLoader
+import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -60,6 +52,7 @@ import ru.zarina.zarina.ui.screens.product.components.sections.ColorsSection
 import ru.zarina.zarina.ui.screens.product.components.sections.DeliveryAvailabilitySection
 import ru.zarina.zarina.ui.screens.product.components.sections.DetailsSection
 import ru.zarina.zarina.ui.screens.product.components.sections.MediaSection
+import ru.zarina.zarina.ui.screens.product.components.sections.PickupSection
 import ru.zarina.zarina.ui.screens.product.components.sections.PriceSection
 import ru.zarina.zarina.ui.screens.product.components.sections.ProductHorizontalSection
 import ru.zarina.zarina.ui.screens.product.components.sections.ShareSection
@@ -69,7 +62,7 @@ import ru.zarina.zarina.utils.android.share
 import java.util.UUID
 
 @OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class,
+    ExperimentalMaterial3Api::class,
     ExperimentalFoundationApi::class
 )
 @Composable
@@ -77,23 +70,30 @@ fun ProductScreenContent(
     product: Product?,
     onVariantClick: (Product.Variant) -> Unit,
     onShareClick: () -> Unit,
+    onPickupClick: (Product) -> Unit,
     completeLookProducts: ImmutableList<Product>,
     similarProducts: ImmutableList<Product>,
     onProductClick: (Product) -> Unit,
     deliveryAvailability: DeliveryAvailability?,
     onBackClick: () -> Unit,
     isProductLoaderVisible: Boolean,
-    errorState: ErrorState?,
+    errorType: ProductViewModel.ErrorType?,
+    onRefreshClick: () -> Unit,
     cache: State<Cache?>,
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.screenBackground)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-        ) {
+    val errorState = when (errorType) {
+        ProductViewModel.ErrorType.NETWORK -> ErrorState.NETWORK
+        ProductViewModel.ErrorType.NOT_FOUND -> ErrorState(
+            icon = R.drawable.ic_magnifying_glass_96,
+            title = ru.zarina.zarina.ui.common.base.Text.Resource(R.string.product_not_on_sale),
+            subtitle = ru.zarina.zarina.ui.common.base.Text.Resource(R.string.dont_fret_catalog),
+        )
+
+        ProductViewModel.ErrorType.GENERIC -> ErrorState.GENERIC
+        null -> null
+    }
+    ZarinaScaffold(
+        toolbar = {
             ScreenToolbar(
                 title = { ToolbarTitle(product = product) },
                 startIcon = {
@@ -101,101 +101,94 @@ fun ProductScreenContent(
                 },
                 modifier = Modifier.fillMaxWidth()
             )
-            if (product != null) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+        },
+        errorState = errorState,
+        isModalLoaderVisible = isProductLoaderVisible,
+        onErrorButtonClick = onRefreshClick,
+    ) {
+        if (product != null) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                val coroutineScope = rememberCoroutineScope()
+                val completeLookRequester = remember { BringIntoViewRequester() }
+                MediaSection(
+                    product = product,
+                    onBuyCompleteLookClick = {
+                        coroutineScope.launch {
+                            completeLookRequester.bringIntoView()
+                        }
+                    },
+                    cache = cache,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                PriceSection(
+                    price = product.price,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                )
+                ColorsSection(
+                    product = product,
+                    onVariantClick = onVariantClick,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
+                PickupSection(
+                    onPickupClick = { onPickupClick(product) },
                     modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState()),
-                ) {
-                    val coroutineScope = rememberCoroutineScope()
-                    val completeLookRequester = remember { BringIntoViewRequester() }
-                    MediaSection(
-                        product = product,
-                        onBuyCompleteLookClick = {
-                            coroutineScope.launch {
-                                completeLookRequester.bringIntoView()
-                            }
-                        },
-                        cache = cache,
+                        .padding(bottom = 24.dp)
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth()
+                )
+                Divider(
+                    color = UiKitTheme.colors.listDivider,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+                DetailsSection(
+                    description = product.description,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Divider(
+                    color = UiKitTheme.colors.listDivider,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+                if (completeLookProducts.isNotEmpty())
+                    ProductHorizontalSection(
+                        title = stringResource(R.string.complete_look),
+                        products = completeLookProducts,
+                        onProductClick = onProductClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .bringIntoViewRequester(completeLookRequester)
+                    )
+                if (similarProducts.isNotEmpty())
+                    ProductHorizontalSection(
+                        title = stringResource(R.string.similar_products),
+                        products = similarProducts,
+                        onProductClick = onProductClick,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    PriceSection(
-                        price = product.price,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
-                    )
-                    ColorsSection(
-                        product = product,
-                        onVariantClick = onVariantClick,
-                        modifier = Modifier.padding(bottom = 12.dp)
-                    )
-                    Divider(
-                        color = UiKitTheme.colors.listDivider,
+                DeliveryAvailabilitySection(
+                    deliveryAvailability = deliveryAvailability,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 24.dp),
+                )
+                if (product.url != null)
+                    ShareSection(
+                        onShareClick = onShareClick,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
                     )
-                    DetailsSection(
-                        description = product.description,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Divider(
-                        color = UiKitTheme.colors.listDivider,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    )
-                    if (completeLookProducts.isNotEmpty())
-                        ProductHorizontalSection(
-                            title = stringResource(R.string.complete_look),
-                            products = completeLookProducts,
-                            onProductClick = onProductClick,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .bringIntoViewRequester(completeLookRequester)
-                        )
-                    if (similarProducts.isNotEmpty())
-                        ProductHorizontalSection(
-                            title = stringResource(R.string.similar_products),
-                            products = similarProducts,
-                            onProductClick = onProductClick,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    DeliveryAvailabilitySection(
-                        deliveryAvailability = deliveryAvailability,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 24.dp),
-                    )
-                    if (product.url != null)
-                        ShareSection(
-                            onShareClick = onShareClick,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                        )
-                    Spacer(modifier = Modifier.navigationBarsPadding())
-                }
-            }
-            AnimatedContent(
-                targetState = errorState,
-                transitionSpec = { fadeIn() with fadeOut() },
-                label = "error state",
-                modifier = Modifier.fillMaxSize()
-            ) { state ->
-                if (state != null)
-                    ModalError(
-                        state = state,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .navigationBarsPadding()
-                    )
+                Spacer(modifier = Modifier.navigationBarsPadding())
             }
         }
-        ModalLoader(
-            isVisible = isProductLoaderVisible,
-            modifier = Modifier.fillMaxSize(),
-        )
     }
 }
 
@@ -211,7 +204,7 @@ private fun ToolbarTitle(
     ) {
         Text(
             text = product?.name.orEmpty(),
-            style = UiKitTheme.typography.screenToolbarTitle,
+            style = UiKitTheme.typography.circle1718,
             color = UiKitTheme.colors.primaryContentColor,
             maxLines = 1,
         )
@@ -219,7 +212,7 @@ private fun ToolbarTitle(
         if (attribute != null) {
             Text(
                 text = attribute.uppercase(),
-                style = UiKitTheme.typography.screenToolbarSubtitle,
+                style = UiKitTheme.typography.circle811,
                 color = UiKitTheme.colors.primaryContentColor,
                 maxLines = 1,
             )
@@ -230,6 +223,7 @@ private fun ToolbarTitle(
 @Composable
 fun ProductScreen(
     showProduct: (Product.Id) -> Unit,
+    showPickup: (Product.Id) -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel = hiltViewModel<ProductViewModel>()
@@ -240,11 +234,12 @@ fun ProductScreen(
     val similarProducts by viewModel.similarProducts.collectAsStateWithLifecycle()
     val deliveryAvailability by viewModel.deliveryAvailability.collectAsStateWithLifecycle()
     val isProductLoaderVisible by viewModel.isProductLoaderVisible.collectAsStateWithLifecycle()
-    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
+    val errorType by viewModel.errorType.collectAsStateWithLifecycle()
 
     ProductScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showProduct = showProduct,
+        showPickup = showPickup,
         goBack = goBack,
     )
 
@@ -252,13 +247,15 @@ fun ProductScreen(
         product = product,
         onVariantClick = viewModel::onVariantClick,
         onShareClick = viewModel::onShareClick,
+        onPickupClick = viewModel::onPickupClick,
         completeLookProducts = completeLookProducts,
         similarProducts = similarProducts,
         onProductClick = viewModel::onProductClick,
         deliveryAvailability = deliveryAvailability,
         onBackClick = viewModel::onBackClick,
         isProductLoaderVisible = isProductLoaderVisible,
-        errorState = errorState,
+        errorType = errorType,
+        onRefreshClick = viewModel::onRefreshClick,
         cache = cache
     )
 }
@@ -267,6 +264,7 @@ fun ProductScreen(
 fun ProductScreenBehavior(
     sideEffects: Flow<ProductViewModel.SideEffect>,
     showProduct: (Product.Id) -> Unit,
+    showPickup: (Product.Id) -> Unit,
     goBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -275,6 +273,7 @@ fun ProductScreenBehavior(
             when (effect) {
                 is ProductViewModel.SideEffect.ShareText -> context.share(effect.text)
                 is ProductViewModel.SideEffect.ShowProduct -> showProduct(effect.product.id)
+                is ProductViewModel.SideEffect.ShowPickup -> showPickup(effect.product.id)
                 ProductViewModel.SideEffect.GoBack -> goBack()
             }
         }
@@ -311,10 +310,12 @@ fun ProductScreenContentPreview(
                 )
             }.toPersistentList(),
             onProductClick = {},
+            onPickupClick = {},
             deliveryAvailability = deliveryAvailability,
             onBackClick = {},
             isProductLoaderVisible = false,
-            errorState = null,
+            errorType = null,
+            onRefreshClick = {},
             cache = remember { mutableStateOf(null) },
         )
     }

@@ -27,7 +27,7 @@ fun ZarinaTextButton(
         Text(
             text = text,
             color = colors.foreground,
-            style = UiKitTheme.typography.button,
+            style = UiKitTheme.typography.circle1720bold,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )

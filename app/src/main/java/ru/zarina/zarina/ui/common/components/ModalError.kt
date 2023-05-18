@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,7 +30,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 fun ModalError(
     state: ErrorState,
     modifier: Modifier = Modifier,
-    onRefreshClick: () -> Unit = {},
+    onButtonClick: () -> Unit = {},
 ) {
     Column(modifier = modifier) {
         Spacer(modifier = Modifier.weight(1f))
@@ -42,7 +41,7 @@ fun ModalError(
         Spacer(modifier = Modifier.weight(1f))
         RefreshButton(
             state = state,
-            onClick = onRefreshClick
+            onClick = onButtonClick
         )
         Spacer(modifier = Modifier.height(12.dp))
     }
@@ -68,14 +67,14 @@ private fun ErrorContent(
         if (state.title != null)
             Text(
                 text = textString(state.title),
-                style = UiKitTheme.typography.errorPlaceholderTitle,
+                style = UiKitTheme.typography.circle1720bold,
                 color = UiKitTheme.colors.primaryContentColor,
                 textAlign = TextAlign.Center,
             )
         if (state.subtitle != null)
             Text(
                 text = textString(state.subtitle),
-                style = UiKitTheme.typography.errorPlaceholderBody,
+                style = UiKitTheme.typography.circle1518,
                 color = UiKitTheme.colors.primaryContentColor,
                 textAlign = TextAlign.Center,
             )
@@ -88,9 +87,9 @@ private fun RefreshButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (state.isRefreshButtonVisible)
+    if (state.isButtonVisible && state.buttonText != null)
         ZarinaTextButton(
-            text = stringResource(id = R.string.refresh),
+            text = textString(state.buttonText),
             onClick = onClick,
             modifier = modifier
                 .fillMaxWidth()
@@ -112,7 +111,7 @@ fun ModalErrorPreview() {
                 icon = R.drawable.ic_no_network_96,
                 title = Text.String("Error title"),
                 subtitle = Text.String("Error subtitle"),
-                isRefreshButtonVisible = true,
+                isButtonVisible = true,
             ),
             modifier = Modifier.fillMaxSize(),
         )

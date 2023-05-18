@@ -39,4 +39,21 @@
     <string name="out_of_stock">Нет в наличии</string>
     <string name="buy_complete_look">Купить образ</string>
     <string name="find_and_pickup">Найти и забрать в магазине</string>
+    <string name="product_not_on_sale">Этот товар больше не продаётся</string>
+    <string name="dont_fret_catalog">Не расстраивайтесь! В нашем каталоге обязательно найдется альтернатива</string>
+    <string name="color">Цвет</string>
+    <string name="size">Размер</string>
+    <string name="unknown">Неизвестен</string>
+    <string name="dropdown">Выпадающее меню</string>
+    <string name="select_size">Выбрать размер</string>
+    <string name="select_size_appeal">Выберите размер</string>
+    <string name="list">Список</string>
+    <string name="map">Карта</string>
+    <string name="working_schedule_template">Время работы: %1$s</string>
+    <string name="last_chance">Последний шанс</string>
+    <string name="few">Мало</string>
+    <string name="enough">Достаточно</string>
+    <string name="many">Много</string>
+    <string name="pickup_at_shop">Забрать в магазине</string>
+    <string name="product_not_available_in_city">Выбранного товара нет в наличии в магазинах вашего города</string>
 </resources>

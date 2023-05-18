@@ -1,5 +1,5 @@
 [versions]
-android-gradle = "8.1.0-alpha11"
+android-gradle = "8.1.0-beta03"
 kotlin = "1.8.20"
 kotlinx-serialization = "1.5.0"
 kotlinx-collections-immutable = "0.3.5"
@@ -19,6 +19,8 @@ coil = "2.3.0"
 timber = "5.0.1"
 google-play-services-plugin = "4.3.15"
 google-play-services-location = "21.0.1"
+google-play-services-maps = "18.1.0"
+google-play-services-maps-compose = "2.11.4"
 firebase = "31.4.0"
 firebase-crashlytics = "2.9.4"
 firebase-performance = "1.4.2"
@@ -55,6 +57,7 @@ compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 accompanist-systemUi = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
+accompanist-navigation-material = { group = "com.google.accompanist", name = "accompanist-navigation-material", version.ref = "accompanist" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-compose-navigation" }
@@ -69,6 +72,8 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 google-play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "google-play-services-location" }
+google-play-services-maps-core = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "google-play-services-maps" }
+google-play-services-maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "google-play-services-maps-compose" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
 firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }

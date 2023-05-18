@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.cityselection
+package ru.zarina.zarina.ui.screens.bases.selectcity
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -34,8 +34,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,10 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.ErrorState
@@ -70,15 +65,15 @@ import ru.zarina.zarina.utils.compose.navigationOrIme
     ExperimentalMaterial3Api::class
 )
 @Composable
-fun CitySelectionScreenContent(
+fun SelectCityScreenContent(
     isSearchLoadingVisible: Boolean,
     query: String,
     onQueryChange: (String) -> Unit,
-    cityItems: ImmutableList<CitySelectionViewModel.CityListItem>,
+    cityItems: ImmutableList<SelectCityComponent.CityListItem>,
     onCityClick: (City) -> Unit,
     isRegionVisible: Boolean,
-    errorState: ErrorState?,
-    onRefreshClick: () -> Unit,
+    errorType: SelectCityComponent.ErrorType?,
+    onErrorButtonClick: (SelectCityComponent.ErrorType) -> Unit,
     onCloseClick: () -> Unit,
     isSnackbarVisible: Boolean,
     snackbarText: Text,
@@ -111,27 +106,35 @@ fun CitySelectionScreenContent(
                 .weight(1f)
         ) {
             AnimatedContent(
-                targetState = errorState,
+                targetState = errorType,
                 transitionSpec = { fadeIn() with fadeOut() },
                 label = "error state",
                 modifier = Modifier.fillMaxSize()
-            ) { error ->
-                if (error != null)
+            ) { type ->
+                if (type != null) {
+                    val state = when (type) {
+                        SelectCityComponent.ErrorType.NETWORK -> ErrorState.NETWORK
+                        SelectCityComponent.ErrorType.NO_RESULTS -> ErrorState(
+                            subtitle = Text.Resource(R.string.city_not_found),
+                        )
+
+                        SelectCityComponent.ErrorType.GENERIC -> ErrorState.GENERIC
+                    }
                     ModalError(
-                        state = error,
-                        onRefreshClick = onRefreshClick,
+                        state = state,
+                        onButtonClick = { onErrorButtonClick(type) },
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(WindowInsets.navigationOrIme.asPaddingValues())
                     )
-                else
+                } else
                     LazyColumn(
                         contentPadding = WindowInsets.navigationOrIme.asPaddingValues(),
                         modifier = Modifier.fillMaxSize()
                     ) {
                         cityItems.forEach { item ->
                             when (item) {
-                                is CitySelectionViewModel.CityListItem.Header -> stickyHeader(
+                                is SelectCityComponent.CityListItem.Header -> stickyHeader(
                                     key = item.key,
                                     contentType = item.contentType,
                                 ) {
@@ -141,7 +144,7 @@ fun CitySelectionScreenContent(
                                     )
                                 }
 
-                                is CitySelectionViewModel.CityListItem.Item -> item(
+                                is SelectCityComponent.CityListItem.Item -> item(
                                     key = item.key,
                                     contentType = item.contentType,
                                 ) {
@@ -191,7 +194,7 @@ private fun CityHeader(
     )
     Text(
         text = text,
-        style = UiKitTheme.typography.listHeaderItem,
+        style = UiKitTheme.typography.circle2026,
         color = UiKitTheme.colors.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = modifier
@@ -214,7 +217,7 @@ private fun CitySimpleItem(
     )
     Text(
         text = city.name,
-        style = UiKitTheme.typography.listRegularItem,
+        style = UiKitTheme.typography.circle1618,
         color = UiKitTheme.colors.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = modifier.padding(16.dp),
@@ -229,14 +232,14 @@ private fun CityExtendedItem(
     Column(modifier = modifier.padding(16.dp)) {
         Text(
             text = city.name,
-            style = UiKitTheme.typography.listRegularItem,
+            style = UiKitTheme.typography.circle1618,
             color = UiKitTheme.colors.primaryContentColor,
             textAlign = TextAlign.Start,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = city.region,
-            style = UiKitTheme.typography.listRegularItemSubtitle,
+            text = city.region.orEmpty(),
+            style = UiKitTheme.typography.circle1316,
             color = UiKitTheme.colors.listItemSubtitle,
             textAlign = TextAlign.Start,
         )
@@ -291,7 +294,7 @@ private fun SearchBar(
             ) {
                 Text(
                     text = stringResource(R.string.city_search),
-                    style = UiKitTheme.typography.hint,
+                    style = UiKitTheme.typography.circle1518,
                     color = UiKitTheme.colors.hint,
                     textAlign = TextAlign.Start,
                     maxLines = 1,
@@ -300,7 +303,7 @@ private fun SearchBar(
             BasicTextField(
                 value = query,
                 onValueChange = { onQueryChange(it) },
-                textStyle = UiKitTheme.typography.input.copy(color = UiKitTheme.colors.primaryContentColor),
+                textStyle = UiKitTheme.typography.circle1518.copy(color = UiKitTheme.colors.primaryContentColor),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -323,72 +326,24 @@ private fun SearchBar(
     }
 }
 
-@Composable
-fun CitySelectionScreen(
-    showHome: () -> Unit,
-) {
-    val viewModel = hiltViewModel<CitySelectionViewModel>()
-
-    val isSearchLoadingVisible by viewModel.isSearchLoadingVisible.collectAsStateWithLifecycle()
-    val query by viewModel.query.collectAsStateWithLifecycle()
-    val cityItems by viewModel.cities.collectAsStateWithLifecycle()
-    val isRegionVisible by viewModel.isRegionVisible.collectAsStateWithLifecycle()
-    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
-    val isSnackbarVisible by viewModel.isSnackbarVisible.collectAsStateWithLifecycle()
-    val snackbarText by viewModel.snackbarText.collectAsStateWithLifecycle()
-
-    CitySelectionScreenBehavior(
-        sideEffects = viewModel.sideEffects,
-        showHome = showHome,
-    )
-
-    CitySelectionScreenContent(
-        isSearchLoadingVisible = isSearchLoadingVisible,
-        query = query,
-        onQueryChange = viewModel::onQueryChange,
-        cityItems = cityItems,
-        onCityClick = viewModel::onCityClick,
-        isRegionVisible = isRegionVisible,
-        errorState = errorState,
-        onRefreshClick = viewModel::onRefreshClick,
-        onCloseClick = viewModel::onCloseClick,
-        isSnackbarVisible = isSnackbarVisible,
-        snackbarText = snackbarText,
-    )
-}
-
-@Composable
-fun CitySelectionScreenBehavior(
-    sideEffects: Flow<CitySelectionViewModel.SideEffect>,
-    showHome: () -> Unit,
-) {
-    LaunchedEffect(sideEffects) {
-        sideEffects.collect { effect ->
-            when (effect) {
-                CitySelectionViewModel.SideEffect.ShowHome -> showHome()
-            }
-        }
-    }
-}
-
 @Preview
 @FontScalePreviews
 @DensityPreviews
 @Composable
-fun CitySelectionScreenContentPreview(
+fun SelectCityScreenContentPreview(
     @PreviewParameter(CityListItemProvider::class, limit = 1)
-    cityItems: ImmutableList<CitySelectionViewModel.CityListItem>,
+    cityItems: ImmutableList<SelectCityComponent.CityListItem>,
 ) {
     ZarinaTheme {
-        CitySelectionScreenContent(
+        SelectCityScreenContent(
             isSearchLoadingVisible = true,
             query = "",
             onQueryChange = {},
-            errorState = null,
+            errorType = null,
             cityItems = cityItems,
             onCityClick = {},
             isRegionVisible = true,
-            onRefreshClick = {},
+            onErrorButtonClick = {},
             onCloseClick = {},
             isSnackbarVisible = false,
             snackbarText = Text.Empty,

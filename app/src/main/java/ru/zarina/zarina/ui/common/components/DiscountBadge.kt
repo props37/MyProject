@@ -28,7 +28,7 @@ fun DiscountBadge(
                     R.string.discount_percentage,
                     (price.discount * 100f).toInt()
                 ),
-                style = UiKitTheme.typography.productBadge,
+                style = UiKitTheme.typography.circle1012,
                 color = UiKitTheme.colors.productBadgeForeground,
             )
         }

@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.navigation.base
 
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavBackStackEntry
@@ -8,6 +9,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.navigation
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.bottomSheet
 
 /**
  * Adds the [Destination] to the [NavGraphBuilder].
@@ -52,6 +55,20 @@ fun NavGraphBuilder.dialogDestination(
         arguments = destination.arguments,
         deepLinks = destination.deepLinks,
         dialogProperties = dialogProperties,
+        content = content,
+    )
+}
+
+@OptIn(ExperimentalMaterialNavigationApi::class)
+@Suppress("Unused")
+fun NavGraphBuilder.bottomSheetDestination(
+    destination: Destination<*>,
+    content: @Composable ColumnScope.(NavBackStackEntry) -> Unit,
+) {
+    bottomSheet(
+        route = destination.routeSchema,
+        arguments = destination.arguments,
+        deepLinks = destination.deepLinks,
         content = content,
     )
 }

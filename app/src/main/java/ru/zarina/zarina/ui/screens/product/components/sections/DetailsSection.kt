@@ -23,7 +23,7 @@ fun DetailsSection(
         header = {
             Text(
                 text = stringResource(id = R.string.details),
-                style = UiKitTheme.typography.productDetailsHeader,
+                style = UiKitTheme.typography.circle1718,
                 color = UiKitTheme.colors.primaryContentColor,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
@@ -37,7 +37,7 @@ fun DetailsSection(
             description.forEach {
                 Text(
                     text = stringResource(R.string.key_value, it.first, it.second),
-                    style = UiKitTheme.typography.productDetailsContent,
+                    style = UiKitTheme.typography.circle1518,
                     color = UiKitTheme.colors.primaryContentColor,
                     textAlign = TextAlign.Start,
                 )
