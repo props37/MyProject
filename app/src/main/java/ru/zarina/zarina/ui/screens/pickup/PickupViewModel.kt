@@ -117,7 +117,7 @@ class PickupViewModel @Inject constructor(
     }
 
     fun onStockPickupClick(stock: Stock) {
-        savedStateHandle[KEY_SELECTED_SHOP] = stock.shop
+        savedStateHandle[KEY_SELECTED_SHOP] = stock
     }
 
     fun onRefreshClick() {
