@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.recommendation.remote.api.dto
+package ru.zarina.zarina.data.recommendation.remote.mindbox.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

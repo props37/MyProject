@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.recommendation.remote.api
+package ru.zarina.zarina.data.recommendation.remote.mindbox
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -8,8 +8,8 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import ru.zarina.zarina.BuildConfig
-import ru.zarina.zarina.data.recommendation.remote.api.dto.RecommendationRequestBody
-import ru.zarina.zarina.data.recommendation.remote.api.dto.RecommendationsResponseDto
+import ru.zarina.zarina.data.recommendation.remote.mindbox.dto.RecommendationRequestBody
+import ru.zarina.zarina.data.recommendation.remote.mindbox.dto.RecommendationsResponseDto
 import ru.zarina.zarina.di.Authorization
 import javax.inject.Inject
 

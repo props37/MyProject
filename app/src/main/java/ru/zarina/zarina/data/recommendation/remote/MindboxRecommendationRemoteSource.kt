@@ -1,8 +1,8 @@
 package ru.zarina.zarina.data.recommendation.remote
 
-import ru.zarina.zarina.data.recommendation.remote.api.IMindboxRecommendationApi
-import ru.zarina.zarina.data.recommendation.remote.api.dto.RecommendationRequestBody
-import ru.zarina.zarina.data.recommendation.remote.api.dto.toMindboxProductDto
+import ru.zarina.zarina.data.recommendation.remote.mindbox.IMindboxRecommendationApi
+import ru.zarina.zarina.data.recommendation.remote.mindbox.dto.RecommendationRequestBody
+import ru.zarina.zarina.data.recommendation.remote.mindbox.dto.toMindboxProductDto
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.RecommendationType
 import javax.inject.Inject

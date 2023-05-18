@@ -40,8 +40,8 @@ import ru.zarina.zarina.data.recommendation.IRecommendationRepository
 import ru.zarina.zarina.data.recommendation.RecommendationRepository
 import ru.zarina.zarina.data.recommendation.remote.IRecommendationRemoteSource
 import ru.zarina.zarina.data.recommendation.remote.MindboxRecommendationRemoteSource
-import ru.zarina.zarina.data.recommendation.remote.api.IMindboxRecommendationApi
-import ru.zarina.zarina.data.recommendation.remote.api.KtorMindboxRecommendationApi
+import ru.zarina.zarina.data.recommendation.remote.mindbox.IMindboxRecommendationApi
+import ru.zarina.zarina.data.recommendation.remote.mindbox.KtorMindboxRecommendationApi
 import ru.zarina.zarina.data.shop.IShopRepository
 import ru.zarina.zarina.data.shop.ShopRepository
 import ru.zarina.zarina.data.shop.remote.IShopRemoteSource
