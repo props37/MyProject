@@ -22,6 +22,8 @@ import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Stock
+import ru.zarina.zarina.ui.common.base.operation.OperationKey
+import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
 import ru.zarina.zarina.utils.coroutine.mapState
 import ru.zarina.zarina.utils.isNetworkException
@@ -33,6 +35,8 @@ class PickupViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val interactor: PickupInteractor,
 ) : ViewModel() {
+
+    private val operationTracker = OperationTracker()
 
     private val _errorType = MutableStateFlow<ErrorType?>(null)
     val errorType = _errorType.asStateFlow()
@@ -63,6 +67,15 @@ class PickupViewModel @Inject constructor(
         .map { it?.getOrNull()?.toPersistentList() }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
+    val isStocksLoaderVisible = operationTracker
+        .isOperationOngoing(
+            Operation.LOADING_CITY,
+            Operation.LOADING_PRODUCT,
+            Operation.LOADING_SIZES,
+            Operation.LOADING_STOCKS,
+        )
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
     init {
         loadUserCity()
         setupStockLoading()
@@ -88,37 +101,40 @@ class PickupViewModel @Inject constructor(
 
     private fun loadProduct(id: Product.Id) {
         viewModelScope.launch {
-            // TODO loader
-            interactor.getProduct(id)
-                .onSuccess {
-                    _product.value = it
-                    _errorType.value = null
-                }
-                .onFailure { throwable ->
-                    _errorType.value = when {
-                        throwable is CancellationException -> return@onFailure
-                        throwable.isNetworkException() -> ErrorType.NETWORK
-                        else -> ErrorType.GENERIC
+            operationTracker.track(Operation.LOADING_PRODUCT) {
+                interactor.getProduct(id)
+                    .onSuccess {
+                        _product.value = it
+                        _errorType.value = null
                     }
-                }
+                    .onFailure { throwable ->
+                        _errorType.value = when {
+                            throwable is CancellationException -> return@onFailure
+                            throwable.isNetworkException() -> ErrorType.NETWORK
+                            else -> ErrorType.GENERIC
+                        }
+                    }
+            }
         }
     }
 
     private fun loadUserCity() {
-        // TODO loader
         // TODO error
         viewModelScope.launch {
-            _city.value = interactor.getCity().getOrNull()
+            operationTracker.track(Operation.LOADING_CITY) {
+                _city.value = interactor.getCity().getOrNull()
+            }
         }
     }
 
     private fun setupStockLoading() {
         combine(_selectedOffer, _city) { offer, city ->
             if (offer == null || city == null) return@combine
-            // TODO loader
             // TODO error
-            _stocks.value = interactor.getStocks(offer, city)
-                .recover { persistentListOf() }
+            operationTracker.track(Operation.LOADING_STOCKS) {
+                _stocks.value = interactor.getStocks(offer, city)
+                    .recover { persistentListOf() }
+            }
         }
             .launchIn(viewModelScope)
     }
@@ -126,10 +142,11 @@ class PickupViewModel @Inject constructor(
     private fun setupSizeUpdates() {
         combine(_product, _city) { product, city ->
             if (product == null || city == null) return@combine
-            // TODO loader
             // TODO error
-            interactor.getOffers(product, city)
-                .onSuccess { _offers.value = it }
+            operationTracker.track(Operation.LOADING_SIZES) {
+                interactor.getOffers(product, city)
+                    .onSuccess { _offers.value = it }
+            }
         }
             .launchIn(viewModelScope)
 
@@ -151,5 +168,8 @@ class PickupViewModel @Inject constructor(
     }
 
     enum class ErrorType { NETWORK, GENERIC }
+
+    enum class Operation :
+        OperationKey { LOADING_CITY, LOADING_PRODUCT, LOADING_SIZES, LOADING_STOCKS }
 
 }

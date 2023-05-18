@@ -60,6 +60,7 @@ fun PickupRootScreenContent(
     product: Product?,
     selectedOffer: Offer?,
     stocks: ImmutableList<Stock>?,
+    isLoaderVisible: Boolean,
     onBackClick: () -> Unit,
     onSelectCityClick: () -> Unit,
     onSelectSizeClick: () -> Unit,
@@ -81,6 +82,7 @@ fun PickupRootScreenContent(
                 }
             )
         },
+        isModalLoaderVisible = isLoaderVisible,
         errorState = errorState,
         onErrorButtonClick = onRefreshClick,
     ) {
@@ -223,6 +225,7 @@ fun PickupRootScreen(
     val selectedOffer by parentViewModel.selectedOffer.collectAsStateWithLifecycle()
     val stocks by parentViewModel.stocks.collectAsStateWithLifecycle()
     val errorType by parentViewModel.errorType.collectAsStateWithLifecycle()
+    val isLoaderVisible by parentViewModel.isStocksLoaderVisible.collectAsStateWithLifecycle()
 
     PickupRootScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -236,6 +239,7 @@ fun PickupRootScreen(
         product = product,
         selectedOffer = selectedOffer,
         stocks = stocks,
+        isLoaderVisible = isLoaderVisible,
         onBackClick = viewModel::onBackClick,
         onSelectCityClick = viewModel::onSelectCityClick,
         onSelectSizeClick = viewModel::onSelectSizeClick,
@@ -275,6 +279,7 @@ fun PickupRootScreenContentPreview(
             product = product,
             selectedOffer = product.offers.first(),
             stocks = persistentListOf(),
+            isLoaderVisible = false,
             onBackClick = {},
             onSelectCityClick = {},
             onSelectSizeClick = {},
