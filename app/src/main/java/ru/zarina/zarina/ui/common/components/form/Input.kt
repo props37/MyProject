@@ -2,6 +2,8 @@ package ru.zarina.zarina.ui.common.components.form
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -19,6 +21,8 @@ fun Input(
     onValueChange: (String) -> Unit,
     hint: String,
     modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     BasicTextField(
@@ -27,6 +31,8 @@ fun Input(
         interactionSource = interactionSource,
         textStyle = UiKitTheme.typography.circle1718.copy(color = UiKitTheme.colors.primaryContentColor),
         singleLine = true,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         decorationBox = { innerTextField ->
             TextFieldDefaults.TextFieldDecorationBox(
                 value = value,

@@ -6,13 +6,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,6 +35,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.utils.compose.autofill
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,6 +79,7 @@ fun DetailsScreenContent(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ColumnScope.RecipientInformation(
     surname: String,
@@ -91,37 +99,57 @@ private fun ColumnScope.RecipientInformation(
         value = surname,
         onValueChange = onSurnameChange,
         hint = stringResource(id = R.string.surname),
+        keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.Words,
+            imeAction = ImeAction.Next,
+        ),
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .padding(top = 4.dp, bottom = 12.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .autofill(listOf(AutofillType.PersonLastName), onSurnameChange),
     )
     Input(
         value = name,
         onValueChange = onNameChange,
         hint = stringResource(id = R.string.name),
+        keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.Words,
+            imeAction = ImeAction.Next,
+        ),
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .padding(top = 4.dp, bottom = 12.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .autofill(listOf(AutofillType.PersonFirstName), onNameChange),
     )
     Input(
         value = phone,
         onValueChange = onPhoneChange,
         hint = stringResource(id = R.string.phone),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Phone,
+            imeAction = ImeAction.Next,
+        ),
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .padding(top = 4.dp, bottom = 12.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .autofill(listOf(AutofillType.PhoneNumber), onPhoneChange),
     )
     Input(
         value = email,
         onValueChange = onEmailChange,
         hint = stringResource(id = R.string.email),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next,
+        ),
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .padding(top = 4.dp, bottom = 12.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .autofill(listOf(AutofillType.EmailAddress), onEmailChange),
     )
 }
 
