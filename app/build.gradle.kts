@@ -102,7 +102,7 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.compose)
     implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.auth)
     implementation(libs.ktor.client.contentNegotiation)
     implementation(libs.ktor.client.logging)
