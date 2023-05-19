@@ -3,6 +3,8 @@ package ru.zarina.zarina.ui.screens.pickup.details
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -44,6 +46,7 @@ import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.compose.autofill
+import ru.zarina.zarina.utils.compose.navigationOrIme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,6 +90,7 @@ fun DetailsScreenContent(
             OrderInformation(
                 shop = shop
             )
+            Spacer(modifier = Modifier.padding(WindowInsets.navigationOrIme.asPaddingValues()))
         }
     }
 }
