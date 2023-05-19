@@ -10,6 +10,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -22,6 +23,7 @@ fun Input(
     hint: String,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
+    error: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
@@ -43,9 +45,16 @@ fun Input(
                         text = hint,
                     )
                 },
+                supportingText = {
+                    Text(
+                        text = error.orEmpty(),
+                        modifier = Modifier.graphicsLayer { translationX = -16.dp.toPx() }
+                    )
+                },
                 shape = TextFieldDefaults.filledShape,
                 singleLine = true,
                 enabled = true,
+                isError = isError,
                 visualTransformation = VisualTransformation.None,
                 interactionSource = interactionSource,
                 colors = TextFieldDefaults.textFieldColors(
