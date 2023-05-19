@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Shop
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
+import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.form.Input
 import ru.zarina.zarina.ui.common.components.form.SectionHeader
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
@@ -60,6 +61,7 @@ fun DetailsScreenContent(
     email: String,
     onEmailChange: (String) -> Unit,
     shop: Shop?,
+    onPlaceOrderClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
     ZarinaScaffold(
@@ -90,7 +92,19 @@ fun DetailsScreenContent(
             OrderInformation(
                 shop = shop
             )
-            Spacer(modifier = Modifier.padding(WindowInsets.navigationOrIme.asPaddingValues()))
+            Spacer(modifier = Modifier.height(8.dp))
+            ZarinaTextButton(
+                text = stringResource(id = R.string.place_order),
+                onClick = onPlaceOrderClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
+            Spacer(
+                modifier = Modifier
+                    .padding(WindowInsets.navigationOrIme.asPaddingValues())
+                    .height(24.dp)
+            )
         }
     }
 }
@@ -273,6 +287,7 @@ fun DetailsScreen(
         email = email,
         onEmailChange = parentViewModel::onEmailChange,
         shop = shop?.shop,
+        onPlaceOrderClick = parentViewModel::onPlaceOrderClick,
         onBackClick = viewModel::onBackClick,
     )
 }
@@ -310,6 +325,7 @@ fun DetailsScreenContentPreview(
             email = "ivan@gmail.com",
             onEmailChange = {},
             shop = shop,
+            onPlaceOrderClick = {},
             onBackClick = {},
         )
     }

@@ -148,6 +148,10 @@ class PickupViewModel @Inject constructor(
         savedStateHandle[KEY_EMAIL] = email
     }
 
+    fun onPlaceOrderClick() {
+        // TODO
+    }
+
     private fun loadProduct(id: Product.Id) {
         viewModelScope.launch {
             operationTracker.track(Operation.LOADING_PRODUCT) {
