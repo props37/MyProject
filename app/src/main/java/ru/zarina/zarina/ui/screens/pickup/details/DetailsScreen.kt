@@ -55,13 +55,15 @@ import ru.zarina.zarina.utils.compose.navigationOrIme
 @Composable
 fun DetailsScreenContent(
     surname: String,
-    surnameErrorText: Text?,
+    surnameError: Text?,
     onSurnameChange: (String) -> Unit,
     name: String,
+    nameError: Text?,
     onNameChange: (String) -> Unit,
     phone: String,
     onPhoneChange: (String) -> Unit,
     email: String,
+    emailError: Text?,
     onEmailChange: (String) -> Unit,
     shop: Shop?,
     onPlaceOrderClick: () -> Unit,
@@ -86,13 +88,15 @@ fun DetailsScreenContent(
         ) {
             RecipientInformation(
                 surname = surname,
-                surnameErrorText = surnameErrorText,
+                surnameError = surnameError,
                 onSurnameChange = onSurnameChange,
                 name = name,
+                nameError = nameError,
                 onNameChange = onNameChange,
                 phone = phone,
                 onPhoneChange = onPhoneChange,
                 email = email,
+                emailError = emailError,
                 onEmailChange = onEmailChange,
             )
             OrderInformation(
@@ -119,13 +123,15 @@ fun DetailsScreenContent(
 @Composable
 private fun ColumnScope.RecipientInformation(
     surname: String,
-    surnameErrorText: Text?,
+    surnameError: Text?,
     onSurnameChange: (String) -> Unit,
     name: String,
+    nameError: Text?,
     onNameChange: (String) -> Unit,
     phone: String,
     onPhoneChange: (String) -> Unit,
     email: String,
+    emailError: Text?,
     onEmailChange: (String) -> Unit,
 ) {
     SectionHeader(
@@ -136,8 +142,8 @@ private fun ColumnScope.RecipientInformation(
         value = surname,
         onValueChange = onSurnameChange,
         hint = stringResource(id = R.string.surname),
-        isError = surnameErrorText != null,
-        error = surnameErrorText?.let { textString(it) },
+        isError = surnameError != null,
+        error = surnameError?.let { textString(it) },
         keyboardOptions = KeyboardOptions(
             capitalization = KeyboardCapitalization.Words,
             imeAction = ImeAction.Next,
@@ -152,6 +158,8 @@ private fun ColumnScope.RecipientInformation(
         value = name,
         onValueChange = onNameChange,
         hint = stringResource(id = R.string.name),
+        isError = nameError != null,
+        error = nameError?.let { textString(it) },
         keyboardOptions = KeyboardOptions(
             capitalization = KeyboardCapitalization.Words,
             imeAction = ImeAction.Next,
@@ -180,6 +188,8 @@ private fun ColumnScope.RecipientInformation(
         value = email,
         onValueChange = onEmailChange,
         hint = stringResource(id = R.string.email),
+        isError = emailError != null,
+        error = emailError?.let { textString(it) },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Next,
@@ -278,8 +288,10 @@ fun DetailsScreen(
     val surname by parentViewModel.surname.collectAsStateWithLifecycle()
     val surnameError by parentViewModel.surnameError.collectAsStateWithLifecycle()
     val name by parentViewModel.name.collectAsStateWithLifecycle()
+    val nameError by parentViewModel.nameError.collectAsStateWithLifecycle()
     val phone by parentViewModel.phone.collectAsStateWithLifecycle()
     val email by parentViewModel.email.collectAsStateWithLifecycle()
+    val emailError by parentViewModel.emailError.collectAsStateWithLifecycle()
     val shop by parentViewModel.selectedShop.collectAsStateWithLifecycle()
 
     DetailsScreenBehavior(
@@ -289,13 +301,15 @@ fun DetailsScreen(
 
     DetailsScreenContent(
         surname = surname,
-        surnameErrorText = surnameError,
+        surnameError = surnameError,
         onSurnameChange = parentViewModel::onSurnameChange,
         name = name,
+        nameError = nameError,
         onNameChange = parentViewModel::onNameChange,
         phone = phone,
         onPhoneChange = parentViewModel::onPhoneChange,
         email = email,
+        emailError = emailError,
         onEmailChange = parentViewModel::onEmailChange,
         shop = shop?.shop,
         onPlaceOrderClick = parentViewModel::onPlaceOrderClick,
@@ -328,13 +342,15 @@ fun DetailsScreenContentPreview(
     ZarinaTheme {
         DetailsScreenContent(
             surname = "Петров",
-            surnameErrorText = Text.Resource(R.string.allowed_symbols),
+            surnameError = Text.Resource(R.string.allowed_symbols),
             onSurnameChange = {},
             name = "Иван",
+            nameError = null,
             onNameChange = {},
             phone = "123-456-7890",
             onPhoneChange = {},
             email = "ivan@gmail.com",
+            emailError = null,
             onEmailChange = {},
             shop = shop,
             onPlaceOrderClick = {},

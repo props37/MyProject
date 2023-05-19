@@ -26,6 +26,7 @@ import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Stock
 import ru.zarina.zarina.domain.exception.NotFoundException
 import ru.zarina.zarina.domain.exception.validation.EmptyException
+import ru.zarina.zarina.domain.exception.validation.FormatException
 import ru.zarina.zarina.domain.exception.validation.IllegalContentsException
 import ru.zarina.zarina.domain.exception.validation.TooLongException
 import ru.zarina.zarina.ui.common.base.Text
@@ -117,8 +118,25 @@ class PickupViewModel @Inject constructor(
     }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val name = savedStateHandle.getStateFlow(KEY_NAME, "")
+    val nameError: StateFlow<Text?> = name.map {
+        when (val exception = interactor.validateName(it).exceptionOrNull()) {
+            is TooLongException -> Text.Resource(R.string.max_length_symbols, exception.maxLength)
+            is EmptyException -> Text.Resource(R.string.field_should_be_filled)
+            is IllegalContentsException -> Text.Resource(R.string.allowed_symbols)
+            else -> null
+        }
+    }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val phone = savedStateHandle.getStateFlow(KEY_PHONE, "")
     val email = savedStateHandle.getStateFlow(KEY_EMAIL, "")
+    val emailError: StateFlow<Text?> = email.map {
+        when (interactor.validateEmail(it).exceptionOrNull()) {
+            is EmptyException -> Text.Resource(R.string.field_should_be_filled)
+            is FormatException -> Text.Resource(R.string.illegal_email_format)
+            else -> null
+        }
+    }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     init {
         loadUserCity()
