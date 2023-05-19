@@ -64,6 +64,7 @@ fun DetailsScreenContent(
     onPlaceOrderClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
+    val scrollState = rememberScrollState()
     ZarinaScaffold(
         toolbar = {
             ScreenToolbar(
@@ -71,13 +72,14 @@ fun DetailsScreenContent(
                 startIcon = {
                     BackButton(onClick = onBackClick)
                 },
+                isElevated = scrollState.canScrollBackward,
             )
         }
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(scrollState),
         ) {
             RecipientInformation(
                 surname = surname,
