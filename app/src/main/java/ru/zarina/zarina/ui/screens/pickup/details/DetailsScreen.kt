@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -57,6 +58,7 @@ fun DetailsScreenContent(
     surname: String,
     surnameError: Text?,
     onSurnameChange: (String) -> Unit,
+    onSurnameFocusChange: (Boolean) -> Unit,
     name: String,
     nameError: Text?,
     onNameChange: (String) -> Unit,
@@ -90,6 +92,7 @@ fun DetailsScreenContent(
                 surname = surname,
                 surnameError = surnameError,
                 onSurnameChange = onSurnameChange,
+                onSurnameFocusChange = onSurnameFocusChange,
                 name = name,
                 nameError = nameError,
                 onNameChange = onNameChange,
@@ -125,6 +128,7 @@ private fun ColumnScope.RecipientInformation(
     surname: String,
     surnameError: Text?,
     onSurnameChange: (String) -> Unit,
+    onSurnameFocusChange: (Boolean) -> Unit,
     name: String,
     nameError: Text?,
     onNameChange: (String) -> Unit,
@@ -151,6 +155,7 @@ private fun ColumnScope.RecipientInformation(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .padding(top = 4.dp, bottom = 12.dp)
+            .onFocusChanged { onSurnameFocusChange(it.hasFocus) }
             .fillMaxWidth()
             .autofill(listOf(AutofillType.PersonLastName), onSurnameChange),
     )
@@ -303,6 +308,7 @@ fun DetailsScreen(
         surname = surname,
         surnameError = surnameError,
         onSurnameChange = parentViewModel::onSurnameChange,
+        onSurnameFocusChange = parentViewModel::onSurnameFocusChange,
         name = name,
         nameError = nameError,
         onNameChange = parentViewModel::onNameChange,
@@ -344,6 +350,7 @@ fun DetailsScreenContentPreview(
             surname = "Петров",
             surnameError = Text.Resource(R.string.allowed_symbols),
             onSurnameChange = {},
+            onSurnameFocusChange = {},
             name = "Иван",
             nameError = null,
             onNameChange = {},

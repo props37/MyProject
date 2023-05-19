@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
@@ -29,6 +30,7 @@ import ru.zarina.zarina.domain.exception.validation.EmptyException
 import ru.zarina.zarina.domain.exception.validation.FormatException
 import ru.zarina.zarina.domain.exception.validation.IllegalContentsException
 import ru.zarina.zarina.domain.exception.validation.TooLongException
+import ru.zarina.zarina.ui.common.base.FocusState
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
@@ -108,15 +110,20 @@ class PickupViewModel @Inject constructor(
     val selectedShop = savedStateHandle.getStateFlow<Stock?>(KEY_SELECTED_SHOP, null)
 
     val surname = savedStateHandle.getStateFlow(KEY_SURNAME, "")
-    val surnameError: StateFlow<Text?> = surname.map {
-        when (val exception = interactor.validateName(it).exceptionOrNull()) {
-            is TooLongException -> Text.Resource(R.string.max_length_symbols, exception.maxLength)
-            is EmptyException -> Text.Resource(R.string.field_should_be_filled)
-            is IllegalContentsException -> Text.Resource(R.string.allowed_symbols)
-            else -> null
+    private val surnameFocusState = MutableStateFlow(FocusState())
+    val surnameError: StateFlow<Text?> =
+        combine(surname, surnameFocusState) { surname, focusState ->
+            val exception = interactor.validateName(surname).exceptionOrNull()
+            when {
+                exception is TooLongException ->
+                    Text.Resource(R.string.max_length_symbols, exception.maxLength)
+
+                exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+                exception is IllegalContentsException -> Text.Resource(R.string.allowed_symbols)
+                else -> null
+            }
         }
-    }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val name = savedStateHandle.getStateFlow(KEY_NAME, "")
     val nameError: StateFlow<Text?> = name.map {
         when (val exception = interactor.validateName(it).exceptionOrNull()) {
@@ -167,6 +174,10 @@ class PickupViewModel @Inject constructor(
 
     fun onSurnameChange(surname: String) {
         savedStateHandle[KEY_SURNAME] = surname
+    }
+
+    fun onSurnameFocusChange(isFocused: Boolean) {
+        surnameFocusState.update { it.updated(isFocused) }
     }
 
     fun onNameChange(name: String) {
