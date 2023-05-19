@@ -34,6 +34,7 @@ data class UiKitColors(
     val snackbarForeground: Color = Color.Black,
     val disabled: Color = RollingStone,
     val hint: Color = RollingStone,
+    val error: Color = Monza,
     val listDivider: Color = Mercury,
     val listItemSubtitle: Color = RollingStone,
     val pagerDot: Color = Color.White,

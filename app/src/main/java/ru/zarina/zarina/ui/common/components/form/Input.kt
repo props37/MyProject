@@ -21,6 +21,7 @@ fun Input(
     onValueChange: (String) -> Unit,
     hint: String,
     modifier: Modifier = Modifier,
+    isError: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
@@ -53,8 +54,13 @@ fun Input(
                     cursorColor = UiKitTheme.colors.primaryContentColor,
                     focusedIndicatorColor = UiKitTheme.colors.listDivider,
                     unfocusedIndicatorColor = UiKitTheme.colors.listDivider,
+                    errorIndicatorColor = UiKitTheme.colors.error,
                     focusedLabelColor = UiKitTheme.colors.hint,
                     unfocusedLabelColor = UiKitTheme.colors.hint,
+                    errorLabelColor = UiKitTheme.colors.error,
+                    focusedSupportingTextColor = UiKitTheme.colors.listDivider,
+                    unfocusedSupportingTextColor = UiKitTheme.colors.listDivider,
+                    errorSupportingTextColor = UiKitTheme.colors.error,
                 ),
                 contentPadding = TextFieldDefaults.textFieldWithLabelPadding(
                     start = 0.dp,
