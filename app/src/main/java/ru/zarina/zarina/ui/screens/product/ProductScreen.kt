@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -92,13 +93,16 @@ fun ProductScreenContent(
         ProductViewModel.ErrorType.GENERIC -> ErrorState.GENERIC
         null -> null
     }
+    val scrollState = rememberScrollState()
     ZarinaScaffold(
         toolbar = {
+            val isToolbarElevated by remember { derivedStateOf { scrollState.value > 0 } }
             ScreenToolbar(
                 title = { ToolbarTitle(product = product) },
                 startIcon = {
                     BackButton(onBackClick)
                 },
+                isElevated = isToolbarElevated,
                 modifier = Modifier.fillMaxWidth()
             )
         },
@@ -111,7 +115,7 @@ fun ProductScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScroll(scrollState),
             ) {
                 val coroutineScope = rememberCoroutineScope()
                 val completeLookRequester = remember { BringIntoViewRequester() }
