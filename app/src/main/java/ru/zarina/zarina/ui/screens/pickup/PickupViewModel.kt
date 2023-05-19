@@ -11,6 +11,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -18,11 +19,16 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Stock
 import ru.zarina.zarina.domain.exception.NotFoundException
+import ru.zarina.zarina.domain.exception.validation.EmptyException
+import ru.zarina.zarina.domain.exception.validation.IllegalContentsException
+import ru.zarina.zarina.domain.exception.validation.TooLongException
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
@@ -101,6 +107,15 @@ class PickupViewModel @Inject constructor(
     val selectedShop = savedStateHandle.getStateFlow<Stock?>(KEY_SELECTED_SHOP, null)
 
     val surname = savedStateHandle.getStateFlow(KEY_SURNAME, "")
+    val surnameError: StateFlow<Text?> = surname.map {
+        when (val exception = interactor.validateName(it).exceptionOrNull()) {
+            is TooLongException -> Text.Resource(R.string.max_length_symbols, exception.maxLength)
+            is EmptyException -> Text.Resource(R.string.field_should_be_filled)
+            is IllegalContentsException -> Text.Resource(R.string.allowed_symbols)
+            else -> null
+        }
+    }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val name = savedStateHandle.getStateFlow(KEY_NAME, "")
     val phone = savedStateHandle.getStateFlow(KEY_PHONE, "")
     val email = savedStateHandle.getStateFlow(KEY_EMAIL, "")

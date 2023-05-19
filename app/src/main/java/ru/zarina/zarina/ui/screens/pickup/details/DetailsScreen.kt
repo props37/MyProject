@@ -34,6 +34,8 @@ import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Shop
+import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.form.Input
@@ -53,6 +55,7 @@ import ru.zarina.zarina.utils.compose.navigationOrIme
 @Composable
 fun DetailsScreenContent(
     surname: String,
+    surnameErrorText: Text?,
     onSurnameChange: (String) -> Unit,
     name: String,
     onNameChange: (String) -> Unit,
@@ -83,6 +86,7 @@ fun DetailsScreenContent(
         ) {
             RecipientInformation(
                 surname = surname,
+                surnameErrorText = surnameErrorText,
                 onSurnameChange = onSurnameChange,
                 name = name,
                 onNameChange = onNameChange,
@@ -115,6 +119,7 @@ fun DetailsScreenContent(
 @Composable
 private fun ColumnScope.RecipientInformation(
     surname: String,
+    surnameErrorText: Text?,
     onSurnameChange: (String) -> Unit,
     name: String,
     onNameChange: (String) -> Unit,
@@ -131,6 +136,8 @@ private fun ColumnScope.RecipientInformation(
         value = surname,
         onValueChange = onSurnameChange,
         hint = stringResource(id = R.string.surname),
+        isError = surnameErrorText != null,
+        error = surnameErrorText?.let { textString(it) },
         keyboardOptions = KeyboardOptions(
             capitalization = KeyboardCapitalization.Words,
             imeAction = ImeAction.Next,
@@ -269,6 +276,7 @@ fun DetailsScreen(
     val viewModel = hiltViewModel<DetailsViewModel>()
 
     val surname by parentViewModel.surname.collectAsStateWithLifecycle()
+    val surnameError by parentViewModel.surnameError.collectAsStateWithLifecycle()
     val name by parentViewModel.name.collectAsStateWithLifecycle()
     val phone by parentViewModel.phone.collectAsStateWithLifecycle()
     val email by parentViewModel.email.collectAsStateWithLifecycle()
@@ -281,6 +289,7 @@ fun DetailsScreen(
 
     DetailsScreenContent(
         surname = surname,
+        surnameErrorText = surnameError,
         onSurnameChange = parentViewModel::onSurnameChange,
         name = name,
         onNameChange = parentViewModel::onNameChange,
@@ -319,6 +328,7 @@ fun DetailsScreenContentPreview(
     ZarinaTheme {
         DetailsScreenContent(
             surname = "Петров",
+            surnameErrorText = Text.Resource(R.string.allowed_symbols),
             onSurnameChange = {},
             name = "Иван",
             onNameChange = {},

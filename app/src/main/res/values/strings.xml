@@ -69,4 +69,7 @@
     <string name="in_cash_or_by_card_upon_receiving">Наличными или картой при получении</string>
     <string name="you_ll_be_able_to_pickup_after_sms">Вы сможете забрать заказ после получения смс о готовности заказа</string>
     <string name="place_order">Оформить заказ</string>
+    <string name="field_should_be_filled">Необходимо заполнить поле</string>
+    <string name="max_length_symbols">Максимальная длина: %1$d символов</string>
+    <string name="allowed_symbols">Допустимые символы: А-я и "-"</string>
 </resources>

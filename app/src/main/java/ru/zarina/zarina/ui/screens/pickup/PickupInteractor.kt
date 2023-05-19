@@ -7,6 +7,7 @@ import ru.zarina.zarina.usecase.catalog.GetProductUseCase
 import ru.zarina.zarina.usecase.shop.GetOffersUseCase
 import ru.zarina.zarina.usecase.shop.GetStocksUseCase
 import ru.zarina.zarina.usecase.user.GetCityUseCase
+import ru.zarina.zarina.usecase.user.ValidateNameUseCase
 import ru.zarina.zarina.utils.clean.invoke
 import javax.inject.Inject
 
@@ -15,6 +16,7 @@ class PickupInteractor @Inject constructor(
     private val getProductUseCase: GetProductUseCase,
     private val getOffersUseCase: GetOffersUseCase,
     private val getStocksUseCase: GetStocksUseCase,
+    private val validateNameUseCase: ValidateNameUseCase,
 ) {
 
     suspend fun getCity() = getCityUseCase()
@@ -26,5 +28,7 @@ class PickupInteractor @Inject constructor(
 
     suspend fun getStocks(offer: Offer, city: City) =
         getStocksUseCase(GetStocksUseCase.Params(offer, city))
+
+    suspend fun validateName(name: String) = validateNameUseCase(ValidateNameUseCase.Params(name))
 
 }
