@@ -22,6 +22,7 @@ fun Input(
     onValueChange: (String) -> Unit,
     hint: String,
     modifier: Modifier = Modifier,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     isError: Boolean = false,
     error: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -34,6 +35,7 @@ fun Input(
         interactionSource = interactionSource,
         textStyle = UiKitTheme.typography.circle1718.copy(color = UiKitTheme.colors.primaryContentColor),
         singleLine = true,
+        visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         decorationBox = { innerTextField ->
