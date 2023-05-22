@@ -31,6 +31,8 @@ import ru.zarina.zarina.domain.exception.validation.FormatException
 import ru.zarina.zarina.domain.exception.validation.IllegalContentsException
 import ru.zarina.zarina.domain.exception.validation.TooLongException
 import ru.zarina.zarina.ui.common.base.FocusState
+import ru.zarina.zarina.ui.common.base.ISideEffectSource
+import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
@@ -44,7 +46,8 @@ import javax.inject.Inject
 class PickupViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val interactor: PickupInteractor,
-) : ViewModel() {
+) : ViewModel(),
+    ISideEffectSource<PickupViewModel.SideEffect> by SideEffectQueue() {
 
     private val operationTracker = OperationTracker()
 
@@ -251,7 +254,6 @@ class PickupViewModel @Inject constructor(
         viewModelScope.launch {
             operationTracker.track(Operation.RESERVING) {
                 // TODO error
-                // TODO navigation
                 interactor.reserve(
                     offer = selectedOffer.value ?: return@track,
                     shop = selectedShop.value?.shop ?: return@track,
@@ -260,6 +262,7 @@ class PickupViewModel @Inject constructor(
                     email = email.value,
                     phone = phone.value,
                 )
+                    .onSuccess { sideEffect(SideEffect.ShowSuccess) }
             }
         }
     }
@@ -330,6 +333,10 @@ class PickupViewModel @Inject constructor(
 
     enum class Operation : OperationKey {
         LOADING_CITY, LOADING_PRODUCT, LOADING_SIZES, LOADING_STOCKS, RESERVING
+    }
+
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        object ShowSuccess : SideEffect
     }
 
     companion object {

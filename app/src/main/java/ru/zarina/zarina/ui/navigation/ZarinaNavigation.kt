@@ -19,6 +19,7 @@ import ru.zarina.zarina.ui.screens.pickup.details.DetailsScreen
 import ru.zarina.zarina.ui.screens.pickup.root.PickupRootScreen
 import ru.zarina.zarina.ui.screens.pickup.selectpickupcity.SelectPickupCityScreen
 import ru.zarina.zarina.ui.screens.pickup.selectsize.SelectSizeScreen
+import ru.zarina.zarina.ui.screens.pickup.success.SuccessScreen
 import ru.zarina.zarina.ui.screens.product.ProductScreen
 import ru.zarina.zarina.ui.screens.selectcity.SelectCityScreen
 
@@ -126,10 +127,20 @@ fun ZarinaNavigation(
                         remember(it) { navController.getBackStackEntry(Pickup.routeSchema) }
                     DetailsScreen(
                         parentEntry = parentEntry,
+                        showSuccess = {
+                            navController.navigate(Pickup.Success.routeSchema) {
+                                popUpTo(Pickup.Root.routeSchema) {
+                                    inclusive = true
+                                }
+                            }
+                        },
                         goBack = {
                             navController.popBackStack(Pickup.Details.routeSchema, true)
                         }
                     )
+                }
+                composableDestination(Pickup.Success) {
+                    SuccessScreen()
                 }
             }
         }

@@ -328,6 +328,7 @@ private fun ColumnScope.OrderInformation(
 @Composable
 fun DetailsScreen(
     parentEntry: NavBackStackEntry,
+    showSuccess: () -> Unit,
     goBack: () -> Unit,
 ) {
     val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
@@ -347,6 +348,8 @@ fun DetailsScreen(
 
     DetailsScreenBehavior(
         sideEffects = viewModel.sideEffects,
+        parentSideEffects = parentViewModel.sideEffects,
+        showSuccess = showSuccess,
         goBack = goBack,
     )
 
@@ -378,12 +381,21 @@ fun DetailsScreen(
 @Composable
 fun DetailsScreenBehavior(
     sideEffects: Flow<DetailsViewModel.SideEffect>,
+    parentSideEffects: Flow<PickupViewModel.SideEffect>,
+    showSuccess: () -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
                 DetailsViewModel.SideEffect.GoBack -> goBack()
+            }
+        }
+    }
+    LaunchedEffect(parentSideEffects) {
+        parentSideEffects.collect { effect ->
+            when (effect) {
+                PickupViewModel.SideEffect.ShowSuccess -> showSuccess()
             }
         }
     }

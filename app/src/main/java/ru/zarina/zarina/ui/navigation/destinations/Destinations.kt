@@ -93,4 +93,6 @@ object Pickup : Graph<Pickup.Arguments>() {
 
     object Details : SimpleDestination(BaseRoute.PICKUP_DETAILS)
 
+    object Success : SimpleDestination(BaseRoute.PICKUP_SUCCESS)
+
 }
