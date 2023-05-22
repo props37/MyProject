@@ -46,6 +46,7 @@ import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ShopProvider
+import ru.zarina.zarina.ui.common.utils.adaptPhoneValue
 import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
@@ -184,7 +185,7 @@ private fun ColumnScope.RecipientInformation(
     )
     Input(
         value = phone,
-        onValueChange = onPhoneChange,
+        onValueChange = { onPhoneChange(adaptPhoneValue(it)) },
         hint = stringResource(id = R.string.phone),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Phone,

@@ -140,7 +140,7 @@ class PickupViewModel @Inject constructor(
         }
     }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
-    val phone = savedStateHandle.getStateFlow(KEY_PHONE, "")
+    val phone = savedStateHandle.getStateFlow(KEY_PHONE, "+7")
     val email = savedStateHandle.getStateFlow(KEY_EMAIL, "")
     private val emailFocusState = MutableStateFlow(FocusState())
     val emailError: StateFlow<Text?> = combine(email, emailFocusState) { email, focusState ->
