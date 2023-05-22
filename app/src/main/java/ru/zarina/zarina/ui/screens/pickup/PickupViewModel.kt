@@ -111,9 +111,12 @@ class PickupViewModel @Inject constructor(
 
     val surname = savedStateHandle.getStateFlow(KEY_SURNAME, "")
     private val surnameFocusState = MutableStateFlow(FocusState())
+    private val surnameValidation = surname
+        .map { interactor.validateName(it) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val surnameError: StateFlow<Text?> =
-        combine(surname, surnameFocusState) { surname, focusState ->
-            val exception = interactor.validateName(surname).exceptionOrNull()
+        combine(surnameValidation, surnameFocusState) { surnameValidation, focusState ->
+            val exception = surnameValidation?.exceptionOrNull()
             when {
                 exception is TooLongException ->
                     Text.Resource(R.string.max_length_symbols, exception.maxLength)
@@ -126,41 +129,61 @@ class PickupViewModel @Inject constructor(
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val name = savedStateHandle.getStateFlow(KEY_NAME, "")
     private val nameFocusState = MutableStateFlow(FocusState())
-    val nameError: StateFlow<Text?> = combine(name, nameFocusState) { name, focusState ->
-        val exception = interactor.validateName(name).exceptionOrNull()
-        when {
-            exception is TooLongException -> Text.Resource(
-                R.string.max_length_symbols,
-                exception.maxLength
-            )
-
-            exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
-            exception is IllegalContentsException -> Text.Resource(R.string.allowed_symbols)
-            else -> null
-        }
-    }
+    private val nameValidation = name
+        .map { interactor.validateName(it) }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val nameError: StateFlow<Text?> =
+        combine(nameValidation, nameFocusState) { nameValidation, focusState ->
+            val exception = nameValidation?.exceptionOrNull()
+            when {
+                exception is TooLongException -> Text.Resource(
+                    R.string.max_length_symbols,
+                    exception.maxLength
+                )
+
+                exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+                exception is IllegalContentsException -> Text.Resource(R.string.allowed_symbols)
+                else -> null
+            }
+        }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val phone = savedStateHandle.getStateFlow(KEY_PHONE, "+7")
     private val phoneFocusState = MutableStateFlow(FocusState())
-    val phoneError: StateFlow<Text?> = combine(phone, phoneFocusState) { phone, focusState ->
-        val exception = interactor.validatePhone(phone).exceptionOrNull()
-        when {
-            exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
-            exception is FormatException && focusState.everLostFocus -> Text.Resource(R.string.illegal_phone_format)
-            else -> null
-        }
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    private val phoneValidation = phone
+        .map { interactor.validatePhone(it) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val phoneError: StateFlow<Text?> =
+        combine(phoneValidation, phoneFocusState) { phoneValidation, focusState ->
+            val exception = phoneValidation?.exceptionOrNull()
+            when {
+                exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+                exception is FormatException && focusState.everLostFocus -> Text.Resource(R.string.illegal_phone_format)
+                else -> null
+            }
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val email = savedStateHandle.getStateFlow(KEY_EMAIL, "")
     private val emailFocusState = MutableStateFlow(FocusState())
-    val emailError: StateFlow<Text?> = combine(email, emailFocusState) { email, focusState ->
-        val exception = interactor.validateEmail(email).exceptionOrNull()
-        when {
-            exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
-            exception is FormatException && focusState.everLostFocus -> Text.Resource(R.string.illegal_email_format)
-            else -> null
-        }
-    }
+    private val emailValidation = email
+        .map { interactor.validateEmail(it) }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val emailError: StateFlow<Text?> =
+        combine(emailValidation, emailFocusState) { emailValidation, focusState ->
+            val exception = emailValidation?.exceptionOrNull()
+            when {
+                exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+                exception is FormatException && focusState.everLostFocus -> Text.Resource(R.string.illegal_email_format)
+                else -> null
+            }
+        }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    val isReserveButtonEnabled = combine(
+        nameValidation,
+        surnameValidation,
+        emailValidation,
+        phoneValidation
+    ) { validations -> validations.all { it?.isSuccess == true } }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     init {
         loadUserCity()
@@ -221,8 +244,8 @@ class PickupViewModel @Inject constructor(
         emailFocusState.update { it.updated(isFocused) }
     }
 
-    fun onPlaceOrderClick() {
-        // TODO
+    fun onReserveClick() {
+
     }
 
     private fun loadProduct(id: Product.Id) {

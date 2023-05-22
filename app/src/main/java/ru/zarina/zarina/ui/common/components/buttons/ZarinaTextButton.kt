@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.common.components.buttons
 
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,17 +17,19 @@ fun ZarinaTextButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
+    isEnabled: Boolean = true,
     colors: ZarinaButtonColors = ZarinaButtonDefaults.primaryColors(),
 ) {
     ZarinaButton(
         onClick = onClick,
         colors = colors,
         isLoading = isLoading,
+        isEnabled = isEnabled,
         modifier = modifier
     ) {
         Text(
             text = text,
-            color = colors.foreground,
+            color = LocalContentColor.current,
             style = UiKitTheme.typography.circle1720bold,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,

@@ -84,6 +84,7 @@ fun DetailsScreenContent(
     shop: Shop?,
     onPlaceOrderClick: () -> Unit,
     onBackClick: () -> Unit,
+    isReserveButtonEnabled: Boolean,
 ) {
     val scrollState = rememberScrollState()
     ZarinaScaffold(
@@ -134,6 +135,7 @@ fun DetailsScreenContent(
             ZarinaTextButton(
                 text = stringResource(id = R.string.place_order),
                 onClick = onPlaceOrderClick,
+                isEnabled = isReserveButtonEnabled,
                 modifier = Modifier
                     .fillMaxWidth()
                     .bringIntoViewRequester(placeOrderRequester)
@@ -338,6 +340,7 @@ fun DetailsScreen(
     val email by parentViewModel.email.collectAsStateWithLifecycle()
     val emailError by parentViewModel.emailError.collectAsStateWithLifecycle()
     val shop by parentViewModel.selectedShop.collectAsStateWithLifecycle()
+    val isReserveButtonEnabled by parentViewModel.isReserveButtonEnabled.collectAsStateWithLifecycle()
 
     DetailsScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -362,8 +365,9 @@ fun DetailsScreen(
         onEmailChange = parentViewModel::onEmailChange,
         onEmailFocusChange = parentViewModel::onEmailFocusChange,
         shop = shop?.shop,
-        onPlaceOrderClick = parentViewModel::onPlaceOrderClick,
+        onPlaceOrderClick = parentViewModel::onReserveClick,
         onBackClick = viewModel::onBackClick,
+        isReserveButtonEnabled = isReserveButtonEnabled,
     )
 }
 
@@ -410,6 +414,7 @@ fun DetailsScreenContentPreview(
             shop = shop,
             onPlaceOrderClick = {},
             onBackClick = {},
+            isReserveButtonEnabled = true,
         )
     }
 }
