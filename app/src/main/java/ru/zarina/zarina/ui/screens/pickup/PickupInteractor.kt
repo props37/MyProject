@@ -3,9 +3,11 @@ package ru.zarina.zarina.ui.screens.pickup
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.Shop
 import ru.zarina.zarina.usecase.catalog.GetProductUseCase
 import ru.zarina.zarina.usecase.shop.GetOffersUseCase
 import ru.zarina.zarina.usecase.shop.GetStocksUseCase
+import ru.zarina.zarina.usecase.shop.ReserveUseCase
 import ru.zarina.zarina.usecase.user.GetCityUseCase
 import ru.zarina.zarina.usecase.user.ValidateEmailUseCase
 import ru.zarina.zarina.usecase.user.ValidateNameUseCase
@@ -21,6 +23,7 @@ class PickupInteractor @Inject constructor(
     private val validateNameUseCase: ValidateNameUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePhoneUseCase: ValidatePhoneUseCase,
+    private val reserveUseCase: ReserveUseCase,
 ) {
 
     suspend fun getCity() = getCityUseCase()
@@ -40,5 +43,14 @@ class PickupInteractor @Inject constructor(
 
     suspend fun validatePhone(phone: String) =
         validatePhoneUseCase(ValidatePhoneUseCase.Params(phone))
+
+    suspend fun reserve(
+        offer: Offer,
+        shop: Shop,
+        surname: String,
+        name: String,
+        phone: String,
+        email: String,
+    ) = reserveUseCase(ReserveUseCase.Params(offer, shop, surname, name, phone, email))
 
 }

@@ -245,7 +245,21 @@ class PickupViewModel @Inject constructor(
     }
 
     fun onReserveClick() {
-
+        viewModelScope.launch {
+            operationTracker.track(Operation.RESERVING) {
+                // TODO loader
+                // TODO error
+                // TODO navigation
+                interactor.reserve(
+                    offer = selectedOffer.value ?: return@track,
+                    shop = selectedShop.value?.shop ?: return@track,
+                    surname = surname.value,
+                    name = name.value,
+                    email = email.value,
+                    phone = phone.value,
+                )
+            }
+        }
     }
 
     private fun loadProduct(id: Product.Id) {
@@ -313,7 +327,7 @@ class PickupViewModel @Inject constructor(
     enum class ErrorType { NETWORK, GENERIC }
 
     enum class Operation : OperationKey {
-        LOADING_CITY, LOADING_PRODUCT, LOADING_SIZES, LOADING_STOCKS
+        LOADING_CITY, LOADING_PRODUCT, LOADING_SIZES, LOADING_STOCKS, RESERVING
     }
 
     companion object {
