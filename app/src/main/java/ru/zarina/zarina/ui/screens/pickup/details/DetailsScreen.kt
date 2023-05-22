@@ -66,7 +66,9 @@ fun DetailsScreenContent(
     onNameChange: (String) -> Unit,
     onNameFocusChange: (Boolean) -> Unit,
     phone: String,
+    phoneError: Text?,
     onPhoneChange: (String) -> Unit,
+    onPhoneFocusChange: (Boolean) -> Unit,
     email: String,
     emailError: Text?,
     onEmailChange: (String) -> Unit,
@@ -102,7 +104,9 @@ fun DetailsScreenContent(
                 onNameChange = onNameChange,
                 onNameFocusChange = onNameFocusChange,
                 phone = phone,
+                phoneError = phoneError,
                 onPhoneChange = onPhoneChange,
+                onPhoneFocusChange = onPhoneFocusChange,
                 email = email,
                 emailError = emailError,
                 onEmailChange = onEmailChange,
@@ -140,7 +144,9 @@ private fun ColumnScope.RecipientInformation(
     onNameChange: (String) -> Unit,
     onNameFocusChange: (Boolean) -> Unit,
     phone: String,
+    phoneError: Text?,
     onPhoneChange: (String) -> Unit,
+    onPhoneFocusChange: (Boolean) -> Unit,
     email: String,
     emailError: Text?,
     onEmailChange: (String) -> Unit,
@@ -188,6 +194,8 @@ private fun ColumnScope.RecipientInformation(
         value = phone,
         onValueChange = { onPhoneChange(adaptPhoneValue(it)) },
         hint = stringResource(id = R.string.phone),
+        isError = phoneError != null,
+        error = phoneError?.let { textString(it) },
         visualTransformation = PhoneVisualTransformation,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Phone,
@@ -196,6 +204,7 @@ private fun ColumnScope.RecipientInformation(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .padding(top = 4.dp, bottom = 12.dp)
+            .onFocusChanged { onPhoneFocusChange(it.hasFocus) }
             .fillMaxWidth()
             .autofill(listOf(AutofillType.PhoneNumber), onPhoneChange),
     )
@@ -306,6 +315,7 @@ fun DetailsScreen(
     val name by parentViewModel.name.collectAsStateWithLifecycle()
     val nameError by parentViewModel.nameError.collectAsStateWithLifecycle()
     val phone by parentViewModel.phone.collectAsStateWithLifecycle()
+    val phoneError by parentViewModel.phoneError.collectAsStateWithLifecycle()
     val email by parentViewModel.email.collectAsStateWithLifecycle()
     val emailError by parentViewModel.emailError.collectAsStateWithLifecycle()
     val shop by parentViewModel.selectedShop.collectAsStateWithLifecycle()
@@ -325,7 +335,9 @@ fun DetailsScreen(
         onNameChange = parentViewModel::onNameChange,
         onNameFocusChange = parentViewModel::onNameFocusChange,
         phone = phone,
+        phoneError = phoneError,
         onPhoneChange = parentViewModel::onPhoneChange,
+        onPhoneFocusChange = parentViewModel::onPhoneFocusChange,
         email = email,
         emailError = emailError,
         onEmailChange = parentViewModel::onEmailChange,
@@ -369,7 +381,9 @@ fun DetailsScreenContentPreview(
             onNameChange = {},
             onNameFocusChange = {},
             phone = "123-456-7890",
+            phoneError = null,
             onPhoneChange = {},
+            onPhoneFocusChange = {},
             email = "ivan@gmail.com",
             emailError = null,
             onEmailChange = {},

@@ -9,6 +9,7 @@ import ru.zarina.zarina.usecase.shop.GetStocksUseCase
 import ru.zarina.zarina.usecase.user.GetCityUseCase
 import ru.zarina.zarina.usecase.user.ValidateEmailUseCase
 import ru.zarina.zarina.usecase.user.ValidateNameUseCase
+import ru.zarina.zarina.usecase.user.ValidatePhoneUseCase
 import ru.zarina.zarina.utils.clean.invoke
 import javax.inject.Inject
 
@@ -19,6 +20,7 @@ class PickupInteractor @Inject constructor(
     private val getStocksUseCase: GetStocksUseCase,
     private val validateNameUseCase: ValidateNameUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validatePhoneUseCase: ValidatePhoneUseCase,
 ) {
 
     suspend fun getCity() = getCityUseCase()
@@ -35,5 +37,8 @@ class PickupInteractor @Inject constructor(
 
     suspend fun validateEmail(email: String) =
         validateEmailUseCase(ValidateEmailUseCase.Params(email))
+
+    suspend fun validatePhone(phone: String) =
+        validatePhoneUseCase(ValidatePhoneUseCase.Params(phone))
 
 }

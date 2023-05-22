@@ -141,6 +141,15 @@ class PickupViewModel @Inject constructor(
     }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val phone = savedStateHandle.getStateFlow(KEY_PHONE, "+7")
+    private val phoneFocusState = MutableStateFlow(FocusState())
+    val phoneError: StateFlow<Text?> = combine(phone, phoneFocusState) { phone, focusState ->
+        val exception = interactor.validatePhone(phone).exceptionOrNull()
+        when {
+            exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+            exception is FormatException && focusState.everLostFocus -> Text.Resource(R.string.illegal_phone_format)
+            else -> null
+        }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val email = savedStateHandle.getStateFlow(KEY_EMAIL, "")
     private val emailFocusState = MutableStateFlow(FocusState())
     val emailError: StateFlow<Text?> = combine(email, emailFocusState) { email, focusState ->
@@ -198,6 +207,10 @@ class PickupViewModel @Inject constructor(
 
     fun onPhoneChange(phone: String) {
         savedStateHandle[KEY_PHONE] = phone
+    }
+
+    fun onPhoneFocusChange(isFocused: Boolean) {
+        phoneFocusState.update { it.updated(isFocused) }
     }
 
     fun onEmailChange(email: String) {
