@@ -125,21 +125,29 @@ class PickupViewModel @Inject constructor(
         }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val name = savedStateHandle.getStateFlow(KEY_NAME, "")
-    val nameError: StateFlow<Text?> = name.map {
-        when (val exception = interactor.validateName(it).exceptionOrNull()) {
-            is TooLongException -> Text.Resource(R.string.max_length_symbols, exception.maxLength)
-            is EmptyException -> Text.Resource(R.string.field_should_be_filled)
-            is IllegalContentsException -> Text.Resource(R.string.allowed_symbols)
+    private val nameFocusState = MutableStateFlow(FocusState())
+    val nameError: StateFlow<Text?> = combine(name, nameFocusState) { name, focusState ->
+        val exception = interactor.validateName(name).exceptionOrNull()
+        when {
+            exception is TooLongException -> Text.Resource(
+                R.string.max_length_symbols,
+                exception.maxLength
+            )
+
+            exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+            exception is IllegalContentsException -> Text.Resource(R.string.allowed_symbols)
             else -> null
         }
     }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val phone = savedStateHandle.getStateFlow(KEY_PHONE, "")
     val email = savedStateHandle.getStateFlow(KEY_EMAIL, "")
-    val emailError: StateFlow<Text?> = email.map {
-        when (interactor.validateEmail(it).exceptionOrNull()) {
-            is EmptyException -> Text.Resource(R.string.field_should_be_filled)
-            is FormatException -> Text.Resource(R.string.illegal_email_format)
+    private val emailFocusState = MutableStateFlow(FocusState())
+    val emailError: StateFlow<Text?> = combine(email, emailFocusState) { email, focusState ->
+        val exception = interactor.validateEmail(email).exceptionOrNull()
+        when {
+            exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+            exception is FormatException && focusState.everLostFocus -> Text.Resource(R.string.illegal_email_format)
             else -> null
         }
     }
@@ -184,12 +192,20 @@ class PickupViewModel @Inject constructor(
         savedStateHandle[KEY_NAME] = name
     }
 
+    fun onNameFocusChange(isFocused: Boolean) {
+        nameFocusState.update { it.updated(isFocused) }
+    }
+
     fun onPhoneChange(phone: String) {
         savedStateHandle[KEY_PHONE] = phone
     }
 
     fun onEmailChange(email: String) {
         savedStateHandle[KEY_EMAIL] = email
+    }
+
+    fun onEmailFocusChange(isFocused: Boolean) {
+        emailFocusState.update { it.updated(isFocused) }
     }
 
     fun onPlaceOrderClick() {

@@ -62,11 +62,13 @@ fun DetailsScreenContent(
     name: String,
     nameError: Text?,
     onNameChange: (String) -> Unit,
+    onNameFocusChange: (Boolean) -> Unit,
     phone: String,
     onPhoneChange: (String) -> Unit,
     email: String,
     emailError: Text?,
     onEmailChange: (String) -> Unit,
+    onEmailFocusChange: (Boolean) -> Unit,
     shop: Shop?,
     onPlaceOrderClick: () -> Unit,
     onBackClick: () -> Unit,
@@ -96,11 +98,13 @@ fun DetailsScreenContent(
                 name = name,
                 nameError = nameError,
                 onNameChange = onNameChange,
+                onNameFocusChange = onNameFocusChange,
                 phone = phone,
                 onPhoneChange = onPhoneChange,
                 email = email,
                 emailError = emailError,
                 onEmailChange = onEmailChange,
+                onEmailFocusChange = onEmailFocusChange,
             )
             OrderInformation(
                 shop = shop
@@ -132,11 +136,13 @@ private fun ColumnScope.RecipientInformation(
     name: String,
     nameError: Text?,
     onNameChange: (String) -> Unit,
+    onNameFocusChange: (Boolean) -> Unit,
     phone: String,
     onPhoneChange: (String) -> Unit,
     email: String,
     emailError: Text?,
     onEmailChange: (String) -> Unit,
+    onEmailFocusChange: (Boolean) -> Unit,
 ) {
     SectionHeader(
         text = stringResource(id = R.string.recipient_information),
@@ -172,6 +178,7 @@ private fun ColumnScope.RecipientInformation(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .padding(top = 4.dp, bottom = 12.dp)
+            .onFocusChanged { onNameFocusChange(it.hasFocus) }
             .fillMaxWidth()
             .autofill(listOf(AutofillType.PersonFirstName), onNameChange),
     )
@@ -202,6 +209,7 @@ private fun ColumnScope.RecipientInformation(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .padding(top = 4.dp, bottom = 12.dp)
+            .onFocusChanged { onEmailFocusChange(it.hasFocus) }
             .fillMaxWidth()
             .autofill(listOf(AutofillType.EmailAddress), onEmailChange),
     )
@@ -312,11 +320,13 @@ fun DetailsScreen(
         name = name,
         nameError = nameError,
         onNameChange = parentViewModel::onNameChange,
+        onNameFocusChange = parentViewModel::onNameFocusChange,
         phone = phone,
         onPhoneChange = parentViewModel::onPhoneChange,
         email = email,
         emailError = emailError,
         onEmailChange = parentViewModel::onEmailChange,
+        onEmailFocusChange = parentViewModel::onEmailFocusChange,
         shop = shop?.shop,
         onPlaceOrderClick = parentViewModel::onPlaceOrderClick,
         onBackClick = viewModel::onBackClick,
@@ -354,11 +364,13 @@ fun DetailsScreenContentPreview(
             name = "Иван",
             nameError = null,
             onNameChange = {},
+            onNameFocusChange = {},
             phone = "123-456-7890",
             onPhoneChange = {},
             email = "ivan@gmail.com",
             emailError = null,
             onEmailChange = {},
+            onEmailFocusChange = {},
             shop = shop,
             onPlaceOrderClick = {},
             onBackClick = {},
