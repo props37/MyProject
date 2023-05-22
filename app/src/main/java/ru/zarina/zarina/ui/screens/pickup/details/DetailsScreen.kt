@@ -186,7 +186,7 @@ private fun ColumnScope.RecipientInformation(
         ),
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .padding(top = 4.dp, bottom = 12.dp)
+            .padding(bottom = 8.dp)
             .onFocusChanged { onSurnameFocusChange(it.hasFocus) }
             .fillMaxWidth()
             .autofill(listOf(AutofillType.PersonLastName), onSurnameChange),
@@ -203,7 +203,7 @@ private fun ColumnScope.RecipientInformation(
         ),
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .padding(top = 4.dp, bottom = 12.dp)
+            .padding(bottom = 8.dp)
             .onFocusChanged { onNameFocusChange(it.hasFocus) }
             .fillMaxWidth()
             .autofill(listOf(AutofillType.PersonFirstName), onNameChange),
@@ -221,7 +221,7 @@ private fun ColumnScope.RecipientInformation(
         ),
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .padding(top = 4.dp, bottom = 12.dp)
+            .padding(bottom = 8.dp)
             .onFocusChanged { onPhoneFocusChange(it.hasFocus) }
             .fillMaxWidth()
             .autofill(listOf(AutofillType.PhoneNumber), onPhoneChange),
@@ -243,7 +243,7 @@ private fun ColumnScope.RecipientInformation(
         },
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .padding(top = 4.dp, bottom = 12.dp)
+            .padding(bottom = 8.dp)
             .onFocusChanged { onEmailFocusChange(it.hasFocus) }
             .fillMaxWidth()
             .autofill(listOf(AutofillType.EmailAddress), onEmailChange),
