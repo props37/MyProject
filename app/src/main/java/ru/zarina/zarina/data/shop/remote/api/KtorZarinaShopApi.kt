@@ -4,7 +4,12 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
+import ru.zarina.zarina.data.shop.remote.api.dto.ReserveRequestBody
 import ru.zarina.zarina.data.shop.remote.api.dto.ShopCountryDto
 import ru.zarina.zarina.data.shop.remote.api.dto.StockDto
 import ru.zarina.zarina.di.Authorization
@@ -30,6 +35,24 @@ class KtorZarinaShopApi @Inject constructor(
         } catch (exception: ClientRequestException) {
             if (exception.response.status == HttpStatusCode.NotFound)
                 throw NotFoundException("Stocks for barcode $offerBarcode in city $cityId are empty.")
+            else
+                throw exception
+        }
+    }
+
+    override suspend fun reserve(
+        offerBarcode: String,
+        shopId: String,
+        body: ReserveRequestBody,
+    ) {
+        try {
+            client.post("/api/products/stock/offers/$offerBarcode/shops/$shopId") {
+                contentType(ContentType.Application.Json)
+                setBody(body)
+            }
+        } catch (exception: ClientRequestException) {
+            if (exception.response.status == HttpStatusCode.NotFound)
+                throw NotFoundException("Stocks for barcode $offerBarcode in shop $shopId are empty.")
             else
                 throw exception
         }
