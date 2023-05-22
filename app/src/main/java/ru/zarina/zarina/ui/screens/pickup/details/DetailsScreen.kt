@@ -85,6 +85,7 @@ fun DetailsScreenContent(
     onReserveClick: () -> Unit,
     onBackClick: () -> Unit,
     isReserveButtonEnabled: Boolean,
+    isLoaderVisible: Boolean,
 ) {
     val scrollState = rememberScrollState()
     ZarinaScaffold(
@@ -96,7 +97,8 @@ fun DetailsScreenContent(
                 },
                 isElevated = scrollState.canScrollBackward,
             )
-        }
+        },
+        isModalLoaderVisible = isLoaderVisible,
     ) {
         Column(
             modifier = Modifier
@@ -341,6 +343,7 @@ fun DetailsScreen(
     val emailError by parentViewModel.emailError.collectAsStateWithLifecycle()
     val shop by parentViewModel.selectedShop.collectAsStateWithLifecycle()
     val isReserveButtonEnabled by parentViewModel.isReserveButtonEnabled.collectAsStateWithLifecycle()
+    val isLoaderVisible by parentViewModel.isReservationLoaderVisible.collectAsStateWithLifecycle()
 
     DetailsScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -368,6 +371,7 @@ fun DetailsScreen(
         onReserveClick = parentViewModel::onReserveClick,
         onBackClick = viewModel::onBackClick,
         isReserveButtonEnabled = isReserveButtonEnabled,
+        isLoaderVisible = isLoaderVisible,
     )
 }
 
@@ -415,6 +419,7 @@ fun DetailsScreenContentPreview(
             onReserveClick = {},
             onBackClick = {},
             isReserveButtonEnabled = true,
+            isLoaderVisible = false,
         )
     }
 }

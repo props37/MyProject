@@ -185,6 +185,9 @@ class PickupViewModel @Inject constructor(
     ) { validations -> validations.all { it?.isSuccess == true } }
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
+    val isReservationLoaderVisible = operationTracker.isOperationOngoing(Operation.RESERVING)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
     init {
         loadUserCity()
         setupStockLoading()
@@ -247,7 +250,6 @@ class PickupViewModel @Inject constructor(
     fun onReserveClick() {
         viewModelScope.launch {
             operationTracker.track(Operation.RESERVING) {
-                // TODO loader
                 // TODO error
                 // TODO navigation
                 interactor.reserve(
