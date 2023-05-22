@@ -82,7 +82,7 @@ fun DetailsScreenContent(
     onEmailChange: (String) -> Unit,
     onEmailFocusChange: (Boolean) -> Unit,
     shop: Shop?,
-    onPlaceOrderClick: () -> Unit,
+    onReserveClick: () -> Unit,
     onBackClick: () -> Unit,
     isReserveButtonEnabled: Boolean,
 ) {
@@ -104,7 +104,7 @@ fun DetailsScreenContent(
                 .verticalScroll(scrollState),
         ) {
             val coroutineScope = rememberCoroutineScope()
-            val placeOrderRequester = remember { BringIntoViewRequester() }
+            val reserveRequester = remember { BringIntoViewRequester() }
             RecipientInformation(
                 surname = surname,
                 surnameError = surnameError,
@@ -124,7 +124,7 @@ fun DetailsScreenContent(
                 onEmailFocusChange = onEmailFocusChange,
                 onContinue = {
                     coroutineScope.launch {
-                        placeOrderRequester.bringIntoView()
+                        reserveRequester.bringIntoView()
                     }
                 }
             )
@@ -134,11 +134,11 @@ fun DetailsScreenContent(
             Spacer(modifier = Modifier.height(8.dp))
             ZarinaTextButton(
                 text = stringResource(id = R.string.place_order),
-                onClick = onPlaceOrderClick,
+                onClick = onReserveClick,
                 isEnabled = isReserveButtonEnabled,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .bringIntoViewRequester(placeOrderRequester)
+                    .bringIntoViewRequester(reserveRequester)
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 24.dp)
                     .padding(WindowInsets.navigationOrIme.asPaddingValues()),
@@ -365,7 +365,7 @@ fun DetailsScreen(
         onEmailChange = parentViewModel::onEmailChange,
         onEmailFocusChange = parentViewModel::onEmailFocusChange,
         shop = shop?.shop,
-        onPlaceOrderClick = parentViewModel::onReserveClick,
+        onReserveClick = parentViewModel::onReserveClick,
         onBackClick = viewModel::onBackClick,
         isReserveButtonEnabled = isReserveButtonEnabled,
     )
@@ -412,7 +412,7 @@ fun DetailsScreenContentPreview(
             onEmailChange = {},
             onEmailFocusChange = {},
             shop = shop,
-            onPlaceOrderClick = {},
+            onReserveClick = {},
             onBackClick = {},
             isReserveButtonEnabled = true,
         )
