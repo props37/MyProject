@@ -140,7 +140,11 @@ fun ZarinaNavigation(
                     )
                 }
                 composableDestination(Pickup.Success) {
-                    SuccessScreen()
+                    SuccessScreen(
+                        goBack = {
+                            navController.popBackStack(Pickup.routeSchema, true)
+                        }
+                    )
                 }
             }
         }

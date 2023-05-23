@@ -12,6 +12,12 @@ class SuccessViewModel @Inject constructor(
 ) : ViewModel(),
     ISideEffectSource<SuccessViewModel.SideEffect> by SideEffectQueue() {
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
+    fun onCloseClick() {
+        sideEffect(SideEffect.GoBack)
+    }
+
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        object GoBack : SideEffect
+    }
 
 }
