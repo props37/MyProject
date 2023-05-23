@@ -2,8 +2,12 @@ package ru.zarina.zarina.ui.screens.subscribe
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
@@ -34,12 +38,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
+import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.form.Input
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.android.openBrowser
+import ru.zarina.zarina.utils.compose.navigationOrIme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,6 +57,8 @@ fun SubscribeScreenContent(
     isSwitchChecked: Boolean,
     onSwitchCheckedChange: (Boolean) -> Unit,
     onLinkClick: (SubscribeViewModel.Link) -> Unit,
+    isSubscribeButtonEnabled: Boolean,
+    onSubscribeClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
     ZarinaScaffold(
@@ -123,6 +131,17 @@ fun SubscribeScreenContent(
                     )
                 )
             }
+            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(12.dp))
+            ZarinaTextButton(
+                text = stringResource(R.string.subscribe),
+                isEnabled = isSubscribeButtonEnabled,
+                onClick = onSubscribeClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(WindowInsets.navigationOrIme.asPaddingValues())
+                    .padding(bottom = 24.dp),
+            )
         }
     }
 }
@@ -183,6 +202,7 @@ fun SubscribeScreen(
     val name by viewModel.name.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
     val isSwitchChecked by viewModel.isSwitchChecked.collectAsStateWithLifecycle()
+    val isSubscribeButtonEnabled by viewModel.isSubscribeButtonEnabled.collectAsStateWithLifecycle()
 
     SubscribeScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -198,6 +218,8 @@ fun SubscribeScreen(
         onSwitchCheckedChange = viewModel::onSwitchCheckedChange,
         onBackClick = viewModel::onBackClick,
         onLinkClick = viewModel::onLinkClick,
+        isSubscribeButtonEnabled = isSubscribeButtonEnabled,
+        onSubscribeClick = viewModel::onSubscribeClick,
     )
 }
 
@@ -233,6 +255,8 @@ fun SubscribeScreenContentPreview() {
             onSwitchCheckedChange = { isSwitchChecked = it },
             onBackClick = {},
             onLinkClick = {},
+            isSubscribeButtonEnabled = true,
+            onSubscribeClick = {},
         )
     }
 }

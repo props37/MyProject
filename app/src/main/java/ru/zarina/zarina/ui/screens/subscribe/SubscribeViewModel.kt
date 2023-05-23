@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.data.StaticPages
@@ -34,6 +35,16 @@ class SubscribeViewModel @Inject constructor(
     private val _isSwitchChecked = MutableStateFlow(false)
     val isSwitchChecked = _isSwitchChecked.asStateFlow()
 
+    val isSubscribeButtonEnabled = combine(
+        nameValidation,
+        emailValidation,
+        _isSwitchChecked
+    ) { nameValidation, emailValidation, isChecked ->
+        nameValidation?.isSuccess == true
+                && emailValidation?.isSuccess == true
+                && isChecked
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
     fun onNameChange(name: String) {
         savedStateHandle[KEY_NAME] = name
     }
@@ -48,6 +59,10 @@ class SubscribeViewModel @Inject constructor(
 
     fun onBackClick() {
         sideEffect(SideEffect.GoBack)
+    }
+
+    fun onSubscribeClick() {
+        // TODO
     }
 
     fun onLinkClick(link: Link) {
