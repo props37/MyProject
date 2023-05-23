@@ -199,7 +199,7 @@ class PickupViewModel @Inject constructor(
     }
 
     fun onOfferClick(offer: Offer) {
-        savedStateHandle[KEY_SELECTED_OFFER] = offer
+        if (offer.isAvailable) savedStateHandle[KEY_SELECTED_OFFER] = offer
     }
 
     fun onStockPickupClick(stock: Stock) {

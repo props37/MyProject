@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.screens.pickup.selectsize
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import javax.inject.Inject
@@ -12,12 +13,16 @@ class SelectSizeViewModel @Inject constructor(
 ) : ViewModel(),
     ISideEffectSource<SelectSizeViewModel.SideEffect> by SideEffectQueue() {
 
-    fun onSizeClick() {
-        sideEffect(SideEffect.GoBack)
+    fun onOfferClick(offer: Offer) {
+        if (offer.isAvailable)
+            sideEffect(SideEffect.GoBack)
+        else
+            sideEffect(SideEffect.ShowSubscribe(offer.id))
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object GoBack : SideEffect
+        data class ShowSubscribe(val offerId: Offer.Id) : SideEffect
     }
 
 }

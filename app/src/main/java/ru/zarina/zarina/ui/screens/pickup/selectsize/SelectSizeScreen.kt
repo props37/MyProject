@@ -141,6 +141,7 @@ private fun Subscribe(
 @Composable
 fun SelectSizeScreen(
     parentEntry: NavBackStackEntry,
+    showSubscribe: (Offer.Id) -> Unit,
     goBack: () -> Unit,
 ) {
     val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
@@ -151,13 +152,14 @@ fun SelectSizeScreen(
     SelectSizeScreenBehavior(
         sideEffects = viewModel.sideEffects,
         goBack = goBack,
+        showSubscribe = showSubscribe,
     )
 
     SelectSizeScreenContent(
         offers = sizes,
         onOfferClick = {
             parentViewModel.onOfferClick(it)
-            viewModel.onSizeClick()
+            viewModel.onOfferClick(it)
         },
     )
 }
@@ -166,11 +168,13 @@ fun SelectSizeScreen(
 fun SelectSizeScreenBehavior(
     sideEffects: Flow<SelectSizeViewModel.SideEffect>,
     goBack: () -> Unit,
+    showSubscribe: (Offer.Id) -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
                 SelectSizeViewModel.SideEffect.GoBack -> goBack()
+                is SelectSizeViewModel.SideEffect.ShowSubscribe -> showSubscribe(effect.offerId)
             }
         }
     }
