@@ -77,4 +77,5 @@
     <string name="reservation_is_successful">Резерв в магазине оформлен</string>
     <string name="reservation_confirmation_will_be_sent_to_email_template">На почту %1$s придет письмо, с подтверждением резерва. Ожидайте смс о готовности заказа</string>
     <string name="continue_shopping">Продолжить покупки</string>
+    <string name="subscribe">Подписаться</string>
 </resources>
