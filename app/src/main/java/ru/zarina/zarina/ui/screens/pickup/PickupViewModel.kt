@@ -243,6 +243,7 @@ class PickupViewModel @Inject constructor(
     }
 
     fun onEmailChange(email: String) {
+        if (isReservationLoaderVisible.value) return
         savedStateHandle[KEY_EMAIL] = email
     }
 
