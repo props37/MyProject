@@ -140,7 +140,10 @@ fun ZarinaNavigation(
                     )
                 }
                 composableDestination(Pickup.Success) {
+                    val parentEntry =
+                        remember(it) { navController.getBackStackEntry(Pickup.routeSchema) }
                     SuccessScreen(
+                        parentEntry = parentEntry,
                         goBack = {
                             navController.popBackStack(Pickup.routeSchema, true)
                         }

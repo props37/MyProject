@@ -74,4 +74,7 @@
     <string name="allowed_symbols">Допустимые символы: А-я и "-"</string>
     <string name="illegal_email_format">Некорректный формат e-mail</string>
     <string name="illegal_phone_format">Некорректный формат телефона</string>
+    <string name="reservation_is_successful">Резерв в магазине оформлен</string>
+    <string name="reservation_confirmation_will_be_sent_to_email_template">На почту %1$s придет письмо, с подтверждением резерва. Ожидайте смс о готовности заказа</string>
+    <string name="continue_shopping">Продолжить покупки</string>
 </resources>

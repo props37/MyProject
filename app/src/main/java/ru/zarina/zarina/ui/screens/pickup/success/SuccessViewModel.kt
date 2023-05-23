@@ -12,6 +12,10 @@ class SuccessViewModel @Inject constructor(
 ) : ViewModel(),
     ISideEffectSource<SuccessViewModel.SideEffect> by SideEffectQueue() {
 
+    fun onContinueShoppingClick() {
+        // TODO
+    }
+
     fun onCloseClick() {
         sideEffect(SideEffect.GoBack)
     }
