@@ -13,6 +13,7 @@ import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
+import ru.zarina.zarina.ui.navigation.destinations.Subscribe
 import ru.zarina.zarina.ui.screens.home.HomeScreen
 import ru.zarina.zarina.ui.screens.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screens.pickup.details.DetailsScreen
@@ -22,6 +23,7 @@ import ru.zarina.zarina.ui.screens.pickup.selectsize.SelectSizeScreen
 import ru.zarina.zarina.ui.screens.pickup.success.SuccessScreen
 import ru.zarina.zarina.ui.screens.product.ProductScreen
 import ru.zarina.zarina.ui.screens.selectcity.SelectCityScreen
+import ru.zarina.zarina.ui.screens.subscribe.SubscribeScreen
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
@@ -148,6 +150,11 @@ fun ZarinaNavigation(
                             navController.popBackStack(Pickup.routeSchema, true)
                         }
                     )
+                }
+            }
+            navigationGraph(Subscribe) {
+                composableDestination(Subscribe.Root) {
+                    SubscribeScreen()
                 }
             }
         }
