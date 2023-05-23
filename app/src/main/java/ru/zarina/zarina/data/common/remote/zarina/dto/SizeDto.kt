@@ -34,7 +34,7 @@ data class SizeDto(
                 name = name
             )
             Offer(
-                id = offerId,
+                id = Offer.Id(offerId),
                 isAvailable = isAvailable ?: false,
                 barcode = offerBarcode,
                 size = size,

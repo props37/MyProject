@@ -51,7 +51,7 @@ class ProductProvider : PreviewParameterProvider<Product> {
             ),
             offers = persistentListOf(
                 Offer(
-                    id = "110160",
+                    id = Offer.Id("110160"),
                     barcode = "4640078695058",
                     isAvailable = true,
                     size = Size(
@@ -60,7 +60,7 @@ class ProductProvider : PreviewParameterProvider<Product> {
                     ),
                 ),
                 Offer(
-                    id = "110161",
+                    id = Offer.Id("110161"),
                     barcode = "4640078695072",
                     isAvailable = false,
                     size = Size(
