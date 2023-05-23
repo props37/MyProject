@@ -161,7 +161,11 @@ fun ZarinaNavigation(
             }
             navigationGraph(Subscribe) {
                 composableDestination(Subscribe.Root) {
-                    SubscribeScreen()
+                    SubscribeScreen(
+                        goBack = {
+                            navController.popBackStack(Subscribe.routeSchema, true)
+                        }
+                    )
                 }
             }
         }

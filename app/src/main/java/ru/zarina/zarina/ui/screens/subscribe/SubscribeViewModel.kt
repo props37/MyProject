@@ -47,7 +47,7 @@ class SubscribeViewModel @Inject constructor(
     }
 
     fun onBackClick() {
-        // TODO
+        sideEffect(SideEffect.GoBack)
     }
 
     fun onLinkClick(link: Link) {
@@ -62,6 +62,7 @@ class SubscribeViewModel @Inject constructor(
     enum class Link { POLICY, RULES, DATA }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        object GoBack : SideEffect
         data class ShowBrowser(val url: String) : SideEffect
     }
 

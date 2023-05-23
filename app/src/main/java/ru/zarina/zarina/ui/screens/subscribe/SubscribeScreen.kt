@@ -175,7 +175,9 @@ private fun AnnotatedString.Builder.ApplyForString(
 }
 
 @Composable
-fun SubscribeScreen() {
+fun SubscribeScreen(
+    goBack: () -> Unit,
+) {
     val viewModel = hiltViewModel<SubscribeViewModel>()
 
     val name by viewModel.name.collectAsStateWithLifecycle()
@@ -183,7 +185,8 @@ fun SubscribeScreen() {
     val isSwitchChecked by viewModel.isSwitchChecked.collectAsStateWithLifecycle()
 
     SubscribeScreenBehavior(
-        sideEffects = viewModel.sideEffects
+        sideEffects = viewModel.sideEffects,
+        goBack = goBack,
     )
 
     SubscribeScreenContent(
@@ -201,11 +204,13 @@ fun SubscribeScreen() {
 @Composable
 fun SubscribeScreenBehavior(
     sideEffects: Flow<SubscribeViewModel.SideEffect>,
+    goBack: () -> Unit,
 ) {
     val context = LocalContext.current
     LaunchedEffect(sideEffects, context) {
         sideEffects.collect { effect ->
             when (effect) {
+                SubscribeViewModel.SideEffect.GoBack -> goBack()
                 is SubscribeViewModel.SideEffect.ShowBrowser -> context.openBrowser(effect.url)
             }
         }
