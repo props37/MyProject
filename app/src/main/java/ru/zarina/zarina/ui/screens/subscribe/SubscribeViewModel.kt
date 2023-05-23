@@ -1,9 +1,14 @@
 package ru.zarina.zarina.ui.screens.subscribe
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.data.StaticPages
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
@@ -11,25 +16,30 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SubscribeViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val interactor: SubscribeInteractor,
 ) : ViewModel(),
     ISideEffectSource<SubscribeViewModel.SideEffect> by SideEffectQueue() {
 
-    private val _name = MutableStateFlow("")
-    val name = _name.asStateFlow()
+    val name = savedStateHandle.getStateFlow(KEY_NAME, "")
+    private val nameValidation = name
+        .map { interactor.validateName(it) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    private val _email = MutableStateFlow("")
-    val email = _email.asStateFlow()
+    val email = savedStateHandle.getStateFlow(KEY_EMAIL, "")
+    private val emailValidation = email
+        .map { interactor.validateEmail(it) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private val _isSwitchChecked = MutableStateFlow(false)
     val isSwitchChecked = _isSwitchChecked.asStateFlow()
 
     fun onNameChange(name: String) {
-        _name.value = name
+        savedStateHandle[KEY_NAME] = name
     }
 
     fun onEmailChange(email: String) {
-        _email.value = email
+        savedStateHandle[KEY_EMAIL] = email
     }
 
     fun onSwitchCheckedChange(isChecked: Boolean) {
@@ -53,6 +63,11 @@ class SubscribeViewModel @Inject constructor(
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         data class ShowBrowser(val url: String) : SideEffect
+    }
+
+    companion object {
+        private const val KEY_NAME = "name"
+        private const val KEY_EMAIL = "email"
     }
 
 }
