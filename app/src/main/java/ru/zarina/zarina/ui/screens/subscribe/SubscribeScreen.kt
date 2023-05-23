@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
@@ -37,6 +38,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
+import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.form.Input
@@ -51,9 +54,13 @@ import ru.zarina.zarina.utils.compose.navigationOrIme
 @Composable
 fun SubscribeScreenContent(
     name: String,
+    nameError: Text?,
     onNameChange: (String) -> Unit,
+    onNameFocusChange: (Boolean) -> Unit,
     email: String,
+    emailError: Text?,
     onEmailChange: (String) -> Unit,
+    onEmailFocusChange: (Boolean) -> Unit,
     isSwitchChecked: Boolean,
     onSwitchCheckedChange: (Boolean) -> Unit,
     onLinkClick: (SubscribeViewModel.Link) -> Unit,
@@ -87,16 +94,22 @@ fun SubscribeScreenContent(
                 value = name,
                 onValueChange = onNameChange,
                 hint = stringResource(R.string.name),
+                isError = nameError != null,
+                error = nameError?.let { textString(it) },
                 modifier = Modifier
                     .padding(bottom = 8.dp)
+                    .onFocusChanged { onNameFocusChange(it.hasFocus) }
                     .fillMaxWidth(),
             )
             Input(
                 value = email,
                 onValueChange = onEmailChange,
                 hint = stringResource(R.string.email),
+                isError = emailError != null,
+                error = emailError?.let { textString(it) },
                 modifier = Modifier
                     .padding(bottom = 8.dp)
+                    .onFocusChanged { onEmailFocusChange(it.hasFocus) }
                     .fillMaxWidth(),
             )
             Row(
@@ -200,7 +213,9 @@ fun SubscribeScreen(
     val viewModel = hiltViewModel<SubscribeViewModel>()
 
     val name by viewModel.name.collectAsStateWithLifecycle()
+    val nameError by viewModel.nameError.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
+    val emailError by viewModel.emailError.collectAsStateWithLifecycle()
     val isSwitchChecked by viewModel.isSwitchChecked.collectAsStateWithLifecycle()
     val isSubscribeButtonEnabled by viewModel.isSubscribeButtonEnabled.collectAsStateWithLifecycle()
 
@@ -211,9 +226,13 @@ fun SubscribeScreen(
 
     SubscribeScreenContent(
         name = name,
+        nameError = nameError,
         onNameChange = viewModel::onNameChange,
+        onNameFocusChange = viewModel::onNameFocusChange,
         email = email,
+        emailError = emailError,
         onEmailChange = viewModel::onEmailChange,
+        onEmailFocusChange = viewModel::onEmailFocusChange,
         isSwitchChecked = isSwitchChecked,
         onSwitchCheckedChange = viewModel::onSwitchCheckedChange,
         onBackClick = viewModel::onBackClick,
@@ -248,9 +267,13 @@ fun SubscribeScreenContentPreview() {
         var isSwitchChecked by remember { mutableStateOf(false) }
         SubscribeScreenContent(
             name = "Михаил",
+            nameError = null,
             onNameChange = {},
+            onNameFocusChange = {},
             email = "mikhail@gmail.com",
+            emailError = null,
             onEmailChange = {},
+            onEmailFocusChange = {},
             isSwitchChecked = isSwitchChecked,
             onSwitchCheckedChange = { isSwitchChecked = it },
             onBackClick = {},
