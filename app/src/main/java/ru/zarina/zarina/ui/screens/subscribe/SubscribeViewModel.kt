@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import ru.zarina.zarina.data.StaticPages
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import javax.inject.Inject
@@ -40,11 +41,18 @@ class SubscribeViewModel @Inject constructor(
     }
 
     fun onLinkClick(link: Link) {
-        // TODO
+        val url = when (link) {
+            Link.POLICY -> StaticPages.PRIVACY_POLICY_URL
+            Link.RULES -> StaticPages.CONDITIONS_URL
+            Link.DATA -> StaticPages.DATA_POLICY_URL
+        }
+        sideEffect(SideEffect.ShowBrowser(url))
     }
 
     enum class Link { POLICY, RULES, DATA }
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        data class ShowBrowser(val url: String) : SideEffect
+    }
 
 }

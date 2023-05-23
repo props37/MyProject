@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -34,6 +35,7 @@ import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.utils.android.openBrowser
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -182,10 +184,11 @@ fun SubscribeScreen() {
 fun SubscribeScreenBehavior(
     sideEffects: Flow<SubscribeViewModel.SideEffect>,
 ) {
-    LaunchedEffect(sideEffects) {
+    val context = LocalContext.current
+    LaunchedEffect(sideEffects, context) {
         sideEffects.collect { effect ->
             when (effect) {
-                else -> TODO()
+                is SubscribeViewModel.SideEffect.ShowBrowser -> context.openBrowser(effect.url)
             }
         }
     }
