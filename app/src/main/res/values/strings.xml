@@ -80,4 +80,8 @@
     <string name="subscribe">Подписаться</string>
     <string name="subscription_to_product">Подписка на товар</string>
     <string name="leave_your_contacts">Оставьте контактные данные и мы сообщим, когда товар появится в продаже</string>
+    <string name="acknowledgement_subscription_template">Подтверждаю согласие с %1$s, %2$s, а также даю согласие %3$s</string>
+    <string name="acknowledgement_subscription_policy">политикой конфиденциальности</string>
+    <string name="acknowledgement_subscription_rules">правилами работы интернет-магазина</string>
+    <string name="acknowledgement_subscription_data">на обработку персональных данных</string>
 </resources>

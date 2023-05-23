@@ -39,6 +39,12 @@ class SubscribeViewModel @Inject constructor(
         // TODO
     }
 
+    fun onLinkClick(link: Link) {
+        // TODO
+    }
+
+    enum class Link { POLICY, RULES, DATA }
+
     sealed interface SideEffect : ISideEffectSource.ISideEffect
 
 }

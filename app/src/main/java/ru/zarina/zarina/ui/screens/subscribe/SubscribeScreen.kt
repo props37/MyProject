@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -18,6 +19,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,6 +44,7 @@ fun SubscribeScreenContent(
     onEmailChange: (String) -> Unit,
     isSwitchChecked: Boolean,
     onSwitchCheckedChange: (Boolean) -> Unit,
+    onLinkClick: (SubscribeViewModel.Link) -> Unit,
     onBackClick: () -> Unit,
 ) {
     ZarinaScaffold(
@@ -61,7 +66,7 @@ fun SubscribeScreenContent(
         ) {
             Text(
                 text = stringResource(R.string.leave_your_contacts),
-                style = UiKitTheme.typography.circle1618,
+                style = UiKitTheme.typography.circle1718,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
             Input(
@@ -84,13 +89,69 @@ fun SubscribeScreenContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = "", // TODO
+                val text = acknowledgementText()
+                ClickableText(
+                    text = text,
+                    style = UiKitTheme.typography.circle1718.copy(color = UiKitTheme.colors.primaryContentColor),
                     modifier = Modifier.weight(1f),
-                )
+                ) { index ->
+                    val item = text
+                        .getStringAnnotations(ANNOTATION_TAG_URL, index, index)
+                        .firstOrNull()
+                        ?.item
+                    val link = item?.let { SubscribeViewModel.Link.valueOf(it) }
+                    if (link != null) onLinkClick(link)
+                }
             }
         }
     }
+}
+
+@Composable
+private fun acknowledgementText() = buildAnnotatedString {
+    val policy = stringResource(R.string.acknowledgement_subscription_policy)
+    val rules = stringResource(R.string.acknowledgement_subscription_rules)
+    val data = stringResource(R.string.acknowledgement_subscription_data)
+    val fullString = stringResource(
+        R.string.acknowledgement_subscription_template,
+        policy,
+        rules,
+        data,
+    )
+    append(fullString)
+
+    val linkStyle = SpanStyle(color = UiKitTheme.colors.primaryAccentColor)
+    ApplyForString(
+        fullString = fullString,
+        target = policy,
+        style = linkStyle,
+        annotation = SubscribeViewModel.Link.POLICY.name
+    )
+    ApplyForString(
+        fullString = fullString,
+        target = rules,
+        style = linkStyle,
+        annotation = SubscribeViewModel.Link.RULES.name
+    )
+    ApplyForString(
+        fullString = fullString,
+        target = data,
+        style = linkStyle,
+        annotation = SubscribeViewModel.Link.DATA.name
+    )
+}
+
+@Composable
+private fun AnnotatedString.Builder.ApplyForString(
+    fullString: String,
+    target: String,
+    style: SpanStyle,
+    annotation: String,
+) {
+    val startIndex = fullString.indexOf(target)
+    val endIndex = startIndex + target.length
+    addStyle(style, startIndex, endIndex)
+    addStringAnnotation(ANNOTATION_TAG_URL, annotation, startIndex, endIndex)
 }
 
 @Composable
@@ -113,6 +174,7 @@ fun SubscribeScreen() {
         isSwitchChecked = isSwitchChecked,
         onSwitchCheckedChange = viewModel::onSwitchCheckedChange,
         onBackClick = viewModel::onBackClick,
+        onLinkClick = viewModel::onLinkClick,
     )
 }
 
@@ -129,6 +191,8 @@ fun SubscribeScreenBehavior(
     }
 }
 
+private const val ANNOTATION_TAG_URL = "url"
+
 @Preview
 @Composable
 fun SubscribeScreenContentPreview() {
@@ -142,6 +206,7 @@ fun SubscribeScreenContentPreview() {
             isSwitchChecked = isSwitchChecked,
             onSwitchCheckedChange = { isSwitchChecked = it },
             onBackClick = {},
+            onLinkClick = {},
         )
     }
 }
