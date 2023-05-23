@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screens.pickup.selectsize
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -59,6 +60,7 @@ fun SelectSizeScreenContent(
             offers.forEach { offer ->
                 SizeItem(
                     size = offer.size,
+                    isAvailable = offer.isAvailable,
                     onClick = { onOfferClick(offer) },
                 )
             }
@@ -82,6 +84,7 @@ private fun Header(
 @Composable
 private fun SizeItem(
     size: Size,
+    isAvailable: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -92,9 +95,14 @@ private fun SizeItem(
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 16.dp),
     ) {
+        val textColor by animateColorAsState(
+            if (isAvailable) UiKitTheme.colors.primaryContentColor else UiKitTheme.colors.disabled,
+            label = "size text color"
+        )
         Text(
             text = size.name,
             style = UiKitTheme.typography.circle1718,
+            color = textColor,
             textAlign = TextAlign.Start,
             modifier = modifier
         )

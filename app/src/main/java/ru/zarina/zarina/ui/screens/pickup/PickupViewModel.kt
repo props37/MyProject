@@ -11,19 +11,29 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Stock
 import ru.zarina.zarina.domain.exception.NotFoundException
+import ru.zarina.zarina.domain.exception.validation.EmptyException
+import ru.zarina.zarina.domain.exception.validation.FormatException
+import ru.zarina.zarina.domain.exception.validation.IllegalContentsException
+import ru.zarina.zarina.domain.exception.validation.TooLongException
+import ru.zarina.zarina.ui.common.base.FocusState
+import ru.zarina.zarina.ui.common.base.ISideEffectSource
+import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
@@ -34,9 +44,10 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class PickupViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val interactor: PickupInteractor,
-) : ViewModel() {
+) : ViewModel(),
+    ISideEffectSource<PickupViewModel.SideEffect> by SideEffectQueue() {
 
     private val operationTracker = OperationTracker()
 
@@ -45,8 +56,7 @@ class PickupViewModel @Inject constructor(
         initialValue = ""
     ).mapState(viewModelScope) { Product.Id(it) }
 
-    private val _city = MutableStateFlow<City?>(null)
-    val city = _city.asStateFlow()
+    val city = savedStateHandle.getStateFlow<City?>(KEY_SELECTED_CITY, null)
 
     private val _product = MutableStateFlow<Result<Product?>?>(null)
     val product = _product
@@ -62,9 +72,6 @@ class PickupViewModel @Inject constructor(
         .mapState(viewModelScope) {
             it?.getOrNull()?.toPersistentList() ?: persistentListOf()
         }
-
-    private val _selectedOffer = MutableStateFlow<Offer?>(null)
-    val selectedOffer = _selectedOffer.asStateFlow()
 
     private val stockReloadTrigger = MutableSharedFlow<Unit>(
         replay = 1,
@@ -102,6 +109,88 @@ class PickupViewModel @Inject constructor(
     }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
+    val selectedOffer = savedStateHandle.getStateFlow<Offer?>(KEY_SELECTED_OFFER, null)
+    val selectedShop = savedStateHandle.getStateFlow<Stock?>(KEY_SELECTED_SHOP, null)
+
+    val surname = savedStateHandle.getStateFlow(KEY_SURNAME, "")
+    private val surnameFocusState = MutableStateFlow(FocusState())
+    private val surnameValidation = surname
+        .map { interactor.validateName(it) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val surnameError: StateFlow<Text?> =
+        combine(surnameValidation, surnameFocusState) { surnameValidation, focusState ->
+            val exception = surnameValidation?.exceptionOrNull()
+            when {
+                exception is TooLongException ->
+                    Text.Resource(R.string.max_length_symbols, exception.maxLength)
+
+                exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+                exception is IllegalContentsException -> Text.Resource(R.string.allowed_symbols)
+                else -> null
+            }
+        }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val name = savedStateHandle.getStateFlow(KEY_NAME, "")
+    private val nameFocusState = MutableStateFlow(FocusState())
+    private val nameValidation = name
+        .map { interactor.validateName(it) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val nameError: StateFlow<Text?> =
+        combine(nameValidation, nameFocusState) { nameValidation, focusState ->
+            val exception = nameValidation?.exceptionOrNull()
+            when {
+                exception is TooLongException -> Text.Resource(
+                    R.string.max_length_symbols,
+                    exception.maxLength
+                )
+
+                exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+                exception is IllegalContentsException -> Text.Resource(R.string.allowed_symbols)
+                else -> null
+            }
+        }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val phone = savedStateHandle.getStateFlow(KEY_PHONE, "+7")
+    private val phoneFocusState = MutableStateFlow(FocusState())
+    private val phoneValidation = phone
+        .map { interactor.validatePhone(it) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val phoneError: StateFlow<Text?> =
+        combine(phoneValidation, phoneFocusState) { phoneValidation, focusState ->
+            val exception = phoneValidation?.exceptionOrNull()
+            when {
+                exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+                exception is FormatException && focusState.everLostFocus -> Text.Resource(R.string.illegal_phone_format)
+                else -> null
+            }
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val email = savedStateHandle.getStateFlow(KEY_EMAIL, "")
+    private val emailFocusState = MutableStateFlow(FocusState())
+    private val emailValidation = email
+        .map { interactor.validateEmail(it) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val emailError: StateFlow<Text?> =
+        combine(emailValidation, emailFocusState) { emailValidation, focusState ->
+            val exception = emailValidation?.exceptionOrNull()
+            when {
+                exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+                exception is FormatException && focusState.everLostFocus -> Text.Resource(R.string.illegal_email_format)
+                else -> null
+            }
+        }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    val isReserveButtonEnabled = combine(
+        nameValidation,
+        surnameValidation,
+        emailValidation,
+        phoneValidation
+    ) { validations -> validations.all { it?.isSuccess == true } }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    val isReservationLoaderVisible = operationTracker.isOperationOngoing(Operation.RESERVING)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
     init {
         loadUserCity()
         setupStockLoading()
@@ -110,11 +199,11 @@ class PickupViewModel @Inject constructor(
     }
 
     fun onOfferClick(offer: Offer) {
-        _selectedOffer.value = offer
+        savedStateHandle[KEY_SELECTED_OFFER] = offer
     }
 
     fun onStockPickupClick(stock: Stock) {
-        // TODO
+        savedStateHandle[KEY_SELECTED_SHOP] = stock
     }
 
     fun onRefreshClick() {
@@ -126,7 +215,57 @@ class PickupViewModel @Inject constructor(
     }
 
     fun onCityClick(city: City) {
-        _city.value = city
+        savedStateHandle[KEY_SELECTED_CITY] = city
+    }
+
+    fun onSurnameChange(surname: String) {
+        savedStateHandle[KEY_SURNAME] = surname
+    }
+
+    fun onSurnameFocusChange(isFocused: Boolean) {
+        surnameFocusState.update { it.updated(isFocused) }
+    }
+
+    fun onNameChange(name: String) {
+        savedStateHandle[KEY_NAME] = name
+    }
+
+    fun onNameFocusChange(isFocused: Boolean) {
+        nameFocusState.update { it.updated(isFocused) }
+    }
+
+    fun onPhoneChange(phone: String) {
+        savedStateHandle[KEY_PHONE] = phone
+    }
+
+    fun onPhoneFocusChange(isFocused: Boolean) {
+        phoneFocusState.update { it.updated(isFocused) }
+    }
+
+    fun onEmailChange(email: String) {
+        if (isReservationLoaderVisible.value) return
+        savedStateHandle[KEY_EMAIL] = email
+    }
+
+    fun onEmailFocusChange(isFocused: Boolean) {
+        emailFocusState.update { it.updated(isFocused) }
+    }
+
+    fun onReserveClick() {
+        viewModelScope.launch {
+            operationTracker.track(Operation.RESERVING) {
+                // TODO error
+                interactor.reserve(
+                    offer = selectedOffer.value ?: return@track,
+                    shop = selectedShop.value?.shop ?: return@track,
+                    surname = surname.value,
+                    name = name.value,
+                    email = email.value,
+                    phone = phone.value,
+                )
+                    .onSuccess { sideEffect(SideEffect.ShowSuccess) }
+            }
+        }
     }
 
     private fun loadProduct(id: Product.Id) {
@@ -138,15 +277,16 @@ class PickupViewModel @Inject constructor(
     }
 
     private fun loadUserCity() {
-        viewModelScope.launch {
-            operationTracker.track(Operation.LOADING_CITY) {
-                _city.value = interactor.getCity().getOrNull()
+        if (city.value == null)
+            viewModelScope.launch {
+                operationTracker.track(Operation.LOADING_CITY) {
+                    savedStateHandle[KEY_SELECTED_CITY] = interactor.getCity().getOrNull()
+                }
             }
-        }
     }
 
     private fun setupStockLoading() {
-        combine(_selectedOffer, _city, stockReloadTrigger) { offer, city, _ ->
+        combine(selectedOffer, city, stockReloadTrigger) { offer, city, _ ->
             if (offer == null || city == null) return@combine
             operationTracker.track(Operation.LOADING_STOCKS) {
                 _stocks.value = interactor.getStocks(offer, city)
@@ -162,7 +302,7 @@ class PickupViewModel @Inject constructor(
     }
 
     private fun setupSizeUpdates() {
-        combine(_product, _city, offersReloadTrigger) { productResult, city, _ ->
+        combine(_product, city, offersReloadTrigger) { productResult, city, _ ->
             val product = productResult?.getOrNull()
             if (product == null || city == null) return@combine
             operationTracker.track(Operation.LOADING_SIZES) {
@@ -173,15 +313,12 @@ class PickupViewModel @Inject constructor(
 
         _offers
             .onEach { offersResult ->
-                val offers = offersResult?.getOrNull()
-                _selectedOffer.value = if (offers == null) {
-                    null
-                } else {
-                    val selectedSizeName = _selectedOffer.value?.size?.name
-                    val sameNameOffer = offers.find { it.size.name == selectedSizeName }
+                val offers = offersResult?.getOrNull() ?: return@onEach
+                val selectedOffer = selectedOffer.value
+                if (selectedOffer !in offers || selectedOffer == null) {
                     val availableOffer = offers.find { it.isAvailable }
                     val firstOffer = offers.firstOrNull()
-                    sameNameOffer ?: availableOffer ?: firstOffer
+                    savedStateHandle[KEY_SELECTED_OFFER] = availableOffer ?: firstOffer
                 }
             }
             .launchIn(viewModelScope)
@@ -196,7 +333,21 @@ class PickupViewModel @Inject constructor(
     enum class ErrorType { NETWORK, GENERIC }
 
     enum class Operation : OperationKey {
-        LOADING_CITY, LOADING_PRODUCT, LOADING_SIZES, LOADING_STOCKS
+        LOADING_CITY, LOADING_PRODUCT, LOADING_SIZES, LOADING_STOCKS, RESERVING
+    }
+
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        object ShowSuccess : SideEffect
+    }
+
+    companion object {
+        private const val KEY_SELECTED_CITY = "selected_city"
+        private const val KEY_SELECTED_OFFER = "selected_offer"
+        private const val KEY_SELECTED_SHOP = "selected_shop"
+        private const val KEY_SURNAME = "surname"
+        private const val KEY_NAME = "name"
+        private const val KEY_PHONE = "phone"
+        private const val KEY_EMAIL = "email"
     }
 
 }

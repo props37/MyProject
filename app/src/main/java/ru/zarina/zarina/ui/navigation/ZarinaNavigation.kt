@@ -15,9 +15,11 @@ import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
 import ru.zarina.zarina.ui.screens.home.HomeScreen
 import ru.zarina.zarina.ui.screens.onboarding.OnboardingScreen
+import ru.zarina.zarina.ui.screens.pickup.details.DetailsScreen
 import ru.zarina.zarina.ui.screens.pickup.root.PickupRootScreen
 import ru.zarina.zarina.ui.screens.pickup.selectpickupcity.SelectPickupCityScreen
 import ru.zarina.zarina.ui.screens.pickup.selectsize.SelectSizeScreen
+import ru.zarina.zarina.ui.screens.pickup.success.SuccessScreen
 import ru.zarina.zarina.ui.screens.product.ProductScreen
 import ru.zarina.zarina.ui.screens.selectcity.SelectCityScreen
 
@@ -92,6 +94,9 @@ fun ZarinaNavigation(
                         showSelectCity = {
                             navController.navigate(Pickup.SelectCity.route)
                         },
+                        showDetails = {
+                            navController.navigate(Pickup.Details.route)
+                        },
                         goBack = {
                             navController.popBackStack(Pickup.routeSchema, true)
                         }
@@ -114,6 +119,33 @@ fun ZarinaNavigation(
                         parentEntry = parentEntry,
                         goBack = {
                             navController.popBackStack(Pickup.SelectCity.routeSchema, true)
+                        }
+                    )
+                }
+                composableDestination(Pickup.Details) {
+                    val parentEntry =
+                        remember(it) { navController.getBackStackEntry(Pickup.routeSchema) }
+                    DetailsScreen(
+                        parentEntry = parentEntry,
+                        showSuccess = {
+                            navController.navigate(Pickup.Success.routeSchema) {
+                                popUpTo(Pickup.Root.routeSchema) {
+                                    inclusive = true
+                                }
+                            }
+                        },
+                        goBack = {
+                            navController.popBackStack(Pickup.Details.routeSchema, true)
+                        }
+                    )
+                }
+                composableDestination(Pickup.Success) {
+                    val parentEntry =
+                        remember(it) { navController.getBackStackEntry(Pickup.routeSchema) }
+                    SuccessScreen(
+                        parentEntry = parentEntry,
+                        goBack = {
+                            navController.popBackStack(Pickup.routeSchema, true)
                         }
                     )
                 }

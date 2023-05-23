@@ -8,8 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.engine.cio.CIOEngineConfig
+import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.cache.HttpCache
@@ -54,7 +53,7 @@ class NetworkModule {
         @ApplicationContext context: Context,
         json: Json,
         headerProvider: UserAgentHeaderProvider,
-    ) = HttpClient(CIO) {
+    ) = HttpClient(OkHttp) {
         baseConfig(json)
         baseZarinaConfig(context, headerProvider)
     }
@@ -68,7 +67,7 @@ class NetworkModule {
         clearDeviceAuthorizationToken: ClearDeviceAuthorizationTokenUseCase,
         json: Json,
         headerProvider: UserAgentHeaderProvider,
-    ) = HttpClient(CIO) {
+    ) = HttpClient(OkHttp) {
         baseConfig(json)
         baseZarinaConfig(context, headerProvider)
         install(ZarinaAuth) {
@@ -91,7 +90,7 @@ class NetworkModule {
         @ApplicationContext context: Context,
         json: Json,
         headerProvider: MindboxHeaderProvider,
-    ) = HttpClient(CIO) {
+    ) = HttpClient(OkHttp) {
         baseConfig(json)
         install(DefaultRequest) {
             url("https://api.mindbox.ru/v3/operations/sync/")
@@ -107,7 +106,7 @@ class NetworkModule {
         }
     }
 
-    private fun HttpClientConfig<CIOEngineConfig>.baseConfig(
+    private fun HttpClientConfig<*>.baseConfig(
         json: Json,
     ) {
         expectSuccess = true
@@ -122,7 +121,7 @@ class NetworkModule {
         }
     }
 
-    private fun HttpClientConfig<CIOEngineConfig>.baseZarinaConfig(
+    private fun HttpClientConfig<*>.baseZarinaConfig(
         context: Context,
         headerProvider: UserAgentHeaderProvider,
     ) {
