@@ -13,7 +13,7 @@ class SuccessViewModel @Inject constructor(
     ISideEffectSource<SuccessViewModel.SideEffect> by SideEffectQueue() {
 
     fun onContinueShoppingClick() {
-        // TODO
+        sideEffect(SideEffect.GoBack)
     }
 
     fun onCloseClick() {
