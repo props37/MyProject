@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
@@ -30,10 +32,13 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -105,6 +110,10 @@ fun SubscribeScreenContent(
                 isError = nameError != null,
                 error = nameError?.let { textString(it) },
                 isEnabled = isInputEnabled,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Words,
+                    imeAction = ImeAction.Next
+                ),
                 modifier = Modifier
                     .padding(bottom = 8.dp)
                     .onFocusChanged { onNameFocusChange(it.hasFocus) }
@@ -114,6 +123,7 @@ fun SubscribeScreenContent(
                     )
                     .fillMaxWidth(),
             )
+            val focusManager = LocalFocusManager.current
             Input(
                 value = email,
                 onValueChange = onEmailChange,
@@ -121,6 +131,12 @@ fun SubscribeScreenContent(
                 isError = emailError != null,
                 error = emailError?.let { textString(it) },
                 isEnabled = isInputEnabled,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions {
+                    focusManager.clearFocus()
+                },
                 modifier = Modifier
                     .padding(bottom = 8.dp)
                     .onFocusChanged { onEmailFocusChange(it.hasFocus) }
