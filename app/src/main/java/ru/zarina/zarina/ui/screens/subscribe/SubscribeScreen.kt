@@ -215,6 +215,7 @@ private fun AnnotatedString.Builder.ApplyForString(
 
 @Composable
 fun SubscribeScreen(
+    showSuccess: (String) -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel = hiltViewModel<SubscribeViewModel>()
@@ -230,6 +231,7 @@ fun SubscribeScreen(
 
     SubscribeScreenBehavior(
         sideEffects = viewModel.sideEffects,
+        showSuccess = showSuccess,
         goBack = goBack,
     )
 
@@ -256,6 +258,7 @@ fun SubscribeScreen(
 @Composable
 fun SubscribeScreenBehavior(
     sideEffects: Flow<SubscribeViewModel.SideEffect>,
+    showSuccess: (String) -> Unit,
     goBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -264,6 +267,7 @@ fun SubscribeScreenBehavior(
             when (effect) {
                 SubscribeViewModel.SideEffect.GoBack -> goBack()
                 is SubscribeViewModel.SideEffect.ShowBrowser -> context.openBrowser(effect.url)
+                is SubscribeViewModel.SideEffect.ShowSuccess -> showSuccess(effect.email)
             }
         }
     }

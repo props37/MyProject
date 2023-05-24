@@ -124,4 +124,27 @@ object Subscribe : Graph<Subscribe.Arguments>() {
 
     object Root : SimpleDestination(BaseRoute.SUBSCRIBE)
 
+    object Success : Destination<Success.Arguments>() {
+
+        const val ARGUMENT_EMAIL = "email"
+
+        override val routeSchema = RouteUtils.generateRouteSchema(
+            baseRoute = BaseRoute.SUBSCRIBE_SUCCESS,
+            argNames = arrayOf(ARGUMENT_EMAIL)
+        )
+
+        override val arguments = listOf(
+            navArgument(ARGUMENT_EMAIL) { type = NavType.StringType }
+        )
+
+        override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
+            baseRoute = BaseRoute.SUBSCRIBE_SUCCESS,
+            args = arrayOf(args.email)
+        )
+
+        data class Arguments(
+            val email: String,
+        )
+    }
+
 }

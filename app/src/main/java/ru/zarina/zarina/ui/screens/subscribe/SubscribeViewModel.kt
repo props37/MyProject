@@ -120,11 +120,15 @@ class SubscribeViewModel @Inject constructor(
         viewModelScope.launch {
             operationTracker.track(Operation.SUBSCRIBE) {
                 // TODO error
+                val email = email.value
                 interactor.subscribeToOffer(
                     offerBarcode = offerBarcode.value,
                     name = name.value,
-                    email = email.value
+                    email = email
                 )
+                    .onSuccess {
+                        sideEffect(SideEffect.ShowSuccess(email))
+                    }
             }
         }
     }
@@ -143,6 +147,7 @@ class SubscribeViewModel @Inject constructor(
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object GoBack : SideEffect
         data class ShowBrowser(val url: String) : SideEffect
+        data class ShowSuccess(val email: String) : SideEffect
     }
 
     enum class Operation : OperationKey { SUBSCRIBE }

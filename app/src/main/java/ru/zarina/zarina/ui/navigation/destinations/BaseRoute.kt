@@ -13,4 +13,5 @@ enum class BaseRoute {
     PICKUP_DETAILS,
     PICKUP_SUCCESS,
     SUBSCRIBE,
+    SUBSCRIBE_SUCCESS,
 }
