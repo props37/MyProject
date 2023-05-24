@@ -21,6 +21,7 @@ import ru.zarina.zarina.ui.common.base.FocusState
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.navigation.destinations.Subscribe
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,6 +30,8 @@ class SubscribeViewModel @Inject constructor(
     private val interactor: SubscribeInteractor,
 ) : ViewModel(),
     ISideEffectSource<SubscribeViewModel.SideEffect> by SideEffectQueue() {
+
+    private val offerId = savedStateHandle.getStateFlow(Subscribe.ARGUMENT_OFFER_ID, "")
 
     val name = savedStateHandle.getStateFlow(KEY_NAME, "")
     private val nameFocusState = MutableStateFlow(FocusState())
