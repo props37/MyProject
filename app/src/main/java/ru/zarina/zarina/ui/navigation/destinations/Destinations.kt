@@ -2,7 +2,7 @@ package ru.zarina.zarina.ui.navigation.destinations
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import ru.zarina.zarina.domain.Offer
+import ru.zarina.zarina.domain.Barcode
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Graph
@@ -101,25 +101,25 @@ object Pickup : Graph<Pickup.Arguments>() {
 
 object Subscribe : Graph<Subscribe.Arguments>() {
 
-    const val ARGUMENT_OFFER_ID = "offer_id"
+    const val ARGUMENT_OFFER_BARCODE = "offer_barcode"
 
     override val routeSchema = RouteUtils.generateRouteSchema(
         baseRoute = BaseRoute.GRAPH_SUBSCRIBE,
-        argNames = arrayOf(ARGUMENT_OFFER_ID)
+        argNames = arrayOf(ARGUMENT_OFFER_BARCODE)
     )
     override val startDestination = Root
 
     override val arguments = listOf(
-        navArgument(ARGUMENT_OFFER_ID) { type = NavType.StringType }
+        navArgument(ARGUMENT_OFFER_BARCODE) { type = NavType.StringType }
     )
 
     override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
         baseRoute = BaseRoute.GRAPH_SUBSCRIBE,
-        args = arrayOf(args.offerId.value)
+        args = arrayOf(args.offerBarcode.value)
     )
 
     data class Arguments(
-        val offerId: Offer.Id,
+        val offerBarcode: Barcode,
     )
 
     object Root : SimpleDestination(BaseRoute.SUBSCRIBE)

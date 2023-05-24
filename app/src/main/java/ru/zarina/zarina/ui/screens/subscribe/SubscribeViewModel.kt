@@ -11,8 +11,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.data.StaticPages
+import ru.zarina.zarina.domain.Barcode
 import ru.zarina.zarina.domain.exception.validation.EmptyException
 import ru.zarina.zarina.domain.exception.validation.FormatException
 import ru.zarina.zarina.domain.exception.validation.IllegalContentsException
@@ -21,7 +23,10 @@ import ru.zarina.zarina.ui.common.base.FocusState
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.base.operation.OperationKey
+import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.navigation.destinations.Subscribe
+import ru.zarina.zarina.utils.coroutine.mapState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,7 +36,10 @@ class SubscribeViewModel @Inject constructor(
 ) : ViewModel(),
     ISideEffectSource<SubscribeViewModel.SideEffect> by SideEffectQueue() {
 
-    private val offerId = savedStateHandle.getStateFlow(Subscribe.ARGUMENT_OFFER_ID, "")
+    private val offerBarcode = savedStateHandle.getStateFlow(Subscribe.ARGUMENT_OFFER_BARCODE, "")
+        .mapState(viewModelScope) { Barcode(it) }
+
+    private val operationTracker = OperationTracker()
 
     val name = savedStateHandle.getStateFlow(KEY_NAME, "")
     private val nameFocusState = MutableStateFlow(FocusState())
@@ -104,7 +112,18 @@ class SubscribeViewModel @Inject constructor(
     }
 
     fun onSubscribeClick() {
-        // TODO
+        viewModelScope.launch {
+            operationTracker.track(Operation.SUBSCRIBE) {
+                // TODO loader
+                // TODO error
+                // TODO disable input
+                interactor.subscribeToOffer(
+                    offerBarcode = offerBarcode.value,
+                    name = name.value,
+                    email = email.value
+                )
+            }
+        }
     }
 
     fun onLinkClick(link: Link) {
@@ -122,6 +141,8 @@ class SubscribeViewModel @Inject constructor(
         object GoBack : SideEffect
         data class ShowBrowser(val url: String) : SideEffect
     }
+
+    enum class Operation : OperationKey { SUBSCRIBE }
 
     companion object {
         private const val KEY_NAME = "name"

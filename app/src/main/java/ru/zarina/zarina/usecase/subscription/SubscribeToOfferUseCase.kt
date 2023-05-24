@@ -5,6 +5,7 @@ import ru.zarina.zarina.base.clean.UseCase
 import ru.zarina.zarina.data.subscription.ISubscriptionRepository
 import ru.zarina.zarina.di.Dispatcher
 import ru.zarina.zarina.di.ZarinaDispatcher
+import ru.zarina.zarina.domain.Barcode
 import javax.inject.Inject
 
 class SubscribeToOfferUseCase @Inject constructor(
@@ -18,7 +19,7 @@ class SubscribeToOfferUseCase @Inject constructor(
     }
 
     data class Params(
-        val offerBarcode: String,
+        val offerBarcode: Barcode,
         val name: String,
         val email: String,
     )
