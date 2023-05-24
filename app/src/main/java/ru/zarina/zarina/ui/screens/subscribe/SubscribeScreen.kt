@@ -23,7 +23,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
@@ -48,9 +50,10 @@ import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.android.openBrowser
+import ru.zarina.zarina.utils.compose.autofill
 import ru.zarina.zarina.utils.compose.navigationOrIme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SubscribeScreenContent(
     name: String,
@@ -105,6 +108,10 @@ fun SubscribeScreenContent(
                 modifier = Modifier
                     .padding(bottom = 8.dp)
                     .onFocusChanged { onNameFocusChange(it.hasFocus) }
+                    .autofill(
+                        types = listOf(AutofillType.PersonFirstName),
+                        onFill = onNameChange
+                    )
                     .fillMaxWidth(),
             )
             Input(
@@ -117,6 +124,10 @@ fun SubscribeScreenContent(
                 modifier = Modifier
                     .padding(bottom = 8.dp)
                     .onFocusChanged { onEmailFocusChange(it.hasFocus) }
+                    .autofill(
+                        types = listOf(AutofillType.EmailAddress),
+                        onFill = onEmailChange
+                    )
                     .fillMaxWidth(),
             )
             Row(

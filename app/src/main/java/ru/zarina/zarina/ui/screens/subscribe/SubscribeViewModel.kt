@@ -93,6 +93,7 @@ class SubscribeViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     fun onNameChange(name: String) {
+        if (!isInputEnabled.value) return
         savedStateHandle[KEY_NAME] = name
     }
 
@@ -101,6 +102,7 @@ class SubscribeViewModel @Inject constructor(
     }
 
     fun onEmailChange(email: String) {
+        if (!isInputEnabled.value) return
         savedStateHandle[KEY_EMAIL] = email
     }
 
