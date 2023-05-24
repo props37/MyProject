@@ -66,6 +66,8 @@ fun SubscribeScreenContent(
     onLinkClick: (SubscribeViewModel.Link) -> Unit,
     isSubscribeButtonEnabled: Boolean,
     onSubscribeClick: () -> Unit,
+    isInputEnabled: Boolean,
+    isLoaderVisible: Boolean,
     onBackClick: () -> Unit,
 ) {
     ZarinaScaffold(
@@ -77,6 +79,7 @@ fun SubscribeScreenContent(
                 }
             )
         },
+        isModalLoaderVisible = isLoaderVisible
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
@@ -96,6 +99,7 @@ fun SubscribeScreenContent(
                 hint = stringResource(R.string.name),
                 isError = nameError != null,
                 error = nameError?.let { textString(it) },
+                isEnabled = isInputEnabled,
                 modifier = Modifier
                     .padding(bottom = 8.dp)
                     .onFocusChanged { onNameFocusChange(it.hasFocus) }
@@ -107,6 +111,7 @@ fun SubscribeScreenContent(
                 hint = stringResource(R.string.email),
                 isError = emailError != null,
                 error = emailError?.let { textString(it) },
+                isEnabled = isInputEnabled,
                 modifier = Modifier
                     .padding(bottom = 8.dp)
                     .onFocusChanged { onEmailFocusChange(it.hasFocus) }
@@ -218,6 +223,8 @@ fun SubscribeScreen(
     val emailError by viewModel.emailError.collectAsStateWithLifecycle()
     val isSwitchChecked by viewModel.isSwitchChecked.collectAsStateWithLifecycle()
     val isSubscribeButtonEnabled by viewModel.isSubscribeButtonEnabled.collectAsStateWithLifecycle()
+    val isInputEnabled by viewModel.isInputEnabled.collectAsStateWithLifecycle()
+    val isLoaderVisible by viewModel.isLoaderVisible.collectAsStateWithLifecycle()
 
     SubscribeScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -239,6 +246,8 @@ fun SubscribeScreen(
         onLinkClick = viewModel::onLinkClick,
         isSubscribeButtonEnabled = isSubscribeButtonEnabled,
         onSubscribeClick = viewModel::onSubscribeClick,
+        isInputEnabled = isInputEnabled,
+        isLoaderVisible = isLoaderVisible,
     )
 }
 
@@ -280,6 +289,8 @@ fun SubscribeScreenContentPreview() {
             onLinkClick = {},
             isSubscribeButtonEnabled = true,
             onSubscribeClick = {},
+            isInputEnabled = true,
+            isLoaderVisible = false,
         )
     }
 }

@@ -41,6 +41,11 @@ class SubscribeViewModel @Inject constructor(
 
     private val operationTracker = OperationTracker()
 
+    private val isSubscriptionInProgress = operationTracker.isOperationOngoing(Operation.SUBSCRIBE)
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
+    val isInputEnabled = isSubscriptionInProgress.mapState(viewModelScope) { !it }
+    val isLoaderVisible = isSubscriptionInProgress
+
     val name = savedStateHandle.getStateFlow(KEY_NAME, "")
     private val nameFocusState = MutableStateFlow(FocusState())
     private val nameValidation = name
@@ -114,9 +119,7 @@ class SubscribeViewModel @Inject constructor(
     fun onSubscribeClick() {
         viewModelScope.launch {
             operationTracker.track(Operation.SUBSCRIBE) {
-                // TODO loader
                 // TODO error
-                // TODO disable input
                 interactor.subscribeToOffer(
                     offerBarcode = offerBarcode.value,
                     name = name.value,
