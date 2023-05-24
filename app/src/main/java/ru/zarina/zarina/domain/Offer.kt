@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class Offer(
     val id: Id,
     val isAvailable: Boolean,
-    val barcode: String,
+    val barcode: Barcode,
     val size: Size,
 ) : Parcelable {
 
