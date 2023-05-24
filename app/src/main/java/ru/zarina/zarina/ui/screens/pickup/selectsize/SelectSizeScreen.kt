@@ -31,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.Barcode
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Size
@@ -141,7 +142,7 @@ private fun Subscribe(
 @Composable
 fun SelectSizeScreen(
     parentEntry: NavBackStackEntry,
-    showSubscribe: (Offer.Id) -> Unit,
+    showSubscribe: (Barcode) -> Unit,
     goBack: () -> Unit,
 ) {
     val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
@@ -168,13 +169,13 @@ fun SelectSizeScreen(
 fun SelectSizeScreenBehavior(
     sideEffects: Flow<SelectSizeViewModel.SideEffect>,
     goBack: () -> Unit,
-    showSubscribe: (Offer.Id) -> Unit,
+    showSubscribe: (Barcode) -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
                 SelectSizeViewModel.SideEffect.GoBack -> goBack()
-                is SelectSizeViewModel.SideEffect.ShowSubscribe -> showSubscribe(effect.offerId)
+                is SelectSizeViewModel.SideEffect.ShowSubscribe -> showSubscribe(effect.offerBarcode)
             }
         }
     }
