@@ -70,23 +70,25 @@ fun SubscribeScreenContent(
     isLoaderVisible: Boolean,
     onBackClick: () -> Unit,
 ) {
+    val scrollState = rememberScrollState()
     ZarinaScaffold(
         toolbar = {
             ScreenToolbar(
                 title = stringResource(R.string.subscription_to_product),
                 startIcon = {
                     BackButton(onClick = onBackClick)
-                }
+                },
+                isElevated = scrollState.canScrollBackward,
             )
         },
-        isModalLoaderVisible = isLoaderVisible
+        isModalLoaderVisible = isLoaderVisible,
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(scrollState),
         ) {
             Text(
                 text = stringResource(R.string.leave_your_contacts),
