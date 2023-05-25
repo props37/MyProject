@@ -48,6 +48,12 @@ import ru.zarina.zarina.data.shop.remote.IShopRemoteSource
 import ru.zarina.zarina.data.shop.remote.ZarinaShopRemoteSource
 import ru.zarina.zarina.data.shop.remote.api.IZarinaShopApi
 import ru.zarina.zarina.data.shop.remote.api.KtorZarinaShopApi
+import ru.zarina.zarina.data.subscription.ISubscriptionRepository
+import ru.zarina.zarina.data.subscription.SubscriptionRepository
+import ru.zarina.zarina.data.subscription.remote.ISubscriptionRemoteSource
+import ru.zarina.zarina.data.subscription.remote.ZarinaSubscriptionRemoteSource
+import ru.zarina.zarina.data.subscription.remote.api.IZarinaSubscriptionApi
+import ru.zarina.zarina.data.subscription.remote.api.KtorZarinaSubscriptionApi
 import ru.zarina.zarina.data.user.IUserRepository
 import ru.zarina.zarina.data.user.UserRepository
 import ru.zarina.zarina.data.user.local.DataStoreUserLocalSource
@@ -138,5 +144,14 @@ interface DataModule {
 
     @Binds
     fun bindsShopRepository(repository: ShopRepository): IShopRepository
+
+    @Binds
+    fun bindZarinaSubscriptionApi(api: KtorZarinaSubscriptionApi): IZarinaSubscriptionApi
+
+    @Binds
+    fun bindsSubscriptionRemoteSource(source: ZarinaSubscriptionRemoteSource): ISubscriptionRemoteSource
+
+    @Binds
+    fun bindsSubscriptionRepository(repository: SubscriptionRepository): ISubscriptionRepository
 
 }

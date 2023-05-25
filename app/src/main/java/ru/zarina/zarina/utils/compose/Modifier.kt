@@ -24,11 +24,11 @@ fun Modifier.minInteractionSize(): Modifier =
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun Modifier.autofill(
-    autofillTypes: List<AutofillType>,
+    types: List<AutofillType>,
     onFill: (String) -> Unit,
 ) = composed {
     val autofill = LocalAutofill.current
-    val autofillNode = AutofillNode(onFill = onFill, autofillTypes = autofillTypes)
+    val autofillNode = AutofillNode(onFill = onFill, autofillTypes = types)
     LocalAutofillTree.current += autofillNode
 
     this

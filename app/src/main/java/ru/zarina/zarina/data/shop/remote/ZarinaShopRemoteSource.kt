@@ -24,7 +24,7 @@ class ZarinaShopRemoteSource @Inject constructor(
     }
 
     override suspend fun getStocks(offer: Offer, city: City): List<Stock> {
-        return api.getStocks(offer.barcode, city.id.id).mapNotNull { it.toDomain() }
+        return api.getStocks(offer.barcode.value, city.id.id).mapNotNull { it.toDomain() }
     }
 
     override suspend fun reserve(
@@ -41,7 +41,7 @@ class ZarinaShopRemoteSource @Inject constructor(
             email = email,
             phone = phone,
         )
-        api.reserve(offer.barcode, shop.id, body)
+        api.reserve(offer.barcode.value, shop.id, body)
     }
 
 }

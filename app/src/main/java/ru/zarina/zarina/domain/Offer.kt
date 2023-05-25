@@ -5,8 +5,14 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Offer(
-    val id: String,
+    val id: Id,
     val isAvailable: Boolean,
-    val barcode: String,
+    val barcode: Barcode,
     val size: Size,
-) : Parcelable
+) : Parcelable {
+
+    @Parcelize
+    @JvmInline
+    value class Id(val value: String) : Parcelable
+
+}

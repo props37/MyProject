@@ -94,6 +94,7 @@ dependencies {
     implementation(libs.compose.ui.core)
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.material)
     implementation(libs.compose.material3)
     implementation(libs.accompanist.systemUi)
     implementation(libs.accompanist.permissions)

@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.navigation.destinations
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import ru.zarina.zarina.domain.Barcode
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Graph
@@ -94,5 +95,56 @@ object Pickup : Graph<Pickup.Arguments>() {
     object Details : SimpleDestination(BaseRoute.PICKUP_DETAILS)
 
     object Success : SimpleDestination(BaseRoute.PICKUP_SUCCESS)
+
+}
+
+
+object Subscribe : Graph<Subscribe.Arguments>() {
+
+    const val ARGUMENT_OFFER_BARCODE = "offer_barcode"
+
+    override val routeSchema = RouteUtils.generateRouteSchema(
+        baseRoute = BaseRoute.GRAPH_SUBSCRIBE,
+        argNames = arrayOf(ARGUMENT_OFFER_BARCODE)
+    )
+    override val startDestination = Root
+
+    override val arguments = listOf(
+        navArgument(ARGUMENT_OFFER_BARCODE) { type = NavType.StringType }
+    )
+
+    override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
+        baseRoute = BaseRoute.GRAPH_SUBSCRIBE,
+        args = arrayOf(args.offerBarcode.value)
+    )
+
+    data class Arguments(
+        val offerBarcode: Barcode,
+    )
+
+    object Root : SimpleDestination(BaseRoute.SUBSCRIBE)
+
+    object Success : Destination<Success.Arguments>() {
+
+        const val ARGUMENT_EMAIL = "email"
+
+        override val routeSchema = RouteUtils.generateRouteSchema(
+            baseRoute = BaseRoute.SUBSCRIBE_SUCCESS,
+            argNames = arrayOf(ARGUMENT_EMAIL)
+        )
+
+        override val arguments = listOf(
+            navArgument(ARGUMENT_EMAIL) { type = NavType.StringType }
+        )
+
+        override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
+            baseRoute = BaseRoute.SUBSCRIBE_SUCCESS,
+            args = arrayOf(args.email)
+        )
+
+        data class Arguments(
+            val email: String,
+        )
+    }
 
 }

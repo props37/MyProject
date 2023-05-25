@@ -77,4 +77,13 @@
     <string name="reservation_is_successful">Резерв в магазине оформлен</string>
     <string name="reservation_confirmation_will_be_sent_to_email_template">На почту %1$s придет письмо, с подтверждением резерва. Ожидайте смс о готовности заказа</string>
     <string name="continue_shopping">Продолжить покупки</string>
+    <string name="subscribe">Подписаться</string>
+    <string name="subscription_to_product">Подписка на товар</string>
+    <string name="leave_your_contacts">Оставьте контактные данные и мы сообщим, когда товар появится в продаже</string>
+    <string name="acknowledgement_subscription_template">Подтверждаю согласие с %1$s, %2$s, а также даю согласие %3$s</string>
+    <string name="acknowledgement_subscription_policy">политикой конфиденциальности</string>
+    <string name="acknowledgement_subscription_rules">правилами работы интернет-магазина</string>
+    <string name="acknowledgement_subscription_data">на обработку персональных данных</string>
+    <string name="product_subscription_done">Подписка на товар оформлена</string>
+    <string name="product_availability_will_be_sent_to_mail_template">На почту %1$s придёт письмо, как только товар появится в наличии</string>
 </resources>

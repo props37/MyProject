@@ -1,14 +1,17 @@
 package ru.zarina.zarina.ui.navigation.destinations
 
 enum class BaseRoute {
+    GRAPH_PICKUP,
+    GRAPH_SUBSCRIBE,
     HOME,
     ONBOARDING,
     SELECT_CITY,
     PRODUCT,
-    GRAPH_PICKUP,
     PICKUP,
     SELECT_SIZE,
     SELECT_PICKUP_CITY,
     PICKUP_DETAILS,
     PICKUP_SUCCESS,
+    SUBSCRIBE,
+    SUBSCRIBE_SUCCESS,
 }
