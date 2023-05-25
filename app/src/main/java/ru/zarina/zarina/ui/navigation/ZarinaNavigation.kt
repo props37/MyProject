@@ -174,7 +174,11 @@ fun ZarinaNavigation(
                     )
                 }
                 composableDestination(Subscribe.Success) {
-                    ru.zarina.zarina.ui.screens.subscribe.success.SuccessScreen()
+                    ru.zarina.zarina.ui.screens.subscribe.success.SuccessScreen(
+                        goBack = {
+                            navController.popBackStack(Subscribe.routeSchema, true)
+                        }
+                    )
                 }
             }
         }
