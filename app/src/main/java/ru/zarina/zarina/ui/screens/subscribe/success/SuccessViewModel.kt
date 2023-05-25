@@ -10,8 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SuccessViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
-    private val interactor: SuccessInteractor,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel(),
     ISideEffectSource<SuccessViewModel.SideEffect> by SideEffectQueue() {
 
