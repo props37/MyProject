@@ -20,6 +20,10 @@ class SuccessViewModel @Inject constructor(
         initialValue = ""
     )
 
+    fun onContinueClick() {
+        sideEffect(SideEffect.GoBack)
+    }
+
     fun onCloseClick() {
         sideEffect(SideEffect.GoBack)
     }
