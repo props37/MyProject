@@ -23,6 +23,7 @@ import ru.zarina.zarina.ui.screens.pickup.selectsize.SelectSizeScreen
 import ru.zarina.zarina.ui.screens.product.ProductScreen
 import ru.zarina.zarina.ui.screens.selectcity.SelectCityScreen
 import ru.zarina.zarina.ui.screens.subscribe.SubscribeScreen
+import ru.zarina.zarina.ui.screens.webpage.WebpageScreen
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
@@ -180,6 +181,9 @@ fun ZarinaNavigation(
                         }
                     )
                 }
+            }
+            composableDestination(Destinations.Webpage) {
+                WebpageScreen()
             }
         }
     }

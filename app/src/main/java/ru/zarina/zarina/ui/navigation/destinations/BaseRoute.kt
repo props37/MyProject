@@ -14,4 +14,5 @@ enum class BaseRoute {
     PICKUP_SUCCESS,
     SUBSCRIBE,
     SUBSCRIBE_SUCCESS,
+    WEBPAGE,
 }

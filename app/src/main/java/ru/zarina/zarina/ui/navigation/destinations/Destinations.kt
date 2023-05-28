@@ -38,6 +38,30 @@ object Destinations {
             val productId: ru.zarina.zarina.domain.Product.Id,
         )
     }
+
+    object Webpage : Destination<Webpage.Arguments>() {
+
+        const val ARGUMENT_URL = "url"
+
+        override val routeSchema = RouteUtils.generateRouteSchema(
+            baseRoute = BaseRoute.WEBPAGE,
+            argNames = arrayOf(ARGUMENT_URL)
+        )
+
+        override val arguments = listOf(
+            navArgument(ARGUMENT_URL) { type = NavType.StringType }
+        )
+
+        override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
+            baseRoute = BaseRoute.WEBPAGE,
+            args = arrayOf(args.url)
+        )
+
+        data class Arguments(
+            val url: String,
+        )
+
+    }
 }
 
 
