@@ -6,16 +6,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.web.LoadingState
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
@@ -28,21 +32,27 @@ fun WebpageScreenContent(
         url = url,
         additionalHttpHeaders = headers
     )
-    WebView(
-        state = state,
-        onCreated = {
-            with(it.settings) {
-                @SuppressLint("SetJavaScriptEnabled")
-                javaScriptEnabled = true
-                domStorageEnabled = true
-                javaScriptCanOpenWindowsAutomatically = true
-            }
-        },
-        modifier = Modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.screenBackground)
-            .safeDrawingPadding(),
-    )
+    val isLoaderVisible by remember { derivedStateOf { state.loadingState != LoadingState.Finished } }
+    ZarinaScaffold(
+        isModalLoaderVisible = isLoaderVisible,
+    ) {
+        WebView(
+            state = state,
+            onCreated = {
+                with(it.settings) {
+                    @SuppressLint("SetJavaScriptEnabled")
+                    javaScriptEnabled = true
+                    domStorageEnabled = true
+                    javaScriptCanOpenWindowsAutomatically = true
+                }
+            },
+
+            modifier = Modifier
+                .fillMaxSize()
+                .background(UiKitTheme.colors.screenBackground)
+                .safeDrawingPadding(),
+        )
+    }
 }
 
 @Composable

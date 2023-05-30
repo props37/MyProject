@@ -23,7 +23,7 @@ fun ZarinaScaffold(
     errorState: ErrorState? = null,
     onErrorButtonClick: () -> Unit = {},
     isModalLoaderVisible: Boolean = false,
-    toolbar: @Composable () -> Unit,
+    toolbar: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
     Box(
