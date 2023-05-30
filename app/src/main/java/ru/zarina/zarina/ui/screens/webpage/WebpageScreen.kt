@@ -10,14 +10,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @Composable
 fun WebpageScreenContent(
+    headers: ImmutableMap<String, String>,
     url: String,
 ) {
-    val state = rememberWebViewState(url = url)
+    val state = rememberWebViewState(
+        url = url,
+        additionalHttpHeaders = headers
+    )
     WebView(
         state = state,
         modifier = Modifier.fillMaxSize()
@@ -28,6 +34,7 @@ fun WebpageScreenContent(
 fun WebpageScreen() {
     val viewModel = hiltViewModel<WebpageViewModel>()
 
+    val headers by viewModel.headers.collectAsStateWithLifecycle()
     val url by viewModel.url.collectAsStateWithLifecycle()
 
     WebpageScreenBehavior(
@@ -35,6 +42,7 @@ fun WebpageScreen() {
     )
 
     WebpageScreenContent(
+        headers = headers,
         url = url,
     )
 }
@@ -57,7 +65,8 @@ fun WebpageScreenBehavior(
 fun WebpageScreenContentPreview() {
     ZarinaTheme {
         WebpageScreenContent(
-            url = "https://zarina.ru/help/privacy-policy/"
+            headers = persistentMapOf(),
+            url = "https://zarina.ru/help/privacy-policy/",
         )
     }
 }
