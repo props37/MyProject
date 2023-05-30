@@ -40,6 +40,10 @@ class WebpageViewModel @Inject constructor(
 
     fun onReloadClick() = loadAuthorizationToken()
 
+    fun onCloseClick() {
+        sideEffect(SideEffect.GoBack)
+    }
+
     private fun loadAuthorizationToken() {
         viewModelScope.launch {
             authorizationToken.value = interactor.getAuthorizationToken()
@@ -48,6 +52,8 @@ class WebpageViewModel @Inject constructor(
 
     enum class ErrorType { GENERIC }
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        object GoBack : SideEffect
+    }
 
 }

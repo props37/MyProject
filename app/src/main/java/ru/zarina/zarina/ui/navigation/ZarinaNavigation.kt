@@ -196,7 +196,11 @@ fun ZarinaNavigation(
                 }
             }
             composableDestination(Destinations.Webpage) {
-                WebpageScreen()
+                WebpageScreen(
+                    goBack = {
+                        navController.popBackStack(Destinations.Webpage.routeSchema, true)
+                    }
+                )
             }
         }
     }
