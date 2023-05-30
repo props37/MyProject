@@ -1,6 +1,9 @@
 package ru.zarina.zarina.ui.screens.webpage
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -12,9 +15,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.LoadingState
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
@@ -25,6 +30,7 @@ import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.utils.android.tryStartActivity
 
 @Composable
 fun WebpageScreenContent(
@@ -68,6 +74,7 @@ private fun Webpage(
     LaunchedEffect(loadingState) {
         onLoadingChange(loadingState != LoadingState.Finished || lastLoadedUrl == null)
     }
+    val context = LocalContext.current
     WebView(
         state = state,
         onCreated = {
@@ -76,6 +83,21 @@ private fun Webpage(
                 javaScriptEnabled = true
                 domStorageEnabled = true
                 javaScriptCanOpenWindowsAutomatically = true
+            }
+        },
+        client = remember {
+            object : AccompanistWebViewClient() {
+                override fun shouldOverrideUrlLoading(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                ): Boolean {
+                    val uri = request?.url ?: return false
+                    val isOverridden = uri.scheme == "mailto"
+                    if (isOverridden) {
+                        context.tryStartActivity(Intent(Intent.ACTION_VIEW, uri))
+                    }
+                    return isOverridden
+                }
             }
         },
         modifier = Modifier

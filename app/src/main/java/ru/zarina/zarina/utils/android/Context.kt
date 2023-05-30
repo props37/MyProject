@@ -24,7 +24,7 @@ fun Context.openBrowser(url: String): Boolean {
     return isActivityStarted
 }
 
-private fun Context.tryStartActivity(intent: Intent): Boolean {
+fun Context.tryStartActivity(intent: Intent): Boolean {
     return if (intent.resolveActivity(packageManager) != null) {
         startActivity(intent)
         true
