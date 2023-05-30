@@ -31,7 +31,6 @@ import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -54,7 +53,6 @@ import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
-import ru.zarina.zarina.utils.android.openBrowser
 import ru.zarina.zarina.utils.compose.autofill
 import ru.zarina.zarina.utils.compose.navigationOrIme
 
@@ -243,6 +241,7 @@ private fun AnnotatedString.Builder.ApplyForString(
 @Composable
 fun SubscribeScreen(
     showSuccess: (String) -> Unit,
+    showWebpage: (String) -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel = hiltViewModel<SubscribeViewModel>()
@@ -259,6 +258,7 @@ fun SubscribeScreen(
     SubscribeScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showSuccess = showSuccess,
+        showWebpage = showWebpage,
         goBack = goBack,
     )
 
@@ -286,14 +286,14 @@ fun SubscribeScreen(
 fun SubscribeScreenBehavior(
     sideEffects: Flow<SubscribeViewModel.SideEffect>,
     showSuccess: (String) -> Unit,
+    showWebpage: (String) -> Unit,
     goBack: () -> Unit,
 ) {
-    val context = LocalContext.current
-    LaunchedEffect(sideEffects, context) {
+    LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
                 SubscribeViewModel.SideEffect.GoBack -> goBack()
-                is SubscribeViewModel.SideEffect.ShowBrowser -> context.openBrowser(effect.url)
+                is SubscribeViewModel.SideEffect.ShowWebpage -> showWebpage(effect.url)
                 is SubscribeViewModel.SideEffect.ShowSuccess -> showSuccess(effect.email)
             }
         }

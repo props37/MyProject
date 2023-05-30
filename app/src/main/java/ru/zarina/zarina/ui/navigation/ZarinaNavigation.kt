@@ -24,6 +24,8 @@ import ru.zarina.zarina.ui.screens.product.ProductScreen
 import ru.zarina.zarina.ui.screens.selectcity.SelectCityScreen
 import ru.zarina.zarina.ui.screens.subscribe.SubscribeScreen
 import ru.zarina.zarina.ui.screens.webpage.WebpageScreen
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
@@ -168,6 +170,17 @@ fun ZarinaNavigation(
                             ) {
                                 popUpTo(Destinations.Product.routeSchema)
                             }
+                        },
+                        showWebpage = { url ->
+                            val encodedUrl =
+                                URLEncoder.encode(url, StandardCharsets.UTF_8.toString())
+                            navController.navigate(
+                                Destinations.Webpage.createRoute(
+                                    Destinations.Webpage.Arguments(
+                                        encodedUrl
+                                    )
+                                )
+                            )
                         },
                         goBack = {
                             navController.popBackStack(Subscribe.routeSchema, true)

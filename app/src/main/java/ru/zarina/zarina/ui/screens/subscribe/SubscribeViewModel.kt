@@ -141,14 +141,14 @@ class SubscribeViewModel @Inject constructor(
             Link.RULES -> StaticPages.CONDITIONS_URL
             Link.DATA -> StaticPages.DATA_POLICY_URL
         }
-        sideEffect(SideEffect.ShowBrowser(url))
+        sideEffect(SideEffect.ShowWebpage(url))
     }
 
     enum class Link { POLICY, RULES, DATA }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object GoBack : SideEffect
-        data class ShowBrowser(val url: String) : SideEffect
+        data class ShowWebpage(val url: String) : SideEffect
         data class ShowSuccess(val email: String) : SideEffect
     }
 
