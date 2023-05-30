@@ -28,23 +28,25 @@ class WebpageViewModel @Inject constructor(
     }
     val errorType = authorizationToken.mapState(viewModelScope) { result ->
         when {
-            result?.isFailure == true -> ErrorType.GENERAL
+            result?.isFailure == true -> ErrorType.GENERIC
             else -> null
         }
     }
     val url = savedStateHandle.getStateFlow(Destinations.Webpage.ARGUMENT_URL, "")
 
     init {
-        setupAuthorizationToken()
+        loadAuthorizationToken()
     }
 
-    private fun setupAuthorizationToken() {
+    fun onReloadClick() = loadAuthorizationToken()
+
+    private fun loadAuthorizationToken() {
         viewModelScope.launch {
             authorizationToken.value = interactor.getAuthorizationToken()
         }
     }
 
-    enum class ErrorType { GENERAL }
+    enum class ErrorType { GENERIC }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect
 

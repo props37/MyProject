@@ -21,6 +21,7 @@ import com.google.accompanist.web.rememberWebViewState
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
@@ -29,11 +30,19 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 fun WebpageScreenContent(
     headers: ImmutableMap<String, String>?,
     url: String,
+    onReloadClick: () -> Unit,
+    errorType: WebpageViewModel.ErrorType?,
 ) {
     var isWebViewLoading by remember { mutableStateOf(true) }
     val isLoading = headers == null || isWebViewLoading
+    val errorState = when (errorType) {
+        WebpageViewModel.ErrorType.GENERIC -> ErrorState.GENERIC
+        else -> null
+    }
     ZarinaScaffold(
         isModalLoaderVisible = isLoading,
+        errorState = errorState,
+        onErrorButtonClick = { onReloadClick() },
     ) {
         if (headers != null)
             Webpage(
@@ -82,6 +91,7 @@ fun WebpageScreen() {
 
     val headers by viewModel.headers.collectAsStateWithLifecycle()
     val url by viewModel.url.collectAsStateWithLifecycle()
+    val errorType by viewModel.errorType.collectAsStateWithLifecycle()
 
     WebpageScreenBehavior(
         sideEffects = viewModel.sideEffects
@@ -90,6 +100,8 @@ fun WebpageScreen() {
     WebpageScreenContent(
         headers = headers,
         url = url,
+        onReloadClick = viewModel::onReloadClick,
+        errorType = errorType,
     )
 }
 
@@ -113,6 +125,8 @@ fun WebpageScreenContentPreview() {
         WebpageScreenContent(
             headers = persistentMapOf(),
             url = "https://zarina.ru/help/privacy-policy/",
+            errorType = null,
+            onReloadClick = {}
         )
     }
 }
