@@ -8,7 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,34 +27,53 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @Composable
 fun WebpageScreenContent(
+    headers: ImmutableMap<String, String>?,
+    url: String,
+) {
+    var isWebViewLoading by remember { mutableStateOf(true) }
+    val isLoading = headers == null || isWebViewLoading
+    ZarinaScaffold(
+        isModalLoaderVisible = isLoading,
+    ) {
+        if (headers != null)
+            Webpage(
+                headers = headers,
+                url = url,
+                onLoadingChange = { isWebViewLoading = it },
+            )
+    }
+}
+
+@Composable
+private fun Webpage(
     headers: ImmutableMap<String, String>,
     url: String,
+    onLoadingChange: (Boolean) -> Unit,
 ) {
     val state = rememberWebViewState(
         url = url,
-        additionalHttpHeaders = headers
+        additionalHttpHeaders = headers,
     )
-    val isLoaderVisible by remember { derivedStateOf { state.loadingState != LoadingState.Finished } }
-    ZarinaScaffold(
-        isModalLoaderVisible = isLoaderVisible,
-    ) {
-        WebView(
-            state = state,
-            onCreated = {
-                with(it.settings) {
-                    @SuppressLint("SetJavaScriptEnabled")
-                    javaScriptEnabled = true
-                    domStorageEnabled = true
-                    javaScriptCanOpenWindowsAutomatically = true
-                }
-            },
-
-            modifier = Modifier
-                .fillMaxSize()
-                .background(UiKitTheme.colors.screenBackground)
-                .safeDrawingPadding(),
-        )
+    val loadingState by remember { derivedStateOf { state.loadingState } }
+    val lastLoadedUrl by remember { derivedStateOf { state.lastLoadedUrl } }
+    LaunchedEffect(loadingState) {
+        onLoadingChange(loadingState != LoadingState.Finished || lastLoadedUrl == null)
     }
+    WebView(
+        state = state,
+        onCreated = {
+            with(it.settings) {
+                @SuppressLint("SetJavaScriptEnabled")
+                javaScriptEnabled = true
+                domStorageEnabled = true
+                javaScriptCanOpenWindowsAutomatically = true
+            }
+        },
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme.colors.screenBackground)
+            .safeDrawingPadding(),
+    )
 }
 
 @Composable

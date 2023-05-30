@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.domain.AuthorizationToken
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
@@ -21,9 +21,17 @@ class WebpageViewModel @Inject constructor(
 ) : ViewModel(),
     ISideEffectSource<WebpageViewModel.SideEffect> by SideEffectQueue() {
 
-    private val _headers = MutableStateFlow(interactor.getUserAgentHeaders())
-    val headers = _headers
-        .mapState(viewModelScope) { it.toPersistentMap() }
+    private val authorizationToken = MutableStateFlow<Result<AuthorizationToken>?>(null)
+    val headers = authorizationToken.mapState(viewModelScope) { result ->
+        val token = result?.getOrNull() ?: return@mapState null
+        (interactor.getUserAgentHeaders() + ("Authorization" to "Bearer ${token.token}")).toPersistentMap()
+    }
+    val errorType = authorizationToken.mapState(viewModelScope) { result ->
+        when {
+            result?.isFailure == true -> ErrorType.GENERAL
+            else -> null
+        }
+    }
     val url = savedStateHandle.getStateFlow(Destinations.Webpage.ARGUMENT_URL, "")
 
     init {
@@ -32,12 +40,11 @@ class WebpageViewModel @Inject constructor(
 
     private fun setupAuthorizationToken() {
         viewModelScope.launch {
-            interactor.getAuthorizationToken()
-                .onSuccess { token ->
-                    _headers.update { it + ("Authorization" to "Bearer ${token.token}") }
-                }
+            authorizationToken.value = interactor.getAuthorizationToken()
         }
     }
+
+    enum class ErrorType { GENERAL }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect
 
