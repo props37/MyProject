@@ -1,6 +1,9 @@
 package ru.zarina.zarina.ui.screens.webpage
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -13,6 +16,7 @@ import com.google.accompanist.web.rememberWebViewState
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @Composable
@@ -26,7 +30,18 @@ fun WebpageScreenContent(
     )
     WebView(
         state = state,
-        modifier = Modifier.fillMaxSize()
+        onCreated = {
+            with(it.settings) {
+                @SuppressLint("SetJavaScriptEnabled")
+                javaScriptEnabled = true
+                domStorageEnabled = true
+                javaScriptCanOpenWindowsAutomatically = true
+            }
+        },
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme.colors.screenBackground)
+            .safeDrawingPadding(),
     )
 }
 
