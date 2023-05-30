@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.screens.webpage
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.webkit.WebResourceRequest
@@ -86,15 +87,7 @@ private fun Webpage(
                 domStorageEnabled = true
                 javaScriptCanOpenWindowsAutomatically = true
             }
-            webView.setDownloadListener { url, _, _, _, _ ->
-                try {
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    intent.data = Uri.parse(url)
-                    context.tryStartActivity(intent)
-                } catch (exception: Exception) {
-                    Timber.e(exception)
-                }
-            }
+            webView.enableDefaultResourceHandling()
         },
         client = remember {
             object : AccompanistWebViewClient() {
@@ -103,11 +96,7 @@ private fun Webpage(
                     request: WebResourceRequest?,
                 ): Boolean {
                     val uri = request?.url ?: return false
-                    val isOverridden = uri.scheme == "mailto"
-                    if (isOverridden) {
-                        context.tryStartActivity(Intent(Intent.ACTION_VIEW, uri))
-                    }
-                    return isOverridden
+                    return handleMailto(context, uri)
                 }
             }
         },
@@ -116,6 +105,27 @@ private fun Webpage(
             .background(UiKitTheme.colors.screenBackground)
             .safeDrawingPadding(),
     )
+}
+
+private fun WebView.enableDefaultResourceHandling() {
+    setDownloadListener { url, _, _, _, _ ->
+        try {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+            context.tryStartActivity(intent)
+        } catch (exception: Exception) {
+            Timber.e(exception)
+        }
+    }
+}
+
+private fun handleMailto(context: Context, uri: Uri): Boolean {
+    val isOverridden = uri.scheme == "mailto"
+    return if (isOverridden) {
+        context.tryStartActivity(Intent(Intent.ACTION_VIEW, uri))
+    } else {
+        false
+    }
 }
 
 @Composable
