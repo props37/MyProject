@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.screens.webpage
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.compose.foundation.background
@@ -31,6 +32,7 @@ import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.android.tryStartActivity
+import timber.log.Timber
 
 @Composable
 fun WebpageScreenContent(
@@ -77,12 +79,21 @@ private fun Webpage(
     val context = LocalContext.current
     WebView(
         state = state,
-        onCreated = {
-            with(it.settings) {
+        onCreated = { webView ->
+            with(webView.settings) {
                 @SuppressLint("SetJavaScriptEnabled")
                 javaScriptEnabled = true
                 domStorageEnabled = true
                 javaScriptCanOpenWindowsAutomatically = true
+            }
+            webView.setDownloadListener { url, _, _, _, _ ->
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    context.tryStartActivity(intent)
+                } catch (exception: Exception) {
+                    Timber.e(exception)
+                }
             }
         },
         client = remember {
