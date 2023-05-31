@@ -8,6 +8,7 @@ import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.composableDestination
+import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
 import ru.zarina.zarina.ui.navigation.graphs.catalogGraph
@@ -39,6 +40,9 @@ fun ZarinaNavigation(
                             productId = productId,
                         )
                         navController.navigate(Destinations.Product.createRoute(arguments))
+                    },
+                    showCatalog = {
+                        navController.navigate(Catalog.createRoute(Unit))
                     }
                 )
             }
