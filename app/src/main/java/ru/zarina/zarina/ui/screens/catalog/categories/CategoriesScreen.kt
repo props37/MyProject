@@ -39,6 +39,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 fun CategoriesScreenContent(
     categories: PersistentList<Category>,
     onCategoryClick: (Category) -> Unit,
+    isLoaderVisible: Boolean,
 ) {
     val listState = rememberLazyListState()
     ZarinaScaffold(
@@ -48,6 +49,7 @@ fun CategoriesScreenContent(
                 isElevated = listState.canScrollBackward,
             )
         },
+        isModalLoaderVisible = isLoaderVisible,
     ) {
         LazyColumn(
             state = listState,
@@ -87,6 +89,7 @@ fun CategoriesScreen() {
     val viewModel = hiltViewModel<CategoriesViewModel>()
 
     val categories by viewModel.categories.collectAsStateWithLifecycle()
+    val isLoaderVisible by viewModel.isLoaderVisible.collectAsStateWithLifecycle()
 
     CategoriesScreenBehavior(
         sideEffects = viewModel.sideEffects
@@ -95,6 +98,7 @@ fun CategoriesScreen() {
     CategoriesScreenContent(
         categories = categories,
         onCategoryClick = viewModel::onCategoryClick,
+        isLoaderVisible = isLoaderVisible,
     )
 }
 
@@ -121,6 +125,7 @@ fun CategoriesScreenContentPreview(
         CategoriesScreenContent(
             categories = categories.toPersistentList(),
             onCategoryClick = {},
+            isLoaderVisible = false,
         )
     }
 }
