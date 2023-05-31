@@ -4,6 +4,12 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.zarina.zarina.data.category.CategoryRepository
+import ru.zarina.zarina.data.category.ICategoryRepository
+import ru.zarina.zarina.data.category.remote.ICategoryRemoteSource
+import ru.zarina.zarina.data.category.remote.ZarinaCategoryRemoteSource
+import ru.zarina.zarina.data.category.remote.api.IZarinaCategoryApi
+import ru.zarina.zarina.data.category.remote.api.KtorZarinaCategoryApi
 import ru.zarina.zarina.data.content.ContentRepository
 import ru.zarina.zarina.data.content.IContentRepository
 import ru.zarina.zarina.data.content.remote.IContentRemoteSource
@@ -153,5 +159,14 @@ interface DataModule {
 
     @Binds
     fun bindsSubscriptionRepository(repository: SubscriptionRepository): ISubscriptionRepository
+
+    @Binds
+    fun bindCategoryRepository(repository: CategoryRepository): ICategoryRepository
+
+    @Binds
+    fun bindCategoryRemoteSource(source: ZarinaCategoryRemoteSource): ICategoryRemoteSource
+
+    @Binds
+    fun bindZarinaCategoryApi(api: KtorZarinaCategoryApi): IZarinaCategoryApi
 
 }
