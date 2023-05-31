@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -291,7 +292,7 @@ fun SubscribeScreenBehavior(
     showWebpage: (String) -> Unit,
     goBack: () -> Unit,
 ) {
-    val context = LocalContext.current
+    val context by rememberUpdatedState(LocalContext.current)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {

@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,7 +55,7 @@ fun SelectPickupCityScreenBehavior(
     sideEffects: Flow<SelectPickupCityViewModel.SideEffect>,
     goBack: () -> Unit,
 ) {
-    val context = LocalContext.current
+    val context by rememberUpdatedState(LocalContext.current)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {

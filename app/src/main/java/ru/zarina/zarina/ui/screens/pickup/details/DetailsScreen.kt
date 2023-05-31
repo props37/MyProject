@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
@@ -394,8 +395,8 @@ fun DetailsScreenBehavior(
             }
         }
     }
-    val context = LocalContext.current
-    LaunchedEffect(context, parentSideEffects) {
+    val context by rememberUpdatedState(LocalContext.current)
+    LaunchedEffect(parentSideEffects) {
         parentSideEffects.collect { effect ->
             when (effect) {
                 PickupViewModel.SideEffect.ShowSuccess -> showSuccess()
