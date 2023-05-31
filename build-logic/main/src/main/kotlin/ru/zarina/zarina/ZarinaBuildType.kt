@@ -51,12 +51,12 @@ sealed interface ZarinaBuildType {
         override val isDebuggable = true
         override val isMinifyEnabled = false
         override val isShrinkResources = false
-        override val backendUrl = "https://test.zarina.ru"
+        override val backendUrl = "https://test7.zarina.ru"
     }
 
     object Qa : ZarinaBuildType {
         override val name = "qa"
-        override val backendUrl = "https://test.zarina.ru"
+        override val backendUrl = "https://test7.zarina.ru"
     }
 
     object Release : ZarinaBuildType {
@@ -72,7 +72,7 @@ sealed interface ZarinaBuildType {
         override val name = "benchmark"
         override val initializeWith = Release
         override val matchingFallbacks = listOf(Release)
-        override val backendUrl = "https://test.zarina.ru"
+        override val backendUrl = "https://test7.zarina.ru"
     }
 
     companion object {
