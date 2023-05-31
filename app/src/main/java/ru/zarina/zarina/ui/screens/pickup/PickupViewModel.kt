@@ -254,7 +254,6 @@ class PickupViewModel @Inject constructor(
     fun onReserveClick() {
         viewModelScope.launch {
             operationTracker.track(Operation.RESERVING) {
-                // TODO error
                 interactor.reserve(
                     offer = selectedOffer.value ?: return@track,
                     shop = selectedShop.value?.shop ?: return@track,
@@ -264,6 +263,7 @@ class PickupViewModel @Inject constructor(
                     phone = phone.value,
                 )
                     .onSuccess { sideEffect(SideEffect.ShowSuccess) }
+                    .onFailure { sideEffect(SideEffect.ShowError(Text.Resource(R.string.unable_to_reserve))) }
             }
         }
     }
@@ -338,6 +338,7 @@ class PickupViewModel @Inject constructor(
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object ShowSuccess : SideEffect
+        data class ShowError(val message: Text) : SideEffect
     }
 
     companion object {
