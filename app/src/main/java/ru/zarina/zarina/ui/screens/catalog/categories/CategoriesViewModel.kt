@@ -24,7 +24,7 @@ class CategoriesViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            categoriesResult.value = interactor.getCategories()
+            categoriesResult.value = interactor.fetchCategories()
         }
     }
 

@@ -6,6 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.zarina.zarina.data.category.CategoryRepository
 import ru.zarina.zarina.data.category.ICategoryRepository
+import ru.zarina.zarina.data.category.local.ICategoryLocalSource
+import ru.zarina.zarina.data.category.local.RoomCategoryLocalSource
 import ru.zarina.zarina.data.category.remote.ICategoryRemoteSource
 import ru.zarina.zarina.data.category.remote.ZarinaCategoryRemoteSource
 import ru.zarina.zarina.data.category.remote.api.IZarinaCategoryApi
@@ -168,5 +170,8 @@ interface DataModule {
 
     @Binds
     fun bindZarinaCategoryApi(api: KtorZarinaCategoryApi): IZarinaCategoryApi
+
+    @Binds
+    fun bindsCategoryLocalSource(source: RoomCategoryLocalSource): ICategoryLocalSource
 
 }

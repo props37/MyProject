@@ -8,11 +8,11 @@ import ru.zarina.zarina.di.ZarinaDispatcher
 import ru.zarina.zarina.domain.Category
 import javax.inject.Inject
 
-class GetCategoriesUseCase @Inject constructor(
+class FetchCategoriesUseCase @Inject constructor(
     @Dispatcher(ZarinaDispatcher.IO) dispatcher: CoroutineDispatcher,
     private val categoryRepository: ICategoryRepository,
 ) : UseCase<Unit, List<Category>>(dispatcher) {
     override suspend fun execute(params: Unit): List<Category> {
-        return categoryRepository.getCategories()
+        return categoryRepository.fetchCategories()
     }
 }

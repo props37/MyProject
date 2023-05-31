@@ -27,7 +27,11 @@ data class CategoryDto(
                 id = id,
                 name = name,
                 image = listImage?.let { Url(it) },
-                subcategories = subcategories?.mapNotNull { it.toDomain() }.orEmpty()
+                subcategories = subcategories
+                    // TODO Remove this filter once all subcategories have unique ids of their own
+                    ?.filter { it.id != id }
+                    ?.mapNotNull { it.toDomain() }
+                    .orEmpty()
             )
         } else {
             null
