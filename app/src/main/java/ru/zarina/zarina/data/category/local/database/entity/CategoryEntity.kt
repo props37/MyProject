@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.category.local.database
+package ru.zarina.zarina.data.category.local.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -13,4 +13,6 @@ data class CategoryEntity(
     val name: String,
     @ColumnInfo(name = "image")
     val image: String,
+    @ColumnInfo(name = "parent_id")
+    val parentId: Int? = null,
 )

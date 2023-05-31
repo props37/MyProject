@@ -22,4 +22,9 @@ class DatabaseModule {
         return Room.databaseBuilder(context, ZarinaDatabase::class.java, "zarina.db").build()
     }
 
+    @Provides
+    fun provideCategoryDao(
+        database: ZarinaDatabase,
+    ) = database.categoryDao()
+
 }
