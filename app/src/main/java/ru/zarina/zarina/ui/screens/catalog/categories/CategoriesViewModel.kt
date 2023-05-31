@@ -8,9 +8,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.utils.coroutine.mapState
@@ -33,8 +35,8 @@ class CategoriesViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             operationTracker.track(Operation.LOADING_CATEGORIES) {
-                // TODO errors
                 categoriesResult.value = interactor.fetchCategories()
+                    .onFailure { sideEffect(SideEffect.ShowToast(Text.Resource(R.string.unable_to_load_categories))) }
             }
         }
     }
@@ -45,6 +47,8 @@ class CategoriesViewModel @Inject constructor(
 
     enum class Operation : OperationKey { LOADING_CATEGORIES }
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        data class ShowToast(val message: Text) : SideEffect
+    }
 
 }
