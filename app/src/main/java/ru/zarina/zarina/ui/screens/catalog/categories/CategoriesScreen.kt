@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screens.catalog.categories
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -37,6 +38,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @Composable
 fun CategoriesScreenContent(
     categories: PersistentList<Category>,
+    onCategoryClick: (Category) -> Unit,
 ) {
     val listState = rememberLazyListState()
     ZarinaScaffold(
@@ -59,7 +61,9 @@ fun CategoriesScreenContent(
             ) { category ->
                 CategoryItem(
                     category = category,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onCategoryClick(category) }
                 )
             }
         }
@@ -90,6 +94,7 @@ fun CategoriesScreen() {
 
     CategoriesScreenContent(
         categories = categories,
+        onCategoryClick = viewModel::onCategoryClick,
     )
 }
 
@@ -115,6 +120,7 @@ fun CategoriesScreenContentPreview(
     ZarinaTheme {
         CategoriesScreenContent(
             categories = categories.toPersistentList(),
+            onCategoryClick = {},
         )
     }
 }

@@ -30,6 +30,10 @@ class CategoriesViewModel @Inject constructor(
         }
     }
 
+    fun onCategoryClick(category: Category) {
+        // TODO navigate
+    }
+
     sealed interface SideEffect : ISideEffectSource.ISideEffect
 
 }
