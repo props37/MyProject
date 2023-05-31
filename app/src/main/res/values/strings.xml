@@ -87,4 +87,5 @@
     <string name="product_subscription_done">Подписка на товар оформлена</string>
     <string name="product_availability_will_be_sent_to_mail_template">На почту %1$s придёт письмо, как только товар появится в наличии</string>
     <string name="unable_to_subscribe">Не удалось подписаться на товар</string>
+    <string name="unable_to_load_cities">Не удалось загрузить список городов</string>
 </resources>
