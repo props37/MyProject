@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,14 +38,17 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 fun CategoriesScreenContent(
     categories: PersistentList<Category>,
 ) {
+    val listState = rememberLazyListState()
     ZarinaScaffold(
         toolbar = {
             ScreenToolbar(
-                title = stringResource(id = R.string.catalog)
+                title = stringResource(id = R.string.catalog),
+                isElevated = listState.canScrollBackward,
             )
-        }
+        },
     ) {
         LazyColumn(
+            state = listState,
             contentPadding = WindowInsets.navigationBars.asPaddingValues(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxSize()
