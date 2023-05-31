@@ -8,6 +8,7 @@ import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Graph
 import ru.zarina.zarina.ui.navigation.base.RouteUtils
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
+import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleGraph
 
 object Destinations {
     object Home : SimpleDestination(BaseRoute.HOME)
@@ -170,5 +171,11 @@ object Subscribe : Graph<Subscribe.Arguments>() {
             val email: String,
         )
     }
+
+}
+
+object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
+
+    object Categories : SimpleDestination(BaseRoute.CATALOG_CATEGORIES)
 
 }

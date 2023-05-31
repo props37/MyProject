@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.navigation.destinations
 enum class BaseRoute {
     GRAPH_PICKUP,
     GRAPH_SUBSCRIBE,
+    GRAPH_CATALOG,
     HOME,
     ONBOARDING,
     SELECT_CITY,
@@ -15,4 +16,5 @@ enum class BaseRoute {
     SUBSCRIBE,
     SUBSCRIBE_SUCCESS,
     WEBPAGE,
+    CATALOG_CATEGORIES,
 }
