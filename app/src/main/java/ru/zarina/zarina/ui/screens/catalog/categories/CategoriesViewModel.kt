@@ -24,6 +24,8 @@ class CategoriesViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            // TODO loader
+            // TODO errors
             categoriesResult.value = interactor.fetchCategories()
         }
     }
