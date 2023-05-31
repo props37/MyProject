@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "45f48613d895551bb40f5c9c17905760",
+    "identityHash": "f92145f9065a70f7653148dfcf302123",
     "entities": [
       {
         "tableName": "categories",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `image` TEXT NOT NULL, `parent_id` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `image` TEXT, `children_ids` TEXT, `is_root` INTEGER NOT NULL, `display_order` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -24,13 +24,25 @@
             "fieldPath": "image",
             "columnName": "image",
             "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "childrenIds",
+            "columnName": "children_ids",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isRoot",
+            "columnName": "is_root",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "parentId",
-            "columnName": "parent_id",
+            "fieldPath": "displayOrder",
+            "columnName": "display_order",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -46,7 +58,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '45f48613d895551bb40f5c9c17905760')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f92145f9065a70f7653148dfcf302123')"
     ]
   }
 }

@@ -7,19 +7,30 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import ru.zarina.zarina.data.ZarinaDatabase
+import kotlinx.serialization.json.Json
+import ru.zarina.zarina.data.base.database.TypeConverter
+import ru.zarina.zarina.data.base.database.ZarinaDatabase
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class DatabaseModule {
 
+    @Provides
+    fun provideTypeConverter(
+        json: Json,
+    ) = TypeConverter(json)
+
     @Singleton
     @Provides
     fun provideZarinaDatabase(
         @ApplicationContext context: Context,
+        converter: TypeConverter,
     ): ZarinaDatabase {
-        return Room.databaseBuilder(context, ZarinaDatabase::class.java, "zarina.db").build()
+        return Room
+            .databaseBuilder(context, ZarinaDatabase::class.java, "zarina.db")
+            .addTypeConverter(converter)
+            .build()
     }
 
     @Provides

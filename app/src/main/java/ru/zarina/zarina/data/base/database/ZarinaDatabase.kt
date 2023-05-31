@@ -1,7 +1,8 @@
-package ru.zarina.zarina.data
+package ru.zarina.zarina.data.base.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import ru.zarina.zarina.data.category.local.database.CategoryDao
 import ru.zarina.zarina.data.category.local.database.entity.CategoryEntity
 
@@ -10,6 +11,7 @@ import ru.zarina.zarina.data.category.local.database.entity.CategoryEntity
         CategoryEntity::class
     ]
 )
+@TypeConverters(TypeConverter::class)
 abstract class ZarinaDatabase : RoomDatabase() {
 
     abstract fun categoryDao(): CategoryDao
