@@ -17,11 +17,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
@@ -29,8 +30,7 @@ import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.ui.common.components.AsyncImageLoader
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
-import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
-import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
+import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.CategoryListProvider
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -107,14 +107,14 @@ fun CategoriesScreenBehavior(
 }
 
 @Preview
-@FontScalePreviews
-@DensityPreviews
 @Composable
-fun CategoriesScreenContentPreview() {
+fun CategoriesScreenContentPreview(
+    @PreviewParameter(CategoryListProvider::class, limit = 1)
+    categories: List<Category>,
+) {
     ZarinaTheme {
         CategoriesScreenContent(
-            // TODO provider
-            categories = persistentListOf()
+            categories = categories.toPersistentList(),
         )
     }
 }
