@@ -89,4 +89,5 @@
     <string name="unable_to_subscribe">Не удалось подписаться на товар</string>
     <string name="unable_to_load_cities">Не удалось загрузить список городов</string>
     <string name="unable_to_reserve">Не удалось зарезервировать товар</string>
+    <string name="catalog">Каталог</string>
 </resources>
