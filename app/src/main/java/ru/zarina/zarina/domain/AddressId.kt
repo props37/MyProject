@@ -1,10 +1,14 @@
 package ru.zarina.zarina.domain
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 /**
  * Address id according to "КЛАДР РФ"
  */
+@Parcelize
 @JvmInline
-value class AddressId(val id: String) {
+value class AddressId(val id: String) : Parcelable {
 
     companion object {
         val SAINT_PETERSBURG = AddressId("7800000000000")

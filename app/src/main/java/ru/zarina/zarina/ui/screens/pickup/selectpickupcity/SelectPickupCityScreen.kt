@@ -1,8 +1,11 @@
 package ru.zarina.zarina.ui.screens.pickup.selectpickupcity
 
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
@@ -52,10 +55,14 @@ fun SelectPickupCityScreenBehavior(
     sideEffects: Flow<SelectPickupCityViewModel.SideEffect>,
     goBack: () -> Unit,
 ) {
+    val context by rememberUpdatedState(LocalContext.current)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
                 SelectPickupCityViewModel.SideEffect.GoBack -> goBack()
+                is SelectPickupCityViewModel.SideEffect.ShowError -> Toast
+                    .makeText(context, effect.message.getString(context), Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }

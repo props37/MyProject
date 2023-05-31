@@ -92,6 +92,7 @@ fun ProductScreenContent(
         ProductViewModel.ErrorType.GENERIC -> ErrorState.GENERIC
         null -> null
     }
+    val scrollState = rememberScrollState()
     ZarinaScaffold(
         toolbar = {
             ScreenToolbar(
@@ -99,6 +100,7 @@ fun ProductScreenContent(
                 startIcon = {
                     BackButton(onBackClick)
                 },
+                isElevated = scrollState.canScrollBackward,
                 modifier = Modifier.fillMaxWidth()
             )
         },
@@ -111,7 +113,7 @@ fun ProductScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScroll(scrollState),
             ) {
                 val coroutineScope = rememberCoroutineScope()
                 val completeLookRequester = remember { BringIntoViewRequester() }

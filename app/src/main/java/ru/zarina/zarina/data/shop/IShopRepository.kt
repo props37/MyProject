@@ -14,4 +14,13 @@ interface IShopRepository {
 
     suspend fun getStocks(offer: Offer, city: City): List<Stock>
 
+    suspend fun reserve(
+        offer: Offer,
+        shop: Shop,
+        firstName: String,
+        lastName: String,
+        email: String,
+        phone: String,
+    )
+
 }

@@ -1,6 +1,7 @@
 package ru.zarina.zarina.data.shop.remote
 
 import ru.zarina.zarina.data.shop.remote.api.IZarinaShopApi
+import ru.zarina.zarina.data.shop.remote.api.dto.ReserveRequestBody
 import ru.zarina.zarina.data.shop.remote.api.dto.toCountries
 import ru.zarina.zarina.data.shop.remote.api.dto.toShops
 import ru.zarina.zarina.domain.City
@@ -23,6 +24,24 @@ class ZarinaShopRemoteSource @Inject constructor(
     }
 
     override suspend fun getStocks(offer: Offer, city: City): List<Stock> {
-        return api.getStocks(offer.barcode, city.id.id).mapNotNull { it.toDomain() }
+        return api.getStocks(offer.barcode.value, city.id.id).mapNotNull { it.toDomain() }
     }
+
+    override suspend fun reserve(
+        offer: Offer,
+        shop: Shop,
+        firstName: String,
+        lastName: String,
+        email: String,
+        phone: String,
+    ) {
+        val body = ReserveRequestBody(
+            firstName = firstName,
+            lastName = lastName,
+            email = email,
+            phone = phone,
+        )
+        api.reserve(offer.barcode.value, shop.id, body)
+    }
+
 }

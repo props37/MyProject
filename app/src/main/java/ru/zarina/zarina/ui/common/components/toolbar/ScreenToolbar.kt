@@ -1,5 +1,7 @@
 package ru.zarina.zarina.ui.common.components.toolbar
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -7,8 +9,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -19,6 +25,7 @@ fun ScreenToolbar(
     startIcon: @Composable (() -> Unit)? = null,
     endIcon: @Composable (() -> Unit)? = null,
     colors: TopAppBarColors = ScreenToolbarDefaults.colors(),
+    isElevated: Boolean = false,
 ) {
     ScreenToolbar(
         title = {
@@ -33,6 +40,7 @@ fun ScreenToolbar(
         startIcon = startIcon,
         endIcon = endIcon,
         colors = colors,
+        isElevated = isElevated,
     )
 }
 
@@ -44,14 +52,25 @@ fun ScreenToolbar(
     startIcon: @Composable (() -> Unit)? = null,
     endIcon: @Composable (() -> Unit)? = null,
     colors: TopAppBarColors = ScreenToolbarDefaults.colors(),
+    isElevated: Boolean = false,
 ) {
-    CenterAlignedTopAppBar(
-        title = title,
-        navigationIcon = { if (startIcon != null) startIcon() },
-        actions = { if (endIcon != null) endIcon() },
-        colors = colors,
-        modifier = modifier.fillMaxWidth(),
+    val elevationDp by animateDpAsState(
+        if (isElevated) 6.dp else 0.dp,
+        label = "toolbar elevation"
     )
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .shadow(elevationDp)
+            .zIndex(1000f),
+    ) {
+        CenterAlignedTopAppBar(
+            title = title,
+            navigationIcon = { if (startIcon != null) startIcon() },
+            actions = { if (endIcon != null) endIcon() },
+            colors = colors,
+        )
+    }
 }
 
 object ScreenToolbarDefaults {

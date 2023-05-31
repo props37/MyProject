@@ -12,9 +12,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.screens.bases.selectcity.SelectCityComponent
@@ -60,10 +62,10 @@ class SelectPickupCityViewModel @Inject constructor(
 
     private fun loadPickupCities() {
         viewModelScope.launch {
-            // TODO errors
             operationTracker.track(Operation.LOADING_CITIES) {
                 interactor.getPickupCities()
                     .onSuccess { _cities.value = it }
+                    .onFailure { sideEffect(SideEffect.ShowError(Text.Resource(R.string.unable_to_load_cities))) }
             }
         }
     }
@@ -82,6 +84,7 @@ class SelectPickupCityViewModel @Inject constructor(
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object GoBack : SideEffect
+        data class ShowError(val message: Text) : SideEffect
     }
 
     enum class Operation : OperationKey { LOADING_CITIES }

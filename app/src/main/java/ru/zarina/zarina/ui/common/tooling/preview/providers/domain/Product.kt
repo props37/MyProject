@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.common.tooling.preview.providers.domain
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
+import ru.zarina.zarina.domain.Barcode
 import ru.zarina.zarina.domain.Color
 import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Offer
@@ -51,8 +52,8 @@ class ProductProvider : PreviewParameterProvider<Product> {
             ),
             offers = persistentListOf(
                 Offer(
-                    id = "110160",
-                    barcode = "4640078695058",
+                    id = Offer.Id("110160"),
+                    barcode = Barcode("4640078695058"),
                     isAvailable = true,
                     size = Size(
                         id = "XS",
@@ -60,8 +61,8 @@ class ProductProvider : PreviewParameterProvider<Product> {
                     ),
                 ),
                 Offer(
-                    id = "110161",
-                    barcode = "4640078695072",
+                    id = Offer.Id("110161"),
+                    barcode = Barcode("4640078695072"),
                     isAvailable = false,
                     size = Size(
                         id = "S",

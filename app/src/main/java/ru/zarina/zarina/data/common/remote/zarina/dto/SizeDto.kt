@@ -3,6 +3,7 @@ package ru.zarina.zarina.data.common.remote.zarina.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
+import ru.zarina.zarina.domain.Barcode
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Size
 
@@ -34,9 +35,9 @@ data class SizeDto(
                 name = name
             )
             Offer(
-                id = offerId,
+                id = Offer.Id(offerId),
                 isAvailable = isAvailable ?: false,
-                barcode = offerBarcode,
+                barcode = Barcode(offerBarcode),
                 size = size,
             )
         } else {

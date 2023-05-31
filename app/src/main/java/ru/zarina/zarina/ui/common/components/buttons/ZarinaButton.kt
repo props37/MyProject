@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.common.components.buttons
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,19 +36,29 @@ fun ZarinaButton(
     modifier: Modifier = Modifier,
     padding: PaddingValues = PaddingValues(vertical = 12.dp, horizontal = 24.dp),
     isLoading: Boolean = false,
+    isEnabled: Boolean = true,
     colors: ZarinaButtonColors = ZarinaButtonDefaults.primaryColors(),
     content: @Composable () -> Unit,
 ) {
+    val foregroundColor by animateColorAsState(
+        if (isEnabled) colors.foreground else colors.disabledForeground,
+        label = "foreground color"
+    )
+    val backgroundColor by animateColorAsState(
+        if (isEnabled) colors.background else colors.disabledBackground,
+        label = "background color"
+    )
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(color = colors.foreground),
+                indication = rememberRipple(color = foregroundColor),
                 onClick = onClick,
-                enabled = !isLoading
+                enabled = !isLoading && isEnabled,
             )
-            .background(colors.background)
+            .background(backgroundColor)
             .border(width = 1.dp, color = colors.border)
             .padding(padding)
             .height(IntrinsicSize.Min),
@@ -57,13 +70,15 @@ fun ZarinaButton(
         val loaderAlpha = 1f - contentAlpha
         if (loaderAlpha > 0f)
             Loader(
-                color = colors.foreground,
+                color = foregroundColor,
                 modifier = Modifier.graphicsLayer { alpha = loaderAlpha },
             )
         Box(
             modifier = Modifier.graphicsLayer { alpha = contentAlpha },
         ) {
-            content()
+            CompositionLocalProvider(LocalContentColor provides foregroundColor) {
+                content()
+            }
         }
     }
 }
@@ -87,10 +102,14 @@ object ZarinaButtonDefaults {
     fun primaryColors(
         background: Color = UiKitTheme.colors.primaryButtonBackground,
         foreground: Color = UiKitTheme.colors.primaryButtonForeground,
+        disabledBackground: Color = UiKitTheme.colors.primaryButtonDisabledBackground,
+        disabledForeground: Color = UiKitTheme.colors.primaryButtonDisabledForeground,
         border: Color = UiKitTheme.colors.primaryButtonBorder,
     ) = ZarinaButtonColors(
         background = background,
         foreground = foreground,
+        disabledBackground = disabledBackground,
+        disabledForeground = disabledForeground,
         border = border,
     )
 
@@ -98,17 +117,23 @@ object ZarinaButtonDefaults {
     fun secondaryColors(
         background: Color = UiKitTheme.colors.secondaryButtonBackground,
         foreground: Color = UiKitTheme.colors.secondaryButtonForeground,
+        disabledBackground: Color = UiKitTheme.colors.secondaryButtonDisabledBackground,
+        disabledForeground: Color = UiKitTheme.colors.secondaryButtonDisabledForeground,
         border: Color = UiKitTheme.colors.secondaryButtonBorder,
     ) = ZarinaButtonColors(
         background = background,
         foreground = foreground,
+        disabledBackground = disabledBackground,
+        disabledForeground = disabledForeground,
         border = border,
     )
 }
 
 data class ZarinaButtonColors(
     val background: Color,
+    val disabledBackground: Color,
     val foreground: Color,
+    val disabledForeground: Color,
     val border: Color,
 )
 

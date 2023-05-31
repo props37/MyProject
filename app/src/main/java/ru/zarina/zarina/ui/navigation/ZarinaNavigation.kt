@@ -13,13 +13,19 @@ import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.navigation.destinations.Pickup
+import ru.zarina.zarina.ui.navigation.destinations.Subscribe
 import ru.zarina.zarina.ui.screens.home.HomeScreen
 import ru.zarina.zarina.ui.screens.onboarding.OnboardingScreen
+import ru.zarina.zarina.ui.screens.pickup.details.DetailsScreen
 import ru.zarina.zarina.ui.screens.pickup.root.PickupRootScreen
 import ru.zarina.zarina.ui.screens.pickup.selectpickupcity.SelectPickupCityScreen
 import ru.zarina.zarina.ui.screens.pickup.selectsize.SelectSizeScreen
 import ru.zarina.zarina.ui.screens.product.ProductScreen
 import ru.zarina.zarina.ui.screens.selectcity.SelectCityScreen
+import ru.zarina.zarina.ui.screens.subscribe.SubscribeScreen
+import ru.zarina.zarina.ui.screens.webpage.WebpageScreen
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
@@ -92,6 +98,9 @@ fun ZarinaNavigation(
                         showSelectCity = {
                             navController.navigate(Pickup.SelectCity.route)
                         },
+                        showDetails = {
+                            navController.navigate(Pickup.Details.route)
+                        },
                         goBack = {
                             navController.popBackStack(Pickup.routeSchema, true)
                         }
@@ -102,6 +111,13 @@ fun ZarinaNavigation(
                         remember(it) { navController.getBackStackEntry(Pickup.routeSchema) }
                     SelectSizeScreen(
                         parentEntry = parentEntry,
+                        showSubscribe = { barcode ->
+                            navController.navigate(Subscribe.createRoute(Subscribe.Arguments(barcode))) {
+                                popUpTo(Pickup.SelectSize.routeSchema) {
+                                    inclusive = true
+                                }
+                            }
+                        },
                         goBack = {
                             navController.popBackStack(Pickup.SelectSize.routeSchema, true)
                         }
@@ -117,6 +133,74 @@ fun ZarinaNavigation(
                         }
                     )
                 }
+                composableDestination(Pickup.Details) {
+                    val parentEntry =
+                        remember(it) { navController.getBackStackEntry(Pickup.routeSchema) }
+                    DetailsScreen(
+                        parentEntry = parentEntry,
+                        showSuccess = {
+                            navController.navigate(Pickup.Success.routeSchema) {
+                                popUpTo(Pickup.Root.routeSchema) {
+                                    inclusive = true
+                                }
+                            }
+                        },
+                        goBack = {
+                            navController.popBackStack(Pickup.Details.routeSchema, true)
+                        }
+                    )
+                }
+                composableDestination(Pickup.Success) {
+                    val parentEntry =
+                        remember(it) { navController.getBackStackEntry(Pickup.routeSchema) }
+                    ru.zarina.zarina.ui.screens.pickup.success.SuccessScreen(
+                        parentEntry = parentEntry,
+                        goBack = {
+                            navController.popBackStack(Pickup.routeSchema, true)
+                        }
+                    )
+                }
+            }
+            navigationGraph(Subscribe) {
+                composableDestination(Subscribe.Root) {
+                    SubscribeScreen(
+                        showSuccess = { email ->
+                            navController.navigate(
+                                Subscribe.Success.createRoute(Subscribe.Success.Arguments(email))
+                            ) {
+                                popUpTo(Destinations.Product.routeSchema)
+                            }
+                        },
+                        showWebpage = { url ->
+                            val encodedUrl =
+                                URLEncoder.encode(url, StandardCharsets.UTF_8.toString())
+                            navController.navigate(
+                                Destinations.Webpage.createRoute(
+                                    Destinations.Webpage.Arguments(
+                                        encodedUrl
+                                    )
+                                )
+                            )
+                        },
+                        goBack = {
+                            navController.popBackStack(Subscribe.routeSchema, true)
+                        }
+                    )
+                }
+                composableDestination(Subscribe.Success) {
+                    ru.zarina.zarina.ui.screens.subscribe.success.SuccessScreen(
+                        goBack = {
+                            navController.popBackStack(Subscribe.routeSchema, true)
+                        }
+                    )
+                }
+            }
+            composableDestination(Destinations.Webpage) {
+                WebpageScreen(
+                    goBack = {
+                        navController.popBackStack(Destinations.Webpage.routeSchema, true)
+                    }
+                )
             }
         }
     }
