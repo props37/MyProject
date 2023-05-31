@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screens.subscribe
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +32,7 @@ import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -289,12 +291,16 @@ fun SubscribeScreenBehavior(
     showWebpage: (String) -> Unit,
     goBack: () -> Unit,
 ) {
+    val context = LocalContext.current
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
                 SubscribeViewModel.SideEffect.GoBack -> goBack()
                 is SubscribeViewModel.SideEffect.ShowWebpage -> showWebpage(effect.url)
                 is SubscribeViewModel.SideEffect.ShowSuccess -> showSuccess(effect.email)
+                is SubscribeViewModel.SideEffect.ShowError -> Toast
+                    .makeText(context, effect.message.getString(context), Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }

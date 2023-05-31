@@ -121,7 +121,6 @@ class SubscribeViewModel @Inject constructor(
     fun onSubscribeClick() {
         viewModelScope.launch {
             operationTracker.track(Operation.SUBSCRIBE) {
-                // TODO error
                 val email = email.value
                 interactor.subscribeToOffer(
                     offerBarcode = offerBarcode.value,
@@ -130,6 +129,9 @@ class SubscribeViewModel @Inject constructor(
                 )
                     .onSuccess {
                         sideEffect(SideEffect.ShowSuccess(email))
+                    }
+                    .onFailure {
+                        sideEffect(SideEffect.ShowError(Text.Resource(R.string.unable_to_subscribe)))
                     }
             }
         }
@@ -150,6 +152,7 @@ class SubscribeViewModel @Inject constructor(
         object GoBack : SideEffect
         data class ShowWebpage(val url: String) : SideEffect
         data class ShowSuccess(val email: String) : SideEffect
+        data class ShowError(val message: Text) : SideEffect
     }
 
     enum class Operation : OperationKey { SUBSCRIBE }
