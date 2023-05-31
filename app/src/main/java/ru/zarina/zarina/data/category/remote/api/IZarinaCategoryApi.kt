@@ -1,3 +1,9 @@
 package ru.zarina.zarina.data.category.remote.api
 
-interface IZarinaCategoryApi
+import ru.zarina.zarina.data.category.remote.api.dto.CategoryResponseDto
+
+interface IZarinaCategoryApi {
+
+    suspend fun getCategories(): CategoryResponseDto
+
+}
