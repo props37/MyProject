@@ -1,7 +1,15 @@
 package ru.zarina.zarina.ui.common.components.toolbar
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,11 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun ScreenToolbar(
     title: String,
     modifier: Modifier = Modifier,
+    subtitle: String? = null,
     startIcon: @Composable (() -> Unit)? = null,
     endIcon: @Composable (() -> Unit)? = null,
     colors: TopAppBarColors = ScreenToolbarDefaults.colors(),
@@ -29,12 +38,27 @@ fun ScreenToolbar(
 ) {
     ScreenToolbar(
         title = {
-            Text(
-                text = title,
-                style = UiKitTheme.typography.circle1718,
-                color = UiKitTheme.colors.primaryContentColor,
-                maxLines = 1,
-            )
+            Column {
+                Text(
+                    text = title,
+                    style = UiKitTheme.typography.circle1718,
+                    color = UiKitTheme.colors.primaryContentColor,
+                    maxLines = 1,
+                )
+                AnimatedContent(
+                    targetState = subtitle,
+                    label = "subtitle",
+                    transitionSpec = { fadeIn() + slideInHorizontally { it * 2 } with fadeOut() + slideOutVertically { it * 2 } }
+                ) { subtitle ->
+                    if (subtitle != null)
+                        Text(
+                            text = subtitle,
+                            style = UiKitTheme.typography.circle1316,
+                            color = UiKitTheme.colors.primaryContentColor,
+                            maxLines = 1,
+                        )
+                }
+            }
         },
         modifier = modifier,
         startIcon = startIcon,
