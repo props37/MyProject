@@ -140,7 +140,9 @@ private fun GridLoader(
 }
 
 @Composable
-fun ProductsScreen() {
+fun ProductsScreen(
+    goBack: () -> Unit,
+) {
     val viewModel = hiltViewModel<ProductsViewModel>()
 
     val category by viewModel.category.collectAsStateWithLifecycle()
@@ -149,6 +151,7 @@ fun ProductsScreen() {
 
     ProductsScreenBehavior(
         sideEffects = viewModel.sideEffects,
+        goBack = goBack,
     )
 
     ProductsScreenContent(
@@ -163,11 +166,12 @@ fun ProductsScreen() {
 @Composable
 fun ProductsScreenBehavior(
     sideEffects: Flow<ProductsViewModel.SideEffect>,
+    goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                else -> TODO()
+                ProductsViewModel.SideEffect.GoBack -> goBack()
             }
         }
     }

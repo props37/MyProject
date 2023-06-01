@@ -75,13 +75,15 @@ class ProductsViewModel @Inject constructor(
     val products = pager.flatMapLatest { it?.flow?.cachedIn(viewModelScope) ?: emptyFlow() }
 
     fun onBackClick() {
-        // TODO
+        sideEffect(SideEffect.GoBack)
     }
 
     fun onProductClick(product: Product) {
         // TODO
     }
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        object GoBack : SideEffect
+    }
 
 }
