@@ -141,6 +141,7 @@ private fun GridLoader(
 
 @Composable
 fun ProductsScreen(
+    showProduct: (Product.Id) -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel = hiltViewModel<ProductsViewModel>()
@@ -151,6 +152,7 @@ fun ProductsScreen(
 
     ProductsScreenBehavior(
         sideEffects = viewModel.sideEffects,
+        showProduct = showProduct,
         goBack = goBack,
     )
 
@@ -166,12 +168,14 @@ fun ProductsScreen(
 @Composable
 fun ProductsScreenBehavior(
     sideEffects: Flow<ProductsViewModel.SideEffect>,
+    showProduct: (Product.Id) -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
                 ProductsViewModel.SideEffect.GoBack -> goBack()
+                is ProductsViewModel.SideEffect.ShowProduct -> showProduct(effect.id)
             }
         }
     }

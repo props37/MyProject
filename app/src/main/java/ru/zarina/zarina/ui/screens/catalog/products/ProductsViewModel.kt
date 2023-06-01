@@ -79,11 +79,12 @@ class ProductsViewModel @Inject constructor(
     }
 
     fun onProductClick(product: Product) {
-        // TODO
+        sideEffect(SideEffect.ShowProduct(product.id))
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object GoBack : SideEffect
+        data class ShowProduct(val id: Product.Id) : SideEffect
     }
 
 }
