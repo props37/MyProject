@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.ui.common.utils.domain.toColorOr
@@ -28,16 +30,18 @@ fun SmallColorPicker(
     colors: ImmutableList<ZarinaColor>,
     selectedColor: ZarinaColor?,
     modifier: Modifier = Modifier,
+    dimensions: ColorPickerDimensions = ColorPickerDefaults.smallDimensions(),
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(dimensions.colorsSpacing),
         modifier = modifier.horizontalScroll(rememberScrollState())
     ) {
         colors.forEach { color ->
             ColorCircle(
                 color = color,
                 isSelected = color == selectedColor,
+                dimensions = dimensions,
             )
         }
     }
@@ -47,6 +51,7 @@ fun SmallColorPicker(
 private fun ColorCircle(
     color: ZarinaColor,
     isSelected: Boolean,
+    dimensions: ColorPickerDimensions,
     modifier: Modifier = Modifier,
 ) {
     val shape = CircleShape
@@ -56,20 +61,46 @@ private fun ColorCircle(
     )
     Box(
         modifier = modifier
-            .size(22.dp)
+            .size(dimensions.circleSize)
             .clip(shape)
             .border(
-                width = 1.dp,
+                width = dimensions.selectionBorderWidth,
                 color = selectionBorderColor,
                 shape = shape,
             )
-            .padding(2.dp)
+            .padding(dimensions.selectionBorderPadding)
             .border(
-                width = 1.dp,
+                width = dimensions.colorBorderWidth,
                 color = UiKitTheme.colors.colorPickerCircleBorder,
                 shape = shape,
             )
             .clip(shape)
             .background(color.toColorOr(Color.Transparent))
+    )
+}
+
+@Immutable
+data class ColorPickerDimensions constructor(
+    val colorsSpacing: Dp = 8.dp,
+    val circleSize: Dp = 22.dp,
+    val selectionBorderWidth: Dp = 1.dp,
+    val selectionBorderPadding: Dp = 2.dp,
+    val colorBorderWidth: Dp = 1.dp,
+)
+
+object ColorPickerDefaults {
+    @Composable
+    fun smallDimensions(
+        colorsSpacing: Dp = 8.dp,
+        size: Dp = 22.dp,
+        selectionBorderWidth: Dp = 1.dp,
+        selectionBorderPadding: Dp = 2.dp,
+        colorBorderWidth: Dp = 1.dp,
+    ) = ColorPickerDimensions(
+        colorsSpacing = colorsSpacing,
+        circleSize = size,
+        selectionBorderWidth = selectionBorderWidth,
+        selectionBorderPadding = selectionBorderPadding,
+        colorBorderWidth = colorBorderWidth,
     )
 }
