@@ -62,7 +62,7 @@ fun CategoriesScreenContent(
         ) {
             items(
                 items = categories,
-                key = { category -> category.id },
+                key = { category -> category.id.value },
             ) { category ->
                 CategoryItem(
                     category = category,
