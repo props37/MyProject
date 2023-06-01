@@ -30,8 +30,8 @@ import ru.zarina.zarina.domain.Color as ZarinaColor
 fun ColorPicker(
     colors: ImmutableList<ZarinaColor>,
     selectedColor: ZarinaColor?,
-    onColorSelected: (ZarinaColor) -> Unit,
     modifier: Modifier = Modifier,
+    onColorSelected: ((ZarinaColor) -> Unit)? = null,
     dimensions: ColorPickerDimensions = ColorPickerDefaults.dimensions(),
 ) {
     Row(
@@ -44,7 +44,7 @@ fun ColorPicker(
             ColorCircle(
                 color = color,
                 isSelected = color == selectedColor,
-                onClick = { onColorSelected(color) },
+                onClick = onColorSelected?.let { { it(color) } },
                 dimensions = dimensions
             )
         }
@@ -56,9 +56,9 @@ fun ColorPicker(
 private fun ColorCircle(
     color: ZarinaColor,
     isSelected: Boolean,
-    onClick: () -> Unit,
     dimensions: ColorPickerDimensions,
     modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
 ) {
     val shape = CircleShape
     val selectionBorderColor by animateColorAsState(
@@ -70,8 +70,8 @@ private fun ColorCircle(
             .size(dimensions.circleSize)
             .clip(shape)
             .clickable(
-                enabled = !isSelected,
-                onClick = onClick
+                enabled = !isSelected && onClick != null,
+                onClick = onClick ?: {}
             )
             .padding(dimensions.outerPadding)
             .border(

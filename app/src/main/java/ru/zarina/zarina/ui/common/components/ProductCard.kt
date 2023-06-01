@@ -25,7 +25,8 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toImmutableList
 import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.ui.common.components.color.SmallColorPicker
+import ru.zarina.zarina.ui.common.components.color.ColorPicker
+import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
@@ -92,9 +93,10 @@ fun ProductCard(
         val selectedColor = remember(product) {
             product.colorVariants.entries.firstOrNull { it.value.isCurrent }?.key
         }
-        SmallColorPicker(
+        ColorPicker(
             colors = colors,
             selectedColor = selectedColor,
+            dimensions = ColorPickerDefaults.smallDimensions(),
         )
         Spacer(modifier = Modifier.height(4.dp))
         ProductPrice(
