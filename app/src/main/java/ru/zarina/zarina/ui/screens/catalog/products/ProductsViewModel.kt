@@ -58,6 +58,9 @@ class ProductsViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val products = pager.flatMapLatest { it?.flow?.cachedIn(viewModelScope) ?: emptyFlow() }
 
+    fun onBackClick() {
+        // TODO
+    }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect
 
