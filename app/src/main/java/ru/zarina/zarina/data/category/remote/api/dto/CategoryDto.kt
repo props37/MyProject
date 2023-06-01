@@ -24,7 +24,7 @@ data class CategoryDto(
             && ApiContract.isNotNull(name, "name")
         ) {
             Category(
-                id = id,
+                id = Category.Id(id),
                 name = name,
                 image = listImage?.let { Url(it) },
                 subcategories = subcategories

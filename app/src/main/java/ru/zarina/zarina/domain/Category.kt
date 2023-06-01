@@ -1,7 +1,7 @@
 package ru.zarina.zarina.domain
 
 data class Category(
-    val id: Int,
+    val id: Id,
     val image: Url?,
     val name: String,
     val subcategories: List<Category>,
@@ -10,5 +10,8 @@ data class Category(
     fun getFlattenedSubcategories(): List<Category> {
         return subcategories + subcategories.flatMap { it.getFlattenedSubcategories() }
     }
+
+    @JvmInline
+    value class Id(val value: Int)
 
 }

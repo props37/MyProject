@@ -26,17 +26,17 @@ data class CategoryEntity(
     companion object {
         fun from(category: Category, displayOrder: Int, isRoot: Boolean = false): CategoryEntity =
             CategoryEntity(
-                id = category.id,
+                id = category.id.value,
                 name = category.name,
                 image = category.image?.value,
-                childrenIds = category.subcategories.map { it.id }.takeIf { it.isNotEmpty() },
+                childrenIds = category.subcategories.map { it.id.value }.takeIf { it.isNotEmpty() },
                 isRoot = isRoot,
                 displayOrder = displayOrder,
             )
     }
 
     fun toDomain(children: List<Category>): Category = Category(
-        id = id,
+        id = Category.Id(id),
         name = name,
         image = image?.let { Url(it) },
         subcategories = children
