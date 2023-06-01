@@ -42,6 +42,7 @@ import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.components.ProductCard
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
+import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -67,6 +68,7 @@ fun ProductsScreenContent(
             )
         },
     ) {
+        val colorPickerDimensions = ColorPickerDefaults.tinyDimensions()
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             state = productGridState,
@@ -84,6 +86,7 @@ fun ProductsScreenContent(
                     ProductCard(
                         product = product,
                         onClick = { onProductClick(product) },
+                        colorPickerDimensions = colorPickerDimensions,
                     )
             }
             item(

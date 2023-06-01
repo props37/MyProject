@@ -6,6 +6,24 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 object ColorPickerDefaults {
+
+    @Composable
+    fun tinyDimensions(
+        colorsSpacing: Dp = 4.dp,
+        size: Dp = 20.dp,
+        outerPadding: Dp = 0.dp,
+        selectionBorderWidth: Dp = 1.dp,
+        selectionBorderPadding: Dp = 0.dp,
+        colorBorderWidth: Dp = 1.dp,
+    ) = ColorPickerDimensions(
+        colorsSpacing = colorsSpacing,
+        circleSize = size,
+        outerPadding = outerPadding,
+        selectionBorderWidth = selectionBorderWidth,
+        selectionBorderPadding = selectionBorderPadding,
+        colorBorderWidth = colorBorderWidth,
+    )
+
     @Composable
     fun smallDimensions(
         colorsSpacing: Dp = 8.dp,

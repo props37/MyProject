@@ -27,6 +27,7 @@ import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.components.color.ColorPicker
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
+import ru.zarina.zarina.ui.common.components.color.ColorPickerDimensions
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
@@ -36,6 +37,7 @@ fun ProductCard(
     product: Product,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    colorPickerDimensions: ColorPickerDimensions = ColorPickerDefaults.smallDimensions(),
 ) {
     val inactiveOverlayColor = UiKitTheme.colors.inactiveOverlay
     Column(
@@ -96,7 +98,7 @@ fun ProductCard(
         ColorPicker(
             colors = colors,
             selectedColor = selectedColor,
-            dimensions = ColorPickerDefaults.smallDimensions(),
+            dimensions = colorPickerDimensions,
         )
         Spacer(modifier = Modifier.height(4.dp))
         ProductPrice(
