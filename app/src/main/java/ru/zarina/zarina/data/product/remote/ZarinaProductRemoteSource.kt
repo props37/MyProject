@@ -15,7 +15,8 @@ class ZarinaProductRemoteSource @Inject constructor(
         checkNotNull(api.getProduct(id.value).toDomain())
 
     override suspend fun getProductPage(category: Category, pageIndex: Int): Page<List<Product>> {
-        val response = api.getProductPage(category.id.value, pageIndex)
+        // adjust page index, because it starts from 1 on the backend
+        val response = api.getProductPage(category.id.value, pageIndex + 1)
         val pagination = response.toPagination()
         val products = response.items?.mapNotNull { it.toDomain() }.orEmpty()
         return Page(pagination, products)

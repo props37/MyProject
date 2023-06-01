@@ -22,7 +22,8 @@ data class ProductPageResponseDto(
         checkNotNull(pagination.currentPage)
         checkNotNull(pagination.totalPages)
         return Pagination(
-            currentPageIndex = pagination.currentPage,
+            // adjust page index, because it starts from 1 on the backend
+            currentPageIndex = pagination.currentPage - 1,
             pageCount = pagination.currentPage,
             totalItemCount = pagination.totalPages,
         )
