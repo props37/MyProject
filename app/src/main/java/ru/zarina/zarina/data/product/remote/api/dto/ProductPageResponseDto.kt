@@ -4,6 +4,7 @@ package ru.zarina.zarina.data.product.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.common.remote.zarina.dto.ProductDto
+import ru.zarina.zarina.domain.Pagination
 
 @Serializable
 data class ProductPageResponseDto(
@@ -13,4 +14,18 @@ data class ProductPageResponseDto(
     val pagination: PaginationDto? = null,
     @SerialName("items")
     val items: List<ProductDto>? = null,
-)
+) {
+
+    fun toPagination(): Pagination {
+        checkNotNull(itemCount)
+        checkNotNull(pagination)
+        checkNotNull(pagination.currentPage)
+        checkNotNull(pagination.totalPages)
+        return Pagination(
+            currentPageIndex = pagination.currentPage,
+            pageCount = pagination.currentPage,
+            totalItemCount = pagination.totalPages,
+        )
+    }
+
+}

@@ -37,10 +37,10 @@ class KtorZarinaProductApi @Inject constructor(
         }
     }
 
-    override suspend fun getProductPage(categoryId: Int, page: Int): ProductPageResponseDto {
+    override suspend fun getProductPage(categoryId: Int, pageIndex: Int): ProductPageResponseDto {
         val body = ProductPageRequestBody(
             categoryId = categoryId,
-            page = page,
+            page = pageIndex,
         )
         val response = client.post("/api/products") {
             contentType(ContentType.Application.Json)
