@@ -12,11 +12,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPagingSource
 import ru.zarina.zarina.utils.coroutine.mapState
@@ -42,6 +45,18 @@ class ProductsViewModel @Inject constructor(
         .mapState(viewModelScope) { category ->
             category?.let { CategoryProductPagingSource(it, interactor.getProductsPageUseCase) }
         }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val productCount = pagingSource
+        .flatMapLatest { it?.itemCount ?: flowOf(null) }
+        .map { count ->
+            when (count) {
+                null -> null
+                0 -> Text.Resource(R.string.no_products)
+                else -> Text.PluralsResource(R.plurals.products, count, count)
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     val pager = pagingSource
         .mapState(viewModelScope) { source ->

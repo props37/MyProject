@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.screens.catalog.products.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import kotlinx.coroutines.flow.MutableStateFlow
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.usecase.catalog.GetProductsPageUseCase
@@ -11,6 +12,8 @@ class CategoryProductPagingSource @Inject constructor(
     private val category: Category,
     private val getProductsPageUseCase: GetProductsPageUseCase,
 ) : PagingSource<Int, Product>() {
+
+    val itemCount = MutableStateFlow<Int?>(null)
 
     override fun getRefreshKey(
         state: PagingState<Int, Product>,
@@ -26,6 +29,7 @@ class CategoryProductPagingSource @Inject constructor(
         val nextPageIndex = params.key ?: 0
         getProductsPageUseCase(GetProductsPageUseCase.Params(category, nextPageIndex))
             .onSuccess {
+                itemCount.value = it.pagination.totalItemCount
                 return LoadResult.Page(
                     data = it.value,
                     prevKey = it.pagination.previousPageIndex,

@@ -91,4 +91,13 @@
     <string name="unable_to_reserve">Не удалось зарезервировать товар</string>
     <string name="catalog">Каталог</string>
     <string name="unable_to_load_categories">Не удалось загрузить категории</string>
+    <string name="no_products">Нет товаров</string>
+    <plurals name="products">
+        <item quantity="zero">%1$d товаров</item>
+        <item quantity="one">%1$d товар</item>
+        <item quantity="two">%1$d товара</item>
+        <item quantity="few">%1$d товара</item>
+        <item quantity="many">%1$d товаров</item>
+        <item quantity="other">%1$d товаров</item>
+    </plurals>
 </resources>

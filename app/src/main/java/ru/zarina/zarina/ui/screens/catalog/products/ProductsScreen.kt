@@ -26,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,8 +39,10 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.components.ProductCard
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
@@ -53,14 +56,17 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 fun ProductsScreenContent(
     category: Category?,
     products: LazyPagingItems<Product>,
+    productCount: Text?,
     onProductClick: (Product) -> Unit,
     onBackClick: () -> Unit,
 ) {
     val productGridState = rememberLazyGridState()
     ZarinaScaffold(
         toolbar = {
+            val context = LocalContext.current
             ScreenToolbar(
                 title = category?.name.orEmpty(),
+                subtitle = productCount?.getString(context),
                 isElevated = productGridState.canScrollBackward,
                 startIcon = {
                     BackButton(onClick = onBackClick)
@@ -139,6 +145,7 @@ fun ProductsScreen() {
 
     val category by viewModel.category.collectAsStateWithLifecycle()
     val products = viewModel.products.collectAsLazyPagingItems()
+    val productCount by viewModel.productCount.collectAsStateWithLifecycle()
 
     ProductsScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -147,6 +154,7 @@ fun ProductsScreen() {
     ProductsScreenContent(
         category = category,
         products = products,
+        productCount = productCount,
         onProductClick = viewModel::onProductClick,
         onBackClick = viewModel::onBackClick,
     )
@@ -173,6 +181,7 @@ fun ProductsScreenContentPreview() {
         ProductsScreenContent(
             category = null,
             products = products,
+            productCount = Text.PluralsResource(R.plurals.products, 12, 12),
             onProductClick = {},
             onBackClick = {},
         )
