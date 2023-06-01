@@ -6,6 +6,7 @@ plugins {
     id("zarina.compose.metrics")
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
@@ -65,6 +66,9 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.5"
     }
+    ksp {
+        arg(RoomSchemaArgProvider(File(projectDir, "schemas")))
+    }
     kapt {
         correctErrorTypes = true
     }
@@ -103,6 +107,9 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.compose)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.auth)
@@ -127,4 +134,15 @@ dependencies {
 
     debugImplementation(libs.compose.ui.tooling.core)
     debugImplementation(libs.compose.ui.test.manifest)
+}
+
+class RoomSchemaArgProvider(
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    val schemaDir: File,
+) : CommandLineArgumentProvider {
+
+    override fun asArguments(): Iterable<String> {
+        return listOf("room.schemaLocation=${schemaDir.path}")
+    }
 }

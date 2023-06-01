@@ -1,6 +1,7 @@
 [versions]
 android-gradle = "8.1.0-beta04"
 kotlin = "1.8.20"
+ksp = "1.8.20-1.0.11"
 kotlinx-serialization = "1.5.0"
 kotlinx-collections-immutable = "0.3.5"
 androidx-core = "1.10.0"
@@ -14,6 +15,7 @@ compose = "2023.04.00"
 accompanist = "0.30.1"
 hilt = "2.44.2"
 hilt-compose-navigation = "1.0.0"
+room = "2.5.1"
 ktor = "2.2.4"
 coil = "2.3.0"
 timber = "5.0.1"
@@ -71,6 +73,9 @@ ktor-client-contentNegotiation = { group = "io.ktor", name = "ktor-client-conten
 ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor" }
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging-jvm", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
@@ -96,6 +101,7 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
 android-test = { id = "com.android.test", version.ref = "android-gradle" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
