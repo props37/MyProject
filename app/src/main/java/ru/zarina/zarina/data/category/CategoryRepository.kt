@@ -19,5 +19,7 @@ class CategoryRepository @Inject constructor(
 
     override suspend fun getCategories(): Flow<List<Category>> = local.getCategories()
 
+    override fun getCategory(id: Category.Id) = local.getCategory(id)
+
 }
 

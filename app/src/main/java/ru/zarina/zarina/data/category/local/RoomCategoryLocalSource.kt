@@ -35,4 +35,7 @@ class RoomCategoryLocalSource @Inject constructor(
         entities.filter { it.isRoot }.sortedBy { it.displayOrder }.map { it.toCategory() }
     }
 
+    override fun getCategory(id: Category.Id) = getCategories()
+        .map { categories -> categories.firstOrNull { it.id == id } }
+
 }
