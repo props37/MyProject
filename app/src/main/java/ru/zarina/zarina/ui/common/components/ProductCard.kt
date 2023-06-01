@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toImmutableList
 import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.ui.common.components.color.SmallColorPicker
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme

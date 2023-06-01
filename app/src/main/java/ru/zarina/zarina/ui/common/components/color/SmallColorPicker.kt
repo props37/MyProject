@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.components
+package ru.zarina.zarina.ui.common.components.color
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -12,14 +12,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.ui.common.utils.domain.toColorOr
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -79,28 +76,3 @@ private fun ColorCircle(
     )
 }
 
-@Immutable
-data class ColorPickerDimensions constructor(
-    val colorsSpacing: Dp = 8.dp,
-    val circleSize: Dp = 22.dp,
-    val selectionBorderWidth: Dp = 1.dp,
-    val selectionBorderPadding: Dp = 2.dp,
-    val colorBorderWidth: Dp = 1.dp,
-)
-
-object ColorPickerDefaults {
-    @Composable
-    fun smallDimensions(
-        colorsSpacing: Dp = 8.dp,
-        size: Dp = 22.dp,
-        selectionBorderWidth: Dp = 1.dp,
-        selectionBorderPadding: Dp = 2.dp,
-        colorBorderWidth: Dp = 1.dp,
-    ) = ColorPickerDimensions(
-        colorsSpacing = colorsSpacing,
-        circleSize = size,
-        selectionBorderWidth = selectionBorderWidth,
-        selectionBorderPadding = selectionBorderPadding,
-        colorBorderWidth = colorBorderWidth,
-    )
-}
