@@ -5,6 +5,7 @@ import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.categories.CategoriesScreen
+import ru.zarina.zarina.ui.screens.catalog.products.ProductsScreen
 
 fun NavGraphBuilder.catalogGraph() {
     navigationGraph(Catalog) {
@@ -12,6 +13,9 @@ fun NavGraphBuilder.catalogGraph() {
             CategoriesScreen(
                 showProducts = {}, // TODO
             )
+        }
+        composableDestination(Catalog.Products) {
+            ProductsScreen()
         }
     }
 }

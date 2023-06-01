@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.navigation.destinations
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import ru.zarina.zarina.domain.Barcode
+import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Graph
@@ -177,5 +178,28 @@ object Subscribe : Graph<Subscribe.Arguments>() {
 object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
 
     object Categories : SimpleDestination(BaseRoute.CATALOG_CATEGORIES)
+
+    object Products : Destination<Products.Arguments>() {
+
+        const val ARGUMENT_CATEGORY_ID = "category_id"
+
+        override val routeSchema = RouteUtils.generateRouteSchema(
+            baseRoute = BaseRoute.CATALOG_PRODUCTS,
+            argNames = arrayOf(ARGUMENT_CATEGORY_ID)
+        )
+
+        override val arguments = listOf(
+            navArgument(ARGUMENT_CATEGORY_ID) { type = NavType.IntType }
+        )
+
+        override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
+            baseRoute = BaseRoute.CATALOG_PRODUCTS,
+            args = arrayOf(args.categoryId.value)
+        )
+
+        data class Arguments(
+            val categoryId: Category.Id,
+        )
+    }
 
 }
