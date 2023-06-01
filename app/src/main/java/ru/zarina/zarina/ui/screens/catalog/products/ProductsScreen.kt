@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,6 +39,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.ui.common.components.ProductCard
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
@@ -51,6 +51,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 fun ProductsScreenContent(
     category: Category?,
     products: LazyPagingItems<Product>,
+    onProductClick: (Product) -> Unit,
     onBackClick: () -> Unit,
 ) {
     val productGridState = rememberLazyGridState()
@@ -76,9 +77,12 @@ fun ProductsScreenContent(
                 key = products.itemKey { it.id.value },
                 contentType = products.itemContentType { null }
             ) { productIndex ->
-                // TODO implement ui
                 val product = products[productIndex]
-                Text(product?.name.orEmpty())
+                if (product != null)
+                    ProductCard(
+                        product = product,
+                        onClick = { onProductClick(product) }
+                    )
             }
             item(
                 span = { GridItemSpan(2) }
@@ -138,6 +142,7 @@ fun ProductsScreen() {
     ProductsScreenContent(
         category = category,
         products = products,
+        onProductClick = viewModel::onProductClick,
         onBackClick = viewModel::onBackClick,
     )
 }
@@ -163,6 +168,7 @@ fun ProductsScreenContentPreview() {
         ProductsScreenContent(
             category = null,
             products = products,
+            onProductClick = {},
             onBackClick = {},
         )
     }

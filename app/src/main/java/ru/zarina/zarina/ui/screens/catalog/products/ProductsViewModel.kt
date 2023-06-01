@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.Category
+import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
@@ -59,6 +60,10 @@ class ProductsViewModel @Inject constructor(
     val products = pager.flatMapLatest { it?.flow?.cachedIn(viewModelScope) ?: emptyFlow() }
 
     fun onBackClick() {
+        // TODO
+    }
+
+    fun onProductClick(product: Product) {
         // TODO
     }
 
