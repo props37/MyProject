@@ -24,8 +24,8 @@ data class ProductPageResponseDto(
         return Pagination(
             // adjust page index, because it starts from 1 on the backend
             currentPageIndex = pagination.currentPage - 1,
-            pageCount = pagination.currentPage,
-            totalItemCount = pagination.totalPages,
+            pageCount = pagination.totalPages,
+            totalItemCount = itemCount,
         )
     }
 
