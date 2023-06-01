@@ -101,6 +101,7 @@ fun ProductCard(
             price = product.price,
             textStyle = UiKitTheme.typography.circle1614,
         )
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
