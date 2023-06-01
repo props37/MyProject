@@ -91,7 +91,7 @@ fun ZarinaNavigation(
             }
             pickupGraph(navController)
             subscribeGraph(navController)
-            catalogGraph()
+            catalogGraph(navController)
         }
     }
 }
