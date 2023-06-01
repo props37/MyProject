@@ -83,7 +83,6 @@ fun ProductCard(
             text = product.name,
             color = UiKitTheme.colors.primaryContentColor,
             style = UiKitTheme.typography.circle1518,
-            maxLines = 1,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp)
         )

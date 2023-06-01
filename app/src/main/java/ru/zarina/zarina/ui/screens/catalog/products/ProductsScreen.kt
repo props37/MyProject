@@ -6,6 +6,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -69,6 +70,7 @@ fun ProductsScreenContent(
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             state = productGridState,
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
             contentPadding = WindowInsets.navigationBars.asPaddingValues(),
             modifier = Modifier.fillMaxSize()
         ) {
@@ -81,7 +83,7 @@ fun ProductsScreenContent(
                 if (product != null)
                     ProductCard(
                         product = product,
-                        onClick = { onProductClick(product) }
+                        onClick = { onProductClick(product) },
                     )
             }
             item(
