@@ -88,14 +88,17 @@ private fun CategoryItem(
 }
 
 @Composable
-fun CategoriesScreen() {
+fun CategoriesScreen(
+    showProducts: (Category.Id) -> Unit,
+) {
     val viewModel = hiltViewModel<CategoriesViewModel>()
 
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     val isLoaderVisible by viewModel.isLoaderVisible.collectAsStateWithLifecycle()
 
     CategoriesScreenBehavior(
-        sideEffects = viewModel.sideEffects
+        sideEffects = viewModel.sideEffects,
+        showProducts = showProducts,
     )
 
     CategoriesScreenContent(
@@ -108,6 +111,7 @@ fun CategoriesScreen() {
 @Composable
 fun CategoriesScreenBehavior(
     sideEffects: Flow<CategoriesViewModel.SideEffect>,
+    showProducts: (Category.Id) -> Unit,
 ) {
     val context by rememberUpdatedState(LocalContext.current)
     LaunchedEffect(sideEffects) {
@@ -116,6 +120,8 @@ fun CategoriesScreenBehavior(
                 is CategoriesViewModel.SideEffect.ShowToast -> Toast
                     .makeText(context, effect.message.getString(context), Toast.LENGTH_SHORT)
                     .show()
+
+                is CategoriesViewModel.SideEffect.ShowProducts -> showProducts(effect.categoryId)
             }
         }
     }

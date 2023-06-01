@@ -42,12 +42,13 @@ class CategoriesViewModel @Inject constructor(
     }
 
     fun onCategoryClick(category: Category) {
-        // TODO navigate
+        sideEffect(SideEffect.ShowProducts(category.id))
     }
 
     enum class Operation : OperationKey { LOADING_CATEGORIES }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        data class ShowProducts(val categoryId: Category.Id) : SideEffect
         data class ShowToast(val message: Text) : SideEffect
     }
 

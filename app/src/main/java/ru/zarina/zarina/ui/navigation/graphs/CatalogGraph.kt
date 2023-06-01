@@ -9,7 +9,9 @@ import ru.zarina.zarina.ui.screens.catalog.categories.CategoriesScreen
 fun NavGraphBuilder.catalogGraph() {
     navigationGraph(Catalog) {
         composableDestination(Catalog.Categories) {
-            CategoriesScreen()
+            CategoriesScreen(
+                showProducts = {}, // TODO
+            )
         }
     }
 }
