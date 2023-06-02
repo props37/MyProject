@@ -100,4 +100,6 @@
         <item quantity="many">%1$d товаров</item>
         <item quantity="other">%1$d товаров</item>
     </plurals>
+    <string name="products_not_found">Товаров не нашлось</string>
+    <string name="try_changing_filter">Попробуйте изменить выбранные фильтры</string>
 </resources>

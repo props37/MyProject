@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -28,6 +29,7 @@ import kotlinx.coroutines.flow.flowOf
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.components.ProductCard
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
@@ -45,6 +47,19 @@ fun ProductsScreenContent(
     onProductClick: (Product) -> Unit,
     onBackClick: () -> Unit,
 ) {
+    val isLoading =
+        products.loadState.append == LoadState.Loading || products.loadState.refresh == LoadState.Loading
+    val errorState = when {
+        !isLoading && products.itemCount == 0 -> ErrorState(
+            icon = R.drawable.ic_magnifying_glass_96,
+            title = Text.Resource(R.string.products_not_found),
+            subtitle = Text.Resource(R.string.try_changing_filter),
+            isButtonVisible = false,
+            buttonText = null
+        )
+
+        else -> null
+    }
     val productGridState = rememberLazyGridState()
     ZarinaScaffold(
         toolbar = {
@@ -58,6 +73,7 @@ fun ProductsScreenContent(
                 }
             )
         },
+        errorState = errorState,
     ) {
         val colorPickerDimensions = ColorPickerDefaults.tinyDimensions()
         LazyVerticalGrid(
