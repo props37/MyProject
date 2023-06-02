@@ -66,8 +66,7 @@ class ProductsViewModel @Inject constructor(
             if (source == null) return@mapState null
             Pager(
                 config = PagingConfig(
-                    // TODO constant
-                    pageSize = 12,
+                    pageSize = PAGE_SIZE,
                     enablePlaceholders = false,
                 ),
                 pagingSourceFactory = { source },
@@ -91,6 +90,10 @@ class ProductsViewModel @Inject constructor(
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object GoBack : SideEffect
         data class ShowProduct(val id: Product.Id) : SideEffect
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 12
     }
 
 }
