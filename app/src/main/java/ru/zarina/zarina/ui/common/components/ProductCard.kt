@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.common.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,6 +48,8 @@ fun ProductCard(
         modifier = modifier
             .clickable(
                 onClick = onClick,
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
             )
             .drawWithContent {
                 drawContent()
