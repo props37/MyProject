@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -32,6 +33,7 @@ import ru.zarina.zarina.ui.common.components.color.ColorPickerDimensions
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.utils.kotlin.roundToMultipleOf
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -62,9 +64,18 @@ fun ProductCard(
                 .fillMaxWidth()
         ) {
             if (isMediaScrollable) {
+                val pagerState = rememberPagerState(
+                    initialPage = (Int.MAX_VALUE / 2).roundToMultipleOf(product.media.size),
+                )
                 MediaPager(
                     media = product.media.filter { it.type == Media.Type.IMAGE }.toImmutableList(),
+                    state = pagerState,
                     modifier = Modifier.fillMaxSize()
+                )
+                PageDots(
+                    count = product.media.size,
+                    activeIndex = pagerState.currentPage % product.media.size,
+                    modifier = Modifier.align(Alignment.BottomCenter),
                 )
             } else {
                 val image = product.media.firstOrNull { it.type == Media.Type.IMAGE }
