@@ -24,7 +24,6 @@ import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPagingSource
 import ru.zarina.zarina.utils.coroutine.mapState
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,7 +44,6 @@ class ProductsViewModel @Inject constructor(
 
     private val pagingSource = category
         .mapState(viewModelScope) { category ->
-            Timber.d("🚯 category: $category")
             category?.let { CategoryProductPagingSource(it, interactor.getProductsPageUseCase) }
         }
 
