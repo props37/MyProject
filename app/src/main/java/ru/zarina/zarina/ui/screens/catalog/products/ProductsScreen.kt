@@ -92,6 +92,7 @@ fun ProductsScreenContent(
                 if (product != null)
                     ProductCard(
                         product = product,
+                        isMediaScrollable = true,
                         onClick = { onProductClick(product) },
                         colorPickerDimensions = colorPickerDimensions,
                     )

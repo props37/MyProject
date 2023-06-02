@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.common.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,11 +32,13 @@ import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvid
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductCard(
     product: Product,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isMediaScrollable: Boolean = false,
     colorPickerDimensions: ColorPickerDimensions = ColorPickerDefaults.smallDimensions(),
 ) {
     val inactiveOverlayColor = UiKitTheme.colors.inactiveOverlay
@@ -55,11 +58,18 @@ fun ProductCard(
                 .aspectRatio(Media.Defaults.PRODUCT_MEDIA_ASPECT_RATIO)
                 .fillMaxWidth()
         ) {
-            val image = product.media.firstOrNull { it.type == Media.Type.IMAGE }
-            AsyncImageLoader(
-                url = image?.url?.value,
-                modifier = Modifier.fillMaxSize()
-            )
+            if (isMediaScrollable) {
+                MediaPager(
+                    media = product.media.filter { it.type == Media.Type.IMAGE }.toImmutableList(),
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                val image = product.media.firstOrNull { it.type == Media.Type.IMAGE }
+                AsyncImageLoader(
+                    url = image?.url?.value,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),

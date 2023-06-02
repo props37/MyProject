@@ -8,6 +8,8 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -21,8 +23,8 @@ import ru.zarina.zarina.utils.kotlin.roundToMultipleOf
 @Composable
 fun MediaPager(
     media: ImmutableList<Media>,
-    cache: State<Cache?>,
     modifier: Modifier = Modifier,
+    cache: State<Cache?> = remember { mutableStateOf(null) },
     state: PagerState = rememberPagerState(
         initialPage = (Int.MAX_VALUE / 2).roundToMultipleOf(media.size),
     ),
@@ -30,7 +32,7 @@ fun MediaPager(
     HorizontalPager(
         pageCount = Int.MAX_VALUE,
         beyondBoundsPageCount = 1,
-        key = { media.loopingGet(it).url.value },
+        key = { it },
         state = state,
         modifier = modifier
     ) { pageIndex ->
