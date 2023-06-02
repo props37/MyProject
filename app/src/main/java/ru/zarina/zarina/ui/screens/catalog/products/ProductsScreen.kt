@@ -116,7 +116,7 @@ fun ProductsScreenContent(
                 span = { GridItemSpan(2) }
             ) {
                 GridLoader(
-                    isVisible = products.loadState.append is LoadState.Loading || products.loadState.refresh is LoadState.Loading,
+                    isVisible = isLoading,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
