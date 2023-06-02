@@ -14,6 +14,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.media3.datasource.cache.Cache
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.domain.Media
+import ru.zarina.zarina.utils.kotlin.loopingGet
+import ru.zarina.zarina.utils.kotlin.roundToMultipleOf
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -21,16 +23,18 @@ fun MediaPager(
     media: ImmutableList<Media>,
     cache: State<Cache?>,
     modifier: Modifier = Modifier,
-    state: PagerState = rememberPagerState(),
+    state: PagerState = rememberPagerState(
+        initialPage = (Int.MAX_VALUE / 2).roundToMultipleOf(media.size),
+    ),
 ) {
     HorizontalPager(
-        pageCount = media.size,
+        pageCount = Int.MAX_VALUE,
         beyondBoundsPageCount = 1,
-        key = { media[it].url.value },
+        key = { media.loopingGet(it).url.value },
         state = state,
         modifier = modifier
     ) { pageIndex ->
-        val item = media[pageIndex]
+        val item = media.loopingGet(pageIndex)
         val itemModifier = Modifier
             .fillMaxWidth()
             .aspectRatio(Media.Defaults.PRODUCT_MEDIA_ASPECT_RATIO)

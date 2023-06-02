@@ -32,6 +32,7 @@ import ru.zarina.zarina.ui.common.components.InvertedRippleTheme
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.utils.kotlin.roundToMultipleOf
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -42,7 +43,9 @@ fun MediaSection(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
-        val pagerState = rememberPagerState()
+        val pagerState = rememberPagerState(
+            initialPage = (Int.MAX_VALUE / 2).roundToMultipleOf(product.media.size),
+        )
         MediaPager(
             media = product.media,
             cache = cache,
@@ -52,7 +55,7 @@ fun MediaSection(
         val coroutineScope = rememberCoroutineScope()
         PageDots(
             count = product.media.size,
-            activeIndex = pagerState.currentPage,
+            activeIndex = pagerState.currentPage % product.media.size,
             onDotClick = { index ->
                 coroutineScope.launch {
                     pagerState.animateScrollToPage(index)
