@@ -79,6 +79,7 @@ fun ProductsScreenContent(
             columns = GridCells.Fixed(2),
             state = productGridState,
             horizontalArrangement = Arrangement.spacedBy(2.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
             contentPadding = WindowInsets.navigationBars.asPaddingValues(),
             modifier = Modifier.fillMaxSize()
         ) {
