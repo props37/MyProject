@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
@@ -23,6 +24,7 @@ import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPagingSource
 import ru.zarina.zarina.utils.coroutine.mapState
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +45,7 @@ class ProductsViewModel @Inject constructor(
 
     private val pagingSource = category
         .mapState(viewModelScope) { category ->
+            Timber.d("🚯 category: $category")
             category?.let { CategoryProductPagingSource(it, interactor.getProductsPageUseCase) }
         }
 
@@ -72,7 +75,10 @@ class ProductsViewModel @Inject constructor(
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val products = pager.flatMapLatest { it?.flow?.cachedIn(viewModelScope) ?: emptyFlow() }
+    val products = pager.flatMapLatest {
+        it?.flow?.cachedIn(viewModelScope) ?: emptyFlow()
+    }
+        .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
 
     fun onBackClick() {
         sideEffect(SideEffect.GoBack)
