@@ -19,16 +19,15 @@ class SelectSortViewModel @Inject constructor(
     val options = MutableStateFlow(ProductSort.values().toList().toPersistentList())
         .asStateFlow()
 
-    private val _selectedOption = MutableStateFlow(ProductSort.DEFAULT)
-    val selectedOption = _selectedOption.asStateFlow()
+    val selectedOption = interactor.sort.asStateFlow()
 
     fun onOptionClick(option: ProductSort) {
-        _selectedOption.value = option
-        sideEffect(SideEffect.GoBack(option))
+        interactor.sort.value = option
+        sideEffect(SideEffect.GoBack)
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
-        data class GoBack(val selectedSort: ProductSort?) : SideEffect
+        object GoBack : SideEffect
     }
 
 }

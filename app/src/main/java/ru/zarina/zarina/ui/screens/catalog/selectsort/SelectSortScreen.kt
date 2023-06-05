@@ -100,7 +100,7 @@ private fun SortDivider() {
 
 @Composable
 fun SelectSortScreen(
-    goBack: (ProductSort?) -> Unit,
+    goBack: () -> Unit,
 ) {
     val viewModel = hiltViewModel<SelectSortViewModel>()
 
@@ -122,12 +122,12 @@ fun SelectSortScreen(
 @Composable
 fun SelectSortScreenBehavior(
     sideEffects: Flow<SelectSortViewModel.SideEffect>,
-    goBack: (ProductSort?) -> Unit,
+    goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                is SelectSortViewModel.SideEffect.GoBack -> goBack(effect.selectedSort)
+                is SelectSortViewModel.SideEffect.GoBack -> goBack()
             }
         }
     }
