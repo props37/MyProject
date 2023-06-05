@@ -46,10 +46,10 @@ class ProductsViewModel @Inject constructor(
         .flatMapLatest { id -> id?.let { interactor.getCategory(it) } ?: flowOf(null) }
         .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
-    val selectedSort = savedStateHandle
+    val sort = savedStateHandle
         .getStateFlow(KEY_SELECTED_SORT, ProductSort.DEFAULT)
 
-    private val pagingSource = combine(category, selectedSort) { category, sort ->
+    private val pagingSource = combine(category, sort) { category, sort ->
         category?.let { CategoryProductPagingSource(it, sort, interactor.getProductsPageUseCase) }
     }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)

@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -56,6 +57,7 @@ import kotlinx.coroutines.flow.flowOf
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.components.ProductCard
@@ -63,6 +65,7 @@ import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
+import ru.zarina.zarina.ui.common.utils.domain.getStringResource
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
@@ -73,6 +76,7 @@ fun ProductsScreenContent(
     products: LazyPagingItems<Product>,
     productCount: Text?,
     onProductClick: (Product) -> Unit,
+    sort: ProductSort,
     onSortClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
@@ -118,6 +122,7 @@ fun ProductsScreenContent(
                     .zIndex(1000f)
             ) {
                 FilterBar(
+                    sort = sort,
                     onSortClick = onSortClick,
                     modifier = Modifier
                         .background(color = UiKitTheme.colors.screenBackground)
@@ -161,6 +166,7 @@ fun ProductsScreenContent(
 
 @Composable
 private fun FilterBar(
+    sort: ProductSort,
     onSortClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -172,7 +178,7 @@ private fun FilterBar(
     ) {
         FilterButton(
             icon = R.drawable.ic_sort_24,
-            text = "По новизне", // TODO
+            text = stringResource(sort.getStringResource()),
             onClick = onSortClick,
             modifier = Modifier.weight(1f)
         )
@@ -249,6 +255,7 @@ fun ProductsScreen(
     val category by viewModel.category.collectAsStateWithLifecycle()
     val products = viewModel.products.collectAsLazyPagingItems()
     val productCount by viewModel.productCount.collectAsStateWithLifecycle()
+    val sort by viewModel.sort.collectAsStateWithLifecycle()
 
     ProductsScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -262,6 +269,7 @@ fun ProductsScreen(
         products = products,
         productCount = productCount,
         onProductClick = viewModel::onProductClick,
+        sort = sort,
         onSortClick = viewModel::onSortClick,
         onBackClick = viewModel::onBackClick,
     )
@@ -295,6 +303,7 @@ fun ProductsScreenContentPreview() {
             products = products,
             productCount = Text.String("12 товаров"),
             onProductClick = {},
+            sort = ProductSort.PRICE,
             onSortClick = {},
             onBackClick = {},
         )
