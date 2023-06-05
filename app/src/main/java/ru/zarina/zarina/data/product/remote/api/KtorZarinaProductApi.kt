@@ -16,6 +16,7 @@ import ru.zarina.zarina.data.common.remote.zarina.dto.SizeDto
 import ru.zarina.zarina.data.product.remote.api.dto.DeliveryInfoDto
 import ru.zarina.zarina.data.product.remote.api.dto.ProductPageRequestBody
 import ru.zarina.zarina.data.product.remote.api.dto.ProductPageResponseDto
+import ru.zarina.zarina.data.product.remote.api.dto.ProductSortDto
 import ru.zarina.zarina.di.Authorization
 import ru.zarina.zarina.domain.exception.NotFoundException
 import javax.inject.Inject
@@ -37,9 +38,14 @@ class KtorZarinaProductApi @Inject constructor(
         }
     }
 
-    override suspend fun getProductPage(categoryId: Int, pageIndex: Int): ProductPageResponseDto {
+    override suspend fun getProductPage(
+        categoryId: Int,
+        sort: ProductSortDto,
+        pageIndex: Int,
+    ): ProductPageResponseDto {
         val body = ProductPageRequestBody(
             categoryId = categoryId,
+            sort = sort,
             page = pageIndex,
         )
         val response = client.post("/api/products") {

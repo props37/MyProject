@@ -8,6 +8,7 @@ import ru.zarina.zarina.di.ZarinaDispatcher
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.ProductSort
 import javax.inject.Inject
 
 class GetProductsPageUseCase @Inject constructor(
@@ -15,12 +16,13 @@ class GetProductsPageUseCase @Inject constructor(
     private val productRepository: IProductRepository,
 ) : UseCase<GetProductsPageUseCase.Params, Page<List<Product>>>(dispatcher) {
     override suspend fun execute(params: Params): Page<List<Product>> {
-        val (category, pageIndex) = params
-        return productRepository.getProducts(category, pageIndex)
+        val (category, sort, pageIndex) = params
+        return productRepository.getProducts(category, sort, pageIndex)
     }
 
     data class Params(
         val category: Category,
+        val sort: ProductSort,
         val pageIndex: Int,
     )
 
