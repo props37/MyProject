@@ -35,6 +35,7 @@ import ru.zarina.zarina.domain.Barcode
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Size
+import ru.zarina.zarina.ui.common.components.bottomsheet.Header
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
@@ -53,9 +54,9 @@ fun SelectSizeScreenContent(
             .background(UiKitTheme.colors.screenBackground)
     ) {
         Header(
+            text = stringResource(id = R.string.select_size_appeal),
             modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .padding(top = 24.dp, bottom = 8.dp),
+                .padding(horizontal = 16.dp),
         )
         Column(
             modifier = Modifier
@@ -72,18 +73,6 @@ fun SelectSizeScreenContent(
             Spacer(modifier = Modifier.navigationBarsPadding())
         }
     }
-}
-
-@Composable
-private fun Header(
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        text = stringResource(id = R.string.select_size_appeal),
-        style = UiKitTheme.typography.circle1718bold,
-        textAlign = TextAlign.Start,
-        modifier = modifier
-    )
 }
 
 @Composable
