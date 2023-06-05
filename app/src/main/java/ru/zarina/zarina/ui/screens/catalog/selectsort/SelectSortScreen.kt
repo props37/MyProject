@@ -99,14 +99,17 @@ private fun SortDivider() {
 }
 
 @Composable
-fun SelectSortScreen() {
+fun SelectSortScreen(
+    goBack: (ProductSort?) -> Unit,
+) {
     val viewModel = hiltViewModel<SelectSortViewModel>()
 
     val options by viewModel.options.collectAsStateWithLifecycle()
     val selectedOption by viewModel.selectedOption.collectAsStateWithLifecycle()
 
     SelectSortScreenBehavior(
-        sideEffects = viewModel.sideEffects
+        sideEffects = viewModel.sideEffects,
+        goBack = goBack,
     )
 
     SelectSortScreenContent(
@@ -119,11 +122,12 @@ fun SelectSortScreen() {
 @Composable
 fun SelectSortScreenBehavior(
     sideEffects: Flow<SelectSortViewModel.SideEffect>,
+    goBack: (ProductSort?) -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                else -> TODO()
+                is SelectSortViewModel.SideEffect.GoBack -> goBack(effect.selectedSort)
             }
         }
     }

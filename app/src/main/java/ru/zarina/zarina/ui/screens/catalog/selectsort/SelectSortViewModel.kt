@@ -24,8 +24,11 @@ class SelectSortViewModel @Inject constructor(
 
     fun onOptionClick(option: ProductSort) {
         _selectedOption.value = option
+        sideEffect(SideEffect.GoBack(option))
     }
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        data class GoBack(val selectedSort: ProductSort?) : SideEffect
+    }
 
 }

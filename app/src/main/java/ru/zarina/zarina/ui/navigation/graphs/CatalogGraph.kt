@@ -9,6 +9,7 @@ import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.screens.catalog.categories.CategoriesScreen
 import ru.zarina.zarina.ui.screens.catalog.products.ProductsScreen
+import ru.zarina.zarina.ui.screens.catalog.products.ProductsViewModel
 import ru.zarina.zarina.ui.screens.catalog.selectsort.SelectSortScreen
 
 fun NavGraphBuilder.catalogGraph(
@@ -38,7 +39,16 @@ fun NavGraphBuilder.catalogGraph(
             )
         }
         bottomSheetDestination(Catalog.SelectSort) {
-            SelectSortScreen()
+            SelectSortScreen(
+                goBack = { sort ->
+                    if (sort != null) {
+                        val parentEntry =
+                            navController.getBackStackEntry(Catalog.Products.routeSchema)
+                        parentEntry.savedStateHandle[ProductsViewModel.KEY_SELECTED_SORT] = sort
+                    }
+                    navController.popBackStack(Catalog.SelectSort.routeSchema, true)
+                }
+            )
         }
     }
 }
