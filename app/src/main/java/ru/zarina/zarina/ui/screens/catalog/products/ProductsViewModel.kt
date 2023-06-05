@@ -9,6 +9,7 @@ import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.PluralManager
 import ru.zarina.zarina.ui.common.base.PluralResources
@@ -44,10 +46,13 @@ class ProductsViewModel @Inject constructor(
         .flatMapLatest { id -> id?.let { interactor.getCategory(it) } ?: flowOf(null) }
         .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
-    private val pagingSource = category
-        .mapState(viewModelScope) { category ->
-            category?.let { CategoryProductPagingSource(it, interactor.getProductsPageUseCase) }
-        }
+    val selectedSort = savedStateHandle
+        .getStateFlow(KEY_SELECTED_SORT, ProductSort.DEFAULT)
+
+    private val pagingSource = combine(category, selectedSort) { category, sort ->
+        category?.let { CategoryProductPagingSource(it, sort, interactor.getProductsPageUseCase) }
+    }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private val productsPluralManager = PluralManager(
         PluralResources(
@@ -110,6 +115,8 @@ class ProductsViewModel @Inject constructor(
 
     companion object {
         private const val PAGE_SIZE = 12
+
+        const val KEY_SELECTED_SORT = "selected_sort"
     }
 
 }

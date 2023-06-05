@@ -11,6 +11,7 @@ import javax.inject.Inject
 
 class CategoryProductPagingSource @Inject constructor(
     private val category: Category,
+    private val sort: ProductSort,
     private val getProductsPageUseCase: GetProductsPageUseCase,
 ) : PagingSource<Int, Product>() {
 
@@ -31,7 +32,7 @@ class CategoryProductPagingSource @Inject constructor(
         getProductsPageUseCase(
             GetProductsPageUseCase.Params(
                 category = category,
-                sort = ProductSort.DEFAULT,
+                sort = sort,
                 pageIndex = nextPageIndex
             )
         )
