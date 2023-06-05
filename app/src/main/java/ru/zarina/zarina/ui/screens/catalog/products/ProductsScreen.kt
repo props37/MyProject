@@ -3,11 +3,13 @@ package ru.zarina.zarina.ui.screens.catalog.products
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,10 +37,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
@@ -91,7 +95,6 @@ fun ProductsScreenContent(
             ScreenToolbar(
                 title = category?.name.orEmpty(),
                 subtitle = productCount?.getString(context),
-                isElevated = productGridState.canScrollBackward,
                 startIcon = {
                     BackButton(onClick = onBackClick)
                 }
@@ -103,9 +106,22 @@ fun ProductsScreenContent(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            FilterBar(
-                modifier = Modifier.fillMaxWidth(),
+            val elevation = animateDpAsState(
+                targetValue = if (productGridState.canScrollBackward) 6.dp else 0.dp,
+                label = "filter bar elevation"
             )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .shadow(elevation.value)
+                    .zIndex(1000f)
+            ) {
+                FilterBar(
+                    modifier = Modifier
+                        .background(color = UiKitTheme.colors.screenBackground)
+                        .fillMaxWidth(),
+                )
+            }
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 state = productGridState,
