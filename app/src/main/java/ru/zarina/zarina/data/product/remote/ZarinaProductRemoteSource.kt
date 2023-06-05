@@ -1,7 +1,9 @@
 package ru.zarina.zarina.data.product.remote
 
 import ru.zarina.zarina.data.product.remote.api.IZarinaProductApi
+import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.Product
 import javax.inject.Inject
 
@@ -11,6 +13,14 @@ class ZarinaProductRemoteSource @Inject constructor(
 
     override suspend fun getProduct(id: Product.Id) =
         checkNotNull(api.getProduct(id.value).toDomain())
+
+    override suspend fun getProductPage(category: Category, pageIndex: Int): Page<List<Product>> {
+        // adjust page index, because it starts from 1 on the backend
+        val response = api.getProductPage(category.id.value, pageIndex + 1)
+        val pagination = response.toPagination()
+        val products = response.items?.mapNotNull { it.toDomain() }.orEmpty()
+        return Page(pagination, products)
+    }
 
     override suspend fun getCompleteLook(product: Product) =
         api.getCompleteLook(product.id.value).toDomain()

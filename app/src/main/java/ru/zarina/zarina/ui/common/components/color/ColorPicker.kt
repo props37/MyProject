@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.components
+package ru.zarina.zarina.ui.common.components.color
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -23,19 +24,19 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.ui.common.utils.domain.toColorOr
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.utils.compose.minInteractionSize
 import ru.zarina.zarina.domain.Color as ZarinaColor
 
 @Composable
 fun ColorPicker(
     colors: ImmutableList<ZarinaColor>,
     selectedColor: ZarinaColor?,
-    onColorSelected: (ZarinaColor) -> Unit,
     modifier: Modifier = Modifier,
+    onColorSelected: ((ZarinaColor) -> Unit)? = null,
+    dimensions: ColorPickerDimensions = ColorPickerDefaults.dimensions(),
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(dimensions.colorsSpacing),
         modifier = modifier.horizontalScroll(rememberScrollState())
     ) {
         Spacer(Modifier.width(4.dp))
@@ -43,7 +44,8 @@ fun ColorPicker(
             ColorCircle(
                 color = color,
                 isSelected = color == selectedColor,
-                onClick = { onColorSelected(color) }
+                onClick = onColorSelected?.let { { it(color) } },
+                dimensions = dimensions
             )
         }
         Spacer(Modifier.width(4.dp))
@@ -54,8 +56,9 @@ fun ColorPicker(
 private fun ColorCircle(
     color: ZarinaColor,
     isSelected: Boolean,
-    onClick: () -> Unit,
+    dimensions: ColorPickerDimensions,
     modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
 ) {
     val shape = CircleShape
     val selectionBorderColor by animateColorAsState(
@@ -64,21 +67,21 @@ private fun ColorCircle(
     )
     Box(
         modifier = modifier
-            .minInteractionSize()
+            .size(dimensions.circleSize)
             .clip(shape)
             .clickable(
-                enabled = !isSelected,
-                onClick = onClick
+                enabled = !isSelected && onClick != null,
+                onClick = onClick ?: {}
             )
-            .padding(4.dp)
+            .padding(dimensions.outerPadding)
             .border(
-                width = 1.dp,
+                width = dimensions.selectionBorderWidth,
                 color = selectionBorderColor,
                 shape = shape,
             )
-            .padding(5.dp)
+            .padding(dimensions.selectionBorderPadding)
             .border(
-                width = 1.dp,
+                width = dimensions.colorBorderWidth,
                 color = UiKitTheme.colors.colorPickerCircleBorder,
                 shape = shape
             )

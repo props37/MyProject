@@ -17,4 +17,5 @@ enum class BaseRoute {
     SUBSCRIBE_SUCCESS,
     WEBPAGE,
     CATALOG_CATEGORIES,
+    CATALOG_PRODUCTS,
 }

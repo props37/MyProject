@@ -13,7 +13,13 @@ class RoomCategoryLocalSource @Inject constructor(
 
     override suspend fun addCategories(categories: List<Category>) {
         val entities = buildList {
-            addAll(categories.mapIndexed { index, item -> CategoryEntity.from(item, index) })
+            addAll(categories.mapIndexed { index, item ->
+                CategoryEntity.from(
+                    category = item,
+                    displayOrder = index,
+                    isRoot = true
+                )
+            })
             addAll(
                 categories.flatMap { category ->
                     category.getFlattenedSubcategories()
@@ -34,5 +40,8 @@ class RoomCategoryLocalSource @Inject constructor(
 
         entities.filter { it.isRoot }.sortedBy { it.displayOrder }.map { it.toCategory() }
     }
+
+    override fun getCategory(id: Category.Id) = getCategories()
+        .map { categories -> categories.firstOrNull { it.id == id } }
 
 }
