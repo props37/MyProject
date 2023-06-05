@@ -73,6 +73,7 @@ fun ProductsScreenContent(
     products: LazyPagingItems<Product>,
     productCount: Text?,
     onProductClick: (Product) -> Unit,
+    onSortClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
     val isLoading =
@@ -117,6 +118,7 @@ fun ProductsScreenContent(
                     .zIndex(1000f)
             ) {
                 FilterBar(
+                    onSortClick = onSortClick,
                     modifier = Modifier
                         .background(color = UiKitTheme.colors.screenBackground)
                         .fillMaxWidth(),
@@ -159,6 +161,7 @@ fun ProductsScreenContent(
 
 @Composable
 private fun FilterBar(
+    onSortClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -170,7 +173,7 @@ private fun FilterBar(
         FilterButton(
             icon = R.drawable.ic_sort_24,
             text = "По новизне", // TODO
-            onClick = {}, // TODO
+            onClick = onSortClick,
             modifier = Modifier.weight(1f)
         )
     }
@@ -238,6 +241,7 @@ private fun GridLoader(
 @Composable
 fun ProductsScreen(
     showProduct: (Product.Id) -> Unit,
+    showSelectSort: () -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel = hiltViewModel<ProductsViewModel>()
@@ -249,6 +253,7 @@ fun ProductsScreen(
     ProductsScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showProduct = showProduct,
+        showSelectSort = showSelectSort,
         goBack = goBack,
     )
 
@@ -257,6 +262,7 @@ fun ProductsScreen(
         products = products,
         productCount = productCount,
         onProductClick = viewModel::onProductClick,
+        onSortClick = viewModel::onSortClick,
         onBackClick = viewModel::onBackClick,
     )
 }
@@ -265,6 +271,7 @@ fun ProductsScreen(
 fun ProductsScreenBehavior(
     sideEffects: Flow<ProductsViewModel.SideEffect>,
     showProduct: (Product.Id) -> Unit,
+    showSelectSort: () -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
@@ -272,6 +279,7 @@ fun ProductsScreenBehavior(
             when (effect) {
                 ProductsViewModel.SideEffect.GoBack -> goBack()
                 is ProductsViewModel.SideEffect.ShowProduct -> showProduct(effect.id)
+                ProductsViewModel.SideEffect.ShowSelectSort -> showSelectSort()
             }
         }
     }
@@ -287,6 +295,7 @@ fun ProductsScreenContentPreview() {
             products = products,
             productCount = Text.String("12 товаров"),
             onProductClick = {},
+            onSortClick = {},
             onBackClick = {},
         )
     }

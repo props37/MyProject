@@ -98,9 +98,14 @@ class ProductsViewModel @Inject constructor(
         sideEffect(SideEffect.ShowProduct(product.id))
     }
 
+    fun onSortClick() {
+        sideEffect(SideEffect.ShowSelectSort)
+    }
+
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object GoBack : SideEffect
         data class ShowProduct(val id: Product.Id) : SideEffect
+        object ShowSelectSort : SideEffect
     }
 
     companion object {

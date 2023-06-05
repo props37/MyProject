@@ -29,6 +29,9 @@ fun NavGraphBuilder.catalogGraph(
                     val arguments = Destinations.Product.Arguments(id)
                     navController.navigate(Destinations.Product.createRoute(arguments))
                 },
+                showSelectSort = {
+                    navController.navigate(Catalog.SelectSort.routeSchema)
+                },
                 goBack = {
                     navController.popBackStack(Catalog.Products.routeSchema, true)
                 }
