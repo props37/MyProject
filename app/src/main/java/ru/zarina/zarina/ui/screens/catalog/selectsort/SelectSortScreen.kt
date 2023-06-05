@@ -27,7 +27,7 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.ProductSort
-import ru.zarina.zarina.domain.ProductSort.values
+import ru.zarina.zarina.ui.common.components.SelectionCircle
 import ru.zarina.zarina.ui.common.components.bottomsheet.Header
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -38,6 +38,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @Composable
 fun SelectSortScreenContent(
     options: ImmutableList<ProductSort>,
+    selectedOption: ProductSort,
     onOptionClick: (ProductSort) -> Unit,
 ) {
     Column(
@@ -57,6 +58,7 @@ fun SelectSortScreenContent(
         options.forEach { option ->
             SortItem(
                 item = option,
+                isSelected = option == selectedOption,
                 onClick = { onOptionClick(option) },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -68,6 +70,7 @@ fun SelectSortScreenContent(
 @Composable
 private fun SortItem(
     item: ProductSort,
+    isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -82,7 +85,7 @@ private fun SortItem(
             modifier = Modifier.weight(1f)
         )
         Spacer(modifier = Modifier.width(8.dp))
-        // TODO selection circle
+        SelectionCircle(isSelected = isSelected)
     }
 }
 
@@ -100,6 +103,7 @@ fun SelectSortScreen() {
     val viewModel = hiltViewModel<SelectSortViewModel>()
 
     val options by viewModel.options.collectAsStateWithLifecycle()
+    val selectedOption by viewModel.selectedOption.collectAsStateWithLifecycle()
 
     SelectSortScreenBehavior(
         sideEffects = viewModel.sideEffects
@@ -107,6 +111,7 @@ fun SelectSortScreen() {
 
     SelectSortScreenContent(
         options = options,
+        selectedOption = selectedOption,
         onOptionClick = viewModel::onOptionClick,
     )
 }
@@ -131,7 +136,8 @@ fun SelectSortScreenBehavior(
 fun SelectSortScreenContentPreview() {
     ZarinaTheme {
         SelectSortScreenContent(
-            options = values().toList().toPersistentList(),
+            options = ProductSort.values().toList().toPersistentList(),
+            selectedOption = ProductSort.values().first(),
             onOptionClick = {},
         )
     }

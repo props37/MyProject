@@ -19,8 +19,11 @@ class SelectSortViewModel @Inject constructor(
     val options = MutableStateFlow(ProductSort.values().toList().toPersistentList())
         .asStateFlow()
 
+    private val _selectedOption = MutableStateFlow(ProductSort.DEFAULT)
+    val selectedOption = _selectedOption.asStateFlow()
+
     fun onOptionClick(option: ProductSort) {
-        // TODO
+        _selectedOption.value = option
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect
