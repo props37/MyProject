@@ -19,6 +19,8 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
+import ru.zarina.zarina.ui.common.base.PluralManager
+import ru.zarina.zarina.ui.common.base.PluralResources
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
@@ -47,6 +49,17 @@ class ProductsViewModel @Inject constructor(
             category?.let { CategoryProductPagingSource(it, interactor.getProductsPageUseCase) }
         }
 
+    private val productsPluralManager = PluralManager(
+        PluralResources(
+            zero = R.string.plural_products_zero,
+            one = R.string.plural_products_one,
+            two = R.string.plural_products_two,
+            few = R.string.plural_products_few,
+            many = R.string.plural_products_many,
+            other = R.string.plural_products_other
+        )
+    )
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val productCount = pagingSource
         .flatMapLatest { it?.itemCount ?: flowOf(null) }
@@ -54,7 +67,7 @@ class ProductsViewModel @Inject constructor(
             when (count) {
                 null -> null
                 0 -> Text.Resource(R.string.no_products)
-                else -> Text.PluralsResource(R.plurals.products, count, count)
+                else -> productsPluralManager.getText(count, count)
             }
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)

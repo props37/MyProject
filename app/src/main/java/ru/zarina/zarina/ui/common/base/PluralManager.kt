@@ -5,10 +5,9 @@ import androidx.annotation.StringRes
 /* The plural string management is done through this class as a workaround to Android not allowing
  to specify the locale (and, in turn, the plural rules) of the default string resources. It uses
  the rules of the intended default language */
-object PluralManager {
+class PluralManager(private val resources: PluralResources) {
 
     fun getText(
-        resources: PluralResources,
         count: Int,
         vararg args: Any,
     ): Text.Resource {

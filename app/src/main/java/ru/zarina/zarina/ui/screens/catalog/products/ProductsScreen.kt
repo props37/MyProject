@@ -206,7 +206,7 @@ fun ProductsScreenContentPreview() {
         ProductsScreenContent(
             category = null,
             products = products,
-            productCount = Text.PluralsResource(R.plurals.products, 12, 12),
+            productCount = Text.String("12 товаров"),
             onProductClick = {},
             onBackClick = {},
         )

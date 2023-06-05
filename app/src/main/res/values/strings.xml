@@ -92,14 +92,12 @@
     <string name="catalog">Каталог</string>
     <string name="unable_to_load_categories">Не удалось загрузить категории</string>
     <string name="no_products">Нет товаров</string>
-    <plurals name="products">
-        <item quantity="zero">%1$d товаров</item>
-        <item quantity="one">%1$d товар</item>
-        <item quantity="two">%1$d товара</item>
-        <item quantity="few">%1$d товара</item>
-        <item quantity="many">%1$d товаров</item>
-        <item quantity="other">%1$d товаров</item>
-    </plurals>
+    <string name="plural_products_zero">%1$d товаров</string>
+    <string name="plural_products_one">%1$d товар</string>
+    <string name="plural_products_two">%1$d товара</string>
+    <string name="plural_products_few">%1$d товара</string>
+    <string name="plural_products_many">%1$d товаров</string>
+    <string name="plural_products_other">%1$d товаров</string>
     <string name="products_not_found">Товаров не нашлось</string>
     <string name="try_changing_filter">Попробуйте изменить выбранные фильтры</string>
 </resources>
