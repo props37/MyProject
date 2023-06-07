@@ -15,6 +15,9 @@ class ProductsInteractor @Inject constructor(
     val sort
         get() = coordinator.sort
 
+    val filtration
+        get() = coordinator.filtration
+
     fun getCategory(id: Category.Id) = categoryRepository.getCategory(id)
 
 }

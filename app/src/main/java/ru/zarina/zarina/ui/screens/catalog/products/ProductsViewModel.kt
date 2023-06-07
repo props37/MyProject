@@ -33,6 +33,7 @@ import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPaging
 import ru.zarina.zarina.utils.coroutine.mapState
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ProductsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -104,6 +105,13 @@ class ProductsViewModel @Inject constructor(
         it?.flow?.cachedIn(viewModelScope) ?: emptyFlow()
     }
         .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
+
+    init {
+        pagingSource
+            .flatMapLatest { it?.filtration ?: emptyFlow() }
+            .onEach { interactor.filtration.value = it }
+            .launchIn(viewModelScope)
+    }
 
     fun onBackClick() {
         sideEffect(SideEffect.GoBack)

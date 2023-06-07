@@ -4,6 +4,7 @@ import ru.zarina.zarina.data.product.remote.api.IZarinaProductApi
 import ru.zarina.zarina.data.product.remote.api.dto.ProductSortDto
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.FilteredProducts
 import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
@@ -20,13 +21,14 @@ class ZarinaProductRemoteSource @Inject constructor(
         category: Category,
         sort: ProductSort,
         pageIndex: Int,
-    ): Page<List<Product>> {
+    ): Page<FilteredProducts> {
         // adjust page index, because it starts from 1 on the backend
         val response =
             api.getProductPage(category.id.value, ProductSortDto.from(sort), pageIndex + 1)
         val pagination = response.toPagination()
         val products = response.items?.mapNotNull { it.toDomain() }.orEmpty()
-        return Page(pagination, products)
+        val filtration = response.filters.toDomain()
+        return Page(pagination, FilteredProducts(products, filtration))
     }
 
     override suspend fun getCompleteLook(product: Product) =

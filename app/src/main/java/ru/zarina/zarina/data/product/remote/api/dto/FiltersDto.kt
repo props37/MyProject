@@ -3,6 +3,7 @@ package ru.zarina.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.domain.Filtration
 
 @Serializable
 data class FiltersDto(
@@ -20,4 +21,10 @@ data class FiltersDto(
     val materials: List<MaterialFilterDto?>? = null,
     @SerialName("price")
     val price: PriceFilterDto? = null,
-)
+) {
+    fun toDomain(): Filtration {
+        return Filtration(
+            price = price?.toDomain(),
+        )
+    }
+}
