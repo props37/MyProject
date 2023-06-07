@@ -1,0 +1,10 @@
+package ru.zarina.zarina.domain
+
+enum class ProductSort {
+    DATE_DESCENDING, POPULARITY, PRICE, PRICE_DESCENDING, DISCOUNT;
+
+    companion object {
+        val DEFAULT
+            get() = DATE_DESCENDING
+    }
+}

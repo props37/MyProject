@@ -18,4 +18,5 @@ enum class BaseRoute {
     WEBPAGE,
     CATALOG_CATEGORIES,
     CATALOG_PRODUCTS,
+    CATALOG_SELECT_SORT,
 }

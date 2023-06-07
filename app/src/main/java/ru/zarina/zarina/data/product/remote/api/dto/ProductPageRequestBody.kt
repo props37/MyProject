@@ -10,4 +10,6 @@ data class ProductPageRequestBody(
     val categoryId: Int,
     @SerialName("page")
     val page: Int,
+    @SerialName("sort")
+    val sort: ProductSortDto,
 )

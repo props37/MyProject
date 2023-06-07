@@ -5,11 +5,13 @@ import androidx.paging.PagingState
 import kotlinx.coroutines.flow.MutableStateFlow
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.usecase.catalog.GetProductsPageUseCase
 import javax.inject.Inject
 
 class CategoryProductPagingSource @Inject constructor(
     private val category: Category,
+    private val sort: ProductSort,
     private val getProductsPageUseCase: GetProductsPageUseCase,
 ) : PagingSource<Int, Product>() {
 
@@ -27,7 +29,13 @@ class CategoryProductPagingSource @Inject constructor(
         params: LoadParams<Int>,
     ): LoadResult<Int, Product> {
         val nextPageIndex = params.key ?: 0
-        getProductsPageUseCase(GetProductsPageUseCase.Params(category, nextPageIndex))
+        getProductsPageUseCase(
+            GetProductsPageUseCase.Params(
+                category = category,
+                sort = sort,
+                pageIndex = nextPageIndex
+            )
+        )
             .onSuccess {
                 itemCount.value = it.pagination.totalItemCount
                 return LoadResult.Page(

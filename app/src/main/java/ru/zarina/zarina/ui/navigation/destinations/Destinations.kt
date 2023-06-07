@@ -202,4 +202,6 @@ object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
         )
     }
 
+    object SelectSort : SimpleDestination(BaseRoute.CATALOG_SELECT_SORT)
+
 }
