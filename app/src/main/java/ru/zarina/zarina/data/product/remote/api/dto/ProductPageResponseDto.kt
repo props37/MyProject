@@ -14,6 +14,8 @@ data class ProductPageResponseDto(
     val pagination: PaginationDto? = null,
     @SerialName("items")
     val items: List<ProductDto>? = null,
+    @SerialName("filters")
+    val filters: FiltersDto,
 ) {
 
     fun toPagination(): Pagination {
