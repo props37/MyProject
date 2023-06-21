@@ -1,5 +1,5 @@
 [versions]
-android-gradle = "8.1.0-beta04"
+android-gradle = "8.1.0-beta05"
 kotlin = "1.8.20"
 ksp = "1.8.20-1.0.11"
 kotlinx-serialization = "1.5.0"
