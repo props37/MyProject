@@ -17,6 +17,9 @@ compose = "2023.04.00"
 accompanist = "0.30.1"
 hilt = "2.44.2"
 hilt-compose-navigation = "1.0.0"
+koin-core = "3.4.2"
+koin-annotations = "1.2.2"
+koin-androidx-compose = "3.4.5"
 room = "2.5.1"
 ktor = "2.2.4"
 coil = "2.3.0"
@@ -69,6 +72,10 @@ accompanist-webview = { group = "com.google.accompanist", name = "accompanist-we
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-compose-navigation" }
+koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-annotations" }
+koin-ksp-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-annotations" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin-core" }
+koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin-androidx-compose" }
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
 ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
