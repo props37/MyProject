@@ -6,10 +6,9 @@ import cloud.mindbox.mobile_sdk.MindboxConfiguration
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.BuildConfig
 import ru.zarina.zarina.base.application.extensions.base.ApplicationExtension
-import javax.inject.Inject
 
 @Factory
-class MindboxExtension @Inject constructor() : ApplicationExtension {
+class MindboxExtension : ApplicationExtension {
 
     override fun install(application: Application) {
         val configuration = getConfiguration(application)

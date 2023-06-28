@@ -1,15 +1,16 @@
 package ru.zarina.zarina.usecase.catalog
 
 import kotlinx.coroutines.CoroutineDispatcher
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Named
 import ru.zarina.zarina.base.clean.UseCase
 import ru.zarina.zarina.data.product.IProductRepository
-import ru.zarina.zarina.di.Dispatcher
-import ru.zarina.zarina.di.ZarinaDispatcher
+import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Product
-import javax.inject.Inject
 
-class GetProductUseCase @Inject constructor(
-    @Dispatcher(ZarinaDispatcher.IO) dispatcher: CoroutineDispatcher,
+@Factory
+class GetProductUseCase(
+    @Named(Qualifiers.Dispatcher.IO) dispatcher: CoroutineDispatcher,
     private val productRepository: IProductRepository,
 ) : UseCase<GetProductUseCase.Params, Product>(dispatcher) {
 

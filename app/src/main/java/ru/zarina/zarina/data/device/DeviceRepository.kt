@@ -1,13 +1,14 @@
 package ru.zarina.zarina.data.device
 
 import kotlinx.coroutines.flow.first
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.device.local.IDeviceLocalSource
 import ru.zarina.zarina.data.device.remote.IDeviceRemoteSource
 import ru.zarina.zarina.domain.AuthorizationToken
 import timber.log.Timber
-import javax.inject.Inject
 
-class DeviceRepository @Inject constructor(
+@Factory
+class DeviceRepository(
     private val local: IDeviceLocalSource,
     private val remote: IDeviceRemoteSource,
 ) : IDeviceRepository {

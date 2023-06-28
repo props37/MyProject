@@ -1,13 +1,14 @@
 package ru.zarina.zarina.data.geography
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.geography.local.IGeographyLocalSource
 import ru.zarina.zarina.data.geography.remote.IGeographyRemoteSource
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.GeoLocation
 import timber.log.Timber
-import javax.inject.Inject
 
-class GeographyRepository @Inject constructor(
+@Factory
+class GeographyRepository(
     private val local: IGeographyLocalSource,
     private val remote: IGeographyRemoteSource,
 ) : IGeographyRepository {

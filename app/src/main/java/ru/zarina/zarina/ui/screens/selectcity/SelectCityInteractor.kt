@@ -1,11 +1,12 @@
 package ru.zarina.zarina.ui.screens.selectcity
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.usecase.geography.GetCitiesUseCase
 import ru.zarina.zarina.usecase.onboarding.FinishOnboardingUseCase
-import javax.inject.Inject
 
-class SelectCityInteractor @Inject constructor(
+@Factory
+class SelectCityInteractor(
     private val getCitiesUseCase: GetCitiesUseCase,
     private val finishOnboardingUseCase: FinishOnboardingUseCase,
 ) {

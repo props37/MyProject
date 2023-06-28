@@ -1,5 +1,6 @@
 package ru.zarina.zarina.data.product.remote
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.product.remote.api.IZarinaProductApi
 import ru.zarina.zarina.data.product.remote.api.dto.ProductSortDto
 import ru.zarina.zarina.domain.Category
@@ -8,9 +9,9 @@ import ru.zarina.zarina.domain.FilteredProducts
 import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
-import javax.inject.Inject
 
-class ZarinaProductRemoteSource @Inject constructor(
+@Factory
+class ZarinaProductRemoteSource(
     private val api: IZarinaProductApi,
 ) : IProductRemoteSource {
 

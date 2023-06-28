@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screens.pickup
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
@@ -13,9 +14,9 @@ import ru.zarina.zarina.usecase.user.ValidateEmailUseCase
 import ru.zarina.zarina.usecase.user.ValidateNameUseCase
 import ru.zarina.zarina.usecase.user.ValidatePhoneUseCase
 import ru.zarina.zarina.utils.clean.invoke
-import javax.inject.Inject
 
-class PickupInteractor @Inject constructor(
+@Factory
+class PickupInteractor(
     private val getCityUseCase: GetCityUseCase,
     private val getProductUseCase: GetProductUseCase,
     private val getOffersUseCase: GetOffersUseCase,

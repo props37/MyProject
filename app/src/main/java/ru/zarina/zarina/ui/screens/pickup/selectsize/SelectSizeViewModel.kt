@@ -1,15 +1,14 @@
 package ru.zarina.zarina.ui.screens.pickup.selectsize
 
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.Barcode
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
-import javax.inject.Inject
 
-@HiltViewModel
-class SelectSizeViewModel @Inject constructor(
+@KoinViewModel
+class SelectSizeViewModel(
     private val interactor: SelectSizeInteractor,
 ) : ViewModel(),
     ISideEffectSource<SelectSizeViewModel.SideEffect> by SideEffectQueue() {

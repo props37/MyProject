@@ -29,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
@@ -37,6 +36,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.DeliveryAvailability
 import ru.zarina.zarina.domain.Product
@@ -228,7 +228,7 @@ fun ProductScreen(
     showPickup: (Product.Id) -> Unit,
     goBack: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<ProductViewModel>()
+    val viewModel = koinViewModel<ProductViewModel>()
 
     val cache = viewModel.cache.collectAsStateWithLifecycle()
     val product by viewModel.product.collectAsStateWithLifecycle()

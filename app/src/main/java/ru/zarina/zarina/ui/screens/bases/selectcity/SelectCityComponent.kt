@@ -2,10 +2,11 @@ package ru.zarina.zarina.ui.screens.bases.selectcity
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.City
-import javax.inject.Inject
 
-class SelectCityComponent @Inject constructor() {
+@Factory
+class SelectCityComponent {
 
     fun List<City>.toCityListItems(
         priorityCitiesAtTop: Boolean,

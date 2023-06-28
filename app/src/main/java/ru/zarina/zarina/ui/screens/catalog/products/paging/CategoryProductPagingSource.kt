@@ -3,14 +3,15 @@ package ru.zarina.zarina.ui.screens.catalog.products.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.usecase.catalog.GetProductsPageUseCase
-import javax.inject.Inject
 
-class CategoryProductPagingSource @Inject constructor(
+@Factory
+class CategoryProductPagingSource(
     private val category: Category,
     private val sort: ProductSort,
     private val getProductsPageUseCase: GetProductsPageUseCase,

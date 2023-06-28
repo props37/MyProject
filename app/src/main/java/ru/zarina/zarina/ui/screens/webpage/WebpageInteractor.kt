@@ -1,11 +1,12 @@
 package ru.zarina.zarina.ui.screens.webpage
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.UserAgentHeaderProvider
 import ru.zarina.zarina.usecase.authorization.GetAuthorizationTokenUseCase
 import ru.zarina.zarina.utils.clean.invoke
-import javax.inject.Inject
 
-class WebpageInteractor @Inject constructor(
+@Factory
+class WebpageInteractor(
     private val userAgentHeaderProvider: UserAgentHeaderProvider,
     private val getAuthorizationTokenUseCase: GetAuthorizationTokenUseCase,
 ) {

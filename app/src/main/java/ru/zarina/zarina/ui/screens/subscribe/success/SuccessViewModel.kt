@@ -2,14 +2,13 @@ package ru.zarina.zarina.ui.screens.subscribe.success
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.navigation.destinations.Subscribe
-import javax.inject.Inject
 
-@HiltViewModel
-class SuccessViewModel @Inject constructor(
+@KoinViewModel
+class SuccessViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel(),
     ISideEffectSource<SuccessViewModel.SideEffect> by SideEffectQueue() {

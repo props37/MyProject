@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +18,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
@@ -31,11 +31,10 @@ import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPagingSource
 import ru.zarina.zarina.utils.coroutine.mapState
-import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@HiltViewModel
-class ProductsViewModel @Inject constructor(
+@KoinViewModel
+class ProductsViewModel(
     savedStateHandle: SavedStateHandle,
     private val interactor: ProductsInteractor,
 ) : ViewModel(),

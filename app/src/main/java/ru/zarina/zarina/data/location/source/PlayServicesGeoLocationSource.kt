@@ -6,11 +6,12 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.tasks.await
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.GeoLocation
 import ru.zarina.zarina.domain.exception.MissingPermissionException
-import javax.inject.Inject
 
-class PlayServicesGeoLocationSource @Inject constructor(
+@Factory
+class PlayServicesGeoLocationSource(
     private val client: FusedLocationProviderClient,
 ) : IGeoLocationSource {
 

@@ -20,11 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.ui.common.components.SelectionCircle
@@ -102,7 +102,7 @@ private fun SortDivider() {
 fun SelectSortScreen(
     goBack: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<SelectSortViewModel>()
+    val viewModel = koinViewModel<SelectSortViewModel>()
 
     val options by viewModel.options.collectAsStateWithLifecycle()
     val selectedOption by viewModel.selectedOption.collectAsStateWithLifecycle()

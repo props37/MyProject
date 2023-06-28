@@ -44,7 +44,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -54,6 +53,7 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
@@ -250,7 +250,7 @@ fun ProductsScreen(
     showSelectSort: () -> Unit,
     goBack: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<ProductsViewModel>()
+    val viewModel = koinViewModel<ProductsViewModel>()
 
     val category by viewModel.category.collectAsStateWithLifecycle()
     val products = viewModel.products.collectAsLazyPagingItems()

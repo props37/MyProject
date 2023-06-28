@@ -2,12 +2,13 @@ package ru.zarina.zarina.data.category.local
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.category.local.database.CategoryDao
 import ru.zarina.zarina.data.category.local.database.entity.CategoryEntity
 import ru.zarina.zarina.domain.Category
-import javax.inject.Inject
 
-class RoomCategoryLocalSource @Inject constructor(
+@Factory
+class RoomCategoryLocalSource(
     private val dao: CategoryDao,
 ) : ICategoryLocalSource {
 

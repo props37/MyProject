@@ -1,9 +1,10 @@
 package ru.zarina.zarina.ui
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.device.IDeviceRepository
-import javax.inject.Inject
 
-class AppInteractor @Inject constructor(
+@Factory
+class AppInteractor(
     private val deviceRepository: IDeviceRepository,
 ) {
     fun isOnboardingCompleted() = deviceRepository.getIsOnboardingCompleted()
