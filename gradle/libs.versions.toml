@@ -18,6 +18,7 @@ accompanist = "0.30.1"
 koin-core = "3.4.2"
 koin-annotations = "1.2.2"
 koin-androidx-compose = "3.4.5"
+koin-test = "3.4.1"
 room = "2.5.1"
 ktor = "2.2.4"
 coil = "2.3.0"
@@ -98,6 +99,7 @@ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version
 androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "androidx-uiautomator" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 androidx-benchmark = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "androidx-benchmark" }
+koin-test = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin-test" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle" }
