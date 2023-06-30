@@ -2,6 +2,7 @@
 android-gradle = "8.1.0-rc01"
 kotlin = "1.8.20"
 ksp = "1.8.20-1.0.11"
+kotlinx-coroutines-test = "1.7.1"
 kotlinx-serialization = "1.5.0"
 kotlinx-collections-immutable = "0.3.5"
 androidx-core = "1.10.0"
@@ -38,6 +39,7 @@ androidx-junit = "1.1.5"
 androidx-benchmark = "1.1.1"
 androidx-uiautomator = "2.2.0"
 espresso = "3.5.1"
+mockito = "5.4.0"
 
 [libraries]
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
@@ -95,11 +97,13 @@ firebase-performance = { group = "com.google.firebase", name = "firebase-perf-kt
 mindbox = { group = "cloud.mindbox", name = "mobile-sdk", version.ref = "mindbox" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-junit" }
 androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "androidx-uiautomator" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 androidx-benchmark = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "androidx-benchmark" }
 koin-test = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin-test" }
+mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle" }
