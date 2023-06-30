@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screens.home
 
-import javax.inject.Inject
+import org.koin.core.annotation.Factory
 
-class HomeInteractor @Inject constructor()
+@Factory
+class HomeInteractor

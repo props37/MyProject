@@ -1,12 +1,13 @@
 package ru.zarina.zarina.data.category
 
 import kotlinx.coroutines.flow.Flow
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.category.local.ICategoryLocalSource
 import ru.zarina.zarina.data.category.remote.ICategoryRemoteSource
 import ru.zarina.zarina.domain.Category
-import javax.inject.Inject
 
-class CategoryRepository @Inject constructor(
+@Factory
+class CategoryRepository(
     private val local: ICategoryLocalSource,
     private val remote: ICategoryRemoteSource,
 ) : ICategoryRepository {

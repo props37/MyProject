@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.datasource.cache.Cache
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.exception.NotFoundException
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
@@ -23,11 +23,10 @@ import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.utils.coroutine.mapState
 import ru.zarina.zarina.utils.isNetworkException
-import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@HiltViewModel
-class ProductViewModel @Inject constructor(
+@KoinViewModel
+class ProductViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val interactor: ProductInteractor,
     cache: Cache,

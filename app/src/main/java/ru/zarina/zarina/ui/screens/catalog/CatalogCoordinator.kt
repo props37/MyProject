@@ -1,13 +1,12 @@
 package ru.zarina.zarina.ui.screens.catalog
 
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.koin.core.annotation.Singleton
 import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.ProductSort
-import javax.inject.Inject
 
-@ActivityRetainedScoped
-class CatalogCoordinator @Inject constructor() {
+@Singleton
+class CatalogCoordinator {
 
     val sort = MutableStateFlow(ProductSort.DEFAULT)
     val filtration = MutableStateFlow<Filtration?>(null)

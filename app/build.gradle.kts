@@ -10,7 +10,6 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.google.play.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.firebase.performance)
@@ -77,6 +76,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -106,9 +108,10 @@ dependencies {
     implementation(libs.accompanist.permissions)
     implementation(libs.accompanist.navigation.material)
     implementation(libs.accompanist.webview)
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    implementation(libs.hilt.compose)
+    implementation(libs.koin.android)
+    implementation(libs.koin.annotations)
+    ksp(libs.koin.ksp.compiler)
+    implementation(libs.koin.androidx.compose)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
@@ -129,6 +132,8 @@ dependencies {
     implementation(libs.mindbox)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.koin.test)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))

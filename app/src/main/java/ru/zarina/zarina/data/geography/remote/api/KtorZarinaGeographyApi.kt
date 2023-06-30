@@ -4,12 +4,14 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.geography.remote.api.dto.CityDto
-import ru.zarina.zarina.di.Authorization
-import javax.inject.Inject
+import ru.zarina.zarina.di.Qualifiers
 
-class KtorZarinaGeographyApi @Inject constructor(
-    @Authorization(Authorization.Type.TOKEN)
+@Factory
+class KtorZarinaGeographyApi(
+    @Named(Qualifiers.Authorization.TOKEN)
     private val client: HttpClient,
 ) : IZarinaGeographyApi {
 

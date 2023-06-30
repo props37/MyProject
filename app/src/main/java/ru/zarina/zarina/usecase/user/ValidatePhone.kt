@@ -1,15 +1,16 @@
 package ru.zarina.zarina.usecase.user
 
 import kotlinx.coroutines.CoroutineDispatcher
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Named
 import ru.zarina.zarina.base.clean.UseCase
-import ru.zarina.zarina.di.Dispatcher
-import ru.zarina.zarina.di.ZarinaDispatcher
+import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.exception.validation.EmptyException
 import ru.zarina.zarina.domain.exception.validation.FormatException
-import javax.inject.Inject
 
-class ValidatePhoneUseCase @Inject constructor(
-    @Dispatcher(ZarinaDispatcher.IO) dispatcher: CoroutineDispatcher,
+@Factory
+class ValidatePhoneUseCase(
+    @Named(Qualifiers.Dispatcher.IO) dispatcher: CoroutineDispatcher,
 ) : UseCase<ValidatePhoneUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {

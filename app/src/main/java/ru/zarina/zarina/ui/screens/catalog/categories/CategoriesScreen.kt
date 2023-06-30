@@ -23,11 +23,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Media
@@ -91,7 +91,7 @@ private fun CategoryItem(
 fun CategoriesScreen(
     showProducts: (Category.Id) -> Unit,
 ) {
-    val viewModel = hiltViewModel<CategoriesViewModel>()
+    val viewModel = koinViewModel<CategoriesViewModel>()
 
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     val isLoaderVisible by viewModel.isLoaderVisible.collectAsStateWithLifecycle()

@@ -26,10 +26,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Barcode
 import ru.zarina.zarina.domain.Offer
@@ -134,8 +134,8 @@ fun SelectSizeScreen(
     showSubscribe: (Barcode) -> Unit,
     goBack: () -> Unit,
 ) {
-    val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
-    val viewModel = hiltViewModel<SelectSizeViewModel>()
+    val parentViewModel = koinViewModel<PickupViewModel>(viewModelStoreOwner = parentEntry)
+    val viewModel = koinViewModel<SelectSizeViewModel>()
 
     val sizes by parentViewModel.offers.collectAsStateWithLifecycle()
 

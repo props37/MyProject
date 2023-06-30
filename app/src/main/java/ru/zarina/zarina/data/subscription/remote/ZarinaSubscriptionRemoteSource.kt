@@ -1,11 +1,12 @@
 package ru.zarina.zarina.data.subscription.remote
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.subscription.remote.api.IZarinaSubscriptionApi
 import ru.zarina.zarina.data.subscription.remote.api.dto.SubscribeRequestBody
 import ru.zarina.zarina.domain.Barcode
-import javax.inject.Inject
 
-class ZarinaSubscriptionRemoteSource @Inject constructor(
+@Factory
+class ZarinaSubscriptionRemoteSource(
     private val api: IZarinaSubscriptionApi,
 ) : ISubscriptionRemoteSource {
 

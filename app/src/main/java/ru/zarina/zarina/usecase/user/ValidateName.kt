@@ -1,17 +1,18 @@
 package ru.zarina.zarina.usecase.user
 
 import kotlinx.coroutines.CoroutineDispatcher
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Named
 import ru.zarina.zarina.base.clean.UseCase
-import ru.zarina.zarina.di.Dispatcher
-import ru.zarina.zarina.di.ZarinaDispatcher
+import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.exception.validation.EmptyException
 import ru.zarina.zarina.domain.exception.validation.IllegalContentsException
 import ru.zarina.zarina.domain.exception.validation.TooLongException
-import javax.inject.Inject
 
 
-class ValidateNameUseCase @Inject constructor(
-    @Dispatcher(ZarinaDispatcher.IO) dispatcher: CoroutineDispatcher,
+@Factory
+class ValidateNameUseCase(
+    @Named(Qualifiers.Dispatcher.IO) dispatcher: CoroutineDispatcher,
 ) : UseCase<ValidateNameUseCase.Params, Unit>(dispatcher) {
 
     private val allowedCharactersRegex = ALLOWED_CHARACTERS.toRegex()

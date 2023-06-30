@@ -1,11 +1,6 @@
 package ru.zarina.zarina.di
 
 import android.content.Context
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.okhttp.OkHttp
@@ -20,6 +15,9 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.core.annotation.Module
+import org.koin.core.annotation.Named
+import org.koin.core.annotation.Singleton
 import ru.zarina.zarina.BuildConfig
 import ru.zarina.zarina.data.MindboxHeaderProvider
 import ru.zarina.zarina.data.UserAgentHeaderProvider
@@ -31,38 +29,21 @@ import ru.zarina.zarina.usecase.authorization.GetAuthorizationTokenUseCase
 import ru.zarina.zarina.utils.clean.invoke
 import timber.log.Timber
 import java.io.File
-import javax.inject.Qualifier
-import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
 class NetworkModule {
 
     @Singleton
-    @Provides
     fun providesJson() = Json {
         isLenient = true
         ignoreUnknownKeys = true
         coerceInputValues = true
     }
 
-    @Authorization(Authorization.Type.NONE)
+    @Named(Qualifiers.Authorization.TOKEN)
     @Singleton
-    @Provides
-    fun providesHttpClient(
-        @ApplicationContext context: Context,
-        json: Json,
-        headerProvider: UserAgentHeaderProvider,
-    ) = HttpClient(OkHttp) {
-        baseConfig(json)
-        baseZarinaConfig(context, headerProvider)
-    }
-
-    @Authorization(Authorization.Type.TOKEN)
-    @Singleton
-    @Provides
     fun providesTokenAuthorizationHttpClient(
-        @ApplicationContext context: Context,
+        context: Context,
         getAuthorizationToken: GetAuthorizationTokenUseCase,
         clearDeviceAuthorizationToken: ClearDeviceAuthorizationTokenUseCase,
         json: Json,
@@ -83,11 +64,21 @@ class NetworkModule {
         }
     }
 
-    @Authorization(Authorization.Type.MINDBOX_SECRET)
+    @Named(Qualifiers.Authorization.NONE)
     @Singleton
-    @Provides
+    fun providesHttpClient(
+        context: Context,
+        json: Json,
+        headerProvider: UserAgentHeaderProvider,
+    ) = HttpClient(OkHttp) {
+        baseConfig(json)
+        baseZarinaConfig(context, headerProvider)
+    }
+
+    @Named(Qualifiers.Authorization.MINDBOX_SECRET)
+    @Singleton
     fun providesMindboxSecretHttpClient(
-        @ApplicationContext context: Context,
+        context: Context,
         json: Json,
         headerProvider: MindboxHeaderProvider,
     ) = HttpClient(OkHttp) {
@@ -149,8 +140,4 @@ class NetworkModule {
     }
 }
 
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-annotation class Authorization(@Suppress("unused") val type: Type) {
-    enum class Type { NONE, TOKEN, MINDBOX_SECRET }
-}
+

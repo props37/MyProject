@@ -1,10 +1,11 @@
 package ru.zarina.zarina.ui.screens.pickup.selectsize
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.usecase.catalog.GetProductUseCase
-import javax.inject.Inject
 
-class SelectSizeInteractor @Inject constructor(
+@Factory
+class SelectSizeInteractor(
     private val getProductUseCase: GetProductUseCase,
 ) {
 

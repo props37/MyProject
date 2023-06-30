@@ -3,16 +3,16 @@ package ru.zarina.zarina.ui.screens.selectcity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.ui.screens.bases.selectcity.SelectCityScreenContent
 
 @Composable
 fun SelectCityScreen(
     showHome: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<SelectCityViewModel>()
+    val viewModel = koinViewModel<SelectCityViewModel>()
 
     val isSearchLoadingVisible by viewModel.isSearchLoadingVisible.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()

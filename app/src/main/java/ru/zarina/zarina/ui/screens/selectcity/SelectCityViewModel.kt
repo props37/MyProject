@@ -2,7 +2,6 @@ package ru.zarina.zarina.ui.screens.selectcity
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.CancellationException
@@ -19,6 +18,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
@@ -29,13 +29,12 @@ import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.screens.bases.selectcity.SelectCityComponent
 import ru.zarina.zarina.utils.isNetworkException
-import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(FlowPreview::class)
-@HiltViewModel
-class SelectCityViewModel @Inject constructor(
+@KoinViewModel
+class SelectCityViewModel(
     private val interactor: SelectCityInteractor,
     private val selectCityComponent: SelectCityComponent,
 ) : ViewModel(),

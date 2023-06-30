@@ -6,10 +6,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.screens.bases.selectcity.SelectCityScreenContent
 import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
@@ -19,8 +19,8 @@ fun SelectPickupCityScreen(
     parentEntry: NavBackStackEntry,
     goBack: () -> Unit,
 ) {
-    val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
-    val viewModel = hiltViewModel<SelectPickupCityViewModel>()
+    val parentViewModel = koinViewModel<PickupViewModel>(viewModelStoreOwner = parentEntry)
+    val viewModel = koinViewModel<SelectPickupCityViewModel>()
 
     val query by viewModel.query.collectAsStateWithLifecycle()
     val cityItems by viewModel.cities.collectAsStateWithLifecycle()

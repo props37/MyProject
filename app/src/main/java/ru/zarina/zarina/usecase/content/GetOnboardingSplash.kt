@@ -1,16 +1,17 @@
 package ru.zarina.zarina.usecase.content
 
 import kotlinx.coroutines.CoroutineDispatcher
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Named
 import ru.zarina.zarina.base.clean.UseCase
 import ru.zarina.zarina.data.content.IContentRepository
-import ru.zarina.zarina.di.Dispatcher
-import ru.zarina.zarina.di.ZarinaDispatcher
+import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Url
 import timber.log.Timber
-import javax.inject.Inject
 
-class GetOnboardingSplashUseCase @Inject constructor(
-    @Dispatcher(ZarinaDispatcher.IO) dispatcher: CoroutineDispatcher,
+@Factory
+class GetOnboardingSplashUseCase(
+    @Named(Qualifiers.Dispatcher.IO) dispatcher: CoroutineDispatcher,
     private val contentRepository: IContentRepository,
 ) : UseCase<Unit, Url>(dispatcher) {
     override suspend fun execute(params: Unit): Url {

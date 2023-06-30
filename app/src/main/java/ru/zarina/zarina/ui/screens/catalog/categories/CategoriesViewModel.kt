@@ -2,12 +2,12 @@ package ru.zarina.zarina.ui.screens.catalog.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
@@ -16,10 +16,9 @@ import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.utils.coroutine.mapState
-import javax.inject.Inject
 
-@HiltViewModel
-class CategoriesViewModel @Inject constructor(
+@KoinViewModel
+class CategoriesViewModel(
     private val interactor: CategoriesInteractor,
 ) : ViewModel(),
     ISideEffectSource<CategoriesViewModel.SideEffect> by SideEffectQueue() {

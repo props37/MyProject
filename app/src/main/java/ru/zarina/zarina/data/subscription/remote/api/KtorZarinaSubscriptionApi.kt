@@ -5,12 +5,14 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.subscription.remote.api.dto.SubscribeRequestBody
-import ru.zarina.zarina.di.Authorization
-import javax.inject.Inject
+import ru.zarina.zarina.di.Qualifiers
 
-class KtorZarinaSubscriptionApi @Inject constructor(
-    @Authorization(Authorization.Type.TOKEN)
+@Factory
+class KtorZarinaSubscriptionApi(
+    @Named(Qualifiers.Authorization.TOKEN)
     private val client: HttpClient,
 ) : IZarinaSubscriptionApi {
 
