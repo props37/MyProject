@@ -39,7 +39,6 @@ androidx-junit = "1.1.5"
 androidx-benchmark = "1.1.1"
 androidx-uiautomator = "2.2.0"
 espresso = "3.5.1"
-mockito = "5.4.0"
 
 [libraries]
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
@@ -103,7 +102,6 @@ androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiaut
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 androidx-benchmark = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "androidx-benchmark" }
 koin-test = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin-test" }
-mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle" }

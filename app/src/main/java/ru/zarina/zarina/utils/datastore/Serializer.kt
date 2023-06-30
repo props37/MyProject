@@ -8,7 +8,7 @@ import kotlinx.serialization.SerializationException
 import java.io.InputStream
 import java.io.OutputStream
 
-class Serializer<T>(
+open class Serializer<T> internal constructor(
     private val defaultValueProducer: () -> T,
     private val decodeFromString: (String) -> T,
     private val encodeToString: (T) -> String,
