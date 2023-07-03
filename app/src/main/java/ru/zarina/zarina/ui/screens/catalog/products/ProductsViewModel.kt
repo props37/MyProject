@@ -8,7 +8,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
@@ -33,20 +31,11 @@ import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPaging
 import ru.zarina.zarina.utils.coroutine.mapState
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@KoinViewModel
 class ProductsViewModel(
     savedStateHandle: SavedStateHandle,
     private val interactor: ProductsInteractor,
 ) : ViewModel(),
     ISideEffectSource<ProductsViewModel.SideEffect> by SideEffectQueue() {
-
-    init {
-        interactor.sort.value = savedStateHandle[KEY_SELECTED_SORT] ?: ProductSort.DEFAULT
-
-        interactor.sort
-            .onEach { savedStateHandle[KEY_SELECTED_SORT] = it }
-            .launchIn(viewModelScope)
-    }
 
     private val categoryId = savedStateHandle
         .getStateFlow<Int?>(Catalog.Products.ARGUMENT_CATEGORY_ID, null)
@@ -57,7 +46,7 @@ class ProductsViewModel(
         .flatMapLatest { id -> id?.let { interactor.getCategory(it) } ?: flowOf(null) }
         .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
-    val sort = interactor.sort.asStateFlow()
+    val sort = savedStateHandle.getStateFlow(KEY_SELECTED_SORT, ProductSort.DEFAULT)
 
     private val pagingSource = combine(category, sort) { category, sort ->
         category?.let { CategoryProductPagingSource(it, sort, interactor.getProductsPageUseCase) }

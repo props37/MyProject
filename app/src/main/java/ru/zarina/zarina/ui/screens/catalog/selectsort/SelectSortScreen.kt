@@ -20,11 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.ui.common.components.SelectionCircle
@@ -38,7 +40,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @Composable
 fun SelectSortScreenContent(
     options: ImmutableList<ProductSort>,
-    selectedOption: ProductSort,
+    selectedOption: ProductSort?,
     onOptionClick: (ProductSort) -> Unit,
 ) {
     Column(
@@ -100,9 +102,10 @@ private fun SortDivider() {
 
 @Composable
 fun SelectSortScreen(
+    productSavedStateHandle: SavedStateHandle,
     goBack: () -> Unit,
 ) {
-    val viewModel = koinViewModel<SelectSortViewModel>()
+    val viewModel = koinViewModel<SelectSortViewModel> { parametersOf(productSavedStateHandle) }
 
     val options by viewModel.options.collectAsStateWithLifecycle()
     val selectedOption by viewModel.selectedOption.collectAsStateWithLifecycle()

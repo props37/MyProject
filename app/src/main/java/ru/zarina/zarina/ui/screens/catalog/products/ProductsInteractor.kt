@@ -13,9 +13,6 @@ class ProductsInteractor(
     val getProductsPageUseCase: GetProductsPageUseCase,
 ) {
 
-    val sort
-        get() = coordinator.sort
-
     val filtration
         get() = coordinator.filtration
 

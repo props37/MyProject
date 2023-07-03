@@ -1,27 +1,28 @@
 package ru.zarina.zarina.ui.screens.catalog.selectsort
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.screens.catalog.products.ProductsViewModel
 
-@KoinViewModel
 class SelectSortViewModel(
-    private val interactor: SelectSortInteractor,
+    private val productSavedStateHandle: SavedStateHandle,
 ) : ViewModel(),
     ISideEffectSource<SelectSortViewModel.SideEffect> by SideEffectQueue() {
 
     val options = MutableStateFlow(ProductSort.values().toList().toPersistentList())
         .asStateFlow()
 
-    val selectedOption = interactor.sort.asStateFlow()
+    val selectedOption = productSavedStateHandle
+        .getStateFlow(ProductsViewModel.KEY_SELECTED_SORT, ProductSort.DEFAULT)
 
     fun onOptionClick(option: ProductSort) {
-        interactor.sort.value = option
+        productSavedStateHandle[ProductsViewModel.KEY_SELECTED_SORT] = option
         sideEffect(SideEffect.GoBack)
     }
 

@@ -6,9 +6,4 @@ import ru.zarina.zarina.ui.screens.catalog.CatalogCoordinator
 @Factory
 class SelectSortInteractor(
     private val coordinator: CatalogCoordinator,
-) {
-
-    val sort
-        get() = coordinator.sort
-
-}
+)

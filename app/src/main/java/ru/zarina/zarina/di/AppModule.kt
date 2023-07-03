@@ -12,6 +12,7 @@ val appModule = module {
         DataStoreModule().module,
         NetworkModule().module,
         PlayerModule().module,
-        PlayServicesModule().module
+        PlayServicesModule().module,
+        viewModelModule,
     )
 }
