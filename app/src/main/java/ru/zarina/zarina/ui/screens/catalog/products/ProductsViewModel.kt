@@ -116,10 +116,15 @@ class ProductsViewModel(
         sideEffect(SideEffect.ShowSelectSort)
     }
 
+    fun onFiltersClick() {
+        sideEffect(SideEffect.ShowFilters)
+    }
+
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object GoBack : SideEffect
         data class ShowProduct(val id: Product.Id) : SideEffect
         object ShowSelectSort : SideEffect
+        object ShowFilters : SideEffect
     }
 
     companion object {

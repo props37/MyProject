@@ -15,12 +15,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -80,6 +83,7 @@ fun ProductsScreenContent(
     onProductClick: (Product) -> Unit,
     sort: ProductSort,
     onSortClick: () -> Unit,
+    onFiltersClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
     val isLoading =
@@ -126,6 +130,7 @@ fun ProductsScreenContent(
                 FilterBar(
                     sort = sort,
                     onSortClick = onSortClick,
+                    onFiltersClick = onFiltersClick,
                     modifier = Modifier
                         .background(color = UiKitTheme.colors.screenBackground)
                         .fillMaxWidth(),
@@ -170,18 +175,33 @@ fun ProductsScreenContent(
 private fun FilterBar(
     sort: ProductSort,
     onSortClick: () -> Unit,
+    onFiltersClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.border(
-            width = 1.dp,
-            color = UiKitTheme.colors.primaryBorderColor,
-        ),
+        modifier = modifier
+            .height(IntrinsicSize.Min)
+            .border(
+                width = 1.dp,
+                color = UiKitTheme.colors.primaryBorderColor,
+            ),
     ) {
         FilterButton(
             icon = R.drawable.ic_sort_24,
             text = stringResource(sort.getStringResource()),
             onClick = onSortClick,
+            modifier = Modifier.weight(1f)
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(1.dp)
+                .background(UiKitTheme.colors.listDivider)
+        )
+        FilterButton(
+            icon = R.drawable.ic_sliders_24,
+            text = stringResource(R.string.filters),
+            onClick = onFiltersClick,
             modifier = Modifier.weight(1f)
         )
     }
@@ -251,6 +271,7 @@ fun ProductsScreen(
     savedStateHandle: SavedStateHandle,
     showProduct: (Product.Id) -> Unit,
     showSelectSort: () -> Unit,
+    showFilters: () -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel = koinViewModel<ProductsViewModel> { parametersOf(savedStateHandle) }
@@ -264,6 +285,7 @@ fun ProductsScreen(
         sideEffects = viewModel.sideEffects,
         showProduct = showProduct,
         showSelectSort = showSelectSort,
+        showFilters = showFilters,
         goBack = goBack,
     )
 
@@ -274,6 +296,7 @@ fun ProductsScreen(
         onProductClick = viewModel::onProductClick,
         sort = sort,
         onSortClick = viewModel::onSortClick,
+        onFiltersClick = viewModel::onFiltersClick,
         onBackClick = viewModel::onBackClick,
     )
 }
@@ -283,6 +306,7 @@ fun ProductsScreenBehavior(
     sideEffects: Flow<ProductsViewModel.SideEffect>,
     showProduct: (Product.Id) -> Unit,
     showSelectSort: () -> Unit,
+    showFilters: () -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
@@ -291,6 +315,7 @@ fun ProductsScreenBehavior(
                 ProductsViewModel.SideEffect.GoBack -> goBack()
                 is ProductsViewModel.SideEffect.ShowProduct -> showProduct(effect.id)
                 ProductsViewModel.SideEffect.ShowSelectSort -> showSelectSort()
+                ProductsViewModel.SideEffect.ShowFilters -> showFilters()
             }
         }
     }
@@ -308,6 +333,7 @@ fun ProductsScreenContentPreview() {
             onProductClick = {},
             sort = ProductSort.PRICE,
             onSortClick = {},
+            onFiltersClick = {},
             onBackClick = {},
         )
     }

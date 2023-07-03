@@ -43,6 +43,9 @@ fun NavGraphBuilder.catalogGraph(
                 showSelectSort = {
                     navController.navigate(Catalog.SelectSort.routeSchema)
                 },
+                showFilters = {
+                    navController.navigate(Catalog.Filters.routeSchema)
+                },
                 goBack = {
                     navController.popBackStack(Catalog.Products.routeSchema, true)
                 }
