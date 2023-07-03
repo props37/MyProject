@@ -1,12 +1,11 @@
 package ru.zarina.zarina.data
 
 import android.os.Build
+import org.koin.core.annotation.Singleton
 import ru.zarina.zarina.BuildConfig
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
-class UserAgentHeaderProvider @Inject constructor() {
+class UserAgentHeaderProvider {
 
     private val headers = mutableMapOf(
         getUserAgentHeader(),

@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screens.pickup.success
 
-import javax.inject.Inject
+import org.koin.core.annotation.Factory
 
-class SuccessInteractor @Inject constructor()
+@Factory
+class SuccessInteractor

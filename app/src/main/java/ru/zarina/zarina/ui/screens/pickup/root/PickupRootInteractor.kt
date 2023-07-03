@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screens.pickup.root
 
-import javax.inject.Inject
+import org.koin.core.annotation.Factory
 
-class PickupRootInteractor @Inject constructor()
+@Factory
+class PickupRootInteractor

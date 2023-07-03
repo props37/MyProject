@@ -20,9 +20,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
@@ -97,7 +97,7 @@ fun SuccessScreenContent(
 fun SuccessScreen(
     goBack: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<SuccessViewModel>()
+    val viewModel = koinViewModel<SuccessViewModel>()
 
     val email by viewModel.email.collectAsStateWithLifecycle()
 

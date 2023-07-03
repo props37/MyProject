@@ -6,32 +6,28 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Module
+import org.koin.core.annotation.Named
+import org.koin.core.annotation.Singleton
 import ru.zarina.zarina.data.user.local.entity.CityDataEntity
 import ru.zarina.zarina.utils.datastore.Serializer
-import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
 class DataStoreModule {
 
     private val Context.dataStore by preferencesDataStore(DATA_STORE_NAME)
 
-    @Provides
     @Singleton
+    @Named(Qualifiers.DataStore.PREFERENCES)
     fun providesPreferencesDataStore(
-        @ApplicationContext context: Context,
+        context: Context,
     ): DataStore<Preferences> = context.dataStore
 
-
-    @Provides
+    @Factory
     fun provideUserCitySerializer(
         json: Json,
     ) = Serializer<CityDataEntity?>(
@@ -40,10 +36,10 @@ class DataStoreModule {
         encodeToString = { json.encodeToString(it) }
     )
 
-    @Provides
     @Singleton
+    @Named(Qualifiers.DataStore.USER_CITY)
     fun providesUserCityDataStore(
-        @ApplicationContext context: Context,
+        context: Context,
         serializer: Serializer<CityDataEntity?>,
     ): DataStore<CityDataEntity?> {
         return DataStoreFactory.create(

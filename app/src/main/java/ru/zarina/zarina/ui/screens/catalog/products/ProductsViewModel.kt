@@ -6,10 +6,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -21,6 +19,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
+import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
@@ -31,23 +30,13 @@ import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPagingSource
 import ru.zarina.zarina.utils.coroutine.mapState
-import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@HiltViewModel
-class ProductsViewModel @Inject constructor(
+class ProductsViewModel(
     savedStateHandle: SavedStateHandle,
     private val interactor: ProductsInteractor,
 ) : ViewModel(),
     ISideEffectSource<ProductsViewModel.SideEffect> by SideEffectQueue() {
-
-    init {
-        interactor.sort.value = savedStateHandle[KEY_SELECTED_SORT] ?: ProductSort.DEFAULT
-
-        interactor.sort
-            .onEach { savedStateHandle[KEY_SELECTED_SORT] = it }
-            .launchIn(viewModelScope)
-    }
 
     private val categoryId = savedStateHandle
         .getStateFlow<Int?>(Catalog.Products.ARGUMENT_CATEGORY_ID, null)
@@ -58,7 +47,9 @@ class ProductsViewModel @Inject constructor(
         .flatMapLatest { id -> id?.let { interactor.getCategory(it) } ?: flowOf(null) }
         .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
-    val sort = interactor.sort.asStateFlow()
+    val sort = savedStateHandle.getStateFlow(KEY_SELECTED_SORT, ProductSort.DEFAULT)
+
+    val filtration = savedStateHandle.getStateFlow<Filtration?>(KEY_FILTRATION, null)
 
     private val pagingSource = combine(category, sort) { category, sort ->
         category?.let { CategoryProductPagingSource(it, sort, interactor.getProductsPageUseCase) }
@@ -109,7 +100,7 @@ class ProductsViewModel @Inject constructor(
     init {
         pagingSource
             .flatMapLatest { it?.filtration ?: emptyFlow() }
-            .onEach { interactor.filtration.value = it }
+            .onEach { savedStateHandle[KEY_FILTRATION] = it }
             .launchIn(viewModelScope)
     }
 
@@ -135,6 +126,7 @@ class ProductsViewModel @Inject constructor(
         private const val PAGE_SIZE = 12
 
         const val KEY_SELECTED_SORT = "selected_sort"
+        const val KEY_FILTRATION = "filtration"
     }
 
 }

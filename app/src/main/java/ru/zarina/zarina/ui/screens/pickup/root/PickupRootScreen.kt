@@ -29,13 +29,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
@@ -229,8 +229,8 @@ fun PickupRootScreen(
     showDetails: () -> Unit,
     goBack: () -> Unit,
 ) {
-    val viewModel: PickupRootViewModel = hiltViewModel()
-    val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
+    val viewModel: PickupRootViewModel = koinViewModel()
+    val parentViewModel = koinViewModel<PickupViewModel>(viewModelStoreOwner = parentEntry)
 
     val city by parentViewModel.city.collectAsStateWithLifecycle()
     val product by parentViewModel.product.collectAsStateWithLifecycle()

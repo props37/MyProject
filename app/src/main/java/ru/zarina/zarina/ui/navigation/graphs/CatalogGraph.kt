@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.navigation.graphs
 
+import androidx.compose.runtime.remember
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
@@ -25,6 +26,15 @@ fun NavGraphBuilder.catalogGraph(
         }
         composableDestination(Catalog.Products) {
             ProductsScreen(
+                savedStateHandle = remember(it) {
+                    it.savedStateHandle
+                        .apply {
+                            set(
+                                Catalog.Products.ARGUMENT_CATEGORY_ID,
+                                it.arguments?.getInt(Catalog.Products.ARGUMENT_CATEGORY_ID)
+                            )
+                        }
+                },
                 showProduct = { id ->
                     val arguments = Destinations.Product.Arguments(id)
                     navController.navigate(Destinations.Product.createRoute(arguments))
@@ -38,7 +48,10 @@ fun NavGraphBuilder.catalogGraph(
             )
         }
         bottomSheetDestination(Catalog.SelectSort) {
+            val productSavedStateHandle =
+                remember(it) { navController.getBackStackEntry(Catalog.Products.routeSchema).savedStateHandle }
             SelectSortScreen(
+                productSavedStateHandle = productSavedStateHandle,
                 goBack = {
                     navController.popBackStack(Catalog.SelectSort.routeSchema, true)
                 }

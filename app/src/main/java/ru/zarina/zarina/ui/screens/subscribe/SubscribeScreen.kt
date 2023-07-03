@@ -43,9 +43,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.textString
@@ -247,7 +247,7 @@ fun SubscribeScreen(
     showWebpage: (String) -> Unit,
     goBack: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<SubscribeViewModel>()
+    val viewModel = koinViewModel<SubscribeViewModel>()
 
     val name by viewModel.name.collectAsStateWithLifecycle()
     val nameError by viewModel.nameError.collectAsStateWithLifecycle()
