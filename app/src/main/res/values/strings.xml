@@ -107,4 +107,6 @@
     <string name="by_popularity">По популярности</string>
     <string name="by_discount">По скидке</string>
     <string name="filters">Фильтры</string>
+    <string name="price">Цена</string>
+    <string name="range">%1$s – %2$s</string>
 </resources>
