@@ -62,7 +62,10 @@ fun NavGraphBuilder.catalogGraph(
             )
         }
         composableDestination(Catalog.Filters) {
+            val productSavedStateHandle =
+                remember(it) { navController.getBackStackEntry(Catalog.Products.routeSchema).savedStateHandle }
             FiltersScreen(
+                productsSavedStateHandle = productSavedStateHandle,
                 goBack = {
                     navController.popBackStack(Catalog.Filters.routeSchema, true)
                 }

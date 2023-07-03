@@ -17,8 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
@@ -78,9 +80,10 @@ fun FiltersScreenContent(
 
 @Composable
 fun FiltersScreen(
+    productsSavedStateHandle: SavedStateHandle,
     goBack: () -> Unit,
 ) {
-    val viewModel = koinViewModel<FiltersViewModel>()
+    val viewModel = koinViewModel<FiltersViewModel> { parametersOf(productsSavedStateHandle) }
 
     FiltersScreenBehavior(
         sideEffects = viewModel.sideEffects,
