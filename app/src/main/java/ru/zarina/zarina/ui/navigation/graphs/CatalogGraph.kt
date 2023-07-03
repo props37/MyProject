@@ -9,6 +9,7 @@ import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.screens.catalog.categories.CategoriesScreen
+import ru.zarina.zarina.ui.screens.catalog.filters.FiltersScreen
 import ru.zarina.zarina.ui.screens.catalog.products.ProductsScreen
 import ru.zarina.zarina.ui.screens.catalog.selectsort.SelectSortScreen
 
@@ -56,6 +57,9 @@ fun NavGraphBuilder.catalogGraph(
                     navController.popBackStack(Catalog.SelectSort.routeSchema, true)
                 }
             )
+        }
+        composableDestination(Catalog.Filters) {
+            FiltersScreen()
         }
     }
 }
