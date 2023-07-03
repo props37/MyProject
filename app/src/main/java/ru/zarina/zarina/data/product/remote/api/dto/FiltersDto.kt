@@ -24,7 +24,7 @@ data class FiltersDto(
 ) {
     fun toDomain(): Filtration {
         return Filtration(
-            price = price?.toDomain(),
+            priceLimits = price?.toDomain(),
         )
     }
 }

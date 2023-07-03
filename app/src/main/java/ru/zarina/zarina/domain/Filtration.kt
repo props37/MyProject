@@ -5,5 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Filtration(
-    val price: PriceRange?,
+    val priceLimits: PriceRange?,
+    val price: PriceRange? = priceLimits,
 ) : Parcelable
