@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
+import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
@@ -47,6 +48,8 @@ class ProductsViewModel(
         .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     val sort = savedStateHandle.getStateFlow(KEY_SELECTED_SORT, ProductSort.DEFAULT)
+
+    val filtration = savedStateHandle.getStateFlow<Filtration?>(KEY_FILTRATION, null)
 
     private val pagingSource = combine(category, sort) { category, sort ->
         category?.let { CategoryProductPagingSource(it, sort, interactor.getProductsPageUseCase) }
@@ -97,7 +100,7 @@ class ProductsViewModel(
     init {
         pagingSource
             .flatMapLatest { it?.filtration ?: emptyFlow() }
-            .onEach { interactor.filtration.value = it }
+            .onEach { savedStateHandle[KEY_FILTRATION] = it }
             .launchIn(viewModelScope)
     }
 
@@ -123,6 +126,7 @@ class ProductsViewModel(
         private const val PAGE_SIZE = 12
 
         const val KEY_SELECTED_SORT = "selected_sort"
+        const val KEY_FILTRATION = "filtration"
     }
 
 }
