@@ -4,6 +4,7 @@ package ru.zarina.zarina.data.product.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
+import ru.zarina.zarina.domain.PriceRange
 
 @Serializable
 data class PriceFilterDto(
@@ -13,12 +14,12 @@ data class PriceFilterDto(
     val max: Int? = null,
 ) {
 
-    fun toDomain(): IntRange? {
+    fun toDomain(): PriceRange? {
         return if (
             ApiContract.isNotNull(min)
             && ApiContract.isNotNull(max)
         )
-            IntRange(min, max)
+            PriceRange(min, max)
         else
             null
     }
