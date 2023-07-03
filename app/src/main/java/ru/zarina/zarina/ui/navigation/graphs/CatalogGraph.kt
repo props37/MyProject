@@ -62,7 +62,11 @@ fun NavGraphBuilder.catalogGraph(
             )
         }
         composableDestination(Catalog.Filters) {
-            FiltersScreen()
+            FiltersScreen(
+                goBack = {
+                    navController.popBackStack(Catalog.Filters.routeSchema, true)
+                }
+            )
         }
     }
 }
