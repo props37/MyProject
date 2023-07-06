@@ -120,7 +120,11 @@ class ProductsViewModel(
         pagingSource
             .flatMapLatest { it?.appliedFiltration ?: emptyFlow() }
             .filterNotNull()
-            .onEach { savedStateHandle[KEY_APPLIED_FILTRATION] = it }
+            .onEach {
+                savedStateHandle[KEY_APPLIED_FILTRATION] = it
+                if (requestedFiltration.value == null)
+                    savedStateHandle[KEY_REQUESTED_FILTRATION] = it
+            }
             .launchIn(viewModelScope)
     }
 
