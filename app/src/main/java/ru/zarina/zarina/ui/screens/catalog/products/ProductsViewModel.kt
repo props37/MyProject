@@ -62,6 +62,10 @@ class ProductsViewModel(
     private val requestedFiltration =
         savedStateHandle.getStateFlow<Filtration?>(KEY_REQUESTED_FILTRATION, null)
 
+    val isFilterButtonEnabled = requestedFiltration
+        .map { it != null }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
     private val pagingSource =
         combine(category, sort, requestedFiltration) { category, sort, filtration ->
             category?.let {

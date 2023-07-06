@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.screens.catalog.products
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -41,6 +42,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -83,6 +85,7 @@ fun ProductsScreenContent(
     onProductClick: (Product) -> Unit,
     sort: ProductSort,
     onSortClick: () -> Unit,
+    isFilterButtonEnabled: Boolean,
     onFiltersClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
@@ -130,6 +133,7 @@ fun ProductsScreenContent(
                 FilterBar(
                     sort = sort,
                     onSortClick = onSortClick,
+                    isFilterButtonEnabled = isFilterButtonEnabled,
                     onFiltersClick = onFiltersClick,
                     modifier = Modifier
                         .background(color = UiKitTheme.colors.screenBackground)
@@ -175,10 +179,12 @@ fun ProductsScreenContent(
 private fun FilterBar(
     sort: ProductSort,
     onSortClick: () -> Unit,
+    isFilterButtonEnabled: Boolean,
     onFiltersClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
+        verticalAlignment = Alignment.Top,
         modifier = modifier
             .height(IntrinsicSize.Min)
             .border(
@@ -190,7 +196,9 @@ private fun FilterBar(
             icon = R.drawable.ic_sort_24,
             text = stringResource(sort.getStringResource()),
             onClick = onSortClick,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()
         )
         Box(
             modifier = Modifier
@@ -199,10 +207,13 @@ private fun FilterBar(
                 .background(UiKitTheme.colors.listDivider)
         )
         FilterButton(
+            isEnabled = isFilterButtonEnabled,
             icon = R.drawable.ic_sliders_24,
             text = stringResource(R.string.filters),
             onClick = onFiltersClick,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()
         )
     }
 }
@@ -214,22 +225,32 @@ private fun FilterButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isEnabled: Boolean = true,
 ) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .clickable(onClick = onClick)
+            .clickable(
+                enabled = isEnabled,
+                onClick = onClick
+            )
             .padding(16.dp)
     ) {
+        val foregroundColor by animateColorAsState(
+            targetValue = if (isEnabled) UiKitTheme.colors.primaryContentColor else UiKitTheme.colors.disabled,
+            label = "foreground color"
+        )
         Image(
             painter = painterResource(id = icon),
             contentDescription = null,
+            colorFilter = ColorFilter.tint(foregroundColor),
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = text,
             style = UiKitTheme.typography.circle1718,
+            color = foregroundColor,
         )
     }
 }
@@ -280,6 +301,7 @@ fun ProductsScreen(
     val products = viewModel.products.collectAsLazyPagingItems()
     val productCount by viewModel.productCount.collectAsStateWithLifecycle()
     val sort by viewModel.sort.collectAsStateWithLifecycle()
+    val isFilterButtonEnabled by viewModel.isFilterButtonEnabled.collectAsStateWithLifecycle()
 
     ProductsScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -296,6 +318,7 @@ fun ProductsScreen(
         onProductClick = viewModel::onProductClick,
         sort = sort,
         onSortClick = viewModel::onSortClick,
+        isFilterButtonEnabled = isFilterButtonEnabled,
         onFiltersClick = viewModel::onFiltersClick,
         onBackClick = viewModel::onBackClick,
     )
@@ -333,6 +356,7 @@ fun ProductsScreenContentPreview() {
             onProductClick = {},
             sort = ProductSort.PRICE,
             onSortClick = {},
+            isFilterButtonEnabled = false,
             onFiltersClick = {},
             onBackClick = {},
         )
