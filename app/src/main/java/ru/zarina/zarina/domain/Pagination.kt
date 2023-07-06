@@ -7,7 +7,7 @@ data class Pagination(
 ) {
 
     val nextPageIndex: Int?
-        get() = if (currentPageIndex == pageCount - 1) null else currentPageIndex + 1
+        get() = if (currentPageIndex > pageCount - 1) null else currentPageIndex + 1
 
     val previousPageIndex: Int?
         get() = if (currentPageIndex == 0) null else currentPageIndex - 1
