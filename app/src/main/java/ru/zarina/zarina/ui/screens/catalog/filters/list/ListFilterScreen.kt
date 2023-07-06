@@ -15,10 +15,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,14 +60,22 @@ fun ListFilterScreenContent(
             .fillMaxSize()
             .verticalScroll(scrollState),
     ) {
-        items.forEach { item ->
+        items.forEachIndexed { index, item ->
             FilterListItem(
                 item = item,
                 onClick = { onItemClick(item) },
                 modifier = Modifier.fillMaxWidth()
             )
-            // TODO separator
+            if (index != items.lastIndex)
+                Divider(
+                    thickness = 1.dp,
+                    color = UiKitTheme.colors.listDivider,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                )
         }
+        Spacer(modifier = Modifier.navigationBarsPadding())
     }
 }
 
