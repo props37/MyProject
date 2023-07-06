@@ -1,5 +1,10 @@
 package ru.zarina.zarina.ui.common.components.buttons
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,6 +16,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ZarinaTextButton(
     text: String,
@@ -27,13 +33,19 @@ fun ZarinaTextButton(
         isEnabled = isEnabled,
         modifier = modifier
     ) {
-        Text(
-            text = text,
-            color = LocalContentColor.current,
-            style = UiKitTheme.typography.circle1720bold,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
-        )
+        AnimatedContent(
+            targetState = text,
+            label = "text button text",
+            transitionSpec = { fadeIn() with fadeOut() }
+        ) { text ->
+            Text(
+                text = text,
+                color = LocalContentColor.current,
+                style = UiKitTheme.typography.circle1720bold,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+            )
+        }
     }
 }
 
