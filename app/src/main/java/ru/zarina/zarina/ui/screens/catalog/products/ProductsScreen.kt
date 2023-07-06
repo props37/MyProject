@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -67,6 +68,7 @@ import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.components.ModalError
 import ru.zarina.zarina.ui.common.components.ProductCard
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
@@ -89,20 +91,6 @@ fun ProductsScreenContent(
     onFiltersClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
-    val isLoading =
-        products.loadState.append == LoadState.Loading || products.loadState.refresh == LoadState.Loading
-    val errorState = when {
-        !isLoading && products.itemCount == 0 -> ErrorState(
-            icon = R.drawable.ic_magnifying_glass_96,
-            title = Text.Resource(R.string.products_not_found),
-            subtitle = Text.Resource(R.string.try_changing_filter),
-            isButtonVisible = false,
-            buttonText = null
-        )
-
-        else -> null
-    }
-    val productGridState = rememberLazyGridState()
     ZarinaScaffold(
         toolbar = {
             val context = LocalContext.current
@@ -114,12 +102,12 @@ fun ProductsScreenContent(
                 }
             )
         },
-        errorState = errorState,
     ) {
         val colorPickerDimensions = ColorPickerDefaults.tinyDimensions()
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            val productGridState = rememberLazyGridState()
             val elevation = animateDpAsState(
                 targetValue = if (productGridState.canScrollBackward) 6.dp else 0.dp,
                 label = "filter bar elevation"
@@ -140,37 +128,59 @@ fun ProductsScreenContent(
                         .fillMaxWidth(),
                 )
             }
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                state = productGridState,
-                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp),
-                contentPadding = WindowInsets.navigationBars.asPaddingValues(),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(
-                    count = products.itemCount,
-                    key = products.itemKey { it.id.value },
-                    contentType = products.itemContentType { null }
-                ) { productIndex ->
-                    val product = products[productIndex]
-                    if (product != null)
-                        ProductCard(
-                            product = product,
-                            isMediaScrollable = true,
-                            onClick = { onProductClick(product) },
-                            colorPickerDimensions = colorPickerDimensions,
-                        )
-                }
-                item(
-                    span = { GridItemSpan(2) }
-                ) {
-                    GridLoader(
-                        isVisible = isLoading,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+            val isLoading =
+                products.loadState.append == LoadState.Loading || products.loadState.refresh == LoadState.Loading
+            val errorState = when {
+                !isLoading && products.itemCount == 0 -> ErrorState(
+                    icon = R.drawable.ic_magnifying_glass_96,
+                    title = Text.Resource(R.string.products_not_found),
+                    subtitle = Text.Resource(R.string.try_changing_filter),
+                    isButtonVisible = false,
+                    buttonText = null
+                )
+
+                else -> null
             }
+            if (errorState == null)
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    state = productGridState,
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                    contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(
+                        count = products.itemCount,
+                        key = products.itemKey { it.id.value },
+                        contentType = products.itemContentType { null }
+                    ) { productIndex ->
+                        val product = products[productIndex]
+                        if (product != null)
+                            ProductCard(
+                                product = product,
+                                isMediaScrollable = true,
+                                onClick = { onProductClick(product) },
+                                colorPickerDimensions = colorPickerDimensions,
+                            )
+                    }
+                    item(
+                        span = { GridItemSpan(2) }
+                    ) {
+                        GridLoader(
+                            isVisible = isLoading,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+            else
+                ModalError(
+                    state = errorState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(UiKitTheme.colors.screenBackground)
+                        .navigationBarsPadding()
+                )
         }
     }
 }
