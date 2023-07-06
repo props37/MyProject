@@ -31,6 +31,11 @@ class FiltersViewModel @Inject constructor(
     private val _newFiltration = MutableStateFlow(appliedFiltration.value)
     val newFiltration = _newFiltration.asStateFlow()
 
+    val isClearButtonVisible = combine(baseFiltration, _newFiltration) { base, new ->
+        new != base
+    }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
     val filterButtonMode = combine(appliedFiltration, _newFiltration) { applied, new ->
         if (applied != new) FilterButtonMode.APPLY else FilterButtonMode.CLOSE
     }

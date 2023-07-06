@@ -1,5 +1,8 @@
 package ru.zarina.zarina.ui.screens.catalog.filters
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,6 +43,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @Composable
 fun FiltersScreenContent(
     filtration: Filtration?,
+    isClearButtonVisible: Boolean,
     onClearClick: () -> Unit,
     onPriceChange: (min: Int, max: Int) -> Unit,
     filterButtonMode: FiltersViewModel.FilterButtonMode,
@@ -55,7 +59,13 @@ fun FiltersScreenContent(
                     CloseButton(onClick = onCloseClick)
                 },
                 endIcon = {
-                    ClearButton(onClick = onClearClick)
+                    AnimatedVisibility(
+                        visible = isClearButtonVisible,
+                        enter = fadeIn(),
+                        exit = fadeOut(),
+                    ) {
+                        ClearButton(onClick = onClearClick)
+                    }
                 },
                 isElevated = scrollState.canScrollBackward,
             )
@@ -139,6 +149,7 @@ fun FiltersScreen(
     val viewModel = koinViewModel<FiltersViewModel> { parametersOf(productsSavedStateHandle) }
 
     val filtration by viewModel.newFiltration.collectAsStateWithLifecycle()
+    val isClearButtonVisible by viewModel.isClearButtonVisible.collectAsStateWithLifecycle()
     val filterButtonMode by viewModel.filterButtonMode.collectAsStateWithLifecycle()
 
     FiltersScreenBehavior(
@@ -148,6 +159,7 @@ fun FiltersScreen(
 
     FiltersScreenContent(
         filtration = filtration,
+        isClearButtonVisible = isClearButtonVisible,
         onClearClick = viewModel::onClearClick,
         onPriceChange = viewModel::onPriceChange,
         onCloseClick = viewModel::onCloseClick,
@@ -183,6 +195,7 @@ fun FiltersScreenContentPreview() {
                     max = 4999
                 ),
             ),
+            isClearButtonVisible = true,
             onClearClick = {},
             onPriceChange = { _, _ -> },
             onCloseClick = {},

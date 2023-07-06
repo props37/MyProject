@@ -1,14 +1,15 @@
 package ru.zarina.zarina.ui.common.components.toolbar
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.utils.compose.minInteractionSize
 
@@ -21,11 +22,9 @@ fun TextButton(
     Box(
         modifier = modifier
             .minInteractionSize()
-            .clickable(
-                onClick = onClick,
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = false),
-            )
+            .clip(RoundedCornerShape(50))
+            .clickable(onClick = onClick)
+            .padding(4.dp)
     ) {
         Text(
             text = text.uppercase(),
