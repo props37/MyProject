@@ -7,4 +7,8 @@ import kotlinx.parcelize.Parcelize
 data class Filtration(
     val priceLimits: PriceRange?,
     val price: PriceRange? = priceLimits,
-) : Parcelable
+) : Parcelable {
+
+    fun isEmpty() = price == priceLimits
+
+}

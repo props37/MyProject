@@ -51,6 +51,12 @@ class ProductsViewModel(
     val sort = savedStateHandle.getStateFlow(KEY_SELECTED_SORT, ProductSort.DEFAULT)
 
     /**
+     * Default filtration used when no filtration was sent.
+     */
+    private val baseFiltration =
+        savedStateHandle.getStateFlow<Filtration?>(KEY_BASE_FILTRATION, null)
+
+    /**
      * Filtration that was applied to the products currently displayed.
      */
     private val appliedFiltration =
@@ -126,6 +132,8 @@ class ProductsViewModel(
             .filterNotNull()
             .onEach {
                 savedStateHandle[KEY_APPLIED_FILTRATION] = it
+                if (baseFiltration.value == null)
+                    savedStateHandle[KEY_BASE_FILTRATION] = it
                 if (requestedFiltration.value == null)
                     savedStateHandle[KEY_REQUESTED_FILTRATION] = it
             }
@@ -159,6 +167,7 @@ class ProductsViewModel(
         private const val PAGE_SIZE = 12
 
         const val KEY_SELECTED_SORT = "selected_sort"
+        const val KEY_BASE_FILTRATION = "base_filtration"
         const val KEY_APPLIED_FILTRATION = "applied_filtration"
         const val KEY_REQUESTED_FILTRATION = "requested_filtration"
     }

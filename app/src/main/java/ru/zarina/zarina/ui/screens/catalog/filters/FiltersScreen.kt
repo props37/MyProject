@@ -29,6 +29,7 @@ import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
+import ru.zarina.zarina.ui.common.components.toolbar.TextButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.PriceItem
@@ -39,6 +40,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @Composable
 fun FiltersScreenContent(
     filtration: Filtration?,
+    onClearClick: () -> Unit,
     onPriceChange: (min: Int, max: Int) -> Unit,
     filterButtonMode: FiltersViewModel.FilterButtonMode,
     onCloseClick: () -> Unit,
@@ -49,8 +51,11 @@ fun FiltersScreenContent(
         toolbar = {
             ScreenToolbar(
                 title = stringResource(id = R.string.filters),
-                endIcon = {
+                startIcon = {
                     CloseButton(onClick = onCloseClick)
+                },
+                endIcon = {
+                    ClearButton(onClick = onClearClick)
                 },
                 isElevated = scrollState.canScrollBackward,
             )
@@ -115,6 +120,18 @@ private fun FilterButton(
 }
 
 @Composable
+private fun ClearButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    TextButton(
+        text = stringResource(id = R.string.reset),
+        onClick = onClick,
+        modifier = modifier
+    )
+}
+
+@Composable
 fun FiltersScreen(
     productsSavedStateHandle: SavedStateHandle,
     goBack: () -> Unit,
@@ -131,6 +148,7 @@ fun FiltersScreen(
 
     FiltersScreenContent(
         filtration = filtration,
+        onClearClick = viewModel::onClearClick,
         onPriceChange = viewModel::onPriceChange,
         onCloseClick = viewModel::onCloseClick,
         filterButtonMode = filterButtonMode,
@@ -165,6 +183,7 @@ fun FiltersScreenContentPreview() {
                     max = 4999
                 ),
             ),
+            onClearClick = {},
             onPriceChange = { _, _ -> },
             onCloseClick = {},
             filterButtonMode = FiltersViewModel.FilterButtonMode.CLOSE,

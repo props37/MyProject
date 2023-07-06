@@ -111,4 +111,5 @@
     <string name="range">%1$s – %2$s</string>
     <string name="apply">Применить</string>
     <string name="close">Закрыть</string>
+    <string name="reset">Сбросить</string>
 </resources>

@@ -24,6 +24,8 @@ class FiltersViewModel @Inject constructor(
 ) : ViewModel(),
     ISideEffectSource<FiltersViewModel.SideEffect> by SideEffectQueue() {
 
+    private val baseFiltration = productsSavedStateHandle
+        .getStateFlow<Filtration?>(ProductsViewModel.KEY_BASE_FILTRATION, null)
     private val appliedFiltration = productsSavedStateHandle
         .getStateFlow<Filtration?>(ProductsViewModel.KEY_REQUESTED_FILTRATION, null)
     private val _newFiltration = MutableStateFlow(appliedFiltration.value)
@@ -36,6 +38,10 @@ class FiltersViewModel @Inject constructor(
 
     fun onCloseClick() {
         sideEffect(SideEffect.GoBack)
+    }
+
+    fun onClearClick() {
+        _newFiltration.value = baseFiltration.value
     }
 
     fun onPriceChange(min: Int, max: Int) {
