@@ -3,7 +3,9 @@ package ru.zarina.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.domain.ColorFilterItem
 import ru.zarina.zarina.domain.Filtration
+import ru.zarina.zarina.domain.ListFilter
 
 @Serializable
 data class FiltersDto(
@@ -25,10 +27,12 @@ data class FiltersDto(
     fun toDomain(): Filtration {
         return Filtration(
             priceLimits = price?.toDomain(),
+            colors = colors?.toDomain(),
         )
     }
 
     companion object {
+        // TODO make separate class for outgoing filters
         fun from(filtration: Filtration): FiltersDto {
             return FiltersDto(
                 price = filtration.price?.let { PriceFilterDto.from(it) }
@@ -36,4 +40,11 @@ data class FiltersDto(
         }
     }
 
+}
+
+private fun List<ColorFilterDto?>.toDomain(): ListFilter<ColorFilterItem> {
+    return ListFilter(
+        items = this.mapNotNull { it?.toDomain() },
+        isSingleSelection = true,
+    )
 }
