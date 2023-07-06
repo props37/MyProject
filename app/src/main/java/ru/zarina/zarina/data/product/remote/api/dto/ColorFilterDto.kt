@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
 import ru.zarina.zarina.domain.Color
-import ru.zarina.zarina.domain.ColorFilterItem
+import ru.zarina.zarina.domain.ListFilter
 
 @Serializable
 data class ColorFilterDto(
@@ -19,9 +19,11 @@ data class ColorFilterDto(
     val isApplied: Boolean? = null,
 ) {
 
-    fun toDomain(): ColorFilterItem? {
+    fun toDomain(): ListFilter.Item? {
         val color = this.toColor() ?: return null
-        return ColorFilterItem(
+        return ListFilter.Item(
+            id = color.id,
+            name = color.name,
             color = color,
             isSelected = this.isApplied ?: false
         )
@@ -40,17 +42,6 @@ data class ColorFilterDto(
             )
         } else {
             null
-        }
-    }
-
-    companion object {
-        fun from(item: ColorFilterItem): ColorFilterDto {
-            return ColorFilterDto(
-                id = item.id,
-                title = item.name,
-                code = item.color.code.value,
-                isApplied = item.isSelected
-            )
         }
     }
 

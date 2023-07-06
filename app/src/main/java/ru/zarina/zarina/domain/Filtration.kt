@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 data class Filtration(
     val priceLimits: PriceRange?,
     val price: PriceRange? = priceLimits,
-    val colors: ListFilter<ColorFilterItem>? = null,
+    val colors: ListFilter? = null,
 ) : Parcelable {
 
     fun isEmpty() = price == priceLimits
@@ -22,22 +22,19 @@ interface Filter {
 }
 
 @Parcelize
-open class ListFilterItem(
-    open val id: String,
-    open val name: String,
-    open val isSelected: Boolean,
-) : Parcelable
-
-data class ColorFilterItem(
-    val color: Color,
-    override val isSelected: Boolean,
-) : ListFilterItem(color.id, color.name, isSelected)
-
-@Parcelize
-data class ListFilter<T : ListFilterItem>(
-    val items: List<T>,
+data class ListFilter(
+    val items: List<Item>,
     override val isSingleSelection: Boolean,
 ) : Filter, Parcelable {
+
+    @Parcelize
+    data class Item(
+        val id: String,
+        val name: String,
+        val isSelected: Boolean,
+        val color: Color? = null,
+    ) : Parcelable
+
     @IgnoredOnParcel
     override val isApplied = items.any { it.isSelected }
 }

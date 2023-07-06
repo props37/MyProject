@@ -3,7 +3,6 @@ package ru.zarina.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.ColorFilterItem
 import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.ListFilter
 
@@ -42,7 +41,7 @@ data class FiltersDto(
 
 }
 
-private fun List<ColorFilterDto?>.toDomain(): ListFilter<ColorFilterItem> {
+private fun List<ColorFilterDto?>.toDomain(): ListFilter {
     return ListFilter(
         items = this.mapNotNull { it?.toDomain() },
         isSingleSelection = true,
