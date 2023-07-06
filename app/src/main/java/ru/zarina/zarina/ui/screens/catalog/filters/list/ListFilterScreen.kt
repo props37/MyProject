@@ -43,6 +43,8 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.ListFilter
+import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
@@ -55,6 +57,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListFilterScreenContent(
+    toolbarTitle: Text,
     items: PersistentList<ListFilter.Item>,
     onItemClick: (ListFilter.Item) -> Unit,
     onBackClick: () -> Unit,
@@ -63,8 +66,7 @@ fun ListFilterScreenContent(
     ZarinaScaffold(
         toolbar = {
             ScreenToolbar(
-                // TODO toolbar title
-                title = "TODO",
+                title = textString(toolbarTitle),
                 startIcon = {
                     BackButton(onClick = onBackClick)
                 },
@@ -150,6 +152,7 @@ fun ListFilterScreen(
 ) {
     val viewModel = koinViewModel<ListFilterViewModel> { parametersOf(filtersSavedStateHandle) }
 
+    val toolbarTitle by viewModel.toolbarTitle.collectAsState()
     val items by viewModel.items.collectAsState()
 
     ListFilterScreenBehavior(
@@ -158,6 +161,7 @@ fun ListFilterScreen(
     )
 
     ListFilterScreenContent(
+        toolbarTitle = toolbarTitle,
         items = items,
         onItemClick = viewModel::onItemClick,
         onBackClick = viewModel::onBackClick,
@@ -185,6 +189,7 @@ fun ListFilterScreenBehavior(
 fun ListFilterScreenContentPreview() {
     ZarinaTheme {
         ListFilterScreenContent(
+            toolbarTitle = Text.String(text = "Цвет"),
             items = persistentListOf(),
             onItemClick = {},
             onBackClick = {},

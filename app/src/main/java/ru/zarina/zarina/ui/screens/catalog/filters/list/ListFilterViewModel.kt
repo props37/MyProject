@@ -7,13 +7,17 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import org.koin.android.annotation.KoinViewModel
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.ListFilter
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 import ru.zarina.zarina.ui.screens.catalog.filters.FiltersViewModel
@@ -25,6 +29,9 @@ class ListFilterViewModel(
     private val parentSavedStateHandle: SavedStateHandle,
 ) : ViewModel(),
     ISideEffectSource<ListFilterViewModel.SideEffect> by SideEffectQueue() {
+
+    private val filterType = savedStateHandle
+        .getStateFlow<FilterType?>(Catalog.ListFilter.ARGUMENT_FILTER_TYPE, null)
 
     private val newFiltration =
         parentSavedStateHandle.getStateFlow<Filtration?>(
@@ -39,10 +46,17 @@ class ListFilterViewModel(
             it?.items.orEmpty().toPersistentList()
         }
 
+    val toolbarTitle = filterType.map {
+        when (it) {
+            FilterType.COLOR -> Text.Resource(R.string.color)
+            else -> Text.Empty
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Text.Empty)
+
     init {
         newFiltration
             .onEach { filtration ->
-                when (savedStateHandle.get<FilterType>(Catalog.ListFilter.ARGUMENT_FILTER_TYPE)) {
+                when (filterType.value) {
                     FilterType.COLOR -> filterData.value = filtration?.colors
                     else -> Unit
                 }
