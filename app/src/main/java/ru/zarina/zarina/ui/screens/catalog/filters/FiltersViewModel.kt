@@ -63,7 +63,7 @@ class FiltersViewModel(
     enum class FilterButtonMode { APPLY, CLOSE }
 
     companion object {
-        private const val KEY_NEW_FILTRATION = "new_filtration"
+        const val KEY_NEW_FILTRATION = "new_filtration"
     }
 
 }
