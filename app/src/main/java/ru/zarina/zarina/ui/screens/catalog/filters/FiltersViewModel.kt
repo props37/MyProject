@@ -51,12 +51,17 @@ class FiltersViewModel(
             baseFiltration.value?.copy(price = PriceRange(min, max))
     }
 
+    fun onColorClick() {
+        sideEffect(SideEffect.ShowColorFilter)
+    }
+
     fun onFilterButtonClick() {
         productsSavedStateHandle[ProductsViewModel.KEY_REQUESTED_FILTRATION] = newFiltration.value
         sideEffect(SideEffect.GoBack)
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        object ShowColorFilter : SideEffect
         object GoBack : SideEffect
     }
 

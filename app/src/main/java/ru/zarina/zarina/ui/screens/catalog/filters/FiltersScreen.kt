@@ -47,6 +47,7 @@ fun FiltersScreenContent(
     filtration: Filtration?,
     isClearButtonVisible: Boolean,
     onClearClick: () -> Unit,
+    onColorClick: () -> Unit,
     onPriceChange: (min: Int, max: Int) -> Unit,
     filterButtonMode: FiltersViewModel.FilterButtonMode,
     onCloseClick: () -> Unit,
@@ -102,7 +103,7 @@ fun FiltersScreenContent(
                     ListItem(
                         filterName = stringResource(id = R.string.color),
                         items = filtration.colors.items.toPersistentList(),
-                        onClick = { /* TODO */ }
+                        onClick = onColorClick,
                     )
                 }
             }
@@ -153,6 +154,7 @@ private fun ClearButton(
 @Composable
 fun FiltersScreen(
     productsSavedStateHandle: SavedStateHandle,
+    showColorFilter: () -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel = koinViewModel<FiltersViewModel> { parametersOf(productsSavedStateHandle) }
@@ -163,6 +165,7 @@ fun FiltersScreen(
 
     FiltersScreenBehavior(
         sideEffects = viewModel.sideEffects,
+        showColorFilter = showColorFilter,
         goBack = goBack
     )
 
@@ -171,6 +174,7 @@ fun FiltersScreen(
         isClearButtonVisible = isClearButtonVisible,
         onClearClick = viewModel::onClearClick,
         onPriceChange = viewModel::onPriceChange,
+        onColorClick = viewModel::onColorClick,
         onCloseClick = viewModel::onCloseClick,
         filterButtonMode = filterButtonMode,
         onFilterButtonClick = viewModel::onFilterButtonClick
@@ -180,11 +184,13 @@ fun FiltersScreen(
 @Composable
 fun FiltersScreenBehavior(
     sideEffects: Flow<FiltersViewModel.SideEffect>,
+    showColorFilter: () -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
+                FiltersViewModel.SideEffect.ShowColorFilter -> showColorFilter()
                 FiltersViewModel.SideEffect.GoBack -> goBack()
             }
         }
@@ -207,6 +213,7 @@ fun FiltersScreenContentPreview() {
             isClearButtonVisible = true,
             onClearClick = {},
             onPriceChange = { _, _ -> },
+            onColorClick = {},
             onCloseClick = {},
             filterButtonMode = FiltersViewModel.FilterButtonMode.CLOSE,
             onFilterButtonClick = {},
