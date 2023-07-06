@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.ui.common.utils.domain.toColorOr
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.utils.compose.conditional
 import ru.zarina.zarina.domain.Color as ZarinaColor
 
 @Composable
@@ -69,10 +70,9 @@ private fun ColorCircle(
         modifier = modifier
             .size(dimensions.circleSize)
             .clip(shape)
-            .clickable(
-                enabled = !isSelected && onClick != null,
-                onClick = onClick ?: {}
-            )
+            .conditional(!isSelected && onClick != null) {
+                this.clickable(onClick = onClick ?: {})
+            }
             .padding(dimensions.outerPadding)
             .border(
                 width = dimensions.selectionBorderWidth,
