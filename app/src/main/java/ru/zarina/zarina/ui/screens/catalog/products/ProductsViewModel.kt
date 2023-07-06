@@ -10,6 +10,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
@@ -49,7 +50,16 @@ class ProductsViewModel(
 
     val sort = savedStateHandle.getStateFlow(KEY_SELECTED_SORT, ProductSort.DEFAULT)
 
-    val filtration = savedStateHandle.getStateFlow<Filtration?>(KEY_FILTRATION, null)
+    /**
+     * Filtration that was applied to the products currently displayed.
+     */
+    val appliedFiltration = savedStateHandle.getStateFlow<Filtration?>(KEY_APPLIED_FILTRATION, null)
+
+    /**
+     * The latest filtration that was requested by the user.
+     */
+    val requestedFiltration =
+        savedStateHandle.getStateFlow<Filtration?>(KEY_REQUESTED_FILTRATION, null)
 
     private val pagingSource = combine(category, sort) { category, sort ->
         category?.let { CategoryProductPagingSource(it, sort, interactor.getProductsPageUseCase) }
@@ -100,7 +110,8 @@ class ProductsViewModel(
     init {
         pagingSource
             .flatMapLatest { it?.filtration ?: emptyFlow() }
-            .onEach { savedStateHandle[KEY_FILTRATION] = it }
+            .filterNotNull()
+            .onEach { savedStateHandle[KEY_APPLIED_FILTRATION] = it }
             .launchIn(viewModelScope)
     }
 
@@ -131,7 +142,8 @@ class ProductsViewModel(
         private const val PAGE_SIZE = 12
 
         const val KEY_SELECTED_SORT = "selected_sort"
-        const val KEY_FILTRATION = "filtration"
+        const val KEY_APPLIED_FILTRATION = "applied_filtration"
+        const val KEY_REQUESTED_FILTRATION = "requested_filtration"
     }
 
 }

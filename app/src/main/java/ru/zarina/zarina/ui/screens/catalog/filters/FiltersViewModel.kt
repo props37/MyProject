@@ -19,13 +19,13 @@ import javax.inject.Inject
 
 @KoinViewModel
 class FiltersViewModel @Inject constructor(
-    productsSavedStateHandle: SavedStateHandle,
+    private val productsSavedStateHandle: SavedStateHandle,
     private val interactor: FiltersInteractor,
 ) : ViewModel(),
     ISideEffectSource<FiltersViewModel.SideEffect> by SideEffectQueue() {
 
     private val appliedFiltration = productsSavedStateHandle
-        .getStateFlow<Filtration?>(ProductsViewModel.KEY_FILTRATION, null)
+        .getStateFlow<Filtration?>(ProductsViewModel.KEY_REQUESTED_FILTRATION, null)
     private val _newFiltration = MutableStateFlow(appliedFiltration.value)
     val newFiltration = _newFiltration.asStateFlow()
 
@@ -43,7 +43,7 @@ class FiltersViewModel @Inject constructor(
     }
 
     fun onFilterButtonClick() {
-        // TODO send result
+        productsSavedStateHandle[ProductsViewModel.KEY_REQUESTED_FILTRATION] = _newFiltration.value
         sideEffect(SideEffect.GoBack)
     }
 
