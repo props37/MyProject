@@ -53,18 +53,27 @@ class ProductsViewModel(
     /**
      * Filtration that was applied to the products currently displayed.
      */
-    val appliedFiltration = savedStateHandle.getStateFlow<Filtration?>(KEY_APPLIED_FILTRATION, null)
+    private val appliedFiltration =
+        savedStateHandle.getStateFlow<Filtration?>(KEY_APPLIED_FILTRATION, null)
 
     /**
      * The latest filtration that was requested by the user.
      */
-    val requestedFiltration =
+    private val requestedFiltration =
         savedStateHandle.getStateFlow<Filtration?>(KEY_REQUESTED_FILTRATION, null)
 
-    private val pagingSource = combine(category, sort) { category, sort ->
-        category?.let { CategoryProductPagingSource(it, sort, interactor.getProductsPageUseCase) }
-    }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    private val pagingSource =
+        combine(category, sort, requestedFiltration) { category, sort, filtration ->
+            category?.let {
+                CategoryProductPagingSource(
+                    category = it,
+                    sort = sort,
+                    filtration = filtration,
+                    getProductsPageUseCase = interactor.getProductsPageUseCase
+                )
+            }
+        }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private val productsPluralManager = PluralManager(
         PluralResources(
@@ -109,7 +118,7 @@ class ProductsViewModel(
 
     init {
         pagingSource
-            .flatMapLatest { it?.filtration ?: emptyFlow() }
+            .flatMapLatest { it?.appliedFiltration ?: emptyFlow() }
             .filterNotNull()
             .onEach { savedStateHandle[KEY_APPLIED_FILTRATION] = it }
             .launchIn(viewModelScope)

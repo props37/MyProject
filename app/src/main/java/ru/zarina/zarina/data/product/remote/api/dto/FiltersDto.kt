@@ -27,4 +27,13 @@ data class FiltersDto(
             priceLimits = price?.toDomain(),
         )
     }
+
+    companion object {
+        fun from(filtration: Filtration): FiltersDto {
+            return FiltersDto(
+                price = filtration.price?.let { PriceFilterDto.from(it) }
+            )
+        }
+    }
+
 }

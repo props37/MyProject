@@ -12,11 +12,12 @@ import ru.zarina.zarina.usecase.catalog.GetProductsPageUseCase
 class CategoryProductPagingSource(
     private val category: Category,
     private val sort: ProductSort,
+    private val filtration: Filtration?,
     private val getProductsPageUseCase: GetProductsPageUseCase,
 ) : PagingSource<Int, Product>() {
 
     val itemCount = MutableStateFlow<Int?>(null)
-    val filtration = MutableStateFlow<Filtration?>(null)
+    val appliedFiltration = MutableStateFlow<Filtration?>(null)
 
     override fun getRefreshKey(
         state: PagingState<Int, Product>,
@@ -34,12 +35,13 @@ class CategoryProductPagingSource(
             GetProductsPageUseCase.Params(
                 category = category,
                 sort = sort,
+                filtration = filtration,
                 pageIndex = nextPageIndex
             )
         )
             .onSuccess {
                 itemCount.value = it.pagination.totalItemCount
-                filtration.value = it.value.filtration
+                appliedFiltration.value = it.value.filtration
                 return LoadResult.Page(
                     data = it.value.products,
                     prevKey = it.pagination.previousPageIndex,
