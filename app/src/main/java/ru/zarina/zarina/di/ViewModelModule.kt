@@ -14,6 +14,6 @@ val viewModelModule = module {
         SelectSortViewModel(parameters[0])
     }
     viewModel { parameters ->
-        FiltersViewModel(parameters[0], get())
+        FiltersViewModel(get(), parameters[0], get())
     }
 }
