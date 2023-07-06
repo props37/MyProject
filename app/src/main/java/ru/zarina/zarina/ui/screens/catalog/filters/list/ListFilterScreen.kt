@@ -1,5 +1,7 @@
 package ru.zarina.zarina.ui.screens.catalog.filters.list
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,6 +58,7 @@ fun ListFilterScreenContent(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun FilterListItem(
     item: ListFilter.Item,
@@ -75,11 +78,17 @@ fun FilterListItem(
             modifier = Modifier.padding(end = 8.dp),
         )
         Spacer(modifier = Modifier.weight(1f))
-        Icon(
-            painter = painterResource(id = R.drawable.ic_checkmark_24),
-            contentDescription = stringResource(id = R.string.selected),
-            tint = UiKitTheme.colors.primaryContentColor,
-        )
+        AnimatedContent(
+            targetState = item.isSelected,
+            label = "${item.id} is selected",
+        ) {
+            if (it)
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_checkmark_24),
+                    contentDescription = stringResource(id = R.string.selected),
+                    tint = UiKitTheme.colors.primaryContentColor,
+                )
+        }
     }
 }
 
