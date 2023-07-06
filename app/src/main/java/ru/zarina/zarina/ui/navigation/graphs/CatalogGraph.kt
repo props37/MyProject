@@ -83,6 +83,9 @@ fun NavGraphBuilder.catalogGraph(
                 remember(it) { navController.getBackStackEntry(Catalog.Filters.routeSchema).savedStateHandle }
             ListFilterScreen(
                 filtersSavedStateHandle = filtersSavedStateHandle,
+                goBack = {
+                    navController.popBackStack(Catalog.ListFilter.routeSchema, true)
+                }
             )
         }
     }

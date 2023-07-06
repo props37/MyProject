@@ -21,6 +21,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,40 +43,58 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.ListFilter
+import ru.zarina.zarina.ui.common.components.ZarinaScaffold
+import ru.zarina.zarina.ui.common.components.toolbar.BackButton
+import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.utils.domain.toColorOr
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListFilterScreenContent(
     items: PersistentList<ListFilter.Item>,
     onItemClick: (ListFilter.Item) -> Unit,
+    onBackClick: () -> Unit,
 ) {
-    // TODO toolbar title
     val scrollState = rememberScrollState()
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
-    ) {
-        items.forEachIndexed { index, item ->
-            FilterListItem(
-                item = item,
-                onClick = { onItemClick(item) },
-                modifier = Modifier.fillMaxWidth()
+    ZarinaScaffold(
+        toolbar = {
+            ScreenToolbar(
+                // TODO toolbar title
+                title = "TODO",
+                startIcon = {
+                    BackButton(onClick = onBackClick)
+                },
+                isElevated = scrollState.canScrollBackward,
             )
-            if (index != items.lastIndex)
-                Divider(
-                    thickness = 1.dp,
-                    color = UiKitTheme.colors.listDivider,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+        },
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState),
+        ) {
+            items.forEachIndexed { index, item ->
+                FilterListItem(
+                    item = item,
+                    onClick = { onItemClick(item) },
+                    modifier = Modifier.fillMaxWidth()
                 )
+                if (index != items.lastIndex)
+                    Divider(
+                        thickness = 1.dp,
+                        color = UiKitTheme.colors.listDivider,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    )
+            }
+            Spacer(modifier = Modifier.navigationBarsPadding())
         }
-        Spacer(modifier = Modifier.navigationBarsPadding())
     }
 }
 
@@ -127,29 +146,33 @@ fun FilterListItem(
 @Composable
 fun ListFilterScreen(
     filtersSavedStateHandle: SavedStateHandle,
+    goBack: () -> Unit,
 ) {
     val viewModel = koinViewModel<ListFilterViewModel> { parametersOf(filtersSavedStateHandle) }
 
     val items by viewModel.items.collectAsState()
 
     ListFilterScreenBehavior(
-        sideEffects = viewModel.sideEffects
+        sideEffects = viewModel.sideEffects,
+        goBack = goBack,
     )
 
     ListFilterScreenContent(
         items = items,
         onItemClick = viewModel::onItemClick,
+        onBackClick = viewModel::onBackClick,
     )
 }
 
 @Composable
 fun ListFilterScreenBehavior(
     sideEffects: Flow<ListFilterViewModel.SideEffect>,
+    goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                else -> TODO()
+                ListFilterViewModel.SideEffect.GoBack -> goBack()
             }
         }
     }
@@ -164,6 +187,7 @@ fun ListFilterScreenContentPreview() {
         ListFilterScreenContent(
             items = persistentListOf(),
             onItemClick = {},
+            onBackClick = {},
         )
     }
 }
