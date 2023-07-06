@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.PriceRange
@@ -26,7 +28,7 @@ class FiltersViewModel(
     private val appliedFiltration = productsSavedStateHandle
         .getStateFlow<Filtration?>(ProductsViewModel.KEY_REQUESTED_FILTRATION, null)
     val newFiltration =
-        savedStateHandle.getStateFlow(KEY_NEW_FILTRATION, appliedFiltration.value)
+        savedStateHandle.getStateFlow<Filtration?>(KEY_NEW_FILTRATION, null)
 
     val isClearButtonVisible = combine(baseFiltration, newFiltration) { base, new ->
         new != base
@@ -38,6 +40,13 @@ class FiltersViewModel(
     }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), FilterButtonMode.CLOSE)
 
+    init {
+        viewModelScope.launch {
+            val baseFiltration = baseFiltration.first { it != null }
+            if (newFiltration.value == null) savedStateHandle[KEY_NEW_FILTRATION] = baseFiltration
+        }
+    }
+
     fun onCloseClick() {
         sideEffect(SideEffect.GoBack)
     }
@@ -48,7 +57,7 @@ class FiltersViewModel(
 
     fun onPriceChange(min: Int, max: Int) {
         savedStateHandle[KEY_NEW_FILTRATION] =
-            baseFiltration.value?.copy(price = PriceRange(min, max))
+            newFiltration.value?.copy(price = PriceRange(min, max))
     }
 
     fun onColorClick() {

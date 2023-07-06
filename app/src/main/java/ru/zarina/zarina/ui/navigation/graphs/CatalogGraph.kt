@@ -67,6 +67,7 @@ fun NavGraphBuilder.catalogGraph(
             val productSavedStateHandle =
                 remember(it) { navController.getBackStackEntry(Catalog.Products.routeSchema).savedStateHandle }
             FiltersScreen(
+                savedStateHandle = remember(it) { it.savedStateHandle },
                 productsSavedStateHandle = productSavedStateHandle,
                 showColorFilter = {
                     val arguments = Catalog.ListFilter.Arguments(filterType = FilterType.COLOR)

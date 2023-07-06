@@ -153,11 +153,13 @@ private fun ClearButton(
 
 @Composable
 fun FiltersScreen(
+    savedStateHandle: SavedStateHandle,
     productsSavedStateHandle: SavedStateHandle,
     showColorFilter: () -> Unit,
     goBack: () -> Unit,
 ) {
-    val viewModel = koinViewModel<FiltersViewModel> { parametersOf(productsSavedStateHandle) }
+    val viewModel =
+        koinViewModel<FiltersViewModel> { parametersOf(savedStateHandle, productsSavedStateHandle) }
 
     val filtration by viewModel.newFiltration.collectAsStateWithLifecycle()
     val isClearButtonVisible by viewModel.isClearButtonVisible.collectAsStateWithLifecycle()

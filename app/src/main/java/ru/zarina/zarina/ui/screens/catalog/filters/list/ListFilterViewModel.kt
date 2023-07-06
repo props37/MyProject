@@ -2,7 +2,11 @@ package ru.zarina.zarina.ui.screens.catalog.filters.list
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import org.koin.android.annotation.KoinViewModel
@@ -13,6 +17,7 @@ import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 import ru.zarina.zarina.ui.screens.catalog.filters.FiltersViewModel
+import ru.zarina.zarina.utils.coroutine.mapState
 
 @KoinViewModel
 class ListFilterViewModel(
@@ -27,16 +32,22 @@ class ListFilterViewModel(
             initialValue = null
         )
 
-    val filterData = MutableStateFlow<ListFilter?>(null)
+    private val filterData = MutableStateFlow<ListFilter?>(null)
+
+    val items = filterData
+        .mapState(viewModelScope, SharingStarted.WhileSubscribed()) {
+            it?.items.orEmpty().toPersistentList()
+        }
 
     init {
         newFiltration
             .onEach { filtration ->
-                when (savedStateHandle.get<FilterType>(Catalog.Products.ARGUMENT_CATEGORY_ID)) {
+                when (savedStateHandle.get<FilterType>(Catalog.ListFilter.ARGUMENT_FILTER_TYPE)) {
                     FilterType.COLOR -> filterData.value = filtration?.colors
                     else -> Unit
                 }
             }
+            .launchIn(viewModelScope)
     }
 
     fun onItemClick(item: ListFilter.Item) {
