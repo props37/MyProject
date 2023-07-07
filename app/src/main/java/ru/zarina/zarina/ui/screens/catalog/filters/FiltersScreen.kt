@@ -91,13 +91,7 @@ fun FiltersScreenContent(
                         onSelectedValueChange = onPriceChange,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    Divider(
-                        thickness = 1.dp,
-                        color = UiKitTheme.colors.listDivider,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    )
+                    FiltersDivider()
                 }
                 if (filtration?.colors != null) {
                     ListItem(
@@ -105,6 +99,7 @@ fun FiltersScreenContent(
                         items = filtration.colors.items.toPersistentList(),
                         onClick = { onFilterClick(FilterType.COLOR) },
                     )
+                    FiltersDivider()
                 }
                 if (filtration?.attributes != null) {
                     ListItem(
@@ -112,6 +107,7 @@ fun FiltersScreenContent(
                         items = filtration.attributes.items.toPersistentList(),
                         onClick = { onFilterClick(FilterType.ATTRIBUTES) },
                     )
+                    FiltersDivider()
                 }
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -125,6 +121,19 @@ fun FiltersScreenContent(
             )
         }
     }
+}
+
+@Composable
+private fun FiltersDivider(
+    modifier: Modifier = Modifier,
+) {
+    Divider(
+        thickness = 1.dp,
+        color = UiKitTheme.colors.listDivider,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    )
 }
 
 @Composable
