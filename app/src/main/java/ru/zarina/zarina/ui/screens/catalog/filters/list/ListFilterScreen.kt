@@ -86,7 +86,7 @@ fun ListFilterScreenContent(
                         exit = fadeOut(),
                     ) {
                         TextButton(
-                            text = stringResource(id = R.string.clear),
+                            text = stringResource(id = R.string.reset),
                             onClick = onClearClick,
                         )
                     }
