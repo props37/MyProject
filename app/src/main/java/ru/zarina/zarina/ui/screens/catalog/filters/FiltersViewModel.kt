@@ -42,8 +42,9 @@ class FiltersViewModel(
 
     init {
         viewModelScope.launch {
-            val baseFiltration = baseFiltration.first { it != null }
-            if (newFiltration.value == null) savedStateHandle[KEY_NEW_FILTRATION] = baseFiltration
+            val appliedFiltration = appliedFiltration.first { it != null }
+            if (newFiltration.value == null) savedStateHandle[KEY_NEW_FILTRATION] =
+                appliedFiltration
         }
     }
 
