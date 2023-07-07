@@ -12,12 +12,12 @@ data class Filtration(
 ) : Parcelable {
 
     fun isEmpty() = price == priceLimits
-            && colors?.isApplied != true
+            && colors?.isEmpty != true
 
 }
 
 interface Filter {
-    val isApplied: Boolean
+    val isEmpty: Boolean
     val isSingleSelection: Boolean
 }
 
@@ -36,5 +36,5 @@ data class ListFilter(
     ) : Parcelable
 
     @IgnoredOnParcel
-    override val isApplied = items.any { it.isSelected }
+    override val isEmpty = items.none { it.isSelected }
 }

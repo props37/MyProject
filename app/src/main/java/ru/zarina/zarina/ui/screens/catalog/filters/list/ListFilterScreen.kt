@@ -1,7 +1,10 @@
 package ru.zarina.zarina.ui.screens.catalog.filters.list
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -49,6 +52,7 @@ import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
+import ru.zarina.zarina.ui.common.components.toolbar.TextButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.utils.domain.toColorOr
@@ -59,6 +63,8 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @Composable
 fun ListFilterScreenContent(
     toolbarTitle: Text,
+    isClearButtonVisible: Boolean,
+    onClearClick: () -> Unit,
     items: PersistentList<ListFilter.Item>,
     onItemClick: (ListFilter.Item) -> Unit,
     onBackClick: () -> Unit,
@@ -72,6 +78,18 @@ fun ListFilterScreenContent(
                 title = textString(toolbarTitle),
                 startIcon = {
                     BackButton(onClick = onBackClick)
+                },
+                endIcon = {
+                    AnimatedVisibility(
+                        visible = isClearButtonVisible,
+                        enter = fadeIn(),
+                        exit = fadeOut(),
+                    ) {
+                        TextButton(
+                            text = stringResource(id = R.string.clear),
+                            onClick = onClearClick,
+                        )
+                    }
                 },
                 isElevated = scrollState.canScrollBackward,
             )
@@ -174,6 +192,7 @@ fun ListFilterScreen(
     val viewModel = koinViewModel<ListFilterViewModel> { parametersOf(filtersSavedStateHandle) }
 
     val toolbarTitle by viewModel.toolbarTitle.collectAsState()
+    val isClearButtonVisible by viewModel.isClearButtonVisible.collectAsState()
     val items by viewModel.items.collectAsState()
     val filterButtonMode by viewModel.isApplyButtonVisible.collectAsState()
 
@@ -184,6 +203,8 @@ fun ListFilterScreen(
 
     ListFilterScreenContent(
         toolbarTitle = toolbarTitle,
+        isClearButtonVisible = isClearButtonVisible,
+        onClearClick = viewModel::onClearClick,
         items = items,
         onItemClick = viewModel::onItemClick,
         onBackClick = viewModel::onBackClick,
@@ -214,6 +235,8 @@ fun ListFilterScreenContentPreview() {
     ZarinaTheme {
         ListFilterScreenContent(
             toolbarTitle = Text.String(text = "Цвет"),
+            isClearButtonVisible = true,
+            onClearClick = {},
             items = persistentListOf(),
             onItemClick = {},
             onBackClick = {},

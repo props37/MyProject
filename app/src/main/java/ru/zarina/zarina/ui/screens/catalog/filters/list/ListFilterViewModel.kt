@@ -60,6 +60,9 @@ class ListFilterViewModel(
     }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
+    val isClearButtonVisible = filterData.map { it?.isEmpty == false }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
     init {
         newFiltration
             .onEach { filtration ->
