@@ -14,7 +14,7 @@ data class FiltersRequestDto(
     companion object {
         fun from(filtration: Filtration): FiltersRequestDto {
             return FiltersRequestDto(
-                price = filtration.priceLimits?.let { PriceFilterDto.from(it) },
+                price = filtration.price?.let { PriceFilterDto.from(it) },
                 color = filtration.colors?.items?.filter { it.isSelected }?.map { it.id }
             )
         }
