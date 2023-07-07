@@ -29,16 +29,6 @@ data class FiltersDto(
             colors = colors?.toDomain(),
         )
     }
-
-    companion object {
-        // TODO make separate class for outgoing filters
-        fun from(filtration: Filtration): FiltersDto {
-            return FiltersDto(
-                price = filtration.price?.let { PriceFilterDto.from(it) }
-            )
-        }
-    }
-
 }
 
 private fun List<ColorFilterDto?>.toDomain(): ListFilter {

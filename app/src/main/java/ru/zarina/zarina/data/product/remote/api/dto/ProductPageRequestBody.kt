@@ -13,5 +13,5 @@ data class ProductPageRequestBody(
     @SerialName("sort")
     val sort: ProductSortDto,
     @SerialName("filters")
-    val filters: FiltersDto?,
+    val filters: FiltersRequestDto?,
 )
