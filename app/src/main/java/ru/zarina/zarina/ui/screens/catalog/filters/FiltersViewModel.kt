@@ -61,6 +61,16 @@ class FiltersViewModel(
             newFiltration.value?.copy(price = PriceRange(min, max))
     }
 
+    fun onIsShippingAvailableChange(isAvailable: Boolean) {
+        savedStateHandle[KEY_NEW_FILTRATION] =
+            newFiltration.value?.copy(isShippingAvailable = isAvailable)
+    }
+
+    fun onIsPickupAvailableChange(isAvailable: Boolean) {
+        savedStateHandle[KEY_NEW_FILTRATION] =
+            newFiltration.value?.copy(isPickupAvailable = isAvailable)
+    }
+
     fun onFilterClick(type: FilterType) {
         sideEffect(SideEffect.ShowColorFilter(type))
     }

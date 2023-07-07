@@ -17,6 +17,10 @@ data class FiltersRequestDto(
     val sizes: List<String>?,
     @SerialName("materials")
     val materials: List<String>?,
+    @SerialName("available_for_shipping")
+    val availableForShipping: Boolean?,
+    @SerialName("available_for_store_pickup")
+    val availableForPickup: AvailableForPickupDto?,
 ) {
     companion object {
         fun from(filtration: Filtration): FiltersRequestDto {
@@ -26,6 +30,10 @@ data class FiltersRequestDto(
                 attributes = filtration.attributes?.toDto(),
                 materials = filtration.materials?.toDto(),
                 sizes = filtration.sizes?.toDto(),
+                availableForShipping = filtration.isShippingAvailable.takeIf { it == true },
+                availableForPickup = filtration.isPickupAvailable
+                    .takeIf { it == true }
+                    ?.let { AvailableForPickupDto(isApplied = true) },
             )
         }
 
@@ -33,3 +41,11 @@ data class FiltersRequestDto(
             this.items.filter { it.isSelected }.map { it.id }
     }
 }
+
+@Serializable
+data class AvailableForPickupDto(
+    @SerialName("applied")
+    val isApplied: Boolean,
+    @SerialName("store_id")
+    val storeId: Int? = null,
+)

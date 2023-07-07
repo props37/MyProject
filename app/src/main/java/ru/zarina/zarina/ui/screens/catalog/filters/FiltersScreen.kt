@@ -38,6 +38,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.ListItem
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.PriceItem
+import ru.zarina.zarina.ui.screens.catalog.filters.components.items.SwitchItem
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
@@ -49,6 +50,8 @@ fun FiltersScreenContent(
     onClearClick: () -> Unit,
     onFilterClick: (FilterType) -> Unit,
     onPriceChange: (min: Int, max: Int) -> Unit,
+    onIsShippingAvailableChange: (Boolean) -> Unit,
+    onIsPickupAvailableChange: (Boolean) -> Unit,
     filterButtonMode: FiltersViewModel.FilterButtonMode,
     onCloseClick: () -> Unit,
     onFilterButtonClick: () -> Unit,
@@ -122,6 +125,22 @@ fun FiltersScreenContent(
                         filterName = stringResource(id = R.string.color),
                         items = filtration.colors.items.toPersistentList(),
                         onClick = { onFilterClick(FilterType.COLOR) },
+                    )
+                    FiltersDivider()
+                }
+                if (filtration?.isShippingAvailable != null) {
+                    SwitchItem(
+                        filterName = stringResource(id = R.string.available_for_delivery),
+                        isChecked = filtration.isShippingAvailable,
+                        onCheckedChange = { onIsShippingAvailableChange(it) },
+                    )
+                    FiltersDivider()
+                }
+                if (filtration?.isPickupAvailable != null) {
+                    SwitchItem(
+                        filterName = stringResource(id = R.string.available_for_pickup_at_store),
+                        isChecked = filtration.isPickupAvailable,
+                        onCheckedChange = { onIsPickupAvailableChange(it) },
                     )
                     FiltersDivider()
                 }
@@ -208,10 +227,12 @@ fun FiltersScreen(
         isClearButtonVisible = isClearButtonVisible,
         onClearClick = viewModel::onClearClick,
         onPriceChange = viewModel::onPriceChange,
+        onIsShippingAvailableChange = viewModel::onIsShippingAvailableChange,
+        onIsPickupAvailableChange = viewModel::onIsPickupAvailableChange,
         onFilterClick = viewModel::onFilterClick,
         onCloseClick = viewModel::onCloseClick,
         filterButtonMode = filterButtonMode,
-        onFilterButtonClick = viewModel::onFilterButtonClick
+        onFilterButtonClick = viewModel::onFilterButtonClick,
     )
 }
 
@@ -243,10 +264,19 @@ fun FiltersScreenContentPreview() {
                     min = 200,
                     max = 4999
                 ),
+                price = null,
+                colors = null,
+                attributes = null,
+                materials = null,
+                sizes = null,
+                isShippingAvailable = null,
+                isPickupAvailable = null,
             ),
             isClearButtonVisible = true,
             onClearClick = {},
             onPriceChange = { _, _ -> },
+            onIsShippingAvailableChange = {},
+            onIsPickupAvailableChange = {},
             onFilterClick = {},
             onCloseClick = {},
             filterButtonMode = FiltersViewModel.FilterButtonMode.CLOSE,

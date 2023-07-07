@@ -30,6 +30,8 @@ data class FiltersDto(
             attributes = attributes?.toDomain(),
             sizes = sizes?.toDomain(),
             materials = materials?.toDomain(),
+            isShippingAvailable = availableForShipping,
+            isPickupAvailable = availableForStorePickup?.isApplied,
         )
     }
 }
