@@ -23,15 +23,28 @@ data class FiltersDto(
     @SerialName("price")
     val price: PriceFilterDto? = null,
 ) {
-    fun toDomain(): Filtration {
+    fun toDomain(categoryFilter: ListFilter): Filtration {
         return Filtration(
             priceLimits = price?.toDomain(),
-            colors = colors?.toDomain(),
+            categories = categoryFilter,
+            colors = colors?.colorsToDomain(),
+            attributes = attributes?.toDomain(),
+            sizes = sizes?.toDomain(),
+            materials = materials?.toDomain(),
+            isShippingAvailable = availableForShipping,
+            isPickupAvailable = availableForStorePickup?.isApplied,
         )
     }
 }
 
-private fun List<ColorFilterDto?>.toDomain(): ListFilter {
+private fun List<ColorFilterDto?>.colorsToDomain(): ListFilter {
+    return ListFilter(
+        items = this.mapNotNull { it?.toDomain() },
+        isSingleSelection = false,
+    )
+}
+
+private fun List<FilterItemDto?>.toDomain(): ListFilter {
     return ListFilter(
         items = this.mapNotNull { it?.toDomain() },
         isSingleSelection = true,

@@ -38,6 +38,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.ListItem
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.PriceItem
+import ru.zarina.zarina.ui.screens.catalog.filters.components.items.SwitchItem
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
@@ -47,8 +48,10 @@ fun FiltersScreenContent(
     filtration: Filtration?,
     isClearButtonVisible: Boolean,
     onClearClick: () -> Unit,
-    onColorClick: () -> Unit,
+    onFilterClick: (FilterType) -> Unit,
     onPriceChange: (min: Int, max: Int) -> Unit,
+    onIsShippingAvailableChange: (Boolean) -> Unit,
+    onIsPickupAvailableChange: (Boolean) -> Unit,
     filterButtonMode: FiltersViewModel.FilterButtonMode,
     onCloseClick: () -> Unit,
     onFilterButtonClick: () -> Unit,
@@ -91,20 +94,63 @@ fun FiltersScreenContent(
                         onSelectedValueChange = onPriceChange,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    Divider(
-                        thickness = 1.dp,
-                        color = UiKitTheme.colors.listDivider,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
+                    FiltersDivider()
+                }
+                if (filtration?.categories != null) {
+                    ListItem(
+                        filterName = stringResource(id = R.string.categories),
+                        items = filtration.categories.items.toPersistentList(),
+                        onClick = { onFilterClick(FilterType.CATEGORY) },
                     )
+                    FiltersDivider()
+                }
+                if (filtration?.attributes != null) {
+                    ListItem(
+                        filterName = stringResource(id = R.string.attributes),
+                        items = filtration.attributes.items.toPersistentList(),
+                        onClick = { onFilterClick(FilterType.ATTRIBUTES) },
+                    )
+                    FiltersDivider()
+                }
+                if (filtration?.materials != null) {
+                    ListItem(
+                        filterName = stringResource(id = R.string.materials),
+                        items = filtration.materials.items.toPersistentList(),
+                        onClick = { onFilterClick(FilterType.MATERIALS) },
+                    )
+                    FiltersDivider()
+                }
+                if (filtration?.sizes != null) {
+                    ListItem(
+                        filterName = stringResource(id = R.string.size),
+                        items = filtration.sizes.items.toPersistentList(),
+                        onClick = { onFilterClick(FilterType.SIZE) },
+                    )
+                    FiltersDivider()
                 }
                 if (filtration?.colors != null) {
                     ListItem(
                         filterName = stringResource(id = R.string.color),
                         items = filtration.colors.items.toPersistentList(),
-                        onClick = onColorClick,
+                        onClick = { onFilterClick(FilterType.COLOR) },
                     )
+                    FiltersDivider()
+                }
+                if (filtration?.isShippingAvailable != null) {
+                    SwitchItem(
+                        filterName = stringResource(id = R.string.available_for_delivery),
+                        isChecked = filtration.isShippingAvailable,
+                        onCheckedChange = { onIsShippingAvailableChange(it) },
+                    )
+                    FiltersDivider()
+                }
+                if (filtration?.isPickupAvailable != null) {
+                    SwitchItem(
+                        filterName = stringResource(id = R.string.available_for_pickup_at_store),
+                        isChecked = filtration.isPickupAvailable,
+                        onCheckedChange = { onIsPickupAvailableChange(it) },
+                    )
+                    FiltersDivider()
                 }
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -118,6 +164,19 @@ fun FiltersScreenContent(
             )
         }
     }
+}
+
+@Composable
+private fun FiltersDivider(
+    modifier: Modifier = Modifier,
+) {
+    Divider(
+        thickness = 1.dp,
+        color = UiKitTheme.colors.listDivider,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    )
 }
 
 @Composable
@@ -155,7 +214,7 @@ private fun ClearButton(
 fun FiltersScreen(
     savedStateHandle: SavedStateHandle,
     productsSavedStateHandle: SavedStateHandle,
-    showColorFilter: () -> Unit,
+    showColorFilter: (FilterType) -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel =
@@ -176,23 +235,25 @@ fun FiltersScreen(
         isClearButtonVisible = isClearButtonVisible,
         onClearClick = viewModel::onClearClick,
         onPriceChange = viewModel::onPriceChange,
-        onColorClick = viewModel::onColorClick,
+        onIsShippingAvailableChange = viewModel::onIsShippingAvailableChange,
+        onIsPickupAvailableChange = viewModel::onIsPickupAvailableChange,
+        onFilterClick = viewModel::onFilterClick,
         onCloseClick = viewModel::onCloseClick,
         filterButtonMode = filterButtonMode,
-        onFilterButtonClick = viewModel::onFilterButtonClick
+        onFilterButtonClick = viewModel::onFilterButtonClick,
     )
 }
 
 @Composable
 fun FiltersScreenBehavior(
     sideEffects: Flow<FiltersViewModel.SideEffect>,
-    showColorFilter: () -> Unit,
+    showColorFilter: (FilterType) -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                FiltersViewModel.SideEffect.ShowColorFilter -> showColorFilter()
+                is FiltersViewModel.SideEffect.ShowColorFilter -> showColorFilter(effect.type)
                 FiltersViewModel.SideEffect.GoBack -> goBack()
             }
         }
@@ -211,11 +272,21 @@ fun FiltersScreenContentPreview() {
                     min = 200,
                     max = 4999
                 ),
+                categories = null,
+                price = null,
+                colors = null,
+                attributes = null,
+                materials = null,
+                sizes = null,
+                isShippingAvailable = null,
+                isPickupAvailable = null,
             ),
             isClearButtonVisible = true,
             onClearClick = {},
             onPriceChange = { _, _ -> },
-            onColorClick = {},
+            onIsShippingAvailableChange = {},
+            onIsPickupAvailableChange = {},
+            onFilterClick = {},
             onCloseClick = {},
             filterButtonMode = FiltersViewModel.FilterButtonMode.CLOSE,
             onFilterButtonClick = {},

@@ -31,8 +31,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -52,6 +50,7 @@ import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.form.Input
+import ru.zarina.zarina.ui.common.components.material.zarinaColors
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -169,14 +168,7 @@ fun SubscribeScreenContent(
                 Switch(
                     checked = isSwitchChecked,
                     onCheckedChange = onSwitchCheckedChange,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = UiKitTheme.colors.primaryContentColor,
-                        uncheckedThumbColor = UiKitTheme.colors.primaryContentColor
-                            .copy(0.08f)
-                            .compositeOver(Color.White),
-                        checkedTrackColor = UiKitTheme.colors.hint,
-                        uncheckedTrackColor = UiKitTheme.colors.hint,
-                    )
+                    colors = SwitchDefaults.zarinaColors()
                 )
             }
             Spacer(modifier = Modifier.weight(1f))

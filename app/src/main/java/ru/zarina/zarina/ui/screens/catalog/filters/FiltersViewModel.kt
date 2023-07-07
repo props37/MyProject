@@ -61,8 +61,18 @@ class FiltersViewModel(
             newFiltration.value?.copy(price = PriceRange(min, max))
     }
 
-    fun onColorClick() {
-        sideEffect(SideEffect.ShowColorFilter)
+    fun onIsShippingAvailableChange(isAvailable: Boolean) {
+        savedStateHandle[KEY_NEW_FILTRATION] =
+            newFiltration.value?.copy(isShippingAvailable = isAvailable)
+    }
+
+    fun onIsPickupAvailableChange(isAvailable: Boolean) {
+        savedStateHandle[KEY_NEW_FILTRATION] =
+            newFiltration.value?.copy(isPickupAvailable = isAvailable)
+    }
+
+    fun onFilterClick(type: FilterType) {
+        sideEffect(SideEffect.ShowColorFilter(type))
     }
 
     fun onFilterButtonClick() {
@@ -71,7 +81,7 @@ class FiltersViewModel(
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
-        object ShowColorFilter : SideEffect
+        class ShowColorFilter(val type: FilterType) : SideEffect
         object GoBack : SideEffect
     }
 

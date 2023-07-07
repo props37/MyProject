@@ -49,8 +49,12 @@ class ListFilterViewModel(
 
     val toolbarTitle = filterType.map {
         when (it) {
+            FilterType.CATEGORY -> Text.Resource(R.string.categories)
             FilterType.COLOR -> Text.Resource(R.string.color)
-            else -> Text.Empty
+            FilterType.ATTRIBUTES -> Text.Resource(R.string.attributes)
+            FilterType.MATERIALS -> Text.Resource(R.string.materials)
+            FilterType.SIZE -> Text.Resource(R.string.size)
+            null -> Text.Empty
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Text.Empty)
 
@@ -73,7 +77,17 @@ class ListFilterViewModel(
 
     fun onItemClick(item: ListFilter.Item) {
         filterData.update { filter ->
-            filter?.copy(items = filter.items.map { if (it == item) item.copy(isSelected = !item.isSelected) else it })
+            if (filter?.isSingleSelection == true) {
+                filter.copy(items = filter.items.map {
+                    when {
+                        it == item -> it.copy(isSelected = !it.isSelected)
+                        it != item && it.isSelected -> it.copy(isSelected = false)
+                        else -> it
+                    }
+                })
+            } else {
+                filter?.copy(items = filter.items.map { if (it == item) item.copy(isSelected = !item.isSelected) else it })
+            }
         }
     }
 
@@ -86,8 +100,12 @@ class ListFilterViewModel(
     fun onApplyClick() {
         parentSavedStateHandle[FiltersViewModel.KEY_NEW_FILTRATION] =
             when (filterType.value) {
+                FilterType.CATEGORY -> newFiltration.value?.copy(categories = filterData.value)
                 FilterType.COLOR -> newFiltration.value?.copy(colors = filterData.value)
-                else -> newFiltration.value
+                FilterType.ATTRIBUTES -> newFiltration.value?.copy(attributes = filterData.value)
+                FilterType.MATERIALS -> newFiltration.value?.copy(materials = filterData.value)
+                FilterType.SIZE -> newFiltration.value?.copy(sizes = filterData.value)
+                null -> newFiltration.value
             }
         sideEffect(SideEffect.GoBack)
     }
@@ -98,8 +116,12 @@ class ListFilterViewModel(
 
     private fun Filtration.getFilter(filterType: FilterType?): ListFilter? {
         return when (filterType) {
+            FilterType.CATEGORY -> categories
             FilterType.COLOR -> colors
-            else -> null
+            FilterType.ATTRIBUTES -> attributes
+            FilterType.MATERIALS -> materials
+            FilterType.SIZE -> sizes
+            null -> null
         }
     }
 

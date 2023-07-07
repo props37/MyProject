@@ -20,9 +20,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -71,7 +73,7 @@ fun ListFilterScreenContent(
     isApplyButtonVisible: Boolean,
     onApplyClick: () -> Unit,
 ) {
-    val scrollState = rememberScrollState()
+    val listState = rememberLazyListState()
     ZarinaScaffold(
         toolbar = {
             ScreenToolbar(
@@ -86,12 +88,12 @@ fun ListFilterScreenContent(
                         exit = fadeOut(),
                     ) {
                         TextButton(
-                            text = stringResource(id = R.string.clear),
+                            text = stringResource(id = R.string.reset),
                             onClick = onClearClick,
                         )
                     }
                 },
-                isElevated = scrollState.canScrollBackward,
+                isElevated = listState.canScrollBackward,
             )
         },
         modifier = Modifier.fillMaxSize()
@@ -99,15 +101,18 @@ fun ListFilterScreenContent(
         Column(
             modifier = Modifier.fillMaxSize(),
         ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(scrollState),
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.weight(1f),
             ) {
-                items.forEachIndexed { index, item ->
+                itemsIndexed(
+                    items = items,
+                    key = { _, item -> item.id },
+                ) { index, item ->
+                    val onClick = remember(item) { { onItemClick(item) } }
                     FilterListItem(
                         item = item,
-                        onClick = { onItemClick(item) },
+                        onClick = onClick,
                         modifier = Modifier.fillMaxWidth()
                     )
                     if (index != items.lastIndex)
@@ -119,7 +124,7 @@ fun ListFilterScreenContent(
                                 .padding(horizontal = 16.dp),
                         )
                 }
-                Spacer(modifier = Modifier.navigationBarsPadding())
+                item { Spacer(modifier = Modifier.navigationBarsPadding()) }
             }
             AnimatedContent(
                 targetState = isApplyButtonVisible,
@@ -132,6 +137,7 @@ fun ListFilterScreenContent(
                         onClick = onApplyClick,
                         modifier = Modifier
                             .padding(16.dp)
+                            .navigationBarsPadding()
                             .fillMaxWidth()
                     )
             }

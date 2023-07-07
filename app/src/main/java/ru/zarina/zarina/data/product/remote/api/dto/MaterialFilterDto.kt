@@ -7,9 +7,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MaterialFilterDto(
     @SerialName("id")
-    val id: String? = null,
+    override val id: String? = null,
     @SerialName("name")
-    val name: String? = null,
+    override val name: String? = null,
     @SerialName("is_applied")
-    val isApplied: Boolean? = null,
-)
+    override val isApplied: Boolean? = null,
+) : FilterItemDto
