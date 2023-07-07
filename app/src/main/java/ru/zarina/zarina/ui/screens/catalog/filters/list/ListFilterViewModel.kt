@@ -82,10 +82,11 @@ class ListFilterViewModel(
 
     fun onApplyClick() {
         parentSavedStateHandle[FiltersViewModel.KEY_NEW_FILTRATION] =
-            when (savedStateHandle.get<FilterType>(Catalog.Products.ARGUMENT_CATEGORY_ID)) {
+            when (filterType.value) {
                 FilterType.COLOR -> newFiltration.value?.copy(colors = filterData.value)
                 else -> newFiltration.value
             }
+        sideEffect(SideEffect.GoBack)
     }
 
     fun onBackClick() {
