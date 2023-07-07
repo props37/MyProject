@@ -8,6 +8,7 @@ import ru.zarina.zarina.data.product.IProductRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.FilteredProducts
+import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.ProductSort
 
@@ -17,13 +18,14 @@ class GetProductsPageUseCase(
     private val productRepository: IProductRepository,
 ) : UseCase<GetProductsPageUseCase.Params, Page<FilteredProducts>>(dispatcher) {
     override suspend fun execute(params: Params): Page<FilteredProducts> {
-        val (category, sort, pageIndex) = params
-        return productRepository.getProducts(category, sort, pageIndex)
+        val (category, sort, filtration, pageIndex) = params
+        return productRepository.getProducts(category, sort, filtration, pageIndex)
     }
 
     data class Params(
         val category: Category,
         val sort: ProductSort,
+        val filtration: Filtration?,
         val pageIndex: Int,
     )
 

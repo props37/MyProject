@@ -24,4 +24,8 @@ data class PriceFilterDto(
             null
     }
 
+    companion object {
+        fun from(priceRange: PriceRange) = PriceFilterDto(priceRange.min, priceRange.max)
+    }
+
 }

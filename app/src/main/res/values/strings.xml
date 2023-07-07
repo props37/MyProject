@@ -109,4 +109,8 @@
     <string name="filters">Фильтры</string>
     <string name="price">Цена</string>
     <string name="range">%1$s – %2$s</string>
+    <string name="apply">Применить</string>
+    <string name="close">Закрыть</string>
+    <string name="reset">Сбросить</string>
+    <string name="selected">Выбран</string>
 </resources>

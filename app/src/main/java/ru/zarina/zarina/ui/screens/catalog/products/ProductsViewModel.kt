@@ -10,6 +10,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
@@ -49,12 +50,40 @@ class ProductsViewModel(
 
     val sort = savedStateHandle.getStateFlow(KEY_SELECTED_SORT, ProductSort.DEFAULT)
 
-    val filtration = savedStateHandle.getStateFlow<Filtration?>(KEY_FILTRATION, null)
+    /**
+     * Default filtration used when no filtration was sent.
+     */
+    private val baseFiltration =
+        savedStateHandle.getStateFlow<Filtration?>(KEY_BASE_FILTRATION, null)
 
-    private val pagingSource = combine(category, sort) { category, sort ->
-        category?.let { CategoryProductPagingSource(it, sort, interactor.getProductsPageUseCase) }
-    }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    /**
+     * Filtration that was applied to the products currently displayed.
+     */
+    private val appliedFiltration =
+        savedStateHandle.getStateFlow<Filtration?>(KEY_APPLIED_FILTRATION, null)
+
+    /**
+     * The latest filtration that was requested by the user.
+     */
+    private val requestedFiltration =
+        savedStateHandle.getStateFlow<Filtration?>(KEY_REQUESTED_FILTRATION, null)
+
+    val isFilterButtonEnabled = requestedFiltration
+        .map { it != null }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
+    private val pagingSource =
+        combine(category, sort, requestedFiltration) { category, sort, filtration ->
+            category?.let {
+                CategoryProductPagingSource(
+                    category = it,
+                    sort = sort,
+                    filtration = filtration,
+                    getProductsPageUseCase = interactor.getProductsPageUseCase
+                )
+            }
+        }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private val productsPluralManager = PluralManager(
         PluralResources(
@@ -99,8 +128,15 @@ class ProductsViewModel(
 
     init {
         pagingSource
-            .flatMapLatest { it?.filtration ?: emptyFlow() }
-            .onEach { savedStateHandle[KEY_FILTRATION] = it }
+            .flatMapLatest { it?.appliedFiltration ?: emptyFlow() }
+            .filterNotNull()
+            .onEach {
+                savedStateHandle[KEY_APPLIED_FILTRATION] = it
+                if (baseFiltration.value == null)
+                    savedStateHandle[KEY_BASE_FILTRATION] = it
+                if (requestedFiltration.value == null)
+                    savedStateHandle[KEY_REQUESTED_FILTRATION] = it
+            }
             .launchIn(viewModelScope)
     }
 
@@ -131,7 +167,9 @@ class ProductsViewModel(
         private const val PAGE_SIZE = 12
 
         const val KEY_SELECTED_SORT = "selected_sort"
-        const val KEY_FILTRATION = "filtration"
+        const val KEY_BASE_FILTRATION = "base_filtration"
+        const val KEY_APPLIED_FILTRATION = "applied_filtration"
+        const val KEY_REQUESTED_FILTRATION = "requested_filtration"
     }
 
 }

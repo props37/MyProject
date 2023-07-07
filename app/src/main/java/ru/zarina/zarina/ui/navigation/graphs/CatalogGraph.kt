@@ -9,7 +9,9 @@ import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.screens.catalog.categories.CategoriesScreen
+import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 import ru.zarina.zarina.ui.screens.catalog.filters.FiltersScreen
+import ru.zarina.zarina.ui.screens.catalog.filters.list.ListFilterScreen
 import ru.zarina.zarina.ui.screens.catalog.products.ProductsScreen
 import ru.zarina.zarina.ui.screens.catalog.selectsort.SelectSortScreen
 
@@ -65,9 +67,24 @@ fun NavGraphBuilder.catalogGraph(
             val productSavedStateHandle =
                 remember(it) { navController.getBackStackEntry(Catalog.Products.routeSchema).savedStateHandle }
             FiltersScreen(
+                savedStateHandle = remember(it) { it.savedStateHandle },
                 productsSavedStateHandle = productSavedStateHandle,
+                showColorFilter = {
+                    val arguments = Catalog.ListFilter.Arguments(filterType = FilterType.COLOR)
+                    navController.navigate(Catalog.ListFilter.createRoute(arguments))
+                },
                 goBack = {
                     navController.popBackStack(Catalog.Filters.routeSchema, true)
+                }
+            )
+        }
+        composableDestination(Catalog.ListFilter) {
+            val filtersSavedStateHandle =
+                remember(it) { navController.getBackStackEntry(Catalog.Filters.routeSchema).savedStateHandle }
+            ListFilterScreen(
+                filtersSavedStateHandle = filtersSavedStateHandle,
+                goBack = {
+                    navController.popBackStack(Catalog.ListFilter.routeSchema, true)
                 }
             )
         }
