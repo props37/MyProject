@@ -61,8 +61,8 @@ class FiltersViewModel(
             newFiltration.value?.copy(price = PriceRange(min, max))
     }
 
-    fun onColorClick() {
-        sideEffect(SideEffect.ShowColorFilter)
+    fun onFilterClick(type: FilterType) {
+        sideEffect(SideEffect.ShowColorFilter(type))
     }
 
     fun onFilterButtonClick() {
@@ -71,7 +71,7 @@ class FiltersViewModel(
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
-        object ShowColorFilter : SideEffect
+        class ShowColorFilter(val type: FilterType) : SideEffect
         object GoBack : SideEffect
     }
 

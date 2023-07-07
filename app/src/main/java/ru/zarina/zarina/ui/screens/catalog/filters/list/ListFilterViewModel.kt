@@ -50,7 +50,8 @@ class ListFilterViewModel(
     val toolbarTitle = filterType.map {
         when (it) {
             FilterType.COLOR -> Text.Resource(R.string.color)
-            else -> Text.Empty
+            FilterType.ATTRIBUTES -> Text.Resource(R.string.attributes)
+            null -> Text.Empty
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Text.Empty)
 
@@ -87,7 +88,8 @@ class ListFilterViewModel(
         parentSavedStateHandle[FiltersViewModel.KEY_NEW_FILTRATION] =
             when (filterType.value) {
                 FilterType.COLOR -> newFiltration.value?.copy(colors = filterData.value)
-                else -> newFiltration.value
+                FilterType.ATTRIBUTES -> newFiltration.value?.copy(attributes = filterData.value)
+                null -> newFiltration.value
             }
         sideEffect(SideEffect.GoBack)
     }
@@ -99,6 +101,7 @@ class ListFilterViewModel(
     private fun Filtration.getFilter(filterType: FilterType?): ListFilter? {
         return when (filterType) {
             FilterType.COLOR -> colors
+            FilterType.ATTRIBUTES -> attributes
             else -> null
         }
     }
