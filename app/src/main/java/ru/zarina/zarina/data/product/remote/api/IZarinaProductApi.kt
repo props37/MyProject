@@ -4,7 +4,7 @@ import ru.zarina.zarina.data.common.remote.zarina.dto.ProductBatchDto
 import ru.zarina.zarina.data.common.remote.zarina.dto.ProductDto
 import ru.zarina.zarina.data.common.remote.zarina.dto.SizeDto
 import ru.zarina.zarina.data.product.remote.api.dto.DeliveryInfoDto
-import ru.zarina.zarina.data.product.remote.api.dto.FiltersDto
+import ru.zarina.zarina.data.product.remote.api.dto.FiltersRequestDto
 import ru.zarina.zarina.data.product.remote.api.dto.ProductPageResponseDto
 import ru.zarina.zarina.data.product.remote.api.dto.ProductSortDto
 
@@ -13,7 +13,7 @@ interface IZarinaProductApi {
     suspend fun getProductPage(
         categoryId: Int,
         sort: ProductSortDto,
-        filters: FiltersDto?,
+        filters: FiltersRequestDto?,
         pageIndex: Int,
     ): ProductPageResponseDto
 

@@ -2,7 +2,7 @@ package ru.zarina.zarina.data.product.remote
 
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.product.remote.api.IZarinaProductApi
-import ru.zarina.zarina.data.product.remote.api.dto.FiltersDto
+import ru.zarina.zarina.data.product.remote.api.dto.FiltersRequestDto
 import ru.zarina.zarina.data.product.remote.api.dto.ProductSortDto
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.City
@@ -30,7 +30,7 @@ class ZarinaProductRemoteSource(
             api.getProductPage(
                 categoryId = category.id.value,
                 sort = ProductSortDto.from(sort),
-                filters = filtration?.let { FiltersDto.from(it) },
+                filters = filtration?.let { FiltersRequestDto.from(it) },
                 // adjust page index, because it starts from 1 on the backend
                 pageIndex = pageIndex + 1
             )
