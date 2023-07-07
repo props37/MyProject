@@ -96,6 +96,14 @@ fun FiltersScreenContent(
                     )
                     FiltersDivider()
                 }
+                if (filtration?.categories != null) {
+                    ListItem(
+                        filterName = stringResource(id = R.string.categories),
+                        items = filtration.categories.items.toPersistentList(),
+                        onClick = { onFilterClick(FilterType.CATEGORY) },
+                    )
+                    FiltersDivider()
+                }
                 if (filtration?.attributes != null) {
                     ListItem(
                         filterName = stringResource(id = R.string.attributes),
@@ -264,6 +272,7 @@ fun FiltersScreenContentPreview() {
                     min = 200,
                     max = 4999
                 ),
+                categories = null,
                 price = null,
                 colors = null,
                 attributes = null,

@@ -49,6 +49,7 @@ class ListFilterViewModel(
 
     val toolbarTitle = filterType.map {
         when (it) {
+            FilterType.CATEGORY -> Text.Resource(R.string.categories)
             FilterType.COLOR -> Text.Resource(R.string.color)
             FilterType.ATTRIBUTES -> Text.Resource(R.string.attributes)
             FilterType.MATERIALS -> Text.Resource(R.string.materials)
@@ -76,7 +77,17 @@ class ListFilterViewModel(
 
     fun onItemClick(item: ListFilter.Item) {
         filterData.update { filter ->
-            filter?.copy(items = filter.items.map { if (it == item) item.copy(isSelected = !item.isSelected) else it })
+            if (filter?.isSingleSelection == true) {
+                filter.copy(items = filter.items.map {
+                    when {
+                        it == item -> it.copy(isSelected = !it.isSelected)
+                        it != item && it.isSelected -> it.copy(isSelected = false)
+                        else -> it
+                    }
+                })
+            } else {
+                filter?.copy(items = filter.items.map { if (it == item) item.copy(isSelected = !item.isSelected) else it })
+            }
         }
     }
 
@@ -89,6 +100,7 @@ class ListFilterViewModel(
     fun onApplyClick() {
         parentSavedStateHandle[FiltersViewModel.KEY_NEW_FILTRATION] =
             when (filterType.value) {
+                FilterType.CATEGORY -> newFiltration.value?.copy(categories = filterData.value)
                 FilterType.COLOR -> newFiltration.value?.copy(colors = filterData.value)
                 FilterType.ATTRIBUTES -> newFiltration.value?.copy(attributes = filterData.value)
                 FilterType.MATERIALS -> newFiltration.value?.copy(materials = filterData.value)
@@ -104,6 +116,7 @@ class ListFilterViewModel(
 
     private fun Filtration.getFilter(filterType: FilterType?): ListFilter? {
         return when (filterType) {
+            FilterType.CATEGORY -> categories
             FilterType.COLOR -> colors
             FilterType.ATTRIBUTES -> attributes
             FilterType.MATERIALS -> materials

@@ -23,9 +23,10 @@ data class FiltersDto(
     @SerialName("price")
     val price: PriceFilterDto? = null,
 ) {
-    fun toDomain(): Filtration {
+    fun toDomain(categoryFilter: ListFilter): Filtration {
         return Filtration(
             priceLimits = price?.toDomain(),
+            categories = categoryFilter,
             colors = colors?.colorsToDomain(),
             attributes = attributes?.toDomain(),
             sizes = sizes?.toDomain(),

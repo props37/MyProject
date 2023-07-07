@@ -8,6 +8,7 @@ import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.FilteredProducts
 import ru.zarina.zarina.domain.Filtration
+import ru.zarina.zarina.domain.ListFilter
 import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
@@ -26,9 +27,12 @@ class ZarinaProductRemoteSource(
         filtration: Filtration?,
         pageIndex: Int,
     ): Page<FilteredProducts> {
+        val categoryId =
+            filtration?.categories?.items?.firstOrNull { it.isSelected }?.id?.toInt()
+                ?: category.id.value
         val response =
             api.getProductPage(
-                categoryId = category.id.value,
+                categoryId = categoryId,
                 sort = ProductSortDto.from(sort),
                 filters = filtration?.let { FiltersRequestDto.from(it) },
                 // adjust page index, because it starts from 1 on the backend
@@ -36,7 +40,8 @@ class ZarinaProductRemoteSource(
             )
         val pagination = response.toPagination()
         val products = response.items?.mapNotNull { it.toDomain() }.orEmpty()
-        val appliedFiltration = response.filters.toDomain()
+        val categoryFilter = category.subcategories.toFilter(categoryId)
+        val appliedFiltration = response.filters.toDomain(categoryFilter)
         return Page(pagination, FilteredProducts(products, appliedFiltration))
     }
 
@@ -49,4 +54,17 @@ class ZarinaProductRemoteSource(
     override suspend fun getOffers(product: Product, city: City) =
         api.getSizes(product.id.value, city.id.id).mapNotNull { it.toDomain() }
 
+}
+
+private fun List<Category>.toFilter(loadedCategoryId: Int): ListFilter {
+    return ListFilter(
+        items = this.map {
+            ListFilter.Item(
+                id = it.id.value.toString(),
+                name = it.name,
+                isSelected = loadedCategoryId == it.id.value
+            )
+        },
+        isSingleSelection = true
+    )
 }
