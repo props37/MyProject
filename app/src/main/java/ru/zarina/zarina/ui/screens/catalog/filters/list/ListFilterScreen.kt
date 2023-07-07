@@ -132,6 +132,7 @@ fun ListFilterScreenContent(
                         onClick = onApplyClick,
                         modifier = Modifier
                             .padding(16.dp)
+                            .navigationBarsPadding()
                             .fillMaxWidth()
                     )
             }
