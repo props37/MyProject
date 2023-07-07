@@ -46,6 +46,7 @@ import ru.zarina.zarina.domain.ListFilter
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
+import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -54,13 +55,15 @@ import ru.zarina.zarina.ui.common.utils.domain.toColorOr
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun ListFilterScreenContent(
     toolbarTitle: Text,
     items: PersistentList<ListFilter.Item>,
     onItemClick: (ListFilter.Item) -> Unit,
     onBackClick: () -> Unit,
+    isApplyButtonVisible: Boolean,
+    onApplyClick: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
     ZarinaScaffold(
@@ -76,26 +79,44 @@ fun ListFilterScreenContent(
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState),
+            modifier = Modifier.fillMaxSize(),
         ) {
-            items.forEachIndexed { index, item ->
-                FilterListItem(
-                    item = item,
-                    onClick = { onItemClick(item) },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                if (index != items.lastIndex)
-                    Divider(
-                        thickness = 1.dp,
-                        color = UiKitTheme.colors.listDivider,
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(scrollState),
+            ) {
+                items.forEachIndexed { index, item ->
+                    FilterListItem(
+                        item = item,
+                        onClick = { onItemClick(item) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    if (index != items.lastIndex)
+                        Divider(
+                            thickness = 1.dp,
+                            color = UiKitTheme.colors.listDivider,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                }
+                Spacer(modifier = Modifier.navigationBarsPadding())
+            }
+            AnimatedContent(
+                targetState = isApplyButtonVisible,
+                label = "apply button visibility",
+                modifier = Modifier.fillMaxWidth(),
+            ) { isVisible ->
+                if (isVisible)
+                    ZarinaTextButton(
+                        text = stringResource(id = R.string.apply),
+                        onClick = onApplyClick,
                         modifier = Modifier
+                            .padding(16.dp)
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
                     )
             }
-            Spacer(modifier = Modifier.navigationBarsPadding())
         }
     }
 }
@@ -154,6 +175,7 @@ fun ListFilterScreen(
 
     val toolbarTitle by viewModel.toolbarTitle.collectAsState()
     val items by viewModel.items.collectAsState()
+    val filterButtonMode by viewModel.isApplyButtonVisible.collectAsState()
 
     ListFilterScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -165,6 +187,8 @@ fun ListFilterScreen(
         items = items,
         onItemClick = viewModel::onItemClick,
         onBackClick = viewModel::onBackClick,
+        isApplyButtonVisible = filterButtonMode,
+        onApplyClick = viewModel::onApplyClick,
     )
 }
 
@@ -193,6 +217,8 @@ fun ListFilterScreenContentPreview() {
             items = persistentListOf(),
             onItemClick = {},
             onBackClick = {},
+            isApplyButtonVisible = true,
+            onApplyClick = {},
         )
     }
 }

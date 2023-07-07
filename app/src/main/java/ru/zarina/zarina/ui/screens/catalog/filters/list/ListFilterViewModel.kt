@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -53,13 +54,16 @@ class ListFilterViewModel(
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Text.Empty)
 
+    val isApplyButtonVisible = combine(newFiltration, filterData) { filtration, filterData ->
+        val filtrationData = filtration?.getFilter(filterType.value)
+        filtrationData != filterData
+    }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
     init {
         newFiltration
             .onEach { filtration ->
-                when (filterType.value) {
-                    FilterType.COLOR -> filterData.value = filtration?.colors
-                    else -> Unit
-                }
+                filterData.value = filtration?.getFilter(filterType.value)
             }
             .launchIn(viewModelScope)
     }
@@ -86,6 +90,13 @@ class ListFilterViewModel(
 
     fun onBackClick() {
         sideEffect(SideEffect.GoBack)
+    }
+
+    private fun Filtration.getFilter(filterType: FilterType?): ListFilter? {
+        return when (filterType) {
+            FilterType.COLOR -> colors
+            else -> null
+        }
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
