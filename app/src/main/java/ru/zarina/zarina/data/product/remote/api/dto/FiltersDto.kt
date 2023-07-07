@@ -27,7 +27,9 @@ data class FiltersDto(
         return Filtration(
             priceLimits = price?.toDomain(),
             colors = colors?.colorsToDomain(),
-            attributes = attributes?.attributesToDomain(),
+            attributes = attributes?.toDomain(),
+            sizes = sizes?.toDomain(),
+            materials = materials?.toDomain(),
         )
     }
 }
@@ -35,11 +37,11 @@ data class FiltersDto(
 private fun List<ColorFilterDto?>.colorsToDomain(): ListFilter {
     return ListFilter(
         items = this.mapNotNull { it?.toDomain() },
-        isSingleSelection = true,
+        isSingleSelection = false,
     )
 }
 
-private fun List<AttributeFilterDto?>.attributesToDomain(): ListFilter {
+private fun List<FilterItemDto?>.toDomain(): ListFilter {
     return ListFilter(
         items = this.mapNotNull { it?.toDomain() },
         isSingleSelection = true,

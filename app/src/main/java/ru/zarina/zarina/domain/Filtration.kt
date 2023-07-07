@@ -10,11 +10,15 @@ data class Filtration(
     val price: PriceRange? = priceLimits,
     val colors: ListFilter? = null,
     val attributes: ListFilter? = null,
+    val materials: ListFilter? = null,
+    val sizes: ListFilter? = null,
 ) : Parcelable {
 
     fun isEmpty() = price == priceLimits
             && colors?.isEmpty != true
             && attributes?.isEmpty != true
+            && materials?.isEmpty != true
+            && sizes?.isEmpty != true
 
 }
 

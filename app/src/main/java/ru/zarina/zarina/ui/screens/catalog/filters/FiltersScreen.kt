@@ -93,19 +93,35 @@ fun FiltersScreenContent(
                     )
                     FiltersDivider()
                 }
-                if (filtration?.colors != null) {
-                    ListItem(
-                        filterName = stringResource(id = R.string.color),
-                        items = filtration.colors.items.toPersistentList(),
-                        onClick = { onFilterClick(FilterType.COLOR) },
-                    )
-                    FiltersDivider()
-                }
                 if (filtration?.attributes != null) {
                     ListItem(
                         filterName = stringResource(id = R.string.attributes),
                         items = filtration.attributes.items.toPersistentList(),
                         onClick = { onFilterClick(FilterType.ATTRIBUTES) },
+                    )
+                    FiltersDivider()
+                }
+                if (filtration?.materials != null) {
+                    ListItem(
+                        filterName = stringResource(id = R.string.materials),
+                        items = filtration.materials.items.toPersistentList(),
+                        onClick = { onFilterClick(FilterType.MATERIALS) },
+                    )
+                    FiltersDivider()
+                }
+                if (filtration?.sizes != null) {
+                    ListItem(
+                        filterName = stringResource(id = R.string.size),
+                        items = filtration.sizes.items.toPersistentList(),
+                        onClick = { onFilterClick(FilterType.SIZE) },
+                    )
+                    FiltersDivider()
+                }
+                if (filtration?.colors != null) {
+                    ListItem(
+                        filterName = stringResource(id = R.string.color),
+                        items = filtration.colors.items.toPersistentList(),
+                        onClick = { onFilterClick(FilterType.COLOR) },
                     )
                     FiltersDivider()
                 }

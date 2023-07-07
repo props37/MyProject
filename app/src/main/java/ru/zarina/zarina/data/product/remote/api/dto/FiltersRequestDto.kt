@@ -13,6 +13,10 @@ data class FiltersRequestDto(
     val color: List<String>?,
     @SerialName("attributes")
     val attributes: List<String>?,
+    @SerialName("sizes")
+    val sizes: List<String>?,
+    @SerialName("materials")
+    val materials: List<String>?,
 ) {
     companion object {
         fun from(filtration: Filtration): FiltersRequestDto {
@@ -20,6 +24,8 @@ data class FiltersRequestDto(
                 price = filtration.price?.let { PriceFilterDto.from(it) },
                 color = filtration.colors?.toDto(),
                 attributes = filtration.attributes?.toDto(),
+                materials = filtration.materials?.toDto(),
+                sizes = filtration.sizes?.toDto(),
             )
         }
 

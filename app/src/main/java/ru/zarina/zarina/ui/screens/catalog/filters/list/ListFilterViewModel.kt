@@ -51,6 +51,8 @@ class ListFilterViewModel(
         when (it) {
             FilterType.COLOR -> Text.Resource(R.string.color)
             FilterType.ATTRIBUTES -> Text.Resource(R.string.attributes)
+            FilterType.MATERIALS -> Text.Resource(R.string.materials)
+            FilterType.SIZE -> Text.Resource(R.string.size)
             null -> Text.Empty
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Text.Empty)
@@ -89,6 +91,8 @@ class ListFilterViewModel(
             when (filterType.value) {
                 FilterType.COLOR -> newFiltration.value?.copy(colors = filterData.value)
                 FilterType.ATTRIBUTES -> newFiltration.value?.copy(attributes = filterData.value)
+                FilterType.MATERIALS -> newFiltration.value?.copy(materials = filterData.value)
+                FilterType.SIZE -> newFiltration.value?.copy(sizes = filterData.value)
                 null -> newFiltration.value
             }
         sideEffect(SideEffect.GoBack)
@@ -102,7 +106,9 @@ class ListFilterViewModel(
         return when (filterType) {
             FilterType.COLOR -> colors
             FilterType.ATTRIBUTES -> attributes
-            else -> null
+            FilterType.MATERIALS -> materials
+            FilterType.SIZE -> sizes
+            null -> null
         }
     }
 
