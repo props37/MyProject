@@ -21,7 +21,9 @@ class ZarinaShopRemoteSource(
     }
 
     override suspend fun getShops(city: City): List<Shop> {
-        return api.getShops().toShops()[city].orEmpty()
+        val shopsByCity = api.getShops().toShops()
+        val key = shopsByCity.keys.firstOrNull { it.id == city.id }
+        return shopsByCity[key].orEmpty()
     }
 
     override suspend fun getStocks(offer: Offer, city: City): List<Stock> {

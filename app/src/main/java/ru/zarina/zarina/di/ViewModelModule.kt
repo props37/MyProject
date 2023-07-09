@@ -22,6 +22,6 @@ val viewModelModule = module {
         ListFilterViewModel(get(), parameters[0])
     }
     viewModel { parameters ->
-        SelectShopViewModel(parameters[0])
+        SelectShopViewModel(parameters[0], get())
     }
 }
