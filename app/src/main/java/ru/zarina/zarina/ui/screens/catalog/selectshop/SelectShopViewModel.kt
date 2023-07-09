@@ -12,6 +12,12 @@ class SelectShopViewModel(
 ) : ViewModel(),
     ISideEffectSource<SelectShopViewModel.SideEffect> by SideEffectQueue() {
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
+    fun onBackClick() {
+        sideEffect(SideEffect.GoBack)
+    }
+
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        object GoBack : SideEffect
+    }
 
 }
