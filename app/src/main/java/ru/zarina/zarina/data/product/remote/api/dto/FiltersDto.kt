@@ -33,6 +33,7 @@ data class FiltersDto(
             materials = materials?.toDomain(),
             isShippingAvailable = availableForShipping,
             isPickupAvailable = availableForStorePickup?.isApplied,
+            pickupShop = availableForStorePickup?.stores?.firstOrNull()?.toDomain(),
         )
     }
 }

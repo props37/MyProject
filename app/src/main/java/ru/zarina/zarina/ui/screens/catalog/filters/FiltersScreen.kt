@@ -279,6 +279,7 @@ fun FiltersScreenContentPreview() {
                 materials = null,
                 sizes = null,
                 isShippingAvailable = null,
+                pickupShop = null,
                 isPickupAvailable = null,
             ),
             isClearButtonVisible = true,
