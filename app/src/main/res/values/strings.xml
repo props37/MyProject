@@ -118,4 +118,6 @@
     <string name="available_for_delivery">Доступные для доставки</string>
     <string name="available_for_pickup_at_store">Доступные для самовывоза из магазина</string>
     <string name="categories">Категории</string>
+    <string name="select_store">Выбрать магазин</string>
+    <string name="selection_of_store">Выбор магазина</string>
 </resources>

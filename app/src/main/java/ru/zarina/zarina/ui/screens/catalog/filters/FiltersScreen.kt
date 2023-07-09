@@ -38,6 +38,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.ListItem
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.PriceItem
+import ru.zarina.zarina.ui.screens.catalog.filters.components.items.ShopItem
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.SwitchItem
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
@@ -152,6 +153,10 @@ fun FiltersScreenContent(
                     )
                     FiltersDivider()
                 }
+                ShopItem(
+                    shop = filtration?.pickupShop,
+                    onClick = { /* TODO */ }
+                )
             }
             Spacer(modifier = Modifier.weight(1f))
             FilterButton(
