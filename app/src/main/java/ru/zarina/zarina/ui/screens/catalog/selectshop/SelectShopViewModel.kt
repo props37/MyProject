@@ -17,6 +17,8 @@ import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Shop
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.base.operation.OperationKey
+import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 
 @KoinViewModel
 class SelectShopViewModel(
@@ -25,17 +27,23 @@ class SelectShopViewModel(
 ) : ViewModel(),
     ISideEffectSource<SelectShopViewModel.SideEffect> by SideEffectQueue() {
 
+    private val operationTracker = OperationTracker()
+
     // TODO load user current city
     val city = MutableStateFlow(City.DEFAULT)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val shops = city.mapLatest { city ->
-        // TODO loader
-        interactor.getShops(city)
-            .getOrDefault(emptyList())
-            .toPersistentList()
+        operationTracker.track(Operation.LOADING_SHOPS) {
+            interactor.getShops(city)
+                .getOrDefault(emptyList())
+                .toPersistentList()
+        }
     }
         .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
+
+    val isLoaderVisible = operationTracker.isOperationOngoing(Operation.LOADING_SHOPS)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     private val _selectedShop = MutableStateFlow<Shop?>(null)
     val selectedShop = _selectedShop.asStateFlow()
@@ -51,5 +59,7 @@ class SelectShopViewModel(
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         object GoBack : SideEffect
     }
+
+    enum class Operation : OperationKey { LOADING_SHOPS }
 
 }

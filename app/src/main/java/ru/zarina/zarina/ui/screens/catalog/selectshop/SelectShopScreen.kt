@@ -3,21 +3,26 @@ package ru.zarina.zarina.ui.screens.catalog.selectshop
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,12 +40,13 @@ import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun SelectShopScreenContent(
     shops: ImmutableList<Shop>,
     selectedShop: Shop?,
     onShopClick: (Shop) -> Unit,
+    isLoaderVisible: Boolean,
     onBackClick: () -> Unit,
 ) {
     val listState = rememberLazyListState()
@@ -53,28 +59,54 @@ fun SelectShopScreenContent(
                 },
                 isElevated = listState.canScrollBackward
             )
-        }
+        },
     ) {
-        LazyColumn(
-            state = listState,
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            items(
-                items = shops,
-                key = { shop -> shop.id },
-            ) { shop ->
-                ShopItem(
-                    shop = shop,
-                    isSelected = shop == selectedShop,
-                    onClick = { onShopClick(shop) },
-                )
+            Box(
+                modifier = Modifier.weight(1f)
+            ) {
+                AnimatedContent(
+                    targetState = isLoaderVisible,
+                    label = "is loader visible",
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    if (it) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            CircularProgressIndicator(
+                                color = UiKitTheme.colors.primaryContentColor,
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    } else {
+                        LazyColumn(
+                            state = listState,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            items(
+                                items = shops,
+                                key = { shop -> shop.id },
+                            ) { shop ->
+                                ShopItem(
+                                    shop = shop,
+                                    isSelected = shop == selectedShop,
+                                    onClick = { onShopClick(shop) },
+                                )
+                            }
+                            item {
+                                Spacer(
+                                    modifier = Modifier.navigationBarsPadding()
+                                )
+                            }
+                        }
+                    }
+                }
             }
-            item {
-                Spacer(
-                    modifier = Modifier.navigationBarsPadding()
-                )
-            }
+            // TODO add apply button
         }
-        // TODO add apply button
     }
 }
 
@@ -122,6 +154,7 @@ fun SelectShopScreen(
 
     val shops by viewModel.shops.collectAsStateWithLifecycle()
     val selectedShop by viewModel.selectedShop.collectAsStateWithLifecycle()
+    val isLoaderVisible by viewModel.isLoaderVisible.collectAsStateWithLifecycle()
 
     SelectShopScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -132,6 +165,7 @@ fun SelectShopScreen(
         shops = shops,
         selectedShop = selectedShop,
         onShopClick = viewModel::onShopClick,
+        isLoaderVisible = isLoaderVisible,
         onBackClick = viewModel::onBackClick
     )
 }
