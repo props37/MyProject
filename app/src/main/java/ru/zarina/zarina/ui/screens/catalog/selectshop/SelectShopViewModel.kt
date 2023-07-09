@@ -9,16 +9,19 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Shop
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
+import ru.zarina.zarina.ui.screens.catalog.filters.FiltersViewModel
 
 @KoinViewModel
 class SelectShopViewModel(
@@ -28,6 +31,9 @@ class SelectShopViewModel(
     ISideEffectSource<SelectShopViewModel.SideEffect> by SideEffectQueue() {
 
     private val operationTracker = OperationTracker()
+
+    private val newFiltration =
+        filtersSavedStateHandle.getStateFlow<Filtration?>(FiltersViewModel.KEY_NEW_FILTRATION, null)
 
     // TODO load user current city
     val city = MutableStateFlow(City.DEFAULT)
@@ -45,11 +51,25 @@ class SelectShopViewModel(
     val isLoaderVisible = operationTracker.isOperationOngoing(Operation.LOADING_SHOPS)
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
-    private val _selectedShop = MutableStateFlow<Shop?>(null)
+    private val _selectedShop = MutableStateFlow(newFiltration.value?.pickupShop)
     val selectedShop = _selectedShop.asStateFlow()
+
+    val isApplyButtonVisible = combine(newFiltration, _selectedShop) { filtration, shop ->
+        filtration?.pickupShop != shop
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
     fun onShopClick(shop: Shop) {
         _selectedShop.update { if (it == shop) null else shop }
+    }
+
+    fun onApplyClick() {
+        val selectedShop = _selectedShop.value
+        filtersSavedStateHandle[FiltersViewModel.KEY_NEW_FILTRATION] =
+            newFiltration.value?.copy(
+                isPickupAvailable = selectedShop != null,
+                pickupShop = selectedShop
+            )
+        sideEffect(SideEffect.GoBack)
     }
 
     fun onBackClick() {

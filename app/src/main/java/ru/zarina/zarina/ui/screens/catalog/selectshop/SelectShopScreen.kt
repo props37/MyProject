@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -36,6 +37,7 @@ import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Shop
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
+import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -47,6 +49,8 @@ fun SelectShopScreenContent(
     selectedShop: Shop?,
     onShopClick: (Shop) -> Unit,
     isLoaderVisible: Boolean,
+    isApplyButtonVisible: Boolean,
+    onApplyClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
     val listState = rememberLazyListState()
@@ -62,7 +66,9 @@ fun SelectShopScreenContent(
         },
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .navigationBarsPadding(),
         ) {
             Box(
                 modifier = Modifier.weight(1f)
@@ -96,16 +102,24 @@ fun SelectShopScreenContent(
                                     onClick = { onShopClick(shop) },
                                 )
                             }
-                            item {
-                                Spacer(
-                                    modifier = Modifier.navigationBarsPadding()
-                                )
-                            }
                         }
                     }
                 }
             }
-            // TODO add apply button
+            AnimatedContent(
+                targetState = isApplyButtonVisible,
+                label = "is apply button visible",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                if (it)
+                    ZarinaTextButton(
+                        text = stringResource(id = R.string.apply),
+                        onClick = onApplyClick,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+            }
         }
     }
 }
@@ -155,6 +169,7 @@ fun SelectShopScreen(
     val shops by viewModel.shops.collectAsStateWithLifecycle()
     val selectedShop by viewModel.selectedShop.collectAsStateWithLifecycle()
     val isLoaderVisible by viewModel.isLoaderVisible.collectAsStateWithLifecycle()
+    val isApplyButtonVisible by viewModel.isApplyButtonVisible.collectAsStateWithLifecycle()
 
     SelectShopScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -166,7 +181,9 @@ fun SelectShopScreen(
         selectedShop = selectedShop,
         onShopClick = viewModel::onShopClick,
         isLoaderVisible = isLoaderVisible,
-        onBackClick = viewModel::onBackClick
+        onBackClick = viewModel::onBackClick,
+        isApplyButtonVisible = isApplyButtonVisible,
+        onApplyClick = viewModel::onApplyClick,
     )
 }
 
