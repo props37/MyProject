@@ -155,7 +155,7 @@ fun FiltersScreenContent(
                 }
                 ShopItem(
                     shop = filtration?.pickupShop,
-                    onClick = { /* TODO */ }
+                    onClick = { onFilterClick(FilterType.PICKUP_SHOP) },
                 )
             }
             Spacer(modifier = Modifier.weight(1f))

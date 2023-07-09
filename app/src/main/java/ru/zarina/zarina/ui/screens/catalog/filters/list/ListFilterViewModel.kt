@@ -54,6 +54,7 @@ class ListFilterViewModel(
             FilterType.ATTRIBUTES -> Text.Resource(R.string.attributes)
             FilterType.MATERIALS -> Text.Resource(R.string.materials)
             FilterType.SIZE -> Text.Resource(R.string.size)
+            FilterType.PICKUP_SHOP -> Text.Resource(R.string.selection_of_store)
             null -> Text.Empty
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Text.Empty)
@@ -105,6 +106,7 @@ class ListFilterViewModel(
                 FilterType.ATTRIBUTES -> newFiltration.value?.copy(attributes = filterData.value)
                 FilterType.MATERIALS -> newFiltration.value?.copy(materials = filterData.value)
                 FilterType.SIZE -> newFiltration.value?.copy(sizes = filterData.value)
+                FilterType.PICKUP_SHOP -> newFiltration.value
                 null -> newFiltration.value
             }
         sideEffect(SideEffect.GoBack)
@@ -121,6 +123,7 @@ class ListFilterViewModel(
             FilterType.ATTRIBUTES -> attributes
             FilterType.MATERIALS -> materials
             FilterType.SIZE -> sizes
+            FilterType.PICKUP_SHOP -> null
             null -> null
         }
     }

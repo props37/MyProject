@@ -1,8 +1,9 @@
-package ru.zarina.zarina.ui.screens.catalog.selectstore
+package ru.zarina.zarina.ui.screens.catalog.selectshop
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -10,24 +11,27 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @Composable
-fun SelectStoreScreenContent() {
+fun SelectShopScreenContent() {
 
 }
 
 @Composable
-fun SelectStoreScreen() {
-    val viewModel = koinViewModel<SelectStoreViewModel>()
+fun SelectShopScreen(
+    filtersSavedStateHandle: SavedStateHandle,
+    goBack: () -> Boolean
+) {
+    val viewModel = koinViewModel<SelectShopViewModel>()
 
-    SelectStoreScreenBehavior(
+    SelectShopScreenBehavior(
         sideEffects = viewModel.sideEffects
     )
 
-    SelectStoreScreenContent()
+    SelectShopScreenContent()
 }
 
 @Composable
-fun SelectStoreScreenBehavior(
-    sideEffects: Flow<SelectStoreViewModel.SideEffect>,
+fun SelectShopScreenBehavior(
+    sideEffects: Flow<SelectShopViewModel.SideEffect>,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
@@ -42,9 +46,9 @@ fun SelectStoreScreenBehavior(
 @FontScalePreviews
 @DensityPreviews
 @Composable
-fun SelectStoreScreenContentPreview() {
+fun SelectShopScreenContentPreview() {
     ZarinaTheme {
-        SelectStoreScreenContent()
+        SelectShopScreenContent()
     }
 }
 

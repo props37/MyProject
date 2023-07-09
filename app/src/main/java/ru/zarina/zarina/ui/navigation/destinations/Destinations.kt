@@ -230,4 +230,6 @@ object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
         )
     }
 
+    object SelectPickupShop : SimpleDestination(BaseRoute.CATALOG_SELECT_PICKUP_SHOP)
+
 }
