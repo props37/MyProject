@@ -6,6 +6,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.ZarinaTheme
@@ -20,7 +21,7 @@ fun SelectShopScreen(
     filtersSavedStateHandle: SavedStateHandle,
     goBack: () -> Boolean
 ) {
-    val viewModel = koinViewModel<SelectShopViewModel>()
+    val viewModel = koinViewModel<SelectShopViewModel> { parametersOf(filtersSavedStateHandle) }
 
     SelectShopScreenBehavior(
         sideEffects = viewModel.sideEffects
