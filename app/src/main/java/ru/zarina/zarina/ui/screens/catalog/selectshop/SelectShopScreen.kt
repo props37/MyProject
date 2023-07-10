@@ -2,6 +2,8 @@ package ru.zarina.zarina.ui.screens.catalog.selectshop
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,9 +27,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
@@ -40,6 +44,7 @@ import ru.zarina.zarina.domain.Shop
 import ru.zarina.zarina.ui.common.components.CityPicker
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
+import ru.zarina.zarina.ui.common.components.form.SectionHeader
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -65,7 +70,6 @@ fun SelectShopScreenContent(
                 startIcon = {
                     BackButton(onClick = onBackClick)
                 },
-                isElevated = listState.canScrollBackward
             )
         },
     ) {
@@ -74,11 +78,29 @@ fun SelectShopScreenContent(
                 .fillMaxSize()
                 .navigationBarsPadding(),
         ) {
-            CityPicker(
-                city = city,
-                onClick = onCityClick,
-                modifier = Modifier.fillMaxWidth(),
-            )
+            val elevation =
+                animateDpAsState(
+                    targetValue = if (listState.canScrollBackward) 6.dp else 0.dp,
+                    label = "screen top bar elevation",
+                )
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .shadow(elevation.value)
+                    .zIndex(1f)
+                    .background(UiKitTheme.colors.screenBackground)
+            ) {
+                CityPicker(
+                    city = city,
+                    onClick = onCityClick,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                SectionHeader(
+                    text = stringResource(id = R.string.shop_list),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
             Box(
                 modifier = Modifier.weight(1f)
             ) {
