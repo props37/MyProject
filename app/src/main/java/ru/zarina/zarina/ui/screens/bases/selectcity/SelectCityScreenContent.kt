@@ -84,6 +84,8 @@ fun SelectCityScreenContent(
     onCloseClick: () -> Unit,
     isSnackbarVisible: Boolean,
     snackbarText: Text,
+    isApplyButtonVisible: Boolean = false,
+    onApplyButtonClick: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
@@ -181,11 +183,13 @@ fun SelectCityScreenContent(
                                     if (isRegionVisible)
                                         CityExtendedItem(
                                             city = item.city,
+                                            isSelected = item.isSelected,
                                             modifier = cityModifier,
                                         )
                                     else
                                         CitySimpleItem(
                                             city = item.city,
+                                            isSelected = item.isSelected,
                                             modifier = cityModifier,
                                         )
                                 }
@@ -203,6 +207,7 @@ fun SelectCityScreenContent(
                     .systemBarsPadding()
             )
         }
+        // TODO add apply button
     }
 }
 
@@ -229,10 +234,12 @@ private fun CityHeader(
     )
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun CitySimpleItem(
     city: City,
     modifier: Modifier = Modifier,
+    isSelected: Boolean = false,
 ) {
     Divider(
         color = UiKitTheme.colors.listDivider,
@@ -241,34 +248,82 @@ private fun CitySimpleItem(
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
     )
-    Text(
-        text = city.name,
-        style = UiKitTheme.typography.circle1618,
-        color = UiKitTheme.colors.primaryContentColor,
-        textAlign = TextAlign.Start,
-        modifier = modifier.padding(16.dp),
-    )
-}
-
-@Composable
-private fun CityExtendedItem(
-    city: City,
-    modifier: Modifier = Modifier,
-) {
-    Column(modifier = modifier.padding(16.dp)) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .background(UiKitTheme.colors.screenBackground)
+            .padding(16.dp)
+    ) {
         Text(
             text = city.name,
             style = UiKitTheme.typography.circle1618,
             color = UiKitTheme.colors.primaryContentColor,
             textAlign = TextAlign.Start,
+            modifier = Modifier.weight(1f),
         )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = city.region.orEmpty(),
-            style = UiKitTheme.typography.circle1316,
-            color = UiKitTheme.colors.listItemSubtitle,
-            textAlign = TextAlign.Start,
-        )
+        AnimatedContent(
+            targetState = isSelected,
+            label = "is ${city.name} selected",
+        ) { isSelected ->
+            if (isSelected)
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_checkmark_24),
+                    contentDescription = stringResource(id = R.string.selected),
+                    tint = UiKitTheme.colors.primaryContentColor,
+                    modifier = Modifier.size(20.dp),
+                )
+        }
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+private fun CityExtendedItem(
+    city: City,
+    modifier: Modifier = Modifier,
+    isSelected: Boolean = false,
+) {
+    Divider(
+        color = UiKitTheme.colors.listDivider,
+        thickness = Dp.Hairline,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .background(UiKitTheme.colors.screenBackground)
+            .padding(16.dp)
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = city.name,
+                style = UiKitTheme.typography.circle1618,
+                color = UiKitTheme.colors.primaryContentColor,
+                textAlign = TextAlign.Start,
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = city.region.orEmpty(),
+                style = UiKitTheme.typography.circle1316,
+                color = UiKitTheme.colors.listItemSubtitle,
+                textAlign = TextAlign.Start,
+            )
+        }
+        AnimatedContent(
+            targetState = isSelected,
+            label = "is ${city.name} selected",
+        ) { isSelected ->
+            if (isSelected)
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_checkmark_24),
+                    contentDescription = stringResource(id = R.string.selected),
+                    tint = UiKitTheme.colors.primaryContentColor,
+                )
+        }
     }
 }
 

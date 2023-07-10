@@ -10,6 +10,7 @@ class SelectCityComponent {
 
     fun List<City>.toCityListItems(
         priorityCitiesAtTop: Boolean,
+        selectedCity: City? = null,
     ): ImmutableList<CityListItem> = buildList {
         var previousStartingLetter: Char? = null
         val (priorityCities, regularCities) = if (priorityCitiesAtTop)
@@ -17,7 +18,8 @@ class SelectCityComponent {
         else
             emptyList<City>() to this@toCityListItems
 
-        addAll(priorityCities.sortedBy { it.priority }.map { CityListItem.Item(it) })
+        addAll(priorityCities.sortedBy { it.priority }
+            .map { CityListItem.Item(it, isSelected = it.id == selectedCity?.id) })
 
         regularCities.sortedBy { it.name }.forEach { city ->
             if (city.name.isEmpty()) return@forEach
@@ -25,13 +27,14 @@ class SelectCityComponent {
                 previousStartingLetter = city.name.first()
                 add(CityListItem.Header(previousStartingLetter.toString()))
             }
-            add(CityListItem.Item(city))
+            add(CityListItem.Item(city, isSelected = city.id == selectedCity?.id))
         }
     }.toPersistentList()
 
     sealed class CityListItem(val key: String, val contentType: String) {
         data class Header(val letter: String) : CityListItem(letter, "header")
-        data class Item(val city: City) : CityListItem(city.id.id, "item")
+        data class Item(val city: City, val isSelected: Boolean = false) :
+            CityListItem(city.id.id, "item")
     }
 
     enum class ErrorType { NETWORK, NO_RESULTS, GENERIC }

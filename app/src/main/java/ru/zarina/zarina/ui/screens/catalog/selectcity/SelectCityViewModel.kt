@@ -4,10 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
@@ -16,6 +17,7 @@ import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
+import ru.zarina.zarina.ui.screens.bases.selectcity.SelectCityComponent
 import ru.zarina.zarina.ui.screens.catalog.selectshop.SelectShopViewModel
 
 @KoinViewModel
@@ -23,6 +25,7 @@ class SelectCityViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val selectShopSavedStateHandle: SavedStateHandle,
     private val interactor: SelectCityInteractor,
+    private val selectCityComponent: SelectCityComponent,
 ) : ViewModel(),
     ISideEffectSource<SelectCityViewModel.SideEffect> by SideEffectQueue() {
 
@@ -30,15 +33,22 @@ class SelectCityViewModel(
 
     private val selectedCityResult =
         selectShopSavedStateHandle.getStateFlow<Result<City>?>(SelectShopViewModel.KEY_CITY, null)
-    val selectedCity =
+    private val selectedCity =
         savedStateHandle.getStateFlow(KEY_SELECTED_CITY, selectedCityResult.value?.getOrNull())
 
     private val citiesResult = MutableStateFlow<Result<List<City>>?>(null)
-    val cities = citiesResult.map {
-        it?.getOrNull()
-            .orEmpty()
-            .toPersistentList()
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
+    val query = savedStateHandle.getStateFlow(KEY_QUERY, "")
+    val cities = combine(citiesResult, selectedCity, query) { citiesResult, selectedCity, query ->
+        with(selectCityComponent) {
+            citiesResult?.getOrNull()
+                .orEmpty()
+                .filter { it.name.contains(query, true) }
+                .sortedBy { it.name }
+                .toCityListItems(true, selectedCity)
+        }
+    }
+        .flowOn(Dispatchers.Default)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
     val isLoaderVisible = operationTracker.isOperationOngoing(Operation.LOADING_CITIES)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
@@ -49,6 +59,10 @@ class SelectCityViewModel(
                 citiesResult.value = interactor.getPickupCities()
             }
         }
+    }
+
+    fun onQueryChange(query: String) {
+        savedStateHandle[KEY_QUERY] = query
     }
 
     fun onBackClick() {
@@ -72,6 +86,7 @@ class SelectCityViewModel(
     private enum class Operation : OperationKey { LOADING_CITIES }
 
     companion object {
+        private const val KEY_QUERY = "query"
         private const val KEY_SELECTED_CITY = "selected_city"
     }
 

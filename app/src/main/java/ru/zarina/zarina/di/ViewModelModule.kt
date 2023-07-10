@@ -45,7 +45,8 @@ val viewModelModule = module {
         SelectCityViewModel(
             savedStateHandle = get(),
             selectShopSavedStateHandle = parameters[0],
-            interactor = get()
+            interactor = get(),
+            selectCityComponent = get(),
         )
     }
 }
