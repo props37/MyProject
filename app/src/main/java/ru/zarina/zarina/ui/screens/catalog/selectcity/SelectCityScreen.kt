@@ -41,7 +41,8 @@ fun SelectCityScreen(
         isSnackbarVisible = false,
         snackbarText = Text.Empty,
         isApplyButtonVisible = isApplyButtonVisible,
-        onApplyButtonClick = viewModel::onApplyClick
+        onApplyButtonClick = viewModel::onApplyClick,
+        isAutoscrollEnabled = false,
     )
 }
 

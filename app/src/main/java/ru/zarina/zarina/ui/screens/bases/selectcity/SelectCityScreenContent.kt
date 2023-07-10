@@ -87,6 +87,8 @@ fun SelectCityScreenContent(
     snackbarText: Text,
     isApplyButtonVisible: Boolean = false,
     onApplyButtonClick: () -> Unit = {},
+    /** Whether the automatic scroll to top when [cityItems] are changed is enabled */
+    isAutoscrollEnabled: Boolean = true,
 ) {
     Column(
         modifier = Modifier
@@ -105,13 +107,15 @@ fun SelectCityScreenContent(
             }
         )
         val lazyListState = rememberLazyListState()
-        LaunchedEffect(cityItems) {
-            lazyListState.scrollToItem(
-                3.coerceAtMost(cityItems.lastIndex)
-                    .coerceAtMost(lazyListState.firstVisibleItemIndex)
-                    .coerceAtLeast(0)
-            )
-            lazyListState.animateScrollToItem(0)
+        LaunchedEffect(isAutoscrollEnabled, cityItems) {
+            if (isAutoscrollEnabled) {
+                lazyListState.scrollToItem(
+                    3.coerceAtMost(cityItems.lastIndex)
+                        .coerceAtMost(lazyListState.firstVisibleItemIndex)
+                        .coerceAtLeast(0)
+                )
+                lazyListState.animateScrollToItem(0)
+            }
         }
         val isElevated by remember { derivedStateOf { lazyListState.canScrollBackward } }
         val elevation by animateDpAsState(
