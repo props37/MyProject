@@ -35,7 +35,9 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Shop
+import ru.zarina.zarina.ui.common.components.CityPicker
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
@@ -45,6 +47,8 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun SelectShopScreenContent(
+    city: City?,
+    onCityClick: () -> Unit,
     shops: ImmutableList<Shop>,
     selectedShop: Shop?,
     onShopClick: (Shop) -> Unit,
@@ -70,6 +74,11 @@ fun SelectShopScreenContent(
                 .fillMaxSize()
                 .navigationBarsPadding(),
         ) {
+            CityPicker(
+                city = city,
+                onClick = onCityClick,
+                modifier = Modifier.fillMaxWidth(),
+            )
             Box(
                 modifier = Modifier.weight(1f)
             ) {
@@ -163,6 +172,7 @@ private fun ShopItem(
 fun SelectShopScreen(
     savedStateHandle: SavedStateHandle,
     filtersSavedStateHandle: SavedStateHandle,
+    showSelectCity: () -> Unit,
     goBack: () -> Unit
 ) {
     val viewModel = koinViewModel<SelectShopViewModel> {
@@ -172,6 +182,7 @@ fun SelectShopScreen(
         )
     }
 
+    val city by viewModel.city.collectAsStateWithLifecycle()
     val shops by viewModel.shops.collectAsStateWithLifecycle()
     val selectedShop by viewModel.selectedShop.collectAsStateWithLifecycle()
     val isLoaderVisible by viewModel.isLoaderVisible.collectAsStateWithLifecycle()
@@ -179,10 +190,13 @@ fun SelectShopScreen(
 
     SelectShopScreenBehavior(
         sideEffects = viewModel.sideEffects,
+        showSelectCity = showSelectCity,
         goBack = goBack,
     )
 
     SelectShopScreenContent(
+        city = city,
+        onCityClick = viewModel::onCityClick,
         shops = shops,
         selectedShop = selectedShop,
         onShopClick = viewModel::onShopClick,
@@ -196,11 +210,13 @@ fun SelectShopScreen(
 @Composable
 fun SelectShopScreenBehavior(
     sideEffects: Flow<SelectShopViewModel.SideEffect>,
+    showSelectCity: () -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
+                SelectShopViewModel.SideEffect.ShowSelectCity -> showSelectCity()
                 SelectShopViewModel.SideEffect.GoBack -> goBack()
             }
         }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -38,6 +39,10 @@ class SelectShopViewModel(
         filtersSavedStateHandle.getStateFlow<Filtration?>(FiltersViewModel.KEY_NEW_FILTRATION, null)
 
     private val cityResult = savedStateHandle.getStateFlow<Result<City>?>(KEY_CITY, null)
+
+    val city = cityResult
+        .map { it?.getOrNull() }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val shops = cityResult.mapLatest { cityResult ->
@@ -69,6 +74,10 @@ class SelectShopViewModel(
         }
     }
 
+    fun onCityClick() {
+        sideEffect(SideEffect.ShowSelectCity)
+    }
+
     fun onShopClick(shop: Shop) {
         _selectedShop.update { if (it == shop) null else shop }
     }
@@ -88,6 +97,7 @@ class SelectShopViewModel(
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        object ShowSelectCity : SideEffect
         object GoBack : SideEffect
     }
 

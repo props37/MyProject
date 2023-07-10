@@ -101,6 +101,9 @@ fun NavGraphBuilder.catalogGraph(
             SelectShopScreen(
                 savedStateHandle = remember(it) { it.savedStateHandle },
                 filtersSavedStateHandle = filtersSavedStateHandle,
+                showSelectCity = {
+                    navController.navigate(Catalog.SelectCity.routeSchema)
+                },
                 goBack = {
                     navController.popBackStack(Catalog.SelectPickupShop.routeSchema, true)
                 }
