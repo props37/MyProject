@@ -16,9 +16,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -123,15 +124,23 @@ fun SelectShopScreenContent(
                             state = listState,
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            items(
+                            itemsIndexed(
                                 items = shops,
-                                key = { shop -> shop.id },
-                            ) { shop ->
+                                key = { _, shop -> shop.id },
+                            ) { index, shop ->
                                 ShopItem(
                                     shop = shop,
                                     isSelected = shop == selectedShop,
                                     onClick = { onShopClick(shop) },
                                 )
+                                if (index != shops.lastIndex)
+                                    Divider(
+                                        color = UiKitTheme.colors.listDivider,
+                                        thickness = 1.dp,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 16.dp),
+                                    )
                             }
                         }
                     }
