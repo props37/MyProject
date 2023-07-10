@@ -1,18 +1,19 @@
 package ru.zarina.zarina.usecase.shop
 
 import kotlinx.coroutines.CoroutineDispatcher
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Named
 import ru.zarina.zarina.base.clean.UseCase
 import ru.zarina.zarina.data.product.IProductRepository
-import ru.zarina.zarina.di.Dispatcher
-import ru.zarina.zarina.di.ZarinaDispatcher
+import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
 import timber.log.Timber
-import javax.inject.Inject
 
-class GetOffersUseCase @Inject constructor(
-    @Dispatcher(ZarinaDispatcher.IO) dispatcher: CoroutineDispatcher,
+@Factory
+class GetOffersUseCase(
+    @Named(Qualifiers.Dispatcher.IO) dispatcher: CoroutineDispatcher,
     private val productRepository: IProductRepository,
 ) : UseCase<GetOffersUseCase.Params, List<Offer>>(dispatcher) {
     override suspend fun execute(params: Params): List<Offer> {

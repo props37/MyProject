@@ -2,10 +2,11 @@ package ru.zarina.zarina.data.geography.local
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.City
-import javax.inject.Inject
 
-class MemoryGeographyLocalSource @Inject constructor() : IGeographyLocalSource {
+@Factory
+class MemoryGeographyLocalSource : IGeographyLocalSource {
 
     private val citiesByQuery = MutableStateFlow(mapOf<String?, List<City>>())
 

@@ -1,10 +1,11 @@
 package ru.zarina.zarina.data.subscription
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.subscription.remote.ISubscriptionRemoteSource
 import ru.zarina.zarina.domain.Barcode
-import javax.inject.Inject
 
-class SubscriptionRepository @Inject constructor(
+@Factory
+class SubscriptionRepository(
     private val remote: ISubscriptionRemoteSource,
 ) : ISubscriptionRepository {
 

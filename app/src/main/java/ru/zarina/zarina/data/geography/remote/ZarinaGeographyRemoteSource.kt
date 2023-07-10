@@ -1,11 +1,12 @@
 package ru.zarina.zarina.data.geography.remote
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.geography.remote.api.IZarinaGeographyApi
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.GeoLocation
-import javax.inject.Inject
 
-class ZarinaGeographyRemoteSource @Inject constructor(
+@Factory
+class ZarinaGeographyRemoteSource(
     private val api: IZarinaGeographyApi,
 ) : IGeographyRemoteSource {
 

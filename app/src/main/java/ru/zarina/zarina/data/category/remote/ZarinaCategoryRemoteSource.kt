@@ -1,10 +1,11 @@
 package ru.zarina.zarina.data.category.remote
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.category.remote.api.IZarinaCategoryApi
 import ru.zarina.zarina.domain.Category
-import javax.inject.Inject
 
-class ZarinaCategoryRemoteSource @Inject constructor(
+@Factory
+class ZarinaCategoryRemoteSource(
     private val api: IZarinaCategoryApi,
 ) : ICategoryRemoteSource {
 

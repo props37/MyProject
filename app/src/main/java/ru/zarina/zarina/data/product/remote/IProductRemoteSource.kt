@@ -3,6 +3,8 @@ package ru.zarina.zarina.data.product.remote
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.DeliveryAvailability
+import ru.zarina.zarina.domain.FilteredProducts
+import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.Product
@@ -13,8 +15,9 @@ interface IProductRemoteSource {
     suspend fun getProductPage(
         category: Category,
         sort: ProductSort,
+        filtration: Filtration?,
         pageIndex: Int,
-    ): Page<List<Product>>
+    ): Page<FilteredProducts>
 
     suspend fun getCompleteLook(product: Product): List<Product>
     suspend fun getDeliveryAvailability(product: Product): DeliveryAvailability

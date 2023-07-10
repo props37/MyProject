@@ -1,11 +1,12 @@
 package ru.zarina.zarina.data.recommendation.remote
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.recommendation.remote.zarina.IZarinaRecommendationApi
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.RecommendationType
-import javax.inject.Inject
 
-class ZarinaRecommendationRemoteSource @Inject constructor(
+@Factory
+class ZarinaRecommendationRemoteSource(
     private val api: IZarinaRecommendationApi,
 ) : IRecommendationRemoteSource {
 

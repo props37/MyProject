@@ -7,12 +7,16 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Named
+import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.AuthorizationToken
 import ru.zarina.zarina.utils.datastore.safeData
 import ru.zarina.zarina.utils.datastore.set
-import javax.inject.Inject
 
-class DeviceLocalSource @Inject constructor(
+@Factory
+class DeviceLocalSource(
+    @Named(Qualifiers.DataStore.PREFERENCES)
     private val store: DataStore<Preferences>,
 ) : IDeviceLocalSource {
 

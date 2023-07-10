@@ -9,15 +9,17 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.shop.remote.api.dto.ReserveRequestBody
 import ru.zarina.zarina.data.shop.remote.api.dto.ShopCountryDto
 import ru.zarina.zarina.data.shop.remote.api.dto.StockDto
-import ru.zarina.zarina.di.Authorization
+import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.exception.NotFoundException
-import javax.inject.Inject
 
-class KtorZarinaShopApi @Inject constructor(
-    @Authorization(Authorization.Type.TOKEN)
+@Factory
+class KtorZarinaShopApi(
+    @Named(Qualifiers.Authorization.TOKEN)
     private val client: HttpClient,
 ) : IZarinaShopApi {
 

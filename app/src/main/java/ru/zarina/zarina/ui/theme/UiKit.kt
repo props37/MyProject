@@ -126,6 +126,12 @@ data class UiKitTypography(
         fontFamily = Fonts.Families.Circle,
         fontWeight = FontWeight.Bold,
     ),
+    val circle1216: TextStyle = TextStyle(
+        fontSize = 12.sp,
+        lineHeight = 16.sp,
+        fontFamily = Fonts.Families.Circle,
+        fontWeight = FontWeight.Bold,
+    ),
 )
 
 val LocalUiKitTypography = staticCompositionLocalOf { UiKitTypography() }

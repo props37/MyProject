@@ -1,9 +1,10 @@
 package ru.zarina.zarina.data.content
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.content.remote.IContentRemoteSource
-import javax.inject.Inject
 
-class ContentRepository @Inject constructor(
+@Factory
+class ContentRepository(
     private val remoteSource: IContentRemoteSource,
 ) : IContentRepository {
     override suspend fun getOnboardingSplash() = remoteSource.getOnboardingSplash()

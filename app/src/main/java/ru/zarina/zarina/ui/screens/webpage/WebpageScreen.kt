@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.LoadingState
@@ -28,6 +27,7 @@ import com.google.accompanist.web.rememberWebViewState
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
@@ -148,7 +148,7 @@ private fun handleMailto(context: Context, uri: Uri): Boolean {
 fun WebpageScreen(
     goBack: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<WebpageViewModel>()
+    val viewModel = koinViewModel<WebpageViewModel>()
 
     val headers by viewModel.headers.collectAsStateWithLifecycle()
     val url by viewModel.url.collectAsStateWithLifecycle()

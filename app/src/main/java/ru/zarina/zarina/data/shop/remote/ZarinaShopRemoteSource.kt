@@ -1,5 +1,6 @@
 package ru.zarina.zarina.data.shop.remote
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.shop.remote.api.IZarinaShopApi
 import ru.zarina.zarina.data.shop.remote.api.dto.ReserveRequestBody
 import ru.zarina.zarina.data.shop.remote.api.dto.toCountries
@@ -9,9 +10,9 @@ import ru.zarina.zarina.domain.Country
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Shop
 import ru.zarina.zarina.domain.Stock
-import javax.inject.Inject
 
-class ZarinaShopRemoteSource @Inject constructor(
+@Factory
+class ZarinaShopRemoteSource(
     private val api: IZarinaShopApi,
 ) : IShopRemoteSource {
 
@@ -20,7 +21,9 @@ class ZarinaShopRemoteSource @Inject constructor(
     }
 
     override suspend fun getShops(city: City): List<Shop> {
-        return api.getShops().toShops()[city].orEmpty()
+        val shopsByCity = api.getShops().toShops()
+        val key = shopsByCity.keys.firstOrNull { it.id == city.id }
+        return shopsByCity[key].orEmpty()
     }
 
     override suspend fun getStocks(offer: Offer, city: City): List<Stock> {

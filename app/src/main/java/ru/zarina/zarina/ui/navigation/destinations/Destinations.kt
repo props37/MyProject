@@ -10,6 +10,7 @@ import ru.zarina.zarina.ui.navigation.base.Graph
 import ru.zarina.zarina.ui.navigation.base.RouteUtils
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleGraph
+import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 
 object Destinations {
     object Home : SimpleDestination(BaseRoute.HOME)
@@ -203,5 +204,34 @@ object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
     }
 
     object SelectSort : SimpleDestination(BaseRoute.CATALOG_SELECT_SORT)
+
+    object Filters : SimpleDestination(BaseRoute.CATALOG_FILTERS)
+
+    object ListFilter : Destination<ListFilter.Arguments>() {
+
+        const val ARGUMENT_FILTER_TYPE = "filter_type"
+
+        override val routeSchema = RouteUtils.generateRouteSchema(
+            baseRoute = BaseRoute.CATALOG_LIST_FILTER,
+            argNames = arrayOf(ARGUMENT_FILTER_TYPE)
+        )
+
+        override val arguments = listOf(
+            navArgument(ARGUMENT_FILTER_TYPE) { type = NavType.EnumType(FilterType::class.java) }
+        )
+
+        override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
+            baseRoute = BaseRoute.CATALOG_LIST_FILTER,
+            args = arrayOf(args.filterType)
+        )
+
+        data class Arguments(
+            val filterType: FilterType,
+        )
+    }
+
+    object SelectPickupShop : SimpleDestination(BaseRoute.CATALOG_SELECT_PICKUP_SHOP)
+
+    object SelectCity : SimpleDestination(BaseRoute.CATALOG_SELECT_CITY)
 
 }

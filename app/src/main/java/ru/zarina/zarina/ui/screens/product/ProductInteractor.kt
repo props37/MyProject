@@ -1,14 +1,15 @@
 package ru.zarina.zarina.ui.screens.product
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.RecommendationType
 import ru.zarina.zarina.usecase.catalog.GetCompleteLookUseCase
 import ru.zarina.zarina.usecase.catalog.GetDeliveryAvailabilityUseCase
 import ru.zarina.zarina.usecase.catalog.GetProductUseCase
 import ru.zarina.zarina.usecase.catalog.GetRecommendationsUseCase
-import javax.inject.Inject
 
-class ProductInteractor @Inject constructor(
+@Factory
+class ProductInteractor(
     private val getProductUseCase: GetProductUseCase,
     private val getCompleteLookUseCase: GetCompleteLookUseCase,
     private val getRecommendationsUseCase: GetRecommendationsUseCase,

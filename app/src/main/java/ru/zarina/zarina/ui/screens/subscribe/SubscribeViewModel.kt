@@ -3,7 +3,6 @@ package ru.zarina.zarina.ui.screens.subscribe
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,6 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.data.StaticPages
 import ru.zarina.zarina.domain.Barcode
@@ -27,10 +27,9 @@ import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.navigation.destinations.Subscribe
 import ru.zarina.zarina.utils.coroutine.mapState
-import javax.inject.Inject
 
-@HiltViewModel
-class SubscribeViewModel @Inject constructor(
+@KoinViewModel
+class SubscribeViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val interactor: SubscribeInteractor,
 ) : ViewModel(),

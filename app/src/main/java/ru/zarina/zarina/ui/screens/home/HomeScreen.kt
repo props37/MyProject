@@ -12,8 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -55,7 +55,7 @@ fun HomeScreen(
     showProduct: (id: Product.Id) -> Unit,
     showCatalog: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<HomeViewModel>()
+    val viewModel = koinViewModel<HomeViewModel>()
 
     HomeScreenBehavior(
         sideEffects = viewModel.sideEffects,

@@ -39,11 +39,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Shop
 import ru.zarina.zarina.ui.common.base.Text
@@ -334,8 +334,8 @@ fun DetailsScreen(
     showSuccess: () -> Unit,
     goBack: () -> Unit,
 ) {
-    val parentViewModel = hiltViewModel<PickupViewModel>(parentEntry)
-    val viewModel = hiltViewModel<DetailsViewModel>()
+    val parentViewModel = koinViewModel<PickupViewModel>(viewModelStoreOwner = parentEntry)
+    val viewModel = koinViewModel<DetailsViewModel>()
 
     val surname by parentViewModel.surname.collectAsStateWithLifecycle()
     val surnameError by parentViewModel.surnameError.collectAsStateWithLifecycle()

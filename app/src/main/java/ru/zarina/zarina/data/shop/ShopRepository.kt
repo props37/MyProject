@@ -1,12 +1,13 @@
 package ru.zarina.zarina.data.shop
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.shop.remote.IShopRemoteSource
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Shop
-import javax.inject.Inject
 
-class ShopRepository @Inject constructor(
+@Factory
+class ShopRepository(
     private val remote: IShopRemoteSource,
 ) : IShopRepository {
 
