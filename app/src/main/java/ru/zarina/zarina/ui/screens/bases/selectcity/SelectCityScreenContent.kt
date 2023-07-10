@@ -58,6 +58,7 @@ import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.components.ModalError
 import ru.zarina.zarina.ui.common.components.StateSnackbar
+import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -207,7 +208,22 @@ fun SelectCityScreenContent(
                     .systemBarsPadding()
             )
         }
-        // TODO add apply button
+        AnimatedContent(
+            targetState = isApplyButtonVisible,
+            transitionSpec = { fadeIn() with fadeOut() },
+            label = "apply button",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(WindowInsets.navigationOrIme.asPaddingValues())
+        ) {
+            if (it) {
+                ZarinaTextButton(
+                    text = stringResource(id = R.string.apply),
+                    onClick = onApplyButtonClick,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
     }
 }
 

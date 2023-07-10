@@ -21,6 +21,7 @@ fun SelectCityScreen(
     val query by viewModel.query.collectAsStateWithLifecycle()
     val cities by viewModel.cities.collectAsStateWithLifecycle()
     val isLoaderVisible by viewModel.isLoaderVisible.collectAsStateWithLifecycle()
+    val isApplyButtonVisible by viewModel.isApplyButtonVisible.collectAsStateWithLifecycle()
 
     SelectCityScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -39,9 +40,8 @@ fun SelectCityScreen(
         onCloseClick = viewModel::onBackClick,
         isSnackbarVisible = false,
         snackbarText = Text.Empty,
-        isApplyButtonVisible = false,
-        onApplyButtonClick = {}
-
+        isApplyButtonVisible = isApplyButtonVisible,
+        onApplyButtonClick = viewModel::onApplyClick
     )
 }
 

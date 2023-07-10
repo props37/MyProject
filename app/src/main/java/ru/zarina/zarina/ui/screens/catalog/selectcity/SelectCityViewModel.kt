@@ -53,6 +53,12 @@ class SelectCityViewModel(
     val isLoaderVisible = operationTracker.isOperationOngoing(Operation.LOADING_CITIES)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
 
+    val isApplyButtonVisible =
+        combine(selectedCityResult, selectedCity) { originalSelectedCity, selectedCity ->
+            originalSelectedCity?.getOrNull()?.id != selectedCity?.id
+        }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
     init {
         viewModelScope.launch {
             operationTracker.track(Operation.LOADING_CITIES) {
