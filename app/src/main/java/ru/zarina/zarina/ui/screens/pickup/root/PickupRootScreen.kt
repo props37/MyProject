@@ -25,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -42,7 +41,7 @@ import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Stock
 import ru.zarina.zarina.ui.common.base.ErrorState
-import ru.zarina.zarina.ui.common.components.DropdownBar
+import ru.zarina.zarina.ui.common.components.CityPicker
 import ru.zarina.zarina.ui.common.components.HorizontalProductCard
 import ru.zarina.zarina.ui.common.components.Tabs
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
@@ -139,27 +138,6 @@ fun PickupRootScreenContent(
                     }
                 }
             }
-    }
-}
-
-@Composable
-private fun CityPicker(
-    city: City?,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    DropdownBar(
-        onClick = onClick,
-        modifier = modifier.fillMaxWidth()
-    ) {
-        Text(
-            text = city?.name.orEmpty(),
-            style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
-            textAlign = TextAlign.Start,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
     }
 }
 
