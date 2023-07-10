@@ -37,10 +37,10 @@ class SelectShopViewModel(
     private val newFiltration =
         filtersSavedStateHandle.getStateFlow<Filtration?>(FiltersViewModel.KEY_NEW_FILTRATION, null)
 
-    private val city = MutableStateFlow<Result<City>?>(null)
+    private val cityResult = savedStateHandle.getStateFlow<Result<City>?>(KEY_CITY, null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val shops = city.mapLatest { cityResult ->
+    val shops = cityResult.mapLatest { cityResult ->
         val city = cityResult?.getOrNull() ?: return@mapLatest persistentListOf()
         operationTracker.track(Operation.LOADING_SHOPS) {
             interactor.getShops(city)
@@ -64,7 +64,7 @@ class SelectShopViewModel(
     init {
         viewModelScope.launch {
             operationTracker.track(Operation.LOADING_CITY) {
-                city.value = interactor.getUserCity()
+                savedStateHandle[KEY_CITY] = interactor.getUserCity()
             }
         }
     }
