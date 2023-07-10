@@ -161,10 +161,16 @@ private fun ShopItem(
 
 @Composable
 fun SelectShopScreen(
+    savedStateHandle: SavedStateHandle,
     filtersSavedStateHandle: SavedStateHandle,
     goBack: () -> Unit
 ) {
-    val viewModel = koinViewModel<SelectShopViewModel> { parametersOf(filtersSavedStateHandle) }
+    val viewModel = koinViewModel<SelectShopViewModel> {
+        parametersOf(
+            savedStateHandle,
+            filtersSavedStateHandle
+        )
+    }
 
     val shops by viewModel.shops.collectAsStateWithLifecycle()
     val selectedShop by viewModel.selectedShop.collectAsStateWithLifecycle()

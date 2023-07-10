@@ -5,6 +5,7 @@ import org.koin.dsl.module
 import ru.zarina.zarina.ui.screens.catalog.filters.FiltersViewModel
 import ru.zarina.zarina.ui.screens.catalog.filters.list.ListFilterViewModel
 import ru.zarina.zarina.ui.screens.catalog.products.ProductsViewModel
+import ru.zarina.zarina.ui.screens.catalog.selectcity.SelectCityViewModel
 import ru.zarina.zarina.ui.screens.catalog.selectshop.SelectShopViewModel
 import ru.zarina.zarina.ui.screens.catalog.selectsort.SelectSortViewModel
 
@@ -35,8 +36,14 @@ val viewModelModule = module {
     }
     viewModel { parameters ->
         SelectShopViewModel(
-            savedStateHandle = get(),
-            filtersSavedStateHandle = parameters[0],
+            savedStateHandle = parameters[0],
+            filtersSavedStateHandle = parameters[1],
+            interactor = get()
+        )
+    }
+    viewModel { parameters ->
+        SelectCityViewModel(
+            selectShopSavedStateHandle = parameters[0],
             interactor = get()
         )
     }
