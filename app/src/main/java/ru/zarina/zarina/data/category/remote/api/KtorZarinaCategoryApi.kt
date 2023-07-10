@@ -1,0 +1,22 @@
+package ru.zarina.zarina.data.category.remote.api
+
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Named
+import ru.zarina.zarina.data.category.remote.api.dto.CategoryResponseDto
+import ru.zarina.zarina.di.Qualifiers
+
+@Factory
+class KtorZarinaCategoryApi(
+    @Named(Qualifiers.Authorization.TOKEN)
+    private val client: HttpClient,
+) : IZarinaCategoryApi {
+
+    override suspend fun getCategories(): CategoryResponseDto {
+        val response = client.get("/api/categories")
+        return response.body()
+    }
+
+}

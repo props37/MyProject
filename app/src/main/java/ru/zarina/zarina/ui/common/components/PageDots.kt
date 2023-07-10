@@ -19,6 +19,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
+private const val VISIBLE_DOT_COUNT = 5
+
 @Composable
 fun PageDots(
     count: Int,
@@ -26,14 +28,25 @@ fun PageDots(
     modifier: Modifier = Modifier,
     onDotClick: (index: Int) -> Unit = {},
 ) {
+    val startIndex = (activeIndex - VISIBLE_DOT_COUNT / 2)
+        .coerceAtLeast(0)
+        .coerceAtMost(count - VISIBLE_DOT_COUNT)
+    val endIndex = startIndex + VISIBLE_DOT_COUNT - 1
+    val visibleRange = startIndex..endIndex
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
         repeat(count) { index ->
+            val state = when {
+                index == activeIndex -> DotState.ACTIVE
+                index !in visibleRange -> DotState.HIDDEN
+                (index == visibleRange.first || index == visibleRange.last) && index != 0 && index != count - 1 -> DotState.COLLAPSED
+                else -> DotState.VISIBLE
+            }
             Dot(
-                isActive = index == activeIndex,
-                onClick = { onDotClick(index) }
+                state = state,
+                onClick = { onDotClick(index) },
             )
         }
     }
@@ -41,20 +54,29 @@ fun PageDots(
 
 @Composable
 private fun Dot(
-    isActive: Boolean,
+    state: DotState,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
     val size by animateDpAsState(
-        targetValue = if (isActive) 7.dp else 6.dp,
+        targetValue = when (state) {
+            DotState.ACTIVE -> 7.dp
+            DotState.VISIBLE -> 6.dp
+            DotState.COLLAPSED -> 3.dp
+            else -> 0.dp
+        },
         label = "dot size"
     )
     val color by animateColorAsState(
-        targetValue = if (isActive)
+        targetValue = if (state == DotState.ACTIVE)
             UiKitTheme.colors.pagerDot
         else
             UiKitTheme.colors.pagerDot.copy(0.5f),
         label = "dot color"
+    )
+    val horizontalPadding by animateDpAsState(
+        targetValue = if (state != DotState.HIDDEN) 3.dp else 0.dp,
+        label = "horizontal padding"
     )
     Box(
         modifier = modifier
@@ -63,9 +85,11 @@ private fun Dot(
                 indication = null,
                 onClick = onClick
             )
-            .padding(vertical = 16.dp, horizontal = 3.dp)
+            .padding(vertical = 16.dp, horizontal = horizontalPadding)
             .size(size)
             .clip(CircleShape)
             .background(color),
     )
 }
+
+private enum class DotState { HIDDEN, COLLAPSED, VISIBLE, ACTIVE }

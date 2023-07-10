@@ -1,13 +1,12 @@
 package ru.zarina.zarina.ui.screens.pickup.success
 
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
-import javax.inject.Inject
 
-@HiltViewModel
-class SuccessViewModel @Inject constructor(
+@KoinViewModel
+class SuccessViewModel(
     private val interactor: SuccessInteractor,
 ) : ViewModel(),
     ISideEffectSource<SuccessViewModel.SideEffect> by SideEffectQueue() {

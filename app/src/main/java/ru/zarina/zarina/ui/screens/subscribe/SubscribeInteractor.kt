@@ -1,12 +1,13 @@
 package ru.zarina.zarina.ui.screens.subscribe
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.Barcode
 import ru.zarina.zarina.usecase.subscription.SubscribeToOfferUseCase
 import ru.zarina.zarina.usecase.user.ValidateEmailUseCase
 import ru.zarina.zarina.usecase.user.ValidateNameUseCase
-import javax.inject.Inject
 
-class SubscribeInteractor @Inject constructor(
+@Factory
+class SubscribeInteractor(
     private val validateNameUseCase: ValidateNameUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val subscribeToOfferUseCase: SubscribeToOfferUseCase,

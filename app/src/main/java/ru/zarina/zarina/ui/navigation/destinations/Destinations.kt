@@ -3,11 +3,14 @@ package ru.zarina.zarina.ui.navigation.destinations
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import ru.zarina.zarina.domain.Barcode
+import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Graph
 import ru.zarina.zarina.ui.navigation.base.RouteUtils
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
+import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleGraph
+import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 
 object Destinations {
     object Home : SimpleDestination(BaseRoute.HOME)
@@ -170,5 +173,65 @@ object Subscribe : Graph<Subscribe.Arguments>() {
             val email: String,
         )
     }
+
+}
+
+object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
+
+    object Categories : SimpleDestination(BaseRoute.CATALOG_CATEGORIES)
+
+    object Products : Destination<Products.Arguments>() {
+
+        const val ARGUMENT_CATEGORY_ID = "category_id"
+
+        override val routeSchema = RouteUtils.generateRouteSchema(
+            baseRoute = BaseRoute.CATALOG_PRODUCTS,
+            argNames = arrayOf(ARGUMENT_CATEGORY_ID)
+        )
+
+        override val arguments = listOf(
+            navArgument(ARGUMENT_CATEGORY_ID) { type = NavType.IntType }
+        )
+
+        override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
+            baseRoute = BaseRoute.CATALOG_PRODUCTS,
+            args = arrayOf(args.categoryId.value)
+        )
+
+        data class Arguments(
+            val categoryId: Category.Id,
+        )
+    }
+
+    object SelectSort : SimpleDestination(BaseRoute.CATALOG_SELECT_SORT)
+
+    object Filters : SimpleDestination(BaseRoute.CATALOG_FILTERS)
+
+    object ListFilter : Destination<ListFilter.Arguments>() {
+
+        const val ARGUMENT_FILTER_TYPE = "filter_type"
+
+        override val routeSchema = RouteUtils.generateRouteSchema(
+            baseRoute = BaseRoute.CATALOG_LIST_FILTER,
+            argNames = arrayOf(ARGUMENT_FILTER_TYPE)
+        )
+
+        override val arguments = listOf(
+            navArgument(ARGUMENT_FILTER_TYPE) { type = NavType.EnumType(FilterType::class.java) }
+        )
+
+        override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
+            baseRoute = BaseRoute.CATALOG_LIST_FILTER,
+            args = arrayOf(args.filterType)
+        )
+
+        data class Arguments(
+            val filterType: FilterType,
+        )
+    }
+
+    object SelectPickupShop : SimpleDestination(BaseRoute.CATALOG_SELECT_PICKUP_SHOP)
+
+    object SelectCity : SimpleDestination(BaseRoute.CATALOG_SELECT_CITY)
 
 }

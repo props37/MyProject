@@ -1,14 +1,13 @@
 package ru.zarina.zarina.ui.screens.home
 
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
-import javax.inject.Inject
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+@KoinViewModel
+class HomeViewModel(
     private val interactor: HomeInteractor,
 ) : ViewModel(),
     ISideEffectSource<HomeViewModel.SideEffect> by SideEffectQueue() {
@@ -17,8 +16,11 @@ class HomeViewModel @Inject constructor(
         sideEffect(SideEffect.ShowProduct(Product.Id("1329404704-50")))
     }
 
+    fun onCatalogClick() = sideEffect(SideEffect.ShowCatalog)
+
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         class ShowProduct(val id: Product.Id) : SideEffect
+        object ShowCatalog : SideEffect
     }
 
 }

@@ -3,19 +3,18 @@ package ru.zarina.zarina.ui.screens.webpage
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.AuthorizationToken
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.utils.coroutine.mapState
-import javax.inject.Inject
 
-@HiltViewModel
-class WebpageViewModel @Inject constructor(
+@KoinViewModel
+class WebpageViewModel(
     savedStateHandle: SavedStateHandle,
     private val interactor: WebpageInteractor,
 ) : ViewModel(),

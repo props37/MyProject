@@ -1,18 +1,26 @@
 package ru.zarina.zarina
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 import ru.zarina.zarina.base.application.extensions.base.ExtensionManager
-import javax.inject.Inject
+import ru.zarina.zarina.di.appModule
 
-@HiltAndroidApp
 class ZarinaApplication : Application() {
 
-    @Inject
-    lateinit var extensionManager: ExtensionManager
+    private val extensionManager: ExtensionManager by inject()
 
     override fun onCreate() {
         super.onCreate()
+
+        startKoin {
+            androidLogger()
+            androidContext(this@ZarinaApplication)
+            modules(appModule)
+        }
+
         installExtensions()
     }
 

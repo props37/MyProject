@@ -2,7 +2,6 @@ package ru.zarina.zarina.ui.screens.pickup.selectpickupcity
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
@@ -20,10 +20,9 @@ import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.screens.bases.selectcity.SelectCityComponent
-import javax.inject.Inject
 
-@HiltViewModel
-class SelectPickupCityViewModel @Inject constructor(
+@KoinViewModel
+class SelectPickupCityViewModel(
     private val interactor: SelectPickupCityInteractor,
     private val selectCityComponent: SelectCityComponent,
 ) : ViewModel(),

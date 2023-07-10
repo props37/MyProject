@@ -50,7 +50,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
@@ -59,6 +58,7 @@ import coil.size.Size
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.Text
@@ -425,7 +425,7 @@ fun OnboardingScreen(
     showHome: () -> Unit,
     showSelectCity: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<OnboardingViewModel>()
+    val viewModel = koinViewModel<OnboardingViewModel>()
 
     val step by viewModel.step.collectAsStateWithLifecycle()
     val splashState by viewModel.splashState.collectAsStateWithLifecycle()

@@ -1,11 +1,10 @@
 package ru.zarina.zarina.data
 
+import org.koin.core.annotation.Singleton
 import ru.zarina.zarina.BuildConfig
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
-class MindboxHeaderProvider @Inject constructor() {
+class MindboxHeaderProvider {
 
     private val headers = mutableMapOf(
         getAuthorizationHeader(),

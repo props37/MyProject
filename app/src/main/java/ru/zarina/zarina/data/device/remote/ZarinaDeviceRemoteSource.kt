@@ -1,10 +1,11 @@
 package ru.zarina.zarina.data.device.remote
 
+import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.device.remote.api.IZarinaDeviceApi
 import ru.zarina.zarina.domain.AuthorizationToken
-import javax.inject.Inject
 
-class ZarinaDeviceRemoteSource @Inject constructor(
+@Factory
+class ZarinaDeviceRemoteSource(
     private val api: IZarinaDeviceApi,
 ) : IDeviceRemoteSource {
 
