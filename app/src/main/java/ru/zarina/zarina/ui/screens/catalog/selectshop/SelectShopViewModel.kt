@@ -26,6 +26,7 @@ import ru.zarina.zarina.ui.screens.catalog.filters.FiltersViewModel
 
 @KoinViewModel
 class SelectShopViewModel(
+    private val savedStateHandle: SavedStateHandle,
     private val filtersSavedStateHandle: SavedStateHandle,
     private val interactor: SelectShopInteractor,
 ) : ViewModel(),
@@ -91,5 +92,9 @@ class SelectShopViewModel(
     }
 
     enum class Operation : OperationKey { LOADING_CITY, LOADING_SHOPS }
+
+    companion object {
+        const val KEY_CITY = "city"
+    }
 
 }
