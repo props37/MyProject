@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Filtration
@@ -36,10 +37,11 @@ class SelectShopViewModel(
         filtersSavedStateHandle.getStateFlow<Filtration?>(FiltersViewModel.KEY_NEW_FILTRATION, null)
 
     // TODO load user current city
-    val city = MutableStateFlow(City.DEFAULT)
+    private val city = MutableStateFlow<Result<City>?>(null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val shops = city.mapLatest { city ->
+    val shops = city.mapLatest { cityResult ->
+        val city = cityResult?.getOrNull() ?: return@mapLatest persistentListOf()
         operationTracker.track(Operation.LOADING_SHOPS) {
             interactor.getShops(city)
                 .getOrDefault(emptyList())
@@ -48,8 +50,9 @@ class SelectShopViewModel(
     }
         .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
-    val isLoaderVisible = operationTracker.isOperationOngoing(Operation.LOADING_SHOPS)
-        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+    val isLoaderVisible =
+        operationTracker.isOperationOngoing(Operation.LOADING_CITY, Operation.LOADING_SHOPS)
+            .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     private val _selectedShop = MutableStateFlow(newFiltration.value?.pickupShop)
     val selectedShop = _selectedShop.asStateFlow()
@@ -57,6 +60,14 @@ class SelectShopViewModel(
     val isApplyButtonVisible = combine(newFiltration, _selectedShop) { filtration, shop ->
         filtration?.pickupShop != shop
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
+    init {
+        viewModelScope.launch {
+            operationTracker.track(Operation.LOADING_CITY) {
+                city.value = interactor.getUserCity()
+            }
+        }
+    }
 
     fun onShopClick(shop: Shop) {
         _selectedShop.update { if (it == shop) null else shop }
@@ -80,6 +91,6 @@ class SelectShopViewModel(
         object GoBack : SideEffect
     }
 
-    enum class Operation : OperationKey { LOADING_SHOPS }
+    enum class Operation : OperationKey { LOADING_CITY, LOADING_SHOPS }
 
 }
