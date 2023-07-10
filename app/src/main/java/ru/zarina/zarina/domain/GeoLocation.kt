@@ -7,4 +7,11 @@ import kotlinx.parcelize.Parcelize
 data class GeoLocation(
     val latitude: Double,
     val longitude: Double,
-) : Parcelable
+) : Parcelable {
+
+    companion object {
+        /** Default GeoLocation, the center of Saint-Petersburg */
+        val DEFAULT = GeoLocation(59.937500, 30.308611)
+    }
+
+}

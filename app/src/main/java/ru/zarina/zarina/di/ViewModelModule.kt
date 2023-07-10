@@ -5,19 +5,48 @@ import org.koin.dsl.module
 import ru.zarina.zarina.ui.screens.catalog.filters.FiltersViewModel
 import ru.zarina.zarina.ui.screens.catalog.filters.list.ListFilterViewModel
 import ru.zarina.zarina.ui.screens.catalog.products.ProductsViewModel
+import ru.zarina.zarina.ui.screens.catalog.selectcity.SelectCityViewModel
+import ru.zarina.zarina.ui.screens.catalog.selectshop.SelectShopViewModel
 import ru.zarina.zarina.ui.screens.catalog.selectsort.SelectSortViewModel
 
 val viewModelModule = module {
     viewModel { parameters ->
-        ProductsViewModel(parameters[0], get())
+        ProductsViewModel(
+            savedStateHandle = parameters[0],
+            interactor = get()
+        )
     }
     viewModel { parameters ->
-        SelectSortViewModel(parameters[0])
+        SelectSortViewModel(
+            productSavedStateHandle = parameters[0]
+        )
     }
     viewModel { parameters ->
-        FiltersViewModel(parameters[0], parameters[1], get())
+        FiltersViewModel(
+            savedStateHandle = parameters[0],
+            productsSavedStateHandle = parameters[1],
+            interactor = get()
+        )
     }
     viewModel { parameters ->
-        ListFilterViewModel(get(), parameters[0])
+        ListFilterViewModel(
+            savedStateHandle = get(),
+            parentSavedStateHandle = parameters[0]
+        )
+    }
+    viewModel { parameters ->
+        SelectShopViewModel(
+            savedStateHandle = parameters[0],
+            filtersSavedStateHandle = parameters[1],
+            interactor = get()
+        )
+    }
+    viewModel { parameters ->
+        SelectCityViewModel(
+            savedStateHandle = get(),
+            selectShopSavedStateHandle = parameters[0],
+            interactor = get(),
+            selectCityComponent = get(),
+        )
     }
 }

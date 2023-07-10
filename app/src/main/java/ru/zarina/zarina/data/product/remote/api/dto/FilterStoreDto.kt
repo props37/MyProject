@@ -1,8 +1,10 @@
 package ru.zarina.zarina.data.product.remote.api.dto
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.data.ApiContract
+import ru.zarina.zarina.domain.GeoLocation
+import ru.zarina.zarina.domain.Shop
 
 @Serializable
 data class FilterStoreDto(
@@ -18,4 +20,24 @@ data class FilterStoreDto(
     val address: String? = null,
     @SerialName("schedule")
     val schedule: String? = null,
-)
+) {
+    fun toDomain(): Shop? {
+        return if (
+            ApiContract.isNotNull(id, "id")
+            && ApiContract.isNotNull(name, "name")
+            && ApiContract.isNotNull(address, "address")
+            && ApiContract.isNotNull(schedule, "schedule")
+        ) {
+            Shop(
+                id = id,
+                name = name,
+                geoLocation = GeoLocation.DEFAULT,
+                address = address,
+                phone = "",
+                schedule = schedule
+            )
+        } else {
+            null
+        }
+    }
+}

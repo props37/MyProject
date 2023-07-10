@@ -9,9 +9,12 @@ import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.screens.catalog.categories.CategoriesScreen
+import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 import ru.zarina.zarina.ui.screens.catalog.filters.FiltersScreen
 import ru.zarina.zarina.ui.screens.catalog.filters.list.ListFilterScreen
 import ru.zarina.zarina.ui.screens.catalog.products.ProductsScreen
+import ru.zarina.zarina.ui.screens.catalog.selectcity.SelectCityScreen
+import ru.zarina.zarina.ui.screens.catalog.selectshop.SelectShopScreen
 import ru.zarina.zarina.ui.screens.catalog.selectsort.SelectSortScreen
 
 fun NavGraphBuilder.catalogGraph(
@@ -69,8 +72,13 @@ fun NavGraphBuilder.catalogGraph(
                 savedStateHandle = remember(it) { it.savedStateHandle },
                 productsSavedStateHandle = productSavedStateHandle,
                 showColorFilter = { type ->
-                    val arguments = Catalog.ListFilter.Arguments(filterType = type)
-                    navController.navigate(Catalog.ListFilter.createRoute(arguments))
+                    when (type) {
+                        FilterType.PICKUP_SHOP -> navController.navigate(Catalog.SelectPickupShop.routeSchema)
+                        else -> {
+                            val arguments = Catalog.ListFilter.Arguments(filterType = type)
+                            navController.navigate(Catalog.ListFilter.createRoute(arguments))
+                        }
+                    }
                 },
                 goBack = {
                     navController.popBackStack(Catalog.Filters.routeSchema, true)
@@ -84,6 +92,31 @@ fun NavGraphBuilder.catalogGraph(
                 filtersSavedStateHandle = filtersSavedStateHandle,
                 goBack = {
                     navController.popBackStack(Catalog.ListFilter.routeSchema, true)
+                }
+            )
+        }
+        composableDestination(Catalog.SelectPickupShop) {
+            val filtersSavedStateHandle =
+                remember(it) { navController.getBackStackEntry(Catalog.Filters.routeSchema).savedStateHandle }
+            SelectShopScreen(
+                savedStateHandle = remember(it) { it.savedStateHandle },
+                filtersSavedStateHandle = filtersSavedStateHandle,
+                showSelectCity = {
+                    navController.navigate(Catalog.SelectCity.routeSchema)
+                },
+                goBack = {
+                    navController.popBackStack(Catalog.SelectPickupShop.routeSchema, true)
+                }
+            )
+        }
+        composableDestination(Catalog.SelectCity) {
+            val selectShopSavedStateHandle = remember(it) {
+                navController.getBackStackEntry(Catalog.SelectPickupShop.routeSchema).savedStateHandle
+            }
+            SelectCityScreen(
+                selectShopSavedStateHandle = selectShopSavedStateHandle,
+                goBack = {
+                    navController.popBackStack(Catalog.SelectCity.routeSchema, true)
                 }
             )
         }

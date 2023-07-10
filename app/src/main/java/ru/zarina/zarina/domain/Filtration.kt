@@ -15,6 +15,7 @@ data class Filtration(
     val sizes: ListFilter?,
     val isShippingAvailable: Boolean?,
     val isPickupAvailable: Boolean?,
+    val pickupShop: Shop?,
 ) : Parcelable {
 
     fun isEmpty() = price == priceLimits
@@ -25,6 +26,7 @@ data class Filtration(
             && sizes?.isEmpty != true
             && isShippingAvailable != true
             && isPickupAvailable != true
+            && pickupShop == null
 
 }
 
