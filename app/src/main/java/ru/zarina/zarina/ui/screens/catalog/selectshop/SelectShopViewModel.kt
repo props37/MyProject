@@ -36,7 +36,6 @@ class SelectShopViewModel(
     private val newFiltration =
         filtersSavedStateHandle.getStateFlow<Filtration?>(FiltersViewModel.KEY_NEW_FILTRATION, null)
 
-    // TODO load user current city
     private val city = MutableStateFlow<Result<City>?>(null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
