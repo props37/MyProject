@@ -142,13 +142,14 @@ fun SelectShopScreenContent(
                 label = "is apply button visible",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
             ) {
                 if (it)
                     ZarinaTextButton(
                         text = stringResource(id = R.string.apply),
                         onClick = onApplyClick,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
                     )
             }
         }
