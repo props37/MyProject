@@ -10,6 +10,9 @@ sealed interface ZarinaBuildType {
 
     val name: String
 
+    val signingVariant: ZarinaSigningVariant
+        get() = ZarinaSigningVariant.INTERNAL
+
     val applicationName: String
         get() = "$BASE_NAME $name"
 
@@ -60,6 +63,7 @@ sealed interface ZarinaBuildType {
     }
 
     object Release : ZarinaBuildType {
+        override val signingVariant = ZarinaSigningVariant.RELEASE
         override val name = "release"
         override val applicationName = BASE_NAME
         override val applicationIdSuffix = null
@@ -104,6 +108,7 @@ fun Project.configureBuildTypes(
                         versionNameSuffix = buildType.versionNameSuffix
                         fillBuildConfigFields(buildType)
                         fillManifestPlaceholders(buildType)
+                        signingConfig = signingConfigs.getByName(buildType.signingVariant.name)
                     }
                     buildTypeConfigurationBlock(this, buildType)
                 }

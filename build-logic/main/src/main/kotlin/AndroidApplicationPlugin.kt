@@ -3,6 +3,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import ru.zarina.zarina.configureBuildTypes
+import ru.zarina.zarina.configureSigning
 
 @Suppress("unused")
 class AndroidApplicationPlugin : Plugin<Project> {
@@ -13,6 +14,7 @@ class AndroidApplicationPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.android")
             }
             extensions.configure<ApplicationExtension> {
+                configureSigning(this)
                 configureBuildTypes(this)
             }
         }
