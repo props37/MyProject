@@ -33,7 +33,12 @@ data class FiltersRequestDto(
                 availableForShipping = filtration.isShippingAvailable.takeIf { it == true },
                 availableForPickup = filtration.isPickupAvailable
                     .takeIf { it == true }
-                    ?.let { AvailableForPickupDto(isApplied = true) },
+                    ?.let {
+                        AvailableForPickupDto(
+                            isApplied = true,
+                            storeId = filtration.pickupShop?.id
+                        )
+                    },
             )
         }
 
@@ -47,5 +52,5 @@ data class AvailableForPickupDto(
     @SerialName("applied")
     val isApplied: Boolean,
     @SerialName("store_id")
-    val storeId: Int? = null,
+    val storeId: String? = null,
 )
