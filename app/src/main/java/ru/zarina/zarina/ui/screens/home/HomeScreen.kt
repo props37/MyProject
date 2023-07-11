@@ -25,7 +25,6 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @Composable
 fun HomeScreenContent(
     onProductClick: () -> Unit,
-    onCatalogClick: () -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -41,32 +40,22 @@ fun HomeScreenContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         )
-        ZarinaTextButton(
-            text = "Каталог",
-            onClick = onCatalogClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-        )
     }
 }
 
 @Composable
 fun HomeScreen(
     showProduct: (id: Product.Id) -> Unit,
-    showCatalog: () -> Unit,
 ) {
     val viewModel = koinViewModel<HomeViewModel>()
 
     HomeScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showProduct = showProduct,
-        showCatalog = showCatalog,
     )
 
     HomeScreenContent(
         onProductClick = viewModel::onProductClick,
-        onCatalogClick = viewModel::onCatalogClick
     )
 }
 
@@ -74,14 +63,12 @@ fun HomeScreen(
 fun HomeScreenBehavior(
     sideEffects: Flow<HomeViewModel.SideEffect>,
     showProduct: (Product.Id) -> Unit,
-    showCatalog: () -> Unit,
 ) {
     NavigationBarState(isVisible = true, isAnimated = true)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
                 is HomeViewModel.SideEffect.ShowProduct -> showProduct(effect.id)
-                HomeViewModel.SideEffect.ShowCatalog -> showCatalog()
             }
         }
     }
@@ -95,7 +82,6 @@ fun HomeScreenContentPreview() {
     ZarinaTheme {
         HomeScreenContent(
             onProductClick = {},
-            onCatalogClick = {},
         )
     }
 }
