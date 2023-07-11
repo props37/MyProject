@@ -46,6 +46,8 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.base.behavior.BehaviorController
 import ru.zarina.zarina.ui.common.behavior.navigationbar.LocalNavigationBarController
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarBehavior
+import ru.zarina.zarina.ui.navigation.base.Destination
+import ru.zarina.zarina.ui.navigation.base.Graph
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
@@ -87,7 +89,7 @@ fun ZarinaBottomNavigation(
             val currentDestination = navBackStackEntry?.destination
             BottomNavigationTab.items.forEach { item ->
                 val isSelected =
-                    currentDestination?.hierarchy?.any { it.route == item.route } == true
+                    currentDestination?.hierarchy?.any { it.route == item.destination.routeSchema } == true
                 BottomNavigationItem(
                     item = item,
                     isSelected = isSelected,
@@ -102,12 +104,28 @@ fun ZarinaBottomNavigation(
 }
 
 fun NavController.navigate(tab: BottomNavigationTab) {
-    navigate(tab.route) {
-        popUpTo(graph.findStartDestination().id) {
-            saveState = true
+    val isCurrentTab =
+        currentDestination?.hierarchy?.any { it.route == tab.destination.routeSchema } == true
+    val isCurrentScreen =
+        currentDestination?.route == (tab.destination as? Graph<*>)?.startDestination?.routeSchema
+    when {
+        isCurrentTab && !isCurrentScreen -> {
+            navigate(tab.destination.routeSchema) {
+                popBackStack(tab.destination.routeSchema, true)
+            }
         }
-        launchSingleTop = true
-        restoreState = true
+
+        !isCurrentTab -> {
+            navigate(tab.destination.routeSchema) {
+                popUpTo(graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
+
+        else -> Unit
     }
 }
 
@@ -156,37 +174,37 @@ sealed class BottomNavigationTab(
     val icon: Int,
     @StringRes
     val title: Int,
-    val route: String,
+    val destination: Destination<*>,
 ) {
 
     object Catalogue : BottomNavigationTab(
         icon = R.drawable.ic_magnifying_glass_lines_36,
         title = R.string.catalogue,
-        route = Catalog.routeSchema,
+        destination = Catalog,
     )
 
     object Favourites : BottomNavigationTab(
         icon = R.drawable.ic_heart_36,
         title = R.string.favourites,
-        route = ru.zarina.zarina.ui.navigation.destinations.Favourites.routeSchema,
+        destination = ru.zarina.zarina.ui.navigation.destinations.Favourites,
     )
 
     object Home : BottomNavigationTab(
         icon = R.drawable.ic_home_36,
         title = R.string.main_page,
-        route = ru.zarina.zarina.ui.navigation.destinations.Home.routeSchema,
+        destination = ru.zarina.zarina.ui.navigation.destinations.Home,
     )
 
     object Profile : BottomNavigationTab(
         icon = R.drawable.ic_person_36,
         title = R.string.profile,
-        route = ru.zarina.zarina.ui.navigation.destinations.Profile.routeSchema,
+        destination = ru.zarina.zarina.ui.navigation.destinations.Profile,
     )
 
     object Cart : BottomNavigationTab(
         icon = R.drawable.ic_shopping_bag_36,
         title = R.string.cart,
-        route = ru.zarina.zarina.ui.navigation.destinations.Cart.routeSchema,
+        destination = ru.zarina.zarina.ui.navigation.destinations.Cart,
     )
 
 
