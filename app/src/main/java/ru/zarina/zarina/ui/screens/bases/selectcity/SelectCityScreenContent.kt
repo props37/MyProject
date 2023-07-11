@@ -216,15 +216,19 @@ fun SelectCityScreenContent(
             targetState = isApplyButtonVisible,
             transitionSpec = { fadeIn() with fadeOut() },
             label = "apply button",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(WindowInsets.navigationOrIme.asPaddingValues())
+            modifier = Modifier.fillMaxWidth()
         ) {
             if (it) {
+                val elevation = if (lazyListState.canScrollForward) 6.dp else 0.dp
                 ZarinaTextButton(
                     text = stringResource(id = R.string.apply),
                     onClick = onApplyButtonClick,
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shadow(elevation)
+                        .background(UiKitTheme.colors.screenBackground)
+                        .padding(16.dp)
+                        .padding(WindowInsets.navigationOrIme.asPaddingValues())
                 )
             }
         }

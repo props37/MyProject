@@ -76,9 +76,7 @@ fun SelectShopScreenContent(
         },
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .navigationBarsPadding(),
+            modifier = Modifier.fillMaxSize(),
         ) {
             val elevation =
                 animateDpAsState(
@@ -143,6 +141,9 @@ fun SelectShopScreenContent(
                                             .padding(horizontal = 16.dp),
                                     )
                             }
+                            item {
+                                Spacer(Modifier.navigationBarsPadding())
+                            }
                         }
                     }
                 }
@@ -150,17 +151,21 @@ fun SelectShopScreenContent(
             AnimatedContent(
                 targetState = isApplyButtonVisible,
                 label = "is apply button visible",
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
-                if (it)
+                if (it) {
+                    val elevation = if (listState.canScrollForward) 6.dp else 0.dp
                     ZarinaTextButton(
                         text = stringResource(id = R.string.apply),
                         onClick = onApplyClick,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
+                            .shadow(elevation)
+                            .background(UiKitTheme.colors.screenBackground)
+                            .padding(16.dp)
+                            .navigationBarsPadding(),
                     )
+                }
             }
         }
     }
@@ -206,7 +211,7 @@ fun SelectShopScreen(
     savedStateHandle: SavedStateHandle,
     filtersSavedStateHandle: SavedStateHandle,
     showSelectCity: () -> Unit,
-    goBack: () -> Unit
+    goBack: () -> Unit,
 ) {
     val viewModel = koinViewModel<SelectShopViewModel> {
         parametersOf(
