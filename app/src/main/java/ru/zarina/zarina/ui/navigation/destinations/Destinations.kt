@@ -235,3 +235,15 @@ object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
     object SelectCity : SimpleDestination(BaseRoute.CATALOG_SELECT_CITY)
 
 }
+
+object Favourites : SimpleGraph(BaseRoute.GRAPH_FAVOURITES, Root) {
+    object Root : SimpleDestination(BaseRoute.FAVOURITES)
+}
+
+object Profile : SimpleGraph(BaseRoute.GRAPH_PROFILE, Root) {
+    object Root : SimpleDestination(BaseRoute.PROFILE)
+}
+
+object Cart : SimpleGraph(BaseRoute.GRAPH_CART, Root) {
+    object Root : SimpleDestination(BaseRoute.CART)
+}

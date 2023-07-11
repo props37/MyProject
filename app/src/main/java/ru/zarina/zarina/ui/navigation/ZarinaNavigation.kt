@@ -16,9 +16,12 @@ import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import ru.zarina.zarina.ui.common.components.ZarinaBottomNavigation
 import ru.zarina.zarina.ui.navigation.base.Destination
+import ru.zarina.zarina.ui.navigation.graphs.cartGraph
 import ru.zarina.zarina.ui.navigation.graphs.catalogGraph
+import ru.zarina.zarina.ui.navigation.graphs.favouritesGraph
 import ru.zarina.zarina.ui.navigation.graphs.orphans
 import ru.zarina.zarina.ui.navigation.graphs.pickupGraph
+import ru.zarina.zarina.ui.navigation.graphs.profileGraph
 import ru.zarina.zarina.ui.navigation.graphs.subscribeGraph
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
@@ -42,9 +45,12 @@ fun ZarinaNavigation(
                     .weight(1f),
             ) {
                 orphans(navController)
+                catalogGraph(navController)
                 pickupGraph(navController)
                 subscribeGraph(navController)
-                catalogGraph(navController)
+                favouritesGraph(navController)
+                profileGraph(navController)
+                cartGraph(navController)
             }
             ZarinaBottomNavigation(
                 modifier = Modifier
