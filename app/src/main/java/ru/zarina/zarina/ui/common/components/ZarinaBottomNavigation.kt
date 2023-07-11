@@ -38,7 +38,7 @@ fun ZarinaBottomNavigation(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.height(52.dp),
+        modifier = modifier.height(56.dp),
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
