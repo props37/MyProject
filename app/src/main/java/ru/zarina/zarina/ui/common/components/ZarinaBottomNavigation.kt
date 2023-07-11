@@ -15,6 +15,7 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +23,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.zarina.zarina.R
+import ru.zarina.zarina.ui.navigation.destinations.Catalog
+import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
@@ -34,12 +40,22 @@ fun ZarinaBottomNavigation(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.height(52.dp),
     ) {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
         BottomNavigationRoot.items.forEach { item ->
-            val isSelected = false
+            val isSelected = currentDestination?.hierarchy?.any { it.route == item.route } == true
             BottomNavigationItem(
                 item = item,
                 isSelected = isSelected,
-                onClick = { /*TODO*/ },
+                onClick = {
+                    navController.navigate(item.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
             )
         }
     }
@@ -89,31 +105,37 @@ sealed class BottomNavigationRoot(
     val icon: Int,
     @StringRes
     val title: Int,
+    val route: String,
 ) {
 
     object Catalogue : BottomNavigationRoot(
         icon = R.drawable.ic_magnifying_glass_lines_36,
-        title = R.string.catalogue
+        title = R.string.catalogue,
+        route = Catalog.routeSchema,
     )
 
     object Favourites : BottomNavigationRoot(
         icon = R.drawable.ic_heart_36,
-        title = R.string.favourites
+        title = R.string.favourites,
+        route = ru.zarina.zarina.ui.navigation.destinations.Favourites.routeSchema,
     )
 
     object Home : BottomNavigationRoot(
         icon = R.drawable.ic_home_36,
-        title = R.string.main_page
+        title = R.string.main_page,
+        route = Destinations.Home.route,
     )
 
     object Profile : BottomNavigationRoot(
         icon = R.drawable.ic_person_36,
-        title = R.string.profile
+        title = R.string.profile,
+        route = ru.zarina.zarina.ui.navigation.destinations.Profile.routeSchema,
     )
 
     object Cart : BottomNavigationRoot(
         icon = R.drawable.ic_shopping_bag_36,
-        title = R.string.cart
+        title = R.string.cart,
+        route = ru.zarina.zarina.ui.navigation.destinations.Cart.routeSchema,
     )
 
 
