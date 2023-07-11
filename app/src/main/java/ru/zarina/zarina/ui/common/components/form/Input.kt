@@ -61,10 +61,12 @@ fun Input(
                 isError = isError,
                 visualTransformation = VisualTransformation.None,
                 interactionSource = interactionSource,
-                colors = TextFieldDefaults.textFieldColors(
-                    textColor = UiKitTheme.colors.primaryContentColor,
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = UiKitTheme.colors.primaryContentColor,
+                    unfocusedTextColor = UiKitTheme.colors.primaryContentColor,
                     disabledTextColor = UiKitTheme.colors.primaryContentColor,
-                    containerColor = UiKitTheme.colors.screenBackground,
+                    focusedContainerColor = UiKitTheme.colors.screenBackground,
+                    unfocusedContainerColor = UiKitTheme.colors.screenBackground,
                     cursorColor = UiKitTheme.colors.primaryContentColor,
                     focusedIndicatorColor = UiKitTheme.colors.listDivider,
                     unfocusedIndicatorColor = UiKitTheme.colors.listDivider,
