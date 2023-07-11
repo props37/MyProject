@@ -4,11 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
@@ -53,10 +53,11 @@ fun ZarinaNavigation(
                 cartGraph(navController)
             }
             ZarinaBottomNavigation(
+                navController = navController,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
-                    .background(UiKitTheme.colors.disabled)
+                    .background(UiKitTheme.colors.screenBackground)
+                    .clip(RectangleShape)
                     .navigationBarsPadding(),
             )
         }
