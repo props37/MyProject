@@ -27,7 +27,8 @@ fun NavGraphBuilder.orphans(
     composableDestination(Destinations.SelectCity) {
         SelectCityScreen(
             showHome = {
-                navController.navigate(Home.routeSchema) { popUpTo(0) }
+                navController.popBackStack(0, true)
+                navController.navigate(Home.routeSchema)
             }
         )
     }
