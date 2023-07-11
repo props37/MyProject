@@ -11,6 +11,7 @@ import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.screens.bases.selectcity.SelectCityScreenContent
 import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 
@@ -55,6 +56,7 @@ fun SelectPickupCityScreenBehavior(
     sideEffects: Flow<SelectPickupCityViewModel.SideEffect>,
     goBack: () -> Unit,
 ) {
+    NavigationBarState(isVisible = false, isAnimated = false)
     val context by rememberUpdatedState(LocalContext.current)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->

@@ -3,8 +3,8 @@ package ru.zarina.zarina.ui.screens.catalog.filters
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,7 +30,9 @@ import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.PriceRange
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
+import ru.zarina.zarina.ui.common.components.bottomNavigationPadding
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
@@ -84,6 +87,7 @@ fun FiltersScreenContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .weight(1f)
                     .verticalScroll(scrollState)
             ) {
                 if (filtration?.price != null && filtration.priceLimits != null) {
@@ -158,14 +162,17 @@ fun FiltersScreenContent(
                     onClick = { onFilterClick(FilterType.PICKUP_SHOP) },
                 )
             }
-            Spacer(modifier = Modifier.weight(1f))
+            val elevation = if (scrollState.canScrollForward) 6.dp else 0.dp
             FilterButton(
                 mode = filterButtonMode,
                 onClick = onFilterButtonClick,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .shadow(elevation)
+                    .background(UiKitTheme.colors.screenBackground)
                     .padding(16.dp)
                     .navigationBarsPadding()
+                    .bottomNavigationPadding()
             )
         }
     }
@@ -255,6 +262,7 @@ fun FiltersScreenBehavior(
     showColorFilter: (FilterType) -> Unit,
     goBack: () -> Unit,
 ) {
+    NavigationBarState(isVisible = true, isAnimated = true)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {

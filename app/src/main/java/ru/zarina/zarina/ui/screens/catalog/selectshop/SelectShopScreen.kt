@@ -42,6 +42,7 @@ import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Shop
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.CityPicker
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
@@ -75,9 +76,7 @@ fun SelectShopScreenContent(
         },
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .navigationBarsPadding(),
+            modifier = Modifier.fillMaxSize(),
         ) {
             val elevation =
                 animateDpAsState(
@@ -142,6 +141,9 @@ fun SelectShopScreenContent(
                                             .padding(horizontal = 16.dp),
                                     )
                             }
+                            item {
+                                Spacer(Modifier.navigationBarsPadding())
+                            }
                         }
                     }
                 }
@@ -149,17 +151,21 @@ fun SelectShopScreenContent(
             AnimatedContent(
                 targetState = isApplyButtonVisible,
                 label = "is apply button visible",
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
-                if (it)
+                if (it) {
+                    val elevation = if (listState.canScrollForward) 6.dp else 0.dp
                     ZarinaTextButton(
                         text = stringResource(id = R.string.apply),
                         onClick = onApplyClick,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
+                            .shadow(elevation)
+                            .background(UiKitTheme.colors.screenBackground)
+                            .padding(16.dp)
+                            .navigationBarsPadding(),
                     )
+                }
             }
         }
     }
@@ -205,7 +211,7 @@ fun SelectShopScreen(
     savedStateHandle: SavedStateHandle,
     filtersSavedStateHandle: SavedStateHandle,
     showSelectCity: () -> Unit,
-    goBack: () -> Unit
+    goBack: () -> Unit,
 ) {
     val viewModel = koinViewModel<SelectShopViewModel> {
         parametersOf(
@@ -245,6 +251,7 @@ fun SelectShopScreenBehavior(
     showSelectCity: () -> Unit,
     goBack: () -> Unit,
 ) {
+    NavigationBarState(isVisible = false, isAnimated = false)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {

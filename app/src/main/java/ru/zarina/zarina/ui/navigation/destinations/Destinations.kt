@@ -13,8 +13,6 @@ import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleGraph
 import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 
 object Destinations {
-    object Home : SimpleDestination(BaseRoute.HOME)
-
     object Onboarding : SimpleDestination(BaseRoute.ONBOARDING)
 
     object SelectCity : SimpleDestination(BaseRoute.SELECT_CITY)
@@ -65,6 +63,10 @@ object Destinations {
         )
 
     }
+}
+
+object Home : SimpleGraph(BaseRoute.GRAPH_HOME, Root) {
+    object Root : SimpleDestination(BaseRoute.HOME)
 }
 
 
@@ -234,4 +236,16 @@ object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
 
     object SelectCity : SimpleDestination(BaseRoute.CATALOG_SELECT_CITY)
 
+}
+
+object Favourites : SimpleGraph(BaseRoute.GRAPH_FAVOURITES, Root) {
+    object Root : SimpleDestination(BaseRoute.FAVOURITES)
+}
+
+object Profile : SimpleGraph(BaseRoute.GRAPH_PROFILE, Root) {
+    object Root : SimpleDestination(BaseRoute.PROFILE)
+}
+
+object Cart : SimpleGraph(BaseRoute.GRAPH_CART, Root) {
+    object Root : SimpleDestination(BaseRoute.CART)
 }

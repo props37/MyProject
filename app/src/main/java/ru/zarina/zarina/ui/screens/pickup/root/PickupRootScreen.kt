@@ -41,6 +41,7 @@ import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Stock
 import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.CityPicker
 import ru.zarina.zarina.ui.common.components.HorizontalProductCard
 import ru.zarina.zarina.ui.common.components.Tabs
@@ -251,6 +252,7 @@ fun PickupRootScreenBehavior(
     showDetails: () -> Unit,
     goBack: () -> Unit,
 ) {
+    NavigationBarState(isVisible = false, isAnimated = false)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {

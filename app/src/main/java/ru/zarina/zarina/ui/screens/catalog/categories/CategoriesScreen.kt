@@ -31,8 +31,10 @@ import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Media
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.AsyncImageLoader
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
+import ru.zarina.zarina.ui.common.components.bottomNavigationPadding
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.CategoryListProvider
 import ru.zarina.zarina.ui.theme.ZarinaTheme
@@ -58,7 +60,9 @@ fun CategoriesScreenContent(
             state = listState,
             contentPadding = WindowInsets.navigationBars.asPaddingValues(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .bottomNavigationPadding()
         ) {
             items(
                 items = categories,
@@ -114,6 +118,7 @@ fun CategoriesScreenBehavior(
     showProducts: (Category.Id) -> Unit,
 ) {
     val context by rememberUpdatedState(LocalContext.current)
+    NavigationBarState(isVisible = true, isAnimated = true)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {

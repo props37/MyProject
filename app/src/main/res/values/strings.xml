@@ -121,4 +121,9 @@
     <string name="select_store">Выбрать магазин</string>
     <string name="selection_of_store">Выбор магазина</string>
     <string name="shop_list">Список магазинов</string>
+    <string name="catalogue">Каталог</string>
+    <string name="favourites">Избранное</string>
+    <string name="main_page">Главная</string>
+    <string name="profile">Профиль</string>
+    <string name="cart">Корзина</string>
 </resources>

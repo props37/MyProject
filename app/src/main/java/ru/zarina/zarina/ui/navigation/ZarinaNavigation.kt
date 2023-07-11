@@ -1,97 +1,89 @@
 package ru.zarina.zarina.ui.navigation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
+import ru.zarina.zarina.ui.common.base.behavior.BehaviorController
+import ru.zarina.zarina.ui.common.behavior.navigationbar.LocalNavigationBarController
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarBehavior
+import ru.zarina.zarina.ui.common.components.ZarinaBottomNavigation
 import ru.zarina.zarina.ui.navigation.base.Destination
-import ru.zarina.zarina.ui.navigation.base.composableDestination
-import ru.zarina.zarina.ui.navigation.destinations.Catalog
-import ru.zarina.zarina.ui.navigation.destinations.Destinations
-import ru.zarina.zarina.ui.navigation.destinations.Pickup
+import ru.zarina.zarina.ui.navigation.graphs.cartGraph
 import ru.zarina.zarina.ui.navigation.graphs.catalogGraph
+import ru.zarina.zarina.ui.navigation.graphs.favouritesGraph
+import ru.zarina.zarina.ui.navigation.graphs.homeGraph
+import ru.zarina.zarina.ui.navigation.graphs.orphans
 import ru.zarina.zarina.ui.navigation.graphs.pickupGraph
+import ru.zarina.zarina.ui.navigation.graphs.profileGraph
 import ru.zarina.zarina.ui.navigation.graphs.subscribeGraph
-import ru.zarina.zarina.ui.screens.home.HomeScreen
-import ru.zarina.zarina.ui.screens.onboarding.OnboardingScreen
-import ru.zarina.zarina.ui.screens.product.ProductScreen
-import ru.zarina.zarina.ui.screens.selectcity.SelectCityScreen
-import ru.zarina.zarina.ui.screens.webpage.WebpageScreen
+import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 fun ZarinaNavigation(
     startDestination: Destination<*>,
+    changeStartDestination: (Destination<*>) -> Unit,
 ) {
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberNavController(bottomSheetNavigator)
 
     ModalBottomSheetLayout(bottomSheetNavigator) {
-        NavHost(
-            navController = navController,
-            startDestination = startDestination.routeSchema,
+
+        val navigationBarController = remember {
+            BehaviorController<NavigationBarBehavior>(NavigationBarBehavior.DEFAULT)
+        }
+
+        CompositionLocalProvider(
+            LocalNavigationBarController provides navigationBarController
         ) {
-            composableDestination(Destinations.Home) {
-                HomeScreen(
-                    showProduct = { productId ->
-                        val arguments = Destinations.Product.Arguments(
-                            productId = productId,
-                        )
-                        navController.navigate(Destinations.Product.createRoute(arguments))
-                    },
-                    showCatalog = {
-                        navController.navigate(Catalog.createRoute(Unit))
-                    }
-                )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                NavHost(
+                    navController = navController,
+                    startDestination = startDestination.routeSchema,
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    orphans(
+                        navController = navController,
+                        changeStartDestination = changeStartDestination,
+                    )
+                    homeGraph(navController)
+                    catalogGraph(navController)
+                    pickupGraph(navController)
+                    subscribeGraph(navController)
+                    favouritesGraph(navController)
+                    profileGraph(navController)
+                    cartGraph(navController)
+                }
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth(),
+                ) {
+                    ZarinaBottomNavigation(
+                        navController = navController,
+                        navigationBarController = navigationBarController,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(UiKitTheme.colors.screenBackground)
+                            .clip(RectangleShape),
+                    )
+                }
             }
-            composableDestination(Destinations.Onboarding) {
-                OnboardingScreen(
-                    showHome = {
-                        navController.navigate(Destinations.Home.route) { popUpTo(0) }
-                    },
-                    showSelectCity = {
-                        navController.navigate(Destinations.SelectCity.route)
-                    }
-                )
-            }
-            composableDestination(Destinations.SelectCity) {
-                SelectCityScreen(
-                    showHome = {
-                        navController.navigate(Destinations.Home.route) { popUpTo(0) }
-                    }
-                )
-            }
-            composableDestination(Destinations.Product) {
-                ProductScreen(
-                    showProduct = { productId ->
-                        val arguments = Destinations.Product.Arguments(
-                            productId = productId,
-                        )
-                        navController.navigate(Destinations.Product.createRoute(arguments))
-                    },
-                    showPickup = { productId ->
-                        val arguments = Pickup.Arguments(
-                            productId = productId,
-                        )
-                        navController.navigate(Pickup.createRoute(arguments))
-                    },
-                    goBack = {
-                        navController.popBackStack(Destinations.Product.routeSchema, true)
-                    }
-                )
-            }
-            composableDestination(Destinations.Webpage) {
-                WebpageScreen(
-                    goBack = {
-                        navController.popBackStack(Destinations.Webpage.routeSchema, true)
-                    }
-                )
-            }
-            pickupGraph(navController)
-            subscribeGraph(navController)
-            catalogGraph(navController)
         }
     }
 }

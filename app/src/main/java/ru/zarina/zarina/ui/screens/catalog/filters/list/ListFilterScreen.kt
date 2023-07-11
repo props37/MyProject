@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -50,6 +51,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.ListFilter
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.textString
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
@@ -131,15 +133,19 @@ fun ListFilterScreenContent(
                 label = "apply button visibility",
                 modifier = Modifier.fillMaxWidth(),
             ) { isVisible ->
-                if (isVisible)
+                if (isVisible) {
+                    val elevation = if (listState.canScrollForward) 6.dp else 0.dp
                     ZarinaTextButton(
                         text = stringResource(id = R.string.apply),
                         onClick = onApplyClick,
                         modifier = Modifier
+                            .shadow(elevation)
+                            .background(UiKitTheme.colors.screenBackground)
                             .padding(16.dp)
                             .navigationBarsPadding()
                             .fillMaxWidth()
                     )
+                }
             }
         }
     }
@@ -224,6 +230,7 @@ fun ListFilterScreenBehavior(
     sideEffects: Flow<ListFilterViewModel.SideEffect>,
     goBack: () -> Unit,
 ) {
+    NavigationBarState(isVisible = false, isAnimated = false)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
