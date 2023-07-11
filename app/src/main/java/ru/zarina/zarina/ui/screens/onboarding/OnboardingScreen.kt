@@ -62,6 +62,7 @@ import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.StateSnackbar
 import ru.zarina.zarina.ui.common.components.StateSnackbarDefaults
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaButtonDefaults
@@ -465,6 +466,7 @@ fun OnboardingScreenBehavior(
     showSelectCity: () -> Unit,
     onLocationPermissionResult: (isGranted: Boolean) -> Unit,
 ) {
+    NavigationBarState(isVisible = false, isAnimated = false)
     val locationPermissionState = rememberPermissionState(
         permission = android.Manifest.permission.ACCESS_COARSE_LOCATION,
         onPermissionResult = onLocationPermissionResult

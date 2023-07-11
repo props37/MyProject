@@ -68,9 +68,11 @@ import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ModalError
 import ru.zarina.zarina.ui.common.components.ProductCard
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
+import ru.zarina.zarina.ui.common.components.bottomNavigationPadding
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
@@ -148,7 +150,9 @@ fun ProductsScreenContent(
                     horizontalArrangement = Arrangement.spacedBy(2.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                     contentPadding = WindowInsets.navigationBars.asPaddingValues(),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .bottomNavigationPadding()
                 ) {
                     items(
                         count = products.itemCount,
@@ -180,6 +184,7 @@ fun ProductsScreenContent(
                         .fillMaxSize()
                         .background(UiKitTheme.colors.screenBackground)
                         .navigationBarsPadding()
+                        .bottomNavigationPadding()
                 )
         }
     }
@@ -342,6 +347,7 @@ fun ProductsScreenBehavior(
     showFilters: () -> Unit,
     goBack: () -> Unit,
 ) {
+    NavigationBarState(isVisible = true, isAnimated = true)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {

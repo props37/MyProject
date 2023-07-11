@@ -29,6 +29,7 @@ import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
@@ -173,6 +174,7 @@ fun WebpageScreenBehavior(
     sideEffects: Flow<WebpageViewModel.SideEffect>,
     goBack: () -> Unit,
 ) {
+    NavigationBarState(isVisible = false, isAnimated = false)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {

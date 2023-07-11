@@ -14,6 +14,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -190,8 +191,12 @@ sealed class BottomNavigationRoot(
 }
 
 fun Modifier.bottomNavigationPadding(): Modifier = composed {
-    val behavior = LocalNavigationBarController.current.current.collectAsStateWithLifecycle()
-    val isVisible = remember { derivedStateOf { behavior.value is NavigationBarBehavior.Visible } }
-    this.padding(bottom = if (isVisible.value) BottomNavigationHeight else 0.dp)
+    this.padding(bottomNavigationPaddingValues())
 }
 
+@Composable
+fun bottomNavigationPaddingValues(): PaddingValues {
+    val behavior = LocalNavigationBarController.current.current.collectAsStateWithLifecycle()
+    val isVisible = remember { derivedStateOf { behavior.value is NavigationBarBehavior.Visible } }
+    return PaddingValues(bottom = if (isVisible.value) BottomNavigationHeight else 0.dp)
+}

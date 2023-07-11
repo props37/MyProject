@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.screens.bases.selectcity.SelectCityScreenContent
 
 @Composable
@@ -51,6 +52,7 @@ fun SelectCityScreenBehavior(
     sideEffects: Flow<SelectCityViewModel.SideEffect>,
     goBack: () -> Unit,
 ) {
+    NavigationBarState(isVisible = false, isAnimated = false)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {

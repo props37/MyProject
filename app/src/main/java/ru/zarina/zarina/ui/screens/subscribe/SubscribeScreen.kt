@@ -47,6 +47,7 @@ import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.textString
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.form.Input
@@ -284,6 +285,7 @@ fun SubscribeScreenBehavior(
     showWebpage: (String) -> Unit,
     goBack: () -> Unit,
 ) {
+    NavigationBarState(isVisible = false, isAnimated = false)
     val context by rememberUpdatedState(LocalContext.current)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->

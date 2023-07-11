@@ -41,6 +41,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.DeliveryAvailability
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
@@ -269,6 +270,7 @@ fun ProductScreenBehavior(
     showPickup: (Product.Id) -> Unit,
     goBack: () -> Unit,
 ) {
+    NavigationBarState(isVisible = false, isAnimated = false)
     val context = LocalContext.current
     LaunchedEffect(context, sideEffects) {
         sideEffects.collect { effect ->
