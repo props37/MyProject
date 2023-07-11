@@ -85,20 +85,14 @@ fun ZarinaBottomNavigation(
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
-            BottomNavigationRoot.items.forEach { item ->
+            BottomNavigationTab.items.forEach { item ->
                 val isSelected =
                     currentDestination?.hierarchy?.any { it.route == item.route } == true
                 BottomNavigationItem(
                     item = item,
                     isSelected = isSelected,
                     onClick = {
-                        navController.navigate(item.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        navController.navigate(item)
                     },
                     modifier = Modifier.navigationBarsPadding()
                 )
@@ -107,9 +101,20 @@ fun ZarinaBottomNavigation(
     }
 }
 
+fun NavController.navigate(tab: BottomNavigationTab) {
+    navigate(tab.route) {
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
+}
+
+
 @Composable
 fun RowScope.BottomNavigationItem(
-    item: BottomNavigationRoot,
+    item: BottomNavigationTab,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -146,7 +151,7 @@ fun RowScope.BottomNavigationItem(
     }
 }
 
-sealed class BottomNavigationRoot(
+sealed class BottomNavigationTab(
     @DrawableRes
     val icon: Int,
     @StringRes
@@ -154,31 +159,31 @@ sealed class BottomNavigationRoot(
     val route: String,
 ) {
 
-    object Catalogue : BottomNavigationRoot(
+    object Catalogue : BottomNavigationTab(
         icon = R.drawable.ic_magnifying_glass_lines_36,
         title = R.string.catalogue,
         route = Catalog.routeSchema,
     )
 
-    object Favourites : BottomNavigationRoot(
+    object Favourites : BottomNavigationTab(
         icon = R.drawable.ic_heart_36,
         title = R.string.favourites,
         route = ru.zarina.zarina.ui.navigation.destinations.Favourites.routeSchema,
     )
 
-    object Home : BottomNavigationRoot(
+    object Home : BottomNavigationTab(
         icon = R.drawable.ic_home_36,
         title = R.string.main_page,
         route = ru.zarina.zarina.ui.navigation.destinations.Home.routeSchema,
     )
 
-    object Profile : BottomNavigationRoot(
+    object Profile : BottomNavigationTab(
         icon = R.drawable.ic_person_36,
         title = R.string.profile,
         route = ru.zarina.zarina.ui.navigation.destinations.Profile.routeSchema,
     )
 
-    object Cart : BottomNavigationRoot(
+    object Cart : BottomNavigationTab(
         icon = R.drawable.ic_shopping_bag_36,
         title = R.string.cart,
         route = ru.zarina.zarina.ui.navigation.destinations.Cart.routeSchema,
