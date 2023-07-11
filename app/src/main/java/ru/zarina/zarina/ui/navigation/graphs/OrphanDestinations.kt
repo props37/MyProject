@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.navigation.graphs
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.navigation.destinations.Home
@@ -13,11 +14,12 @@ import ru.zarina.zarina.ui.screens.webpage.WebpageScreen
 
 fun NavGraphBuilder.orphans(
     navController: NavController,
+    changeStartDestination: (Destination<*>) -> Unit,
 ) {
     composableDestination(Destinations.Onboarding) {
         OnboardingScreen(
             showHome = {
-                navController.navigate(Home.routeSchema) { popUpTo(0) }
+                changeStartDestination(Home)
             },
             showSelectCity = {
                 navController.navigate(Destinations.SelectCity.route)
@@ -27,8 +29,7 @@ fun NavGraphBuilder.orphans(
     composableDestination(Destinations.SelectCity) {
         SelectCityScreen(
             showHome = {
-                navController.popBackStack(0, true)
-                navController.navigate(Home.routeSchema)
+                changeStartDestination(Home)
             }
         )
     }

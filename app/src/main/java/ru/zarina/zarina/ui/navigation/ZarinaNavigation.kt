@@ -35,6 +35,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 @Composable
 fun ZarinaNavigation(
     startDestination: Destination<*>,
+    changeStartDestination: (Destination<*>) -> Unit,
 ) {
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberNavController(bottomSheetNavigator)
@@ -56,7 +57,10 @@ fun ZarinaNavigation(
                     startDestination = startDestination.routeSchema,
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    orphans(navController)
+                    orphans(
+                        navController = navController,
+                        changeStartDestination = changeStartDestination,
+                    )
                     homeGraph(navController)
                     catalogGraph(navController)
                     pickupGraph(navController)
