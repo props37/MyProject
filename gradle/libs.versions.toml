@@ -2,25 +2,25 @@
 android-gradle = "8.1.0-rc01"
 kotlin = "1.8.20"
 ksp = "1.8.20-1.0.11"
-kotlinx-coroutines-test = "1.7.1"
-kotlinx-serialization = "1.5.0"
+kotlinx-coroutines-test = "1.7.2"
+kotlinx-serialization = "1.5.1"
 kotlinx-collections-immutable = "0.3.5"
-androidx-core = "1.10.0"
+androidx-core = "1.10.1"
 androidx-lifecycle = "2.6.1"
-androidx-activity = "1.7.0"
-androidx-splashScreen = "1.0.0"
-androidx-navigation = "2.5.3"
+androidx-activity = "1.7.2"
+androidx-splashScreen = "1.0.1"
+androidx-navigation = "2.6.0"
 androidx-datastore = "1.0.0"
-androidx-media3 = "1.0.1"
+androidx-media3 = "1.1.0"
 androidx-paging = "3.1.1"
 androidx-paging-compose = "1.0.0-alpha20"
-compose = "2023.04.00"
+compose = "2023.06.01"
 accompanist = "0.30.1"
 koin-core = "3.4.2"
 koin-annotations = "1.2.2"
 koin-androidx-compose = "3.4.5"
 koin-test = "3.4.1"
-room = "2.5.1"
+room = "2.5.2"
 ktor = "2.2.4"
 coil = "2.3.0"
 timber = "5.0.1"
@@ -28,7 +28,7 @@ google-play-services-plugin = "4.3.15"
 google-play-services-location = "21.0.1"
 google-play-services-maps = "18.1.0"
 google-play-services-maps-compose = "2.11.4"
-firebase = "31.4.0"
+firebase = "32.1.1"
 firebase-crashlytics = "2.9.4"
 firebase-performance = "1.4.2"
 mindbox = "2.5.0"
@@ -74,11 +74,9 @@ koin-ksp-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", vers
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin-core" }
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin-androidx-compose" }
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
-ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
 ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
 ktor-client-contentNegotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
-ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor" }
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging-jvm", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
