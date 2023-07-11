@@ -6,6 +6,7 @@ import kotlinx.coroutines.runBlocking
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
+import ru.zarina.zarina.ui.navigation.destinations.Home
 
 @KoinViewModel
 class AppViewModel(
@@ -15,7 +16,7 @@ class AppViewModel(
     val startDestination: Destination<*> = runBlocking {
         val isOnboardingCompleted = interactor.isOnboardingCompleted()
             .first()
-        if (isOnboardingCompleted) Destinations.Home else Destinations.Onboarding
+        if (isOnboardingCompleted) Home else Destinations.Onboarding
     }
 
 }

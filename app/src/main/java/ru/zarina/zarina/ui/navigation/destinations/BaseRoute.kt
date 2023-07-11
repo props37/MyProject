@@ -7,6 +7,7 @@ enum class BaseRoute {
     GRAPH_FAVOURITES,
     GRAPH_PROFILE,
     GRAPH_CART,
+    GRAPH_HOME,
     HOME,
     ONBOARDING,
     SELECT_CITY,

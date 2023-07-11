@@ -19,6 +19,7 @@ import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.graphs.cartGraph
 import ru.zarina.zarina.ui.navigation.graphs.catalogGraph
 import ru.zarina.zarina.ui.navigation.graphs.favouritesGraph
+import ru.zarina.zarina.ui.navigation.graphs.homeGraph
 import ru.zarina.zarina.ui.navigation.graphs.orphans
 import ru.zarina.zarina.ui.navigation.graphs.pickupGraph
 import ru.zarina.zarina.ui.navigation.graphs.profileGraph
@@ -45,6 +46,7 @@ fun ZarinaNavigation(
                     .weight(1f),
             ) {
                 orphans(navController)
+                homeGraph(navController)
                 catalogGraph(navController)
                 pickupGraph(navController)
                 subscribeGraph(navController)

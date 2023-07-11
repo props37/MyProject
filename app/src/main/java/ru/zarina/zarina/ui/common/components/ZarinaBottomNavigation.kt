@@ -28,7 +28,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
-import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
@@ -123,7 +122,7 @@ sealed class BottomNavigationRoot(
     object Home : BottomNavigationRoot(
         icon = R.drawable.ic_home_36,
         title = R.string.main_page,
-        route = Destinations.Home.route,
+        route = ru.zarina.zarina.ui.navigation.destinations.Home.routeSchema,
     )
 
     object Profile : BottomNavigationRoot(
