@@ -1,13 +1,13 @@
 package ru.zarina.zarina.ui.navigation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
@@ -48,15 +48,13 @@ fun ZarinaNavigation(
         CompositionLocalProvider(
             LocalNavigationBarController provides navigationBarController
         ) {
-            Column(
+            Box(
                 modifier = Modifier.fillMaxSize(),
             ) {
                 NavHost(
                     navController = navController,
                     startDestination = startDestination.routeSchema,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     orphans(navController)
                     homeGraph(navController)
@@ -71,10 +69,10 @@ fun ZarinaNavigation(
                     navController = navController,
                     navigationBarController = navigationBarController,
                     modifier = Modifier
+                        .align(Alignment.BottomCenter)
                         .fillMaxWidth()
                         .background(UiKitTheme.colors.screenBackground)
-                        .clip(RectangleShape)
-                        .navigationBarsPadding(),
+                        .clip(RectangleShape),
                 )
             }
         }
