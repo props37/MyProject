@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.ui.navigation.ZarinaNavigation
@@ -21,6 +22,6 @@ fun ZarinaApp(
 
     ZarinaNavigation(
         startDestination = startDestination,
-        changeStartDestination = viewModel::changeStartDestination,
+        changeStartDestination = remember { { viewModel.changeStartDestination(it) } },
     )
 }

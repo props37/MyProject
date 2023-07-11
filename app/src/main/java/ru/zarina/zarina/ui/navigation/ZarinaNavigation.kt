@@ -69,15 +69,20 @@ fun ZarinaNavigation(
                     profileGraph(navController)
                     cartGraph(navController)
                 }
-                ZarinaBottomNavigation(
-                    navController = navController,
-                    navigationBarController = navigationBarController,
+                Box(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .background(UiKitTheme.colors.screenBackground)
-                        .clip(RectangleShape),
-                )
+                        .fillMaxWidth(),
+                ) {
+                    ZarinaBottomNavigation(
+                        navController = navController,
+                        navigationBarController = navigationBarController,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(UiKitTheme.colors.screenBackground)
+                            .clip(RectangleShape),
+                    )
+                }
             }
         }
     }
