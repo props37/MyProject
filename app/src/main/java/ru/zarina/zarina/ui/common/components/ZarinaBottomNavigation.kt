@@ -2,7 +2,15 @@ package ru.zarina.zarina.ui.common.components
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -22,40 +30,61 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.zarina.zarina.R
+import ru.zarina.zarina.ui.common.base.behavior.BehaviorController
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarBehavior
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ZarinaBottomNavigation(
     navController: NavController,
+    navigationBarController: BehaviorController<NavigationBarBehavior>,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.height(56.dp),
+    val behavior by navigationBarController.current.collectAsStateWithLifecycle()
+    val isVisible = behavior is NavigationBarBehavior.Visible
+    val isAnimated = behavior.isAnimated
+    AnimatedVisibility(
+        visible = isVisible,
+        label = "is navigation bar visible",
+        enter = if (isAnimated) expandVertically() else EnterTransition.None,
+        exit = if (isAnimated) shrinkVertically() else ExitTransition.None,
     ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination
-        BottomNavigationRoot.items.forEach { item ->
-            val isSelected = currentDestination?.hierarchy?.any { it.route == item.route } == true
-            BottomNavigationItem(
-                item = item,
-                isSelected = isSelected,
-                onClick = {
-                    navController.navigate(item.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .height(56.dp)
+                .animateEnterExit(
+                    enter = if (isAnimated) slideInVertically { it } else EnterTransition.None,
+                    exit = if (isAnimated) slideOutVertically { it } else ExitTransition.None,
+                ),
+        ) {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentDestination = navBackStackEntry?.destination
+            BottomNavigationRoot.items.forEach { item ->
+                val isSelected =
+                    currentDestination?.hierarchy?.any { it.route == item.route } == true
+                BottomNavigationItem(
+                    item = item,
+                    isSelected = isSelected,
+                    onClick = {
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
-            )
+                    },
+                )
+            }
         }
     }
 }

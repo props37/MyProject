@@ -7,5 +7,5 @@ import ru.zarina.zarina.ui.common.base.behavior.NoopBehaviorController
 typealias NavigationBarController = IBehaviorController<NavigationBarBehavior>
 
 val LocalNavigationBarController = staticCompositionLocalOf<NavigationBarController> {
-    NoopBehaviorController(NavigationBarBehavior.Hidden(isAnimated = false))
+    NoopBehaviorController(NavigationBarBehavior.DEFAULT)
 }

@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
@@ -14,6 +16,9 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
+import ru.zarina.zarina.ui.common.base.behavior.BehaviorController
+import ru.zarina.zarina.ui.common.behavior.navigationbar.LocalNavigationBarController
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarBehavior
 import ru.zarina.zarina.ui.common.components.ZarinaBottomNavigation
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.graphs.cartGraph
@@ -35,33 +40,43 @@ fun ZarinaNavigation(
     val navController = rememberNavController(bottomSheetNavigator)
 
     ModalBottomSheetLayout(bottomSheetNavigator) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
+
+        val navigationBarController = remember {
+            BehaviorController<NavigationBarBehavior>(NavigationBarBehavior.DEFAULT)
+        }
+
+        CompositionLocalProvider(
+            LocalNavigationBarController provides navigationBarController
         ) {
-            NavHost(
-                navController = navController,
-                startDestination = startDestination.routeSchema,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
+            Column(
+                modifier = Modifier.fillMaxSize(),
             ) {
-                orphans(navController)
-                homeGraph(navController)
-                catalogGraph(navController)
-                pickupGraph(navController)
-                subscribeGraph(navController)
-                favouritesGraph(navController)
-                profileGraph(navController)
-                cartGraph(navController)
+                NavHost(
+                    navController = navController,
+                    startDestination = startDestination.routeSchema,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                ) {
+                    orphans(navController)
+                    homeGraph(navController)
+                    catalogGraph(navController)
+                    pickupGraph(navController)
+                    subscribeGraph(navController)
+                    favouritesGraph(navController)
+                    profileGraph(navController)
+                    cartGraph(navController)
+                }
+                ZarinaBottomNavigation(
+                    navController = navController,
+                    navigationBarController = navigationBarController,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(UiKitTheme.colors.screenBackground)
+                        .clip(RectangleShape)
+                        .navigationBarsPadding(),
+                )
             }
-            ZarinaBottomNavigation(
-                navController = navController,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(UiKitTheme.colors.screenBackground)
-                    .clip(RectangleShape)
-                    .navigationBarsPadding(),
-            )
         }
     }
 }

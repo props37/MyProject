@@ -10,4 +10,9 @@ sealed interface NavigationBarBehavior : Behavior {
 
     data class Hidden(override val isAnimated: Boolean) : NavigationBarBehavior
 
+    companion object {
+        val DEFAULT
+            get() = Hidden(isAnimated = false)
+    }
+
 }
