@@ -2,15 +2,20 @@ package ru.zarina.zarina.ui.screens.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -21,6 +26,7 @@ import ru.zarina.zarina.domain.Banner
 import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.MediaPager
+import ru.zarina.zarina.ui.common.components.PageDots
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -36,13 +42,27 @@ fun HomeScreenContent(
             .fillMaxSize()
             .background(UiKitTheme.colors.screenBackground),
     ) {
-        MediaPager(
-            media = banners.map { it.media }.toPersistentList(),
-            aspectRatio = Media.Defaults.BANNER_MEDIA_ASPECT_RATIO,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .statusBarsPadding(),
-        )
+        ) {
+            val pagerState = rememberPagerState()
+            // TODO add cache
+            MediaPager(
+                media = banners.map { it.media }.toPersistentList(),
+                aspectRatio = Media.Defaults.BANNER_MEDIA_ASPECT_RATIO,
+                state = pagerState,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            PageDots(
+                count = banners.size,
+                activeIndex = pagerState.currentPage,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(10.dp),
+            )
+        }
     }
 }
 
