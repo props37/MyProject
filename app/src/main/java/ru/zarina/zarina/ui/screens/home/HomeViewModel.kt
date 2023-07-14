@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.Banner
-import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 
@@ -38,16 +37,10 @@ class HomeViewModel(
         }
     }
 
-    fun onProductClick() {
-        sideEffect(SideEffect.ShowProduct(Product.Id("1329404704-50")))
-    }
-
     fun onBannerClick(banner: Banner) {
         // TODO handle banner click
     }
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect {
-        class ShowProduct(val id: Product.Id) : SideEffect
-    }
+    sealed interface SideEffect : ISideEffectSource.ISideEffect
 
 }
