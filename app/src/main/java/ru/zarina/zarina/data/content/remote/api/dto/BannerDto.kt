@@ -12,7 +12,7 @@ import ru.zarina.zarina.domain.Url
 data class BannerDto(
     @SerialName("id")
     val id: Int? = null,
-    @SerialName("type")
+    @SerialName("media_type")
     val type: MediaTypeDto? = null,
     @SerialName("media_url")
     val url: String? = null,
@@ -22,8 +22,8 @@ data class BannerDto(
         val type = type?.toDomain()
         return if (
             ApiContract.isNotNull(id, "id")
-            && ApiContract.isNotNull(type, "type")
-            && ApiContract.isNotNull(url, "url")
+            && ApiContract.isNotNull(type, "media_type")
+            && ApiContract.isNotNull(url, "media_url")
         ) {
             val media = Media(
                 type = type,
