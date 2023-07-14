@@ -28,6 +28,7 @@ fun MediaPager(
     state: PagerState = rememberPagerState(
         initialPage = (Int.MAX_VALUE / 2).roundToMultipleOf(media.size),
     ),
+    aspectRatio: Float = Media.Defaults.PRODUCT_MEDIA_ASPECT_RATIO,
 ) {
     HorizontalPager(
         pageCount = Int.MAX_VALUE,
@@ -39,8 +40,8 @@ fun MediaPager(
         val item = media.loopingGet(pageIndex)
         val itemModifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(Media.Defaults.PRODUCT_MEDIA_ASPECT_RATIO)
-        when (item.type) {
+            .aspectRatio(aspectRatio)
+        when (item?.type) {
             Media.Type.IMAGE -> ImageItem(
                 media = item,
                 modifier = itemModifier,
@@ -51,6 +52,8 @@ fun MediaPager(
                 cache = cache,
                 modifier = itemModifier,
             )
+
+            else -> Unit
         }
     }
 }
