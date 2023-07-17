@@ -3,9 +3,14 @@ package ru.zarina.zarina.ui.screens.home
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.rememberPagerState
@@ -34,10 +39,12 @@ import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
 import ru.zarina.zarina.ui.common.components.ProductHorizontalSection
+import ru.zarina.zarina.ui.common.components.bottomNavigationPaddingValues
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.utils.compose.plus
 
 
 @Composable
@@ -47,6 +54,10 @@ fun HomeScreenContent(
     cache: State<Cache?>,
 ) {
     LazyColumn(
+        contentPadding = WindowInsets.navigationBars
+            .add(WindowInsets.statusBars)
+            .asPaddingValues()
+                + bottomNavigationPaddingValues(),
         modifier = Modifier
             .fillMaxSize()
             .background(UiKitTheme.colors.screenBackground),
