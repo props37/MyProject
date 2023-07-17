@@ -131,13 +131,14 @@ private fun Banners(
             cache = cache,
             modifier = Modifier.fillMaxWidth(),
         )
-        PageDots(
-            count = banners.size,
-            activeIndex = pagerState.currentPage,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(10.dp),
-        )
+        if (banners.size > 1)
+            PageDots(
+                count = banners.size,
+                activeIndex = pagerState.currentPage % banners.size,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(10.dp),
+            )
     }
 }
 
