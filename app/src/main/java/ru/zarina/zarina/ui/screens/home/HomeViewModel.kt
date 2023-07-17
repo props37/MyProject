@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.Banner
+import ru.zarina.zarina.domain.Selection
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 
@@ -30,16 +31,24 @@ class HomeViewModel(
         .map { it?.getOrNull().orEmpty().toPersistentList() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), persistentListOf())
 
+    private val _selections = MutableStateFlow<Result<List<Selection>>?>(null)
+    val selections = _selections
+        .map { it?.getOrNull().orEmpty().toPersistentList() }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), persistentListOf())
+
     // TODO add error display
 
     init {
         loadBanners()
+        loadSelections()
     }
 
-    private fun loadBanners() {
-        viewModelScope.launch {
-            _banners.value = interactor.getBanners()
-        }
+    private fun loadBanners() = viewModelScope.launch {
+        _banners.value = interactor.getBanners()
+    }
+
+    private fun loadSelections() = viewModelScope.launch {
+        _selections.value = interactor.getSelections()
     }
 
     fun onBannerClick(banner: Banner) {
