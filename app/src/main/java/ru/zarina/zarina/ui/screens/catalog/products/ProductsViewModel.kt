@@ -66,7 +66,10 @@ class ProductsViewModel(
      * The latest filtration that was requested by the user.
      */
     private val requestedFiltration =
-        savedStateHandle.getStateFlow<Filtration?>(KEY_REQUESTED_FILTRATION, null)
+        savedStateHandle.getStateFlow<Filtration?>(
+            KEY_REQUESTED_FILTRATION,
+            savedStateHandle[Catalog.Products.ARGUMENT_FILTRATION]
+        )
 
     val isFilterButtonEnabled = requestedFiltration
         .map { it != null }

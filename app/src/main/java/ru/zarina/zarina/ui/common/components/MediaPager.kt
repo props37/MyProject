@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.common.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
@@ -16,6 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.media3.datasource.cache.Cache
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.domain.Media
+import ru.zarina.zarina.utils.compose.conditional
 import ru.zarina.zarina.utils.kotlin.loopingGet
 import ru.zarina.zarina.utils.kotlin.roundToMultipleOf
 
@@ -24,10 +26,10 @@ import ru.zarina.zarina.utils.kotlin.roundToMultipleOf
 fun MediaPager(
     media: ImmutableList<Media>,
     modifier: Modifier = Modifier,
+    onMediaClick: ((Media) -> Unit)? = null,
     cache: State<Cache?> = remember { mutableStateOf(null) },
-    state: PagerState = rememberPagerState(
-        initialPage = (Int.MAX_VALUE / 2).roundToMultipleOf(media.size),
-    ),
+    state: PagerState = rememberInfinitePagerState(itemCount = media.size),
+    aspectRatio: Float = Media.Defaults.PRODUCT_MEDIA_ASPECT_RATIO,
 ) {
     HorizontalPager(
         pageCount = Int.MAX_VALUE,
@@ -39,8 +41,11 @@ fun MediaPager(
         val item = media.loopingGet(pageIndex)
         val itemModifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(Media.Defaults.PRODUCT_MEDIA_ASPECT_RATIO)
-        when (item.type) {
+            .aspectRatio(aspectRatio)
+            .conditional(onMediaClick != null && item != null) {
+                this.clickable(onClick = { item?.let { onMediaClick?.invoke(it) } })
+            }
+        when (item?.type) {
             Media.Type.IMAGE -> ImageItem(
                 media = item,
                 modifier = itemModifier,
@@ -51,6 +56,8 @@ fun MediaPager(
                 cache = cache,
                 modifier = itemModifier,
             )
+
+            else -> Unit
         }
     }
 }
@@ -81,3 +88,8 @@ private fun VideoItem(
         modifier = modifier
     )
 }
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun rememberInfinitePagerState(itemCount: Int): PagerState =
+    rememberPagerState(initialPage = (Int.MAX_VALUE / 2).roundToMultipleOf(itemCount))

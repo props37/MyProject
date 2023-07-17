@@ -42,6 +42,7 @@ import ru.zarina.zarina.domain.DeliveryAvailability
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
+import ru.zarina.zarina.ui.common.components.ProductHorizontalSection
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
@@ -55,7 +56,6 @@ import ru.zarina.zarina.ui.screens.product.components.sections.DetailsSection
 import ru.zarina.zarina.ui.screens.product.components.sections.MediaSection
 import ru.zarina.zarina.ui.screens.product.components.sections.PickupSection
 import ru.zarina.zarina.ui.screens.product.components.sections.PriceSection
-import ru.zarina.zarina.ui.screens.product.components.sections.ProductHorizontalSection
 import ru.zarina.zarina.ui.screens.product.components.sections.ShareSection
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme

@@ -8,4 +8,6 @@ class ContentRepository(
     private val remoteSource: IContentRemoteSource,
 ) : IContentRepository {
     override suspend fun getOnboardingSplash() = remoteSource.getOnboardingSplash()
+    override suspend fun getBanners() = remoteSource.getBanners()
+    override suspend fun getSelections() = remoteSource.getSelections()
 }

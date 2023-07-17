@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.IconButton
@@ -31,8 +30,8 @@ import ru.zarina.zarina.ui.common.components.DiscountBadge
 import ru.zarina.zarina.ui.common.components.InvertedRippleTheme
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
+import ru.zarina.zarina.ui.common.components.rememberInfinitePagerState
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.utils.kotlin.roundToMultipleOf
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -43,9 +42,7 @@ fun MediaSection(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
-        val pagerState = rememberPagerState(
-            initialPage = (Int.MAX_VALUE / 2).roundToMultipleOf(product.media.size),
-        )
+        val pagerState = rememberInfinitePagerState(itemCount = product.media.size)
         MediaPager(
             media = product.media,
             cache = cache,
