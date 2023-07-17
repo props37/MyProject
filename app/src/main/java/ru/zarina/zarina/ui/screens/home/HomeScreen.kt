@@ -32,9 +32,12 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.domain.Banner
+import ru.zarina.zarina.domain.Category
+import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Selection
+import ru.zarina.zarina.domain.Url
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
@@ -51,6 +54,7 @@ import ru.zarina.zarina.utils.compose.plus
 fun HomeScreenContent(
     banners: ImmutableList<Banner>,
     selections: ImmutableList<Selection>,
+    onBannerClick: (Banner) -> Unit,
     onProductClick: (Product) -> Unit,
     cache: State<Cache?>,
 ) {
@@ -67,7 +71,11 @@ fun HomeScreenContent(
             key = LAZY_KEY_BANNERS,
             contentType = ContentType.BANNERS,
         ) {
-            Banners(banners, cache)
+            Banners(
+                banners = banners,
+                cache = cache,
+                onBannerClick = onBannerClick,
+            )
         }
         items(
             items = selections,
@@ -81,7 +89,8 @@ fun HomeScreenContent(
             when (selection) {
                 is Selection.Banners -> Banners(
                     banners = selection.banners,
-                    cache = cache
+                    cache = cache,
+                    onBannerClick = onBannerClick,
                 )
 
                 is Selection.Products -> ProductHorizontalSection(
@@ -103,6 +112,7 @@ private enum class ContentType { BANNERS, PRODUCTS }
 @Composable
 private fun Banners(
     banners: ImmutableList<Banner>,
+    onBannerClick: (Banner) -> Unit,
     cache: State<Cache?>,
     modifier: Modifier = Modifier,
 ) {
@@ -112,6 +122,10 @@ private fun Banners(
         val pagerState = rememberPagerState()
         MediaPager(
             media = banners.map { it.media }.toPersistentList(),
+            onMediaClick = { media ->
+                val banner = banners.firstOrNull { it.media == media }
+                banner?.let { onBannerClick(it) }
+            },
             aspectRatio = Media.Defaults.BANNER_MEDIA_ASPECT_RATIO,
             state = pagerState,
             cache = cache,
@@ -129,7 +143,9 @@ private fun Banners(
 
 @Composable
 fun HomeScreen(
-    showProduct: (product: Product) -> Unit,
+    showProduct: (id: Product.Id) -> Unit,
+    showProducts: (categoryId: Category.Id, filtration: Filtration?) -> Unit,
+    showWebpage: (url: Url) -> Unit,
 ) {
     val viewModel = koinViewModel<HomeViewModel>()
 
@@ -140,11 +156,14 @@ fun HomeScreen(
     HomeScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showProduct = showProduct,
+        showProducts = showProducts,
+        showWebpage = showWebpage,
     )
 
     HomeScreenContent(
         banners = banners,
         selections = selections,
+        onBannerClick = remember { { viewModel.onBannerClick(it) } },
         onProductClick = remember { { viewModel.onProductClick(it) } },
         cache = cache,
     )
@@ -153,13 +172,22 @@ fun HomeScreen(
 @Composable
 fun HomeScreenBehavior(
     sideEffects: Flow<HomeViewModel.SideEffect>,
-    showProduct: (product: Product) -> Unit,
+    showProduct: (id: Product.Id) -> Unit,
+    showProducts: (categoryId: Category.Id, filtration: Filtration?) -> Unit,
+    showWebpage: (url: Url) -> Unit,
 ) {
     NavigationBarState(isVisible = true, isAnimated = true)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                is HomeViewModel.SideEffect.ShowProduct -> showProduct(effect.product)
+                is HomeViewModel.SideEffect.ShowProduct ->
+                    showProduct(effect.productId)
+
+                is HomeViewModel.SideEffect.ShowProducts ->
+                    showProducts(effect.categoryId, effect.filtration)
+
+                is HomeViewModel.SideEffect.ShowWebpage ->
+                    showWebpage(effect.url)
             }
         }
     }
@@ -174,7 +202,8 @@ fun HomeScreenContentPreview() {
         HomeScreenContent(
             banners = persistentListOf(),
             selections = persistentListOf(),
-            onProductClick = { },
+            onBannerClick = {},
+            onProductClick = {},
             cache = remember { mutableStateOf<Cache?>(null) },
         )
     }

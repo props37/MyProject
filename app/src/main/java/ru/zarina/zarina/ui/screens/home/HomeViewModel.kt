@@ -12,9 +12,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import ru.zarina.zarina.domain.Action
 import ru.zarina.zarina.domain.Banner
+import ru.zarina.zarina.domain.Category
+import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Selection
+import ru.zarina.zarina.domain.Url
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 
@@ -53,15 +57,30 @@ class HomeViewModel(
     }
 
     fun onBannerClick(banner: Banner) {
-        // TODO handle banner click
+        val effect = when (banner.action) {
+            is Action.Link -> SideEffect.ShowWebpage(banner.action.url)
+            is Action.Product -> SideEffect.ShowProduct(banner.action.id)
+            is Action.Products -> SideEffect.ShowProducts(
+                categoryId = banner.action.categoryId,
+                filtration = banner.action.filtration,
+            )
+
+            else -> null
+        }
+        effect?.let { sideEffect(it) }
     }
 
     fun onProductClick(product: Product) {
-        sideEffect(SideEffect.ShowProduct(product))
+        sideEffect(SideEffect.ShowProduct(product.id))
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
-        data class ShowProduct(val product: Product) : SideEffect
+        data class ShowProduct(val productId: Product.Id) : SideEffect
+        data class ShowWebpage(val url: Url) : SideEffect
+        data class ShowProducts(
+            val categoryId: Category.Id,
+            val filtration: Filtration?
+        ) : SideEffect
     }
 
 }

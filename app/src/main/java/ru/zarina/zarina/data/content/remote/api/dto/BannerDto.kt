@@ -16,7 +16,7 @@ data class BannerDto(
     val type: MediaTypeDto? = null,
     @SerialName("media_url")
     val url: String? = null,
-    @SerialName("action")
+    @SerialName("click")
     val action: ActionDto? = null
 ) {
     fun toDomain(): Banner? {
