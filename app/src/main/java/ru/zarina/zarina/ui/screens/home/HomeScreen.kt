@@ -48,6 +48,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.compose.plus
+import ru.zarina.zarina.utils.kotlin.roundToMultipleOf
 
 
 @Composable
@@ -120,6 +121,9 @@ private fun Banners(
         modifier = modifier.fillMaxWidth(),
     ) {
         val pagerState = rememberInfinitePagerState(banners.size)
+        LaunchedEffect(banners.size) {
+            pagerState.scrollToPage((Int.MAX_VALUE / 2).roundToMultipleOf(banners.size))
+        }
         MediaPager(
             media = banners.map { it.media }.toPersistentList(),
             onMediaClick = { media ->
