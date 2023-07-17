@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.rememberPagerState
@@ -29,10 +28,12 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.domain.Banner
 import ru.zarina.zarina.domain.Media
+import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Selection
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
+import ru.zarina.zarina.ui.common.components.ProductHorizontalSection
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -54,11 +55,7 @@ fun HomeScreenContent(
             key = LAZY_KEY_BANNERS,
             contentType = ContentType.BANNERS,
         ) {
-            Banners(
-                banners,
-                cache,
-                Modifier.statusBarsPadding(),
-            )
+            Banners(banners, cache)
         }
         items(
             items = selections,
@@ -75,7 +72,12 @@ fun HomeScreenContent(
                     cache = cache
                 )
 
-                is Selection.Products -> Unit // TODO
+                is Selection.Products -> ProductHorizontalSection(
+                    title = selection.title,
+                    products = selection.products,
+                    onProductClick = { }, // TODO
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }
@@ -111,6 +113,16 @@ private fun Banners(
                 .padding(10.dp),
         )
     }
+}
+
+@Composable
+private fun Products(
+    title: String,
+    subtitle: String,
+    products: ImmutableList<Product>,
+    modifier: Modifier = Modifier,
+) {
+
 }
 
 @Composable

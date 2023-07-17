@@ -19,7 +19,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductHorizontalSection(
-    title: String,
+    title: String?,
     products: ImmutableList<Product>,
     onProductClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
@@ -29,13 +29,14 @@ fun ProductHorizontalSection(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.background(UiKitTheme.colors.screenBackground)
     ) {
-        Text(
-            text = title,
-            style = UiKitTheme.typography.circle2026bold,
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .padding(horizontal = 16.dp),
-        )
+        if (title != null)
+            Text(
+                text = title,
+                style = UiKitTheme.typography.circle2026bold,
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .padding(horizontal = 16.dp),
+            )
         if (subtitle != null)
             Text(
                 text = subtitle,
