@@ -43,6 +43,9 @@ class RoomCategoryLocalSource(
     }
 
     override fun getCategory(id: Category.Id) = getCategories()
-        .map { categories -> categories.firstOrNull { it.id == id } }
+        .map { categories ->
+            categories.firstOrNull { it.id == id }
+                ?: categories.flatMap { it.getFlattenedSubcategories() }.firstOrNull { it.id == id }
+        }
 
 }
