@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.product.components.sections
+package ru.zarina.zarina.ui.common.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.ui.common.components.ProductCard
+import ru.zarina.zarina.ui.screens.product.components.sections.SectionHeader
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @OptIn(ExperimentalFoundationApi::class)
