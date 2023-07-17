@@ -24,7 +24,7 @@ fun NavGraphBuilder.homeGraph(
                 showProducts = { id, filtration ->
                     val arguments = Catalog.Products.Arguments(
                         categoryId = id,
-                        // TODO add filtration
+                        filtration = filtration
                     )
                     navController.navigate(BottomNavigationTab.Catalogue)
                     navController.navigate(Catalog.Products.createRoute(arguments))

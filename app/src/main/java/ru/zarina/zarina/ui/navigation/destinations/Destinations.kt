@@ -4,9 +4,12 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import ru.zarina.zarina.domain.Barcode
 import ru.zarina.zarina.domain.Category
+import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.navigation.base.Destination
+import ru.zarina.zarina.ui.navigation.base.Filtration
 import ru.zarina.zarina.ui.navigation.base.Graph
+import ru.zarina.zarina.ui.navigation.base.OptionalNavArg
 import ru.zarina.zarina.ui.navigation.base.RouteUtils
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleGraph
@@ -185,23 +188,31 @@ object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
     object Products : Destination<Products.Arguments>() {
 
         const val ARGUMENT_CATEGORY_ID = "category_id"
+        const val ARGUMENT_FILTRATION = "filtration"
 
         override val routeSchema = RouteUtils.generateRouteSchema(
             baseRoute = BaseRoute.CATALOG_PRODUCTS,
-            argNames = arrayOf(ARGUMENT_CATEGORY_ID)
+            argNames = arrayOf(ARGUMENT_CATEGORY_ID),
+            optionalArgNames = arrayOf(ARGUMENT_FILTRATION)
         )
 
         override val arguments = listOf(
-            navArgument(ARGUMENT_CATEGORY_ID) { type = NavType.IntType }
+            navArgument(ARGUMENT_CATEGORY_ID) { type = NavType.IntType },
+            navArgument(ARGUMENT_FILTRATION) {
+                type = NavType.Filtration
+                nullable = true
+            }
         )
 
         override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
             baseRoute = BaseRoute.CATALOG_PRODUCTS,
-            args = arrayOf(args.categoryId.value)
+            args = arrayOf(args.categoryId.value),
+            optionalArgs = arrayOf(OptionalNavArg(ARGUMENT_FILTRATION, args.filtration))
         )
 
         data class Arguments(
             val categoryId: Category.Id,
+            val filtration: Filtration?,
         )
     }
 

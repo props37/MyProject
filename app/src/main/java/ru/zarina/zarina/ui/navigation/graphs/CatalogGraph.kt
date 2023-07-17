@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.navigation.graphs
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
@@ -24,7 +25,7 @@ fun NavGraphBuilder.catalogGraph(
         composableDestination(Catalog.Categories) {
             CategoriesScreen(
                 showProducts = { categoryId ->
-                    val arguments = Catalog.Products.Arguments(categoryId)
+                    val arguments = Catalog.Products.Arguments(categoryId, null)
                     navController.navigate(Catalog.Products.createRoute(arguments))
                 },
             )
@@ -37,6 +38,10 @@ fun NavGraphBuilder.catalogGraph(
                             set(
                                 Catalog.Products.ARGUMENT_CATEGORY_ID,
                                 it.arguments?.getInt(Catalog.Products.ARGUMENT_CATEGORY_ID)
+                            )
+                            set(
+                                Catalog.Products.ARGUMENT_FILTRATION,
+                                it.arguments?.getParcelable<Filtration>(Catalog.Products.ARGUMENT_FILTRATION)
                             )
                         }
                 },
