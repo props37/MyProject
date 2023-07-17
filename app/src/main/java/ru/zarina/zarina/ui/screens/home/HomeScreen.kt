@@ -51,6 +51,7 @@ import ru.zarina.zarina.utils.compose.plus
 fun HomeScreenContent(
     banners: ImmutableList<Banner>,
     selections: ImmutableList<Selection>,
+    onProductClick: (Product) -> Unit,
     cache: State<Cache?>,
 ) {
     LazyColumn(
@@ -86,7 +87,7 @@ fun HomeScreenContent(
                 is Selection.Products -> ProductHorizontalSection(
                     title = selection.title,
                     products = selection.products,
-                    onProductClick = { }, // TODO
+                    onProductClick = onProductClick,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -137,7 +138,9 @@ private fun Products(
 }
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    showProduct: (product: Product) -> Unit,
+) {
     val viewModel = koinViewModel<HomeViewModel>()
 
     val banners by viewModel.banners.collectAsStateWithLifecycle()
@@ -146,11 +149,13 @@ fun HomeScreen() {
 
     HomeScreenBehavior(
         sideEffects = viewModel.sideEffects,
+        showProduct = showProduct,
     )
 
     HomeScreenContent(
         banners = banners,
         selections = selections,
+        onProductClick = remember { { viewModel.onProductClick(it) } },
         cache = cache,
     )
 }
@@ -158,12 +163,13 @@ fun HomeScreen() {
 @Composable
 fun HomeScreenBehavior(
     sideEffects: Flow<HomeViewModel.SideEffect>,
+    showProduct: (product: Product) -> Unit,
 ) {
     NavigationBarState(isVisible = true, isAnimated = true)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                else -> Unit
+                is HomeViewModel.SideEffect.ShowProduct -> showProduct(effect.product)
             }
         }
     }
@@ -178,6 +184,7 @@ fun HomeScreenContentPreview() {
         HomeScreenContent(
             banners = persistentListOf(),
             selections = persistentListOf(),
+            onProductClick = { },
             cache = remember { mutableStateOf<Cache?>(null) },
         )
     }
