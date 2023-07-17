@@ -16,7 +16,8 @@ data class BannerDto(
     val type: MediaTypeDto? = null,
     @SerialName("media_url")
     val url: String? = null,
-    // TODO click
+    @SerialName("action")
+    val action: ActionDto? = null
 ) {
     fun toDomain(): Banner? {
         val type = type?.toDomain()
@@ -32,6 +33,7 @@ data class BannerDto(
             return Banner(
                 id = id.toString(),
                 media = media,
+                action = action?.toDomain()
             )
         } else {
             null
