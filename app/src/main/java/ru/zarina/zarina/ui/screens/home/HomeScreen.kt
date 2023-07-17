@@ -11,12 +11,16 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.media3.datasource.cache.Cache
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -36,6 +40,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @Composable
 fun HomeScreenContent(
     banners: ImmutableList<Banner>,
+    cache: State<Cache?>,
 ) {
     Column(
         modifier = Modifier
@@ -48,11 +53,11 @@ fun HomeScreenContent(
                 .statusBarsPadding(),
         ) {
             val pagerState = rememberPagerState()
-            // TODO add cache
             MediaPager(
                 media = banners.map { it.media }.toPersistentList(),
                 aspectRatio = Media.Defaults.BANNER_MEDIA_ASPECT_RATIO,
                 state = pagerState,
+                cache = cache,
                 modifier = Modifier.fillMaxWidth(),
             )
             PageDots(
@@ -71,6 +76,7 @@ fun HomeScreen() {
     val viewModel = koinViewModel<HomeViewModel>()
 
     val banners by viewModel.banners.collectAsStateWithLifecycle()
+    val cache = viewModel.cache.collectAsStateWithLifecycle()
 
     HomeScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -78,6 +84,7 @@ fun HomeScreen() {
 
     HomeScreenContent(
         banners = banners,
+        cache = cache,
     )
 }
 
@@ -102,7 +109,8 @@ fun HomeScreenBehavior(
 fun HomeScreenContentPreview() {
     ZarinaTheme {
         HomeScreenContent(
-            banners = persistentListOf()
+            banners = persistentListOf(),
+            cache = remember { mutableStateOf<Cache?>(null) }
         )
     }
 }
