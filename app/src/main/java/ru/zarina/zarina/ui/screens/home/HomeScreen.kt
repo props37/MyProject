@@ -128,16 +128,6 @@ private fun Banners(
 }
 
 @Composable
-private fun Products(
-    title: String,
-    subtitle: String,
-    products: ImmutableList<Product>,
-    modifier: Modifier = Modifier,
-) {
-
-}
-
-@Composable
 fun HomeScreen(
     showProduct: (product: Product) -> Unit,
 ) {
