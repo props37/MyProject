@@ -9,5 +9,5 @@ class ZarinaContentRemoteSource(
 ) : IContentRemoteSource {
     override suspend fun getOnboardingSplash() = api.getOnboardingSplash().toDomain()
     override suspend fun getBanners() = api.getBanners().mapNotNull { it.toDomain() }
-    override suspend fun getSelections() = api.getSelections().mapNotNull { it.toDomain() }
+    override suspend fun getSelections() = api.getSelections().flatMap { it.toDomain() }
 }
