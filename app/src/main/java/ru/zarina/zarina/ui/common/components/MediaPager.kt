@@ -28,9 +28,7 @@ fun MediaPager(
     modifier: Modifier = Modifier,
     onMediaClick: ((Media) -> Unit)? = null,
     cache: State<Cache?> = remember { mutableStateOf(null) },
-    state: PagerState = rememberPagerState(
-        initialPage = (Int.MAX_VALUE / 2).roundToMultipleOf(media.size),
-    ),
+    state: PagerState = rememberInfinitePagerState(itemCount = media.size),
     aspectRatio: Float = Media.Defaults.PRODUCT_MEDIA_ASPECT_RATIO,
 ) {
     HorizontalPager(
@@ -90,3 +88,8 @@ private fun VideoItem(
         modifier = modifier
     )
 }
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun rememberInfinitePagerState(itemCount: Int): PagerState =
+    rememberPagerState(initialPage = (Int.MAX_VALUE / 2).roundToMultipleOf(itemCount))

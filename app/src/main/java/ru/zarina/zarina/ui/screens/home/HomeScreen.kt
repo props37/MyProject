@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -43,6 +42,7 @@ import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
 import ru.zarina.zarina.ui.common.components.ProductHorizontalSection
 import ru.zarina.zarina.ui.common.components.bottomNavigationPaddingValues
+import ru.zarina.zarina.ui.common.components.rememberInfinitePagerState
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -119,7 +119,7 @@ private fun Banners(
     Box(
         modifier = modifier.fillMaxWidth(),
     ) {
-        val pagerState = rememberPagerState()
+        val pagerState = rememberInfinitePagerState(banners.size)
         MediaPager(
             media = banners.map { it.media }.toPersistentList(),
             onMediaClick = { media ->
