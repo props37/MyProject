@@ -23,23 +23,36 @@ fun ProductHorizontalSection(
     products: ImmutableList<Product>,
     onProductClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
+    subtitle: String? = null,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.background(UiKitTheme.colors.screenBackground)
     ) {
         Text(
-            text = title.uppercase(),
-            style = UiKitTheme.typography.circle1518,
-            modifier = modifier.padding(vertical = 16.dp),
+            text = title,
+            style = UiKitTheme.typography.circle2026bold,
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .padding(horizontal = 16.dp),
         )
+        if (subtitle != null)
+            Text(
+                text = subtitle,
+                style = UiKitTheme.typography.circle1518,
+                modifier = Modifier
+                    .padding(top = 6.dp)
+                    .padding(horizontal = 16.dp),
+            )
         HorizontalPager(
             pageCount = products.size,
             beyondBoundsPageCount = 1,
             key = { products[it].id.value },
             verticalAlignment = Alignment.Top,
             contentPadding = PaddingValues(horizontal = 32.dp),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
         ) { index ->
             val product = products[index]
             ProductCard(
