@@ -36,7 +36,6 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreenContent(
     banners: ImmutableList<Banner>,
@@ -47,27 +46,39 @@ fun HomeScreenContent(
             .fillMaxSize()
             .background(UiKitTheme.colors.screenBackground),
     ) {
-        Box(
+        Banners(
+            banners,
+            cache,
+            Modifier.statusBarsPadding(),
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun Banners(
+    banners: ImmutableList<Banner>,
+    cache: State<Cache?>,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        val pagerState = rememberPagerState()
+        MediaPager(
+            media = banners.map { it.media }.toPersistentList(),
+            aspectRatio = Media.Defaults.BANNER_MEDIA_ASPECT_RATIO,
+            state = pagerState,
+            cache = cache,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        PageDots(
+            count = banners.size,
+            activeIndex = pagerState.currentPage,
             modifier = Modifier
-                .fillMaxWidth()
-                .statusBarsPadding(),
-        ) {
-            val pagerState = rememberPagerState()
-            MediaPager(
-                media = banners.map { it.media }.toPersistentList(),
-                aspectRatio = Media.Defaults.BANNER_MEDIA_ASPECT_RATIO,
-                state = pagerState,
-                cache = cache,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            PageDots(
-                count = banners.size,
-                activeIndex = pagerState.currentPage,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(10.dp),
-            )
-        }
+                .align(Alignment.BottomCenter)
+                .padding(10.dp),
+        )
     }
 }
 
