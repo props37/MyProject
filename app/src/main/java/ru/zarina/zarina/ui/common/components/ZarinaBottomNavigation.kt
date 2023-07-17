@@ -11,6 +11,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -50,6 +51,7 @@ import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Graph
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.utils.compose.topLineShape
 
 private val BottomNavigationHeight = 56.dp
 
@@ -83,6 +85,11 @@ fun ZarinaBottomNavigation(
                 .animateEnterExit(
                     enter = if (isAnimated) slideInVertically { it } else EnterTransition.None,
                     exit = if (isAnimated) slideOutVertically { it } else ExitTransition.None,
+                )
+                .border(
+                    width = 1.dp,
+                    color = UiKitTheme.colors.listDivider,
+                    shape = topLineShape(1.dp),
                 ),
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
