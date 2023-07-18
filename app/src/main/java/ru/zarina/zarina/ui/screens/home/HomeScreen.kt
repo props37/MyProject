@@ -48,7 +48,6 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.compose.plus
-import ru.zarina.zarina.utils.kotlin.roundToMultipleOf
 
 
 @Composable
@@ -117,33 +116,31 @@ private fun Banners(
     cache: State<Cache?>,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier.fillMaxWidth(),
-    ) {
-        val pagerState = rememberInfinitePagerState(banners.size)
-        LaunchedEffect(banners.size) {
-            pagerState.scrollToPage((Int.MAX_VALUE / 2).roundToMultipleOf(banners.size))
-        }
-        MediaPager(
-            media = banners.map { it.media }.toPersistentList(),
-            onMediaClick = { media ->
-                val banner = banners.firstOrNull { it.media == media }
-                banner?.let { onBannerClick(it) }
-            },
-            aspectRatio = Media.Defaults.BANNER_MEDIA_ASPECT_RATIO,
-            state = pagerState,
-            cache = cache,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        if (banners.size > 1)
-            PageDots(
-                count = banners.size,
-                activeIndex = pagerState.currentPage % banners.size,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(10.dp),
+    if (banners.isNotEmpty())
+        Box(
+            modifier = modifier.fillMaxWidth(),
+        ) {
+            val pagerState = rememberInfinitePagerState(banners.size)
+            MediaPager(
+                media = banners.map { it.media }.toPersistentList(),
+                onMediaClick = { media ->
+                    val banner = banners.firstOrNull { it.media == media }
+                    banner?.let { onBannerClick(it) }
+                },
+                aspectRatio = Media.Defaults.BANNER_MEDIA_ASPECT_RATIO,
+                state = pagerState,
+                cache = cache,
+                modifier = Modifier.fillMaxWidth(),
             )
-    }
+            if (banners.size > 1)
+                PageDots(
+                    count = banners.size,
+                    activeIndex = pagerState.currentPage % banners.size,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(10.dp),
+                )
+        }
 }
 
 @Composable
