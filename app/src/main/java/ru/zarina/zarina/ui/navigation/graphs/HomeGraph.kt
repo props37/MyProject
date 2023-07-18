@@ -1,9 +1,8 @@
 package ru.zarina.zarina.ui.navigation.graphs
 
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
-import ru.zarina.zarina.ui.common.components.BottomNavigationTab
-import ru.zarina.zarina.ui.common.components.navigate
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
@@ -26,8 +25,13 @@ fun NavGraphBuilder.homeGraph(
                         categoryId = id,
                         filtration = filtration
                     )
-                    navController.navigate(BottomNavigationTab.Catalogue)
-                    navController.navigate(Catalog.Products.createRoute(arguments))
+                    navController.navigate(Catalog.Products.createRoute(arguments)) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 },
                 showWebpage = { url ->
                     val arguments = Destinations.Webpage.Arguments(url = url.value)
