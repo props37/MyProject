@@ -13,10 +13,10 @@ class KtorZarinaFavoritesApi(
     private val client: HttpClient,
 ) : IZarinaFavoritesApi {
     override suspend fun add(productId: String) {
-        client.post("favorites/product/$productId")
+        client.post("/api/favorites/product/$productId")
     }
 
     override suspend fun remove(productId: String) {
-        client.delete("favorites/product/$productId")
+        client.delete("/api/favorites/product/$productId")
     }
 }
