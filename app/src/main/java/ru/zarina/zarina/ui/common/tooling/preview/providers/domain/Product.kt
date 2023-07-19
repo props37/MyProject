@@ -78,7 +78,8 @@ class ProductProvider : PreviewParameterProvider<Product> {
             ),
             url = Url("https://zarina.ru/catalog/product/1329404704-50/"),
             isLookPart = true,
-            attributes = persistentListOf("эксклюзивно онлайн")
+            attributes = persistentListOf("эксклюзивно онлайн"),
+            isFavorite = false,
         )
     )
 }
