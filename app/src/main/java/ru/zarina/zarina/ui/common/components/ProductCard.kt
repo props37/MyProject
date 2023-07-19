@@ -83,7 +83,18 @@ fun ProductCard(
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.Top,
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                FavoriteHeart(
+                    isSelected = product.isFavorite,
+                    onSelectedChange = {}, // TODO
+                )
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.Bottom,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(8.dp)
