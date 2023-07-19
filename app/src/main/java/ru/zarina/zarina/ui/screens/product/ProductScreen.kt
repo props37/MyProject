@@ -69,6 +69,7 @@ import java.util.UUID
 @Composable
 fun ProductScreenContent(
     product: Product?,
+    onFavoriteChange: (Boolean) -> Unit,
     onVariantClick: (Product.Variant) -> Unit,
     onShareClick: () -> Unit,
     onPickupClick: (Product) -> Unit,
@@ -120,6 +121,7 @@ fun ProductScreenContent(
                 val completeLookRequester = remember { BringIntoViewRequester() }
                 MediaSection(
                     product = product,
+                    onFavoriteChange = onFavoriteChange,
                     onBuyCompleteLookClick = {
                         coroutineScope.launch {
                             completeLookRequester.bringIntoView()
@@ -248,6 +250,7 @@ fun ProductScreen(
 
     ProductScreenContent(
         product = product,
+        onFavoriteChange = viewModel::onFavoriteChange,
         onVariantClick = viewModel::onVariantClick,
         onShareClick = viewModel::onShareClick,
         onPickupClick = viewModel::onPickupClick,
@@ -297,6 +300,7 @@ fun ProductScreenContentPreview(
     ZarinaTheme {
         ProductScreenContent(
             product = product,
+            onFavoriteChange = {},
             onVariantClick = {},
             onShareClick = {},
             completeLookProducts = List(5) {

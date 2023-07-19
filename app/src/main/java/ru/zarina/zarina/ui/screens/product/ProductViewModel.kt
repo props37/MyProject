@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.Product
@@ -128,6 +129,15 @@ class ProductViewModel(
     fun onRefreshClick() {
         viewModelScope.launch {
             loadProduct(productId.value)
+        }
+    }
+
+    fun onFavoriteChange(isFavorite: Boolean) {
+        val product = product.value ?: return
+        viewModelScope.launch {
+            interactor.setIsFavorite(product, isFavorite)
+                .onSuccess { _product.update { it?.copy(isFavorite = isFavorite) } }
+                .onFailure { } // TODO shake heart icon
         }
     }
 
