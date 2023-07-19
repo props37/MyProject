@@ -10,6 +10,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -49,7 +50,8 @@ class ProductViewModel(
     val product = _product.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val completeLookProducts = product
+    val completeLookProducts = _product
+        .distinctUntilChangedBy { it?.id }
         .mapLatest { product ->
             operationTracker.track(Operation.LOADING_COMPLETE_LOOK) {
                 if (product?.isLookPart == true) {
@@ -64,7 +66,8 @@ class ProductViewModel(
         .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val similarProducts = product
+    val similarProducts = _product
+        .distinctUntilChangedBy { it?.id }
         .mapLatest { product ->
             operationTracker.track(Operation.LOADING_RECOMMENDATIONS) {
                 if (product != null) {
@@ -79,7 +82,8 @@ class ProductViewModel(
         .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val deliveryAvailability = product
+    val deliveryAvailability = _product
+        .distinctUntilChangedBy { it?.id }
         .mapLatest { product ->
             operationTracker.track(Operation.LOADING_DELIVERY_AVAILABILITY) {
                 if (product != null)
