@@ -2,7 +2,9 @@ package ru.zarina.zarina.ui.screens.product.components.sections
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +29,7 @@ import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.components.DiscountBadge
+import ru.zarina.zarina.ui.common.components.FavoriteHeart
 import ru.zarina.zarina.ui.common.components.InvertedRippleTheme
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
@@ -66,13 +69,22 @@ fun MediaSection(
                 .align(Alignment.BottomStart)
                 .padding(16.dp)
         )
-        if (product.isLookPart)
-            BuyCompleteLookButton(
-                onClick = onBuyCompleteLookClick,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.align(Alignment.BottomEnd)
+        ) {
+            if (product.isLookPart)
+                BuyCompleteLookButton(
+                    onClick = onBuyCompleteLookClick,
+                    modifier = Modifier
+
+                )
+            FavoriteHeart(
+                isSelected = product.isFavorite,
+                onSelectedChange = {}, // TODO
             )
+        }
     }
 }
 
