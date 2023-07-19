@@ -126,4 +126,6 @@
     <string name="main_page">Главная</string>
     <string name="profile">Профиль</string>
     <string name="cart">Корзина</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="remove_from_favorites">Удалить из избранного</string>
 </resources>
