@@ -138,9 +138,9 @@ class ProductViewModel(
 
     fun onFavoriteChange(isFavorite: Boolean) {
         val product = product.value ?: return
+        _product.update { it?.copy(isFavorite = isFavorite) }
         viewModelScope.launch {
             interactor.setIsFavorite(product, isFavorite)
-                .onSuccess { _product.update { it?.copy(isFavorite = isFavorite) } }
                 .onFailure { } // TODO shake heart icon
         }
     }
