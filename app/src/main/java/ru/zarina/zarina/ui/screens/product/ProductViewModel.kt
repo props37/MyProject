@@ -142,7 +142,9 @@ class ProductViewModel(
         _product.update { it?.copy(favorite = FavoriteState(isFavorite)) }
         viewModelScope.launch {
             interactor.setIsFavorite(product, isFavorite)
-                .onFailure { } // TODO shake heart icon
+                .onFailure {
+                    _product.update { it?.copy(favorite = product.favorite.copy(isErrorReset = true)) }
+                }
         }
     }
 
