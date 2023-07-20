@@ -5,6 +5,7 @@ import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
+import ru.zarina.zarina.domain.FavoriteState
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Url
 
@@ -65,7 +66,7 @@ data class ProductDto(
             attributes = attributes
                 .orEmpty()
                 .toImmutableList(),
-            isFavorite = isFavorite == true,
+            favorite = FavoriteState(isFavorite == true),
         )
         return null
     }

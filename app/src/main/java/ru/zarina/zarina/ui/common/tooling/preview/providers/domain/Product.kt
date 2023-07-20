@@ -5,6 +5,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import ru.zarina.zarina.domain.Barcode
 import ru.zarina.zarina.domain.Color
+import ru.zarina.zarina.domain.FavoriteState
 import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Price
@@ -79,7 +80,7 @@ class ProductProvider : PreviewParameterProvider<Product> {
             url = Url("https://zarina.ru/catalog/product/1329404704-50/"),
             isLookPart = true,
             attributes = persistentListOf("эксклюзивно онлайн"),
-            isFavorite = false,
+            favorite = FavoriteState(true),
         )
     )
 }

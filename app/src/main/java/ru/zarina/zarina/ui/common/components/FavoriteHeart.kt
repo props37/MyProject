@@ -17,23 +17,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.FavoriteState
 
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun FavoriteHeart(
-    isSelected: Boolean,
-    onSelectedChange: (isSelected: Boolean) -> Unit,
+    state: FavoriteState,
+    onFavoriteChange: (isSelected: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val contentDescriptionRes = if (isSelected)
+    val contentDescriptionRes = if (state.isFavorite)
         R.string.remove_from_favorites
     else
         R.string.add_to_favorites
     // TODO shake heart when error occurs
     // TODO add haptic
     AnimatedContent(
-        targetState = isSelected,
+        targetState = state.isFavorite,
         transitionSpec = {
             fadeIn() with fadeOut(targetAlpha = 0f)
         },
@@ -46,7 +47,7 @@ fun FavoriteHeart(
         Box(
             modifier = modifier
                 .clickable(
-                    onClick = { onSelectedChange(!it) },
+                    onClick = { onFavoriteChange(!it) },
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
                 )

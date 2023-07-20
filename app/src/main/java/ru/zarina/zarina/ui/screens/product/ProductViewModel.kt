@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import ru.zarina.zarina.domain.FavoriteState
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.exception.NotFoundException
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
@@ -138,7 +139,7 @@ class ProductViewModel(
 
     fun onFavoriteChange(isFavorite: Boolean) {
         val product = product.value ?: return
-        _product.update { it?.copy(isFavorite = isFavorite) }
+        _product.update { it?.copy(favorite = FavoriteState(isFavorite)) }
         viewModelScope.launch {
             interactor.setIsFavorite(product, isFavorite)
                 .onFailure { } // TODO shake heart icon

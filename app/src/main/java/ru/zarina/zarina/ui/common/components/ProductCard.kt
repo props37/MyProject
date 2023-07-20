@@ -87,8 +87,8 @@ fun ProductCard(
                 modifier = Modifier.align(Alignment.TopEnd)
             ) {
                 FavoriteHeart(
-                    isSelected = product.isFavorite,
-                    onSelectedChange = {}, // TODO
+                    state = product.favorite,
+                    onFavoriteChange = {}, // TODO
                 )
             }
 
