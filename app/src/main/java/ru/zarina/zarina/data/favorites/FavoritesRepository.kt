@@ -14,7 +14,12 @@ class FavoritesRepository(
     override fun getIds() = local.getIds()
 
     override suspend fun setIsFavorite(product: Product, isFavorite: Boolean) {
-        remote.setIsFavorite(product, isFavorite)
         local.setIsFavorite(product, isFavorite)
+        try {
+            remote.setIsFavorite(product, isFavorite)
+        } catch (e: Exception) {
+            local.setIsFavorite(product, product.favorite.isFavorite)
+            throw e
+        }
     }
 }

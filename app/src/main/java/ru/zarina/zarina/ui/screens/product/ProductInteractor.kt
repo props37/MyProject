@@ -17,7 +17,7 @@ class ProductInteractor(
     private val getDeliveryAvailabilityUseCase: GetDeliveryAvailabilityUseCase,
     private val setIsFavoriteUseCase: SetIsFavoriteUseCase,
 ) {
-    suspend fun getProduct(id: Product.Id) = getProductUseCase(GetProductUseCase.Params(id))
+    fun getProduct(id: Product.Id) = getProductUseCase(GetProductUseCase.Params(id))
 
     suspend fun getCompleteLook(product: Product) =
         getCompleteLookUseCase(GetCompleteLookUseCase.Params(product))

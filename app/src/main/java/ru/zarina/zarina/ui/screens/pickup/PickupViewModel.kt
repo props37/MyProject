@@ -270,7 +270,8 @@ class PickupViewModel(
     private fun loadProduct(id: Product.Id) {
         viewModelScope.launch {
             operationTracker.track(Operation.LOADING_PRODUCT) {
-                _product.value = interactor.getProduct(id)
+                // TODO migrate to flow
+//                _product.value = interactor.getProduct(id)
             }
         }
     }

@@ -1,5 +1,6 @@
 package ru.zarina.zarina.data.product.remote
 
+import kotlinx.coroutines.flow.flow
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.product.remote.api.IZarinaProductApi
 import ru.zarina.zarina.data.product.remote.api.dto.FiltersRequestDto
@@ -18,8 +19,9 @@ class ZarinaProductRemoteSource(
     private val api: IZarinaProductApi,
 ) : IProductRemoteSource {
 
-    override suspend fun getProduct(id: Product.Id) =
-        checkNotNull(api.getProduct(id.value).toDomain())
+    override fun getProduct(id: Product.Id) = flow {
+        this.emit(checkNotNull(api.getProduct(id.value).toDomain()))
+    }
 
     override suspend fun getProductPage(
         category: Category,

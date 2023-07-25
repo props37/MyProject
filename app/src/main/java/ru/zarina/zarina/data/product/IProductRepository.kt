@@ -1,5 +1,6 @@
 package ru.zarina.zarina.data.product
 
+import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.DeliveryAvailability
@@ -11,7 +12,7 @@ import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
 
 interface IProductRepository {
-    suspend fun getProduct(id: Product.Id): Product
+    fun getProduct(id: Product.Id): Flow<Product>
     suspend fun getProducts(
         category: Category,
         sort: ProductSort,

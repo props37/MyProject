@@ -13,7 +13,7 @@ class ProductRepository(
     private val remote: IProductRemoteSource,
 ) : IProductRepository {
 
-    override suspend fun getProduct(id: Product.Id) = remote.getProduct(id)
+    override fun getProduct(id: Product.Id) = remote.getProduct(id)
 
     override suspend fun getProducts(
         category: Category,

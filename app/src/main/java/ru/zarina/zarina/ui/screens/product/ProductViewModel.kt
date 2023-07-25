@@ -7,16 +7,19 @@ import androidx.media3.datasource.cache.Cache
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
-import ru.zarina.zarina.domain.FavoriteState
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.exception.NotFoundException
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
@@ -44,14 +47,32 @@ class ProductViewModel(
         initialValue = ""
     ).mapState(viewModelScope) { Product.Id(it) }
 
-    private val _errorType = MutableStateFlow<ErrorType?>(null)
-    val errorType = _errorType.asStateFlow()
+    private val productReloadTrigger = MutableSharedFlow<Unit>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    ).apply { tryEmit(Unit) }
+    private val productResult = combine(productId, productReloadTrigger) { id, _ -> id }
+        .flatMapLatest { id ->
+            operationTracker.track(Operation.LOADING_PRODUCT) {
+                interactor.getProduct(id)
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    private val _product = MutableStateFlow<Product?>(null)
-    val product = _product.asStateFlow()
+
+    val errorType = productResult.map { result ->
+        val throwable = result?.exceptionOrNull() ?: return@map null
+        when {
+            throwable.isNetworkException() -> ErrorType.NETWORK
+            throwable is NotFoundException -> ErrorType.NOT_FOUND
+            else -> ErrorType.GENERIC
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
+
+    val product = productResult.mapState(viewModelScope) { it?.getOrNull() }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val completeLookProducts = _product
+    val completeLookProducts = product
         .distinctUntilChangedBy { it?.id }
         .mapLatest { product ->
             operationTracker.track(Operation.LOADING_COMPLETE_LOOK) {
@@ -67,7 +88,7 @@ class ProductViewModel(
         .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val similarProducts = _product
+    val similarProducts = product
         .distinctUntilChangedBy { it?.id }
         .mapLatest { product ->
             operationTracker.track(Operation.LOADING_RECOMMENDATIONS) {
@@ -83,7 +104,7 @@ class ProductViewModel(
         .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val deliveryAvailability = _product
+    val deliveryAvailability = product
         .distinctUntilChangedBy { it?.id }
         .mapLatest { product ->
             operationTracker.track(Operation.LOADING_DELIVERY_AVAILABILITY) {
@@ -103,12 +124,6 @@ class ProductViewModel(
             Operation.LOADING_DELIVERY_AVAILABILITY
         )
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
-
-    init {
-        productId
-            .mapLatest { id -> loadProduct(id) }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
-    }
 
     fun onVariantClick(variant: Product.Variant) {
         savedStateHandle[Destinations.Product.ARGUMENT_PRODUCT_ID] = variant.id.value
@@ -132,37 +147,13 @@ class ProductViewModel(
     }
 
     fun onRefreshClick() {
-        viewModelScope.launch {
-            loadProduct(productId.value)
-        }
+        productReloadTrigger.tryEmit(Unit)
     }
 
     fun onFavoriteChange(isFavorite: Boolean) {
         val product = product.value ?: return
-        _product.update { it?.copy(favorite = FavoriteState(isFavorite)) }
         viewModelScope.launch {
             interactor.setIsFavorite(product, isFavorite)
-                .onFailure {
-                    _product.update { it?.copy(favorite = product.favorite.copy(isErrorReset = true)) }
-                }
-        }
-    }
-
-    private suspend fun loadProduct(id: Product.Id) {
-        operationTracker.track(Operation.LOADING_PRODUCT) {
-            interactor.getProduct(id)
-                .onSuccess {
-                    _product.value = it
-                    _errorType.value = null
-                }
-                .getOrElse { throwable ->
-                    _errorType.value = when {
-                        throwable.isNetworkException() -> ErrorType.NETWORK
-                        throwable is NotFoundException -> ErrorType.NOT_FOUND
-                        else -> ErrorType.GENERIC
-                    }
-                    null
-                }
         }
     }
 
