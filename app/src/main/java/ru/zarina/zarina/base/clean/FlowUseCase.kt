@@ -2,6 +2,7 @@ package ru.zarina.zarina.base.clean
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.retryWhen
 import timber.log.Timber
@@ -38,6 +39,7 @@ abstract class FlowUseCase<in P, out R>(private val dispatcher: CoroutineDispatc
             emit(Result.failure(exception))
             shouldRetry(exception, attempt)
         }
+        .catch { exception -> emit(Result.failure(exception)) }
         .flowOn(dispatcher)
 
     protected abstract fun execute(params: P): Flow<Result<R>>
