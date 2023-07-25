@@ -13,6 +13,10 @@ class FavoritesRepository(
 
     override fun getIds() = local.getIds()
 
+    override suspend fun update(products: List<Product>) {
+        local.update(products)
+    }
+
     override suspend fun setIsFavorite(product: Product, isFavorite: Boolean) {
         local.setIsFavorite(product, isFavorite)
         try {

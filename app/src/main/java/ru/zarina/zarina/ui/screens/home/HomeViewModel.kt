@@ -17,7 +17,6 @@ import ru.zarina.zarina.domain.Banner
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.Selection
 import ru.zarina.zarina.domain.Url
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
@@ -36,8 +35,9 @@ class HomeViewModel(
         .map { it?.getOrNull().orEmpty().toPersistentList() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), persistentListOf())
 
-    private val _selections = MutableStateFlow<Result<List<Selection>>?>(null)
-    val selections = _selections
+    private val selectionsResult = interactor.getSelections()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val selections = selectionsResult
         .map { it?.getOrNull().orEmpty().toPersistentList() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), persistentListOf())
 
@@ -45,15 +45,10 @@ class HomeViewModel(
 
     init {
         loadBanners()
-        loadSelections()
     }
 
     private fun loadBanners() = viewModelScope.launch {
         _banners.value = interactor.getBanners()
-    }
-
-    private fun loadSelections() = viewModelScope.launch {
-        _selections.value = interactor.getSelections()
     }
 
     fun onBannerClick(banner: Banner) {

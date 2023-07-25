@@ -15,6 +15,15 @@ class FavoritesLocalSource : IFavoritesLocalSource {
 
     override fun getIds() = ids.asStateFlow()
 
+    override suspend fun update(products: List<Product>) {
+        val (favorite, nonFavorite) = products.partition { it.favorite.isFavorite }
+        val favoriteSet = favorite.map { it.id }.toSet()
+        val nonFavoriteSet = nonFavorite.map { it.id }.toSet()
+        ids.update {
+            it - nonFavoriteSet + favoriteSet
+        }
+    }
+
     override suspend fun setIsFavorite(product: Product, isFavorite: Boolean) {
         if (isFavorite) {
             ids.update { it + product.id }

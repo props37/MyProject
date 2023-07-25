@@ -11,5 +11,5 @@ class HomeInteractor(
     private val getSelectionsUseCase: GetSelectionsUseCase
 ) {
     suspend fun getBanners() = getBannersUseCase()
-    suspend fun getSelections() = getSelectionsUseCase()
+    fun getSelections() = getSelectionsUseCase()
 }
