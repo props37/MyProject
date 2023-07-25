@@ -22,6 +22,7 @@ fun ProductHorizontalSection(
     title: String?,
     products: ImmutableList<Product>,
     onProductClick: (Product) -> Unit,
+    onFavoriteChange: (Product, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
 ) {
@@ -59,6 +60,7 @@ fun ProductHorizontalSection(
             ProductCard(
                 product = product,
                 onClick = { onProductClick(product) },
+                onFavoriteChange = { onFavoriteChange(product, it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 8.dp),

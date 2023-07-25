@@ -167,6 +167,7 @@ fun ProductScreenContent(
                         title = stringResource(R.string.complete_look),
                         products = completeLookProducts,
                         onProductClick = onProductClick,
+                        onFavoriteChange = { _, _ -> }, // TODO
                         modifier = Modifier
                             .fillMaxWidth()
                             .bringIntoViewRequester(completeLookRequester)
@@ -176,6 +177,7 @@ fun ProductScreenContent(
                         title = stringResource(R.string.similar_products),
                         products = similarProducts,
                         onProductClick = onProductClick,
+                        onFavoriteChange = { _, _ -> }, // TODO
                         modifier = Modifier.fillMaxWidth()
                     )
                 DeliveryAvailabilitySection(

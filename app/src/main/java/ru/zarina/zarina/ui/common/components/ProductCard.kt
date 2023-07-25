@@ -38,6 +38,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 fun ProductCard(
     product: Product,
     onClick: () -> Unit,
+    onFavoriteChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     isMediaScrollable: Boolean = false,
     colorPickerDimensions: ColorPickerDimensions = ColorPickerDefaults.smallDimensions(),
@@ -88,7 +89,7 @@ fun ProductCard(
             ) {
                 FavoriteHeart(
                     state = product.favorite,
-                    onFavoriteChange = {}, // TODO
+                    onFavoriteChange = onFavoriteChange,
                 )
             }
 
@@ -162,6 +163,7 @@ fun ProductCardPreview(
         ProductCard(
             product = product,
             onClick = {},
+            onFavoriteChange = {},
         )
     }
 }

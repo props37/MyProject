@@ -97,6 +97,7 @@ fun HomeScreenContent(
                     title = selection.title,
                     products = selection.products,
                     onProductClick = onProductClick,
+                    onFavoriteChange = { _, _ -> }, // TODO
                     modifier = Modifier.fillMaxWidth()
                 )
             }
