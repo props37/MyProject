@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.datasource.cache.Cache
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
@@ -87,20 +86,17 @@ class ProductViewModel(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val similarProducts = product
+    private val similarProductsResult = product
         .distinctUntilChangedBy { it?.id }
-        .mapLatest { product ->
+        .flatMapLatest { product ->
             operationTracker.track(Operation.LOADING_RECOMMENDATIONS) {
-                if (product != null) {
-                    interactor.getRecommendations(product)
-                        .getOrDefault(emptyList())
-                        .toPersistentList()
-                } else {
-                    persistentListOf()
-                }
+                product?.let { interactor.getRecommendations(it) } ?: flowOf(null)
             }
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val similarProducts = similarProductsResult.mapState(viewModelScope) {
+        it?.getOrNull().orEmpty().toPersistentList()
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val deliveryAvailability = product
