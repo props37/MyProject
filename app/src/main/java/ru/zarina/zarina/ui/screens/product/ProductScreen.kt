@@ -69,7 +69,7 @@ import java.util.UUID
 @Composable
 fun ProductScreenContent(
     product: Product?,
-    onFavoriteChange: (Boolean) -> Unit,
+    onFavoriteChange: (Product, Boolean) -> Unit,
     onVariantClick: (Product.Variant) -> Unit,
     onShareClick: () -> Unit,
     onPickupClick: (Product) -> Unit,
@@ -121,7 +121,7 @@ fun ProductScreenContent(
                 val completeLookRequester = remember { BringIntoViewRequester() }
                 MediaSection(
                     product = product,
-                    onFavoriteChange = onFavoriteChange,
+                    onFavoriteChange = { onFavoriteChange(product, it) },
                     onBuyCompleteLookClick = {
                         coroutineScope.launch {
                             completeLookRequester.bringIntoView()
@@ -167,7 +167,7 @@ fun ProductScreenContent(
                         title = stringResource(R.string.complete_look),
                         products = completeLookProducts,
                         onProductClick = onProductClick,
-                        onFavoriteChange = { _, _ -> }, // TODO
+                        onFavoriteChange = onFavoriteChange,
                         modifier = Modifier
                             .fillMaxWidth()
                             .bringIntoViewRequester(completeLookRequester)
@@ -177,7 +177,7 @@ fun ProductScreenContent(
                         title = stringResource(R.string.similar_products),
                         products = similarProducts,
                         onProductClick = onProductClick,
-                        onFavoriteChange = { _, _ -> }, // TODO
+                        onFavoriteChange = onFavoriteChange,
                         modifier = Modifier.fillMaxWidth()
                     )
                 DeliveryAvailabilitySection(
@@ -302,7 +302,7 @@ fun ProductScreenContentPreview(
     ZarinaTheme {
         ProductScreenContent(
             product = product,
-            onFavoriteChange = {},
+            onFavoriteChange = { _, _ -> },
             onVariantClick = {},
             onShareClick = {},
             completeLookProducts = List(5) {

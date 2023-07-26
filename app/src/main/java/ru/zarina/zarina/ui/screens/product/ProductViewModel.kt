@@ -150,8 +150,7 @@ class ProductViewModel(
         productReloadTrigger.tryEmit(Unit)
     }
 
-    fun onFavoriteChange(isFavorite: Boolean) {
-        val product = product.value ?: return
+    fun onFavoriteChange(product: Product, isFavorite: Boolean) {
         viewModelScope.launch {
             interactor.setIsFavorite(product, isFavorite)
         }
