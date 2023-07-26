@@ -59,6 +59,7 @@ fun HomeScreenContent(
     shakingFavorites: ImmutableSet<Product.Id>,
     onBannerClick: (Banner) -> Unit,
     onProductClick: (Product) -> Unit,
+    onFavoriteChange: (Product, Boolean) -> Unit,
     cache: State<Cache?>,
 ) {
     LazyColumn(
@@ -101,7 +102,7 @@ fun HomeScreenContent(
                     products = selection.products,
                     shakingFavorites = shakingFavorites,
                     onProductClick = onProductClick,
-                    onFavoriteChange = { _, _ -> }, // TODO
+                    onFavoriteChange = onFavoriteChange,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -174,6 +175,11 @@ fun HomeScreen(
         shakingFavorites = shakingFavorites,
         onBannerClick = remember { { viewModel.onBannerClick(it) } },
         onProductClick = remember { { viewModel.onProductClick(it) } },
+        onFavoriteChange = remember {
+            { product, isFavorite ->
+                viewModel.onFavoriteChange(product, isFavorite)
+            }
+        },
         cache = cache,
     )
 }
@@ -214,6 +220,7 @@ fun HomeScreenContentPreview() {
             shakingFavorites = persistentSetOf(),
             onBannerClick = {},
             onProductClick = {},
+            onFavoriteChange = { _, _ -> },
             cache = remember { mutableStateOf<Cache?>(null) },
         )
     }

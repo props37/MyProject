@@ -6,11 +6,13 @@ import androidx.media3.datasource.cache.Cache
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentSet
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.Action
@@ -22,6 +24,7 @@ import ru.zarina.zarina.domain.Url
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.utils.coroutine.mapState
+import kotlin.time.Duration.Companion.seconds
 
 @KoinViewModel
 class HomeViewModel(
@@ -74,6 +77,17 @@ class HomeViewModel(
         sideEffect(SideEffect.ShowProduct(product.id))
     }
 
+    fun onFavoriteChange(product: Product, isFavorite: Boolean) {
+        viewModelScope.launch {
+            interactor.setIsFavorite(product, isFavorite)
+                .onFailure {
+                    _shakingFavorites.update { it + product.id }
+                    delay(FAVORITE_SHAKE_DURATION)
+                    _shakingFavorites.update { it - product.id }
+                }
+        }
+    }
+
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         data class ShowProduct(val productId: Product.Id) : SideEffect
         data class ShowWebpage(val url: Url) : SideEffect
@@ -81,6 +95,10 @@ class HomeViewModel(
             val categoryId: Category.Id,
             val filtration: Filtration?
         ) : SideEffect
+    }
+
+    companion object {
+        private val FAVORITE_SHAKE_DURATION = 1.seconds
     }
 
 }
