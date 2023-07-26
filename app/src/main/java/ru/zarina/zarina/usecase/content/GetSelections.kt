@@ -30,7 +30,7 @@ class GetSelectionsUseCase(
         val favoritesFlow = favoritesRepository.getIds()
         return combine(selectionsFlow, favoritesFlow) { selections, favorites ->
             val result = selections.map { selection ->
-                if (selection !is Selection.Products || selection.products.none { it.id in favorites }) {
+                if (selection !is Selection.Products) {
                     selection
                 } else {
                     val newProducts = selection.products
