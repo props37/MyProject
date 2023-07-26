@@ -47,8 +47,9 @@ class ZarinaProductRemoteSource(
         return Page(pagination, FilteredProducts(products, appliedFiltration))
     }
 
-    override suspend fun getCompleteLook(product: Product) =
-        api.getCompleteLook(product.id.value).toDomain()
+    override fun getCompleteLook(product: Product) = flow {
+        emit(api.getCompleteLook(product.id.value).toDomain())
+    }
 
     override suspend fun getDeliveryAvailability(product: Product) =
         checkNotNull(api.getDeliveryInfo(product.id.value).toDomain())

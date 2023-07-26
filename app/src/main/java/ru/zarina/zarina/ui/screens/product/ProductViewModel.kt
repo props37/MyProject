@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
@@ -72,20 +73,18 @@ class ProductViewModel(
     val product = productResult.mapState(viewModelScope) { it?.getOrNull() }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val completeLookProducts = product
+    private val completeLookResult = product
         .distinctUntilChangedBy { it?.id }
-        .mapLatest { product ->
+        .flatMapLatest { product ->
             operationTracker.track(Operation.LOADING_COMPLETE_LOOK) {
-                if (product?.isLookPart == true) {
-                    interactor.getCompleteLook(product)
-                        .getOrDefault(emptyList())
-                        .toPersistentList()
-                } else {
-                    persistentListOf()
-                }
+                product?.let { interactor.getCompleteLook(it) } ?: flowOf(null)
             }
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    val completeLookProducts = completeLookResult.mapState(viewModelScope) {
+        it?.getOrNull().orEmpty().toPersistentList()
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val similarProducts = product

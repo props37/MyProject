@@ -23,7 +23,7 @@ class ProductRepository(
     ) =
         remote.getProductPage(category, sort, filtration, pageIndex)
 
-    override suspend fun getCompleteLook(product: Product) = remote.getCompleteLook(product)
+    override fun getCompleteLook(product: Product) = remote.getCompleteLook(product)
 
     override suspend fun getDeliveryAvailability(product: Product) =
         remote.getDeliveryAvailability(product)

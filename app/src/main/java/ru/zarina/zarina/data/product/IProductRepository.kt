@@ -20,7 +20,7 @@ interface IProductRepository {
         pageIndex: Int,
     ): Page<FilteredProducts>
 
-    suspend fun getCompleteLook(product: Product): List<Product>
+    fun getCompleteLook(product: Product): Flow<List<Product>>
     suspend fun getDeliveryAvailability(product: Product): DeliveryAvailability
     suspend fun getOffers(product: Product, city: City): List<Offer>
 }
