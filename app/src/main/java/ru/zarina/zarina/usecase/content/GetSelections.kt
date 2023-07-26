@@ -11,7 +11,6 @@ import ru.zarina.zarina.base.clean.FlowUseCase
 import ru.zarina.zarina.data.content.IContentRepository
 import ru.zarina.zarina.data.favorites.IFavoritesRepository
 import ru.zarina.zarina.di.Qualifiers
-import ru.zarina.zarina.domain.FavoriteState
 import ru.zarina.zarina.domain.Selection
 import timber.log.Timber
 
@@ -37,10 +36,10 @@ class GetSelectionsUseCase(
                     val newProducts = selection.products
                         .map { product ->
                             val isFavorite = product.id in favorites
-                            if (product.favorite.isFavorite == isFavorite) {
+                            if (product.isFavorite == isFavorite) {
                                 product
                             } else {
-                                product.copy(favorite = FavoriteState(isFavorite))
+                                product.copy(isFavorite = isFavorite)
                             }
                         }
                         .toPersistentList()

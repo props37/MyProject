@@ -10,13 +10,12 @@ import ru.zarina.zarina.domain.Product
 @Singleton
 class FavoritesLocalSource : IFavoritesLocalSource {
 
-    // TODO save states
     private val ids = MutableStateFlow(setOf<Product.Id>())
 
     override fun getIds() = ids.asStateFlow()
 
     override suspend fun update(products: List<Product>) {
-        val (favorite, nonFavorite) = products.partition { it.favorite.isFavorite }
+        val (favorite, nonFavorite) = products.partition { it.isFavorite }
         val favoriteSet = favorite.map { it.id }.toSet()
         val nonFavoriteSet = nonFavorite.map { it.id }.toSet()
         ids.update {

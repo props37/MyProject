@@ -82,7 +82,7 @@ fun MediaSection(
 
                 )
             FavoriteHeart(
-                state = product.favorite,
+                isFavorite = product.isFavorite,
                 onFavoriteChange = onFavoriteChange,
             )
         }

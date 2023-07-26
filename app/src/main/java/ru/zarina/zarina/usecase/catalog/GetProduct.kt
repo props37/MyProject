@@ -32,10 +32,10 @@ class GetProductUseCase(
             .map { id in it }
 
         return combine(productFlow, isFavoriteFlow) { product, isFavorite ->
-            val resultProduct = if (product.favorite.isFavorite == isFavorite)
+            val resultProduct = if (product.isFavorite == isFavorite)
                 product
             else
-                product.copy(favorite = product.favorite.copy(isFavorite = isFavorite))
+                product.copy(isFavorite = isFavorite)
             Result.success(resultProduct)
         }
     }

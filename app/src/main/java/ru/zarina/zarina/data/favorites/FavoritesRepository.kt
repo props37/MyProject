@@ -22,7 +22,7 @@ class FavoritesRepository(
         try {
             remote.setIsFavorite(product, isFavorite)
         } catch (e: Exception) {
-            local.setIsFavorite(product, product.favorite.isFavorite)
+            local.setIsFavorite(product, product.isFavorite)
             throw e
         }
     }
