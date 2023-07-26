@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.datasource.cache.Cache
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +21,7 @@ import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Url
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.utils.coroutine.mapState
 
 @KoinViewModel
 class HomeViewModel(
@@ -40,6 +42,9 @@ class HomeViewModel(
     val selections = selectionsResult
         .map { it?.getOrNull().orEmpty().toPersistentList() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), persistentListOf())
+
+    private val _shakingFavorites = MutableStateFlow(emptySet<Product.Id>())
+    val shakingFavorites = _shakingFavorites.mapState(viewModelScope) { it.toPersistentSet() }
 
     // TODO add error display
 

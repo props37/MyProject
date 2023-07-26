@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableSet
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
@@ -21,6 +22,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 fun ProductHorizontalSection(
     title: String?,
     products: ImmutableList<Product>,
+    shakingFavorites: ImmutableSet<Product.Id>,
     onProductClick: (Product) -> Unit,
     onFavoriteChange: (Product, Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -60,6 +62,7 @@ fun ProductHorizontalSection(
             ProductCard(
                 product = product,
                 onClick = { onProductClick(product) },
+                isFavoriteShaking = product.id in shakingFavorites,
                 onFavoriteChange = { onFavoriteChange(product, it) },
                 modifier = Modifier
                     .fillMaxWidth()

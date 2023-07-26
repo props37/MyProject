@@ -165,6 +165,7 @@ fun ProductsScreenContent(
                                 product = product,
                                 isMediaScrollable = true,
                                 onClick = { onProductClick(product) },
+                                isFavoriteShaking = false, // TODO
                                 onFavoriteChange = { }, // TODO
                                 colorPickerDimensions = colorPickerDimensions,
                             )

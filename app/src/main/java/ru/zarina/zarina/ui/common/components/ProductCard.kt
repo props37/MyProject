@@ -38,6 +38,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 fun ProductCard(
     product: Product,
     onClick: () -> Unit,
+    isFavoriteShaking: Boolean,
     onFavoriteChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     isMediaScrollable: Boolean = false,
@@ -89,6 +90,7 @@ fun ProductCard(
             ) {
                 FavoriteHeart(
                     isFavorite = product.isFavorite,
+                    isShaking = isFavoriteShaking,
                     onFavoriteChange = onFavoriteChange,
                 )
             }
@@ -163,6 +165,7 @@ fun ProductCardPreview(
         ProductCard(
             product = product,
             onClick = {},
+            isFavoriteShaking = false,
             onFavoriteChange = {},
         )
     }
