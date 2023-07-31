@@ -103,7 +103,9 @@ fun ProductRowCard(
             }
         }
         Spacer(modifier = Modifier.width(8.dp))
-        var isFavorite by remember(product.isFavorite) { mutableStateOf(product.isFavorite) }
+        var isFavorite by remember(product.isFavorite, isFavoriteShaking) {
+            mutableStateOf(product.isFavorite)
+        }
         FavoriteHeart(
             isFavorite = isFavorite,
             isShaking = isFavoriteShaking,

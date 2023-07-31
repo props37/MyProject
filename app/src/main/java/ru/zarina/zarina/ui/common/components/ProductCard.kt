@@ -91,7 +91,9 @@ fun ProductCard(
                 verticalAlignment = Alignment.Top,
                 modifier = Modifier.align(Alignment.TopEnd)
             ) {
-                var isFavorite by remember(product.isFavorite) { mutableStateOf(product.isFavorite) }
+                var isFavorite by remember(product.isFavorite, isFavoriteShaking) {
+                    mutableStateOf(product.isFavorite)
+                }
 
                 FavoriteHeart(
                     isFavorite = isFavorite,
