@@ -8,10 +8,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
@@ -113,18 +113,21 @@ class ProductsViewModel(
         )
     )
 
-    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    val productCount = pagingSource
-        .flatMapLatest { it?.itemCount ?: flowOf(null) }
-        .map { count ->
-            when (count) {
-                null -> null
-                0 -> Text.Resource(R.string.no_products)
-                else -> productsPluralManager.getText(count, count)
-            }
-        }
-        // TODO fix product count resetting to empty on product favorite change
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    private val _productCount = MutableStateFlow<Text?>(null)
+    val productCount = _productCount.asStateFlow()
+
+//    @OptIn(ExperimentalCoroutinesApi::class)
+//    val productCount = pagingSource
+//        .flatMapLatest { it?.itemCount ?: flowOf(null) }
+//        .map { count ->
+//            when (count) {
+//                null -> null
+//                0 -> Text.Resource(R.string.no_products)
+//                else -> productsPluralManager.getText(count, count)
+//            }
+//        }
+//        // TODO fix product count resetting to empty on product favorite change
+//        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private val pager = MutableStateFlow(
         Pager(
@@ -160,8 +163,33 @@ class ProductsViewModel(
                     savedStateHandle[KEY_REQUESTED_FILTRATION] = it
             }
             .launchIn(viewModelScope)
+        setupProductCount()
+        setupPagingInvalidation()
+    }
 
-        combine(category, sort, requestedFiltration, interactor.getFavoriteIds()) { it -> it }
+    private fun setupProductCount() {
+        pagingSource
+            .flatMapLatest { it?.itemCount ?: emptyFlow() }
+            .filterNotNull()
+            .onEach { count ->
+                _productCount.value = when (count) {
+                    0 -> Text.Resource(R.string.no_products)
+                    else -> productsPluralManager.getText(count, count)
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun setupPagingInvalidation() {
+        combine(category, requestedFiltration) { it -> it }
+            .distinctUntilChanged()
+            .onEach {
+                pagingSource.value?.invalidate()
+                _productCount.value = null
+            }
+            .launchIn(viewModelScope)
+
+        combine(interactor.getFavoriteIds(), sort) { it -> it }
             .distinctUntilChanged()
             .onEach { pagingSource.value?.invalidate() }
             .launchIn(viewModelScope)
