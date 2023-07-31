@@ -54,7 +54,7 @@ fun ProductRowCard(
                 contentScale = ContentScale.FillHeight,
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth(0.25f)
+                    .fillMaxWidth(0.30f)
                     .aspectRatio(
                         Media.Defaults.PRODUCT_MEDIA_ASPECT_RATIO,
                         matchHeightConstraintsFirst = true
@@ -62,7 +62,9 @@ fun ProductRowCard(
             )
             if (!product.isAvailable)
                 OutOfStockBadge(
-                    modifier = Modifier.align(Alignment.BottomStart)
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(4.dp)
                 )
         }
         Spacer(modifier = Modifier.width(12.dp))
@@ -82,7 +84,7 @@ fun ProductRowCard(
                 text = product.name,
                 color = UiKitTheme.colors.primaryContentColor,
                 style = UiKitTheme.typography.circle1518,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Start,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
             Row(
