@@ -2,6 +2,7 @@ package ru.zarina.zarina.data.favorites.remote
 
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.favorites.remote.api.IZarinaFavoritesApi
+import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.Product
 
 @Factory
@@ -16,4 +17,14 @@ class FavoritesRemoteSource(
         }
     }
 
+    override suspend fun getFavoritesPage(pageIndex: Int): Page<List<Product>> {
+        val response =
+            api.getFavoritesPage(
+                // adjust page index, because it starts from 1 on the backend
+                pageIndex = pageIndex + 1
+            )
+        val pagination = response.toPagination()
+        val products = response.items?.mapNotNull { it.toDomain() }.orEmpty()
+        return Page(pagination, products)
+    }
 }
