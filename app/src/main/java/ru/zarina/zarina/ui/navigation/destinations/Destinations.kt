@@ -249,7 +249,7 @@ object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
 
 }
 
-object Favourites : SimpleGraph(BaseRoute.GRAPH_FAVOURITES, Root) {
+object Favorites : SimpleGraph(BaseRoute.GRAPH_FAVOURITES, Root) {
     object Root : SimpleDestination(BaseRoute.FAVOURITES)
 }
 

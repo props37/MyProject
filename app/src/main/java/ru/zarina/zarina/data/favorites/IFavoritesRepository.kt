@@ -1,6 +1,7 @@
 package ru.zarina.zarina.data.favorites
 
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.Product
 
 interface IFavoritesRepository {
@@ -15,5 +16,7 @@ interface IFavoritesRepository {
      * Set [product] favorite state to [isFavorite] as a result of user action.
      */
     suspend fun setIsFavorite(product: Product, isFavorite: Boolean)
+
+    suspend fun getFavorites(pageIndex: Int): Page<List<Product>>
 }
 

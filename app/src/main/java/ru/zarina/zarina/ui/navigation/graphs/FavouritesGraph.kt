@@ -4,13 +4,19 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
-import ru.zarina.zarina.ui.navigation.destinations.Favourites
-import ru.zarina.zarina.ui.screens.favourites.FavouritesScreen
+import ru.zarina.zarina.ui.navigation.destinations.Destinations
+import ru.zarina.zarina.ui.navigation.destinations.Favorites
+import ru.zarina.zarina.ui.screens.favourites.FavoritesScreen
 
-fun NavGraphBuilder.favouritesGraph(navController: NavController) {
-    navigationGraph(Favourites) {
-        composableDestination(Favourites.Root) {
-            FavouritesScreen()
+fun NavGraphBuilder.favoritesGraph(navController: NavController) {
+    navigationGraph(Favorites) {
+        composableDestination(Favorites.Root) {
+            FavoritesScreen(
+                showProduct = { product ->
+                    val arguments = Destinations.Product.Arguments(productId = product.id)
+                    navController.navigate(Destinations.Product.createRoute(arguments))
+                }
+            )
         }
     }
 }

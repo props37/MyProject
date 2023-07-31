@@ -193,7 +193,7 @@ sealed class BottomNavigationTab(
     object Favourites : BottomNavigationTab(
         icon = R.drawable.ic_heart_36,
         title = R.string.favourites,
-        destination = ru.zarina.zarina.ui.navigation.destinations.Favourites,
+        destination = ru.zarina.zarina.ui.navigation.destinations.Favorites,
     )
 
     object Home : BottomNavigationTab(

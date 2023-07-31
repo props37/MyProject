@@ -3,6 +3,7 @@ package ru.zarina.zarina.data.favorites
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.favorites.local.IFavoritesLocalSource
 import ru.zarina.zarina.data.favorites.remote.IFavoritesRemoteSource
+import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.Product
 
 @Factory
@@ -25,5 +26,11 @@ class FavoritesRepository(
             local.setIsFavorite(product, product.isFavorite)
             throw e
         }
+    }
+
+    override suspend fun getFavorites(pageIndex: Int): Page<List<Product>> {
+        val page = remote.getFavoritesPage(pageIndex)
+        update(page.value)
+        return page
     }
 }
