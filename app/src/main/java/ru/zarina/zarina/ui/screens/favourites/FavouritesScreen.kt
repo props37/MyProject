@@ -12,6 +12,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -35,6 +36,7 @@ import ru.zarina.zarina.utils.compose.plus
 @Composable
 fun FavoritesScreenContent(
     favorites: LazyPagingItems<Product>,
+    onProductClick: (Product) -> Unit,
 ) {
     val productListState = rememberLazyListState()
     ZarinaScaffold(
@@ -66,7 +68,7 @@ fun FavoritesScreenContent(
                 if (product != null)
                     ProductRowCard(
                         product = product,
-                        onClick = {}, // TODO
+                        onClick = { onProductClick(product) },
                         onFavoriteChange = {}, // TODO
                     )
             }
@@ -75,30 +77,35 @@ fun FavoritesScreenContent(
 }
 
 @Composable
-fun FavoritesScreen() {
+fun FavoritesScreen(
+    showProduct: (Product) -> Unit,
+) {
     val viewModel = koinViewModel<FavoritesViewModel>()
 
     val favorites = viewModel.favorites.collectAsLazyPagingItems()
 
     FavoritesScreenBehavior(
-        sideEffects = viewModel.sideEffects
+        sideEffects = viewModel.sideEffects,
+        showProduct = showProduct,
     )
 
     FavoritesScreenContent(
         favorites = favorites,
+        onProductClick = remember { { viewModel.onProductClick(it) } }
     )
 }
 
 @Composable
 fun FavoritesScreenBehavior(
     sideEffects: Flow<FavoritesViewModel.SideEffect>,
+    showProduct: (Product) -> Unit,
 ) {
     NavigationBarState(isVisible = true, isAnimated = true)
 
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                else -> TODO()
+                is FavoritesViewModel.SideEffect.ShowProduct -> showProduct(effect.product)
             }
         }
     }

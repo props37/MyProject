@@ -22,8 +22,6 @@ class FavoritesViewModel @Inject constructor(
 ) : ViewModel(),
     ISideEffectSource<FavoritesViewModel.SideEffect> by SideEffectQueue() {
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
-
     private val pagingSource = MutableStateFlow<PagingSource<Int, Product>?>(null)
     private val pager = Pager(
         config = PagingConfig(
@@ -39,6 +37,14 @@ class FavoritesViewModel @Inject constructor(
     val favorites = pager.flow
         .cachedIn(viewModelScope)
         .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
+
+    fun onProductClick(product: Product) {
+        sideEffect(SideEffect.ShowProduct(product))
+    }
+
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        data class ShowProduct(val product: Product) : SideEffect
+    }
 
     companion object {
         private const val PAGE_SIZE = 12
