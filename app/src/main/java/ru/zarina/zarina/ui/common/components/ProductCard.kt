@@ -149,7 +149,7 @@ fun ProductCard(
 }
 
 @Composable
-private fun Tag(
+fun Tag(
     text: String,
     modifier: Modifier = Modifier,
 ) {
