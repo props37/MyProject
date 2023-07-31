@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,12 +34,18 @@ fun ProductRowCard(
     onFavoriteChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val inactiveOverlayColor = UiKitTheme.colors.inactiveOverlay
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
+            .fillMaxWidth()
             .clickable(onClick = onClick)
             .padding(16.dp)
-            .fillMaxWidth()
+            .drawWithContent {
+                drawContent()
+                if (!product.isAvailable) drawRect(inactiveOverlayColor)
+            }
     ) {
         Box {
             AsyncImageLoader(
