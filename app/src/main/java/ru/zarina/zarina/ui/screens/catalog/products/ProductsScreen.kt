@@ -1,14 +1,8 @@
 package ru.zarina.zarina.ui.screens.catalog.products
 
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,12 +22,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -265,38 +257,6 @@ private fun FilterButton(
             style = UiKitTheme.typography.circle1718,
             color = foregroundColor,
         )
-    }
-}
-
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-private fun GridLoader(
-    isVisible: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = expandVertically(),
-        exit = shrinkVertically(),
-        modifier = modifier
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .animateEnterExit(
-                    enter = fadeIn(),
-                    exit = fadeOut(),
-                )
-                .padding(8.dp)
-        ) {
-            CircularProgressIndicator(
-                color = UiKitTheme.colors.primaryContentColor,
-                strokeWidth = 2.dp,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(16.dp)
-            )
-        }
     }
 }
 
