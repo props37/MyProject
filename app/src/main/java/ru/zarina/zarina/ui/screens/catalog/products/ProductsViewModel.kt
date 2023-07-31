@@ -116,19 +116,6 @@ class ProductsViewModel(
     private val _productCount = MutableStateFlow<Text?>(null)
     val productCount = _productCount.asStateFlow()
 
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    val productCount = pagingSource
-//        .flatMapLatest { it?.itemCount ?: flowOf(null) }
-//        .map { count ->
-//            when (count) {
-//                null -> null
-//                0 -> Text.Resource(R.string.no_products)
-//                else -> productsPluralManager.getText(count, count)
-//            }
-//        }
-//        // TODO fix product count resetting to empty on product favorite change
-//        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
-
     private val pager = MutableStateFlow(
         Pager(
             config = PagingConfig(
