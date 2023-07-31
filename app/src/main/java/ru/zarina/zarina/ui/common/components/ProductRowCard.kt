@@ -32,6 +32,7 @@ fun ProductRowCard(
     product: Product,
     onClick: () -> Unit,
     onFavoriteChange: (Boolean) -> Unit,
+    isFavoriteShaking: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val inactiveOverlayColor = UiKitTheme.colors.inactiveOverlay
@@ -105,7 +106,7 @@ fun ProductRowCard(
         var isFavorite by remember(product.isFavorite) { mutableStateOf(product.isFavorite) }
         FavoriteHeart(
             isFavorite = isFavorite,
-            isShaking = false, // TODO
+            isShaking = isFavoriteShaking,
             onFavoriteChange = {
                 onFavoriteChange(it)
                 isFavorite = it

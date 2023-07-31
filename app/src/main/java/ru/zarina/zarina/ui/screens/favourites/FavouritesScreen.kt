@@ -12,14 +12,17 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
+import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
@@ -38,6 +41,7 @@ fun FavoritesScreenContent(
     favorites: LazyPagingItems<Product>,
     onProductClick: (Product) -> Unit,
     onFavoriteChange: (Product, Boolean) -> Unit,
+    shakingFavorites: ImmutableSet<Product.Id>,
 ) {
     val productListState = rememberLazyListState()
     ZarinaScaffold(
@@ -71,6 +75,7 @@ fun FavoritesScreenContent(
                         product = product,
                         onClick = { onProductClick(product) },
                         onFavoriteChange = { onFavoriteChange(product, it) },
+                        isFavoriteShaking = shakingFavorites.contains(product.id)
                     )
             }
         }
@@ -84,6 +89,7 @@ fun FavoritesScreen(
     val viewModel = koinViewModel<FavoritesViewModel>()
 
     val favorites = viewModel.favorites.collectAsLazyPagingItems()
+    val shakingFavorites by viewModel.shakingFavorites.collectAsStateWithLifecycle()
 
     FavoritesScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -98,6 +104,7 @@ fun FavoritesScreen(
                 viewModel.onFavoriteChange(product, isFavorite)
             }
         },
+        shakingFavorites = shakingFavorites
     )
 }
 
