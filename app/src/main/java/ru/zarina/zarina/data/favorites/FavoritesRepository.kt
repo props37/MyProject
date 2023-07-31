@@ -19,9 +19,9 @@ class FavoritesRepository(
     }
 
     override suspend fun setIsFavorite(product: Product, isFavorite: Boolean) {
-        local.setIsFavorite(product, isFavorite)
         try {
             remote.setIsFavorite(product, isFavorite)
+            local.setIsFavorite(product, isFavorite)
         } catch (e: Exception) {
             local.setIsFavorite(product, product.isFavorite)
             throw e
