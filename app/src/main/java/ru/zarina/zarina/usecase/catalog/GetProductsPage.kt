@@ -24,6 +24,9 @@ class GetProductsPageUseCase(
         val (category, sort, filtration, pageIndex) = params
 
         val page = productRepository.getProducts(category, sort, filtration, pageIndex)
+
+        favoritesRepository.update(page.value.products)
+
         val favorites = favoritesRepository.getIds().first()
 
         val result =
