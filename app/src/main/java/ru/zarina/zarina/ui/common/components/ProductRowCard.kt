@@ -4,11 +4,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
@@ -38,15 +38,20 @@ fun ProductRowCard(
         modifier = modifier
             .clickable(onClick = onClick)
             .padding(16.dp)
-            .height(IntrinsicSize.Min)
+            .fillMaxWidth()
     ) {
         Box {
             AsyncImageLoader(
                 url = product.media.first { it.type == Media.Type.IMAGE }.url.value,
                 alignment = Alignment.Center,
-                contentScale = ContentScale.FillWidth,
+                contentScale = ContentScale.FillHeight,
                 contentDescription = null,
-                modifier = Modifier.fillMaxHeight(0.25f),
+                modifier = Modifier
+                    .fillMaxWidth(0.25f)
+                    .aspectRatio(
+                        Media.Defaults.PRODUCT_MEDIA_ASPECT_RATIO,
+                        matchHeightConstraintsFirst = true
+                    ),
             )
             if (!product.isAvailable)
                 OutOfStockBadge(
@@ -61,10 +66,11 @@ fun ProductRowCard(
                 .weight(1f)
                 .fillMaxHeight()
         ) {
-            Tag(
-                text = product.attributes.firstOrNull().orEmpty(),
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+            if (product.attributes.isNotEmpty())
+                Tag(
+                    text = product.attributes.firstOrNull().orEmpty(),
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
             Text(
                 text = product.name,
                 color = UiKitTheme.colors.primaryContentColor,
@@ -85,17 +91,17 @@ fun ProductRowCard(
                     price = product.price,
                 )
             }
-            Spacer(modifier = Modifier.width(8.dp))
-
-            var isFavorite by remember(product.isFavorite) { mutableStateOf(product.isFavorite) }
-            FavoriteHeart(
-                isFavorite = isFavorite,
-                isShaking = false, // TODO
-                onFavoriteChange = {
-                    onFavoriteChange(it)
-                    isFavorite = it
-                }
-            )
         }
+        Spacer(modifier = Modifier.width(8.dp))
+        var isFavorite by remember(product.isFavorite) { mutableStateOf(product.isFavorite) }
+        FavoriteHeart(
+            isFavorite = isFavorite,
+            isShaking = false, // TODO
+            onFavoriteChange = {
+                onFavoriteChange(it)
+                isFavorite = it
+            },
+            modifier = Modifier.align(Alignment.Top)
+        )
     }
 }
