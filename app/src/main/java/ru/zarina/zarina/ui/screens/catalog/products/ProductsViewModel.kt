@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -21,6 +23,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
@@ -37,6 +40,7 @@ import ru.zarina.zarina.ui.screens.catalog.products.paging.CachingCategoryProduc
 import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPagingSource
 import ru.zarina.zarina.ui.screens.catalog.products.paging.EmptyProductPagingSource
 import ru.zarina.zarina.utils.coroutine.mapState
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProductsViewModel(
@@ -141,6 +145,9 @@ class ProductsViewModel(
     }
         .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
 
+    private val _shakingFavorites = MutableStateFlow(emptySet<Product.Id>())
+    val shakingFavorites = _shakingFavorites.mapState(viewModelScope) { it.toPersistentSet() }
+
     init {
         pagingSource
             .flatMapLatest { it?.appliedFiltration ?: emptyFlow() }
@@ -179,7 +186,11 @@ class ProductsViewModel(
     fun onFavoriteChange(product: Product, isFavorite: Boolean) {
         viewModelScope.launch {
             interactor.setIsFavorite(product, isFavorite)
-            // TODO shake the heart button on failure
+                .onFailure {
+                    _shakingFavorites.update { it + product.id }
+                    delay(FAVORITE_SHAKE_DURATION)
+                    _shakingFavorites.update { it - product.id }
+                }
         }
     }
 
@@ -197,6 +208,8 @@ class ProductsViewModel(
         const val KEY_BASE_FILTRATION = "base_filtration"
         const val KEY_APPLIED_FILTRATION = "applied_filtration"
         const val KEY_REQUESTED_FILTRATION = "requested_filtration"
+
+        private val FAVORITE_SHAKE_DURATION = 1.seconds
     }
 
 }

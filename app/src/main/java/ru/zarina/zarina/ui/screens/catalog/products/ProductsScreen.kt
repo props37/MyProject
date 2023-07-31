@@ -57,6 +57,8 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
+import kotlinx.collections.immutable.PersistentSet
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
@@ -92,6 +94,7 @@ fun ProductsScreenContent(
     isFilterButtonEnabled: Boolean,
     onFiltersClick: () -> Unit,
     onBackClick: () -> Unit,
+    shakingFavorites: PersistentSet<Product.Id>,
 ) {
     ZarinaScaffold(
         toolbar = {
@@ -165,7 +168,7 @@ fun ProductsScreenContent(
                                 product = product,
                                 isMediaScrollable = true,
                                 onClick = { onProductClick(product) },
-                                isFavoriteShaking = false, // TODO
+                                isFavoriteShaking = shakingFavorites.contains(product.id), // TODO
                                 onFavoriteChange = { onFavoriteChange(product, it) },
                                 colorPickerDimensions = colorPickerDimensions,
                             )
@@ -312,6 +315,7 @@ fun ProductsScreen(
     val productCount by viewModel.productCount.collectAsStateWithLifecycle()
     val sort by viewModel.sort.collectAsStateWithLifecycle()
     val isFilterButtonEnabled by viewModel.isFilterButtonEnabled.collectAsStateWithLifecycle()
+    val shakingFavorites by viewModel.shakingFavorites.collectAsStateWithLifecycle()
 
     ProductsScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -332,6 +336,7 @@ fun ProductsScreen(
         isFilterButtonEnabled = isFilterButtonEnabled,
         onFiltersClick = viewModel::onFiltersClick,
         onBackClick = viewModel::onBackClick,
+        shakingFavorites = shakingFavorites,
     )
 }
 
@@ -372,6 +377,7 @@ fun ProductsScreenContentPreview() {
             isFilterButtonEnabled = false,
             onFiltersClick = {},
             onBackClick = {},
+            shakingFavorites = persistentSetOf(),
         )
     }
 }
