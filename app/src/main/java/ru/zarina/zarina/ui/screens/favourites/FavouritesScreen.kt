@@ -1,13 +1,38 @@
 package ru.zarina.zarina.ui.screens.favourites
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import ru.zarina.zarina.R
+import androidx.compose.runtime.LaunchedEffect
+import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
-import ru.zarina.zarina.ui.common.components.ScreenPlaceholder
 
 @Composable
-fun FavouritesScreen() {
+fun FavoritesScreenContent() {
+
+}
+
+@Composable
+fun FavoritesScreen() {
+    val viewModel = koinViewModel<FavoritesViewModel>()
+
+    FavoritesScreenBehavior(
+        sideEffects = viewModel.sideEffects
+    )
+
+    FavoritesScreenContent()
+}
+
+@Composable
+fun FavoritesScreenBehavior(
+    sideEffects: Flow<FavoritesViewModel.SideEffect>,
+) {
     NavigationBarState(isVisible = true, isAnimated = true)
-    ScreenPlaceholder(title = stringResource(id = R.string.favourites))
+
+    LaunchedEffect(sideEffects) {
+        sideEffects.collect { effect ->
+            when (effect) {
+                else -> TODO()
+            }
+        }
+    }
 }
