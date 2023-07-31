@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.base.clean.FlowUseCase
@@ -23,15 +24,18 @@ class GetProductUseCase(
         val (id) = params
 
         val productFlow = productRepository.getProduct(id)
+            .onEach {
+                favoritesRepository.update(listOf(it))
+            }
 
         val isFavoriteFlow = favoritesRepository.getIds()
             .map { id in it }
 
         return combine(productFlow, isFavoriteFlow) { product, isFavorite ->
-            val resultProduct = if (product.favorite.isFavorite == isFavorite)
+            val resultProduct = if (product.isFavorite == isFavorite)
                 product
             else
-                product.copy(favorite = product.favorite.copy(isFavorite = isFavorite))
+                product.copy(isFavorite = isFavorite)
             Result.success(resultProduct)
         }
     }

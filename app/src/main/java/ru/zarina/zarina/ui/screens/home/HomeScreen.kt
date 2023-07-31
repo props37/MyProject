@@ -26,7 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.datasource.cache.Cache
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
@@ -54,8 +56,10 @@ import ru.zarina.zarina.utils.compose.plus
 fun HomeScreenContent(
     banners: ImmutableList<Banner>,
     selections: ImmutableList<Selection>,
+    shakingFavorites: ImmutableSet<Product.Id>,
     onBannerClick: (Banner) -> Unit,
     onProductClick: (Product) -> Unit,
+    onFavoriteChange: (Product, Boolean) -> Unit,
     cache: State<Cache?>,
 ) {
     LazyColumn(
@@ -96,7 +100,9 @@ fun HomeScreenContent(
                 is Selection.Products -> ProductHorizontalSection(
                     title = selection.title,
                     products = selection.products,
+                    shakingFavorites = shakingFavorites,
                     onProductClick = onProductClick,
+                    onFavoriteChange = onFavoriteChange,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -154,6 +160,7 @@ fun HomeScreen(
     val banners by viewModel.banners.collectAsStateWithLifecycle()
     val selections by viewModel.selections.collectAsStateWithLifecycle()
     val cache = viewModel.cache.collectAsStateWithLifecycle()
+    val shakingFavorites by viewModel.shakingFavorites.collectAsStateWithLifecycle()
 
     HomeScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -165,8 +172,14 @@ fun HomeScreen(
     HomeScreenContent(
         banners = banners,
         selections = selections,
+        shakingFavorites = shakingFavorites,
         onBannerClick = remember { { viewModel.onBannerClick(it) } },
         onProductClick = remember { { viewModel.onProductClick(it) } },
+        onFavoriteChange = remember {
+            { product, isFavorite ->
+                viewModel.onFavoriteChange(product, isFavorite)
+            }
+        },
         cache = cache,
     )
 }
@@ -204,8 +217,10 @@ fun HomeScreenContentPreview() {
         HomeScreenContent(
             banners = persistentListOf(),
             selections = persistentListOf(),
+            shakingFavorites = persistentSetOf(),
             onBannerClick = {},
             onProductClick = {},
+            onFavoriteChange = { _, _ -> },
             cache = remember { mutableStateOf<Cache?>(null) },
         )
     }

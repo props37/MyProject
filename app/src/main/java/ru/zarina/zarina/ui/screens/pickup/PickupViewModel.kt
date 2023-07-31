@@ -12,9 +12,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -57,8 +57,19 @@ class PickupViewModel(
 
     val city = savedStateHandle.getStateFlow<City?>(KEY_SELECTED_CITY, null)
 
-    private val _product = MutableStateFlow<Result<Product?>?>(null)
-    val product = _product
+    private val productReloadTrigger = MutableSharedFlow<Unit>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+        .apply { tryEmit(Unit) }
+    private val productResult = combine(productId, productReloadTrigger) { id, _ -> id }
+        .flatMapLatest { id ->
+            operationTracker.track(Operation.LOADING_PRODUCT) {
+                interactor.getProduct(id)
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val product = productResult
         .mapState(viewModelScope) { it?.getOrNull() }
 
     private val offersReloadTrigger = MutableSharedFlow<Unit>(
@@ -92,7 +103,7 @@ class PickupViewModel(
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     val errorType = combine(
-        _product,
+        productResult,
         _offers,
         _stocks,
     ) { product, offers, stocks ->
@@ -194,7 +205,6 @@ class PickupViewModel(
         loadUserCity()
         setupStockLoading()
         setupSizeUpdates()
-        setupProductLoading()
     }
 
     fun onOfferClick(offer: Offer) {
@@ -207,7 +217,7 @@ class PickupViewModel(
 
     fun onRefreshClick() {
         when {
-            _product.value?.isFailure == true -> loadProduct(productId.value)
+            productResult.value?.isFailure == true -> productReloadTrigger.tryEmit(Unit)
             _offers.value?.isFailure == true -> offersReloadTrigger.tryEmit(Unit)
             _stocks.value?.isFailure == true -> stockReloadTrigger.tryEmit(Unit)
         }
@@ -267,15 +277,6 @@ class PickupViewModel(
         }
     }
 
-    private fun loadProduct(id: Product.Id) {
-        viewModelScope.launch {
-            operationTracker.track(Operation.LOADING_PRODUCT) {
-                // TODO migrate to flow
-//                _product.value = interactor.getProduct(id)
-            }
-        }
-    }
-
     private fun loadUserCity() {
         if (city.value == null)
             viewModelScope.launch {
@@ -302,7 +303,7 @@ class PickupViewModel(
     }
 
     private fun setupSizeUpdates() {
-        combine(_product, city, offersReloadTrigger) { productResult, city, _ ->
+        combine(productResult, city, offersReloadTrigger) { productResult, city, _ ->
             val product = productResult?.getOrNull()
             if (product == null || city == null) return@combine
             operationTracker.track(Operation.LOADING_SIZES) {
@@ -321,12 +322,6 @@ class PickupViewModel(
                     savedStateHandle[KEY_SELECTED_OFFER] = availableOffer ?: firstOffer
                 }
             }
-            .launchIn(viewModelScope)
-    }
-
-    private fun setupProductLoading() {
-        productId
-            .mapLatest { id -> loadProduct(id) }
             .launchIn(viewModelScope)
     }
 

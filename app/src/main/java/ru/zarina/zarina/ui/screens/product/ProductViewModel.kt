@@ -4,10 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.datasource.cache.Cache
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,9 +16,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.Product
@@ -29,6 +32,7 @@ import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.utils.coroutine.mapState
 import ru.zarina.zarina.utils.isNetworkException
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @KoinViewModel
@@ -72,36 +76,31 @@ class ProductViewModel(
     val product = productResult.mapState(viewModelScope) { it?.getOrNull() }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val completeLookProducts = product
+    private val completeLookResult = product
         .distinctUntilChangedBy { it?.id }
-        .mapLatest { product ->
+        .flatMapLatest { product ->
             operationTracker.track(Operation.LOADING_COMPLETE_LOOK) {
-                if (product?.isLookPart == true) {
-                    interactor.getCompleteLook(product)
-                        .getOrDefault(emptyList())
-                        .toPersistentList()
-                } else {
-                    persistentListOf()
-                }
+                product?.let { interactor.getCompleteLook(it) } ?: flowOf(null)
             }
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    val completeLookProducts = completeLookResult.mapState(viewModelScope) {
+        it?.getOrNull().orEmpty().toPersistentList()
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val similarProducts = product
+    private val similarProductsResult = product
         .distinctUntilChangedBy { it?.id }
-        .mapLatest { product ->
+        .flatMapLatest { product ->
             operationTracker.track(Operation.LOADING_RECOMMENDATIONS) {
-                if (product != null) {
-                    interactor.getRecommendations(product)
-                        .getOrDefault(emptyList())
-                        .toPersistentList()
-                } else {
-                    persistentListOf()
-                }
+                product?.let { interactor.getRecommendations(it) } ?: flowOf(null)
             }
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val similarProducts = similarProductsResult.mapState(viewModelScope) {
+        it?.getOrNull().orEmpty().toPersistentList()
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val deliveryAvailability = product
@@ -124,6 +123,9 @@ class ProductViewModel(
             Operation.LOADING_DELIVERY_AVAILABILITY
         )
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    private val _shakingFavorites = MutableStateFlow(emptySet<Product.Id>())
+    val shakingFavorites = _shakingFavorites.mapState(viewModelScope) { it.toPersistentSet() }
 
     fun onVariantClick(variant: Product.Variant) {
         savedStateHandle[Destinations.Product.ARGUMENT_PRODUCT_ID] = variant.id.value
@@ -150,10 +152,14 @@ class ProductViewModel(
         productReloadTrigger.tryEmit(Unit)
     }
 
-    fun onFavoriteChange(isFavorite: Boolean) {
-        val product = product.value ?: return
+    fun onFavoriteChange(product: Product, isFavorite: Boolean) {
         viewModelScope.launch {
             interactor.setIsFavorite(product, isFavorite)
+                .onFailure {
+                    _shakingFavorites.update { it + product.id }
+                    delay(FAVORITE_SHAKE_DURATION)
+                    _shakingFavorites.update { it - product.id }
+                }
         }
     }
 
@@ -175,6 +181,10 @@ class ProductViewModel(
         NETWORK,
         NOT_FOUND,
         GENERIC
+    }
+
+    companion object {
+        private val FAVORITE_SHAKE_DURATION = 1.seconds
     }
 
 }

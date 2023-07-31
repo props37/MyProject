@@ -19,10 +19,10 @@ class ProductInteractor(
 ) {
     fun getProduct(id: Product.Id) = getProductUseCase(GetProductUseCase.Params(id))
 
-    suspend fun getCompleteLook(product: Product) =
+    fun getCompleteLook(product: Product) =
         getCompleteLookUseCase(GetCompleteLookUseCase.Params(product))
 
-    suspend fun getRecommendations(product: Product) =
+    fun getRecommendations(product: Product) =
         getRecommendationsUseCase(
             GetRecommendationsUseCase.Params(
                 RecommendationType.Similar(

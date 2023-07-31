@@ -9,15 +9,20 @@ import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.usecase.catalog.GetProductsPageUseCase
 
-class CategoryProductPagingSource(
+sealed class CategoryProductPagingSource : PagingSource<Int, Product>() {
+    open val itemCount = MutableStateFlow<Int?>(null)
+    open val appliedFiltration = MutableStateFlow<Filtration?>(null)
+}
+
+class CachingCategoryProductPagingSource(
     private val category: Category,
     private val sort: ProductSort,
     private val filtration: Filtration?,
     private val getProductsPageUseCase: GetProductsPageUseCase,
-) : PagingSource<Int, Product>() {
+) : CategoryProductPagingSource() {
 
-    val itemCount = MutableStateFlow<Int?>(null)
-    val appliedFiltration = MutableStateFlow<Filtration?>(null)
+    override val itemCount = MutableStateFlow<Int?>(null)
+    override val appliedFiltration = MutableStateFlow<Filtration?>(null)
 
     override fun getRefreshKey(
         state: PagingState<Int, Product>,
@@ -51,5 +56,13 @@ class CategoryProductPagingSource(
         // TODO error handling
         return LoadResult.Error(NotImplementedError())
     }
+
+}
+
+class EmptyProductPagingSource : CategoryProductPagingSource() {
+    override fun getRefreshKey(state: PagingState<Int, Product>) = null
+
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Product> =
+        LoadResult.Invalid()
 
 }

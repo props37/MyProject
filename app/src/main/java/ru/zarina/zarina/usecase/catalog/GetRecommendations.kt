@@ -1,9 +1,13 @@
 package ru.zarina.zarina.usecase.catalog
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onEach
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
-import ru.zarina.zarina.base.clean.UseCase
+import ru.zarina.zarina.base.clean.FlowUseCase
+import ru.zarina.zarina.data.favorites.IFavoritesRepository
 import ru.zarina.zarina.data.recommendation.IRecommendationRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Product
@@ -14,15 +18,29 @@ import timber.log.Timber
 class GetRecommendationsUseCase(
     @Named(Qualifiers.Dispatcher.IO) dispatcher: CoroutineDispatcher,
     private val recommendationRepository: IRecommendationRepository,
-) : UseCase<GetRecommendationsUseCase.Params, List<Product>>(dispatcher) {
-    override suspend fun execute(params: Params): List<Product> {
+    private val favoritesRepository: IFavoritesRepository,
+) : FlowUseCase<GetRecommendationsUseCase.Params, List<Product>>(dispatcher) {
+    override fun execute(params: Params): Flow<Result<List<Product>>> {
         val (type) = params
 
-        val recommendations = recommendationRepository.getRecommendations(type)
+        val recommendationsFlow = recommendationRepository.getRecommendations(type)
+            .onEach {
+                Timber.v("Loaded ${it.size} recommendations for type $type")
+                favoritesRepository.update(it)
+            }
+        val favoritesFlow = favoritesRepository.getIds()
 
-        Timber.v("Loaded ${recommendations.size} recommendations for type $type")
-
-        return recommendations
+        return combine(recommendationsFlow, favoritesFlow) { recommendations, favorites ->
+            val result = recommendations.map { product ->
+                val isFavorite = product.id in favorites
+                if (product.isFavorite == isFavorite) {
+                    product
+                } else {
+                    product.copy(isFavorite = isFavorite)
+                }
+            }
+            Result.success(result)
+        }
     }
 
     data class Params(

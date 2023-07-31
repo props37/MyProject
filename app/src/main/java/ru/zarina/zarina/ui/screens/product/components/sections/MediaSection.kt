@@ -40,6 +40,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 @Composable
 fun MediaSection(
     product: Product,
+    isFavoriteShaking: Boolean,
     onFavoriteChange: (Boolean) -> Unit,
     onBuyCompleteLookClick: () -> Unit,
     cache: State<Cache?>,
@@ -82,7 +83,8 @@ fun MediaSection(
 
                 )
             FavoriteHeart(
-                state = product.favorite,
+                isFavorite = product.isFavorite,
+                isShaking = isFavoriteShaking,
                 onFavoriteChange = onFavoriteChange,
             )
         }

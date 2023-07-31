@@ -33,6 +33,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -69,7 +71,8 @@ import java.util.UUID
 @Composable
 fun ProductScreenContent(
     product: Product?,
-    onFavoriteChange: (Boolean) -> Unit,
+    shakingFavorites: ImmutableSet<Product.Id>,
+    onFavoriteChange: (Product, Boolean) -> Unit,
     onVariantClick: (Product.Variant) -> Unit,
     onShareClick: () -> Unit,
     onPickupClick: (Product) -> Unit,
@@ -121,7 +124,8 @@ fun ProductScreenContent(
                 val completeLookRequester = remember { BringIntoViewRequester() }
                 MediaSection(
                     product = product,
-                    onFavoriteChange = onFavoriteChange,
+                    isFavoriteShaking = shakingFavorites.contains(product.id),
+                    onFavoriteChange = { onFavoriteChange(product, it) },
                     onBuyCompleteLookClick = {
                         coroutineScope.launch {
                             completeLookRequester.bringIntoView()
@@ -166,7 +170,9 @@ fun ProductScreenContent(
                     ProductHorizontalSection(
                         title = stringResource(R.string.complete_look),
                         products = completeLookProducts,
+                        shakingFavorites = shakingFavorites,
                         onProductClick = onProductClick,
+                        onFavoriteChange = onFavoriteChange,
                         modifier = Modifier
                             .fillMaxWidth()
                             .bringIntoViewRequester(completeLookRequester)
@@ -175,7 +181,9 @@ fun ProductScreenContent(
                     ProductHorizontalSection(
                         title = stringResource(R.string.similar_products),
                         products = similarProducts,
+                        shakingFavorites = shakingFavorites,
                         onProductClick = onProductClick,
+                        onFavoriteChange = onFavoriteChange,
                         modifier = Modifier.fillMaxWidth()
                     )
                 DeliveryAvailabilitySection(
@@ -240,6 +248,7 @@ fun ProductScreen(
     val deliveryAvailability by viewModel.deliveryAvailability.collectAsStateWithLifecycle()
     val isProductLoaderVisible by viewModel.isProductLoaderVisible.collectAsStateWithLifecycle()
     val errorType by viewModel.errorType.collectAsStateWithLifecycle()
+    val shakingFavorites by viewModel.shakingFavorites.collectAsStateWithLifecycle()
 
     ProductScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -250,6 +259,7 @@ fun ProductScreen(
 
     ProductScreenContent(
         product = product,
+        shakingFavorites = shakingFavorites,
         onFavoriteChange = viewModel::onFavoriteChange,
         onVariantClick = viewModel::onVariantClick,
         onShareClick = viewModel::onShareClick,
@@ -300,7 +310,8 @@ fun ProductScreenContentPreview(
     ZarinaTheme {
         ProductScreenContent(
             product = product,
-            onFavoriteChange = {},
+            shakingFavorites = persistentSetOf(),
+            onFavoriteChange = { _, _ -> },
             onVariantClick = {},
             onShareClick = {},
             completeLookProducts = List(5) {
