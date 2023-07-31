@@ -11,7 +11,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -38,7 +37,6 @@ import ru.zarina.zarina.ui.screens.catalog.products.paging.CachingCategoryProduc
 import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPagingSource
 import ru.zarina.zarina.ui.screens.catalog.products.paging.EmptyProductPagingSource
 import ru.zarina.zarina.utils.coroutine.mapState
-import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProductsViewModel(
@@ -121,7 +119,7 @@ class ProductsViewModel(
                 else -> productsPluralManager.getText(count, count)
             }
         }
-        .debounce(250.milliseconds)
+        // TODO fix product count resetting to empty on product favorite change
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private val pager = MutableStateFlow(
