@@ -1,7 +1,6 @@
 package ru.zarina.zarina.usecase.catalog
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.first
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.base.clean.UseCase
@@ -27,18 +26,7 @@ class GetProductsPageUseCase(
 
         favoritesRepository.update(page.value.products)
 
-        val favorites = favoritesRepository.getIds().first()
-
-        val result =
-            page.copy(value = page.value.copy(products = page.value.products.map { product ->
-                val isFavorite = favorites.contains(product.id)
-                if (isFavorite == product.isFavorite)
-                    product
-                else
-                    product.copy(isFavorite = isFavorite)
-            }))
-
-        return result
+        return page
     }
 
     data class Params(
