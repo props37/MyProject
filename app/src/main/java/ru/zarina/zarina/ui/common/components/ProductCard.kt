@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -88,10 +91,15 @@ fun ProductCard(
                 verticalAlignment = Alignment.Top,
                 modifier = Modifier.align(Alignment.TopEnd)
             ) {
+                var isFavorite by remember(product.isFavorite) { mutableStateOf(product.isFavorite) }
+
                 FavoriteHeart(
-                    isFavorite = product.isFavorite,
+                    isFavorite = isFavorite,
                     isShaking = isFavoriteShaking,
-                    onFavoriteChange = onFavoriteChange,
+                    onFavoriteChange = {
+                        onFavoriteChange(it)
+                        isFavorite = it
+                    },
                 )
             }
 
