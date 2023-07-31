@@ -7,8 +7,12 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
@@ -30,8 +34,11 @@ import ru.zarina.zarina.ui.common.base.PluralResources
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
+import ru.zarina.zarina.ui.screens.catalog.products.paging.CachingCategoryProductPagingSource
 import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPagingSource
+import ru.zarina.zarina.ui.screens.catalog.products.paging.EmptyProductPagingSource
 import ru.zarina.zarina.utils.coroutine.mapState
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProductsViewModel(
@@ -76,18 +83,22 @@ class ProductsViewModel(
         .map { it != null }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
-    private val pagingSource =
+    private val pagingSourceFactory =
         combine(category, sort, requestedFiltration) { category, sort, filtration ->
-            category?.let {
-                CategoryProductPagingSource(
-                    category = it,
-                    sort = sort,
-                    filtration = filtration,
-                    getProductsPageUseCase = interactor.getProductsPageUseCase
-                )
+            {
+                category?.let {
+                    CachingCategoryProductPagingSource(
+                        category = it,
+                        sort = sort,
+                        filtration = filtration,
+                        getProductsPageUseCase = interactor.getProductsPageUseCase
+                    )
+                } ?: EmptyProductPagingSource()
             }
         }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+            .stateIn(viewModelScope, SharingStarted.Eagerly) { EmptyProductPagingSource() }
+
+    private val pagingSource = MutableStateFlow<CategoryProductPagingSource?>(null)
 
     private val productsPluralManager = PluralManager(
         PluralResources(
@@ -100,7 +111,7 @@ class ProductsViewModel(
         )
     )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val productCount = pagingSource
         .flatMapLatest { it?.itemCount ?: flowOf(null) }
         .map { count ->
@@ -110,23 +121,25 @@ class ProductsViewModel(
                 else -> productsPluralManager.getText(count, count)
             }
         }
+        .debounce(250.milliseconds)
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val pager = pagingSource
-        .mapState(viewModelScope) { source ->
-            if (source == null) return@mapState null
-            Pager(
-                config = PagingConfig(
-                    pageSize = PAGE_SIZE,
-                    enablePlaceholders = false,
-                ),
-                pagingSourceFactory = { source },
-            )
-        }
+    private val pager = MutableStateFlow(
+        Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                enablePlaceholders = false,
+            ),
+            pagingSourceFactory = {
+                val source = pagingSourceFactory.value()
+                pagingSource.value = source
+                source
+            },
+        )
+    )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     val products = pager.flatMapLatest {
-        it?.flow?.cachedIn(viewModelScope) ?: emptyFlow()
+        it.flow.cachedIn(viewModelScope)
     }
         .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
 
@@ -141,6 +154,11 @@ class ProductsViewModel(
                 if (requestedFiltration.value == null)
                     savedStateHandle[KEY_REQUESTED_FILTRATION] = it
             }
+            .launchIn(viewModelScope)
+
+        interactor.getFavoriteIds()
+            .distinctUntilChanged()
+            .onEach { pagingSource.value?.invalidate() }
             .launchIn(viewModelScope)
     }
 
