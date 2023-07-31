@@ -10,6 +10,9 @@ import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -47,6 +50,13 @@ class FavoritesViewModel @Inject constructor(
     private val _shakingFavorites = MutableStateFlow<Set<Product.Id>>(emptySet())
     val shakingFavorites = _shakingFavorites.mapState(viewModelScope) { it.toPersistentSet() }
 
+    init {
+        interactor.getFavoriteIds()
+            .distinctUntilChanged()
+            .onEach { pagingSource.value?.invalidate() }
+            .launchIn(viewModelScope)
+    }
+
     fun onProductClick(product: Product) {
         sideEffect(SideEffect.ShowProduct(product))
     }
@@ -54,7 +64,6 @@ class FavoritesViewModel @Inject constructor(
     fun onFavoriteChange(product: Product, isFavorite: Boolean) {
         viewModelScope.launch {
             interactor.setIsFavorite(product, isFavorite)
-                .onSuccess { pagingSource.value?.invalidate() }
                 .onFailure {
                     _shakingFavorites.update { it + product.id }
                     delay(FAVORITE_SHAKE_DURATION)
