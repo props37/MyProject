@@ -1,7 +1,10 @@
 package ru.zarina.zarina.ui.screens.favourites
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -26,6 +29,7 @@ import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.bottomNavigationPaddingValues
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.utils.compose.plus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +47,7 @@ fun FavoritesScreenContent(
     ) {
         LazyColumn(
             state = productListState,
-            contentPadding = bottomNavigationPaddingValues(),
+            contentPadding = bottomNavigationPaddingValues() + WindowInsets.navigationBars.asPaddingValues(),
             modifier = Modifier.fillMaxSize(),
         ) {
             items(
