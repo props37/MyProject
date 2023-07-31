@@ -37,6 +37,7 @@ import ru.zarina.zarina.utils.compose.plus
 fun FavoritesScreenContent(
     favorites: LazyPagingItems<Product>,
     onProductClick: (Product) -> Unit,
+    onFavoriteChange: (Product, Boolean) -> Unit,
 ) {
     val productListState = rememberLazyListState()
     ZarinaScaffold(
@@ -69,7 +70,7 @@ fun FavoritesScreenContent(
                     ProductRowCard(
                         product = product,
                         onClick = { onProductClick(product) },
-                        onFavoriteChange = {}, // TODO
+                        onFavoriteChange = { onFavoriteChange(product, it) },
                     )
             }
         }
@@ -91,7 +92,12 @@ fun FavoritesScreen(
 
     FavoritesScreenContent(
         favorites = favorites,
-        onProductClick = remember { { viewModel.onProductClick(it) } }
+        onProductClick = remember { { viewModel.onProductClick(it) } },
+        onFavoriteChange = remember {
+            { product, isFavorite ->
+                viewModel.onFavoriteChange(product, isFavorite)
+            }
+        },
     )
 }
 

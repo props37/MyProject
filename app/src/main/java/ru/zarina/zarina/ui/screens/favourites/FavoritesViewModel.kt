@@ -9,6 +9,7 @@ import androidx.paging.cachedIn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
@@ -40,6 +41,16 @@ class FavoritesViewModel @Inject constructor(
 
     fun onProductClick(product: Product) {
         sideEffect(SideEffect.ShowProduct(product))
+    }
+
+    fun onFavoriteChange(product: Product, isFavorite: Boolean) {
+        viewModelScope.launch {
+            interactor.setIsFavorite(product, isFavorite)
+                .onSuccess { pagingSource.value?.invalidate() }
+                .onFailure {
+                    // TODO shake heart
+                }
+        }
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
