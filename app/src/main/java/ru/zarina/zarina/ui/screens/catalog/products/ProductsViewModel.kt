@@ -156,7 +156,7 @@ class ProductsViewModel(
             }
             .launchIn(viewModelScope)
 
-        interactor.getFavoriteIds()
+        combine(category, sort, requestedFiltration, interactor.getFavoriteIds()) { it -> it }
             .distinctUntilChanged()
             .onEach { pagingSource.value?.invalidate() }
             .launchIn(viewModelScope)
