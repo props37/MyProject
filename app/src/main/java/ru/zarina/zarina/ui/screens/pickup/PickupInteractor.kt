@@ -29,7 +29,7 @@ class PickupInteractor(
 
     suspend fun getCity() = getCityUseCase()
 
-    suspend fun getProduct(id: Product.Id) = getProductUseCase(GetProductUseCase.Params(id))
+    fun getProduct(id: Product.Id) = getProductUseCase(GetProductUseCase.Params(id))
 
     suspend fun getOffers(product: Product, city: City) =
         getOffersUseCase(GetOffersUseCase.Params(product, city))

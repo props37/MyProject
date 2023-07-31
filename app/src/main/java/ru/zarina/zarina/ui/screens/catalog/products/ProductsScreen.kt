@@ -1,14 +1,8 @@
 package ru.zarina.zarina.ui.screens.catalog.products
 
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,13 +22,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,6 +49,8 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
+import kotlinx.collections.immutable.PersistentSet
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
@@ -87,11 +80,13 @@ fun ProductsScreenContent(
     products: LazyPagingItems<Product>,
     productCount: Text?,
     onProductClick: (Product) -> Unit,
+    onFavoriteChange: (Product, Boolean) -> Unit,
     sort: ProductSort,
     onSortClick: () -> Unit,
     isFilterButtonEnabled: Boolean,
     onFiltersClick: () -> Unit,
     onBackClick: () -> Unit,
+    shakingFavorites: PersistentSet<Product.Id>,
 ) {
     ZarinaScaffold(
         toolbar = {
@@ -165,16 +160,10 @@ fun ProductsScreenContent(
                                 product = product,
                                 isMediaScrollable = true,
                                 onClick = { onProductClick(product) },
+                                isFavoriteShaking = shakingFavorites.contains(product.id),
+                                onFavoriteChange = { onFavoriteChange(product, it) },
                                 colorPickerDimensions = colorPickerDimensions,
                             )
-                    }
-                    item(
-                        span = { GridItemSpan(2) }
-                    ) {
-                        GridLoader(
-                            isVisible = isLoading,
-                            modifier = Modifier.fillMaxWidth()
-                        )
                     }
                 }
             else
@@ -270,38 +259,6 @@ private fun FilterButton(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-private fun GridLoader(
-    isVisible: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = expandVertically(),
-        exit = shrinkVertically(),
-        modifier = modifier
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .animateEnterExit(
-                    enter = fadeIn(),
-                    exit = fadeOut(),
-                )
-                .padding(8.dp)
-        ) {
-            CircularProgressIndicator(
-                color = UiKitTheme.colors.primaryContentColor,
-                strokeWidth = 2.dp,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(16.dp)
-            )
-        }
-    }
-}
-
 @Composable
 fun ProductsScreen(
     savedStateHandle: SavedStateHandle,
@@ -317,6 +274,7 @@ fun ProductsScreen(
     val productCount by viewModel.productCount.collectAsStateWithLifecycle()
     val sort by viewModel.sort.collectAsStateWithLifecycle()
     val isFilterButtonEnabled by viewModel.isFilterButtonEnabled.collectAsStateWithLifecycle()
+    val shakingFavorites by viewModel.shakingFavorites.collectAsStateWithLifecycle()
 
     ProductsScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -331,11 +289,13 @@ fun ProductsScreen(
         products = products,
         productCount = productCount,
         onProductClick = viewModel::onProductClick,
+        onFavoriteChange = viewModel::onFavoriteChange,
         sort = sort,
         onSortClick = viewModel::onSortClick,
         isFilterButtonEnabled = isFilterButtonEnabled,
         onFiltersClick = viewModel::onFiltersClick,
         onBackClick = viewModel::onBackClick,
+        shakingFavorites = shakingFavorites,
     )
 }
 
@@ -370,11 +330,13 @@ fun ProductsScreenContentPreview() {
             products = products,
             productCount = Text.String("12 товаров"),
             onProductClick = {},
+            onFavoriteChange = { _, _ -> },
             sort = ProductSort.PRICE,
             onSortClick = {},
             isFilterButtonEnabled = false,
             onFiltersClick = {},
             onBackClick = {},
+            shakingFavorites = persistentSetOf(),
         )
     }
 }

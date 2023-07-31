@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.base.clean.UseCase
+import ru.zarina.zarina.data.favorites.IFavoritesRepository
 import ru.zarina.zarina.data.product.IProductRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Category
@@ -16,10 +17,16 @@ import ru.zarina.zarina.domain.ProductSort
 class GetProductsPageUseCase(
     @Named(Qualifiers.Dispatcher.IO) dispatcher: CoroutineDispatcher,
     private val productRepository: IProductRepository,
+    private val favoritesRepository: IFavoritesRepository,
 ) : UseCase<GetProductsPageUseCase.Params, Page<FilteredProducts>>(dispatcher) {
     override suspend fun execute(params: Params): Page<FilteredProducts> {
         val (category, sort, filtration, pageIndex) = params
-        return productRepository.getProducts(category, sort, filtration, pageIndex)
+
+        val page = productRepository.getProducts(category, sort, filtration, pageIndex)
+
+        favoritesRepository.update(page.value.products)
+
+        return page
     }
 
     data class Params(

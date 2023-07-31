@@ -23,7 +23,7 @@ import ru.zarina.zarina.ui.common.components.ZarinaBottomNavigation
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.graphs.cartGraph
 import ru.zarina.zarina.ui.navigation.graphs.catalogGraph
-import ru.zarina.zarina.ui.navigation.graphs.favouritesGraph
+import ru.zarina.zarina.ui.navigation.graphs.favoritesGraph
 import ru.zarina.zarina.ui.navigation.graphs.homeGraph
 import ru.zarina.zarina.ui.navigation.graphs.orphans
 import ru.zarina.zarina.ui.navigation.graphs.pickupGraph
@@ -65,7 +65,7 @@ fun ZarinaNavigation(
                     catalogGraph(navController)
                     pickupGraph(navController)
                     subscribeGraph(navController)
-                    favouritesGraph(navController)
+                    favoritesGraph(navController)
                     profileGraph(navController)
                     cartGraph(navController)
                 }

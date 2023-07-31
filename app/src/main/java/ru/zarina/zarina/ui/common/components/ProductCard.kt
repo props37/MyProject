@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -38,6 +41,8 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 fun ProductCard(
     product: Product,
     onClick: () -> Unit,
+    isFavoriteShaking: Boolean,
+    onFavoriteChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     isMediaScrollable: Boolean = false,
     colorPickerDimensions: ColorPickerDimensions = ColorPickerDefaults.smallDimensions(),
@@ -83,7 +88,26 @@ fun ProductCard(
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.Top,
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                var isFavorite by remember(product.isFavorite, isFavoriteShaking) {
+                    mutableStateOf(product.isFavorite)
+                }
+
+                FavoriteHeart(
+                    isFavorite = isFavorite,
+                    isShaking = isFavoriteShaking,
+                    onFavoriteChange = {
+                        onFavoriteChange(it)
+                        isFavorite = it
+                    },
+                )
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.Bottom,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(8.dp)
@@ -127,7 +151,7 @@ fun ProductCard(
 }
 
 @Composable
-private fun Tag(
+fun Tag(
     text: String,
     modifier: Modifier = Modifier,
 ) {
@@ -151,6 +175,8 @@ fun ProductCardPreview(
         ProductCard(
             product = product,
             onClick = {},
+            isFavoriteShaking = false,
+            onFavoriteChange = {},
         )
     }
 }

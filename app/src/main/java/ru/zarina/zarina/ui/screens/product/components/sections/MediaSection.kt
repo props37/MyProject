@@ -2,7 +2,9 @@ package ru.zarina.zarina.ui.screens.product.components.sections
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +17,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +33,7 @@ import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.components.DiscountBadge
+import ru.zarina.zarina.ui.common.components.FavoriteHeart
 import ru.zarina.zarina.ui.common.components.InvertedRippleTheme
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
@@ -37,6 +44,8 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 @Composable
 fun MediaSection(
     product: Product,
+    isFavoriteShaking: Boolean,
+    onFavoriteChange: (Boolean) -> Unit,
     onBuyCompleteLookClick: () -> Unit,
     cache: State<Cache?>,
     modifier: Modifier = Modifier,
@@ -66,13 +75,31 @@ fun MediaSection(
                 .align(Alignment.BottomStart)
                 .padding(16.dp)
         )
-        if (product.isLookPart)
-            BuyCompleteLookButton(
-                onClick = onBuyCompleteLookClick,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.align(Alignment.BottomEnd)
+        ) {
+            if (product.isLookPart)
+                BuyCompleteLookButton(
+                    onClick = onBuyCompleteLookClick,
+                    modifier = Modifier
+
+                )
+
+            var isFavorite by remember(product.isFavorite, isFavoriteShaking) {
+                mutableStateOf(product.isFavorite)
+            }
+
+            FavoriteHeart(
+                isFavorite = isFavorite,
+                isShaking = isFavoriteShaking,
+                onFavoriteChange = {
+                    isFavorite = it
+                    onFavoriteChange(it)
+                },
             )
+        }
     }
 }
 

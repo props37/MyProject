@@ -16,6 +16,7 @@ data class Product(
     val attributes: ImmutableList<String>,
     /** Whether this product is a part of "complete look" ("образ целиком") bundle */
     val isLookPart: Boolean,
+    val isFavorite: Boolean,
 ) {
 
     val isAvailable by lazy { offers.any { it.isAvailable } }

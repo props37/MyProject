@@ -30,6 +30,8 @@ data class ProductDto(
     val attributes: List<String>? = null,
     @SerialName("sizes")
     val sizes: List<SizeDto>? = null,
+    @SerialName("is_favorite")
+    val isFavorite: Boolean? = null
 ) {
     fun toDomain(): Product? {
         val price = price?.toDomain()
@@ -63,6 +65,7 @@ data class ProductDto(
             attributes = attributes
                 .orEmpty()
                 .toImmutableList(),
+            isFavorite = isFavorite ?: false,
         )
         return null
     }

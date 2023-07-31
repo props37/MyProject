@@ -1,5 +1,6 @@
 package ru.zarina.zarina.data.product.remote
 
+import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.DeliveryAvailability
@@ -11,7 +12,7 @@ import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
 
 interface IProductRemoteSource {
-    suspend fun getProduct(id: Product.Id): Product
+    fun getProduct(id: Product.Id): Flow<Product>
     suspend fun getProductPage(
         category: Category,
         sort: ProductSort,
@@ -19,7 +20,7 @@ interface IProductRemoteSource {
         pageIndex: Int,
     ): Page<FilteredProducts>
 
-    suspend fun getCompleteLook(product: Product): List<Product>
+    fun getCompleteLook(product: Product): Flow<List<Product>>
     suspend fun getDeliveryAvailability(product: Product): DeliveryAvailability
     suspend fun getOffers(product: Product, city: City): List<Offer>
 }
