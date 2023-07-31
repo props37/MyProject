@@ -87,6 +87,7 @@ fun ProductsScreenContent(
     products: LazyPagingItems<Product>,
     productCount: Text?,
     onProductClick: (Product) -> Unit,
+    onFavoriteChange: (Product, Boolean) -> Unit,
     sort: ProductSort,
     onSortClick: () -> Unit,
     isFilterButtonEnabled: Boolean,
@@ -166,7 +167,7 @@ fun ProductsScreenContent(
                                 isMediaScrollable = true,
                                 onClick = { onProductClick(product) },
                                 isFavoriteShaking = false, // TODO
-                                onFavoriteChange = { }, // TODO
+                                onFavoriteChange = { onFavoriteChange(product, it) },
                                 colorPickerDimensions = colorPickerDimensions,
                             )
                     }
@@ -333,6 +334,7 @@ fun ProductsScreen(
         products = products,
         productCount = productCount,
         onProductClick = viewModel::onProductClick,
+        onFavoriteChange = viewModel::onFavoriteChange,
         sort = sort,
         onSortClick = viewModel::onSortClick,
         isFilterButtonEnabled = isFilterButtonEnabled,
@@ -372,6 +374,7 @@ fun ProductsScreenContentPreview() {
             products = products,
             productCount = Text.String("12 товаров"),
             onProductClick = {},
+            onFavoriteChange = { _, _ -> },
             sort = ProductSort.PRICE,
             onSortClick = {},
             isFilterButtonEnabled = false,

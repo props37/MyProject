@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Filtration
@@ -157,6 +158,13 @@ class ProductsViewModel(
 
     fun onFiltersClick() {
         sideEffect(SideEffect.ShowFilters)
+    }
+
+    fun onFavoriteChange(product: Product, isFavorite: Boolean) {
+        viewModelScope.launch {
+            interactor.setIsFavorite(product, isFavorite)
+            // TODO shake the heart button on failure
+        }
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
