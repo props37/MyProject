@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.update
 import org.koin.core.annotation.Singleton
 import ru.zarina.zarina.domain.Product
 
-// TODO persistence and remove Singleton
 @Singleton
 class FavoritesLocalSource : IFavoritesLocalSource {
 

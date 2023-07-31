@@ -160,12 +160,11 @@ fun ProductsScreenContent(
                                 product = product,
                                 isMediaScrollable = true,
                                 onClick = { onProductClick(product) },
-                                isFavoriteShaking = shakingFavorites.contains(product.id), // TODO
+                                isFavoriteShaking = shakingFavorites.contains(product.id),
                                 onFavoriteChange = { onFavoriteChange(product, it) },
                                 colorPickerDimensions = colorPickerDimensions,
                             )
                     }
-                    // TODO loader replacement
                 }
             else
                 ModalError(
