@@ -28,9 +28,9 @@ data class FiltersDto(
             priceLimits = price?.toDomain(),
             categories = categoryFilter,
             colors = colors?.colorsToDomain(),
-            attributes = attributes?.toDomain(),
-            sizes = sizes?.toDomain(),
-            materials = materials?.toDomain(),
+            attributes = attributes?.toDomain(true),
+            sizes = sizes?.toDomain(false),
+            materials = materials?.toDomain(false),
             isShippingAvailable = availableForShipping,
             isPickupAvailable = availableForStorePickup?.isApplied,
             pickupShop = availableForStorePickup?.stores?.firstOrNull()?.toDomain(),
@@ -45,9 +45,9 @@ private fun List<ColorFilterDto?>.colorsToDomain(): ListFilter {
     )
 }
 
-private fun List<FilterItemDto?>.toDomain(): ListFilter {
+private fun List<FilterItemDto?>.toDomain(isSingleSelection: Boolean): ListFilter {
     return ListFilter(
         items = this.mapNotNull { it?.toDomain() },
-        isSingleSelection = true,
+        isSingleSelection = isSingleSelection,
     )
 }
