@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.screens.catalog.filters.components.items
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.utils.compose.max
 import kotlin.math.roundToInt
 
 @Composable
@@ -67,16 +68,18 @@ fun PriceItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    WindowInsets.safeGestures
-                        .only(WindowInsetsSides.Horizontal)
-                        .asPaddingValues()
+                    max(
+                        WindowInsets.safeGestures
+                            .only(WindowInsetsSides.Horizontal)
+                            .asPaddingValues(),
+                        PaddingValues(horizontal = 16.dp)
+                    )
                 )
         )
     }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PriceSlider(
     selectedMinValue: Int,
