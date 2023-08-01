@@ -1,16 +1,15 @@
 package ru.zarina.zarina.ui.screens.favourites
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Divider
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,13 +33,12 @@ import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ModalError
-import ru.zarina.zarina.ui.common.components.ProductRowCard
+import ru.zarina.zarina.ui.common.components.ProductCard
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.bottomNavigationPadding
-import ru.zarina.zarina.ui.common.components.bottomNavigationPaddingValues
+import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.utils.compose.plus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,7 +48,7 @@ fun FavoritesScreenContent(
     onFavoriteChange: (Product, Boolean) -> Unit,
     shakingFavorites: ImmutableSet<Product.Id>,
 ) {
-    val productListState = rememberLazyListState()
+    val productListState = rememberLazyGridState()
     ZarinaScaffold(
         toolbar = {
             ScreenToolbar(
@@ -72,35 +70,38 @@ fun FavoritesScreenContent(
 
             else -> null
         }
-        if (errorState == null)
-            LazyColumn(
+        if (errorState == null) {
+            val colorPickerDimensions = ColorPickerDefaults.tinyDimensions()
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
                 state = productListState,
-                contentPadding = bottomNavigationPaddingValues() + WindowInsets.navigationBars.asPaddingValues(),
-                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+                contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .bottomNavigationPadding()
             ) {
+
                 items(
                     count = favorites.itemCount,
                     key = favorites.itemKey { it.id.value },
                     contentType = favorites.itemContentType { null }
-                ) { index ->
-                    Divider(
-                        thickness = 1.dp,
-                        color = UiKitTheme.colors.listDivider,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                    )
-                    val product = favorites[index]
+                ) { productIndex ->
+                    val product = favorites[productIndex]
                     if (product != null)
-                        ProductRowCard(
+                        ProductCard(
                             product = product,
+                            isMediaScrollable = true,
                             onClick = { onProductClick(product) },
+                            isFavoriteShaking = shakingFavorites.contains(product.id),
                             onFavoriteChange = { onFavoriteChange(product, it) },
-                            isFavoriteShaking = shakingFavorites.contains(product.id)
+                            colorPickerDimensions = colorPickerDimensions,
                         )
                 }
             }
-        else
+        } else {
             ModalError(
                 state = errorState,
                 modifier = Modifier
@@ -109,6 +110,7 @@ fun FavoritesScreenContent(
                     .navigationBarsPadding()
                     .bottomNavigationPadding()
             )
+        }
     }
 }
 
