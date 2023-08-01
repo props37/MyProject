@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -87,6 +88,7 @@ fun ProductsScreenContent(
     onFiltersClick: () -> Unit,
     onBackClick: () -> Unit,
     shakingFavorites: PersistentSet<Product.Id>,
+    productGridState: LazyGridState = rememberLazyGridState(),
 ) {
     ZarinaScaffold(
         toolbar = {
@@ -104,7 +106,6 @@ fun ProductsScreenContent(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            val productGridState = rememberLazyGridState()
             val elevation = animateDpAsState(
                 targetValue = if (productGridState.canScrollBackward) 6.dp else 0.dp,
                 label = "filter bar elevation"
@@ -276,12 +277,15 @@ fun ProductsScreen(
     val isFilterButtonEnabled by viewModel.isFilterButtonEnabled.collectAsStateWithLifecycle()
     val shakingFavorites by viewModel.shakingFavorites.collectAsStateWithLifecycle()
 
+    val productGridState = rememberLazyGridState()
+
     ProductsScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showProduct = showProduct,
         showSelectSort = showSelectSort,
         showFilters = showFilters,
         goBack = goBack,
+        productGridState = productGridState,
     )
 
     ProductsScreenContent(
@@ -296,6 +300,7 @@ fun ProductsScreen(
         onFiltersClick = viewModel::onFiltersClick,
         onBackClick = viewModel::onBackClick,
         shakingFavorites = shakingFavorites,
+        productGridState = productGridState,
     )
 }
 
@@ -306,6 +311,7 @@ fun ProductsScreenBehavior(
     showSelectSort: () -> Unit,
     showFilters: () -> Unit,
     goBack: () -> Unit,
+    productGridState: LazyGridState,
 ) {
     NavigationBarState(isVisible = true, isAnimated = true)
     LaunchedEffect(sideEffects) {
@@ -315,6 +321,7 @@ fun ProductsScreenBehavior(
                 is ProductsViewModel.SideEffect.ShowProduct -> showProduct(effect.id)
                 ProductsViewModel.SideEffect.ShowSelectSort -> showSelectSort()
                 ProductsViewModel.SideEffect.ShowFilters -> showFilters()
+                ProductsViewModel.SideEffect.ScrollProductsToTop -> productGridState.scrollToItem(0)
             }
         }
     }

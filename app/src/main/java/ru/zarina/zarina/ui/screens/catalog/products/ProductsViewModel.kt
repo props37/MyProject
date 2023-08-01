@@ -38,7 +38,6 @@ import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.products.paging.CachingCategoryProductPagingSource
 import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPagingSource
-import ru.zarina.zarina.ui.screens.catalog.products.paging.EmptyProductPagingSource
 import ru.zarina.zarina.utils.coroutine.mapState
 import kotlin.time.Duration.Companion.seconds
 
@@ -85,21 +84,6 @@ class ProductsViewModel(
         .map { it != null }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
-    private val pagingSourceFactory =
-        combine(category, sort, requestedFiltration) { category, sort, filtration ->
-            {
-                category?.let {
-                    CachingCategoryProductPagingSource(
-                        category = it,
-                        sort = sort,
-                        filtration = filtration,
-                        getProductsPageUseCase = interactor.getProductsPageUseCase
-                    )
-                } ?: EmptyProductPagingSource()
-            }
-        }
-            .stateIn(viewModelScope, SharingStarted.Eagerly) { EmptyProductPagingSource() }
-
     private val pagingSource = MutableStateFlow<CategoryProductPagingSource?>(null)
 
     private val productsPluralManager = PluralManager(
@@ -116,27 +100,37 @@ class ProductsViewModel(
     private val _productCount = MutableStateFlow<Text?>(null)
     val productCount = _productCount.asStateFlow()
 
-    private val pager = MutableStateFlow(
-        Pager(
-            config = PagingConfig(
-                pageSize = PAGE_SIZE,
-                enablePlaceholders = false,
-            ),
-            pagingSourceFactory = {
-                val source = pagingSourceFactory.value()
-                pagingSource.value = source
-                source
-            },
-        )
-    )
+    private val pager = combine(category, sort, requestedFiltration) { category, sort, filtration ->
+        sideEffect(SideEffect.ScrollProductsToTop)
+        category?.let {
+            Pager(
+                config = PagingConfig(
+                    pageSize = PAGE_SIZE,
+                    enablePlaceholders = false,
+                ),
+                pagingSourceFactory = {
+                    val source = CachingCategoryProductPagingSource(
+                        category = category,
+                        sort = sort,
+                        filtration = filtration,
+                        getProductsPageUseCase = interactor.getProductsPageUseCase
+                    )
+                    pagingSource.value = source
+                    source
+                },
+            )
+        }
+    }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 
     val products = pager.flatMapLatest {
-        it.flow.cachedIn(viewModelScope)
+        it?.flow?.cachedIn(viewModelScope) ?: emptyFlow()
     }
         .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
 
     private val _shakingFavorites = MutableStateFlow(emptySet<Product.Id>())
-    val shakingFavorites = _shakingFavorites.mapState(viewModelScope) { it.toPersistentSet() }
+    val shakingFavorites =
+        _shakingFavorites.mapState(viewModelScope) { it.toPersistentSet() }
 
     init {
         pagingSource
@@ -168,15 +162,7 @@ class ProductsViewModel(
     }
 
     private fun setupPagingInvalidation() {
-        combine(category, requestedFiltration) { it -> it }
-            .distinctUntilChanged()
-            .onEach {
-                pagingSource.value?.invalidate()
-                _productCount.value = null
-            }
-            .launchIn(viewModelScope)
-
-        combine(interactor.getFavoriteIds(), sort) { it -> it }
+        interactor.getFavoriteIds()
             .distinctUntilChanged()
             .onEach { pagingSource.value?.invalidate() }
             .launchIn(viewModelScope)
@@ -214,6 +200,7 @@ class ProductsViewModel(
         data class ShowProduct(val id: Product.Id) : SideEffect
         object ShowSelectSort : SideEffect
         object ShowFilters : SideEffect
+        object ScrollProductsToTop : SideEffect
     }
 
     companion object {
