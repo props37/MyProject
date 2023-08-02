@@ -35,7 +35,7 @@ fun ProductPrice(
             )
         }
         val currentPriceColor =
-            if (price.isDiscounted) UiKitTheme.colors.retiredPrice else UiKitTheme.colors.price
+            if (price.isDiscounted) UiKitTheme.colors.price else UiKitTheme.colors.primaryContentColor
         Text(
             text = stringResource(R.string.currency_amount_rubles, price.current),
             style = textStyle,
