@@ -34,10 +34,12 @@ fun ProductPrice(
                 maxLines = 1
             )
         }
+        val currentPriceColor =
+            if (price.isDiscounted) UiKitTheme.colors.price else UiKitTheme.colors.primaryContentColor
         Text(
             text = stringResource(R.string.currency_amount_rubles, price.current),
             style = textStyle,
-            color = UiKitTheme.colors.price,
+            color = currentPriceColor,
             textAlign = TextAlign.Center,
             maxLines = 1
         )
