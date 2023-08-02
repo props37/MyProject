@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.screens.catalog.products
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
@@ -36,8 +38,9 @@ import ru.zarina.zarina.ui.common.base.PluralResources
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
-import ru.zarina.zarina.ui.screens.catalog.products.paging.CachingCategoryProductPagingSource
 import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPagingSource
+import ru.zarina.zarina.ui.screens.catalog.products.paging.ProductPageHolder
+import ru.zarina.zarina.ui.screens.catalog.products.paging.ProductsRemoteMediator
 import ru.zarina.zarina.utils.coroutine.mapState
 import kotlin.time.Duration.Companion.seconds
 
@@ -100,24 +103,34 @@ class ProductsViewModel(
     private val _productCount = MutableStateFlow<Text?>(null)
     val productCount = _productCount.asStateFlow()
 
+    @OptIn(ExperimentalPagingApi::class)
     private val pager = combine(category, sort, requestedFiltration) { category, sort, filtration ->
         sideEffect(SideEffect.ScrollProductsToTop)
         category?.let {
+            val pageHolder = ProductPageHolder()
+            val mediator = ProductsRemoteMediator(
+                pageHolder = pageHolder,
+                getProductsPageUseCase = interactor.getProductsPageUseCase,
+                category = it,
+                sort = sort,
+                filtration = filtration,
+            )
             Pager(
                 config = PagingConfig(
                     pageSize = PAGE_SIZE,
                     enablePlaceholders = false,
                 ),
                 pagingSourceFactory = {
-                    val source = CachingCategoryProductPagingSource(
-                        category = category,
-                        sort = sort,
-                        filtration = filtration,
-                        getProductsPageUseCase = interactor.getProductsPageUseCase
+                    val source = CategoryProductPagingSource(
+                        pageHolder = pageHolder,
+                        getFavoriteIdsUseCase = interactor.getFavoriteIdsUseCase,
                     )
+                    mediator.addListener(source)
                     pagingSource.value = source
                     source
                 },
+                remoteMediator = mediator,
+                initialKey = 0,
             )
         }
     }
@@ -131,6 +144,8 @@ class ProductsViewModel(
     private val _shakingFavorites = MutableStateFlow(emptySet<Product.Id>())
     val shakingFavorites =
         _shakingFavorites.mapState(viewModelScope) { it.toPersistentSet() }
+
+    private val isForeground = MutableStateFlow(false)
 
     init {
         pagingSource
@@ -162,7 +177,9 @@ class ProductsViewModel(
     }
 
     private fun setupPagingInvalidation() {
-        interactor.getFavoriteIds()
+        isForeground.flatMapLatest {
+            if (it) interactor.getFavoriteIds() else flowOf(interactor.getFavoriteIds().first())
+        }
             .distinctUntilChanged()
             .onEach { pagingSource.value?.invalidate() }
             .launchIn(viewModelScope)
@@ -193,6 +210,10 @@ class ProductsViewModel(
                     _shakingFavorites.update { it - product.id }
                 }
         }
+    }
+
+    fun onIsForegroundChange(isForeground: Boolean) {
+        this.isForeground.value = isForeground
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {

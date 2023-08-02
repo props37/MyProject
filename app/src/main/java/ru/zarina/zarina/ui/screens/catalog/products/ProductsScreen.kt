@@ -30,6 +30,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -278,6 +279,11 @@ fun ProductsScreen(
     val shakingFavorites by viewModel.shakingFavorites.collectAsStateWithLifecycle()
 
     val productGridState = rememberLazyGridState()
+
+    DisposableEffect(Unit) {
+        viewModel.onIsForegroundChange(true)
+        onDispose { viewModel.onIsForegroundChange(false) }
+    }
 
     ProductsScreenBehavior(
         sideEffects = viewModel.sideEffects,

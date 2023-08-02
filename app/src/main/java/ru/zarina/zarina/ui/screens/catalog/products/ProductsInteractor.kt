@@ -13,7 +13,7 @@ import ru.zarina.zarina.utils.clean.invoke
 class ProductsInteractor(
     private val categoryRepository: ICategoryRepository,
     val getProductsPageUseCase: GetProductsPageUseCase,
-    private val getFavoriteIdsUseCase: GetFavoriteIdsUseCase,
+    val getFavoriteIdsUseCase: GetFavoriteIdsUseCase,
     private val setIsFavoriteUseCase: SetIsFavoriteUseCase,
 ) {
     fun getCategory(id: Category.Id) = categoryRepository.getCategory(id)
