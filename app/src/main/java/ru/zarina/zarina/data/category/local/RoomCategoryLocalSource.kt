@@ -46,6 +46,12 @@ class RoomCategoryLocalSource(
         .map { categories ->
             categories.firstOrNull { it.id == id }
                 ?: categories.flatMap { it.getFlattenedSubcategories() }.firstOrNull { it.id == id }
+                ?: Category(
+                    id = id,
+                    image = null,
+                    name = "",
+                    subcategories = emptyList(),
+                )
         }
 
 }
