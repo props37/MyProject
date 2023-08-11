@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -39,6 +40,7 @@ import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Selection
 import ru.zarina.zarina.domain.Url
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
+import ru.zarina.zarina.ui.common.components.ElevationContainer
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
 import ru.zarina.zarina.ui.common.components.ProductHorizontalSection
@@ -63,17 +65,24 @@ fun HomeScreenContent(
     onFavoriteChange: (Product, Boolean) -> Unit,
     cache: State<Cache?>,
 ) {
+    val lazyColumnState = rememberLazyListState()
     ZarinaScaffold(
         toolbar = {
-            RedirectSearchBar(
-                onClick = { /*TODO*/ },
+            ElevationContainer(
+                isElevated = lazyColumnState.canScrollBackward,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .statusBarsPadding()
-            )
+            ) {
+                RedirectSearchBar(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                )
+            }
         }
     ) {
         LazyColumn(
+            state = lazyColumnState,
             contentPadding = WindowInsets.navigationBars.asPaddingValues()
                     + bottomNavigationPaddingValues(),
             modifier = Modifier
