@@ -2,13 +2,11 @@ package ru.zarina.zarina.ui.common.components.toolbar
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.with
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,14 +16,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
+import ru.zarina.zarina.ui.common.components.ElevationContainer
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
@@ -89,15 +85,9 @@ fun ScreenToolbar(
     colors: TopAppBarColors = ScreenToolbarDefaults.colors(),
     isElevated: Boolean = false,
 ) {
-    val elevationDp by animateDpAsState(
-        if (isElevated) 6.dp else 0.dp,
-        label = "toolbar elevation"
-    )
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .shadow(elevationDp)
-            .zIndex(1000f),
+    ElevationContainer(
+        isElevated = isElevated,
+        modifier = modifier.fillMaxWidth()
     ) {
         CenterAlignedTopAppBar(
             title = title,

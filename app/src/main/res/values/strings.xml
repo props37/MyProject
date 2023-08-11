@@ -130,4 +130,6 @@
     <string name="remove_from_favorites">Удалить из избранного</string>
     <string name="favorites_are_empty">В избранном пусто</string>
     <string name="save_interesting_products_to_favorites">Сохраняйте понравившиеся товары в Избранное</string>
+    <string name="search">Поиск</string>
+    <string name="search_products">Искать товары</string>
 </resources>
