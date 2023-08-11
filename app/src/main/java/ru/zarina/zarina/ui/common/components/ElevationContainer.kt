@@ -19,7 +19,7 @@ fun ElevationContainer(
 ) {
     val elevationDp by animateDpAsState(
         if (isElevated) 6.dp else 0.dp,
-        label = "toolbar elevation"
+        label = "elevation"
     )
     Box(
         modifier = modifier
