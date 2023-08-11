@@ -4,13 +4,12 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -43,6 +42,8 @@ import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.MediaPager
 import ru.zarina.zarina.ui.common.components.PageDots
 import ru.zarina.zarina.ui.common.components.ProductHorizontalSection
+import ru.zarina.zarina.ui.common.components.RedirectSearchBar
+import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.bottomNavigationPaddingValues
 import ru.zarina.zarina.ui.common.components.rememberInfinitePagerState
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -62,49 +63,58 @@ fun HomeScreenContent(
     onFavoriteChange: (Product, Boolean) -> Unit,
     cache: State<Cache?>,
 ) {
-    LazyColumn(
-        contentPadding = WindowInsets.navigationBars
-            .add(WindowInsets.statusBars)
-            .asPaddingValues()
-                + bottomNavigationPaddingValues(),
-        modifier = Modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.screenBackground),
-    ) {
-        item(
-            key = LAZY_KEY_BANNERS,
-            contentType = ContentType.BANNERS,
-        ) {
-            Banners(
-                banners = banners,
-                cache = cache,
-                onBannerClick = onBannerClick,
+    ZarinaScaffold(
+        toolbar = {
+            RedirectSearchBar(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
             )
         }
-        items(
-            items = selections,
-            contentType = { selection ->
-                when (selection) {
-                    is Selection.Banners -> ContentType.BANNERS
-                    is Selection.Products -> ContentType.PRODUCTS
-                }
-            }
-        ) { selection ->
-            when (selection) {
-                is Selection.Banners -> Banners(
-                    banners = selection.banners,
+    ) {
+        LazyColumn(
+            contentPadding = WindowInsets.navigationBars.asPaddingValues()
+                    + bottomNavigationPaddingValues(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(UiKitTheme.colors.screenBackground),
+        ) {
+            item(
+                key = LAZY_KEY_BANNERS,
+                contentType = ContentType.BANNERS,
+            ) {
+                Banners(
+                    banners = banners,
                     cache = cache,
                     onBannerClick = onBannerClick,
                 )
+            }
+            items(
+                items = selections,
+                contentType = { selection ->
+                    when (selection) {
+                        is Selection.Banners -> ContentType.BANNERS
+                        is Selection.Products -> ContentType.PRODUCTS
+                    }
+                }
+            ) { selection ->
+                when (selection) {
+                    is Selection.Banners -> Banners(
+                        banners = selection.banners,
+                        cache = cache,
+                        onBannerClick = onBannerClick,
+                    )
 
-                is Selection.Products -> ProductHorizontalSection(
-                    title = selection.title,
-                    products = selection.products,
-                    shakingFavorites = shakingFavorites,
-                    onProductClick = onProductClick,
-                    onFavoriteChange = onFavoriteChange,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                    is Selection.Products -> ProductHorizontalSection(
+                        title = selection.title,
+                        products = selection.products,
+                        shakingFavorites = shakingFavorites,
+                        onProductClick = onProductClick,
+                        onFavoriteChange = onFavoriteChange,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }

@@ -37,7 +37,22 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @Composable
-fun SearchBar(
+fun RedirectSearchBar(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    SearchBar(
+        onClick = onClick,
+        isInputEnabled = false,
+        value = "",
+        onValueChange = {},
+        onClearClick = {},
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun SearchBar(
     onClick: () -> Unit,
     isInputEnabled: Boolean,
     value: String,
