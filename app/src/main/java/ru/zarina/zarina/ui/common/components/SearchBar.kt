@@ -39,6 +39,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 @Composable
 fun SearchBar(
     onClick: () -> Unit,
+    isInputEnabled: Boolean,
     value: String,
     onValueChange: (String) -> Unit,
     onClearClick: () -> Unit,
@@ -65,6 +66,7 @@ fun SearchBar(
         SearchInput(
             value = value,
             onValueChange = onValueChange,
+            isEnabled = isInputEnabled,
             modifier = Modifier.weight(1f),
         )
         Spacer(modifier = Modifier.width(8.dp))
@@ -91,6 +93,7 @@ fun SearchBar(
 private fun SearchInput(
     value: String,
     onValueChange: (String) -> Unit,
+    isEnabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
     // TODO IME actions
@@ -116,6 +119,7 @@ private fun SearchInput(
             onValueChange = onValueChange,
             textStyle = UiKitTheme.typography.circle1518.copy(color = UiKitTheme.colors.primaryContentColor),
             singleLine = true,
+            enabled = isEnabled,
             interactionSource = interactionSource,
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
             modifier = Modifier.fillMaxWidth(),
@@ -132,6 +136,7 @@ fun SearchBarPreview() {
             onClick = {},
             value = value,
             onValueChange = { value = it },
+            isInputEnabled = true,
             onClearClick = {},
             modifier = Modifier.fillMaxWidth(),
         )
