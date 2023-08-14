@@ -3,6 +3,7 @@ package ru.zarina.zarina.data.search.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
+import ru.zarina.zarina.utils.kotlin.capitalize
 
 @Serializable
 data class StsDto(
@@ -12,7 +13,7 @@ data class StsDto(
 
     fun toDomain(): String? {
         return if (ApiContract.isNotNull(st, "st"))
-            st
+            st.capitalize()
         else
             null
     }

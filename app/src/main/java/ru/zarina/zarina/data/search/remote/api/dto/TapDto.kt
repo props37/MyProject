@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
 import ru.zarina.zarina.domain.AutocompleteWord
+import ru.zarina.zarina.utils.kotlin.capitalize
 
 @Serializable
 data class TapDto(
@@ -18,7 +19,7 @@ data class TapDto(
             ApiContract.isNotNull(tap, "tap")
             && ApiContract.isNotNull(relatedSearch, "relatedSearch")
         )
-            AutocompleteWord(tap, relatedSearch)
+            AutocompleteWord(tap.capitalize(), relatedSearch.capitalize())
         else
             null
     }

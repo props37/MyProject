@@ -38,7 +38,6 @@ import ru.zarina.zarina.ui.common.components.InputSearchBar
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.utils.compose.navigationOrIme
-import java.util.Locale
 
 @Composable
 fun SearchScreenContent(
@@ -126,7 +125,7 @@ private fun Word(
             .padding(horizontal = 12.dp, vertical = 8.dp),
     ) {
         Text(
-            text = word.word.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+            text = word.word,
             maxLines = 1,
             style = UiKitTheme.typography.circle1718,
             color = UiKitTheme.colors.primaryContentColor,
@@ -155,7 +154,7 @@ private fun FrequentlySearched(
         )
         for (query in queries) {
             Text(
-                text = query.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+                text = query,
                 style = UiKitTheme.typography.circle1718,
                 color = UiKitTheme.colors.primaryContentColor,
                 maxLines = 1,
