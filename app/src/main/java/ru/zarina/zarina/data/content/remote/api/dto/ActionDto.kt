@@ -22,7 +22,7 @@ data class ActionDto(
         @SerialName("id")
         val id: String?,
         @SerialName("category_id")
-        val categoryId: Int,
+        val categoryId: Int?,
         @SerialName("filters")
         val filters: FiltersDto?,
         @SerialName("link")
