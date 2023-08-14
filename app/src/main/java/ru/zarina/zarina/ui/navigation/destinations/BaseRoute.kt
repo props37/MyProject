@@ -8,6 +8,7 @@ enum class BaseRoute {
     GRAPH_PROFILE,
     GRAPH_CART,
     GRAPH_HOME,
+    GRAPH_SEARCH,
     HOME,
     ONBOARDING,
     SELECT_CITY,
@@ -29,5 +30,6 @@ enum class BaseRoute {
     CATALOG_SELECT_CITY,
     FAVOURITES,
     PROFILE,
-    CART
+    CART,
+    SEARCH,
 }

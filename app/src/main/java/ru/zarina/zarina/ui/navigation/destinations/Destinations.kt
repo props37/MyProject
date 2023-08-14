@@ -260,3 +260,7 @@ object Profile : SimpleGraph(BaseRoute.GRAPH_PROFILE, Root) {
 object Cart : SimpleGraph(BaseRoute.GRAPH_CART, Root) {
     object Root : SimpleDestination(BaseRoute.CART)
 }
+
+object Search : SimpleGraph(BaseRoute.GRAPH_SEARCH, Root) {
+    object Root : SimpleDestination(BaseRoute.SEARCH)
+}
