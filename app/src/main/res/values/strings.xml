@@ -132,4 +132,5 @@
     <string name="save_interesting_products_to_favorites">Сохраняйте понравившиеся товары в Избранное</string>
     <string name="search">Поиск</string>
     <string name="search_products">Искать товары</string>
+    <string name="frequently_searched">Часто ищут</string>
 </resources>

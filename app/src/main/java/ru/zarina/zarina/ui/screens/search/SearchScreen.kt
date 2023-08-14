@@ -7,9 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,17 +23,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.AutocompleteWord
 import ru.zarina.zarina.domain.SearchAutocomplete
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.InputSearchBar
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.utils.compose.navigationOrIme
 import java.util.Locale
 
 @Composable
@@ -39,7 +46,9 @@ fun SearchScreenContent(
     onQueryClearClick: () -> Unit,
     autocomplete: SearchAutocomplete?,
     onAutocompleteWordClick: (AutocompleteWord) -> Unit,
+    onFrequentlySearchedClick: (String) -> Unit,
 ) {
+    val contentScrollState = rememberScrollState()
     ZarinaScaffold(
         toolbar = {
             // TODO add elevation
@@ -58,12 +67,19 @@ fun SearchScreenContent(
         }
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(state = contentScrollState),
         ) {
             if (autocomplete != null) {
                 Words(
                     words = autocomplete.words,
                     onWordClick = onAutocompleteWordClick,
+                )
+                FrequentlySearched(
+                    queries = autocomplete.frequentQueries,
+                    onQueryClick = onFrequentlySearchedClick,
+                    modifier = Modifier.padding(WindowInsets.navigationOrIme.asPaddingValues())
                 )
             }
         }
@@ -117,6 +133,40 @@ private fun Word(
 }
 
 @Composable
+private fun FrequentlySearched(
+    queries: ImmutableList<String>,
+    onQueryClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth(),
+    ) {
+        Text(
+            text = stringResource(id = R.string.frequently_searched),
+            style = UiKitTheme.typography.circle1518,
+            color = UiKitTheme.colors.primaryContentColor,
+            maxLines = 1,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .padding(top = 24.dp, bottom = 6.dp),
+        )
+        for (query in queries) {
+            Text(
+                text = query.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+                style = UiKitTheme.typography.circle1718,
+                color = UiKitTheme.colors.primaryContentColor,
+                maxLines = 1,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = { onQueryClick(query) })
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+            )
+        }
+    }
+}
+
+@Composable
 fun SearchScreen() {
     val viewModel = koinViewModel<SearchViewModel>()
 
@@ -133,6 +183,7 @@ fun SearchScreen() {
         onQueryClearClick = remember { { viewModel.onQueryClearClick() } },
         autocomplete = autocomplete,
         onAutocompleteWordClick = remember { { viewModel.onAutocompleteWordClick(it) } },
+        onFrequentlySearchedClick = remember { { viewModel.onFrequentlySearchedClick(it) } },
     )
 }
 

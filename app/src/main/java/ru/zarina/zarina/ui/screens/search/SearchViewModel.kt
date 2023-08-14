@@ -46,6 +46,10 @@ class SearchViewModel(
         _query.value = word.query
     }
 
+    fun onFrequentlySearchedClick(query: String) {
+        _query.value = query
+    }
+
     fun onSearchClick() {
         // TODO
     }
