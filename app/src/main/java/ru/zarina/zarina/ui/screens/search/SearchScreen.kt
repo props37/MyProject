@@ -1,9 +1,11 @@
 package ru.zarina.zarina.ui.screens.search
 
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
@@ -19,10 +21,12 @@ fun SearchScreenContent(
 ) {
     ZarinaScaffold(
         toolbar = {
+            // TODO add elevation
             InputSearchBar(
                 value = query,
                 onValueChange = onQueryChange,
                 onClearClick = onQueryClearClick,
+                modifier = Modifier.statusBarsPadding()
             )
         }
     ) {
