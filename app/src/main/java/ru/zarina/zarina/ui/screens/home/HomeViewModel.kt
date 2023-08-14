@@ -88,6 +88,10 @@ class HomeViewModel(
         }
     }
 
+    fun onSearchClick() {
+        sideEffect(SideEffect.ShowSearch)
+    }
+
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         data class ShowProduct(val productId: Product.Id) : SideEffect
         data class ShowWebpage(val url: Url) : SideEffect
@@ -95,6 +99,8 @@ class HomeViewModel(
             val categoryId: Category.Id,
             val filtration: Filtration?
         ) : SideEffect
+
+        object ShowSearch : SideEffect
     }
 
     companion object {

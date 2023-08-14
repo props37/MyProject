@@ -63,6 +63,7 @@ fun HomeScreenContent(
     onBannerClick: (Banner) -> Unit,
     onProductClick: (Product) -> Unit,
     onFavoriteChange: (Product, Boolean) -> Unit,
+    onSearchClick: () -> Unit,
     cache: State<Cache?>,
 ) {
     val lazyColumnState = rememberLazyListState()
@@ -73,7 +74,7 @@ fun HomeScreenContent(
                 modifier = Modifier
             ) {
                 RedirectSearchBar(
-                    onClick = { /*TODO*/ },
+                    onClick = onSearchClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .statusBarsPadding()
@@ -173,6 +174,7 @@ fun HomeScreen(
     showProduct: (id: Product.Id) -> Unit,
     showProducts: (categoryId: Category.Id, filtration: Filtration?) -> Unit,
     showWebpage: (url: Url) -> Unit,
+    showSearch: () -> Unit,
 ) {
     val viewModel = koinViewModel<HomeViewModel>()
 
@@ -186,6 +188,7 @@ fun HomeScreen(
         showProduct = showProduct,
         showProducts = showProducts,
         showWebpage = showWebpage,
+        showSearch = showSearch,
     )
 
     HomeScreenContent(
@@ -199,6 +202,7 @@ fun HomeScreen(
                 viewModel.onFavoriteChange(product, isFavorite)
             }
         },
+        onSearchClick = remember { { viewModel.onSearchClick() } },
         cache = cache,
     )
 }
@@ -209,6 +213,7 @@ fun HomeScreenBehavior(
     showProduct: (id: Product.Id) -> Unit,
     showProducts: (categoryId: Category.Id, filtration: Filtration?) -> Unit,
     showWebpage: (url: Url) -> Unit,
+    showSearch: () -> Unit,
 ) {
     NavigationBarState(isVisible = true, isAnimated = true)
     LaunchedEffect(sideEffects) {
@@ -222,6 +227,8 @@ fun HomeScreenBehavior(
 
                 is HomeViewModel.SideEffect.ShowWebpage ->
                     showWebpage(effect.url)
+
+                HomeViewModel.SideEffect.ShowSearch -> showSearch()
             }
         }
     }
@@ -240,6 +247,7 @@ fun HomeScreenContentPreview() {
             onBannerClick = {},
             onProductClick = {},
             onFavoriteChange = { _, _ -> },
+            onSearchClick = {},
             cache = remember { mutableStateOf<Cache?>(null) },
         )
     }

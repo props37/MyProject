@@ -8,6 +8,7 @@ import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.navigation.destinations.Home
+import ru.zarina.zarina.ui.navigation.destinations.Search
 import ru.zarina.zarina.ui.screens.home.HomeScreen
 
 fun NavGraphBuilder.homeGraph(
@@ -36,6 +37,9 @@ fun NavGraphBuilder.homeGraph(
                 showWebpage = { url ->
                     val arguments = Destinations.Webpage.Arguments(url = url.value)
                     navController.navigate(Destinations.Webpage.createRoute(arguments))
+                },
+                showSearch = {
+                    navController.navigate(Search.Root.routeSchema)
                 }
             )
         }
