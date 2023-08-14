@@ -8,6 +8,6 @@ class AnyQuerySearchRemoteSource(
     private val api: IAnyQuerySearchApi,
 ) : ISearchRemoteSource {
 
-    override fun getAutocomplete(query: String) = api.getAutocomplete(query).toDomain()
+    override suspend fun getAutocomplete(query: String) = api.getAutocomplete(query).toDomain()
 
 }

@@ -2,11 +2,15 @@ package ru.zarina.zarina.data.search
 
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.search.local.ISearchLocalSource
+import ru.zarina.zarina.data.search.remote.ISearchRemoteSource
 
 @Factory
 class SearchRepository(
     private val local: ISearchLocalSource,
+    private val remote: ISearchRemoteSource,
 ) : ISearchRepository {
+
+    override suspend fun getAutocomplete(query: String) = remote.getAutocomplete(query)
 
     override suspend fun getHistory() = local.getHistory()
 
