@@ -33,6 +33,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.AutocompleteWord
 import ru.zarina.zarina.domain.SearchAutocomplete
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
+import ru.zarina.zarina.ui.common.components.ElevationContainer
 import ru.zarina.zarina.ui.common.components.InputSearchBar
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -51,18 +52,19 @@ fun SearchScreenContent(
     val contentScrollState = rememberScrollState()
     ZarinaScaffold(
         toolbar = {
-            // TODO add elevation
-            val focusRequester = remember { FocusRequester() }
-            InputSearchBar(
-                value = query,
-                onValueChange = onQueryChange,
-                onClearClick = onQueryClearClick,
-                modifier = Modifier
-                    .statusBarsPadding()
-                    .focusRequester(focusRequester)
-            )
-            LaunchedEffect(Unit) {
-                focusRequester.requestFocus()
+            ElevationContainer(isElevated = contentScrollState.canScrollBackward) {
+                val focusRequester = remember { FocusRequester() }
+                InputSearchBar(
+                    value = query,
+                    onValueChange = onQueryChange,
+                    onClearClick = onQueryClearClick,
+                    modifier = Modifier
+                        .statusBarsPadding()
+                        .focusRequester(focusRequester)
+                )
+                LaunchedEffect(Unit) {
+                    focusRequester.requestFocus()
+                }
             }
         }
     ) {
