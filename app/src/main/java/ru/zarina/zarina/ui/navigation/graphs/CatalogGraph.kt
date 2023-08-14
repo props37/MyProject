@@ -9,6 +9,7 @@ import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
+import ru.zarina.zarina.ui.navigation.destinations.Search
 import ru.zarina.zarina.ui.screens.catalog.categories.CategoriesScreen
 import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 import ru.zarina.zarina.ui.screens.catalog.filters.FiltersScreen
@@ -28,6 +29,9 @@ fun NavGraphBuilder.catalogGraph(
                     val arguments = Catalog.Products.Arguments(categoryId, null)
                     navController.navigate(Catalog.Products.createRoute(arguments))
                 },
+                showSearch = {
+                    navController.navigate(Search.Root.routeSchema)
+                }
             )
         }
         composableDestination(Catalog.Products) {

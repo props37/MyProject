@@ -42,6 +42,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 fun CategoriesScreenContent(
     categories: PersistentList<Category>,
     onCategoryClick: (Category) -> Unit,
+    onSearchClick: () -> Unit,
     isLoaderVisible: Boolean,
 ) {
     val listState = rememberLazyListState()
@@ -52,7 +53,7 @@ fun CategoriesScreenContent(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 RedirectSearchBar(
-                    onClick = { /*TODO*/ },
+                    onClick = onSearchClick,
                     modifier = Modifier.statusBarsPadding(),
                 )
             }
@@ -97,6 +98,7 @@ private fun CategoryItem(
 @Composable
 fun CategoriesScreen(
     showProducts: (Category.Id) -> Unit,
+    showSearch: () -> Unit,
 ) {
     val viewModel = koinViewModel<CategoriesViewModel>()
 
@@ -106,11 +108,13 @@ fun CategoriesScreen(
     CategoriesScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showProducts = showProducts,
+        showSearch = showSearch,
     )
 
     CategoriesScreenContent(
         categories = categories,
         onCategoryClick = viewModel::onCategoryClick,
+        onSearchClick = viewModel::onSearchClick,
         isLoaderVisible = isLoaderVisible,
     )
 }
@@ -119,6 +123,7 @@ fun CategoriesScreen(
 fun CategoriesScreenBehavior(
     sideEffects: Flow<CategoriesViewModel.SideEffect>,
     showProducts: (Category.Id) -> Unit,
+    showSearch: () -> Unit,
 ) {
     val context by rememberUpdatedState(LocalContext.current)
     NavigationBarState(isVisible = true, isAnimated = true)
@@ -130,6 +135,7 @@ fun CategoriesScreenBehavior(
                     .show()
 
                 is CategoriesViewModel.SideEffect.ShowProducts -> showProducts(effect.categoryId)
+                CategoriesViewModel.SideEffect.ShowSearch -> showSearch()
             }
         }
     }
@@ -144,6 +150,7 @@ fun CategoriesScreenContentPreview(
     ZarinaTheme {
         CategoriesScreenContent(
             categories = categories.toPersistentList(),
+            onSearchClick = {},
             onCategoryClick = {},
             isLoaderVisible = false,
         )
