@@ -52,6 +52,23 @@ fun RedirectSearchBar(
 }
 
 @Composable
+fun InputSearchBar(
+    value: String,
+    onValueChange: (String) -> Unit,
+    onClearClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    SearchBar(
+        onClick = {},
+        isInputEnabled = true,
+        value = value,
+        onValueChange = onValueChange,
+        onClearClick = onClearClick,
+        modifier = modifier
+    )
+}
+
+@Composable
 private fun SearchBar(
     onClick: () -> Unit,
     isInputEnabled: Boolean,

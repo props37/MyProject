@@ -2,29 +2,56 @@ package ru.zarina.zarina.ui.screens.search
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
+import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
+import ru.zarina.zarina.ui.common.components.InputSearchBar
+import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 
 @Composable
-fun SearchScreenContent() {
+fun SearchScreenContent(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onQueryClearClick: () -> Unit,
+) {
+    ZarinaScaffold(
+        toolbar = {
+            InputSearchBar(
+                value = query,
+                onValueChange = onQueryChange,
+                onClearClick = onQueryClearClick,
+            )
+        }
+    ) {
 
+    }
 }
 
 @Composable
 fun SearchScreen() {
     val viewModel = koinViewModel<SearchViewModel>()
 
+    val query by viewModel.query.collectAsStateWithLifecycle()
+
     SearchScreenBehavior(
         sideEffects = viewModel.sideEffects,
     )
 
-    SearchScreenContent()
+    SearchScreenContent(
+        query = query,
+        onQueryChange = remember { { viewModel.onQueryChange(it) } },
+        onQueryClearClick = remember { { viewModel.onQueryClearClick() } }
+    )
 }
 
 @Composable
 fun SearchScreenBehavior(
     sideEffects: Flow<SearchViewModel.SideEffect>,
 ) {
+    NavigationBarState(isVisible = false, isAnimated = false)
 
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
