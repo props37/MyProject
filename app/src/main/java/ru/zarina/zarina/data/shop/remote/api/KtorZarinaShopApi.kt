@@ -19,7 +19,7 @@ import ru.zarina.zarina.domain.exception.NotFoundException
 
 @Factory
 class KtorZarinaShopApi(
-    @Named(Qualifiers.Authorization.TOKEN)
+    @Named(Qualifiers.Api.ZARINA_RESTRICTED)
     private val client: HttpClient,
 ) : IZarinaShopApi {
 

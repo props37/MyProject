@@ -12,7 +12,7 @@ import ru.zarina.zarina.di.Qualifiers
 
 @Factory
 class KtorZarinaUserApi(
-    @Named(Qualifiers.Authorization.TOKEN)
+    @Named(Qualifiers.Api.ZARINA_RESTRICTED)
     private val client: HttpClient,
 ) : IZarinaUserApi {
 

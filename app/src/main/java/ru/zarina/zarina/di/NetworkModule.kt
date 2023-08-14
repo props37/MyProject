@@ -43,7 +43,7 @@ class NetworkModule {
         explicitNulls = false
     }
 
-    @Named(Qualifiers.Authorization.TOKEN)
+    @Named(Qualifiers.Api.ZARINA_RESTRICTED)
     @Singleton
     fun providesTokenAuthorizationHttpClient(
         context: Context,
@@ -67,7 +67,7 @@ class NetworkModule {
         }
     }
 
-    @Named(Qualifiers.Authorization.NONE)
+    @Named(Qualifiers.Api.ZARINA)
     @Singleton
     fun providesHttpClient(
         context: Context,
@@ -78,7 +78,7 @@ class NetworkModule {
         baseZarinaConfig(context, headerProvider)
     }
 
-    @Named(Qualifiers.Authorization.MINDBOX_SECRET)
+    @Named(Qualifiers.Api.MINDBOX_RESTRICTED)
     @Singleton
     fun providesMindboxSecretHttpClient(
         context: Context,

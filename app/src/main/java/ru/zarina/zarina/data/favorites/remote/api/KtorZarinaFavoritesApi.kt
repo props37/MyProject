@@ -13,7 +13,7 @@ import ru.zarina.zarina.di.Qualifiers
 
 @Factory
 class KtorZarinaFavoritesApi(
-    @Named(Qualifiers.Authorization.TOKEN)
+    @Named(Qualifiers.Api.ZARINA_RESTRICTED)
     private val client: HttpClient,
 ) : IZarinaFavoritesApi {
     override suspend fun add(productId: String) {

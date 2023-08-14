@@ -10,9 +10,11 @@ object Qualifiers {
         const val IO = "dispatcher-io"
     }
 
-    object Authorization {
-        const val NONE = "authorization-none"
-        const val TOKEN = "authorization-token"
-        const val MINDBOX_SECRET = "authorization-mindbox-secret"
+    object Api {
+        const val ZARINA = "api-zarina"
+        const val ZARINA_RESTRICTED = "api-zarina-restricted"
+        const val MINDBOX_RESTRICTED = "api-mindbox-restricted"
+        const val ANYQUERY_AUTOCOMPLETE = "api-anyquery-autocomplete"
+        const val ANYQUERY_SEARCH = "api-anyquery-search"
     }
 }
