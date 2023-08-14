@@ -71,6 +71,7 @@ fun SearchScreenContent(
                     for (word in autocomplete.words) {
                         Word(
                             word = word,
+                            // TODO move input cursor to end
                             onClick = { onAutocompleteWordClick(word) },
                         )
                     }
