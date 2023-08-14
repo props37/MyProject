@@ -21,6 +21,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.domain.AutocompleteWord
@@ -31,7 +32,6 @@ import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import java.util.Locale
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SearchScreenContent(
     query: String,
@@ -60,22 +60,36 @@ fun SearchScreenContent(
         Column(
             modifier = Modifier.fillMaxWidth(),
         ) {
-            if (autocomplete != null)
-                FlowRow(
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 11.dp, vertical = 10.dp),
-                ) {
-                    for (word in autocomplete.words) {
-                        Word(
-                            word = word,
-                            // TODO move input cursor to end
-                            onClick = { onAutocompleteWordClick(word) },
-                        )
-                    }
-                }
+            if (autocomplete != null) {
+                Words(
+                    words = autocomplete.words,
+                    onWordClick = onAutocompleteWordClick,
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun Words(
+    words: ImmutableList<AutocompleteWord>,
+    onWordClick: (AutocompleteWord) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    FlowRow(
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 11.dp, vertical = 10.dp),
+    ) {
+        for (word in words) {
+            Word(
+                word = word,
+                // TODO move input cursor to end
+                onClick = { onWordClick(word) },
+            )
         }
     }
 }
