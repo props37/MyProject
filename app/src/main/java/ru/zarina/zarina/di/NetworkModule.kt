@@ -13,6 +13,7 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.headers
+import io.ktor.http.parametersOf
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -92,6 +93,24 @@ class NetworkModule {
                 headerProvider.getHeaders().forEach { (key, value) ->
                     append(key, value)
                 }
+            }
+        }
+        install(HttpCache) {
+            val cacheFile = File(context.cacheDir, CACHE_DIR_MINDBOX)
+            privateStorage(FileStorage(cacheFile))
+        }
+    }
+
+    @Named(Qualifiers.Api.ANYQUERY_AUTOCOMPLETE)
+    @Singleton
+    fun providesAnyQueryAutocompleteHttpClient(
+        context: Context,
+        json: Json,
+    ) = HttpClient(OkHttp) {
+        baseConfig(json)
+        install(DefaultRequest) {
+            url("https://autocomplete.diginetica.net/") {
+                parametersOf("apiKey", BuildConfig.ANYQUERY_SECRET)
             }
         }
         install(HttpCache) {
