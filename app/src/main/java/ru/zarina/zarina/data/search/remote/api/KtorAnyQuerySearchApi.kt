@@ -6,6 +6,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
+import ru.zarina.zarina.BuildConfig
 import ru.zarina.zarina.data.search.remote.api.dto.SearchAutocompleteDto
 import ru.zarina.zarina.di.Qualifiers
 
@@ -23,6 +24,8 @@ class KtorAnyQuerySearchApi(
             parameter("productsSize", 36)
             parameter("fullData", false)
             parameter("regionId", "global")
+
+            parameter("apiKey", BuildConfig.ANYQUERY_SECRET)
         }
         return response.body()
     }

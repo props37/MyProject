@@ -1,5 +1,6 @@
 package ru.zarina.zarina.data.search.remote.api.dto
 
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
@@ -14,7 +15,7 @@ data class SearchAutocompleteDto(
 
     fun toDomain(): SearchAutocomplete {
         return SearchAutocomplete(
-            words = taps?.mapNotNull { it.toDomain() }.orEmpty()
+            words = taps?.mapNotNull { it.toDomain() }.orEmpty().toImmutableList()
         )
     }
 
