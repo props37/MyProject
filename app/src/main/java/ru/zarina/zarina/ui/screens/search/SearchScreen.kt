@@ -90,16 +90,18 @@ fun SearchScreenContent(
                     onQueryDeleteClick = onSearchHistoryDeleteClick
                 )
             if (autocomplete != null) {
-                Words(
-                    words = autocomplete.words,
-                    onWordClick = onAutocompleteWordClick,
-                )
+                if (autocomplete.words.isNotEmpty())
+                    Words(
+                        words = autocomplete.words,
+                        onWordClick = onAutocompleteWordClick,
+                    )
                 // TODO add categories autocomplete
-                FrequentlySearched(
-                    queries = autocomplete.frequentQueries,
-                    onQueryClick = onFrequentlySearchedClick,
-                    modifier = Modifier.padding(WindowInsets.navigationOrIme.asPaddingValues())
-                )
+                if (autocomplete.frequentQueries.isNotEmpty())
+                    FrequentlySearched(
+                        queries = autocomplete.frequentQueries,
+                        onQueryClick = onFrequentlySearchedClick,
+                        modifier = Modifier.padding(WindowInsets.navigationOrIme.asPaddingValues())
+                    )
                 // TODO add recommendations
             }
         }
