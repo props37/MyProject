@@ -11,7 +11,7 @@ import ru.zarina.zarina.data.search.local.database.entity.SearchHistoryEntity
 @Dao
 interface SearchDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(query: SearchHistoryEntity)
 
     @Query("SELECT * FROM search_history_table")

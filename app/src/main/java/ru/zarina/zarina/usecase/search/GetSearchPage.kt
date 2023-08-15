@@ -18,6 +18,8 @@ class GetSearchPageUseCase(
     override suspend fun execute(params: Parameters): Page<List<Product>> {
         val (query, pageIndex) = params
 
+        searchRepository.addToHistory(query)
+
         return searchRepository.getSearchPage(query, pageIndex)
     }
 
