@@ -13,9 +13,9 @@ import ru.zarina.zarina.domain.Product
 class GetSearchPageUseCase(
     @Named(Qualifiers.Dispatcher.IO) dispatcher: CoroutineDispatcher,
     private val searchRepository: ISearchRepository,
-) : UseCase<GetSearchPageUseCase.Parameters, Page<List<Product>>>(dispatcher) {
+) : UseCase<GetSearchPageUseCase.Params, Page<List<Product>>>(dispatcher) {
 
-    override suspend fun execute(params: Parameters): Page<List<Product>> {
+    override suspend fun execute(params: Params): Page<List<Product>> {
         val (query, pageIndex) = params
 
         searchRepository.addToHistory(query)
@@ -23,9 +23,13 @@ class GetSearchPageUseCase(
         return searchRepository.getSearchPage(query, pageIndex)
     }
 
-    data class Parameters(
+    data class Params(
         val query: String,
         val pageIndex: Int,
     )
+
+    companion object {
+        const val PAGE_SIZE = 10
+    }
 
 }

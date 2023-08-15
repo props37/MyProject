@@ -2,6 +2,9 @@ package ru.zarina.zarina.ui.screens.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -11,8 +14,13 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.AutocompleteWord
+import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.base.paging.PageHolder
+import ru.zarina.zarina.ui.screens.search.paging.SearchPagingSource
+import ru.zarina.zarina.ui.screens.search.paging.SearchRemoteMediator
+import ru.zarina.zarina.usecase.search.GetSearchPageUseCase
 import ru.zarina.zarina.utils.coroutine.mapState
 
 @KoinViewModel
@@ -34,6 +42,11 @@ class SearchViewModel(
     val autocomplete = _autocompleteResult
         .mapState(viewModelScope) { it?.getOrNull() }
 
+    private val pager = MutableStateFlow<Pager<Int, Product>?>(null)
+    private val pagingSource = MutableStateFlow<SearchPagingSource?>(null)
+
+    // TODO setup paging source invalidation on favorites change
+
     fun onQueryChange(query: String) {
         _query.value = query
     }
@@ -51,7 +64,35 @@ class SearchViewModel(
     }
 
     fun onSearchClick() {
-        // TODO
+        pager.value = createPager()
+    }
+
+    @OptIn(ExperimentalPagingApi::class)
+    private fun createPager(): Pager<Int, Product> {
+        // TODO scroll to top
+        val pageHolder = PageHolder<List<Product>>()
+        val mediator = SearchRemoteMediator(
+            pageHolder = pageHolder,
+            getSearchPageUseCase = interactor.getSearchPageUseCase,
+            query = _query.value
+        )
+        return Pager(
+            config = PagingConfig(
+                pageSize = GetSearchPageUseCase.PAGE_SIZE,
+                enablePlaceholders = false,
+            ),
+            pagingSourceFactory = {
+                val source = SearchPagingSource(
+                    pageHolder = pageHolder,
+                    getFavoriteIdsUseCase = interactor.getFavoriteIdsUseCase,
+                )
+                mediator.addListener(source)
+                pagingSource.value = source
+                source
+            },
+            remoteMediator = mediator,
+            initialKey = 0,
+        )
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect
