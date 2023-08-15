@@ -11,9 +11,14 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -32,17 +37,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.AutocompleteWord
+import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.SearchAutocomplete
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ElevationContainer
 import ru.zarina.zarina.ui.common.components.InputSearchBar
+import ru.zarina.zarina.ui.common.components.ProductCard
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
+import ru.zarina.zarina.ui.common.components.bottomNavigationPadding
+import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.utils.compose.navigationOrIme
 
@@ -61,8 +74,13 @@ fun SearchScreenContent(
     autocomplete: SearchAutocomplete?,
     onAutocompleteWordClick: (AutocompleteWord) -> Unit,
     onFrequentlySearchedClick: (String) -> Unit,
+    products: LazyPagingItems<Product>,
+    onProductClick: (Product) -> Unit,
+    onFavoriteChange: (Product, Boolean) -> Unit,
+    shakingFavorites: ImmutableList<Product.Id>,
 ) {
     val contentScrollState = rememberScrollState()
+    val productGridState = rememberLazyGridState()
     ZarinaScaffold(
         toolbar = {
             ElevationContainer(isElevated = contentScrollState.canScrollBackward) {
@@ -82,30 +100,62 @@ fun SearchScreenContent(
             }
         }
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(state = contentScrollState),
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
-            if (isSearchHistoryVisible)
-                SearchHistory(
-                    queries = searchHistory,
-                    onQueryClick = onSearchHistoryClick,
-                    onQueryDeleteClick = onSearchHistoryDeleteClick
-                )
-            if (isAutocompleteWordsVisible)
-                Words(
-                    words = autocomplete?.words ?: persistentListOf(),
-                    onWordClick = onAutocompleteWordClick,
-                )
-            // TODO add categories autocomplete
-            if (isFrequentSearchVisible)
-                FrequentlySearched(
-                    queries = autocomplete?.frequentQueries ?: persistentListOf(),
-                    onQueryClick = onFrequentlySearchedClick,
-                    modifier = Modifier.padding(WindowInsets.navigationOrIme.asPaddingValues())
-                )
-            // TODO add recommendations
+            val colorPickerDimensions = ColorPickerDefaults.tinyDimensions()
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                state = productGridState,
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+                contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .bottomNavigationPadding()
+            ) {
+                items(
+                    count = products.itemCount,
+                    key = products.itemKey { it.id.value },
+                    contentType = products.itemContentType { null }
+                ) { productIndex ->
+                    val product = products[productIndex]
+                    if (product != null)
+                        ProductCard(
+                            product = product,
+                            isMediaScrollable = true,
+                            onClick = { onProductClick(product) },
+                            isFavoriteShaking = shakingFavorites.contains(product.id),
+                            onFavoriteChange = { onFavoriteChange(product, it) },
+                            colorPickerDimensions = colorPickerDimensions,
+                        )
+                }
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(state = contentScrollState),
+            ) {
+                if (isSearchHistoryVisible)
+                    SearchHistory(
+                        queries = searchHistory,
+                        onQueryClick = onSearchHistoryClick,
+                        onQueryDeleteClick = onSearchHistoryDeleteClick
+                    )
+                if (isAutocompleteWordsVisible)
+                    Words(
+                        words = autocomplete?.words ?: persistentListOf(),
+                        onWordClick = onAutocompleteWordClick,
+                    )
+                // TODO add categories autocomplete
+                if (isFrequentSearchVisible)
+                    FrequentlySearched(
+                        queries = autocomplete?.frequentQueries ?: persistentListOf(),
+                        onQueryClick = onFrequentlySearchedClick,
+                        modifier = Modifier.padding(WindowInsets.navigationOrIme.asPaddingValues())
+                    )
+                // TODO add recommendations
+            }
         }
     }
 }
@@ -258,6 +308,8 @@ fun SearchScreen() {
     val isAutocompleteWordsVisible by viewModel.isAutocompleteWordsVisible.collectAsStateWithLifecycle()
     val isFrequentSearchVisible by viewModel.isFrequentSearchVisible.collectAsStateWithLifecycle()
     val autocomplete by viewModel.autocomplete.collectAsStateWithLifecycle()
+    val products = viewModel.products.collectAsLazyPagingItems()
+    val shakingFavorites by viewModel.shakingFavorites.collectAsStateWithLifecycle()
 
     SearchScreenBehavior(
         sideEffects = viewModel.sideEffects,
@@ -277,6 +329,17 @@ fun SearchScreen() {
         autocomplete = autocomplete,
         onAutocompleteWordClick = remember { { viewModel.onAutocompleteWordClick(it) } },
         onFrequentlySearchedClick = remember { { viewModel.onFrequentlySearchedClick(it) } },
+        products = products,
+        onProductClick = remember { { viewModel.onProductClick(it) } },
+        onFavoriteChange = remember {
+            { product, isFavorite ->
+                viewModel.onFavoriteChange(
+                    product,
+                    isFavorite
+                )
+            }
+        },
+        shakingFavorites = shakingFavorites,
     )
 }
 

@@ -10,6 +10,7 @@ import ru.zarina.zarina.domain.Media
 import ru.zarina.zarina.domain.Price
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Url
+import kotlin.math.roundToInt
 
 @Serializable
 data class ProductDto(
@@ -33,7 +34,7 @@ data class ProductDto(
     val isFavorite: Boolean? = null,
 ) {
     fun toDomain(): Product? {
-        val priceInt = price?.toIntOrNull()
+        val priceInt = price?.toDoubleOrNull()?.roundToInt()
         return if (
             ApiContract.isNotNull(id, "id")
             && ApiContract.isNotNull(name, "name")
@@ -44,9 +45,13 @@ data class ProductDto(
             }
             Product(
                 id = Product.Id(id),
-                name = name,
+                _isAvailable = isAvailable,
+                name = name.replace("Zarina", "").trim(),
                 media = listOfNotNull(image).toImmutableList(),
-                price = Price(current = priceInt, original = oldPrice?.toIntOrNull() ?: priceInt),
+                price = Price(
+                    current = priceInt,
+                    original = oldPrice?.toDoubleOrNull()?.roundToInt() ?: priceInt
+                ),
                 colorVariants = persistentMapOf(),
                 offers = persistentListOf(),
                 description = persistentListOf(),

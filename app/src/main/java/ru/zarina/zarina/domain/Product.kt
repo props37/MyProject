@@ -17,9 +17,10 @@ data class Product(
     /** Whether this product is a part of "complete look" ("образ целиком") bundle */
     val isLookPart: Boolean,
     val isFavorite: Boolean,
+    private val _isAvailable: Boolean? = null,
 ) {
 
-    val isAvailable by lazy { offers.any { it.isAvailable } }
+    val isAvailable by lazy { _isAvailable ?: offers.any { it.isAvailable } }
     val color by lazy {
         colorVariants
             .entries

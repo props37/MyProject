@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -12,9 +13,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
@@ -68,6 +71,14 @@ class SearchViewModel(
     private val pager = MutableStateFlow<Pager<Int, Product>?>(null)
     private val pagingSource = MutableStateFlow<SearchPagingSource?>(null)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val products = pager.flatMapLatest {
+        it?.flow?.cachedIn(viewModelScope) ?: emptyFlow()
+    }
+        .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
+
+    val shakingFavorites = MutableStateFlow(persistentListOf<Product.Id>()) // TODO
+
     // TODO setup paging source invalidation on favorites change
 
     fun onQueryChange(query: String) {
@@ -103,6 +114,15 @@ class SearchViewModel(
             interactor.addToSearchHistory(query)
         }
         pager.value = createPager(query)
+    }
+
+
+    fun onProductClick(product: Product) {
+        TODO("Not yet implemented")
+    }
+
+    fun onFavoriteChange(product: Product, favorite: Boolean) {
+        TODO("Not yet implemented")
     }
 
     @OptIn(ExperimentalPagingApi::class)
