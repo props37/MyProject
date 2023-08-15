@@ -33,6 +33,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -62,6 +64,8 @@ import ru.zarina.zarina.utils.compose.navigationOrIme
 @Composable
 fun SearchScreenContent(
     query: String,
+    isQueryFocused: Boolean,
+    onQueryFocusChange: (Boolean) -> Unit,
     onQueryChange: (String) -> Unit,
     onQueryClearClick: () -> Unit,
     onSearchClick: () -> Unit,
@@ -93,9 +97,16 @@ fun SearchScreenContent(
                     modifier = Modifier
                         .statusBarsPadding()
                         .focusRequester(focusRequester)
+                        .onFocusChanged {
+                            onQueryFocusChange(it.hasFocus)
+                        }
                 )
-                LaunchedEffect(Unit) {
-                    focusRequester.requestFocus()
+                val focusManager = LocalFocusManager.current
+                LaunchedEffect(isQueryFocused) {
+                    if (isQueryFocused)
+                        focusRequester.requestFocus()
+                    else
+                        focusManager.clearFocus()
                 }
             }
         }
@@ -305,6 +316,7 @@ fun SearchScreen(
     val viewModel = koinViewModel<SearchViewModel>()
 
     val query by viewModel.query.collectAsStateWithLifecycle()
+    val isQueryFocused by viewModel.isQueryFocused.collectAsStateWithLifecycle()
     val isSearchHistoryVisible by viewModel.isSearchHistoryVisible.collectAsStateWithLifecycle()
     val searchHistory by viewModel.searchHistory.collectAsStateWithLifecycle()
     val isAutocompleteWordsVisible by viewModel.isAutocompleteWordsVisible.collectAsStateWithLifecycle()
@@ -320,6 +332,8 @@ fun SearchScreen(
 
     SearchScreenContent(
         query = query,
+        isQueryFocused = isQueryFocused,
+        onQueryFocusChange = remember { { viewModel.onQueryFocusChange(it) } },
         onQueryChange = remember { { viewModel.onQueryChange(it) } },
         onQueryClearClick = remember { { viewModel.onQueryClearClick() } },
         onSearchClick = remember { { viewModel.onSearchClick() } },

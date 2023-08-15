@@ -40,6 +40,12 @@ class SearchViewModel(
     private val _query = MutableStateFlow("")
     val query = _query.asStateFlow()
 
+    private val _isQueryFocused = MutableStateFlow(true)
+    val isQueryFocused = _isQueryFocused.asStateFlow()
+    val state = _isQueryFocused.mapState(viewModelScope) { isFocused ->
+        if (isFocused) State.AUTOCOMPLETE else State.RESULT
+    }
+
     val searchHistory = interactor.getSearchHistory(SEARCH_HISTORY_LIMIT)
         .map { it.getOrNull()?.toPersistentList() ?: persistentListOf() }
         .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
@@ -81,6 +87,10 @@ class SearchViewModel(
 
     // TODO setup paging source invalidation on favorites change
 
+    fun onQueryFocusChange(isFocused: Boolean) {
+        _isQueryFocused.value = isFocused
+    }
+
     fun onQueryChange(query: String) {
         _query.value = query
     }
@@ -113,6 +123,7 @@ class SearchViewModel(
         viewModelScope.launch {
             interactor.addToSearchHistory(query)
         }
+        _isQueryFocused.value = false
         pager.value = createPager(query)
     }
 
@@ -152,6 +163,8 @@ class SearchViewModel(
             initialKey = 0,
         )
     }
+
+    enum class State { AUTOCOMPLETE, RESULT }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         data class ShowProduct(val product: Product) : SideEffect
