@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Category
+import ru.zarina.zarina.domain.FilteredProducts
 import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
@@ -37,9 +38,9 @@ import ru.zarina.zarina.ui.common.base.PluralManager
 import ru.zarina.zarina.ui.common.base.PluralResources
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.base.paging.PageHolder
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPagingSource
-import ru.zarina.zarina.ui.screens.catalog.products.paging.ProductPageHolder
 import ru.zarina.zarina.ui.screens.catalog.products.paging.ProductsRemoteMediator
 import ru.zarina.zarina.utils.coroutine.mapState
 import kotlin.time.Duration.Companion.seconds
@@ -107,7 +108,7 @@ class ProductsViewModel(
     private val pager = combine(category, sort, requestedFiltration) { category, sort, filtration ->
         sideEffect(SideEffect.ScrollProductsToTop)
         category?.let {
-            val pageHolder = ProductPageHolder()
+            val pageHolder = PageHolder<FilteredProducts>()
             val mediator = ProductsRemoteMediator(
                 pageHolder = pageHolder,
                 getProductsPageUseCase = interactor.getProductsPageUseCase,
