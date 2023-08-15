@@ -11,11 +11,11 @@ import ru.zarina.zarina.data.search.local.database.entity.SearchHistoryEntity
 @Dao
 interface SearchDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(query: SearchHistoryEntity)
 
-    @Query("SELECT * FROM search_history_table")
-    fun select(): Flow<List<SearchHistoryEntity>>
+    @Query("SELECT * FROM search_history_table ORDER BY id DESC LIMIT :limit")
+    fun selectLatest(limit: Int): Flow<List<SearchHistoryEntity>>
 
     @Delete
     fun delete(query: SearchHistoryEntity)

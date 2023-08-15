@@ -36,7 +36,7 @@ class SearchViewModel(
     private val _query = MutableStateFlow("")
     val query = _query.asStateFlow()
 
-    val searchHistory = interactor.getSearchHistory()
+    val searchHistory = interactor.getSearchHistory(SEARCH_HISTORY_LIMIT)
         .map { it.getOrNull()?.toPersistentList() ?: persistentListOf() }
         .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
@@ -118,5 +118,9 @@ class SearchViewModel(
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect
+
+    companion object {
+        private val SEARCH_HISTORY_LIMIT = 15
+    }
 
 }

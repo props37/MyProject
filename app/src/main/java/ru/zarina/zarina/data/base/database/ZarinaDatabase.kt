@@ -9,7 +9,7 @@ import ru.zarina.zarina.data.search.local.database.SearchDao
 import ru.zarina.zarina.data.search.local.database.entity.SearchHistoryEntity
 
 @Database(
-    version = 2, exportSchema = true, entities = [
+    version = 3, exportSchema = true, entities = [
         CategoryEntity::class,
         SearchHistoryEntity::class,
     ]

@@ -15,7 +15,7 @@ class SearchRepository(
     override suspend fun getSearchPage(query: String, pageIndex: Int) =
         remote.getSearchPage(query, pageIndex)
 
-    override fun getHistory() = local.getHistory()
+    override fun getHistory(limit: Int) = local.getHistory(limit)
 
     override suspend fun addToHistory(query: String) = local.addToHistory(query)
 

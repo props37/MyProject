@@ -6,7 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "search_history_table")
 data class SearchHistoryEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val id: Int? = null,
     @ColumnInfo(name = "query")
     val query: String,
 ) {
@@ -14,7 +15,7 @@ data class SearchHistoryEntity(
     fun toDomain(): String = query
 
     companion object {
-        fun from(domain: String): SearchHistoryEntity = SearchHistoryEntity(domain)
+        fun from(query: String): SearchHistoryEntity = SearchHistoryEntity(query = query)
     }
 
 }

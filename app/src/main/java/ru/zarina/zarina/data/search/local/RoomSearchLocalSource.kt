@@ -9,7 +9,7 @@ import ru.zarina.zarina.data.search.local.database.entity.SearchHistoryEntity
 class RoomSearchLocalSource(
     private val dao: SearchDao,
 ) : ISearchLocalSource {
-    override fun getHistory() = dao.select()
+    override fun getHistory(limit: Int) = dao.selectLatest(limit)
         .map { list -> list.map { it.toDomain() } }
 
     override suspend fun addToHistory(query: String) {

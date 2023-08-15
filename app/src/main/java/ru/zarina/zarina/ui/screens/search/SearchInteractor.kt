@@ -7,7 +7,6 @@ import ru.zarina.zarina.usecase.search.GetAutocompleteUseCase
 import ru.zarina.zarina.usecase.search.GetSearchHistoryUseCase
 import ru.zarina.zarina.usecase.search.GetSearchPageUseCase
 import ru.zarina.zarina.usecase.search.RemoveFromSearchHistoryUseCase
-import ru.zarina.zarina.utils.clean.invoke
 
 @Factory
 class SearchInteractor(
@@ -19,7 +18,8 @@ class SearchInteractor(
     private val removeFromSearchHistoryUseCase: RemoveFromSearchHistoryUseCase,
 ) {
 
-    fun getSearchHistory() = getSearchHistoryUseCase()
+    fun getSearchHistory(limit: Int) =
+        getSearchHistoryUseCase(GetSearchHistoryUseCase.Params(limit))
 
     suspend fun getAutocomplete(query: String) =
         getAutocompleteUseCase(GetAutocompleteUseCase.Parameters(query))

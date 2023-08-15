@@ -13,10 +13,16 @@ import ru.zarina.zarina.di.Qualifiers
 class GetSearchHistoryUseCase(
     @Named(Qualifiers.Dispatcher.IO) dispatcher: CoroutineDispatcher,
     private val searchRepository: ISearchRepository,
-) : FlowUseCase<Unit, List<String>>(dispatcher) {
+) : FlowUseCase<GetSearchHistoryUseCase.Params, List<String>>(dispatcher) {
 
-    override fun execute(params: Unit): Flow<Result<List<String>>> {
-        return searchRepository.getHistory().map { Result.success(it) }
+    override fun execute(params: Params): Flow<Result<List<String>>> {
+        val (limit) = params
+
+        return searchRepository.getHistory(limit).map { Result.success(it) }
     }
+
+    data class Params(
+        val limit: Int = 15,
+    )
 
 }
