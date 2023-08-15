@@ -11,6 +11,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -39,6 +40,11 @@ class SearchViewModel(
     val searchHistory = interactor.getSearchHistory(SEARCH_HISTORY_LIMIT)
         .map { it.getOrNull()?.toPersistentList() ?: persistentListOf() }
         .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
+    val isSearchHistoryVisible =
+        combine(_query, searchHistory) { query, searchHistory ->
+            query.isEmpty() && searchHistory.isNotEmpty()
+        }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _autocompleteResult = _query
@@ -49,6 +55,15 @@ class SearchViewModel(
 
     val autocomplete = _autocompleteResult
         .mapState(viewModelScope) { it?.getOrNull() }
+
+    val isAutocompleteWordsVisible = autocomplete
+        .mapState(viewModelScope, SharingStarted.WhileSubscribed()) {
+            !it?.words.isNullOrEmpty()
+        }
+    val isFrequentSearchVisible = autocomplete
+        .mapState(viewModelScope, SharingStarted.WhileSubscribed()) {
+            !it?.frequentQueries.isNullOrEmpty()
+        }
 
     private val pager = MutableStateFlow<Pager<Int, Product>?>(null)
     private val pagingSource = MutableStateFlow<SearchPagingSource?>(null)

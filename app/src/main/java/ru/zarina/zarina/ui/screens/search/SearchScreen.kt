@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
@@ -51,9 +52,12 @@ fun SearchScreenContent(
     onQueryChange: (String) -> Unit,
     onQueryClearClick: () -> Unit,
     onSearchClick: () -> Unit,
+    isSearchHistoryVisible: Boolean,
     searchHistory: ImmutableList<String>,
     onSearchHistoryClick: (String) -> Unit,
     onSearchHistoryDeleteClick: (String) -> Unit,
+    isAutocompleteWordsVisible: Boolean,
+    isFrequentSearchVisible: Boolean,
     autocomplete: SearchAutocomplete?,
     onAutocompleteWordClick: (AutocompleteWord) -> Unit,
     onFrequentlySearchedClick: (String) -> Unit,
@@ -83,27 +87,25 @@ fun SearchScreenContent(
                 .fillMaxWidth()
                 .verticalScroll(state = contentScrollState),
         ) {
-            if (searchHistory.isNotEmpty())
+            if (isSearchHistoryVisible)
                 SearchHistory(
                     queries = searchHistory,
                     onQueryClick = onSearchHistoryClick,
                     onQueryDeleteClick = onSearchHistoryDeleteClick
                 )
-            if (autocomplete != null) {
-                if (autocomplete.words.isNotEmpty())
-                    Words(
-                        words = autocomplete.words,
-                        onWordClick = onAutocompleteWordClick,
-                    )
-                // TODO add categories autocomplete
-                if (autocomplete.frequentQueries.isNotEmpty())
-                    FrequentlySearched(
-                        queries = autocomplete.frequentQueries,
-                        onQueryClick = onFrequentlySearchedClick,
-                        modifier = Modifier.padding(WindowInsets.navigationOrIme.asPaddingValues())
-                    )
-                // TODO add recommendations
-            }
+            if (isAutocompleteWordsVisible)
+                Words(
+                    words = autocomplete?.words ?: persistentListOf(),
+                    onWordClick = onAutocompleteWordClick,
+                )
+            // TODO add categories autocomplete
+            if (isFrequentSearchVisible)
+                FrequentlySearched(
+                    queries = autocomplete?.frequentQueries ?: persistentListOf(),
+                    onQueryClick = onFrequentlySearchedClick,
+                    modifier = Modifier.padding(WindowInsets.navigationOrIme.asPaddingValues())
+                )
+            // TODO add recommendations
         }
     }
 }
@@ -251,7 +253,10 @@ fun SearchScreen() {
     val viewModel = koinViewModel<SearchViewModel>()
 
     val query by viewModel.query.collectAsStateWithLifecycle()
+    val isSearchHistoryVisible by viewModel.isSearchHistoryVisible.collectAsStateWithLifecycle()
     val searchHistory by viewModel.searchHistory.collectAsStateWithLifecycle()
+    val isAutocompleteWordsVisible by viewModel.isAutocompleteWordsVisible.collectAsStateWithLifecycle()
+    val isFrequentSearchVisible by viewModel.isFrequentSearchVisible.collectAsStateWithLifecycle()
     val autocomplete by viewModel.autocomplete.collectAsStateWithLifecycle()
 
     SearchScreenBehavior(
@@ -263,9 +268,12 @@ fun SearchScreen() {
         onQueryChange = remember { { viewModel.onQueryChange(it) } },
         onQueryClearClick = remember { { viewModel.onQueryClearClick() } },
         onSearchClick = remember { { viewModel.onSearchClick() } },
+        isSearchHistoryVisible = isSearchHistoryVisible,
         searchHistory = searchHistory,
         onSearchHistoryClick = remember { { viewModel.onSearchHistoryClick(it) } },
         onSearchHistoryDeleteClick = remember { { viewModel.onSearchHistoryDeleteClick(it) } },
+        isAutocompleteWordsVisible = isAutocompleteWordsVisible,
+        isFrequentSearchVisible = isFrequentSearchVisible,
         autocomplete = autocomplete,
         onAutocompleteWordClick = remember { { viewModel.onAutocompleteWordClick(it) } },
         onFrequentlySearchedClick = remember { { viewModel.onFrequentlySearchedClick(it) } },
