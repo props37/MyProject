@@ -44,6 +44,7 @@ fun SearchScreenContent(
     query: String,
     onQueryChange: (String) -> Unit,
     onQueryClearClick: () -> Unit,
+    onSearchClick: () -> Unit,
     autocomplete: SearchAutocomplete?,
     onAutocompleteWordClick: (AutocompleteWord) -> Unit,
     onFrequentlySearchedClick: (String) -> Unit,
@@ -57,6 +58,7 @@ fun SearchScreenContent(
                     value = query,
                     onValueChange = onQueryChange,
                     onClearClick = onQueryClearClick,
+                    onSearchClick = onSearchClick,
                     modifier = Modifier
                         .statusBarsPadding()
                         .focusRequester(focusRequester)
@@ -184,6 +186,7 @@ fun SearchScreen() {
         query = query,
         onQueryChange = remember { { viewModel.onQueryChange(it) } },
         onQueryClearClick = remember { { viewModel.onQueryClearClick() } },
+        onSearchClick = remember { { viewModel.onSearchClick() } },
         autocomplete = autocomplete,
         onAutocompleteWordClick = remember { { viewModel.onAutocompleteWordClick(it) } },
         onFrequentlySearchedClick = remember { { viewModel.onFrequentlySearchedClick(it) } },

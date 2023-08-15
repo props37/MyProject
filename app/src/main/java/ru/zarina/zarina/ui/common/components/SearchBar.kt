@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,6 +48,7 @@ fun RedirectSearchBar(
         isInputEnabled = false,
         value = "",
         onValueChange = {},
+        onSearchClick = {},
         onClearClick = {},
         modifier = modifier
     )
@@ -55,6 +58,7 @@ fun RedirectSearchBar(
 fun InputSearchBar(
     value: String,
     onValueChange: (String) -> Unit,
+    onSearchClick: () -> Unit,
     onClearClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -63,6 +67,7 @@ fun InputSearchBar(
         isInputEnabled = true,
         value = value,
         onValueChange = onValueChange,
+        onSearchClick = onSearchClick,
         onClearClick = onClearClick,
         modifier = modifier
     )
@@ -74,6 +79,7 @@ private fun SearchBar(
     isInputEnabled: Boolean,
     value: String,
     onValueChange: (String) -> Unit,
+    onSearchClick: () -> Unit,
     onClearClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -98,6 +104,7 @@ private fun SearchBar(
         SearchInput(
             value = value,
             onValueChange = onValueChange,
+            onSearchClick = onSearchClick,
             isEnabled = isInputEnabled,
             modifier = Modifier.weight(1f),
         )
@@ -125,10 +132,10 @@ private fun SearchBar(
 private fun SearchInput(
     value: String,
     onValueChange: (String) -> Unit,
+    onSearchClick: () -> Unit,
     isEnabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    // TODO IME actions
     Box(modifier = modifier.fillMaxWidth()) {
         val interactionSource = remember { MutableInteractionSource() }
         AnimatedVisibility(
@@ -153,7 +160,11 @@ private fun SearchInput(
             singleLine = true,
             enabled = isEnabled,
             interactionSource = interactionSource,
-            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Words,
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions { onSearchClick() },
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -168,6 +179,7 @@ fun SearchBarPreview() {
             onClick = {},
             value = value,
             onValueChange = { value = it },
+            onSearchClick = {},
             isInputEnabled = true,
             onClearClick = {},
             modifier = Modifier.fillMaxWidth(),
