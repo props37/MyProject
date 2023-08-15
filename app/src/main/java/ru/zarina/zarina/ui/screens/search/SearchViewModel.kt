@@ -98,6 +98,7 @@ class SearchViewModel(
 
     fun onSearchClick() {
         val query = _query.value
+        if (query.isBlank()) return
         viewModelScope.launch {
             interactor.addToSearchHistory(query)
         }
