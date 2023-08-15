@@ -118,7 +118,7 @@ class SearchViewModel(
 
 
     fun onProductClick(product: Product) {
-        TODO("Not yet implemented")
+        sideEffect(SideEffect.ShowProduct(product))
     }
 
     fun onFavoriteChange(product: Product, favorite: Boolean) {
@@ -153,10 +153,12 @@ class SearchViewModel(
         )
     }
 
-    sealed interface SideEffect : ISideEffectSource.ISideEffect
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        data class ShowProduct(val product: Product) : SideEffect
+    }
 
     companion object {
-        private val SEARCH_HISTORY_LIMIT = 15
+        private const val SEARCH_HISTORY_LIMIT = 15
     }
 
 }

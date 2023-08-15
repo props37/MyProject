@@ -299,7 +299,9 @@ fun SectionHeader(
 }
 
 @Composable
-fun SearchScreen() {
+fun SearchScreen(
+    showProduct: (Product) -> Unit,
+) {
     val viewModel = koinViewModel<SearchViewModel>()
 
     val query by viewModel.query.collectAsStateWithLifecycle()
@@ -313,6 +315,7 @@ fun SearchScreen() {
 
     SearchScreenBehavior(
         sideEffects = viewModel.sideEffects,
+        showProduct = showProduct,
     )
 
     SearchScreenContent(
@@ -346,13 +349,14 @@ fun SearchScreen() {
 @Composable
 fun SearchScreenBehavior(
     sideEffects: Flow<SearchViewModel.SideEffect>,
+    showProduct: (Product) -> Unit,
 ) {
     NavigationBarState(isVisible = false, isAnimated = false)
 
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                else -> TODO()
+                is SearchViewModel.SideEffect.ShowProduct -> showProduct(effect.product)
             }
         }
     }
