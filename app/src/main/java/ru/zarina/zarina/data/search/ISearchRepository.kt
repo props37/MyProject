@@ -8,7 +8,7 @@ import ru.zarina.zarina.domain.SearchAutocomplete
 interface ISearchRepository {
     suspend fun getAutocomplete(query: String): SearchAutocomplete
     suspend fun getSearchPage(query: String, pageIndex: Int): Page<List<Product>>
-    suspend fun getHistory(): Flow<List<String>>
+    fun getHistory(): Flow<List<String>>
     suspend fun addToHistory(query: String)
     suspend fun removeFromHistory(query: String)
 }
