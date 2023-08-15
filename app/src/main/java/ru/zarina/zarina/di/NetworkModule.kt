@@ -116,6 +116,22 @@ class NetworkModule {
         }
     }
 
+    @Named(Qualifiers.Api.ANYQUERY_SEARCH)
+    @Singleton
+    fun providesAnyQuerySearchHttpClient(
+        context: Context,
+        json: Json,
+    ) = HttpClient(OkHttp) {
+        baseConfig(json)
+        install(DefaultRequest) {
+            url("https://sort.diginetica.net/")
+        }
+        install(HttpCache) {
+            val cacheFile = File(context.cacheDir, CACHE_DIR_MINDBOX)
+            privateStorage(FileStorage(cacheFile))
+        }
+    }
+
     private fun HttpClientConfig<*>.baseConfig(
         json: Json,
     ) {
