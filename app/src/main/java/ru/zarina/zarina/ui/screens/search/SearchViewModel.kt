@@ -5,13 +5,17 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.AutocompleteWord
 import ru.zarina.zarina.domain.Product
@@ -31,6 +35,10 @@ class SearchViewModel(
 
     private val _query = MutableStateFlow("")
     val query = _query.asStateFlow()
+
+    val searchHistory = interactor.getSearchHistory()
+        .map { it.getOrNull()?.toPersistentList() ?: persistentListOf() }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _autocompleteResult = _query
@@ -55,6 +63,16 @@ class SearchViewModel(
         _query.value = ""
     }
 
+    fun onSearchHistoryClick(query: String) {
+        _query.value = query
+    }
+
+    fun onSearchHistoryDeleteClick(query: String) {
+        viewModelScope.launch {
+            interactor.removeFromSearchHistory(query)
+        }
+    }
+
     fun onAutocompleteWordClick(word: AutocompleteWord) {
         _query.value = word.query
     }
@@ -64,17 +82,21 @@ class SearchViewModel(
     }
 
     fun onSearchClick() {
-        pager.value = createPager()
+        val query = _query.value
+        viewModelScope.launch {
+            interactor.addToSearchHistory(query)
+        }
+        pager.value = createPager(query)
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    private fun createPager(): Pager<Int, Product> {
+    private fun createPager(query: String): Pager<Int, Product> {
         // TODO scroll to top
         val pageHolder = PageHolder<List<Product>>()
         val mediator = SearchRemoteMediator(
             pageHolder = pageHolder,
             getSearchPageUseCase = interactor.getSearchPageUseCase,
-            query = _query.value
+            query = query,
         )
         return Pager(
             config = PagingConfig(

@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screens.search
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,13 +8,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,8 +25,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -45,6 +51,9 @@ fun SearchScreenContent(
     onQueryChange: (String) -> Unit,
     onQueryClearClick: () -> Unit,
     onSearchClick: () -> Unit,
+    searchHistory: ImmutableList<String>,
+    onSearchHistoryClick: (String) -> Unit,
+    onSearchHistoryDeleteClick: (String) -> Unit,
     autocomplete: SearchAutocomplete?,
     onAutocompleteWordClick: (AutocompleteWord) -> Unit,
     onFrequentlySearchedClick: (String) -> Unit,
@@ -74,6 +83,12 @@ fun SearchScreenContent(
                 .fillMaxWidth()
                 .verticalScroll(state = contentScrollState),
         ) {
+            if (searchHistory.isNotEmpty())
+                SearchHistory(
+                    queries = searchHistory,
+                    onQueryClick = onSearchHistoryClick,
+                    onQueryDeleteClick = onSearchHistoryDeleteClick
+                )
             if (autocomplete != null) {
                 Words(
                     words = autocomplete.words,
@@ -86,6 +101,53 @@ fun SearchScreenContent(
                     modifier = Modifier.padding(WindowInsets.navigationOrIme.asPaddingValues())
                 )
                 // TODO add recommendations
+            }
+        }
+    }
+}
+
+@Composable
+private fun SearchHistory(
+    queries: ImmutableList<String>,
+    onQueryClick: (String) -> Unit,
+    onQueryDeleteClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    SectionHeader(
+        text = stringResource(id = R.string.search_history),
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .padding(top = 24.dp, bottom = 6.dp)
+    )
+    Column(
+        modifier = modifier
+    ) {
+        queries.forEach { query ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = { onQueryClick(query) })
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    text = query,
+                    style = UiKitTheme.typography.circle1718,
+                    color = UiKitTheme.colors.primaryContentColor,
+                    maxLines = 1,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(vertical = 12.dp)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.ic_close_24),
+                    contentDescription = stringResource(id = R.string.remove_from_history),
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .clickable { onQueryDeleteClick(query) }
+                        .minimumInteractiveComponentSize()
+                        .clip(CircleShape)
+                )
             }
         }
     }
@@ -147,11 +209,8 @@ private fun FrequentlySearched(
         modifier = modifier
             .fillMaxWidth(),
     ) {
-        Text(
+        SectionHeader(
             text = stringResource(id = R.string.frequently_searched),
-            style = UiKitTheme.typography.circle1518,
-            color = UiKitTheme.colors.primaryContentColor,
-            maxLines = 1,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .padding(top = 24.dp, bottom = 6.dp),
@@ -172,10 +231,25 @@ private fun FrequentlySearched(
 }
 
 @Composable
+fun SectionHeader(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = text,
+        style = UiKitTheme.typography.circle1518,
+        color = UiKitTheme.colors.primaryContentColor,
+        maxLines = 1,
+        modifier = modifier,
+    )
+}
+
+@Composable
 fun SearchScreen() {
     val viewModel = koinViewModel<SearchViewModel>()
 
     val query by viewModel.query.collectAsStateWithLifecycle()
+    val searchHistory by viewModel.searchHistory.collectAsStateWithLifecycle()
     val autocomplete by viewModel.autocomplete.collectAsStateWithLifecycle()
 
     SearchScreenBehavior(
@@ -187,6 +261,9 @@ fun SearchScreen() {
         onQueryChange = remember { { viewModel.onQueryChange(it) } },
         onQueryClearClick = remember { { viewModel.onQueryClearClick() } },
         onSearchClick = remember { { viewModel.onSearchClick() } },
+        searchHistory = searchHistory,
+        onSearchHistoryClick = remember { { viewModel.onSearchHistoryClick(it) } },
+        onSearchHistoryDeleteClick = remember { { viewModel.onSearchHistoryDeleteClick(it) } },
         autocomplete = autocomplete,
         onAutocompleteWordClick = remember { { viewModel.onAutocompleteWordClick(it) } },
         onFrequentlySearchedClick = remember { { viewModel.onFrequentlySearchedClick(it) } },

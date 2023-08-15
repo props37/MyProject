@@ -133,4 +133,6 @@
     <string name="search">Поиск</string>
     <string name="search_products">Искать товары</string>
     <string name="frequently_searched">Часто ищут</string>
+    <string name="search_history">История поиска</string>
+    <string name="remove_from_history">Удалить из истории</string>
 </resources>
