@@ -333,6 +333,7 @@ fun SearchScreen(
     val viewModel = koinViewModel<SearchViewModel>()
 
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val recommendations by viewModel.recommendations.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
     val isQueryFocused by viewModel.isQueryFocused.collectAsStateWithLifecycle()
     val isSearchHistoryVisible by viewModel.isSearchHistoryVisible.collectAsStateWithLifecycle()

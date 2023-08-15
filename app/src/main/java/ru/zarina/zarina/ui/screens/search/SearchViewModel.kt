@@ -46,6 +46,10 @@ class SearchViewModel(
         if (isFocused) State.AUTOCOMPLETE else State.RESULT
     }
 
+    val recommendations = interactor.getRecommendations()
+        .map { it.getOrNull()?.toPersistentList() ?: persistentListOf() }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), persistentListOf())
+
     val searchHistory = interactor.getSearchHistory(SEARCH_HISTORY_LIMIT)
         .map { it.getOrNull()?.toPersistentList() ?: persistentListOf() }
         .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())

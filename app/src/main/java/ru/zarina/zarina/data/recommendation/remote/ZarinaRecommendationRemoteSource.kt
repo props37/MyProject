@@ -16,6 +16,7 @@ class ZarinaRecommendationRemoteSource(
         return flow {
             val value = when (type) {
                 is RecommendationType.Similar -> getSimilarRecommendations(type.product)
+                RecommendationType.User -> getPersonalRecommendations()
             }
             emit(value)
         }
@@ -23,6 +24,10 @@ class ZarinaRecommendationRemoteSource(
 
     private suspend fun getSimilarRecommendations(product: Product): List<Product> {
         return api.getProductRecommendations(product.id.value).toDomain()
+    }
+
+    private suspend fun getPersonalRecommendations(): List<Product> {
+        return api.getPersonalRecommendations().toDomain()
     }
 
 }
