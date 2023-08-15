@@ -77,11 +77,13 @@ fun SearchScreenContent(
                     words = autocomplete.words,
                     onWordClick = onAutocompleteWordClick,
                 )
+                // TODO add categories autocomplete
                 FrequentlySearched(
                     queries = autocomplete.frequentQueries,
                     onQueryClick = onFrequentlySearchedClick,
                     modifier = Modifier.padding(WindowInsets.navigationOrIme.asPaddingValues())
                 )
+                // TODO add recommendations
             }
         }
     }
