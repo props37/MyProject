@@ -1,5 +1,7 @@
 package ru.zarina.zarina.ui.screens.search
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -61,8 +63,10 @@ import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.utils.compose.navigationOrIme
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SearchScreenContent(
+    state: SearchViewModel.State,
     query: String,
     isQueryFocused: Boolean,
     onQueryFocusChange: (Boolean) -> Unit,
@@ -114,58 +118,71 @@ fun SearchScreenContent(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            val colorPickerDimensions = ColorPickerDefaults.tinyDimensions()
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                state = productGridState,
-                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp),
-                contentPadding = WindowInsets.navigationBars.asPaddingValues(),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .bottomNavigationPadding()
-            ) {
-                items(
-                    count = products.itemCount,
-                    key = products.itemKey { it.id.value },
-                    contentType = products.itemContentType { null }
-                ) { productIndex ->
-                    val product = products[productIndex]
-                    if (product != null)
-                        ProductCard(
-                            product = product,
-                            isMediaScrollable = true,
-                            onClick = { onProductClick(product) },
-                            isFavoriteShaking = shakingFavorites.contains(product.id),
-                            onFavoriteChange = { onFavoriteChange(product, it) },
-                            colorPickerDimensions = colorPickerDimensions,
-                        )
+            AnimatedContent(
+                targetState = state,
+                label = "state content",
+                modifier = Modifier.fillMaxSize(),
+            ) { state ->
+                when (state) {
+                    SearchViewModel.State.AUTOCOMPLETE -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .verticalScroll(state = contentScrollState),
+                        ) {
+                            if (isSearchHistoryVisible)
+                                SearchHistory(
+                                    queries = searchHistory,
+                                    onQueryClick = onSearchHistoryClick,
+                                    onQueryDeleteClick = onSearchHistoryDeleteClick
+                                )
+                            if (isAutocompleteWordsVisible)
+                                Words(
+                                    words = autocomplete?.words ?: persistentListOf(),
+                                    onWordClick = onAutocompleteWordClick,
+                                )
+                            // TODO add categories autocomplete
+                            if (isFrequentSearchVisible)
+                                FrequentlySearched(
+                                    queries = autocomplete?.frequentQueries ?: persistentListOf(),
+                                    onQueryClick = onFrequentlySearchedClick,
+                                    modifier = Modifier.padding(WindowInsets.navigationOrIme.asPaddingValues())
+                                )
+                            // TODO add recommendations
+                        }
+                    }
+
+                    SearchViewModel.State.RESULT -> {
+                        val colorPickerDimensions = ColorPickerDefaults.tinyDimensions()
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            state = productGridState,
+                            horizontalArrangement = Arrangement.spacedBy(2.dp),
+                            verticalArrangement = Arrangement.spacedBy(2.dp),
+                            contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .bottomNavigationPadding()
+                        ) {
+                            items(
+                                count = products.itemCount,
+                                key = products.itemKey { it.id.value },
+                                contentType = products.itemContentType { null }
+                            ) { productIndex ->
+                                val product = products[productIndex]
+                                if (product != null)
+                                    ProductCard(
+                                        product = product,
+                                        isMediaScrollable = true,
+                                        onClick = { onProductClick(product) },
+                                        isFavoriteShaking = shakingFavorites.contains(product.id),
+                                        onFavoriteChange = { onFavoriteChange(product, it) },
+                                        colorPickerDimensions = colorPickerDimensions,
+                                    )
+                            }
+                        }
+                    }
                 }
-            }
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(state = contentScrollState),
-            ) {
-                if (isSearchHistoryVisible)
-                    SearchHistory(
-                        queries = searchHistory,
-                        onQueryClick = onSearchHistoryClick,
-                        onQueryDeleteClick = onSearchHistoryDeleteClick
-                    )
-                if (isAutocompleteWordsVisible)
-                    Words(
-                        words = autocomplete?.words ?: persistentListOf(),
-                        onWordClick = onAutocompleteWordClick,
-                    )
-                // TODO add categories autocomplete
-                if (isFrequentSearchVisible)
-                    FrequentlySearched(
-                        queries = autocomplete?.frequentQueries ?: persistentListOf(),
-                        onQueryClick = onFrequentlySearchedClick,
-                        modifier = Modifier.padding(WindowInsets.navigationOrIme.asPaddingValues())
-                    )
-                // TODO add recommendations
             }
         }
     }
@@ -315,6 +332,7 @@ fun SearchScreen(
 ) {
     val viewModel = koinViewModel<SearchViewModel>()
 
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
     val isQueryFocused by viewModel.isQueryFocused.collectAsStateWithLifecycle()
     val isSearchHistoryVisible by viewModel.isSearchHistoryVisible.collectAsStateWithLifecycle()
@@ -331,6 +349,7 @@ fun SearchScreen(
     )
 
     SearchScreenContent(
+        state = state,
         query = query,
         isQueryFocused = isQueryFocused,
         onQueryFocusChange = remember { { viewModel.onQueryFocusChange(it) } },
