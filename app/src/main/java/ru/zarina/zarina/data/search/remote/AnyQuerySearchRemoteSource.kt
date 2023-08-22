@@ -5,6 +5,7 @@ import ru.zarina.zarina.data.search.remote.api.IAnyQuerySearchApi
 import ru.zarina.zarina.data.search.remote.api.dto.SortDto
 import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.ProductSort
 
 @Factory
 class AnyQuerySearchRemoteSource(
@@ -13,11 +14,15 @@ class AnyQuerySearchRemoteSource(
 
     override suspend fun getAutocomplete(query: String) = api.getAutocomplete(query).toDomain()
 
-    override suspend fun getSearchPage(query: String, pageIndex: Int): Page<List<Product>> {
+    override suspend fun getSearchPage(
+        query: String,
+        sort: ProductSort,
+        pageIndex: Int
+    ): Page<List<Product>> {
         val response = api.getSearchResults(
             query = query,
             offset = pageIndex * PAGE_SIZE,
-            sort = SortDto.DEFAULT
+            sort = SortDto.from(sort)
         )
         return response.toDomain(pageIndex = pageIndex, pageSize = PAGE_SIZE)
     }

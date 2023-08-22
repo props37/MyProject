@@ -8,6 +8,7 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.ui.common.base.paging.PageHolder
 import ru.zarina.zarina.usecase.search.GetSearchPageUseCase
 
@@ -16,6 +17,7 @@ class SearchRemoteMediator(
     private val pageHolder: PageHolder<List<Product>>,
     private val getSearchPageUseCase: GetSearchPageUseCase,
     private val query: String,
+    private val sort: ProductSort,
 ) : RemoteMediator<Int, Product>() {
 
     private val listeners = MutableStateFlow<Set<PagingSource<Int, Product>>>(emptySet())
@@ -38,6 +40,7 @@ class SearchRemoteMediator(
             getSearchPageUseCase(
                 GetSearchPageUseCase.Params(
                     query = query,
+                    sort = sort,
                     pageIndex = nextPageIndex,
                 )
             )

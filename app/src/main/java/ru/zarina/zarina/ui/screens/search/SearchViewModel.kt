@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -90,7 +91,11 @@ class SearchViewModel(
             !it?.frequentQueries.isNullOrEmpty()
         }
 
-    private val pager = MutableStateFlow<Pager<Int, Product>?>(null)
+    private val pagerQuery = MutableStateFlow<String?>(null)
+
+    private val pager = combine(pagerQuery.filterNotNull(), sort) { query, sort ->
+        createPager(query, sort)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val pagingSource = MutableStateFlow<SearchPagingSource?>(null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -159,7 +164,7 @@ class SearchViewModel(
             interactor.addToSearchHistory(query)
         }
         _isQueryFocused.value = false
-        pager.value = createPager(query)
+        pagerQuery.value = query
     }
 
     fun onSortClick() {
@@ -186,13 +191,14 @@ class SearchViewModel(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    private fun createPager(query: String): Pager<Int, Product> {
+    private fun createPager(query: String, sort: ProductSort): Pager<Int, Product> {
         sideEffect(SideEffect.ScrollResultsToTop)
         val pageHolder = PageHolder<List<Product>>()
         val mediator = SearchRemoteMediator(
             pageHolder = pageHolder,
             getSearchPageUseCase = interactor.getSearchPageUseCase,
             query = query,
+            sort = sort,
         )
         return Pager(
             config = PagingConfig(
