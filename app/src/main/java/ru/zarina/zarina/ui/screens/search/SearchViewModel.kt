@@ -180,7 +180,7 @@ class SearchViewModel(
 
     @OptIn(ExperimentalPagingApi::class)
     private fun createPager(query: String): Pager<Int, Product> {
-        // TODO scroll to top
+        sideEffect(SideEffect.ScrollResultsToTop)
         val pageHolder = PageHolder<List<Product>>()
         val mediator = SearchRemoteMediator(
             pageHolder = pageHolder,
@@ -210,6 +210,7 @@ class SearchViewModel(
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         data class ShowProduct(val product: Product) : SideEffect
+        object ScrollResultsToTop : SideEffect
     }
 
     companion object {

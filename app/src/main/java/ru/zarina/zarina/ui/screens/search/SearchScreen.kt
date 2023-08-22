@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
@@ -89,6 +90,7 @@ fun SearchScreenContent(
     onAutocompleteWordClick: (AutocompleteWord) -> Unit,
     onFrequentlySearchedClick: (String) -> Unit,
     products: LazyPagingItems<Product>,
+    resultsLazyGridState: LazyGridState,
     onProductClick: (Product) -> Unit,
     onFavoriteChange: (Product, Boolean) -> Unit,
     recommendations: ImmutableList<Product>,
@@ -96,7 +98,6 @@ fun SearchScreenContent(
 ) {
     val contentScrollState = rememberScrollState()
     val nothingFoundScrollState = rememberScrollState()
-    val productGridState = rememberLazyGridState()
     ZarinaScaffold(
         toolbar = {
             ElevationContainer(isElevated = contentScrollState.canScrollBackward) {
@@ -179,7 +180,7 @@ fun SearchScreenContent(
                             val colorPickerDimensions = ColorPickerDefaults.tinyDimensions()
                             LazyVerticalGrid(
                                 columns = GridCells.Fixed(2),
-                                state = productGridState,
+                                state = resultsLazyGridState,
                                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                                 verticalArrangement = Arrangement.spacedBy(2.dp),
                                 contentPadding = WindowInsets.navigationBars.asPaddingValues(),
@@ -412,6 +413,8 @@ fun SearchScreen(
     val products = viewModel.products.collectAsLazyPagingItems()
     val shakingFavorites by viewModel.shakingFavorites.collectAsStateWithLifecycle()
 
+    val resultsLazyGridState = rememberLazyGridState()
+
     DisposableEffect(Unit) {
         viewModel.onIsForegroundChange(true)
         onDispose { viewModel.onIsForegroundChange(false) }
@@ -420,6 +423,7 @@ fun SearchScreen(
     SearchScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showProduct = showProduct,
+        resultsLazyGridState = resultsLazyGridState,
     )
 
     SearchScreenContent(
@@ -439,6 +443,7 @@ fun SearchScreen(
         autocomplete = autocomplete,
         onAutocompleteWordClick = remember { { viewModel.onAutocompleteWordClick(it) } },
         onFrequentlySearchedClick = remember { { viewModel.onFrequentlySearchedClick(it) } },
+        resultsLazyGridState = resultsLazyGridState,
         products = products,
         onProductClick = remember { { viewModel.onProductClick(it) } },
         onFavoriteChange = remember {
@@ -458,6 +463,7 @@ fun SearchScreen(
 fun SearchScreenBehavior(
     sideEffects: Flow<SearchViewModel.SideEffect>,
     showProduct: (Product) -> Unit,
+    resultsLazyGridState: LazyGridState,
 ) {
     NavigationBarState(isVisible = false, isAnimated = false)
 
@@ -465,6 +471,7 @@ fun SearchScreenBehavior(
         sideEffects.collect { effect ->
             when (effect) {
                 is SearchViewModel.SideEffect.ShowProduct -> showProduct(effect.product)
+                SearchViewModel.SideEffect.ScrollResultsToTop -> resultsLazyGridState.scrollToItem(0)
             }
         }
     }
