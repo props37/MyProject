@@ -7,9 +7,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.AutocompleteWord
@@ -31,6 +33,7 @@ import ru.zarina.zarina.ui.screens.search.paging.SearchPagingSource
 import ru.zarina.zarina.ui.screens.search.paging.SearchRemoteMediator
 import ru.zarina.zarina.usecase.search.GetSearchPageUseCase
 import ru.zarina.zarina.utils.coroutine.mapState
+import kotlin.time.Duration.Companion.seconds
 
 @KoinViewModel
 class SearchViewModel(
@@ -88,7 +91,11 @@ class SearchViewModel(
     }
         .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
 
-    val shakingFavorites = MutableStateFlow(persistentSetOf<Product.Id>()) // TODO
+    private val _shakingFavorites = MutableStateFlow(setOf<Product.Id>())
+    val shakingFavorites =
+        _shakingFavorites.mapState(viewModelScope, SharingStarted.WhileSubscribed()) {
+            it.toPersistentSet()
+        }
 
     // TODO setup paging source invalidation on favorites change
 
@@ -138,8 +145,15 @@ class SearchViewModel(
         sideEffect(SideEffect.ShowProduct(product))
     }
 
-    fun onFavoriteChange(product: Product, favorite: Boolean) {
-        TODO("Not yet implemented")
+    fun onFavoriteChange(product: Product, isFavorite: Boolean) {
+        viewModelScope.launch {
+            interactor.setIsFavorite(product, isFavorite)
+                .onFailure {
+                    _shakingFavorites.update { it + product.id }
+                    delay(FAVORITE_SHAKE_DURATION)
+                    _shakingFavorites.update { it - product.id }
+                }
+        }
     }
 
     @OptIn(ExperimentalPagingApi::class)
@@ -178,6 +192,8 @@ class SearchViewModel(
 
     companion object {
         private const val SEARCH_HISTORY_LIMIT = 15
+
+        private val FAVORITE_SHAKE_DURATION = 1.seconds
     }
 
 }
