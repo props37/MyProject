@@ -29,6 +29,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -410,6 +411,11 @@ fun SearchScreen(
     val autocomplete by viewModel.autocomplete.collectAsStateWithLifecycle()
     val products = viewModel.products.collectAsLazyPagingItems()
     val shakingFavorites by viewModel.shakingFavorites.collectAsStateWithLifecycle()
+
+    DisposableEffect(Unit) {
+        viewModel.onIsForegroundChange(true)
+        onDispose { viewModel.onIsForegroundChange(false) }
+    }
 
     SearchScreenBehavior(
         sideEffects = viewModel.sideEffects,

@@ -15,10 +15,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -97,7 +101,21 @@ class SearchViewModel(
             it.toPersistentSet()
         }
 
-    // TODO setup paging source invalidation on favorites change
+    private val isForeground = MutableStateFlow(false)
+
+    init {
+        setupPagingInvalidation()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun setupPagingInvalidation() {
+        isForeground.flatMapLatest {
+            if (it) interactor.getFavoriteIds() else flowOf(interactor.getFavoriteIds().first())
+        }
+            .distinctUntilChanged()
+            .onEach { pagingSource.value?.invalidate() }
+            .launchIn(viewModelScope)
+    }
 
     fun onQueryFocusChange(isFocused: Boolean) {
         _isQueryFocused.value = isFocused
@@ -154,6 +172,10 @@ class SearchViewModel(
                     _shakingFavorites.update { it - product.id }
                 }
         }
+    }
+
+    fun onIsForegroundChange(isForeground: Boolean) {
+        this.isForeground.value = isForeground
     }
 
     @OptIn(ExperimentalPagingApi::class)

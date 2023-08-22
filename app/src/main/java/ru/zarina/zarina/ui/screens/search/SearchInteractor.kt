@@ -11,6 +11,7 @@ import ru.zarina.zarina.usecase.search.GetAutocompleteUseCase
 import ru.zarina.zarina.usecase.search.GetSearchHistoryUseCase
 import ru.zarina.zarina.usecase.search.GetSearchPageUseCase
 import ru.zarina.zarina.usecase.search.RemoveFromSearchHistoryUseCase
+import ru.zarina.zarina.utils.clean.invoke
 
 @Factory
 class SearchInteractor(
@@ -42,5 +43,7 @@ class SearchInteractor(
 
     suspend fun setIsFavorite(product: Product, isFavorite: Boolean) =
         setIsFavoriteUseCase(SetIsFavoriteUseCase.Params(product, isFavorite))
+
+    fun getFavoriteIds() = getFavoriteIdsUseCase()
 
 }
