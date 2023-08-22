@@ -86,6 +86,7 @@ fun SearchScreenContent(
     onQueryClearClick: () -> Unit,
     onSearchClick: () -> Unit,
     sort: ProductSort,
+    onSortClick: () -> Unit,
     isSearchHistoryVisible: Boolean,
     searchHistory: ImmutableList<String>,
     onSearchHistoryClick: (String) -> Unit,
@@ -187,6 +188,7 @@ fun SearchScreenContent(
                             Results(
                                 products = products,
                                 sort = sort,
+                                onSortClick = onSortClick,
                                 lazyGridState = resultsLazyGridState,
                                 onProductClick = onProductClick,
                                 onFavoriteChange = onFavoriteChange,
@@ -344,6 +346,7 @@ fun SectionHeader(
 @Composable
 private fun Results(
     sort: ProductSort,
+    onSortClick: () -> Unit,
     products: LazyPagingItems<Product>,
     lazyGridState: LazyGridState,
     onProductClick: (Product) -> Unit,
@@ -360,7 +363,7 @@ private fun Results(
         FilterBar(
             sort = sort,
             sortName = { stringResource(it.getStringResource()) },
-            onSortClick = { /*TODO*/ },
+            onSortClick = onSortClick,
             isFilterButtonEnabled = false, // TODO
             onFiltersClick = { /*TODO*/ },
             modifier = Modifier.fillMaxWidth()
@@ -441,6 +444,7 @@ private fun NothingFound(
 fun SearchScreen(
     savedStateHandle: SavedStateHandle,
     showProduct: (Product) -> Unit,
+    showSelectSort: () -> Unit,
 ) {
     val viewModel = koinViewModel<SearchViewModel> { parametersOf(savedStateHandle) }
 
@@ -467,6 +471,7 @@ fun SearchScreen(
     SearchScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showProduct = showProduct,
+        showSelectSort = showSelectSort,
         resultsLazyGridState = resultsLazyGridState,
     )
 
@@ -479,6 +484,7 @@ fun SearchScreen(
         onQueryClearClick = remember { { viewModel.onQueryClearClick() } },
         onSearchClick = remember { { viewModel.onSearchClick() } },
         sort = sort,
+        onSortClick = remember { { viewModel.onSortClick() } },
         isSearchHistoryVisible = isSearchHistoryVisible,
         searchHistory = searchHistory,
         onSearchHistoryClick = remember { { viewModel.onSearchHistoryClick(it) } },
@@ -508,6 +514,7 @@ fun SearchScreen(
 fun SearchScreenBehavior(
     sideEffects: Flow<SearchViewModel.SideEffect>,
     showProduct: (Product) -> Unit,
+    showSelectSort: () -> Unit,
     resultsLazyGridState: LazyGridState,
 ) {
     NavigationBarState(isVisible = false, isAnimated = false)
@@ -517,6 +524,7 @@ fun SearchScreenBehavior(
             when (effect) {
                 is SearchViewModel.SideEffect.ShowProduct -> showProduct(effect.product)
                 SearchViewModel.SideEffect.ScrollResultsToTop -> resultsLazyGridState.scrollToItem(0)
+                SearchViewModel.SideEffect.ShowSelectSort -> showSelectSort()
             }
         }
     }

@@ -56,4 +56,9 @@ val viewModelModule = module {
             interactor = get()
         )
     }
+    viewModel { parameters ->
+        ru.zarina.zarina.ui.screens.search.selectsort.SelectSortViewModel(
+            searchSavedStateHandle = parameters[0],
+        )
+    }
 }

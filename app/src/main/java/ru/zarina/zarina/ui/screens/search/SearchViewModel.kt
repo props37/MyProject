@@ -50,8 +50,7 @@ class SearchViewModel(
 
     val query = savedStateHandle.getStateFlow(KEY_QUERY, "")
 
-    private val _sort = MutableStateFlow(ProductSort.POPULARITY)
-    val sort = _sort.asStateFlow()
+    val sort = savedStateHandle.getStateFlow(KEY_SELECTED_SORT, ProductSort.POPULARITY)
 
     private val _isQueryFocused = MutableStateFlow(true)
     val isQueryFocused = _isQueryFocused.asStateFlow()
@@ -163,6 +162,9 @@ class SearchViewModel(
         pager.value = createPager(query)
     }
 
+    fun onSortClick() {
+        sideEffect(SideEffect.ShowSelectSort)
+    }
 
     fun onProductClick(product: Product) {
         sideEffect(SideEffect.ShowProduct(product))
@@ -215,6 +217,7 @@ class SearchViewModel(
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         data class ShowProduct(val product: Product) : SideEffect
+        object ShowSelectSort : SideEffect
         object ScrollResultsToTop : SideEffect
     }
 

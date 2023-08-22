@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.catalog.selectsort
+package ru.zarina.zarina.ui.screens.search.selectsort
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -63,10 +63,10 @@ fun SelectSortScreenContent(
 
 @Composable
 fun SelectSortScreen(
-    productSavedStateHandle: SavedStateHandle,
+    searchSavedStateHandle: SavedStateHandle,
     goBack: () -> Unit,
 ) {
-    val viewModel = koinViewModel<SelectSortViewModel> { parametersOf(productSavedStateHandle) }
+    val viewModel = koinViewModel<SelectSortViewModel> { parametersOf(searchSavedStateHandle) }
 
     val options by viewModel.options.collectAsStateWithLifecycle()
     val selectedOption by viewModel.selectedOption.collectAsStateWithLifecycle()

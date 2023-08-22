@@ -32,4 +32,5 @@ enum class BaseRoute {
     PROFILE,
     CART,
     SEARCH,
+    SEARCH_SELECT_SORT,
 }
