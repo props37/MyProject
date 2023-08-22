@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.AutocompleteWord
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.paging.PageHolder
@@ -47,6 +48,9 @@ class SearchViewModel(
 
     private val _query = MutableStateFlow("")
     val query = _query.asStateFlow()
+
+    private val _sort = MutableStateFlow(ProductSort.POPULARITY)
+    val sort = _sort.asStateFlow()
 
     private val _isQueryFocused = MutableStateFlow(true)
     val isQueryFocused = _isQueryFocused.asStateFlow()

@@ -104,7 +104,7 @@
     <string name="by_new">По новизне</string>
     <string name="by_price_ascending">По возрастанию цены</string>
     <string name="by_price_descending">По убыванию цены</string>
-    <string name="by_popularity">По популярности</string>
+    <string name="by_popularity">По популярности</string>
     <string name="by_discount">По скидке</string>
     <string name="filters">Фильтры</string>
     <string name="price">Цена</string>

@@ -58,7 +58,9 @@ import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.AutocompleteWord
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.domain.SearchAutocomplete
+import ru.zarina.zarina.ui.common.FilterBar
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ElevationContainer
 import ru.zarina.zarina.ui.common.components.InputSearchBar
@@ -67,6 +69,7 @@ import ru.zarina.zarina.ui.common.components.ProductHorizontalSection
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.bottomNavigationPadding
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
+import ru.zarina.zarina.ui.common.utils.domain.getStringResource
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.utils.compose.navigationOrIme
 
@@ -80,6 +83,7 @@ fun SearchScreenContent(
     onQueryChange: (String) -> Unit,
     onQueryClearClick: () -> Unit,
     onSearchClick: () -> Unit,
+    sort: ProductSort,
     isSearchHistoryVisible: Boolean,
     searchHistory: ImmutableList<String>,
     onSearchHistoryClick: (String) -> Unit,
@@ -100,6 +104,7 @@ fun SearchScreenContent(
     val nothingFoundScrollState = rememberScrollState()
     ZarinaScaffold(
         toolbar = {
+            // TODO elevation for all screen states
             ElevationContainer(isElevated = contentScrollState.canScrollBackward) {
                 val focusRequester = remember { FocusRequester() }
                 InputSearchBar(
@@ -177,34 +182,17 @@ fun SearchScreenContent(
                                     .verticalScroll(nothingFoundScrollState)
                             )
                         } else {
-                            val colorPickerDimensions = ColorPickerDefaults.tinyDimensions()
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(2),
-                                state = resultsLazyGridState,
-                                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                                verticalArrangement = Arrangement.spacedBy(2.dp),
-                                contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+                            Results(
+                                products = products,
+                                sort = sort,
+                                lazyGridState = resultsLazyGridState,
+                                onProductClick = onProductClick,
+                                onFavoriteChange = onFavoriteChange,
+                                shakingFavorites = shakingFavorites,
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .bottomNavigationPadding()
-                            ) {
-                                items(
-                                    count = products.itemCount,
-                                    key = products.itemKey { it.id.value },
-                                    contentType = products.itemContentType { null }
-                                ) { productIndex ->
-                                    val product = products[productIndex]
-                                    if (product != null)
-                                        ProductCard(
-                                            product = product,
-                                            isMediaScrollable = true,
-                                            onClick = { onProductClick(product) },
-                                            isFavoriteShaking = shakingFavorites.contains(product.id),
-                                            onFavoriteChange = { onFavoriteChange(product, it) },
-                                            colorPickerDimensions = colorPickerDimensions,
-                                        )
-                                }
-                            }
+                            )
                         }
                     }
                 }
@@ -352,6 +340,58 @@ fun SectionHeader(
 }
 
 @Composable
+private fun Results(
+    sort: ProductSort,
+    products: LazyPagingItems<Product>,
+    lazyGridState: LazyGridState,
+    onProductClick: (Product) -> Unit,
+    onFavoriteChange: (Product, Boolean) -> Unit,
+    shakingFavorites: ImmutableSet<Product.Id>,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier,
+    ) {
+        val colorPickerDimensions = ColorPickerDefaults.tinyDimensions()
+
+        FilterBar(
+            sort = sort,
+            sortName = { stringResource(it.getStringResource()) },
+            onSortClick = { /*TODO*/ },
+            isFilterButtonEnabled = false, // TODO
+            onFiltersClick = { /*TODO*/ },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            state = lazyGridState,
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+            contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+        ) {
+            items(
+                count = products.itemCount,
+                key = products.itemKey { it.id.value },
+                contentType = products.itemContentType { null }
+            ) { productIndex ->
+                val product = products[productIndex]
+                if (product != null)
+                    ProductCard(
+                        product = product,
+                        isMediaScrollable = true,
+                        onClick = { onProductClick(product) },
+                        isFavoriteShaking = shakingFavorites.contains(product.id),
+                        onFavoriteChange = { onFavoriteChange(product, it) },
+                        colorPickerDimensions = colorPickerDimensions,
+                    )
+            }
+        }
+    }
+}
+
+@Composable
 private fun NothingFound(
     recommendations: ImmutableList<Product>,
     shakingFavorites: ImmutableSet<Product.Id>,
@@ -404,6 +444,7 @@ fun SearchScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val recommendations by viewModel.recommendations.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
+    val sort by viewModel.sort.collectAsStateWithLifecycle()
     val isQueryFocused by viewModel.isQueryFocused.collectAsStateWithLifecycle()
     val isSearchHistoryVisible by viewModel.isSearchHistoryVisible.collectAsStateWithLifecycle()
     val searchHistory by viewModel.searchHistory.collectAsStateWithLifecycle()
@@ -434,6 +475,7 @@ fun SearchScreen(
         onQueryChange = remember { { viewModel.onQueryChange(it) } },
         onQueryClearClick = remember { { viewModel.onQueryClearClick() } },
         onSearchClick = remember { { viewModel.onSearchClick() } },
+        sort = sort,
         isSearchHistoryVisible = isSearchHistoryVisible,
         searchHistory = searchHistory,
         onSearchHistoryClick = remember { { viewModel.onSearchHistoryClick(it) } },
