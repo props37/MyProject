@@ -126,13 +126,16 @@
     <string name="main_page">Главная</string>
     <string name="profile">Профиль</string>
     <string name="cart">Корзина</string>
-    <string name="add_to_favorites">Добавить в избранное</string>
-    <string name="remove_from_favorites">Удалить из избранного</string>
-    <string name="favorites_are_empty">В избранном пусто</string>
-    <string name="save_interesting_products_to_favorites">Сохраняйте понравившиеся товары в Избранное</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="remove_from_favorites">Удалить из избранного</string>
+    <string name="favorites_are_empty">В избранном пусто</string>
+    <string name="save_interesting_products_to_favorites">Сохраняйте понравившиеся товары в Избранное</string>
     <string name="search">Поиск</string>
     <string name="search_products">Искать товары</string>
     <string name="frequently_searched">Часто ищут</string>
     <string name="search_history">История поиска</string>
-    <string name="remove_from_history">Удалить из истории</string>
+    <string name="remove_from_history">Удалить из истории</string>
+    <string name="nothing_found">Ничего не нашлось</string>
+    <string name="reword_your_query">Напишите свой запрос другими словами или воспользуйтесь каталогом товаров</string>
+    <string name="recommended_for_you">Рекомендуем для вас</string>
 </resources>

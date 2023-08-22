@@ -7,6 +7,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -87,7 +88,7 @@ class SearchViewModel(
     }
         .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
 
-    val shakingFavorites = MutableStateFlow(persistentListOf<Product.Id>()) // TODO
+    val shakingFavorites = MutableStateFlow(persistentSetOf<Product.Id>()) // TODO
 
     // TODO setup paging source invalidation on favorites change
 
