@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screens.search
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
@@ -42,12 +43,12 @@ import kotlin.time.Duration.Companion.seconds
 
 @KoinViewModel
 class SearchViewModel(
+    private val savedStateHandle: SavedStateHandle,
     private val interactor: SearchInteractor,
 ) : ViewModel(),
     ISideEffectSource<SearchViewModel.SideEffect> by SideEffectQueue() {
 
-    private val _query = MutableStateFlow("")
-    val query = _query.asStateFlow()
+    val query = savedStateHandle.getStateFlow(KEY_QUERY, "")
 
     private val _sort = MutableStateFlow(ProductSort.POPULARITY)
     val sort = _sort.asStateFlow()
@@ -66,13 +67,13 @@ class SearchViewModel(
         .map { it.getOrNull()?.toPersistentList() ?: persistentListOf() }
         .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
     val isSearchHistoryVisible =
-        combine(_query, searchHistory) { query, searchHistory ->
+        combine(query, searchHistory) { query, searchHistory ->
             query.isEmpty() && searchHistory.isNotEmpty()
         }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val _autocompleteResult = _query
+    private val _autocompleteResult = query
         .flatMapLatest { query ->
             flowOf(interactor.getAutocomplete(query))
         }
@@ -126,16 +127,16 @@ class SearchViewModel(
     }
 
     fun onQueryChange(query: String) {
-        _query.value = query
+        savedStateHandle[KEY_QUERY] = query
     }
 
     fun onQueryClearClick() {
-        _query.value = ""
+        savedStateHandle[KEY_QUERY] = ""
         _isQueryFocused.value = true
     }
 
     fun onSearchHistoryClick(query: String) {
-        _query.value = query
+        savedStateHandle[KEY_QUERY] = query
     }
 
     fun onSearchHistoryDeleteClick(query: String) {
@@ -145,15 +146,15 @@ class SearchViewModel(
     }
 
     fun onAutocompleteWordClick(word: AutocompleteWord) {
-        _query.value = word.query
+        savedStateHandle[KEY_QUERY] = word.query
     }
 
     fun onFrequentlySearchedClick(query: String) {
-        _query.value = query
+        savedStateHandle[KEY_QUERY] = query
     }
 
     fun onSearchClick() {
-        val query = _query.value
+        val query = query.value
         if (query.isBlank()) return
         viewModelScope.launch {
             interactor.addToSearchHistory(query)
@@ -219,6 +220,9 @@ class SearchViewModel(
 
     companion object {
         private const val SEARCH_HISTORY_LIMIT = 15
+
+        const val KEY_QUERY = "query"
+        const val KEY_SELECTED_SORT = "selected_sort"
 
         private val FAVORITE_SHAKE_DURATION = 1.seconds
     }

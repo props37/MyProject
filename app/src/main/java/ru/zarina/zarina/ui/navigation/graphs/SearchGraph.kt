@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.navigation.graphs
 
+import androidx.compose.runtime.remember
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import ru.zarina.zarina.ui.navigation.base.composableDestination
@@ -12,6 +13,7 @@ fun NavGraphBuilder.searchGraph(navController: NavController) {
     navigationGraph(Search) {
         composableDestination(Search.Root) {
             SearchScreen(
+                savedStateHandle = remember(it) { it.savedStateHandle },
                 showProduct = { product ->
                     val arguments = Destinations.Product.Arguments(product.id)
                     navController.navigate(Destinations.Product.createRoute(arguments))

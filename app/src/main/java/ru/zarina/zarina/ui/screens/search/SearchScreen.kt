@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -55,6 +56,7 @@ import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.AutocompleteWord
 import ru.zarina.zarina.domain.Product
@@ -437,9 +439,10 @@ private fun NothingFound(
 
 @Composable
 fun SearchScreen(
+    savedStateHandle: SavedStateHandle,
     showProduct: (Product) -> Unit,
 ) {
-    val viewModel = koinViewModel<SearchViewModel>()
+    val viewModel = koinViewModel<SearchViewModel> { parametersOf(savedStateHandle) }
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     val recommendations by viewModel.recommendations.collectAsStateWithLifecycle()
