@@ -101,6 +101,7 @@ class SearchViewModel(
 
     fun onQueryClearClick() {
         _query.value = ""
+        _isQueryFocused.value = true
     }
 
     fun onSearchHistoryClick(query: String) {
