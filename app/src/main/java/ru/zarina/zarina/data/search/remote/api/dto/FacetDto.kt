@@ -1,0 +1,37 @@
+package ru.zarina.zarina.data.search.remote.api.dto
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import ru.zarina.zarina.data.ApiContract
+import ru.zarina.zarina.domain.PriceRange
+
+@Serializable
+data class FacetDto(
+    @SerialName("name")
+    val name: String? = null,
+    @SerialName("values")
+    val values: List<FacetValueDto>? = null
+) {
+
+    private val valuesById by lazy { values?.associateBy { it.id }.orEmpty() }
+
+    fun toPriceRange(): PriceRange? {
+        val minValue = valuesById[ID_MIN]?.value
+        val maxValue = valuesById[ID_MAX]?.value
+        return if (
+            ApiContract.isNotNull(minValue, ID_MIN)
+            && ApiContract.isNotNull(maxValue, ID_MAX)
+        )
+            PriceRange(minValue.toInt(), maxValue.toInt())
+        else
+            null
+    }
+
+    companion object {
+        private const val ID_MIN = "min"
+        private const val ID_MAX = "max"
+
+        const val NAME_PRICE = "price"
+    }
+
+}
