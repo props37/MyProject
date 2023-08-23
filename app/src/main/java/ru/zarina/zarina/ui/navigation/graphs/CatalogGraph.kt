@@ -81,7 +81,7 @@ fun NavGraphBuilder.catalogGraph(
             FiltersScreen(
                 savedStateHandle = remember(it) { it.savedStateHandle },
                 productsSavedStateHandle = productSavedStateHandle,
-                showColorFilter = { type ->
+                showListFilter = { type ->
                     when (type) {
                         FilterType.PICKUP_SHOP -> navController.navigate(Catalog.SelectPickupShop.routeSchema)
                         else -> {

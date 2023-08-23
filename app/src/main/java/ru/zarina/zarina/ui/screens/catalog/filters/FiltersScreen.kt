@@ -184,7 +184,7 @@ fun FiltersScreenContent(
 fun FiltersScreen(
     savedStateHandle: SavedStateHandle,
     productsSavedStateHandle: SavedStateHandle,
-    showColorFilter: (FilterType) -> Unit,
+    showListFilter: (FilterType) -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel =
@@ -196,7 +196,7 @@ fun FiltersScreen(
 
     FiltersScreenBehavior(
         sideEffects = viewModel.sideEffects,
-        showColorFilter = showColorFilter,
+        showListFilter = showListFilter,
         goBack = goBack
     )
 
@@ -217,14 +217,14 @@ fun FiltersScreen(
 @Composable
 fun FiltersScreenBehavior(
     sideEffects: Flow<FiltersViewModel.SideEffect>,
-    showColorFilter: (FilterType) -> Unit,
+    showListFilter: (FilterType) -> Unit,
     goBack: () -> Unit,
 ) {
     NavigationBarState(isVisible = true, isAnimated = true)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                is FiltersViewModel.SideEffect.ShowColorFilter -> showColorFilter(effect.type)
+                is FiltersViewModel.SideEffect.ShowListFilter -> showListFilter(effect.type)
                 FiltersViewModel.SideEffect.GoBack -> goBack()
             }
         }

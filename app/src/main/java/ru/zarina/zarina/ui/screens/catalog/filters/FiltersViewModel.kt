@@ -73,7 +73,7 @@ class FiltersViewModel(
     }
 
     fun onFilterClick(type: FilterType) {
-        sideEffect(SideEffect.ShowColorFilter(type))
+        sideEffect(SideEffect.ShowListFilter(type))
     }
 
     fun onFilterButtonClick() {
@@ -82,7 +82,7 @@ class FiltersViewModel(
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
-        class ShowColorFilter(val type: FilterType) : SideEffect
+        class ShowListFilter(val type: FilterType) : SideEffect
         object GoBack : SideEffect
     }
 
