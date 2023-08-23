@@ -122,9 +122,10 @@ class SearchViewModel(
         .map { it != null }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
-    private val pager = combine(pagerQuery.filterNotNull(), sort) { query, sort ->
-        createPager(query, sort)
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    private val pager =
+        combine(pagerQuery.filterNotNull(), sort, requestedFiltration) { query, sort, filtration ->
+            createPager(query, sort, filtration)
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val pagingSource = MutableStateFlow<SearchPagingSource?>(null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -240,7 +241,11 @@ class SearchViewModel(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    private fun createPager(query: String, sort: ProductSort): Pager<Int, Product> {
+    private fun createPager(
+        query: String,
+        sort: ProductSort,
+        filtration: Filtration?,
+    ): Pager<Int, Product> {
         sideEffect(SideEffect.ScrollResultsToTop)
         val pageHolder = PageHolder<FilteredProducts>()
         val mediator = SearchRemoteMediator(
@@ -248,6 +253,7 @@ class SearchViewModel(
             getSearchPageUseCase = interactor.getSearchPageUseCase,
             query = query,
             sort = sort,
+            filtration = filtration,
         )
         return Pager(
             config = PagingConfig(

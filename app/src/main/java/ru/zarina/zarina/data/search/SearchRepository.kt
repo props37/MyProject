@@ -3,6 +3,7 @@ package ru.zarina.zarina.data.search
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.search.local.ISearchLocalSource
 import ru.zarina.zarina.data.search.remote.ISearchRemoteSource
+import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.ProductSort
 
 @Factory
@@ -13,8 +14,13 @@ class SearchRepository(
 
     override suspend fun getAutocomplete(query: String) = remote.getAutocomplete(query)
 
-    override suspend fun getSearchPage(query: String, sort: ProductSort, pageIndex: Int) =
-        remote.getSearchPage(query, sort, pageIndex)
+    override suspend fun getSearchPage(
+        query: String,
+        sort: ProductSort,
+        filtration: Filtration?,
+        pageIndex: Int,
+    ) =
+        remote.getSearchPage(query, sort, filtration, pageIndex)
 
     override fun getHistory(limit: Int) = local.getHistory(limit)
 

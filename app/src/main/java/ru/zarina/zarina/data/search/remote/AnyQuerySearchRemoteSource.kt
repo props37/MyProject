@@ -4,6 +4,7 @@ import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.search.remote.api.IAnyQuerySearchApi
 import ru.zarina.zarina.data.search.remote.api.dto.SortDto
 import ru.zarina.zarina.domain.FilteredProducts
+import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.ProductSort
 
@@ -17,12 +18,13 @@ class AnyQuerySearchRemoteSource(
     override suspend fun getSearchPage(
         query: String,
         sort: ProductSort,
+        filtration: Filtration?,
         pageIndex: Int,
     ): Page<FilteredProducts> {
         val response = api.getSearchResults(
             query = query,
             offset = pageIndex * PAGE_SIZE,
-            sort = SortDto.from(sort)
+            sort = SortDto.from(sort),
         )
         return response.toDomain(pageIndex = pageIndex, pageSize = PAGE_SIZE)
     }

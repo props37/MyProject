@@ -7,6 +7,7 @@ import ru.zarina.zarina.base.clean.UseCase
 import ru.zarina.zarina.data.search.ISearchRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.FilteredProducts
+import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.ProductSort
 
@@ -17,14 +18,15 @@ class GetSearchPageUseCase(
 ) : UseCase<GetSearchPageUseCase.Params, Page<FilteredProducts>>(dispatcher) {
 
     override suspend fun execute(params: Params): Page<FilteredProducts> {
-        val (query, sort, pageIndex) = params
+        val (query, sort, filtration, pageIndex) = params
 
-        return searchRepository.getSearchPage(query, sort, pageIndex)
+        return searchRepository.getSearchPage(query, sort, filtration, pageIndex)
     }
 
     data class Params(
         val query: String,
         val sort: ProductSort,
+        val filtration: Filtration?,
         val pageIndex: Int,
     )
 
