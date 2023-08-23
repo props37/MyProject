@@ -152,7 +152,10 @@ fun FilterTreeItem(
     onItemClick: (TreeFilter.Item) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var isCollapsed by remember { mutableStateOf(true) }
+    var isCollapsed by remember {
+        mutableStateOf(
+            item.getFlattenedChildren().none { it.isSelected })
+    }
     Column(
         modifier = modifier
     ) {
