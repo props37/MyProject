@@ -185,6 +185,7 @@ fun FiltersScreen(
     savedStateHandle: SavedStateHandle,
     productsSavedStateHandle: SavedStateHandle,
     showListFilter: (FilterType) -> Unit,
+    showTreeFilter: (FilterType) -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel =
@@ -197,6 +198,7 @@ fun FiltersScreen(
     FiltersScreenBehavior(
         sideEffects = viewModel.sideEffects,
         showListFilter = showListFilter,
+        showTreeFilter = showTreeFilter,
         goBack = goBack
     )
 
@@ -218,6 +220,7 @@ fun FiltersScreen(
 fun FiltersScreenBehavior(
     sideEffects: Flow<FiltersViewModel.SideEffect>,
     showListFilter: (FilterType) -> Unit,
+    showTreeFilter: (FilterType) -> Unit,
     goBack: () -> Unit,
 ) {
     NavigationBarState(isVisible = true, isAnimated = true)
@@ -225,6 +228,7 @@ fun FiltersScreenBehavior(
         sideEffects.collect { effect ->
             when (effect) {
                 is FiltersViewModel.SideEffect.ShowListFilter -> showListFilter(effect.type)
+                is FiltersViewModel.SideEffect.ShowTreeFilter -> showTreeFilter(effect.type)
                 FiltersViewModel.SideEffect.GoBack -> goBack()
             }
         }

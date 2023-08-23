@@ -90,6 +90,15 @@ fun NavGraphBuilder.catalogGraph(
                         }
                     }
                 },
+                showTreeFilter = { type ->
+                    when (type) {
+                        FilterType.PICKUP_SHOP -> navController.navigate(Catalog.SelectPickupShop.routeSchema)
+                        else -> {
+                            val arguments = Catalog.TreeFilter.Arguments(filterType = type)
+                            navController.navigate(Catalog.TreeFilter.createRoute(arguments))
+                        }
+                    }
+                },
                 goBack = {
                     navController.popBackStack(Catalog.Filters.routeSchema, true)
                 }

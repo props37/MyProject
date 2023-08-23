@@ -8,6 +8,7 @@ import ru.zarina.zarina.ui.screens.catalog.selectcity.SelectCityViewModel
 import ru.zarina.zarina.ui.screens.catalog.selectshop.SelectShopViewModel
 import ru.zarina.zarina.ui.screens.catalog.selectsort.SelectSortViewModel
 import ru.zarina.zarina.ui.screens.common.filters.list.ListFilterViewModel
+import ru.zarina.zarina.ui.screens.common.filters.tree.TreeFilterViewModel
 import ru.zarina.zarina.ui.screens.search.SearchViewModel
 
 val viewModelModule = module {
@@ -31,6 +32,12 @@ val viewModelModule = module {
     }
     viewModel { parameters ->
         ListFilterViewModel(
+            savedStateHandle = get(),
+            parentSavedStateHandle = parameters[0]
+        )
+    }
+    viewModel { parameters ->
+        TreeFilterViewModel(
             savedStateHandle = get(),
             parentSavedStateHandle = parameters[0]
         )
