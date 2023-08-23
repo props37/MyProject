@@ -12,13 +12,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.ListFilter
+import ru.zarina.zarina.domain.TreeFilter
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
-fun ListItem(
+fun TreeItem(
     filterName: String,
-    items: ImmutableList<ListFilter.Item>,
+    items: ImmutableList<TreeFilter.Item>,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -50,4 +50,3 @@ fun ListItem(
         )
     }
 }
-

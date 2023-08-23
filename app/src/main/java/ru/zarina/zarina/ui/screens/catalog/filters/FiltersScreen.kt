@@ -44,6 +44,7 @@ import ru.zarina.zarina.ui.screens.catalog.filters.components.items.ListItem
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.PriceItem
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.ShopItem
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.SwitchItem
+import ru.zarina.zarina.ui.screens.catalog.filters.components.items.TreeItem
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
@@ -103,7 +104,7 @@ fun FiltersScreenContent(
                     FiltersDivider()
                 }
                 if (filtration?.categories != null) {
-                    ListItem(
+                    TreeItem(
                         filterName = stringResource(id = R.string.categories),
                         items = filtration.categories.items.toPersistentList(),
                         onClick = { onFilterClick(FilterType.CATEGORY) },

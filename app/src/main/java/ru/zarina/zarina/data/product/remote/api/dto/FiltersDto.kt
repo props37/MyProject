@@ -5,6 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.ListFilter
+import ru.zarina.zarina.domain.TreeFilter
 
 @Serializable
 data class FiltersDto(
@@ -23,7 +24,7 @@ data class FiltersDto(
     @SerialName("price")
     val price: PriceFilterDto? = null,
 ) {
-    fun toDomain(categoryFilter: ListFilter?): Filtration {
+    fun toDomain(categoryFilter: TreeFilter?): Filtration {
         return Filtration(
             priceLimits = price?.toDomain(),
             categories = categoryFilter,

@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 data class Filtration(
     val priceLimits: PriceRange? = null,
     val price: PriceRange? = priceLimits,
-    val categories: ListFilter? = null,
+    val categories: TreeFilter? = null,
     val colors: ListFilter? = null,
     val attributes: ListFilter? = null,
     val materials: ListFilter? = null,
@@ -56,4 +56,30 @@ data class ListFilter(
 
     @IgnoredOnParcel
     override val isEmpty = items.none { it.isSelected }
+
+}
+
+@Parcelize
+data class TreeFilter(
+    val items: List<Item>,
+    override val isSingleSelection: Boolean = false,
+) : Filter, Parcelable {
+
+    @Parcelize
+    data class Item(
+        val id: String,
+        val name: String,
+        val isExplicitSelected: Boolean,
+        val color: Color? = null,
+        val children: List<Item> = emptyList(),
+    ) : Parcelable {
+
+        @IgnoredOnParcel
+        val isSelected: Boolean by lazy { if (children.isNotEmpty()) children.all { it.isSelected } else isExplicitSelected }
+
+    }
+
+    @IgnoredOnParcel
+    override val isEmpty = items.none { it.isSelected }
+
 }
