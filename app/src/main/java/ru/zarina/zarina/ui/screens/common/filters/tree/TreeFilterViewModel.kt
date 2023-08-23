@@ -93,14 +93,15 @@ class TreeFilterViewModel(
     }
 
     fun onClearClick() {
-        // TODO
-//        filterData.update { filter ->
-//            if (filter == null) return@update null
-//            val items = filter.items.map {
-//                it.updated()
-//            }
-//            filter.copy(items = items)
-//        }
+        filterData.update { filter ->
+            if (filter == null) return@update null
+            val terminalChildren =
+                filter.items.flatMap { it.getFlattenedChildren() }.map { it.id }.toSet()
+            val items = filter.items.map {
+                it.updated(false, terminalChildren)
+            }
+            filter.copy(items = items)
+        }
     }
 
     fun onApplyClick() {
