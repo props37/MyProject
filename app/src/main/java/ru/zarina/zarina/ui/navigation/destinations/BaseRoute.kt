@@ -34,4 +34,5 @@ enum class BaseRoute {
     SEARCH,
     SEARCH_SELECT_SORT,
     SEARCH_FILTERS,
+    SEARCH_LIST_FILTER,
 }

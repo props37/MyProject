@@ -265,4 +265,27 @@ object Search : SimpleGraph(BaseRoute.GRAPH_SEARCH, Root) {
     object Root : SimpleDestination(BaseRoute.SEARCH)
     object SelectSort : SimpleDestination(BaseRoute.SEARCH_SELECT_SORT)
     object Filters : SimpleDestination(BaseRoute.SEARCH_FILTERS)
+
+    object ListFilter : Destination<ListFilter.Arguments>() {
+
+        const val ARGUMENT_FILTER_TYPE = "filter_type"
+
+        override val routeSchema = RouteUtils.generateRouteSchema(
+            baseRoute = BaseRoute.SEARCH_LIST_FILTER,
+            argNames = arrayOf(ARGUMENT_FILTER_TYPE)
+        )
+
+        override val arguments = listOf(
+            navArgument(ARGUMENT_FILTER_TYPE) { type = NavType.EnumType(FilterType::class.java) }
+        )
+
+        override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
+            baseRoute = BaseRoute.SEARCH_LIST_FILTER,
+            args = arrayOf(args.filterType)
+        )
+
+        data class Arguments(
+            val filterType: FilterType,
+        )
+    }
 }
