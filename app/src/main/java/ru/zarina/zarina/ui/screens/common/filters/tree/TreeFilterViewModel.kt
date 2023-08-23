@@ -96,7 +96,9 @@ class TreeFilterViewModel(
         filterData.update { filter ->
             if (filter == null) return@update null
             val terminalChildren =
-                filter.items.flatMap { it.getFlattenedChildren() }.map { it.id }.toSet()
+                (filter.items + filter.items.flatMap { it.getFlattenedChildren() })
+                    .map { it.id }
+                    .toSet()
             val items = filter.items.map {
                 it.updated(false, terminalChildren)
             }
