@@ -39,6 +39,7 @@ import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.paging.PageHolder
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
+import ru.zarina.zarina.ui.screens.catalog.products.ProductsViewModel
 import ru.zarina.zarina.ui.screens.search.paging.SearchPagingSource
 import ru.zarina.zarina.ui.screens.search.paging.SearchRemoteMediator
 import ru.zarina.zarina.usecase.search.GetSearchPageUseCase
@@ -117,6 +118,10 @@ class SearchViewModel(
             savedStateHandle[Catalog.Products.ARGUMENT_FILTRATION]
         )
 
+    val isFilterButtonEnabled = requestedFiltration
+        .map { it != null }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
     private val pager = combine(pagerQuery.filterNotNull(), sort) { query, sort ->
         createPager(query, sort)
     }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
@@ -137,6 +142,7 @@ class SearchViewModel(
     private val isForeground = MutableStateFlow(false)
 
     init {
+        setupAppliedFiltrationUpdates()
         setupPagingInvalidation()
     }
 
@@ -147,6 +153,21 @@ class SearchViewModel(
         }
             .distinctUntilChanged()
             .onEach { pagingSource.value?.invalidate() }
+            .launchIn(viewModelScope)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun setupAppliedFiltrationUpdates() {
+        pagingSource
+            .flatMapLatest { it?.appliedFiltration ?: emptyFlow() }
+            .filterNotNull()
+            .onEach {
+                savedStateHandle[ProductsViewModel.KEY_APPLIED_FILTRATION] = it
+                if (baseFiltration.value == null)
+                    savedStateHandle[ProductsViewModel.KEY_BASE_FILTRATION] = it
+                if (requestedFiltration.value == null)
+                    savedStateHandle[ProductsViewModel.KEY_REQUESTED_FILTRATION] = it
+            }
             .launchIn(viewModelScope)
     }
 

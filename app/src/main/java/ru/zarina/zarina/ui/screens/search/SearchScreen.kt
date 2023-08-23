@@ -87,6 +87,7 @@ fun SearchScreenContent(
     onSearchClick: () -> Unit,
     sort: ProductSort,
     onSortClick: () -> Unit,
+    isFilterButtonEnabled: Boolean,
     isSearchHistoryVisible: Boolean,
     searchHistory: ImmutableList<String>,
     onSearchHistoryClick: (String) -> Unit,
@@ -165,7 +166,6 @@ fun SearchScreenContent(
                                     onQueryClick = onFrequentlySearchedClick,
                                     modifier = Modifier.padding(WindowInsets.navigationOrIme.asPaddingValues())
                                 )
-                            // TODO add recommendations
                         }
                     }
 
@@ -186,10 +186,11 @@ fun SearchScreenContent(
                             )
                         } else {
                             Results(
+                                lazyGridState = resultsLazyGridState,
                                 products = products,
                                 sort = sort,
                                 onSortClick = onSortClick,
-                                lazyGridState = resultsLazyGridState,
+                                isFilterButtonEnabled = isFilterButtonEnabled,
                                 onProductClick = onProductClick,
                                 onFavoriteChange = onFavoriteChange,
                                 shakingFavorites = shakingFavorites,
@@ -345,10 +346,11 @@ fun SectionHeader(
 
 @Composable
 private fun Results(
+    lazyGridState: LazyGridState,
+    products: LazyPagingItems<Product>,
     sort: ProductSort,
     onSortClick: () -> Unit,
-    products: LazyPagingItems<Product>,
-    lazyGridState: LazyGridState,
+    isFilterButtonEnabled: Boolean,
     onProductClick: (Product) -> Unit,
     onFavoriteChange: (Product, Boolean) -> Unit,
     shakingFavorites: ImmutableSet<Product.Id>,
@@ -364,7 +366,7 @@ private fun Results(
             sort = sort,
             sortName = { stringResource(it.getStringResource()) },
             onSortClick = onSortClick,
-            isFilterButtonEnabled = false, // TODO
+            isFilterButtonEnabled = isFilterButtonEnabled,
             onFiltersClick = { /*TODO*/ },
             modifier = Modifier.fillMaxWidth()
         )
@@ -452,6 +454,7 @@ fun SearchScreen(
     val recommendations by viewModel.recommendations.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
     val sort by viewModel.sort.collectAsStateWithLifecycle()
+    val isFilterButtonEnabled by viewModel.isFilterButtonEnabled.collectAsStateWithLifecycle()
     val isQueryFocused by viewModel.isQueryFocused.collectAsStateWithLifecycle()
     val isSearchHistoryVisible by viewModel.isSearchHistoryVisible.collectAsStateWithLifecycle()
     val searchHistory by viewModel.searchHistory.collectAsStateWithLifecycle()
@@ -485,6 +488,7 @@ fun SearchScreen(
         onSearchClick = remember { { viewModel.onSearchClick() } },
         sort = sort,
         onSortClick = remember { { viewModel.onSortClick() } },
+        isFilterButtonEnabled = isFilterButtonEnabled,
         isSearchHistoryVisible = isSearchHistoryVisible,
         searchHistory = searchHistory,
         onSearchHistoryClick = remember { { viewModel.onSearchHistoryClick(it) } },
