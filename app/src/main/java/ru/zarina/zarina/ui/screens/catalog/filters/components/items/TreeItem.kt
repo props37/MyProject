@@ -7,10 +7,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.TreeFilter
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -18,7 +18,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 @Composable
 fun TreeItem(
     filterName: String,
-    items: ImmutableList<TreeFilter.Item>,
+    treeFilter: TreeFilter,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -34,7 +34,7 @@ fun TreeItem(
             modifier = Modifier.padding(end = 8.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
-        val selectedItems = items.filter { it.isSelected }
+        val selectedItems = remember(treeFilter) { treeFilter.getSelectedOptimized() }
         if (selectedItems.isNotEmpty()) {
             Text(
                 text = selectedItems.first().name + if (selectedItems.size > 1) " +${selectedItems.size - 1}" else "",

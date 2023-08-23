@@ -106,7 +106,7 @@ fun FiltersScreenContent(
                 if (filtration?.categories != null) {
                     TreeItem(
                         filterName = stringResource(id = R.string.categories),
-                        items = filtration.categories.items.toPersistentList(),
+                        treeFilter = filtration.categories,
                         onClick = { onFilterClick(FilterType.CATEGORY) },
                     )
                     FiltersDivider()
