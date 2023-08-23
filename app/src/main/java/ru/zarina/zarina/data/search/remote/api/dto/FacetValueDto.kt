@@ -2,6 +2,8 @@ package ru.zarina.zarina.data.search.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.data.ApiContract
+import ru.zarina.zarina.domain.ListFilter
 
 @Serializable
 data class FacetValueDto(
@@ -19,4 +21,20 @@ data class FacetValueDto(
     val isOpen: Boolean? = null,
     @SerialName("selected")
     val isSelected: Boolean? = null,
-)
+) {
+    fun toListFilterItem(): ListFilter.Item? {
+        return if (
+            ApiContract.isNotNull(id, "id")
+            && ApiContract.isNotNull(name, "name")
+        ) {
+            ListFilter.Item(
+                id = id,
+                name = name,
+                isSelected = isSelected ?: false,
+                color = null,
+            )
+        } else {
+            null
+        }
+    }
+}
