@@ -13,6 +13,7 @@ import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.PriceRange
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.components.FilterButtonMode
 import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 import ru.zarina.zarina.ui.screens.catalog.products.ProductsViewModel
 import ru.zarina.zarina.ui.screens.search.SearchViewModel
@@ -75,8 +76,6 @@ class FiltersViewModel(
         class ShowFilter(val type: FilterType) : SideEffect
         object GoBack : SideEffect
     }
-
-    enum class FilterButtonMode { APPLY, CLOSE }
 
     companion object {
         const val KEY_NEW_FILTRATION = "new_filtration"

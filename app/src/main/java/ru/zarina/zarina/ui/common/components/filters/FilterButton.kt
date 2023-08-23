@@ -4,19 +4,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import ru.zarina.zarina.R
+import ru.zarina.zarina.ui.common.components.FilterButtonMode
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
-import ru.zarina.zarina.ui.screens.catalog.filters.FiltersViewModel
 
 @Composable
 fun FilterButton(
-    mode: FiltersViewModel.FilterButtonMode,
+    mode: FilterButtonMode,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val text = stringResource(
         when (mode) {
-            FiltersViewModel.FilterButtonMode.APPLY -> R.string.apply
-            FiltersViewModel.FilterButtonMode.CLOSE -> R.string.close
+            FilterButtonMode.APPLY -> R.string.apply
+            FilterButtonMode.CLOSE -> R.string.close
         }
     )
     ZarinaTextButton(

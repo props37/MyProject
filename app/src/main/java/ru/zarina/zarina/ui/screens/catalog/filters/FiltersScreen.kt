@@ -30,6 +30,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.PriceRange
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
+import ru.zarina.zarina.ui.common.components.FilterButtonMode
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.bottomNavigationPadding
 import ru.zarina.zarina.ui.common.components.filters.ClearButton
@@ -56,7 +57,7 @@ fun FiltersScreenContent(
     onPriceChange: (min: Int, max: Int) -> Unit,
     onIsShippingAvailableChange: (Boolean) -> Unit,
     onIsPickupAvailableChange: (Boolean) -> Unit,
-    filterButtonMode: FiltersViewModel.FilterButtonMode,
+    filterButtonMode: FilterButtonMode,
     onCloseClick: () -> Unit,
     onFilterButtonClick: () -> Unit,
 ) {
@@ -258,7 +259,7 @@ fun FiltersScreenContentPreview() {
             onIsPickupAvailableChange = {},
             onFilterClick = {},
             onCloseClick = {},
-            filterButtonMode = FiltersViewModel.FilterButtonMode.CLOSE,
+            filterButtonMode = FilterButtonMode.CLOSE,
             onFilterButtonClick = {},
         )
     }
