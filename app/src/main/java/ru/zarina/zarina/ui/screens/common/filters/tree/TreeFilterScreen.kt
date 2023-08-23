@@ -120,14 +120,6 @@ fun TreeFilterScreenContent(
                         onClick = onClick,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    if (index != items.lastIndex)
-                        Divider(
-                            thickness = 1.dp,
-                            color = UiKitTheme.colors.listDivider,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                        )
                 }
                 item { Spacer(modifier = Modifier.navigationBarsPadding()) }
             }
@@ -208,6 +200,13 @@ fun FilterTreeItem(
                     modifier = Modifier.clickable { isCollapsed = !isCollapsed })
             }
         }
+        Divider(
+            thickness = 1.dp,
+            color = UiKitTheme.colors.listDivider,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+        )
         if (!isCollapsed) {
             item.children.forEach { child ->
                 FilterTreeItem(
