@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common
+package ru.zarina.zarina.ui.common.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.domain.ProductSort
-import ru.zarina.zarina.ui.common.components.SelectionCircle
 import ru.zarina.zarina.ui.common.utils.domain.getStringResource
 
 @Composable

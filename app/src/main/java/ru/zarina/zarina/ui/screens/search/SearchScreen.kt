@@ -62,9 +62,9 @@ import ru.zarina.zarina.domain.AutocompleteWord
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.domain.SearchAutocomplete
-import ru.zarina.zarina.ui.common.FilterBar
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ElevationContainer
+import ru.zarina.zarina.ui.common.components.FilterBar
 import ru.zarina.zarina.ui.common.components.InputSearchBar
 import ru.zarina.zarina.ui.common.components.ProductCard
 import ru.zarina.zarina.ui.common.components.ProductHorizontalSection
