@@ -6,16 +6,16 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Filtration(
-    val priceLimits: PriceRange?,
+    val priceLimits: PriceRange? = null,
     val price: PriceRange? = priceLimits,
-    val categories: ListFilter?,
-    val colors: ListFilter?,
-    val attributes: ListFilter?,
-    val materials: ListFilter?,
-    val sizes: ListFilter?,
-    val isShippingAvailable: Boolean?,
-    val isPickupAvailable: Boolean?,
-    val pickupShop: Shop?,
+    val categories: ListFilter? = null,
+    val colors: ListFilter? = null,
+    val attributes: ListFilter? = null,
+    val materials: ListFilter? = null,
+    val sizes: ListFilter? = null,
+    val isShippingAvailable: Boolean? = null,
+    val isPickupAvailable: Boolean? = null,
+    val pickupShop: Shop? = null,
 ) : Parcelable {
 
     fun isEmpty() = price == priceLimits
@@ -27,6 +27,11 @@ data class Filtration(
             && isShippingAvailable != true
             && isPickupAvailable != true
             && pickupShop == null
+
+    companion object {
+        val EMPTY
+            get() = Filtration()
+    }
 
 }
 

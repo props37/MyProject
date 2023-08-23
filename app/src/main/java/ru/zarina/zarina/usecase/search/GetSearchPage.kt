@@ -6,17 +6,17 @@ import org.koin.core.annotation.Named
 import ru.zarina.zarina.base.clean.UseCase
 import ru.zarina.zarina.data.search.ISearchRepository
 import ru.zarina.zarina.di.Qualifiers
+import ru.zarina.zarina.domain.FilteredProducts
 import ru.zarina.zarina.domain.Page
-import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
 
 @Factory
 class GetSearchPageUseCase(
     @Named(Qualifiers.Dispatcher.IO) dispatcher: CoroutineDispatcher,
     private val searchRepository: ISearchRepository,
-) : UseCase<GetSearchPageUseCase.Params, Page<List<Product>>>(dispatcher) {
+) : UseCase<GetSearchPageUseCase.Params, Page<FilteredProducts>>(dispatcher) {
 
-    override suspend fun execute(params: Params): Page<List<Product>> {
+    override suspend fun execute(params: Params): Page<FilteredProducts> {
         val (query, sort, pageIndex) = params
 
         return searchRepository.getSearchPage(query, sort, pageIndex)

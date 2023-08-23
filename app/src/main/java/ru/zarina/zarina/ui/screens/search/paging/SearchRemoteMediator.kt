@@ -7,6 +7,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import ru.zarina.zarina.domain.FilteredProducts
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.ui.common.base.paging.PageHolder
@@ -14,7 +15,7 @@ import ru.zarina.zarina.usecase.search.GetSearchPageUseCase
 
 @OptIn(ExperimentalPagingApi::class)
 class SearchRemoteMediator(
-    private val pageHolder: PageHolder<List<Product>>,
+    private val pageHolder: PageHolder<FilteredProducts>,
     private val getSearchPageUseCase: GetSearchPageUseCase,
     private val query: String,
     private val sort: ProductSort,

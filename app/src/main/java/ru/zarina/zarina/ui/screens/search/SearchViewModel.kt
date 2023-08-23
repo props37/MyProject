@@ -31,11 +31,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.AutocompleteWord
+import ru.zarina.zarina.domain.FilteredProducts
+import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.paging.PageHolder
+import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.screens.search.paging.SearchPagingSource
 import ru.zarina.zarina.ui.screens.search.paging.SearchRemoteMediator
 import ru.zarina.zarina.usecase.search.GetSearchPageUseCase
@@ -92,6 +95,27 @@ class SearchViewModel(
         }
 
     private val pagerQuery = MutableStateFlow<String?>(null)
+
+    /**
+     * Default filtration used when no filtration was sent.
+     */
+    private val baseFiltration =
+        savedStateHandle.getStateFlow<Filtration?>(KEY_BASE_FILTRATION, null)
+
+    /**
+     * Filtration that was applied to the products currently displayed.
+     */
+    private val appliedFiltration =
+        savedStateHandle.getStateFlow<Filtration?>(KEY_APPLIED_FILTRATION, null)
+
+    /**
+     * The latest filtration that was requested by the user.
+     */
+    private val requestedFiltration =
+        savedStateHandle.getStateFlow<Filtration?>(
+            KEY_REQUESTED_FILTRATION,
+            savedStateHandle[Catalog.Products.ARGUMENT_FILTRATION]
+        )
 
     private val pager = combine(pagerQuery.filterNotNull(), sort) { query, sort ->
         createPager(query, sort)
@@ -193,7 +217,7 @@ class SearchViewModel(
     @OptIn(ExperimentalPagingApi::class)
     private fun createPager(query: String, sort: ProductSort): Pager<Int, Product> {
         sideEffect(SideEffect.ScrollResultsToTop)
-        val pageHolder = PageHolder<List<Product>>()
+        val pageHolder = PageHolder<FilteredProducts>()
         val mediator = SearchRemoteMediator(
             pageHolder = pageHolder,
             getSearchPageUseCase = interactor.getSearchPageUseCase,
@@ -232,6 +256,9 @@ class SearchViewModel(
 
         const val KEY_QUERY = "query"
         const val KEY_SELECTED_SORT = "selected_sort"
+        const val KEY_BASE_FILTRATION = "base_filtration"
+        const val KEY_APPLIED_FILTRATION = "applied_filtration"
+        const val KEY_REQUESTED_FILTRATION = "requested_filtration"
 
         private val FAVORITE_SHAKE_DURATION = 1.seconds
     }
