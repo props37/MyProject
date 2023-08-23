@@ -25,8 +25,17 @@ class AnyQuerySearchRemoteSource(
             query = query,
             offset = pageIndex * PAGE_SIZE,
             sort = SortDto.from(sort),
+            filters = filtration?.toDto().orEmpty(),
         )
         return response.toDomain(pageIndex = pageIndex, pageSize = PAGE_SIZE)
+    }
+
+    private fun Filtration.toDto(): List<String> {
+        return buildList {
+            if (price != null)
+                add("price:${price.min};${price.max}")
+            // TODO categories, sizes and colors
+        }
     }
 
     companion object {

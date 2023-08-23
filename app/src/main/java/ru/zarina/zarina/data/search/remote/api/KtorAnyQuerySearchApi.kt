@@ -38,6 +38,7 @@ class KtorAnyQuerySearchApi(
         query: String,
         offset: Int,
         sort: SortDto,
+        filters: List<String>,
     ): SearchResultDto {
         val response = searchClient.get("search") {
             parameter("st", query.filter { it.isLetter() || it.isWhitespace() })
@@ -52,7 +53,10 @@ class KtorAnyQuerySearchApi(
             parameter("showUnavailable", true)
             parameter("sort", sort)
             parameter("regionId", "global")
-            // TODO filters
+
+            filters.forEach {
+                parameter("filter", it)
+            }
 
             parameter("apiKey", BuildConfig.ANYQUERY_SECRET)
         }

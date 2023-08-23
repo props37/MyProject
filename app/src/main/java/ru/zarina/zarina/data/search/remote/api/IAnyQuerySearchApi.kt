@@ -10,6 +10,6 @@ interface IAnyQuerySearchApi {
         query: String,
         offset: Int,
         sort: SortDto,
-        // TODO filters
+        filters: List<String>,
     ): SearchResultDto
 }
