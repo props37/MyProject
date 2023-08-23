@@ -77,25 +77,30 @@ class TreeFilterViewModel(
     }
 
     fun onItemClick(item: TreeFilter.Item) {
+        val terminalChildren = (listOf(item) + item.getFlattenedChildren())
+            .filter { it.children.isEmpty() }
+            .map { it.id }
+            .toSet()
+        val isSelected = !item.isSelected
+
         filterData.update { filter ->
-            if (filter?.isSingleSelection == true) {
-                filter.copy(items = filter.items.map {
-                    when {
-                        it == item -> it.copy(isExplicitSelected = !it.isSelected)
-                        it != item && it.isSelected -> it.copy(isExplicitSelected = false)
-                        else -> it
-                    }
-                })
-            } else {
-                filter?.copy(items = filter.items.map { if (it == item) item.copy(isExplicitSelected = !item.isSelected) else it })
+            if (filter == null) return@update null
+            val items = filter.items.map {
+                it.updated(isSelected, terminalChildren)
             }
+            filter.copy(items = items)
         }
     }
 
     fun onClearClick() {
-        filterData.update { filter ->
-            filter?.copy(items = filter.items.map { it.copy(isExplicitSelected = false) })
-        }
+        // TODO
+//        filterData.update { filter ->
+//            if (filter == null) return@update null
+//            val items = filter.items.map {
+//                it.updated()
+//            }
+//            filter.copy(items = items)
+//        }
     }
 
     fun onApplyClick() {
@@ -116,6 +121,16 @@ class TreeFilterViewModel(
             FilterType.CATEGORY -> categories
             else -> null
         }
+    }
+
+    private fun TreeFilter.Item.updated(
+        isSelected: Boolean,
+        terminalChildrenIds: Set<String>,
+    ): TreeFilter.Item {
+        return copy(
+            isExplicitSelected = if (this.id in terminalChildrenIds) isSelected else this.isExplicitSelected,
+            children = children.map { it.updated(isSelected, terminalChildrenIds) }
+        )
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {

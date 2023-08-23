@@ -73,7 +73,7 @@ fun NavGraphBuilder.searchGraph(navController: NavController) {
             TreeFilterScreen(
                 filtersSavedStateHandle = filtersSavedStateHandle,
                 goBack = {
-                    navController.popBackStack(Search.ListFilter.routeSchema, true)
+                    navController.popBackStack(Search.TreeFilter.routeSchema, true)
                 }
             )
         }

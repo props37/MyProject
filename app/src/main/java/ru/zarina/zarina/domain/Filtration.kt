@@ -77,9 +77,12 @@ data class TreeFilter(
         @IgnoredOnParcel
         val isSelected: Boolean by lazy { if (children.isNotEmpty()) children.all { it.isSelected } else isExplicitSelected }
 
+        fun getFlattenedChildren(): List<Item> =
+            children + children.flatMap { it.getFlattenedChildren() }
+
     }
 
     @IgnoredOnParcel
-    override val isEmpty = items.none { it.isSelected }
+    override val isEmpty = items.none { item -> item.getFlattenedChildren().any { it.isSelected } }
 
 }

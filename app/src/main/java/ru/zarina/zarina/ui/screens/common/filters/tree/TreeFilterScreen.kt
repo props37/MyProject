@@ -21,7 +21,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
@@ -110,14 +110,13 @@ fun TreeFilterScreenContent(
                 state = listState,
                 modifier = Modifier.weight(1f),
             ) {
-                itemsIndexed(
+                items(
                     items = items,
-                    key = { _, item -> item.id },
-                ) { index, item ->
-                    val onClick = remember(item) { { onItemClick(item) } }
+                    key = { item -> item.id },
+                ) { item ->
                     FilterTreeItem(
                         item = item,
-                        onClick = onClick,
+                        onItemClick = onItemClick,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -150,13 +149,14 @@ fun TreeFilterScreenContent(
 @Composable
 fun FilterTreeItem(
     item: TreeFilter.Item,
-    onClick: () -> Unit,
+    onItemClick: (TreeFilter.Item) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isCollapsed by remember { mutableStateOf(true) }
     Column(
         modifier = modifier
     ) {
+        val onClick = remember(item) { { onItemClick(item) } }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -212,7 +212,7 @@ fun FilterTreeItem(
             item.children.forEach { child ->
                 FilterTreeItem(
                     item = child,
-                    onClick = onClick,
+                    onItemClick = onItemClick,
                     modifier = Modifier.padding(start = 16.dp)
                 )
             }
