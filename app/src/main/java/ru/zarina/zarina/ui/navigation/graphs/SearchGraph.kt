@@ -8,7 +8,7 @@ import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.navigation.destinations.Search
-import ru.zarina.zarina.ui.screens.catalog.filters.list.ListFilterScreen
+import ru.zarina.zarina.ui.screens.common.filters.list.ListFilterScreen
 import ru.zarina.zarina.ui.screens.search.SearchScreen
 import ru.zarina.zarina.ui.screens.search.filters.FiltersScreen
 import ru.zarina.zarina.ui.screens.search.selectsort.SelectSortScreen

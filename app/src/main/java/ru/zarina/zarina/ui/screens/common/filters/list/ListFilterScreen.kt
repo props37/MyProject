@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.catalog.filters.list
+package ru.zarina.zarina.ui.screens.common.filters.list
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility

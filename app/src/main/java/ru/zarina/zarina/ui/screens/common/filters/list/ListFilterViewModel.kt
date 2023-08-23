@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.catalog.filters.list
+package ru.zarina.zarina.ui.screens.common.filters.list
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

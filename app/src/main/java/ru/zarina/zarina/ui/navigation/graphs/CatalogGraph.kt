@@ -13,11 +13,11 @@ import ru.zarina.zarina.ui.navigation.destinations.Search
 import ru.zarina.zarina.ui.screens.catalog.categories.CategoriesScreen
 import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 import ru.zarina.zarina.ui.screens.catalog.filters.FiltersScreen
-import ru.zarina.zarina.ui.screens.catalog.filters.list.ListFilterScreen
 import ru.zarina.zarina.ui.screens.catalog.products.ProductsScreen
 import ru.zarina.zarina.ui.screens.catalog.selectcity.SelectCityScreen
 import ru.zarina.zarina.ui.screens.catalog.selectshop.SelectShopScreen
 import ru.zarina.zarina.ui.screens.catalog.selectsort.SelectSortScreen
+import ru.zarina.zarina.ui.screens.common.filters.list.ListFilterScreen
 
 fun NavGraphBuilder.catalogGraph(
     navController: NavController,
