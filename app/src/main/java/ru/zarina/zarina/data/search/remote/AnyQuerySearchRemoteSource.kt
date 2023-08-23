@@ -8,6 +8,7 @@ import ru.zarina.zarina.domain.FilteredProducts
 import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.TreeFilter
 
 @Factory
 class AnyQuerySearchRemoteSource(
@@ -46,6 +47,34 @@ class AnyQuerySearchRemoteSource(
                 if (selectedItems.isNotEmpty()) {
                     add("${FacetDto.NAME_COLOR}:${selectedItems.joinToString(";") { it.id }}")
                 }
+            }
+            if (categories != null && !categories.isEmpty) {
+                val selectedItems = categories.getSelectedOptimized()
+                if (selectedItems.isNotEmpty()) {
+                    add("${FacetDto.NAME_CATEGORIES}:${selectedItems.joinToString(";") { it.id }}")
+                }
+            }
+        }
+    }
+
+    private fun TreeFilter.getSelectedOptimized(): List<TreeFilter.Item> {
+        return buildList {
+            items.forEach {
+                if (it.isSelected) {
+                    add(it)
+                } else {
+                    addSelectedChildren(it)
+                }
+            }
+        }
+    }
+
+    private fun MutableList<TreeFilter.Item>.addSelectedChildren(item: TreeFilter.Item) {
+        item.children.forEach {
+            if (it.isSelected) {
+                add(it)
+            } else {
+                addSelectedChildren(it)
             }
         }
     }
