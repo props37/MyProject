@@ -38,7 +38,15 @@ fun NavGraphBuilder.searchGraph(navController: NavController) {
             )
         }
         composableDestination(Search.Filters) {
-            FiltersScreen()
+            val savedStateHandle = remember(it) { it.savedStateHandle }
+            val searchSavedStateHandle =
+                remember(it) { navController.getBackStackEntry(Search.Root.routeSchema).savedStateHandle }
+            FiltersScreen(
+                savedStateHandle = savedStateHandle,
+                searchSavedStateHandle = searchSavedStateHandle,
+                showFilter = {}, // TODO
+                goBack = { navController.popBackStack(Search.Filters.routeSchema, true) }
+            )
         }
     }
 }

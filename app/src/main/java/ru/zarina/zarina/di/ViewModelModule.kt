@@ -61,4 +61,10 @@ val viewModelModule = module {
             searchSavedStateHandle = parameters[0],
         )
     }
+    viewModel { parameters ->
+        ru.zarina.zarina.ui.screens.search.filters.FiltersViewModel(
+            savedStateHandle = parameters[0],
+            searchSavedStateHandle = parameters[1],
+        )
+    }
 }
