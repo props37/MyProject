@@ -179,9 +179,10 @@ fun FilterTreeItem(
                 text = item.name,
                 style = UiKitTheme.typography.circle1718,
                 color = UiKitTheme.colors.primaryContentColor,
-                modifier = Modifier.padding(end = 8.dp),
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .weight(1f),
             )
-            Spacer(modifier = Modifier.weight(1f))
             AnimatedContent(
                 targetState = item.isSelected,
                 label = "${item.id} is selected",
@@ -191,10 +192,10 @@ fun FilterTreeItem(
                         painter = painterResource(id = R.drawable.ic_checkmark_24),
                         contentDescription = stringResource(id = R.string.selected),
                         tint = UiKitTheme.colors.primaryContentColor,
+                        modifier = Modifier.padding(end = 8.dp),
                     )
             }
             if (item.children.isNotEmpty()) {
-                Spacer(modifier = Modifier.weight(1f))
                 CollapseButton(
                     isCollapsed = isCollapsed,
                     modifier = Modifier.clickable { isCollapsed = !isCollapsed })
