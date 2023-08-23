@@ -2,6 +2,7 @@ package ru.zarina.zarina.data.search.remote
 
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.search.remote.api.IAnyQuerySearchApi
+import ru.zarina.zarina.data.search.remote.api.dto.FacetDto
 import ru.zarina.zarina.data.search.remote.api.dto.SortDto
 import ru.zarina.zarina.domain.FilteredProducts
 import ru.zarina.zarina.domain.Filtration
@@ -33,8 +34,19 @@ class AnyQuerySearchRemoteSource(
     private fun Filtration.toDto(): List<String> {
         return buildList {
             if (price != null)
-                add("price:${price.min};${price.max}")
-            // TODO categories, sizes and colors
+                add("${FacetDto.NAME_PRICE}:${price.min};${price.max}")
+            if (sizes != null) {
+                val selectedItems = sizes.items.filter { it.isSelected }
+                if (selectedItems.isNotEmpty()) {
+                    add("${FacetDto.NAME_SIZE}:${selectedItems.joinToString(";") { it.id }}")
+                }
+            }
+            if (colors != null) {
+                val selectedItems = colors.items.filter { it.isSelected }
+                if (selectedItems.isNotEmpty()) {
+                    add("${FacetDto.NAME_COLOR}:${selectedItems.joinToString(";") { it.id }}")
+                }
+            }
         }
     }
 
