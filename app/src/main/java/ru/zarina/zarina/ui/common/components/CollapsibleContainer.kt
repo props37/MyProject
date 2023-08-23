@@ -47,27 +47,37 @@ fun CollapsibleContainer(
                 )
         ) {
             header()
-            Box {
-                val iconRotationDegrees by animateFloatAsState(
-                    targetValue = if (isCollapsed) 90f else 0f,
-                    label = "icon rotation degrees"
-                )
-                Icon(
-                    painter = painterResource(R.drawable.ic_minus_24),
-                    contentDescription = null,
-                    modifier = Modifier.graphicsLayer {
-                        rotationZ = iconRotationDegrees * 2
-                    }
-                )
-                Icon(
-                    painter = painterResource(R.drawable.ic_minus_24),
-                    contentDescription = null,
-                    modifier = Modifier.graphicsLayer {
-                        rotationZ = iconRotationDegrees
-                    }
-                )
-            }
+            CollapseButton(isCollapsed = isCollapsed)
         }
         if (!isCollapsed) content()
+    }
+}
+
+@Composable
+fun CollapseButton(
+    isCollapsed: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+    ) {
+        val iconRotationDegrees by animateFloatAsState(
+            targetValue = if (isCollapsed) 90f else 0f,
+            label = "icon rotation degrees"
+        )
+        Icon(
+            painter = painterResource(R.drawable.ic_minus_24),
+            contentDescription = null,
+            modifier = Modifier.graphicsLayer {
+                rotationZ = iconRotationDegrees * 2
+            }
+        )
+        Icon(
+            painter = painterResource(R.drawable.ic_minus_24),
+            contentDescription = null,
+            modifier = Modifier.graphicsLayer {
+                rotationZ = iconRotationDegrees
+            }
+        )
     }
 }
