@@ -83,6 +83,7 @@ data class TreeFilter(
     }
 
     @IgnoredOnParcel
-    override val isEmpty = items.none { item -> item.getFlattenedChildren().any { it.isSelected } }
+    override val isEmpty =
+        items.none { item -> item.isSelected || item.getFlattenedChildren().any { it.isSelected } }
 
 }
