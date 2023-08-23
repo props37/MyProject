@@ -243,6 +243,29 @@ object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
         )
     }
 
+    object TreeFilter : Destination<TreeFilter.Arguments>() {
+
+        const val ARGUMENT_FILTER_TYPE = "filter_type"
+
+        override val routeSchema = RouteUtils.generateRouteSchema(
+            baseRoute = BaseRoute.CATALOG_TREE_FILTER,
+            argNames = arrayOf(ARGUMENT_FILTER_TYPE)
+        )
+
+        override val arguments = listOf(
+            navArgument(ARGUMENT_FILTER_TYPE) { type = NavType.EnumType(FilterType::class.java) }
+        )
+
+        override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
+            baseRoute = BaseRoute.CATALOG_TREE_FILTER,
+            args = arrayOf(args.filterType)
+        )
+
+        data class Arguments(
+            val filterType: FilterType,
+        )
+    }
+
     object SelectPickupShop : SimpleDestination(BaseRoute.CATALOG_SELECT_PICKUP_SHOP)
 
     object SelectCity : SimpleDestination(BaseRoute.CATALOG_SELECT_CITY)
@@ -281,6 +304,29 @@ object Search : SimpleGraph(BaseRoute.GRAPH_SEARCH, Root) {
 
         override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
             baseRoute = BaseRoute.SEARCH_LIST_FILTER,
+            args = arrayOf(args.filterType)
+        )
+
+        data class Arguments(
+            val filterType: FilterType,
+        )
+    }
+
+    object TreeFilter : Destination<TreeFilter.Arguments>() {
+
+        const val ARGUMENT_FILTER_TYPE = "filter_type"
+
+        override val routeSchema = RouteUtils.generateRouteSchema(
+            baseRoute = BaseRoute.SEARCH_TREE_FILTER,
+            argNames = arrayOf(ARGUMENT_FILTER_TYPE)
+        )
+
+        override val arguments = listOf(
+            navArgument(ARGUMENT_FILTER_TYPE) { type = NavType.EnumType(FilterType::class.java) }
+        )
+
+        override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
+            baseRoute = BaseRoute.SEARCH_TREE_FILTER,
             args = arrayOf(args.filterType)
         )
 

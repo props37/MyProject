@@ -18,6 +18,7 @@ import ru.zarina.zarina.ui.screens.catalog.selectcity.SelectCityScreen
 import ru.zarina.zarina.ui.screens.catalog.selectshop.SelectShopScreen
 import ru.zarina.zarina.ui.screens.catalog.selectsort.SelectSortScreen
 import ru.zarina.zarina.ui.screens.common.filters.list.ListFilterScreen
+import ru.zarina.zarina.ui.screens.common.filters.tree.TreeFilterScreen
 
 fun NavGraphBuilder.catalogGraph(
     navController: NavController,
@@ -101,6 +102,16 @@ fun NavGraphBuilder.catalogGraph(
                 filtersSavedStateHandle = filtersSavedStateHandle,
                 goBack = {
                     navController.popBackStack(Catalog.ListFilter.routeSchema, true)
+                }
+            )
+        }
+        composableDestination(Catalog.TreeFilter) {
+            val filtersSavedStateHandle =
+                remember(it) { navController.getBackStackEntry(Catalog.Filters.routeSchema).savedStateHandle }
+            TreeFilterScreen(
+                filtersSavedStateHandle = filtersSavedStateHandle,
+                goBack = {
+                    navController.popBackStack(Catalog.TreeFilter.routeSchema, true)
                 }
             )
         }

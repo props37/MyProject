@@ -9,6 +9,7 @@ import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.navigation.destinations.Search
 import ru.zarina.zarina.ui.screens.common.filters.list.ListFilterScreen
+import ru.zarina.zarina.ui.screens.common.filters.tree.TreeFilterScreen
 import ru.zarina.zarina.ui.screens.search.SearchScreen
 import ru.zarina.zarina.ui.screens.search.filters.FiltersScreen
 import ru.zarina.zarina.ui.screens.search.selectsort.SelectSortScreen
@@ -56,6 +57,16 @@ fun NavGraphBuilder.searchGraph(navController: NavController) {
             val filtersSavedStateHandle =
                 remember(it) { navController.getBackStackEntry(Search.Filters.routeSchema).savedStateHandle }
             ListFilterScreen(
+                filtersSavedStateHandle = filtersSavedStateHandle,
+                goBack = {
+                    navController.popBackStack(Search.ListFilter.routeSchema, true)
+                }
+            )
+        }
+        composableDestination(Search.TreeFilter) {
+            val filtersSavedStateHandle =
+                remember(it) { navController.getBackStackEntry(Search.Filters.routeSchema).savedStateHandle }
+            TreeFilterScreen(
                 filtersSavedStateHandle = filtersSavedStateHandle,
                 goBack = {
                     navController.popBackStack(Search.ListFilter.routeSchema, true)
