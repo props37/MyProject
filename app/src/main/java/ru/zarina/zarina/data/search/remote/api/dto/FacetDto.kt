@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
 import ru.zarina.zarina.domain.ListFilter
 import ru.zarina.zarina.domain.PriceRange
+import ru.zarina.zarina.domain.TreeFilter
 
 @Serializable
 data class FacetDto(
@@ -40,11 +41,24 @@ data class FacetDto(
         }
     }
 
+    fun toTreeFilter(): TreeFilter? {
+        val values = values?.mapNotNull { it.toTreeFilterItem() }
+        return if (values.isNullOrEmpty()) {
+            null
+        } else {
+            TreeFilter(
+                items = values,
+                isSingleSelection = false
+            )
+        }
+    }
+
     companion object {
         private const val ID_MIN = "min"
         private const val ID_MAX = "max"
 
         const val NAME_PRICE = "price"
+        const val NAME_CATEGORIES = "categories"
         const val NAME_SIZE = "Размер"
         const val NAME_COLOR = "Цвет"
     }

@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.ApiContract
 import ru.zarina.zarina.domain.ListFilter
+import ru.zarina.zarina.domain.TreeFilter
 
 @Serializable
 data class FacetValueDto(
@@ -32,6 +33,24 @@ data class FacetValueDto(
                 name = name,
                 isSelected = isSelected ?: false,
                 color = null,
+            )
+        } else {
+            null
+        }
+    }
+
+    fun toTreeFilterItem(): TreeFilter.Item? {
+        return if (
+            ApiContract.isNotNull(id, "id")
+            && ApiContract.isNotNull(name, "name")
+        ) {
+            val children = children?.mapNotNull { it.toTreeFilterItem() }.orEmpty()
+            TreeFilter.Item(
+                id = id,
+                name = name,
+                isExplicitSelected = isSelected ?: false,
+                color = null,
+                children = children,
             )
         } else {
             null

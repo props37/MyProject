@@ -155,7 +155,8 @@ fun FiltersScreenContent(
 fun FiltersScreen(
     savedStateHandle: SavedStateHandle,
     searchSavedStateHandle: SavedStateHandle,
-    showFilter: (FilterType) -> Unit,
+    showListFilter: (FilterType) -> Unit,
+    showTreeFilter: (FilterType) -> Unit,
     goBack: () -> Unit,
 ) {
     val viewModel =
@@ -167,7 +168,8 @@ fun FiltersScreen(
 
     FiltersScreenBehavior(
         sideEffects = viewModel.sideEffects,
-        showFilter = showFilter,
+        showListFilter = showListFilter,
+        showTreeFilter = showTreeFilter,
         goBack = goBack,
     )
 
@@ -186,13 +188,15 @@ fun FiltersScreen(
 @Composable
 fun FiltersScreenBehavior(
     sideEffects: Flow<FiltersViewModel.SideEffect>,
-    showFilter: (FilterType) -> Unit,
+    showListFilter: (FilterType) -> Unit,
+    showTreeFilter: (FilterType) -> Unit,
     goBack: () -> Unit,
 ) {
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                is FiltersViewModel.SideEffect.ShowFilter -> showFilter(effect.type)
+                is FiltersViewModel.SideEffect.ShowListFilter -> showListFilter(effect.type)
+                is FiltersViewModel.SideEffect.ShowTreeFilter -> showTreeFilter(effect.type)
                 FiltersViewModel.SideEffect.GoBack -> goBack()
             }
         }

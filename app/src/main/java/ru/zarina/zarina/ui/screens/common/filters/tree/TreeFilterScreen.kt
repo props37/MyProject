@@ -32,7 +32,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -52,6 +54,7 @@ import ru.zarina.zarina.domain.TreeFilter
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
+import ru.zarina.zarina.ui.common.components.CollapseButton
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
@@ -158,40 +161,61 @@ fun FilterTreeItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
+    var isCollapsed by remember { mutableStateOf(true) }
+    Column(
         modifier = modifier
-            .clickable(onClick = onClick)
-            .height(IntrinsicSize.Min)
-            .padding(16.dp),
     ) {
-        if (item.color != null) {
-            Box(
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .clip(shape = CircleShape)
-                    .background(color = item.color.toColorOr(Color.Transparent))
-                    .border(2.dp, UiKitTheme.colors.colorPickerCircleBorder, CircleShape),
-            )
-        }
-        Text(
-            text = item.name,
-            style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
-            modifier = Modifier.padding(end = 8.dp),
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        AnimatedContent(
-            targetState = item.isSelected,
-            label = "${item.id} is selected",
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .height(IntrinsicSize.Min)
+                .padding(16.dp),
         ) {
-            if (it)
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_checkmark_24),
-                    contentDescription = stringResource(id = R.string.selected),
-                    tint = UiKitTheme.colors.primaryContentColor,
+            if (item.color != null) {
+                Box(
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .fillMaxHeight()
+                        .aspectRatio(1f)
+                        .clip(shape = CircleShape)
+                        .background(color = item.color.toColorOr(Color.Transparent))
+                        .border(2.dp, UiKitTheme.colors.colorPickerCircleBorder, CircleShape),
                 )
+            }
+            Text(
+                text = item.name,
+                style = UiKitTheme.typography.circle1718,
+                color = UiKitTheme.colors.primaryContentColor,
+                modifier = Modifier.padding(end = 8.dp),
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            AnimatedContent(
+                targetState = item.isSelected,
+                label = "${item.id} is selected",
+            ) {
+                if (it)
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_checkmark_24),
+                        contentDescription = stringResource(id = R.string.selected),
+                        tint = UiKitTheme.colors.primaryContentColor,
+                    )
+            }
+            if (item.children.isNotEmpty()) {
+                Spacer(modifier = Modifier.weight(1f))
+                CollapseButton(
+                    isCollapsed = isCollapsed,
+                    modifier = Modifier.clickable { isCollapsed = !isCollapsed })
+            }
+        }
+        if (!isCollapsed) {
+            item.children.forEach { child ->
+                FilterTreeItem(
+                    item = child,
+                    onClick = onClick,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
         }
     }
 }

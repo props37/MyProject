@@ -46,9 +46,13 @@ fun NavGraphBuilder.searchGraph(navController: NavController) {
             FiltersScreen(
                 savedStateHandle = savedStateHandle,
                 searchSavedStateHandle = searchSavedStateHandle,
-                showFilter = { type ->
+                showListFilter = { type ->
                     val arguments = Search.ListFilter.Arguments(filterType = type)
                     navController.navigate(Search.ListFilter.createRoute(arguments))
+                },
+                showTreeFilter = { type ->
+                    val arguments = Search.TreeFilter.Arguments(filterType = type)
+                    navController.navigate(Search.TreeFilter.createRoute(arguments))
                 },
                 goBack = { navController.popBackStack(Search.Filters.routeSchema, true) }
             )

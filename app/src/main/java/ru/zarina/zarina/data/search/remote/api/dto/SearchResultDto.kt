@@ -43,12 +43,13 @@ data class SearchResultDto(
 fun List<FacetDto>.toDomain(): Filtration {
     val facetsByName = this.associateBy { it.name }
     val price = facetsByName[FacetDto.NAME_PRICE]?.toPriceRange()
+    val categories = facetsByName[FacetDto.NAME_CATEGORIES]?.toTreeFilter()
     val sizes = facetsByName[FacetDto.NAME_SIZE]?.toListFilter()
     val colors = facetsByName[FacetDto.NAME_COLOR]?.toListFilter()
 
     return Filtration(
         priceLimits = price,
-        categories = null,
+        categories = categories,
         colors = colors,
         attributes = null,
         materials = null,
