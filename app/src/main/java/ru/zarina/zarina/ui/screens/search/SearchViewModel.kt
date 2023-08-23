@@ -216,6 +216,10 @@ class SearchViewModel(
         sideEffect(SideEffect.ShowSelectSort)
     }
 
+    fun onFilterClick() {
+        sideEffect(SideEffect.ShowFilters)
+    }
+
     fun onProductClick(product: Product) {
         sideEffect(SideEffect.ShowProduct(product))
     }
@@ -269,6 +273,7 @@ class SearchViewModel(
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         data class ShowProduct(val product: Product) : SideEffect
         object ShowSelectSort : SideEffect
+        object ShowFilters : SideEffect
         object ScrollResultsToTop : SideEffect
     }
 

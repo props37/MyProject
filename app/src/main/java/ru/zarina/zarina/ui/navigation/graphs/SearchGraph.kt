@@ -9,6 +9,7 @@ import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
 import ru.zarina.zarina.ui.navigation.destinations.Search
 import ru.zarina.zarina.ui.screens.search.SearchScreen
+import ru.zarina.zarina.ui.screens.search.filters.FiltersScreen
 import ru.zarina.zarina.ui.screens.search.selectsort.SelectSortScreen
 
 fun NavGraphBuilder.searchGraph(navController: NavController) {
@@ -22,6 +23,9 @@ fun NavGraphBuilder.searchGraph(navController: NavController) {
                 },
                 showSelectSort = {
                     navController.navigate(Search.SelectSort.routeSchema)
+                },
+                showFilters = {
+                    navController.navigate(Search.Filters.routeSchema)
                 }
             )
         }
@@ -32,6 +36,9 @@ fun NavGraphBuilder.searchGraph(navController: NavController) {
                 searchSavedStateHandle = searchSavedStateHandle,
                 goBack = { navController.popBackStack(Search.SelectSort.routeSchema, true) }
             )
+        }
+        composableDestination(Search.Filters) {
+            FiltersScreen()
         }
     }
 }

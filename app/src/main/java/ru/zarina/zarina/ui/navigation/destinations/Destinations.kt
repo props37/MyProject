@@ -264,4 +264,5 @@ object Cart : SimpleGraph(BaseRoute.GRAPH_CART, Root) {
 object Search : SimpleGraph(BaseRoute.GRAPH_SEARCH, Root) {
     object Root : SimpleDestination(BaseRoute.SEARCH)
     object SelectSort : SimpleDestination(BaseRoute.SEARCH_SELECT_SORT)
+    object Filters : SimpleDestination(BaseRoute.SEARCH_FILTERS)
 }
