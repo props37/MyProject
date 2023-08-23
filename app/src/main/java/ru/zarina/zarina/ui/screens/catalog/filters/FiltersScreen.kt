@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,10 +32,11 @@ import ru.zarina.zarina.domain.PriceRange
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.bottomNavigationPadding
-import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
+import ru.zarina.zarina.ui.common.components.filters.ClearButton
+import ru.zarina.zarina.ui.common.components.filters.FilterButton
+import ru.zarina.zarina.ui.common.components.filters.FiltersDivider
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
-import ru.zarina.zarina.ui.common.components.toolbar.TextButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.ListItem
@@ -176,50 +176,6 @@ fun FiltersScreenContent(
             )
         }
     }
-}
-
-@Composable
-private fun FiltersDivider(
-    modifier: Modifier = Modifier,
-) {
-    Divider(
-        thickness = 1.dp,
-        color = UiKitTheme.colors.listDivider,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-    )
-}
-
-@Composable
-private fun FilterButton(
-    mode: FiltersViewModel.FilterButtonMode,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val text = stringResource(
-        when (mode) {
-            FiltersViewModel.FilterButtonMode.APPLY -> R.string.apply
-            FiltersViewModel.FilterButtonMode.CLOSE -> R.string.close
-        }
-    )
-    ZarinaTextButton(
-        text = text,
-        onClick = onClick,
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun ClearButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    TextButton(
-        text = stringResource(id = R.string.reset),
-        onClick = onClick,
-        modifier = modifier
-    )
 }
 
 @Composable
