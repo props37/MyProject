@@ -86,4 +86,26 @@ data class TreeFilter(
     override val isEmpty =
         items.none { item -> item.isSelected || item.getFlattenedChildren().any { it.isSelected } }
 
+    fun getSelectedOptimized(): List<Item> {
+        return buildList {
+            items.forEach {
+                if (it.isSelected) {
+                    add(it)
+                } else {
+                    addSelectedChildren(it)
+                }
+            }
+        }
+    }
+
+    private fun MutableList<Item>.addSelectedChildren(item: Item) {
+        item.children.forEach {
+            if (it.isSelected) {
+                add(it)
+            } else {
+                addSelectedChildren(it)
+            }
+        }
+    }
+
 }
