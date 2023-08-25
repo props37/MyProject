@@ -183,9 +183,16 @@ fun FilterTreeItem(
                 style = UiKitTheme.typography.circle1718,
                 color = UiKitTheme.colors.primaryContentColor,
                 modifier = Modifier
-                    .padding(end = 8.dp)
-                    .weight(1f),
+                    .padding(end = 8.dp),
             )
+            if (item.count != null)
+                Text(
+                    text = item.count.toString(),
+                    style = UiKitTheme.typography.circle1718,
+                    color = UiKitTheme.colors.hint,
+                    modifier = Modifier.padding(end = 8.dp),
+                )
+            Spacer(modifier = Modifier.weight(1f))
             AnimatedContent(
                 targetState = item.isSelected,
                 label = "${item.id} is selected",

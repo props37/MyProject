@@ -72,6 +72,7 @@ data class TreeFilter(
         val isExplicitSelected: Boolean,
         val color: Color? = null,
         val children: List<Item> = emptyList(),
+        val count: Int? = null,
     ) : Parcelable {
 
         @IgnoredOnParcel

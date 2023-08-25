@@ -51,6 +51,7 @@ data class FacetValueDto(
                 isExplicitSelected = isSelected ?: false,
                 color = null,
                 children = children,
+                count = value?.toInt()
             )
         } else {
             null
