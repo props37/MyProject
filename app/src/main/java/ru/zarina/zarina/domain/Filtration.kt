@@ -6,16 +6,16 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Filtration(
-    val priceLimits: PriceRange?,
+    val priceLimits: PriceRange? = null,
     val price: PriceRange? = priceLimits,
-    val categories: ListFilter?,
-    val colors: ListFilter?,
-    val attributes: ListFilter?,
-    val materials: ListFilter?,
-    val sizes: ListFilter?,
-    val isShippingAvailable: Boolean?,
-    val isPickupAvailable: Boolean?,
-    val pickupShop: Shop?,
+    val categories: TreeFilter? = null,
+    val colors: ListFilter? = null,
+    val attributes: ListFilter? = null,
+    val materials: ListFilter? = null,
+    val sizes: ListFilter? = null,
+    val isShippingAvailable: Boolean? = null,
+    val isPickupAvailable: Boolean? = null,
+    val pickupShop: Shop? = null,
 ) : Parcelable {
 
     fun isEmpty() = price == priceLimits
@@ -27,6 +27,11 @@ data class Filtration(
             && isShippingAvailable != true
             && isPickupAvailable != true
             && pickupShop == null
+
+    companion object {
+        val EMPTY
+            get() = Filtration()
+    }
 
 }
 
@@ -51,4 +56,57 @@ data class ListFilter(
 
     @IgnoredOnParcel
     override val isEmpty = items.none { it.isSelected }
+
+}
+
+@Parcelize
+data class TreeFilter(
+    val items: List<Item>,
+    override val isSingleSelection: Boolean = false,
+) : Filter, Parcelable {
+
+    @Parcelize
+    data class Item(
+        val id: String,
+        val name: String,
+        val isExplicitSelected: Boolean,
+        val color: Color? = null,
+        val children: List<Item> = emptyList(),
+        val count: Int? = null,
+    ) : Parcelable {
+
+        @IgnoredOnParcel
+        val isSelected: Boolean by lazy { if (children.isNotEmpty()) children.all { it.isSelected } else isExplicitSelected }
+
+        fun getFlattenedChildren(): List<Item> =
+            children + children.flatMap { it.getFlattenedChildren() }
+
+    }
+
+    @IgnoredOnParcel
+    override val isEmpty =
+        items.none { item -> item.isSelected || item.getFlattenedChildren().any { it.isSelected } }
+
+    fun getSelectedOptimized(): List<Item> {
+        return buildList {
+            items.forEach {
+                if (it.isSelected) {
+                    add(it)
+                } else {
+                    addSelectedChildren(it)
+                }
+            }
+        }
+    }
+
+    private fun MutableList<Item>.addSelectedChildren(item: Item) {
+        item.children.forEach {
+            if (it.isSelected) {
+                add(it)
+            } else {
+                addSelectedChildren(it)
+            }
+        }
+    }
+
 }

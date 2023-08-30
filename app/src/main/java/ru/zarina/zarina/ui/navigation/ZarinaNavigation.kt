@@ -28,6 +28,7 @@ import ru.zarina.zarina.ui.navigation.graphs.homeGraph
 import ru.zarina.zarina.ui.navigation.graphs.orphans
 import ru.zarina.zarina.ui.navigation.graphs.pickupGraph
 import ru.zarina.zarina.ui.navigation.graphs.profileGraph
+import ru.zarina.zarina.ui.navigation.graphs.searchGraph
 import ru.zarina.zarina.ui.navigation.graphs.subscribeGraph
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
@@ -68,6 +69,7 @@ fun ZarinaNavigation(
                     favoritesGraph(navController)
                     profileGraph(navController)
                     cartGraph(navController)
+                    searchGraph(navController)
                 }
                 Box(
                     modifier = Modifier

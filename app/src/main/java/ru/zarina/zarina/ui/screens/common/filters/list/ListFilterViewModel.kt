@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.catalog.filters.list
+package ru.zarina.zarina.ui.screens.common.filters.list
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -101,11 +101,11 @@ class ListFilterViewModel(
     fun onApplyClick() {
         parentSavedStateHandle[FiltersViewModel.KEY_NEW_FILTRATION] =
             when (filterType.value) {
-                FilterType.CATEGORY -> newFiltration.value?.copy(categories = filterData.value)
                 FilterType.COLOR -> newFiltration.value?.copy(colors = filterData.value)
                 FilterType.ATTRIBUTES -> newFiltration.value?.copy(attributes = filterData.value)
                 FilterType.MATERIALS -> newFiltration.value?.copy(materials = filterData.value)
                 FilterType.SIZE -> newFiltration.value?.copy(sizes = filterData.value)
+                FilterType.CATEGORY -> newFiltration.value
                 FilterType.PICKUP_SHOP -> newFiltration.value
                 null -> newFiltration.value
             }
@@ -118,11 +118,11 @@ class ListFilterViewModel(
 
     private fun Filtration.getFilter(filterType: FilterType?): ListFilter? {
         return when (filterType) {
-            FilterType.CATEGORY -> categories
             FilterType.COLOR -> colors
             FilterType.ATTRIBUTES -> attributes
             FilterType.MATERIALS -> materials
             FilterType.SIZE -> sizes
+            FilterType.CATEGORY -> null
             FilterType.PICKUP_SHOP -> null
             null -> null
         }

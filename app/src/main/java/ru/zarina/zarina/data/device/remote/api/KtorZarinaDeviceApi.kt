@@ -10,7 +10,7 @@ import ru.zarina.zarina.di.Qualifiers
 
 @Factory
 class KtorZarinaDeviceApi(
-    @Named(Qualifiers.Authorization.NONE)
+    @Named(Qualifiers.Api.ZARINA)
     private val client: HttpClient,
 ) : IZarinaDeviceApi {
 

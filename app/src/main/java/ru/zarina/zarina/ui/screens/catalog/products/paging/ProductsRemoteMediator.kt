@@ -8,14 +8,16 @@ import androidx.paging.RemoteMediator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import ru.zarina.zarina.domain.Category
+import ru.zarina.zarina.domain.FilteredProducts
 import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.ui.common.base.paging.PageHolder
 import ru.zarina.zarina.usecase.catalog.GetProductsPageUseCase
 
 @OptIn(ExperimentalPagingApi::class)
 class ProductsRemoteMediator(
-    private val pageHolder: ProductPageHolder,
+    private val pageHolder: PageHolder<FilteredProducts>,
     private val getProductsPageUseCase: GetProductsPageUseCase,
     private val category: Category,
     private val sort: ProductSort,
@@ -26,7 +28,7 @@ class ProductsRemoteMediator(
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, Product>
+        state: PagingState<Int, Product>,
     ): MediatorResult {
         val nextPageIndex = when (loadType) {
             LoadType.REFRESH -> state.anchorPosition ?: 0

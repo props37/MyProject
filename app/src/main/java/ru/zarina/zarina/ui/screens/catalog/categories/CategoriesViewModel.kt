@@ -44,11 +44,16 @@ class CategoriesViewModel(
         sideEffect(SideEffect.ShowProducts(category.id))
     }
 
+    fun onSearchClick() {
+        sideEffect(SideEffect.ShowSearch)
+    }
+
     enum class Operation : OperationKey { LOADING_CATEGORIES }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
         data class ShowProducts(val categoryId: Category.Id) : SideEffect
         data class ShowToast(val message: Text) : SideEffect
+        object ShowSearch : SideEffect
     }
 
 }

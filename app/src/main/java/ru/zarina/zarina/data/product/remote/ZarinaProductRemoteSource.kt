@@ -9,10 +9,10 @@ import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.FilteredProducts
 import ru.zarina.zarina.domain.Filtration
-import ru.zarina.zarina.domain.ListFilter
 import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.TreeFilter
 
 @Factory
 class ZarinaProductRemoteSource(
@@ -59,13 +59,13 @@ class ZarinaProductRemoteSource(
 
 }
 
-private fun List<Category>.toFilter(loadedCategoryId: Int): ListFilter {
-    return ListFilter(
+private fun List<Category>.toFilter(loadedCategoryId: Int): TreeFilter {
+    return TreeFilter(
         items = this.map {
-            ListFilter.Item(
+            TreeFilter.Item(
                 id = it.id.value.toString(),
                 name = it.name,
-                isSelected = loadedCategoryId == it.id.value
+                isExplicitSelected = loadedCategoryId == it.id.value
             )
         },
         isSingleSelection = true

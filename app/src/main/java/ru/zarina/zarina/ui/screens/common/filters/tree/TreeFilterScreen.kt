@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.catalog.filters.list
+package ru.zarina.zarina.ui.screens.common.filters.tree
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -21,7 +21,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
@@ -32,7 +32,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -48,10 +50,11 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.ListFilter
+import ru.zarina.zarina.domain.TreeFilter
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
+import ru.zarina.zarina.ui.common.components.CollapseButton
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
@@ -65,12 +68,12 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
-fun ListFilterScreenContent(
+fun TreeFilterScreenContent(
     toolbarTitle: Text,
     isClearButtonVisible: Boolean,
     onClearClick: () -> Unit,
-    items: PersistentList<ListFilter.Item>,
-    onItemClick: (ListFilter.Item) -> Unit,
+    items: PersistentList<TreeFilter.Item>,
+    onItemClick: (TreeFilter.Item) -> Unit,
     onBackClick: () -> Unit,
     isApplyButtonVisible: Boolean,
     onApplyClick: () -> Unit,
@@ -107,24 +110,15 @@ fun ListFilterScreenContent(
                 state = listState,
                 modifier = Modifier.weight(1f),
             ) {
-                itemsIndexed(
+                items(
                     items = items,
-                    key = { _, item -> item.id },
-                ) { index, item ->
-                    val onClick = remember(item) { { onItemClick(item) } }
-                    FilterListItem(
+                    key = { item -> item.id },
+                ) { item ->
+                    FilterTreeItem(
                         item = item,
-                        onClick = onClick,
+                        onItemClick = onItemClick,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    if (index != items.lastIndex)
-                        Divider(
-                            thickness = 1.dp,
-                            color = UiKitTheme.colors.listDivider,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                        )
                 }
                 item { Spacer(modifier = Modifier.navigationBarsPadding()) }
             }
@@ -153,67 +147,107 @@ fun ListFilterScreenContent(
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun FilterListItem(
-    item: ListFilter.Item,
-    onClick: () -> Unit,
+fun FilterTreeItem(
+    item: TreeFilter.Item,
+    onItemClick: (TreeFilter.Item) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
+    var isCollapsed by remember {
+        mutableStateOf(
+            item.getFlattenedChildren().none { it.isSelected })
+    }
+    Column(
         modifier = modifier
-            .clickable(onClick = onClick)
-            .height(IntrinsicSize.Min)
-            .padding(16.dp),
     ) {
-        if (item.color != null) {
-            Box(
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .clip(shape = CircleShape)
-                    .background(color = item.color.toColorOr(Color.Transparent))
-                    .border(2.dp, UiKitTheme.colors.colorPickerCircleBorder, CircleShape),
-            )
-        }
-        Text(
-            text = item.name,
-            style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
-            modifier = Modifier.padding(end = 8.dp),
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        AnimatedContent(
-            targetState = item.isSelected,
-            label = "${item.id} is selected",
+        val onClick = remember(item) { { onItemClick(item) } }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .height(IntrinsicSize.Min)
+                .padding(16.dp),
         ) {
-            if (it)
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_checkmark_24),
-                    contentDescription = stringResource(id = R.string.selected),
-                    tint = UiKitTheme.colors.primaryContentColor,
+            if (item.color != null) {
+                Box(
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .fillMaxHeight()
+                        .aspectRatio(1f)
+                        .clip(shape = CircleShape)
+                        .background(color = item.color.toColorOr(Color.Transparent))
+                        .border(2.dp, UiKitTheme.colors.colorPickerCircleBorder, CircleShape),
                 )
+            }
+            Text(
+                text = item.name,
+                style = UiKitTheme.typography.circle1718,
+                color = UiKitTheme.colors.primaryContentColor,
+                modifier = Modifier
+                    .padding(end = 8.dp),
+            )
+            if (item.count != null)
+                Text(
+                    text = item.count.toString(),
+                    style = UiKitTheme.typography.circle1718,
+                    color = UiKitTheme.colors.hint,
+                    modifier = Modifier.padding(end = 8.dp),
+                )
+            Spacer(modifier = Modifier.weight(1f))
+            AnimatedContent(
+                targetState = item.isSelected,
+                label = "${item.id} is selected",
+            ) {
+                if (it)
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_checkmark_24),
+                        contentDescription = stringResource(id = R.string.selected),
+                        tint = UiKitTheme.colors.primaryContentColor,
+                        modifier = Modifier.padding(end = 8.dp),
+                    )
+            }
+            if (item.children.isNotEmpty()) {
+                CollapseButton(
+                    isCollapsed = isCollapsed,
+                    modifier = Modifier.clickable { isCollapsed = !isCollapsed })
+            }
+        }
+        Divider(
+            thickness = 1.dp,
+            color = UiKitTheme.colors.listDivider,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+        )
+        if (!isCollapsed) {
+            item.children.forEach { child ->
+                FilterTreeItem(
+                    item = child,
+                    onItemClick = onItemClick,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
         }
     }
 }
 
 @Composable
-fun ListFilterScreen(
+fun TreeFilterScreen(
     filtersSavedStateHandle: SavedStateHandle,
     goBack: () -> Unit,
 ) {
-    val viewModel = koinViewModel<ListFilterViewModel> { parametersOf(filtersSavedStateHandle) }
+    val viewModel = koinViewModel<TreeFilterViewModel> { parametersOf(filtersSavedStateHandle) }
 
     val toolbarTitle by viewModel.toolbarTitle.collectAsState()
     val isClearButtonVisible by viewModel.isClearButtonVisible.collectAsState()
     val items by viewModel.items.collectAsState()
     val filterButtonMode by viewModel.isApplyButtonVisible.collectAsState()
 
-    ListFilterScreenBehavior(
+    TreeFilterScreenBehavior(
         sideEffects = viewModel.sideEffects,
         goBack = goBack,
     )
 
-    ListFilterScreenContent(
+    TreeFilterScreenContent(
         toolbarTitle = toolbarTitle,
         isClearButtonVisible = isClearButtonVisible,
         onClearClick = viewModel::onClearClick,
@@ -226,15 +260,15 @@ fun ListFilterScreen(
 }
 
 @Composable
-fun ListFilterScreenBehavior(
-    sideEffects: Flow<ListFilterViewModel.SideEffect>,
+fun TreeFilterScreenBehavior(
+    sideEffects: Flow<TreeFilterViewModel.SideEffect>,
     goBack: () -> Unit,
 ) {
     NavigationBarState(isVisible = false, isAnimated = false)
     LaunchedEffect(sideEffects) {
         sideEffects.collect { effect ->
             when (effect) {
-                ListFilterViewModel.SideEffect.GoBack -> goBack()
+                TreeFilterViewModel.SideEffect.GoBack -> goBack()
             }
         }
     }
@@ -244,9 +278,9 @@ fun ListFilterScreenBehavior(
 @FontScalePreviews
 @DensityPreviews
 @Composable
-fun ListFilterScreenContentPreview() {
+fun TreeFilterScreenContentPreview() {
     ZarinaTheme {
-        ListFilterScreenContent(
+        TreeFilterScreenContent(
             toolbarTitle = Text.String(text = "Цвет"),
             isClearButtonVisible = true,
             onClearClick = {},

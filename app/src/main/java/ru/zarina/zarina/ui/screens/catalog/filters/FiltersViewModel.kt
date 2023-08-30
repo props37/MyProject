@@ -13,6 +13,7 @@ import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.PriceRange
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
+import ru.zarina.zarina.ui.common.components.FilterButtonMode
 import ru.zarina.zarina.ui.screens.catalog.products.ProductsViewModel
 
 @KoinViewModel
@@ -72,7 +73,10 @@ class FiltersViewModel(
     }
 
     fun onFilterClick(type: FilterType) {
-        sideEffect(SideEffect.ShowColorFilter(type))
+        when (type) {
+            FilterType.CATEGORY -> sideEffect(SideEffect.ShowTreeFilter(type))
+            else -> sideEffect(SideEffect.ShowListFilter(type))
+        }
     }
 
     fun onFilterButtonClick() {
@@ -81,11 +85,10 @@ class FiltersViewModel(
     }
 
     sealed interface SideEffect : ISideEffectSource.ISideEffect {
-        class ShowColorFilter(val type: FilterType) : SideEffect
+        class ShowListFilter(val type: FilterType) : SideEffect
+        class ShowTreeFilter(val type: FilterType) : SideEffect
         object GoBack : SideEffect
     }
-
-    enum class FilterButtonMode { APPLY, CLOSE }
 
     companion object {
         const val KEY_NEW_FILTRATION = "new_filtration"

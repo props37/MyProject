@@ -9,14 +9,16 @@ import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.navigation.destinations.Destinations
+import ru.zarina.zarina.ui.navigation.destinations.Search
 import ru.zarina.zarina.ui.screens.catalog.categories.CategoriesScreen
 import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 import ru.zarina.zarina.ui.screens.catalog.filters.FiltersScreen
-import ru.zarina.zarina.ui.screens.catalog.filters.list.ListFilterScreen
 import ru.zarina.zarina.ui.screens.catalog.products.ProductsScreen
 import ru.zarina.zarina.ui.screens.catalog.selectcity.SelectCityScreen
 import ru.zarina.zarina.ui.screens.catalog.selectshop.SelectShopScreen
 import ru.zarina.zarina.ui.screens.catalog.selectsort.SelectSortScreen
+import ru.zarina.zarina.ui.screens.common.filters.list.ListFilterScreen
+import ru.zarina.zarina.ui.screens.common.filters.tree.TreeFilterScreen
 
 fun NavGraphBuilder.catalogGraph(
     navController: NavController,
@@ -28,6 +30,9 @@ fun NavGraphBuilder.catalogGraph(
                     val arguments = Catalog.Products.Arguments(categoryId, null)
                     navController.navigate(Catalog.Products.createRoute(arguments))
                 },
+                showSearch = {
+                    navController.navigate(Search.Root.routeSchema)
+                }
             )
         }
         composableDestination(Catalog.Products) {
@@ -76,12 +81,21 @@ fun NavGraphBuilder.catalogGraph(
             FiltersScreen(
                 savedStateHandle = remember(it) { it.savedStateHandle },
                 productsSavedStateHandle = productSavedStateHandle,
-                showColorFilter = { type ->
+                showListFilter = { type ->
                     when (type) {
                         FilterType.PICKUP_SHOP -> navController.navigate(Catalog.SelectPickupShop.routeSchema)
                         else -> {
                             val arguments = Catalog.ListFilter.Arguments(filterType = type)
                             navController.navigate(Catalog.ListFilter.createRoute(arguments))
+                        }
+                    }
+                },
+                showTreeFilter = { type ->
+                    when (type) {
+                        FilterType.PICKUP_SHOP -> navController.navigate(Catalog.SelectPickupShop.routeSchema)
+                        else -> {
+                            val arguments = Catalog.TreeFilter.Arguments(filterType = type)
+                            navController.navigate(Catalog.TreeFilter.createRoute(arguments))
                         }
                     }
                 },
@@ -97,6 +111,16 @@ fun NavGraphBuilder.catalogGraph(
                 filtersSavedStateHandle = filtersSavedStateHandle,
                 goBack = {
                     navController.popBackStack(Catalog.ListFilter.routeSchema, true)
+                }
+            )
+        }
+        composableDestination(Catalog.TreeFilter) {
+            val filtersSavedStateHandle =
+                remember(it) { navController.getBackStackEntry(Catalog.Filters.routeSchema).savedStateHandle }
+            TreeFilterScreen(
+                filtersSavedStateHandle = filtersSavedStateHandle,
+                goBack = {
+                    navController.popBackStack(Catalog.TreeFilter.routeSchema, true)
                 }
             )
         }

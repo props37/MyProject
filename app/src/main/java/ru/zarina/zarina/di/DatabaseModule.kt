@@ -34,4 +34,9 @@ class DatabaseModule {
         database: ZarinaDatabase,
     ) = database.categoryDao()
 
+    @Factory
+    fun provideSearchDao(
+        database: ZarinaDatabase,
+    ) = database.searchDao()
+
 }

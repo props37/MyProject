@@ -43,7 +43,7 @@ class NetworkModule {
         explicitNulls = false
     }
 
-    @Named(Qualifiers.Authorization.TOKEN)
+    @Named(Qualifiers.Api.ZARINA_RESTRICTED)
     @Singleton
     fun providesTokenAuthorizationHttpClient(
         context: Context,
@@ -67,7 +67,7 @@ class NetworkModule {
         }
     }
 
-    @Named(Qualifiers.Authorization.NONE)
+    @Named(Qualifiers.Api.ZARINA)
     @Singleton
     fun providesHttpClient(
         context: Context,
@@ -78,7 +78,7 @@ class NetworkModule {
         baseZarinaConfig(context, headerProvider)
     }
 
-    @Named(Qualifiers.Authorization.MINDBOX_SECRET)
+    @Named(Qualifiers.Api.MINDBOX_RESTRICTED)
     @Singleton
     fun providesMindboxSecretHttpClient(
         context: Context,
@@ -93,6 +93,38 @@ class NetworkModule {
                     append(key, value)
                 }
             }
+        }
+        install(HttpCache) {
+            val cacheFile = File(context.cacheDir, CACHE_DIR_MINDBOX)
+            privateStorage(FileStorage(cacheFile))
+        }
+    }
+
+    @Named(Qualifiers.Api.ANYQUERY_AUTOCOMPLETE)
+    @Singleton
+    fun providesAnyQueryAutocompleteHttpClient(
+        context: Context,
+        json: Json,
+    ) = HttpClient(OkHttp) {
+        baseConfig(json)
+        install(DefaultRequest) {
+            url("https://autocomplete.diginetica.net/")
+        }
+        install(HttpCache) {
+            val cacheFile = File(context.cacheDir, CACHE_DIR_MINDBOX)
+            privateStorage(FileStorage(cacheFile))
+        }
+    }
+
+    @Named(Qualifiers.Api.ANYQUERY_SEARCH)
+    @Singleton
+    fun providesAnyQuerySearchHttpClient(
+        context: Context,
+        json: Json,
+    ) = HttpClient(OkHttp) {
+        baseConfig(json)
+        install(DefaultRequest) {
+            url("https://sort.diginetica.net/")
         }
         install(HttpCache) {
             val cacheFile = File(context.cacheDir, CACHE_DIR_MINDBOX)

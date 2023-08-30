@@ -1,21 +1,14 @@
 package ru.zarina.zarina.ui.screens.catalog.selectsort
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,12 +22,11 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.ProductSort
-import ru.zarina.zarina.ui.common.components.SelectionCircle
+import ru.zarina.zarina.ui.common.components.SortDivider
+import ru.zarina.zarina.ui.common.components.SortItem
 import ru.zarina.zarina.ui.common.components.bottomsheet.Header
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
-import ru.zarina.zarina.ui.common.utils.domain.getStringResource
-import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @Composable
@@ -67,37 +59,6 @@ fun SelectSortScreenContent(
             SortDivider()
         }
     }
-}
-
-@Composable
-private fun SortItem(
-    item: ProductSort,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .clickable(onClick = onClick)
-            .padding(16.dp),
-    ) {
-        Text(
-            text = stringResource(item.getStringResource()),
-            modifier = Modifier.weight(1f)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        SelectionCircle(isSelected = isSelected)
-    }
-}
-
-@Composable
-private fun SortDivider() {
-    Divider(
-        thickness = 1.dp,
-        color = UiKitTheme.colors.listDivider,
-        modifier = Modifier.padding(horizontal = 16.dp),
-    )
 }
 
 @Composable
