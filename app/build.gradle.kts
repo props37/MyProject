@@ -23,7 +23,7 @@ androidGitVersion {
 
 android {
     namespace = "ru.zarina.zarina"
-    compileSdk = 33
+    compileSdk = 34
 
     val tagVersionCode = androidGitVersion.code()
     val tagVersionName = androidGitVersion.name()
@@ -32,6 +32,7 @@ android {
     defaultConfig {
         applicationId = "ru.zarina.zarina"
         minSdk = 24
+        // TODO: [High] Update to 34
         targetSdk = 33
         versionCode = tagVersionCode
         versionName = tagVersionName
