@@ -18,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Zarina"
         tools:targetApi="31">
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
@@ -25,17 +26,19 @@
             android:theme="@style/Theme.Zarina.Splash"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="LockedOrientationActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${GOOGLE_MAPS_SECRET}" />
 
+        <!-- TODO: [High] Remove? -->
         <profileable android:shell="true" />
 
     </application>
@@ -46,6 +49,7 @@
             <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="*" />
         </intent>
+
         <intent>
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
