@@ -11,19 +11,18 @@ import ru.zarina.zarina.base.application.extensions.base.ApplicationExtension
 
 @Factory
 class CoilExtension : ApplicationExtension {
-
     override fun install(application: Application) {
         val factory = ImageLoaderFactory {
             ImageLoader.Builder(application)
                 .memoryCache {
                     MemoryCache.Builder(application)
-                        .maxSizePercent(MEMORY_CACHE_FRACTION)
+                        .maxSizePercent(MEMORY_CACHE_MAX_SIZE_PERCENT)
                         .build()
                 }
                 .diskCache {
                     DiskCache.Builder()
-                        .directory(application.cacheDir.resolve(IMAGE_CACHE_DIR_NAME))
-                        .maxSizePercent(DISK_CACHE_FRACTION)
+                        .directory(application.cacheDir.resolve(DISK_CACHE_DIRECTORY_NAME))
+                        .maxSizePercent(DISK_CACHE_MAX_SIZE_PERCENT)
                         .build()
                 }
                 .build()
@@ -33,8 +32,9 @@ class CoilExtension : ApplicationExtension {
     }
 
     companion object {
-        private const val IMAGE_CACHE_DIR_NAME = "image_cache"
-        private const val MEMORY_CACHE_FRACTION = 0.2
-        private const val DISK_CACHE_FRACTION = 0.02
+        private const val MEMORY_CACHE_MAX_SIZE_PERCENT = 0.2
+
+        private const val DISK_CACHE_DIRECTORY_NAME = "image_cache"
+        private const val DISK_CACHE_MAX_SIZE_PERCENT = 0.02
     }
 }

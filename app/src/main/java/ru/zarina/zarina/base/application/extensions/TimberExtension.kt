@@ -8,9 +8,7 @@ import timber.log.Timber
 
 @Factory
 class TimberExtension : ApplicationExtension {
-
     override fun install(application: Application) {
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }
-
 }

@@ -9,23 +9,23 @@ import ru.zarina.zarina.base.application.extensions.base.ApplicationExtension
 
 @Factory
 class MindboxExtension : ApplicationExtension {
-
     override fun install(application: Application) {
         val configuration = getConfiguration(application)
         Mindbox.init(application, configuration, emptyList())
     }
 
-    private fun getConfiguration(application: Application) = MindboxConfiguration.Builder(
-        context = application.applicationContext,
-        domain = DOMAIN,
-        endpointId = BuildConfig.MINDBOX_ENDPOINT,
-    )
-        .shouldCreateCustomer(false)
-        .subscribeCustomerIfCreated(true)
-        .build()
+    private fun getConfiguration(application: Application): MindboxConfiguration {
+        return MindboxConfiguration.Builder(
+            context = application,
+            domain = DOMAIN,
+            endpointId = BuildConfig.MINDBOX_ENDPOINT,
+        )
+            .shouldCreateCustomer(false)
+            .subscribeCustomerIfCreated(true)
+            .build()
+    }
 
     companion object {
         const val DOMAIN = "api.mindbox.ru"
     }
-
 }

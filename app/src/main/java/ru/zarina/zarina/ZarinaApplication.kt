@@ -5,12 +5,11 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import ru.zarina.zarina.base.application.extensions.base.ExtensionManager
+import ru.zarina.zarina.base.application.extensions.base.ApplicationExtensionManager
 import ru.zarina.zarina.di.appModule
 
 class ZarinaApplication : Application() {
-
-    private val extensionManager: ExtensionManager by inject()
+    private val applicationExtensionManager: ApplicationExtensionManager by inject()
 
     override fun onCreate() {
         super.onCreate()
@@ -21,10 +20,10 @@ class ZarinaApplication : Application() {
             modules(appModule)
         }
 
-        installExtensions()
+        installApplicationExtensions()
     }
 
-    private fun installExtensions() {
-        extensionManager.extensions.forEach { it.install(this) }
+    private fun installApplicationExtensions() {
+        applicationExtensionManager.extensions.forEach { it.install(this) }
     }
 }

@@ -6,12 +6,10 @@ import ru.zarina.zarina.base.application.extensions.MindboxExtension
 import ru.zarina.zarina.base.application.extensions.TimberExtension
 
 @Factory
-class ExtensionManager(
+class ApplicationExtensionManager(
     timber: TimberExtension,
     mindbox: MindboxExtension,
     coil: CoilExtension,
 ) {
-
     val extensions = listOf(timber, mindbox, coil)
-
 }
