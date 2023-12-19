@@ -20,7 +20,7 @@ class GetProductUseCase(
     private val favoritesRepository: IFavoritesRepository,
 ) : FlowUseCase<GetProductUseCase.Params, Product>(dispatcher) {
 
-    override fun execute(params: Params): Flow<Result<Product>> {
+    override fun execute(params: Params): Flow<Product> {
         val (id) = params
 
         val productFlow = productRepository.getProduct(id)
@@ -32,16 +32,15 @@ class GetProductUseCase(
             .map { id in it }
 
         return combine(productFlow, isFavoriteFlow) { product, isFavorite ->
-            val resultProduct = if (product.isFavorite == isFavorite)
+            if (product.isFavorite == isFavorite) {
                 product
-            else
+            } else {
                 product.copy(isFavorite = isFavorite)
-            Result.success(resultProduct)
+            }
         }
     }
 
     data class Params(
         val id: Product.Id,
     )
-
 }

@@ -20,7 +20,8 @@ class GetRecommendationsUseCase(
     private val recommendationRepository: IRecommendationRepository,
     private val favoritesRepository: IFavoritesRepository,
 ) : FlowUseCase<GetRecommendationsUseCase.Params, List<Product>>(dispatcher) {
-    override fun execute(params: Params): Flow<Result<List<Product>>> {
+
+    override fun execute(params: Params): Flow<List<Product>> {
         val (type) = params
 
         val recommendationsFlow = recommendationRepository.getRecommendations(type)
@@ -31,7 +32,7 @@ class GetRecommendationsUseCase(
         val favoritesFlow = favoritesRepository.getIds()
 
         return combine(recommendationsFlow, favoritesFlow) { recommendations, favorites ->
-            val result = recommendations.map { product ->
+            recommendations.map { product ->
                 val isFavorite = product.id in favorites
                 if (product.isFavorite == isFavorite) {
                     product
@@ -39,12 +40,10 @@ class GetRecommendationsUseCase(
                     product.copy(isFavorite = isFavorite)
                 }
             }
-            Result.success(result)
         }
     }
 
     data class Params(
         val type: RecommendationType,
     )
-
 }

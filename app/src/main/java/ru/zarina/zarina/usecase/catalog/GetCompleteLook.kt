@@ -20,10 +20,11 @@ class GetCompleteLookUseCase(
     private val productRepository: IProductRepository,
     private val favoritesRepository: FavoritesRepository,
 ) : FlowUseCase<GetCompleteLookUseCase.Params, List<Product>>(dispatcher) {
-    override fun execute(params: Params): Flow<Result<List<Product>>> {
+
+    override fun execute(params: Params): Flow<List<Product>> {
         val (product) = params
 
-        if (!product.isLookPart) return flowOf(Result.success(emptyList()))
+        if (!product.isLookPart) return flowOf(emptyList())
 
         val completeLookFlow = productRepository.getCompleteLook(product)
             .onEach {
@@ -34,7 +35,7 @@ class GetCompleteLookUseCase(
         val favoritesFlow = favoritesRepository.getIds()
 
         return combine(completeLookFlow, favoritesFlow) { look, favorites ->
-            val result = look.map { product ->
+            look.map { product ->
                 val isFavorite = product.id in favorites
                 if (product.isFavorite == isFavorite) {
                     product
@@ -42,7 +43,6 @@ class GetCompleteLookUseCase(
                     product.copy(isFavorite = isFavorite)
                 }
             }
-            Result.success(result)
         }
     }
 

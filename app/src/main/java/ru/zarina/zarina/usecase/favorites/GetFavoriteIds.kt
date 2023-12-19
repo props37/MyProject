@@ -2,7 +2,6 @@ package ru.zarina.zarina.usecase.favorites
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.base.clean.FlowUseCase
@@ -16,8 +15,7 @@ class GetFavoriteIdsUseCase(
     private val favoritesRepository: IFavoritesRepository,
 ) : FlowUseCase<Unit, Set<Product.Id>>(dispatcher) {
 
-    override fun execute(params: Unit): Flow<Result<Set<Product.Id>>> {
-        return favoritesRepository.getIds().map { Result.success(it) }
+    override fun execute(params: Unit): Flow<Set<Product.Id>> {
+        return favoritesRepository.getIds()
     }
-
 }
