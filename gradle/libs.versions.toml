@@ -1,5 +1,5 @@
 [versions]
-android-gradle = "8.1.0-rc01"
+android-gradle = "8.2.0"
 kotlin = "1.8.20"
 ksp = "1.8.20-1.0.11"
 kotlinx-coroutines-test = "1.7.2"
