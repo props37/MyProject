@@ -1,6 +1,3 @@
-// Workaround for https://github.com/gradle/gradle/issues/22797; remove after Gradle 8.1 migration
-@file:Suppress("DSL_SCOPE_VIOLATION")
-
 plugins {
     alias(libs.plugins.android.test)
     alias(libs.plugins.kotlin.android)
@@ -8,7 +5,7 @@ plugins {
 
 android {
     namespace = "ru.zarina.zarina.macrobenchmark"
-    compileSdk = 33
+    compileSdk = 34
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -39,10 +36,10 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.test.ext.junit)
-    implementation(libs.espresso.core)
-    implementation(libs.androidx.test.uiautomator)
-    implementation(libs.androidx.benchmark)
+    implementation(libs.jetpack.test.junit)
+    implementation(libs.jetpack.espresso)
+    implementation(libs.jetpack.test.uiAutomator)
+    implementation(libs.jetpack.benchmark)
 }
 
 androidComponents {
