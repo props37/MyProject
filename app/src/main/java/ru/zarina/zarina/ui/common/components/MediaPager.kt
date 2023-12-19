@@ -32,7 +32,6 @@ fun MediaPager(
     aspectRatio: Float = Media.Defaults.PRODUCT_MEDIA_ASPECT_RATIO,
 ) {
     HorizontalPager(
-        pageCount = Int.MAX_VALUE,
         beyondBoundsPageCount = 1,
         key = { it },
         state = state,
@@ -91,5 +90,7 @@ private fun VideoItem(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun rememberInfinitePagerState(itemCount: Int): PagerState =
-    rememberPagerState(initialPage = (Int.MAX_VALUE / 2).roundToMultipleOf(itemCount))
+fun rememberInfinitePagerState(itemCount: Int): PagerState = rememberPagerState(
+    initialPage = (Int.MAX_VALUE / 2).roundToMultipleOf(itemCount),
+    pageCount = { Int.MAX_VALUE },
+)

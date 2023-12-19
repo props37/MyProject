@@ -264,7 +264,7 @@ private fun Words(
 ) {
     FlowRow(
         horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
+        verticalArrangement = Arrangement.Center,
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 11.dp, vertical = 10.dp),

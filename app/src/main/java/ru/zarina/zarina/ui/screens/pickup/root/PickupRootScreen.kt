@@ -107,7 +107,7 @@ fun PickupRootScreenContent(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                val pagerState = rememberPagerState()
+                val pagerState = rememberPagerState { ShopListTab.entries.size }
                 AnimatedContent(
                     targetState = stocks?.isEmpty() == true,
                     label = "stocks animated content",
@@ -147,8 +147,8 @@ fun PickupRootScreenContent(
 private fun ShopListPager(
     stocks: ImmutableList<Stock>,
     onStockPickupClick: (Stock) -> Unit,
+    pagerState: PagerState,
     modifier: Modifier = Modifier,
-    pagerState: PagerState = rememberPagerState(),
 ) {
     Column(
         modifier = modifier
@@ -173,7 +173,6 @@ private fun ShopListPager(
             modifier = Modifier.fillMaxWidth()
         )
         HorizontalPager(
-            pageCount = tabs.size,
             state = pagerState,
             beyondBoundsPageCount = 1,
             verticalAlignment = Alignment.Top,

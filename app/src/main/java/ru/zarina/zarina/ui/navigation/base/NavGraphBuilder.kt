@@ -1,5 +1,9 @@
 package ru.zarina.zarina.ui.navigation.base
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.DialogProperties
@@ -20,12 +24,24 @@ import com.google.accompanist.navigation.material.bottomSheet
  */
 fun NavGraphBuilder.composableDestination(
     destination: Destination<*>,
-    content: @Composable (NavBackStackEntry) -> Unit,
+    enterTransition: (@JvmSuppressWildcards
+    AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? = null,
+    exitTransition: (@JvmSuppressWildcards
+    AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? = null,
+    popEnterTransition: (@JvmSuppressWildcards
+    AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? = enterTransition,
+    popExitTransition: (@JvmSuppressWildcards
+    AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? = exitTransition,
+    content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
 ) {
     composable(
         route = destination.routeSchema,
         arguments = destination.arguments,
         deepLinks = destination.deepLinks,
+        enterTransition = enterTransition,
+        exitTransition = exitTransition,
+        popEnterTransition = popEnterTransition,
+        popExitTransition = popExitTransition,
         content = content,
     )
 }

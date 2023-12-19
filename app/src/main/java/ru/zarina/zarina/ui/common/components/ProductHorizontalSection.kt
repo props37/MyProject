@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -49,7 +50,7 @@ fun ProductHorizontalSection(
                     .padding(horizontal = 16.dp),
             )
         HorizontalPager(
-            pageCount = products.size,
+            state = rememberPagerState { products.size },
             beyondBoundsPageCount = 1,
             key = { products[it].id.value },
             verticalAlignment = Alignment.Top,
