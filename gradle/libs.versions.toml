@@ -29,7 +29,7 @@ google-play-services-location = "21.0.1"
 google-play-services-maps = "18.1.0"
 google-play-services-maps-compose = "2.11.4"
 firebase = "32.7.0"
-firebase-crashlytics = "2.9.4"
+firebase-crashlytics = "2.9.9"
 firebase-performance = "1.4.2"
 mindbox = "2.5.0"
 gitVersioning = "0.4.14"
@@ -117,6 +117,3 @@ google-play-services = { id = "com.google.gms.google-services", version.ref = "g
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 firebase-performance = { id = "com.google.firebase.firebase-perf", version.ref = "firebase-performance" }
 gitVersioning = { id = "com.gladed.androidgitversion", version.ref = "gitVersioning" }
-
-[bundles]
-
