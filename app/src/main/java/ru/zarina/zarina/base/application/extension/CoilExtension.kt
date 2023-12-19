@@ -1,4 +1,4 @@
-package ru.zarina.zarina.base.application.extensions
+package ru.zarina.zarina.base.application.extension
 
 import android.app.Application
 import coil.Coil
@@ -7,7 +7,7 @@ import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import org.koin.core.annotation.Factory
-import ru.zarina.zarina.base.application.extensions.base.ApplicationExtension
+import ru.zarina.zarina.base.application.extension.base.ApplicationExtension
 
 @Factory
 class CoilExtension : ApplicationExtension {
