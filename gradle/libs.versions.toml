@@ -2,7 +2,7 @@
 android-gradle = "8.2.0"
 kotlin = "1.9.21"
 ksp = "1.9.21-1.0.15"
-kotlinx-coroutines-test = "1.7.2"
+kotlinx-coroutines-test = "1.7.3"
 kotlinx-serialization = "1.5.1"
 kotlinx-collections-immutable = "0.3.5"
 androidx-core = "1.10.1"
