@@ -62,7 +62,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.5"
+        kotlinCompilerExtensionVersion = "1.5.6"
     }
     ksp {
         arg(RoomSchemaArgProvider(File(projectDir, "schemas")))
