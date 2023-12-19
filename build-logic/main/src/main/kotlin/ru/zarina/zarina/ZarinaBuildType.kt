@@ -7,14 +7,13 @@ import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.Project
 
 sealed interface ZarinaBuildType {
-
     val name: String
 
     val signingVariant: ZarinaSigningVariant
         get() = ZarinaSigningVariant.INTERNAL
 
     val applicationName: String
-        get() = "$BASE_NAME $name"
+        get() = "$name $BASE_NAME"
 
     val applicationIdSuffix: String?
         get() = ".${name}"
@@ -137,4 +136,3 @@ private fun ApplicationBuildType.buildConfigStringField(
 ) {
     buildConfigField("String", name, "\"$value\"")
 }
-
