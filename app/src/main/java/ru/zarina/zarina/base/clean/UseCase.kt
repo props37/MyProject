@@ -13,9 +13,12 @@ import kotlin.time.Duration.Companion.milliseconds
  *
  * @param P type of operation parameters.
  * @param R type of operation expected result.
+ * @see [FlowUseCase]
  * @property dispatcher [CoroutineDispatcher] to run the operation on.
  */
 abstract class UseCase<in P, out R>(private val dispatcher: CoroutineDispatcher) {
+
+    private val className = if (Timber.treeCount != 0) this.javaClass.simpleName else TAG
 
     /**
      * Invokes the operation with given parameters and returns its encapsulated result
@@ -26,7 +29,6 @@ abstract class UseCase<in P, out R>(private val dispatcher: CoroutineDispatcher)
      * @return [Result] that encapsulates the successful result of the operation or caught
      * [Exception].
      */
-    @Suppress("TooGenericExceptionCaught")
     suspend operator fun invoke(params: P): Result<R> {
         return try {
             val result: Result<R>
@@ -37,17 +39,20 @@ abstract class UseCase<in P, out R>(private val dispatcher: CoroutineDispatcher)
                     }
                 }
             }.milliseconds
-            if (Timber.treeCount != 0) Timber.v("Execution of ${this.javaClass.simpleName} took $executionDuration")
+            Timber.tag(className).v("Execution of $className took $executionDuration")
             result
-        } catch (exception: Exception) {
-            Timber.e(
-                exception,
-                "Exception occurred while executing ${this.javaClass.simpleName} with parameters $params"
-            )
-            Result.failure(exception)
+        } catch (e: Exception) {
+            Timber
+                .tag(className)
+                .e(e, "Exception occurred while executing $className with parameters $params")
+            Result.failure(e)
         }
     }
 
     protected abstract suspend fun execute(params: P): R
+
+    companion object {
+        private const val TAG = "UseCase"
+    }
 
 }
