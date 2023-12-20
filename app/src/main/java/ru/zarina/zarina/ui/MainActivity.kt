@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
-import ru.zarina.zarina.ui.common.system.TransparentSystemBars
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @AndroidEntryPoint
@@ -19,7 +18,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ZarinaTheme {
-                TransparentSystemBars()
                 ZarinaApp(
                     splashScreen = splashScreen,
                 )
