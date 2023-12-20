@@ -25,7 +25,7 @@ object Destinations {
         const val ARGUMENT_PRODUCT_ID = "product_id"
 
         override val routeSchema = RouteUtils.generateRouteSchema(
-            baseRoute = BaseRoute.PRODUCT,
+            routeBase = BaseRoute.PRODUCT.route,
             argNames = arrayOf(ARGUMENT_PRODUCT_ID)
         )
 
@@ -34,7 +34,7 @@ object Destinations {
         )
 
         override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
-            baseRoute = BaseRoute.PRODUCT,
+            routeBase = BaseRoute.PRODUCT.route,
             args = arrayOf(args.productId.value)
         )
 
@@ -48,7 +48,7 @@ object Destinations {
         const val ARGUMENT_URL = "url"
 
         override val routeSchema = RouteUtils.generateRouteSchema(
-            baseRoute = BaseRoute.WEBPAGE,
+            routeBase = BaseRoute.WEBPAGE.route,
             argNames = arrayOf(ARGUMENT_URL)
         )
 
@@ -57,7 +57,7 @@ object Destinations {
         )
 
         override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
-            baseRoute = BaseRoute.WEBPAGE,
+            routeBase = BaseRoute.WEBPAGE.route,
             args = arrayOf(args.url)
         )
 
@@ -78,7 +78,7 @@ object Pickup : Graph<Pickup.Arguments>() {
     const val ARGUMENT_PRODUCT_ID = "product_id"
 
     override val routeSchema = RouteUtils.generateRouteSchema(
-        baseRoute = BaseRoute.GRAPH_PICKUP,
+        routeBase = BaseRoute.GRAPH_PICKUP.route,
         argNames = arrayOf(ARGUMENT_PRODUCT_ID)
     )
     override val startDestination = Root
@@ -88,7 +88,7 @@ object Pickup : Graph<Pickup.Arguments>() {
     )
 
     override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
-        baseRoute = BaseRoute.GRAPH_PICKUP,
+        routeBase = BaseRoute.GRAPH_PICKUP.route,
         args = arrayOf(args.productId.value)
     )
 
@@ -101,7 +101,7 @@ object Pickup : Graph<Pickup.Arguments>() {
         const val ARGUMENT_PRODUCT_ID = "product_id"
 
         override val routeSchema = RouteUtils.generateRouteSchema(
-            baseRoute = BaseRoute.PICKUP,
+            routeBase = BaseRoute.PICKUP.route,
             argNames = arrayOf(ARGUMENT_PRODUCT_ID)
         )
 
@@ -110,7 +110,7 @@ object Pickup : Graph<Pickup.Arguments>() {
         )
 
         override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
-            baseRoute = BaseRoute.PICKUP,
+            routeBase = BaseRoute.PICKUP.route,
             args = arrayOf(args.productId.value)
         )
 
@@ -136,7 +136,7 @@ object Subscribe : Graph<Subscribe.Arguments>() {
     const val ARGUMENT_OFFER_BARCODE = "offer_barcode"
 
     override val routeSchema = RouteUtils.generateRouteSchema(
-        baseRoute = BaseRoute.GRAPH_SUBSCRIBE,
+        routeBase = BaseRoute.GRAPH_SUBSCRIBE.route,
         argNames = arrayOf(ARGUMENT_OFFER_BARCODE)
     )
     override val startDestination = Root
@@ -146,7 +146,7 @@ object Subscribe : Graph<Subscribe.Arguments>() {
     )
 
     override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
-        baseRoute = BaseRoute.GRAPH_SUBSCRIBE,
+        routeBase = BaseRoute.GRAPH_SUBSCRIBE.route,
         args = arrayOf(args.offerBarcode.value)
     )
 
@@ -161,7 +161,7 @@ object Subscribe : Graph<Subscribe.Arguments>() {
         const val ARGUMENT_EMAIL = "email"
 
         override val routeSchema = RouteUtils.generateRouteSchema(
-            baseRoute = BaseRoute.SUBSCRIBE_SUCCESS,
+            routeBase = BaseRoute.SUBSCRIBE_SUCCESS.route,
             argNames = arrayOf(ARGUMENT_EMAIL)
         )
 
@@ -170,7 +170,7 @@ object Subscribe : Graph<Subscribe.Arguments>() {
         )
 
         override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
-            baseRoute = BaseRoute.SUBSCRIBE_SUCCESS,
+            routeBase = BaseRoute.SUBSCRIBE_SUCCESS.route,
             args = arrayOf(args.email)
         )
 
@@ -191,7 +191,7 @@ object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
         const val ARGUMENT_FILTRATION = "filtration"
 
         override val routeSchema = RouteUtils.generateRouteSchema(
-            baseRoute = BaseRoute.CATALOG_PRODUCTS,
+            routeBase = BaseRoute.CATALOG_PRODUCTS.route,
             argNames = arrayOf(ARGUMENT_CATEGORY_ID),
             optionalArgNames = arrayOf(ARGUMENT_FILTRATION)
         )
@@ -205,7 +205,7 @@ object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
         )
 
         override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
-            baseRoute = BaseRoute.CATALOG_PRODUCTS,
+            routeBase = BaseRoute.CATALOG_PRODUCTS.route,
             args = arrayOf(args.categoryId.value),
             optionalArgs = arrayOf(OptionalNavArg(ARGUMENT_FILTRATION, args.filtration))
         )
@@ -225,7 +225,7 @@ object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
         const val ARGUMENT_FILTER_TYPE = "filter_type"
 
         override val routeSchema = RouteUtils.generateRouteSchema(
-            baseRoute = BaseRoute.CATALOG_LIST_FILTER,
+            routeBase = BaseRoute.CATALOG_LIST_FILTER.route,
             argNames = arrayOf(ARGUMENT_FILTER_TYPE)
         )
 
@@ -234,7 +234,7 @@ object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
         )
 
         override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
-            baseRoute = BaseRoute.CATALOG_LIST_FILTER,
+            routeBase = BaseRoute.CATALOG_LIST_FILTER.route,
             args = arrayOf(args.filterType)
         )
 
@@ -248,7 +248,7 @@ object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
         const val ARGUMENT_FILTER_TYPE = "filter_type"
 
         override val routeSchema = RouteUtils.generateRouteSchema(
-            baseRoute = BaseRoute.CATALOG_TREE_FILTER,
+            routeBase = BaseRoute.CATALOG_TREE_FILTER.route,
             argNames = arrayOf(ARGUMENT_FILTER_TYPE)
         )
 
@@ -257,7 +257,7 @@ object Catalog : SimpleGraph(BaseRoute.GRAPH_CATALOG, Categories) {
         )
 
         override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
-            baseRoute = BaseRoute.CATALOG_TREE_FILTER,
+            routeBase = BaseRoute.CATALOG_TREE_FILTER.route,
             args = arrayOf(args.filterType)
         )
 
@@ -294,7 +294,7 @@ object Search : SimpleGraph(BaseRoute.GRAPH_SEARCH, Root) {
         const val ARGUMENT_FILTER_TYPE = "filter_type"
 
         override val routeSchema = RouteUtils.generateRouteSchema(
-            baseRoute = BaseRoute.SEARCH_LIST_FILTER,
+            routeBase = BaseRoute.SEARCH_LIST_FILTER.route,
             argNames = arrayOf(ARGUMENT_FILTER_TYPE)
         )
 
@@ -303,7 +303,7 @@ object Search : SimpleGraph(BaseRoute.GRAPH_SEARCH, Root) {
         )
 
         override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
-            baseRoute = BaseRoute.SEARCH_LIST_FILTER,
+            routeBase = BaseRoute.SEARCH_LIST_FILTER.route,
             args = arrayOf(args.filterType)
         )
 
@@ -317,7 +317,7 @@ object Search : SimpleGraph(BaseRoute.GRAPH_SEARCH, Root) {
         const val ARGUMENT_FILTER_TYPE = "filter_type"
 
         override val routeSchema = RouteUtils.generateRouteSchema(
-            baseRoute = BaseRoute.SEARCH_TREE_FILTER,
+            routeBase = BaseRoute.SEARCH_TREE_FILTER.route,
             argNames = arrayOf(ARGUMENT_FILTER_TYPE)
         )
 
@@ -326,7 +326,7 @@ object Search : SimpleGraph(BaseRoute.GRAPH_SEARCH, Root) {
         )
 
         override fun createRoute(args: Arguments) = RouteUtils.generateRoute(
-            baseRoute = BaseRoute.SEARCH_TREE_FILTER,
+            routeBase = BaseRoute.SEARCH_TREE_FILTER.route,
             args = arrayOf(args.filterType)
         )
 

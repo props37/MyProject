@@ -25,7 +25,6 @@ abstract class Destination<P> {
      *
      * @param args destination's arguments.
      */
-    @Suppress("Unused")
     abstract fun createRoute(args: P): String
 
     /**
@@ -39,5 +38,4 @@ abstract class Destination<P> {
      */
     open val deepLinks: List<NavDeepLink>
         get() = emptyList()
-
 }

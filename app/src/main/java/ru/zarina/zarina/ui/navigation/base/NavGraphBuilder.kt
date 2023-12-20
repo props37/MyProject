@@ -20,6 +20,10 @@ import com.google.accompanist.navigation.material.bottomSheet
  * Adds the [Destination] to the [NavGraphBuilder].
  *
  * @param destination destination to add.
+ * @param enterTransition callback to determine the destination's enter transition
+ * @param exitTransition callback to determine the destination's exit transition
+ * @param popEnterTransition callback to determine the destination's popEnter transition
+ * @param popExitTransition callback to determine the destination's popExit transition
  * @param content composable for the destination.
  */
 fun NavGraphBuilder.composableDestination(
@@ -60,7 +64,6 @@ fun NavGraphBuilder.composableDestination(
  * @param dialogProperties properties that should be passed to [androidx.compose.ui.window.Dialog].
  * @param content composable content for the destination that will be hosted within the Dialog.
  */
-@Suppress("Unused")
 fun NavGraphBuilder.dialogDestination(
     destination: Destination<*>,
     dialogProperties: DialogProperties = DialogProperties(),
@@ -76,7 +79,6 @@ fun NavGraphBuilder.dialogDestination(
 }
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
-@Suppress("Unused")
 fun NavGraphBuilder.bottomSheetDestination(
     destination: Destination<*>,
     content: @Composable ColumnScope.(NavBackStackEntry) -> Unit,
@@ -94,8 +96,10 @@ fun NavGraphBuilder.bottomSheetDestination(
  *
  * @param builder the builder used to construct the graph.
  */
-@Suppress("Unused")
-inline fun NavGraphBuilder.navigationGraph(graph: Graph<*>, builder: NavGraphBuilder.() -> Unit) {
+inline fun NavGraphBuilder.navigationGraph(
+    graph: Graph<*>,
+    builder: NavGraphBuilder.() -> Unit,
+) {
     navigation(
         route = graph.routeSchema,
         startDestination = graph.startDestination.routeSchema,
