@@ -18,6 +18,7 @@ fun ZarinaThemeReworked(
 
     CompositionLocalProvider(
         LocalUiKitColorsReworked provides LightUiKitColors,
+        LocalUiKitTypographyReworked provides UiKitTypographyReworked(),
     ) {
         MaterialTheme(
             colors = materialColors,
