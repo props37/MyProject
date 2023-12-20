@@ -20,11 +20,11 @@ val Typography = Typography(
 
 object Fonts {
     val CircleRegular = Font(
-        resId = R.font.circle_regular,
+        resId = R.font.circe_regular,
     )
 
     val CircleBold = Font(
-        resId = R.font.circle_bold,
+        resId = R.font.circe_bold,
         weight = FontWeight.Bold,
     )
 

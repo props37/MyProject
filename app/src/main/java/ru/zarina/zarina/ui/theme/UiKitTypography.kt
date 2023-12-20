@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.theme
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -12,21 +13,24 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.utils.compose.W350
 
 private val CircleBold = Font(
-    resId = R.font.circle_bold,
+    resId = R.font.circe_bold,
     weight = FontWeight.W700,
 )
 
 private val CircleRegular = Font(
-    resId = R.font.circle_regular,
+    resId = R.font.circe_regular,
     weight = FontWeight.W400,
 )
 
 private val CircleLight = Font(
-    resId = R.font.circle_light,
+    resId = R.font.circe_light,
     weight = FontWeight.W350,
 )
 
 private val CircleFamily = FontFamily(CircleBold, CircleRegular, CircleLight)
+
+// TODO: [High] Remove after updating to Compose 1.6.0
+private val PlatformStyle = PlatformTextStyle(includeFontPadding = false)
 
 @Immutable
 data class UiKitTypographyReworked(
@@ -49,12 +53,14 @@ data class UiKitTypographyReworked(
             lineHeight = 41.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W700,
+            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 34.sp,
             lineHeight = 41.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W400,
+            platformStyle = PlatformStyle,
         ),
     )
 
@@ -65,12 +71,14 @@ data class UiKitTypographyReworked(
             lineHeight = 34.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W700,
+            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 28.sp,
             lineHeight = 34.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W400,
+            platformStyle = PlatformStyle,
         ),
     )
 
@@ -81,12 +89,14 @@ data class UiKitTypographyReworked(
             lineHeight = 28.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W700,
+            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 24.sp,
             lineHeight = 28.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W400,
+            platformStyle = PlatformStyle,
         ),
     )
 
@@ -97,12 +107,14 @@ data class UiKitTypographyReworked(
             lineHeight = 24.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W700,
+            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 20.sp,
             lineHeight = 24.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W400,
+            platformStyle = PlatformStyle,
         ),
     )
 
@@ -113,18 +125,21 @@ data class UiKitTypographyReworked(
             lineHeight = 22.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W700,
+            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 17.sp,
             lineHeight = 22.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W400,
+            platformStyle = PlatformStyle,
         ),
         val light: TextStyle = TextStyle(
             fontSize = 17.sp,
             lineHeight = 22.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W350,
+            platformStyle = PlatformStyle,
         ),
     )
 
@@ -135,18 +150,21 @@ data class UiKitTypographyReworked(
             lineHeight = 20.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W700,
+            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 15.sp,
             lineHeight = 20.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W400,
+            platformStyle = PlatformStyle,
         ),
         val light: TextStyle = TextStyle(
             fontSize = 15.sp,
             lineHeight = 20.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W350,
+            platformStyle = PlatformStyle,
         ),
         val strikethrough: TextStyle = TextStyle(
             fontSize = 15.sp,
@@ -154,6 +172,7 @@ data class UiKitTypographyReworked(
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W350,
             textDecoration = TextDecoration.LineThrough,
+            platformStyle = PlatformStyle,
         ),
     )
 
@@ -164,18 +183,21 @@ data class UiKitTypographyReworked(
             lineHeight = 18.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W700,
+            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 13.sp,
             lineHeight = 18.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W400,
+            platformStyle = PlatformStyle,
         ),
         val light: TextStyle = TextStyle(
             fontSize = 13.sp,
             lineHeight = 18.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W350,
+            platformStyle = PlatformStyle,
         ),
     )
 
@@ -186,18 +208,21 @@ data class UiKitTypographyReworked(
             lineHeight = 16.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W700,
+            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 12.sp,
             lineHeight = 16.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W400,
+            platformStyle = PlatformStyle,
         ),
         val light: TextStyle = TextStyle(
             fontSize = 12.sp,
             lineHeight = 16.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W350,
+            platformStyle = PlatformStyle,
         ),
         val strikethrough: TextStyle = TextStyle(
             fontSize = 12.sp,
@@ -205,6 +230,7 @@ data class UiKitTypographyReworked(
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W400,
             textDecoration = TextDecoration.LineThrough,
+            platformStyle = PlatformStyle,
         ),
     )
 
@@ -215,18 +241,21 @@ data class UiKitTypographyReworked(
             lineHeight = 15.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W700,
+            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 11.sp,
             lineHeight = 15.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W400,
+            platformStyle = PlatformStyle,
         ),
         val light: TextStyle = TextStyle(
             fontSize = 11.sp,
             lineHeight = 15.sp,
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W350,
+            platformStyle = PlatformStyle,
         ),
     )
 
@@ -238,6 +267,7 @@ data class UiKitTypographyReworked(
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W700,
             letterSpacing = 0.12.sp,
+            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 10.sp,
@@ -245,6 +275,7 @@ data class UiKitTypographyReworked(
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W400,
             letterSpacing = 0.12.sp,
+            platformStyle = PlatformStyle,
         ),
     )
 
@@ -256,6 +287,7 @@ data class UiKitTypographyReworked(
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W700,
             letterSpacing = 0.16.sp,
+            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 9.sp,
@@ -263,6 +295,7 @@ data class UiKitTypographyReworked(
             fontFamily = CircleFamily,
             fontWeight = FontWeight.W400,
             letterSpacing = 0.16.sp,
+            platformStyle = PlatformStyle,
         ),
     )
 }
