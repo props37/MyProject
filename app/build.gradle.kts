@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.google.play.services)
+    alias(libs.plugins.googlePlayServices)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.firebase.performance)
 

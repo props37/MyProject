@@ -135,7 +135,7 @@ kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
-google-play-services = { id = "com.google.gms.google-services", version.ref = "googlePlayServices-plugin" }
+googlePlayServices = { id = "com.google.gms.google-services", version.ref = "googlePlayServices-plugin" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlyticsPlugin" }
 firebase-performance = { id = "com.google.firebase.firebase-perf", version.ref = "firebase-performance" }
 androidGitVersion = { id = "com.gladed.androidgitversion", version.ref = "androidGitVersion" }
