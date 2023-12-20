@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component
+package ru.zarina.zarina.ui.common.component.button
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
