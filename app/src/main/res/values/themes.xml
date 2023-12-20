@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.Zarina.Splash" parent="Theme.SplashScreen">
-        <item name="postSplashScreenTheme">@style/Theme.Zarina</item>
-        <item name="android:windowBackground">@color/white</item>
+    <style name="Theme.Zarina" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:background">@color/white</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
-    <style name="Theme.Zarina" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Zarina.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="postSplashScreenTheme">@style/Theme.Zarina</item>
+    </style>
 
 </resources>
