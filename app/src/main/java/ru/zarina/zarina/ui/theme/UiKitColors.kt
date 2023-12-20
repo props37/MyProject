@@ -25,7 +25,6 @@ data class UiKitColorsReworked(
             @Immutable
             data class Primary(
                 val default: Color = Colors.MineShaftLight,
-                val pressed: Color = Colors.Black,
                 val active: Color = Colors.MineShaftDark,
                 val disabled: Color = Colors.Scorpion,
             )
@@ -33,7 +32,6 @@ data class UiKitColorsReworked(
             @Immutable
             data class Secondary(
                 val default: Color = Colors.White,
-                val pressed: Color = Colors.WildSand,
                 val active: Color = Colors.Gallery,
                 val disabled: Color = Colors.White,
             )
@@ -41,7 +39,6 @@ data class UiKitColorsReworked(
             @Immutable
             data class Tertiary(
                 val default: Color = Colors.WildSand,
-                val pressed: Color = Colors.Gallery,
                 val active: Color = Colors.Alto,
                 val disabled: Color = Colors.WildSand,
             )

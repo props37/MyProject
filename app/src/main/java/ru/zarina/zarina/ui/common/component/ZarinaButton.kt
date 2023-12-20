@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -32,7 +31,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.zarina.zarina.ui.common.rippletheme.DarkRippleTheme
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaThemeReworked
 
@@ -64,11 +62,7 @@ fun ZarinaButton(
         label = "$Tag content color",
     )
 
-    // TODO: [High] Figure out ripple effect
-    CompositionLocalProvider(
-        LocalContentColor provides contentColor.value,
-        LocalRippleTheme provides DarkRippleTheme,
-    ) {
+    CompositionLocalProvider(LocalContentColor provides contentColor.value) {
         ProvideTextStyle(textStyle) {
             Row(
                 horizontalArrangement = Arrangement.Center,
