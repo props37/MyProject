@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.hilt)
     alias(libs.plugins.googlePlayServices)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.firebase.performance)
@@ -122,6 +123,10 @@ dependencies {
     implementation(libs.ktor.client.contentNegotiation)
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.serialization.json)
+
+    implementation(libs.hilt)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigationCompose)
 
     implementation(libs.koin.annotations)
     implementation(libs.koin.android)
