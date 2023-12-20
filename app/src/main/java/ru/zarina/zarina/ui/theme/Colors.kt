@@ -9,6 +9,11 @@ data object Colors {
     val MineShaftLight = Color(0xFF383838)
     val MineShaftDark = Color(0xFF232323)
     val WildSand = Color(0xFFF5F5F5)
+    val Scorpion = Color(0xFF585858)
+    val Gray = Color(0xFF8C8C8C)
+    val Gallery = Color(0xFFEAEAEA)
+    val SilverChalice = Color(0xFFA1A1A1)
+    val Alto = Color(0xFFE0E0E0)
 }
 
 // TODO: [Low] Remove!

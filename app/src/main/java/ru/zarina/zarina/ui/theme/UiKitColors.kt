@@ -4,6 +4,8 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
+// TODO: [Low] Use single class to represent different buttons, texts etc?
+
 @Immutable
 data class UiKitColorsReworked(
     val background: Background = Background(),
@@ -17,25 +19,31 @@ data class UiKitColorsReworked(
         @Immutable
         data class Button(
             val primary: Primary = Primary(),
-            val outline: Outline = Outline(),
             val secondary: Secondary = Secondary(),
+            val tertiary: Tertiary = Tertiary(),
         ) {
             @Immutable
             data class Primary(
                 val default: Color = Colors.MineShaftLight,
                 val pressed: Color = Colors.Black,
-            )
-
-            @Immutable
-            data class Outline(
-                val default: Color = Colors.White,
-                val pressed: Color = Colors.WildSand,
+                val active: Color = Colors.MineShaftDark,
+                val disabled: Color = Colors.Scorpion,
             )
 
             @Immutable
             data class Secondary(
                 val default: Color = Colors.White,
                 val pressed: Color = Colors.WildSand,
+                val active: Color = Colors.Gallery,
+                val disabled: Color = Colors.White,
+            )
+
+            @Immutable
+            data class Tertiary(
+                val default: Color = Colors.WildSand,
+                val pressed: Color = Colors.Gallery,
+                val active: Color = Colors.Alto,
+                val disabled: Color = Colors.WildSand,
             )
         }
     }
@@ -47,22 +55,25 @@ data class UiKitColorsReworked(
         @Immutable
         data class Button(
             val primary: Primary = Primary(),
-            val outline: Outline = Outline(),
             val secondary: Secondary = Secondary(),
+            val tertiary: Tertiary = Tertiary(),
         ) {
             @Immutable
             data class Primary(
                 val default: Color = Colors.White,
-            )
-
-            @Immutable
-            data class Outline(
-                val default: Color = Colors.MineShaftDark,
+                val disabled: Color = Colors.Gray,
             )
 
             @Immutable
             data class Secondary(
                 val default: Color = Colors.MineShaftDark,
+                val disabled: Color = Colors.SilverChalice,
+            )
+
+            @Immutable
+            data class Tertiary(
+                val default: Color = Colors.MineShaftDark,
+                val disabled: Color = Colors.SilverChalice,
             )
         }
     }

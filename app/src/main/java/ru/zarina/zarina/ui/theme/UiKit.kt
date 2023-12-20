@@ -9,6 +9,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 object UiKitTheme {
+    val colorsReworked: UiKitColorsReworked
+        @Composable
+        get() = LocalUiKitColorsReworked.current
+
+    val typographyReworked: UiKitTypographyReworked
+        @Composable
+        get() = LocalUiKitTypographyReworked.current
+
     val colors: UiKitColors
         @Composable
         get() = LocalUiKitColors.current
