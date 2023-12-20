@@ -159,4 +159,6 @@ dependencies {
     androidTestImplementation(libs.jetpack.espresso)
     androidTestImplementation(platform(libs.jetpack.compose.bom))
     androidTestImplementation(libs.jetpack.compose.junit4)
+
+    lintChecks(libs.lint.composeChecks)
 }

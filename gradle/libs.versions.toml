@@ -55,6 +55,8 @@ mindbox = "2.5.0"
 
 junit = "4.13.2"
 
+lint-composeChecks = "1.2.0"
+
 
 [libraries]
 # Jetpack
@@ -128,6 +130,8 @@ firebase-performance = { group = "com.google.firebase", name = "firebase-perf-kt
 mindbox = { group = "cloud.mindbox", name = "mobile-sdk", version.ref = "mindbox" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+lint-composeChecks = { group = "com.slack.lint.compose", name = "compose-lint-checks", version.ref = "lint-composeChecks" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
