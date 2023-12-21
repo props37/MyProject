@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.common.component.button
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -66,6 +67,10 @@ fun ZarinaButton(
         targetValue = if (isEnabled) colors.contentColor else colors.disabledContentColor,
         label = "$Tag content color",
     )
+    val borderColor = animateColorAsState(
+        targetValue = if (isEnabled) colors.borderColor else colors.disabledBorderColor,
+        label = "$Tag border color",
+    )
 
     val providedRippleTheme = LocalRippleTheme.current
     val rippleTheme = remember(
@@ -97,6 +102,7 @@ fun ZarinaButton(
                     .defaultMinSize(minHeight = minHeight)
                     .clip(shape)
                     .drawBehind { drawRect(backgroundColor.value) }
+                    .border(width = 1.dp, color = borderColor.value, shape = shape)
                     .clickable(
                         interactionSource = interactionSource,
                         indication = LocalIndication.current,
@@ -117,6 +123,8 @@ data class ZarinaButtonColors(
     val contentColor: Color,
     val disabledBackgroundColor: Color,
     val disabledContentColor: Color,
+    val borderColor: Color,
+    val disabledBorderColor: Color,
 )
 
 @Immutable
@@ -143,11 +151,15 @@ object ZarinaButtonDefaults {
         contentColor: Color = UiKitTheme.colorsReworked.text.button.primary.default,
         disabledBackgroundColor: Color = UiKitTheme.colorsReworked.background.button.primary.disabled,
         disabledContentColor: Color = UiKitTheme.colorsReworked.text.button.primary.disabled,
+        borderColor: Color = Color.Unspecified,
+        disabledBorderColor: Color = Color.Unspecified,
     ): ZarinaButtonColors = ZarinaButtonColors(
         backgroundColor = backgroundColor,
         contentColor = contentColor,
         disabledBackgroundColor = disabledBackgroundColor,
         disabledContentColor = disabledContentColor,
+        borderColor = borderColor,
+        disabledBorderColor = disabledBorderColor,
     )
 
     @Composable
@@ -156,11 +168,15 @@ object ZarinaButtonDefaults {
         contentColor: Color = UiKitTheme.colorsReworked.text.button.secondary.default,
         disabledBackgroundColor: Color = UiKitTheme.colorsReworked.background.button.secondary.disabled,
         disabledContentColor: Color = UiKitTheme.colorsReworked.text.button.secondary.disabled,
+        borderColor: Color = Color.Unspecified,
+        disabledBorderColor: Color = Color.Unspecified,
     ): ZarinaButtonColors = ZarinaButtonColors(
         backgroundColor = backgroundColor,
         contentColor = contentColor,
         disabledBackgroundColor = disabledBackgroundColor,
         disabledContentColor = disabledContentColor,
+        borderColor = borderColor,
+        disabledBorderColor = disabledBorderColor,
     )
 
     @Composable
@@ -169,11 +185,32 @@ object ZarinaButtonDefaults {
         contentColor: Color = UiKitTheme.colorsReworked.text.button.tertiary.default,
         disabledBackgroundColor: Color = UiKitTheme.colorsReworked.background.button.tertiary.disabled,
         disabledContentColor: Color = UiKitTheme.colorsReworked.text.button.tertiary.disabled,
+        borderColor: Color = Color.Unspecified,
+        disabledBorderColor: Color = Color.Unspecified,
     ): ZarinaButtonColors = ZarinaButtonColors(
         backgroundColor = backgroundColor,
         contentColor = contentColor,
         disabledBackgroundColor = disabledBackgroundColor,
         disabledContentColor = disabledContentColor,
+        borderColor = borderColor,
+        disabledBorderColor = disabledBorderColor,
+    )
+
+    @Composable
+    fun outlineColors(
+        backgroundColor: Color = UiKitTheme.colorsReworked.background.button.outline.default,
+        contentColor: Color = UiKitTheme.colorsReworked.text.button.outline.default,
+        disabledBackgroundColor: Color = UiKitTheme.colorsReworked.background.button.outline.disabled,
+        disabledContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.disabled,
+        borderColor: Color = UiKitTheme.colorsReworked.border.button.default,
+        disabledBorderColor: Color = UiKitTheme.colorsReworked.border.button.disabled,
+    ): ZarinaButtonColors = ZarinaButtonColors(
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        disabledBackgroundColor = disabledBackgroundColor,
+        disabledContentColor = disabledContentColor,
+        borderColor = borderColor,
+        disabledBorderColor = disabledBorderColor,
     )
 
     @Stable
@@ -312,6 +349,48 @@ private fun Tertiary() {
                     .padding(16.dp),
             ) {
                 Text(text = "TERTIARY SMALL")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun Outline() {
+    ZarinaThemeReworked {
+        Column(verticalArrangement = Arrangement.Center) {
+            ZarinaButton(
+                onClick = {},
+                size = ZarinaButtonSize.Large,
+                colors = ZarinaButtonDefaults.outlineColors(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            ) {
+                Text(text = "OUTLINE LARGE")
+            }
+
+            ZarinaButton(
+                onClick = {},
+                isEnabled = false,
+                size = ZarinaButtonSize.Medium,
+                colors = ZarinaButtonDefaults.outlineColors(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            ) {
+                Text(text = "OUTLINE MEDIUM DISABLED")
+            }
+
+            ZarinaButton(
+                onClick = {},
+                size = ZarinaButtonSize.Small,
+                colors = ZarinaButtonDefaults.outlineColors(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            ) {
+                Text(text = "OUTLINE SMALL")
             }
         }
     }

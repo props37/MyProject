@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 data class UiKitColorsReworked(
     val background: Background = Background(),
     val text: Text = Text(),
-    val borders: Borders = Borders(),
+    val border: Border = Border(),
 ) {
     @Immutable
     data class Background(
@@ -20,10 +20,17 @@ data class UiKitColorsReworked(
         @Immutable
         data class General(
             val regular: Regular = Regular(),
+            val inverse: Inverse = Inverse(),
         ) {
             @Immutable
             data class Regular(
                 val background: Color = Colors.White,
+                val muted: Color = Colors.AltoDark,
+            )
+
+            @Immutable
+            data class Inverse(
+                val inverse: Color = Colors.MineShaftDark,
             )
         }
 
@@ -32,6 +39,7 @@ data class UiKitColorsReworked(
             val primary: Primary = Primary(),
             val secondary: Secondary = Secondary(),
             val tertiary: Tertiary = Tertiary(),
+            val outline: Outline = Outline(),
         ) {
             @Immutable
             data class Primary(
@@ -50,21 +58,41 @@ data class UiKitColorsReworked(
             @Immutable
             data class Tertiary(
                 val default: Color = Colors.WildSand,
-                val active: Color = Colors.Alto,
+                val active: Color = Colors.AltoLight,
                 val disabled: Color = Colors.WildSand,
+            )
+
+            @Immutable
+            data class Outline(
+                val default: Color = Colors.White,
+                val active: Color = Colors.Gallery,
+                val disabled: Color = Colors.White,
             )
         }
     }
 
     @Immutable
     data class Text(
+        val general: General = General(),
         val button: Button = Button(),
     ) {
+        @Immutable
+        data class General(
+            val regular: Regular = Regular(),
+        ) {
+            @Immutable
+            data class Regular(
+                val default: Color = Colors.MineShaftDark,
+                val disabled: Color = Colors.SilverChalice,
+            )
+        }
+
         @Immutable
         data class Button(
             val primary: Primary = Primary(),
             val secondary: Secondary = Secondary(),
             val tertiary: Tertiary = Tertiary(),
+            val outline: Outline = Outline(),
         ) {
             @Immutable
             data class Primary(
@@ -83,16 +111,23 @@ data class UiKitColorsReworked(
                 val default: Color = Colors.MineShaftDark,
                 val disabled: Color = Colors.SilverChalice,
             )
+
+            @Immutable
+            data class Outline(
+                val default: Color = Colors.MineShaftDark,
+                val disabled: Color = Colors.SilverChalice,
+            )
         }
     }
 
     @Immutable
-    data class Borders(
+    data class Border(
         val button: Button = Button(),
     ) {
         @Immutable
         data class Button(
             val default: Color = Colors.MineShaftDark,
+            val disabled: Color = Colors.SilverChalice,
         )
     }
 }

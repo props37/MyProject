@@ -13,7 +13,8 @@ data object Colors {
     val Gray = Color(0xFF8C8C8C)
     val Gallery = Color(0xFFEAEAEA)
     val SilverChalice = Color(0xFFA1A1A1)
-    val Alto = Color(0xFFE0E0E0)
+    val AltoLight = Color(0xFFE0E0E0)
+    val AltoDark = Color(0xFFD5D5D5)
 }
 
 // TODO: [Low] Remove!
