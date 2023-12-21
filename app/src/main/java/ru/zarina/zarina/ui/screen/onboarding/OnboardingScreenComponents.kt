@@ -103,6 +103,7 @@ object OnboardingScreenComponents {
     @Composable
     fun OnboardingPage(
         onboarding: Onboarding,
+        onRequestNotificationsPermissionClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         AnimatedContent(
@@ -126,7 +127,7 @@ object OnboardingScreenComponents {
                             body = stringResource(R.string.onboarding_notifications_setup_body),
                             buttons = {
                                 ZarinaButton(
-                                    onClick = { /*TODO*/ },
+                                    onClick = onRequestNotificationsPermissionClicked,
                                     modifier = Modifier.fillMaxWidth(),
                                 ) {
                                     Text(text = stringResource(R.string.continue_).uppercase())

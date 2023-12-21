@@ -38,12 +38,14 @@ fun OnboardingScreenRework(
 
     ScreenContent(
         onboarding = onboarding,
+        onRequestNotificationsPermissionClicked = viewModel::onRequestNotificationsPermissionClicked,
     )
 }
 
 @Composable
 private fun ScreenContent(
     onboarding: Onboarding,
+    onRequestNotificationsPermissionClicked: () -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -71,6 +73,7 @@ private fun ScreenContent(
 
                 OnboardingPage(
                     onboarding = onboarding,
+                    onRequestNotificationsPermissionClicked = onRequestNotificationsPermissionClicked,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
