@@ -8,11 +8,17 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
+import ru.zarina.zarina.data.permissionmanager.PermissionManager
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.utils.library.jetpack.activity.DefaultDarkScrim
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var permissionManager: PermissionManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         enableEdgeToEdge(
@@ -23,11 +29,17 @@ class MainActivity : ComponentActivity() {
             ),
         )
         super.onCreate(savedInstanceState)
+        permissionManager.setActivity(this)
 
         setContent {
             ZarinaTheme {
                 ZarinaAppReworked()
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        permissionManager.unsetActivity(this)
     }
 }
