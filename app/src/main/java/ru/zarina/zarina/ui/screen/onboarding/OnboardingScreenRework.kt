@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.onboarding.rework
+package ru.zarina.zarina.ui.screen.onboarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

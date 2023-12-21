@@ -1,10 +1,10 @@
-package ru.zarina.zarina.ui.screens.onboarding.rework
+package ru.zarina.zarina.ui.screen.onboarding
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
-import ru.zarina.zarina.ui.screens.onboarding.rework.OnboardingViewModelRework.SideEffect
+import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModelRework.SideEffect
 import javax.inject.Inject
 
 @HiltViewModel

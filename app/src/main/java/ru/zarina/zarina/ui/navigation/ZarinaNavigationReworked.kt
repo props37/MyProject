@@ -9,7 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destinations.CommonDestinations
-import ru.zarina.zarina.ui.screens.onboarding.rework.OnboardingScreenRework
+import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenRework
 import ru.zarina.zarina.utils.library.accompanist.rememberBottomSheetNavigator
 
 @OptIn(ExperimentalMaterialNavigationApi::class)

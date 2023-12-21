@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screens.onboarding.rework
+package ru.zarina.zarina.ui.screen.onboarding
 
 import javax.inject.Inject
 
