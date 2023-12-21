@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Text
+import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -27,10 +28,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ru.zarina.zarina.ui.common.rippletheme.DarkRippleTheme
+import ru.zarina.zarina.ui.common.rippletheme.LightRippleTheme
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaThemeReworked
 
@@ -45,6 +49,7 @@ fun ZarinaButton(
     shape: Shape = ZarinaButtonDefaults.Shape,
     contentPadding: PaddingValues = ZarinaButtonDefaults.contentPaddingFromSize(size),
     textStyle: TextStyle = ZarinaButtonDefaults.textStyleFromSize(size),
+    useProvidedRippleTheme: Boolean = false,
     content: @Composable RowScope.() -> Unit,
 ) {
     val minHeight = when (size) {
@@ -62,7 +67,28 @@ fun ZarinaButton(
         label = "$Tag content color",
     )
 
-    CompositionLocalProvider(LocalContentColor provides contentColor.value) {
+    val providedRippleTheme = LocalRippleTheme.current
+    val rippleTheme = remember(
+        useProvidedRippleTheme,
+        providedRippleTheme,
+        colors.backgroundColor,
+    ) {
+        if (useProvidedRippleTheme) {
+            providedRippleTheme
+        } else {
+            val backgroundColorLuminance = colors.backgroundColor.luminance()
+            if (backgroundColorLuminance <= MaxBackgroundColorLuminanceForLightRippleTheme) {
+                LightRippleTheme
+            } else {
+                DarkRippleTheme
+            }
+        }
+    }
+
+    CompositionLocalProvider(
+        LocalContentColor provides contentColor.value,
+        LocalRippleTheme provides rippleTheme,
+    ) {
         ProvideTextStyle(textStyle) {
             Row(
                 horizontalArrangement = Arrangement.Center,
@@ -290,5 +316,7 @@ private fun Tertiary() {
         }
     }
 }
+
+private const val MaxBackgroundColorLuminanceForLightRippleTheme = 0.5f
 
 private const val Tag = "ZarinaButton"
