@@ -26,9 +26,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ZarinaTheme {
-                ZarinaApp(
-                    splashScreen = splashScreen,
-                )
+                ZarinaAppReworked()
             }
         }
     }

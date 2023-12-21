@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.navigation.base.parameterless
 import androidx.navigation.NamedNavArgument
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.destinations.BaseRoute
+import ru.zarina.zarina.ui.navigation.destinations.BaseRouteReworked
 
 /**
  * An abstraction for a Compose Navigation destination that encapsulates destination's
@@ -15,6 +16,8 @@ import ru.zarina.zarina.ui.navigation.destinations.BaseRoute
 abstract class SimpleDestination(override val routeSchema: String) : Destination<Unit>() {
 
     constructor(baseRoute: BaseRoute) : this(baseRoute.route)
+
+    constructor(baseRoute: BaseRouteReworked) : this(baseRoute.route)
 
     /**
      * String that can be used as a route for NavController navigation.

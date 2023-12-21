@@ -14,8 +14,19 @@ data class UiKitColorsReworked(
 ) {
     @Immutable
     data class Background(
+        val general: General = General(),
         val button: Button = Button(),
     ) {
+        @Immutable
+        data class General(
+            val regular: Regular = Regular(),
+        ) {
+            @Immutable
+            data class Regular(
+                val background: Color = Colors.White,
+            )
+        }
+
         @Immutable
         data class Button(
             val primary: Primary = Primary(),
