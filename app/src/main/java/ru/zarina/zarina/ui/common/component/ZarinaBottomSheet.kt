@@ -23,11 +23,11 @@ fun ZarinaBottomSheet(
 
     Box(
         modifier = modifier
+            .shadow(elevation = 16.dp, shape = shape)
             .background(
                 color = UiKitTheme.colorsReworked.background.general.regular.background,
                 shape = shape,
-            )
-            .shadow(elevation = 4.dp, shape = shape),
+            ),
     ) {
         content()
     }
