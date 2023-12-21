@@ -8,9 +8,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.UUID
+import javax.inject.Inject
 import kotlin.coroutines.resume
 
-class PermissionManagerImpl : PermissionManager {
+class PermissionManagerImpl @Inject constructor() : PermissionManager {
     private var activity: ComponentActivity? = null
 
     override suspend fun requestPermission(permission: String): PermissionState {
