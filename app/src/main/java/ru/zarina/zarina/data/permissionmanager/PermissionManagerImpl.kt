@@ -104,7 +104,9 @@ class PermissionManagerImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMultiplePermissionsState(permissions: List<String>): Map<String, PermissionState> {
+    override suspend fun getMultiplePermissionsState(
+        permissions: List<String>,
+    ): Map<String, PermissionState> {
         val map = mutableMapOf<String, PermissionState>()
         for (permission in permissions) {
             map[permission] = getPermissionState(permission)
