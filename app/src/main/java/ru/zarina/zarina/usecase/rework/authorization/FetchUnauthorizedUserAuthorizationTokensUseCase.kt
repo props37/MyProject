@@ -1,4 +1,4 @@
-package ru.zarina.zarina.usecase.authorization
+package ru.zarina.zarina.usecase.rework.authorization
 
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.base.clean.UseCase
