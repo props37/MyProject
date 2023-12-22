@@ -9,12 +9,16 @@ class AuthorizationRepository @Inject constructor(
     private val localDataSource: AuthorizationLocalDataSource,
     private val remoteDataSource: AuthorizationRemoteDataSource,
 ) {
-    suspend fun getUnauthorizedUserAuthorizationTokens(): AuthorizationTokens {
-        return remoteDataSource.getUnauthorizedUserAuthorizationTokens()
+    suspend fun getAuthorizationTokens(): AuthorizationTokens? {
+        return localDataSource.getAuthorizationTokens()
     }
 
     suspend fun setAuthorizationTokens(tokens: AuthorizationTokens?) {
         localDataSource.setAuthorizationTokens(tokens)
+    }
+
+    suspend fun requestUnauthorizedUserAuthorizationTokens(): AuthorizationTokens {
+        return remoteDataSource.getUnauthorizedUserAuthorizationTokens()
     }
 
     suspend fun clear() {
