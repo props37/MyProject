@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
-private const val PREFERENCES_DATA_STORE_NAME = "permission_manager_storage"
+private const val PERMISSION_MANAGER_PREFERENCES_DATA_STORE_NAME = "permission_manager_data_store"
 
 private val Context.permissionManagerPreferencesDataStore by preferencesDataStore(
-    name = PREFERENCES_DATA_STORE_NAME,
+    name = PERMISSION_MANAGER_PREFERENCES_DATA_STORE_NAME,
 )
 
 class PermissionManagerStorage(context: Context) {
