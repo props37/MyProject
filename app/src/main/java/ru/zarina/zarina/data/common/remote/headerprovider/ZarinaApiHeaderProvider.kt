@@ -15,6 +15,6 @@ class ZarinaApiHeaderProvider @Inject constructor() : HeaderProvider {
         private const val KEY_CLIENT_SOURCE = "x-client-source"
 
         // TODO: [High] Hide from code
-        private const val VALUE_CLIENT_SOURCE = "eiyahW0oEeVae5la"
+        private const val VALUE_CLIENT_SOURCE = "phoh8Meimu1uQuoH"
     }
 }
