@@ -10,7 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.utils.compose.W350
+import ru.zarina.zarina.util.compose.W350
 
 private val CirceBold = Font(
     resId = R.font.circe_bold,

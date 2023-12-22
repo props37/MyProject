@@ -1,4 +1,4 @@
-package ru.zarina.zarina.utils.compose
+package ru.zarina.zarina.util.compose
 
 import androidx.compose.ui.text.font.FontWeight
 
