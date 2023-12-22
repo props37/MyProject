@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import ru.zarina.zarina.ui.navigation.rework.ZarinaNavigation
 
 @Composable
-fun ZarinaAppReworked(
+fun ZarinaApp(
     modifier: Modifier = Modifier,
 ) {
     ZarinaNavigation(modifier = modifier)
