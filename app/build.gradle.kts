@@ -104,6 +104,7 @@ dependencies {
     implementation(libs.jetpack.media3.exoplayer)
     implementation(libs.jetpack.media3.ui)
     implementation(libs.jetpack.paging.compose)
+    implementation(libs.jetpack.security.cripto)
 
     implementation(platform(libs.jetpack.compose.bom))
     implementation(libs.jetpack.compose.ui)
