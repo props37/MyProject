@@ -2,7 +2,7 @@ package ru.zarina.zarina.data.rework.authorization.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
+import ru.zarina.zarina.domain.rework.AuthorizationTokens
 import ru.zarina.zarina.domain.rework.common.Token
 
 @Serializable

@@ -2,7 +2,7 @@ package ru.zarina.zarina.data.rework.authorization
 
 import ru.zarina.zarina.data.rework.authorization.local.AuthorizationLocalDataSource
 import ru.zarina.zarina.data.rework.authorization.remote.AuthorizationRemoteDataSource
-import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
+import ru.zarina.zarina.domain.rework.AuthorizationTokens
 import javax.inject.Inject
 
 class AuthorizationRepository @Inject constructor(

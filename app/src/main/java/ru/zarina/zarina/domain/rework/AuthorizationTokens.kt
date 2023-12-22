@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.rework.authorization
+package ru.zarina.zarina.domain.rework
 
 import ru.zarina.zarina.domain.rework.common.Token
 
