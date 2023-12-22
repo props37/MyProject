@@ -1,4 +1,4 @@
-package ru.zarina.zarina.utils.library.jetpack.activity
+package ru.zarina.zarina.util.library.activity
 
 import android.graphics.Color
 import androidx.activity.SystemBarStyle

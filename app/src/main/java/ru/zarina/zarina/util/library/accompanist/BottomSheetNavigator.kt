@@ -1,4 +1,4 @@
-package ru.zarina.zarina.utils.library.accompanist
+package ru.zarina.zarina.util.library.accompanist
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.material.ExperimentalMaterialApi

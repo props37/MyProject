@@ -11,7 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.zarina.zarina.data.permissionmanager.PermissionManager
 import ru.zarina.zarina.ui.rework.ZarinaApp
 import ru.zarina.zarina.ui.theme.ZarinaTheme
-import ru.zarina.zarina.utils.library.jetpack.activity.DefaultDarkScrim
+import ru.zarina.zarina.util.library.activity.DefaultDarkScrim
 import javax.inject.Inject
 
 @AndroidEntryPoint

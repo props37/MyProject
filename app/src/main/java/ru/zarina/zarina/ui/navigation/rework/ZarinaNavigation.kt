@@ -10,7 +10,7 @@ import com.google.accompanist.navigation.material.ExperimentalMaterialNavigation
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destinations.CommonDestinations
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenRework
-import ru.zarina.zarina.utils.library.accompanist.rememberBottomSheetNavigator
+import ru.zarina.zarina.util.library.accompanist.rememberBottomSheetNavigator
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
