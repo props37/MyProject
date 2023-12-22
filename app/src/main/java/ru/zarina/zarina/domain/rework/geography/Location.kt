@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.geography
+package ru.zarina.zarina.domain.rework.geography
 
 data class Location(
     val latitude: Double,
