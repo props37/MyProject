@@ -14,6 +14,8 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import ru.zarina.zarina.data.permissionmanager.PermissionManager
 import ru.zarina.zarina.data.permissionmanager.PermissionManagerImpl
+import ru.zarina.zarina.data.rework.location.GooglePlayServicesLocationDataSource
+import ru.zarina.zarina.data.rework.location.LocationDataSource
 import javax.inject.Singleton
 
 @Module
@@ -25,6 +27,11 @@ abstract class ApplicationModule {
     abstract fun bindPermissionManager(
         permissionManagerImpl: PermissionManagerImpl,
     ): PermissionManager
+
+    @Binds
+    abstract fun bindLocationDataSource(
+        googlePlayServicesLocationDataSource: GooglePlayServicesLocationDataSource,
+    ): LocationDataSource
 
     companion object {
         @OptIn(ExperimentalSerializationApi::class)
