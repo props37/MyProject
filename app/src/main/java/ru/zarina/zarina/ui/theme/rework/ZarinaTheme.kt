@@ -8,7 +8,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 
 @Composable
-fun ZarinaThemeReworked(
+fun ZarinaTheme(
     isDarkTheme: Boolean = false,
     content: @Composable () -> Unit,
 ) {

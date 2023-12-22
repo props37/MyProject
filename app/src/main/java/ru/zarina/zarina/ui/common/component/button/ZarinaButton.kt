@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.common.rippletheme.DarkRippleTheme
 import ru.zarina.zarina.ui.common.rippletheme.LightRippleTheme
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.rework.ZarinaThemeReworked
+import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 
 @Composable
 fun ZarinaButton(
@@ -231,7 +231,7 @@ object ZarinaButtonDefaults {
 @Preview
 @Composable
 private fun Primary() {
-    ZarinaThemeReworked {
+    ZarinaTheme {
         Column(verticalArrangement = Arrangement.Center) {
             ZarinaButton(
                 onClick = {},
@@ -273,7 +273,7 @@ private fun Primary() {
 @Preview
 @Composable
 private fun Secondary() {
-    ZarinaThemeReworked {
+    ZarinaTheme {
         Column(verticalArrangement = Arrangement.Center) {
             ZarinaButton(
                 onClick = {},
@@ -315,7 +315,7 @@ private fun Secondary() {
 @Preview
 @Composable
 private fun Tertiary() {
-    ZarinaThemeReworked {
+    ZarinaTheme {
         Column(verticalArrangement = Arrangement.Center) {
             ZarinaButton(
                 onClick = {},
@@ -357,7 +357,7 @@ private fun Tertiary() {
 @Preview
 @Composable
 private fun Outline() {
-    ZarinaThemeReworked {
+    ZarinaTheme {
         Column(verticalArrangement = Arrangement.Center) {
             ZarinaButton(
                 onClick = {},
