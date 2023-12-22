@@ -14,7 +14,7 @@ import ru.zarina.zarina.utils.library.accompanist.rememberBottomSheetNavigator
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
-fun ZarinaNavigationReworked(
+fun ZarinaNavigation(
     modifier: Modifier = Modifier,
 ) {
     val bottomSheetNavigator = rememberBottomSheetNavigator()
