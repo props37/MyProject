@@ -1,7 +1,7 @@
-package ru.zarina.zarina.data.authorization
+package ru.zarina.zarina.data.rework.authorization
 
-import ru.zarina.zarina.data.authorization.local.AuthorizationLocalDataSource
-import ru.zarina.zarina.data.authorization.remote.AuthorizationRemoteDataSource
+import ru.zarina.zarina.data.rework.authorization.local.AuthorizationLocalDataSource
+import ru.zarina.zarina.data.rework.authorization.remote.AuthorizationRemoteDataSource
 import ru.zarina.zarina.domain.authorization.AuthorizationTokens
 import javax.inject.Inject
 

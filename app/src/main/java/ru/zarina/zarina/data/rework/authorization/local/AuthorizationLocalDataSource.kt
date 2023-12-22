@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.authorization.local
+package ru.zarina.zarina.data.rework.authorization.local
 
 import ru.zarina.zarina.domain.authorization.AuthorizationTokens
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.authorization.local
+package ru.zarina.zarina.data.rework.authorization.local
 
 import android.content.SharedPreferences
 import androidx.core.content.edit

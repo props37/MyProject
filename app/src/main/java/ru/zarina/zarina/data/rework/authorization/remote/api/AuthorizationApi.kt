@@ -1,9 +1,9 @@
-package ru.zarina.zarina.data.authorization.remote.api
+package ru.zarina.zarina.data.rework.authorization.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import ru.zarina.zarina.data.authorization.remote.api.dto.AuthorizationTokensDto
+import ru.zarina.zarina.data.rework.authorization.remote.api.dto.AuthorizationTokensDto
 import ru.zarina.zarina.di.reworked.Qualifiers
 import javax.inject.Inject
 

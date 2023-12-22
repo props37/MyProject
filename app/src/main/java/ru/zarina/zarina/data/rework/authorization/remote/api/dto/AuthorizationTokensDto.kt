@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.authorization.remote.api.dto
+package ru.zarina.zarina.data.rework.authorization.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
