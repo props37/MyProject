@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.common.rippletheme.DarkRippleTheme
 import ru.zarina.zarina.ui.common.rippletheme.LightRippleTheme
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaThemeReworked
+import ru.zarina.zarina.ui.theme.rework.ZarinaThemeReworked
 
 @Composable
 fun ZarinaButton(

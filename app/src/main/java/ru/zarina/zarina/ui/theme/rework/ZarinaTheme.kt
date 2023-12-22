@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.theme
+package ru.zarina.zarina.ui.theme.rework
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors

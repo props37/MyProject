@@ -27,7 +27,7 @@ import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.Backgrou
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.OnboardingPage
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.ProgressIndicator
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModelRework.Onboarding
-import ru.zarina.zarina.ui.theme.ZarinaThemeReworked
+import ru.zarina.zarina.ui.theme.rework.ZarinaThemeReworked
 import ru.zarina.zarina.util.compose.HorizontalAndBottom
 
 @Composable
