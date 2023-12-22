@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui
+package ru.zarina.zarina.ui.rework
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
