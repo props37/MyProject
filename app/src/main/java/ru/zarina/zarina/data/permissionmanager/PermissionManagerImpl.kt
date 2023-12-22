@@ -1,24 +1,47 @@
 package ru.zarina.zarina.data.permissionmanager
 
+import android.content.Context
 import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
-class PermissionManagerImpl @Inject constructor() : PermissionManager {
+class PermissionManagerImpl @Inject constructor(
+    @ApplicationContext
+    context: Context,
+) : PermissionManager {
+    private val storage = PermissionManagerStorage(context)
+
     private var activity: ComponentActivity? = null
+
+    override fun isPermissionGranted(permission: String): Boolean {
+        val activity = checkNotNull(activity) { ACTIVITY_NULL_ERROR_MESSAGE }
+        return ContextCompat.checkSelfPermission(
+            activity,
+            permission,
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    override fun areMultiplePermissionsGranted(permissions: List<String>): Map<String, Boolean> {
+        val map = mutableMapOf<String, Boolean>()
+        for (permission in permissions) {
+            map[permission] = isPermissionGranted(permission)
+        }
+        return map
+    }
 
     override suspend fun requestPermission(permission: String): PermissionState {
         val activity = checkNotNull(activity) { ACTIVITY_NULL_ERROR_MESSAGE }
-        return suspendCancellableCoroutine { continuation ->
-            var launcher: ActivityResultLauncher<String>? = null
-
+        var launcher: ActivityResultLauncher<String>? = null
+        suspendCancellableCoroutine { continuation ->
             continuation.invokeOnCancellation {
                 launcher?.unregister()
             }
@@ -27,22 +50,25 @@ class PermissionManagerImpl @Inject constructor() : PermissionManager {
                 UUID.randomUUID().toString(),
                 ActivityResultContracts.RequestPermission(),
             ) {
-                launcher?.unregister()
-
-                val permissionState = getPermissionState(permission)
-                continuation.resume(permissionState)
+                continuation.resume(Unit)
             }
-            launcher.launch(permission)
+            launcher?.launch(permission)
         }
+        launcher?.unregister()
+
+        if (shouldShowRequestPermissionRationale(permission)) {
+            storage.savePermissionRequiredRequestRationale(permission)
+        }
+
+        return getPermissionState(permission)
     }
 
     override suspend fun requestMultiplePermissions(
         permissions: List<String>,
     ): Map<String, PermissionState> {
         val activity = checkNotNull(activity) { ACTIVITY_NULL_ERROR_MESSAGE }
-        return suspendCancellableCoroutine { continuation ->
-            var launcher: ActivityResultLauncher<Array<String>>? = null
-
+        var launcher: ActivityResultLauncher<Array<String>>? = null
+        suspendCancellableCoroutine { continuation ->
             continuation.invokeOnCancellation {
                 launcher?.unregister()
             }
@@ -51,30 +77,49 @@ class PermissionManagerImpl @Inject constructor() : PermissionManager {
                 UUID.randomUUID().toString(),
                 ActivityResultContracts.RequestMultiplePermissions(),
             ) {
-                launcher?.unregister()
-
-                val permissionsState = getMultiplePermissionsState(permissions)
-                continuation.resume(permissionsState)
+                continuation.resume(Unit)
             }
-            launcher.launch(permissions.toTypedArray())
+            launcher?.launch(permissions.toTypedArray())
         }
+        launcher?.unregister()
+
+        for (permission in permissions) {
+            if (shouldShowRequestPermissionRationale(permission)) {
+                storage.savePermissionRequiredRequestRationale(permission)
+            }
+        }
+
+        return getMultiplePermissionsState(permissions)
     }
 
-    override fun getPermissionState(permission: String): PermissionState {
+    override suspend fun getPermissionState(permission: String): PermissionState {
         return if (isPermissionGranted(permission)) {
             PermissionState.Granted
         } else {
             val shouldShowRequestRationale = shouldShowRequestPermissionRationale(permission)
+            if (shouldShowRequestRationale) {
+                storage.savePermissionRequiredRequestRationale(permission)
+            }
             PermissionState.Denied(shouldShowRequestRationale)
         }
     }
 
-    override fun getMultiplePermissionsState(permissions: List<String>): Map<String, PermissionState> {
+    override suspend fun getMultiplePermissionsState(permissions: List<String>): Map<String, PermissionState> {
         val map = mutableMapOf<String, PermissionState>()
         for (permission in permissions) {
             map[permission] = getPermissionState(permission)
         }
         return map
+    }
+
+    override fun hasPermissionRequiredRequestRationale(permission: String): Flow<Boolean?> {
+        return storage.hasPermissionRequiredRequestRationale(permission)
+    }
+
+    override fun haveMultiplePermissionsRequiredRequestRationale(
+        permissions: List<String>,
+    ): Flow<Map<String, Boolean?>> {
+        return storage.haveMultiplePermissionsRequiredRequestRationale(permissions)
     }
 
     @Synchronized
@@ -92,14 +137,6 @@ class PermissionManagerImpl @Inject constructor() : PermissionManager {
     @Synchronized
     override fun release() {
         activity = null
-    }
-
-    private fun isPermissionGranted(permission: String): Boolean {
-        val activity = checkNotNull(activity) { ACTIVITY_NULL_ERROR_MESSAGE }
-        return ContextCompat.checkSelfPermission(
-            activity,
-            permission,
-        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun shouldShowRequestPermissionRationale(permission: String): Boolean {

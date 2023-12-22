@@ -3,7 +3,6 @@ package ru.zarina.zarina.ui.screen.onboarding
 import android.Manifest
 import android.os.Build
 import ru.zarina.zarina.data.permissionmanager.PermissionManager
-import ru.zarina.zarina.data.permissionmanager.isDenied
 import ru.zarina.zarina.domain.rework.OnboardingStep
 
 // TODO: [High] Refactor
@@ -14,9 +13,9 @@ object OnboardingStepsBuilder {
                 when (step) {
                     OnboardingStep.NOTIFICATIONS_SETUP -> {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            val notificationsPermissionState =
-                                permissionManager.getPermissionState(Manifest.permission.POST_NOTIFICATIONS)
-                            if (notificationsPermissionState.isDenied) {
+                            val isNotificationsPermissionGranted =
+                                permissionManager.isPermissionGranted(Manifest.permission.POST_NOTIFICATIONS)
+                            if (!isNotificationsPermissionGranted) {
                                 add(step)
                             }
                         }

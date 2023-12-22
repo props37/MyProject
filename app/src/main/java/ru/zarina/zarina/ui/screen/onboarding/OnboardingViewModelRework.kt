@@ -8,10 +8,13 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.data.permissionmanager.isDenied
 import ru.zarina.zarina.data.permissionmanager.isGranted
+import ru.zarina.zarina.data.permissionmanager.shouldShowRequestRationale
 import ru.zarina.zarina.domain.rework.OnboardingStep
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
@@ -48,16 +51,27 @@ class OnboardingViewModelRework @Inject constructor(
 
     fun onRequestNotificationsPermissionClicked() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permissionManager = interactor.permissionManager
             val permission = Manifest.permission.POST_NOTIFICATIONS
-            val currentPermissionState = interactor.permissionManager.getPermissionState(permission)
-            if (currentPermissionState.isGranted) {
-                showNextOnboardingPage()
-            } else {
-                viewModelScope.launch {
-                    val newPermissionState =
-                        interactor.permissionManager.requestPermission(permission)
+            viewModelScope.launch {
+                val currentPermissionState = permissionManager.getPermissionState(permission)
+                if (currentPermissionState.isGranted) {
+                    showNextOnboardingPage()
+                } else {
+                    val newPermissionState = permissionManager.requestPermission(permission)
                     if (newPermissionState != currentPermissionState) {
+                        // User has either granted or denied the permission
                         showNextOnboardingPage()
+                    } else if (
+                        newPermissionState.isDenied && !newPermissionState.shouldShowRequestRationale
+                    ) {
+                        val hasPermissionRequiredRequestRationale =
+                            permissionManager.hasPermissionRequiredRequestRationale(permission)
+                                .firstOrNull() ?: false
+                        if (hasPermissionRequiredRequestRationale) {
+                            // User has denied the permission permanently
+                            showNextOnboardingPage()
+                        }
                     }
                 }
             }

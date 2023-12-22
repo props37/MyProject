@@ -29,6 +29,13 @@ val PermissionState.isDenied: Boolean
     get() = this is PermissionState.Denied
 
 /**
+ * Returns `true` if this instance represents the [PermissionState.Denied] state
+ * and the app has to show permission request rationale or `false` otherwise.
+ */
+val PermissionState.shouldShowRequestRationale: Boolean
+    get() = if (this is PermissionState.Denied) shouldShowRequestRationale else false
+
+/**
  * Performs the given [action] if this instance represents the [PermissionState.Granted] state.
  * Returns the original [PermissionState] unchanged.
  */
