@@ -20,7 +20,7 @@ class UpdateUnauthorizedUserAuthorizationTokensUseCase @Inject constructor(
         if (currentTokens == null) {
             fetchUnauthorizedUserAuthorizationTokensUseCase().getOrThrow()
         } else {
-            Timber.v("Do not fetch tokens since the tokens are present")
+            Timber.v("No need to fetch tokens since the tokens are present")
         }
     }
 }
