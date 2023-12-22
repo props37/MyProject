@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.navigation
+package ru.zarina.zarina.ui.navigation.rework
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
