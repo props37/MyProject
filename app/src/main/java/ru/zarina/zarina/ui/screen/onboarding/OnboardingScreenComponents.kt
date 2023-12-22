@@ -104,6 +104,7 @@ object OnboardingScreenComponents {
     fun OnboardingPage(
         onboarding: Onboarding,
         onRequestNotificationsPermissionClicked: () -> Unit,
+        onDetectCityClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         AnimatedContent(
@@ -142,7 +143,7 @@ object OnboardingScreenComponents {
                             body = stringResource(R.string.onboarding_city_selection_body),
                             buttons = {
                                 ZarinaButton(
-                                    onClick = { /*TODO*/ },
+                                    onClick = onDetectCityClicked,
                                     modifier = Modifier.fillMaxWidth(),
                                 ) {
                                     Text(text = stringResource(R.string.detect_city).uppercase())

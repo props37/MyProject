@@ -80,6 +80,17 @@ class OnboardingViewModelRework @Inject constructor(
         }
     }
 
+    fun onDetectCityClicked() {
+        val permissions = listOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+        )
+        viewModelScope.launch {
+            interactor.permissionManager.requestMultiplePermissions(permissions)
+            // TODO: [High] Implement
+        }
+    }
+
     private fun showNextOnboardingPage() {
         if (currentOnboardingStepIndex.value != onboardingSteps.lastIndex) {
             currentOnboardingStepIndex.value += 1

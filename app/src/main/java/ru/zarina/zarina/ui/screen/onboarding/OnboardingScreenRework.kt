@@ -39,6 +39,7 @@ fun OnboardingScreenRework(
     ScreenContent(
         onboarding = onboarding,
         onRequestNotificationsPermissionClicked = viewModel::onRequestNotificationsPermissionClicked,
+        onDetectCityClicked = viewModel::onDetectCityClicked,
     )
 }
 
@@ -46,6 +47,7 @@ fun OnboardingScreenRework(
 private fun ScreenContent(
     onboarding: Onboarding,
     onRequestNotificationsPermissionClicked: () -> Unit,
+    onDetectCityClicked: () -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -74,6 +76,7 @@ private fun ScreenContent(
                 OnboardingPage(
                     onboarding = onboarding,
                     onRequestNotificationsPermissionClicked = onRequestNotificationsPermissionClicked,
+                    onDetectCityClicked = onDetectCityClicked,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
