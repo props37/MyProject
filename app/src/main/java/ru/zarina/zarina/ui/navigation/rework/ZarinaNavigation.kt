@@ -9,7 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destinations.CommonDestinations
-import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenRework
+import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
 import ru.zarina.zarina.util.library.accompanist.rememberBottomSheetNavigator
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
@@ -31,6 +31,6 @@ fun ZarinaNavigation(
 
 private fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
     composableDestination(CommonDestinations.Onboarding) {
-        OnboardingScreenRework()
+        OnboardingScreen()
     }
 }

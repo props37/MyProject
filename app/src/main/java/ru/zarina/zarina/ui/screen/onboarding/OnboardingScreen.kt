@@ -31,7 +31,7 @@ import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 import ru.zarina.zarina.util.compose.HorizontalAndBottom
 
 @Composable
-fun OnboardingScreenRework(
+fun OnboardingScreen(
     viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
     val onboarding by viewModel.onboarding.collectAsStateWithLifecycle()
