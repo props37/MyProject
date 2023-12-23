@@ -4,6 +4,7 @@ import androidx.navigation.NamedNavArgument
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Graph
 import ru.zarina.zarina.ui.navigation.destinations.BaseRoute
+import ru.zarina.zarina.ui.navigation.rework.destination.BaseRouteReworked
 
 /**
  * An abstraction for a Compose Navigation nested graph that encapsulates graph's
@@ -20,6 +21,11 @@ abstract class SimpleGraph(
 
     constructor(
         baseRoute: BaseRoute,
+        startDestination: Destination<*>,
+    ) : this(baseRoute.route, startDestination)
+
+    constructor(
+        baseRoute: BaseRouteReworked,
         startDestination: Destination<*>,
     ) : this(baseRoute.route, startDestination)
 
