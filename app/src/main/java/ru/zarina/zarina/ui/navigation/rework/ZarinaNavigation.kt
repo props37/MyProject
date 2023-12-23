@@ -10,7 +10,7 @@ import ru.zarina.zarina.ui.navigation.rework.destination.favoritesGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.homeGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.onboardingScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.profileGraph
-import ru.zarina.zarina.ui.navigation.rework.graph.CommonDestinations
+import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 
 @Composable
 fun ZarinaNavigation(
@@ -19,7 +19,7 @@ fun ZarinaNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = CommonDestinations.Onboarding.route,
+        startDestination = UnscopedDestinations.Onboarding.route,
         modifier = modifier,
     ) {
         catalogGraph(navController)
