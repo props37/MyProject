@@ -5,12 +5,12 @@ import androidx.navigation.NavHostController
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.rework.graph.CatalogGraph
-import ru.zarina.zarina.util.compose.ScreenPlaceholder
+import ru.zarina.zarina.ui.screen.catalog.CatalogScreen
 
 fun NavGraphBuilder.catalogGraph(navController: NavHostController) {
     navigationGraph(CatalogGraph) {
         composableDestination(CatalogGraph.Catalog) {
-            ScreenPlaceholder(title = "Catalog")
+            CatalogScreen()
         }
     }
 }
