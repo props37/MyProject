@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import androidx.navigation.NavHostController
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.navigation.rework.destination.BaseRouteReworked
+import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
 import ru.zarina.zarina.ui.navigation.rework.graph.HomeGraph
 
 @Stable

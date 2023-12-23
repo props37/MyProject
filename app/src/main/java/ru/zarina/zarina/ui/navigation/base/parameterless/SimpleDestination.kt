@@ -3,7 +3,7 @@ package ru.zarina.zarina.ui.navigation.base.parameterless
 import androidx.navigation.NamedNavArgument
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.destinations.BaseRoute
-import ru.zarina.zarina.ui.navigation.rework.destination.BaseRouteReworked
+import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
 
 /**
  * An abstraction for a Compose Navigation destination that encapsulates destination's

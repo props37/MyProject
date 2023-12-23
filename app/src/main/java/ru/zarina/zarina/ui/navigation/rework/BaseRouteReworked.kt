@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.navigation.rework.destination
+package ru.zarina.zarina.ui.navigation.rework
 
 enum class BaseRouteReworked {
     ONBOARDING,
