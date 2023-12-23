@@ -2,20 +2,18 @@ package ru.zarina.zarina.ui.screen.onboarding
 
 import android.Manifest
 import android.os.Build
-import androidx.compose.runtime.Immutable
+import android.os.Parcelable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import ru.zarina.zarina.data.permissionmanager.isDenied
 import ru.zarina.zarina.data.permissionmanager.isGranted
 import ru.zarina.zarina.data.permissionmanager.shouldShowRequestRationale
-import ru.zarina.zarina.domain.rework.OnboardingStep
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
@@ -23,33 +21,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val interactor: OnboardingInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
-    private val onboardingSteps = OnboardingStepsBuilder.build(interactor.permissionManager)
-
-    private val currentOnboardingStepIndex = MutableStateFlow(0)
-
     private val permissionManager = interactor.permissionManager
 
-    val onboarding = currentOnboardingStepIndex
-        .map { currentStepIndex ->
-            val coercedStepIndex = currentStepIndex.coerceIn(0, onboardingSteps.lastIndex)
-            val currentStep = onboardingSteps[coercedStepIndex]
-            val currentPage = Onboarding.Page(number = coercedStepIndex + 1, step = currentStep)
-            Onboarding(currentPage = currentPage, pageCount = onboardingSteps.size)
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = Onboarding(
-                currentPage = Onboarding.Page(
-                    number = currentOnboardingStepIndex.value + 1,
-                    step = onboardingSteps.first(),
-                ),
-                pageCount = onboardingSteps.size,
-            ),
-        )
+    val onboardingSteps: StateFlow<List<OnboardingStep>> = savedStateHandle.getStateFlow(
+        key = KEY_ONBOARDING_STEPS,
+        initialValue = createOnboardingSteps(),
+    )
+
+    val currentOnboardingStep: StateFlow<OnboardingStep> = savedStateHandle.getStateFlow(
+        key = KEY_CURRENT_ONBOARDING_STEP,
+        initialValue = onboardingSteps.value.firstOrNull() ?: OnboardingStep.CITY_DETECTION,
+    )
 
     fun onRequestNotificationsPermissionClicked() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -57,12 +43,12 @@ class OnboardingViewModel @Inject constructor(
             viewModelScope.launch {
                 val currentPermissionState = permissionManager.getPermissionState(permission)
                 if (currentPermissionState.isGranted) {
-                    showNextOnboardingPage()
+                    showNextOnboardingStep()
                 } else {
                     val newPermissionState = permissionManager.requestPermission(permission)
                     if (newPermissionState != currentPermissionState) {
                         // User has either granted or denied the permission
-                        showNextOnboardingPage()
+                        showNextOnboardingStep()
                     } else if (
                         newPermissionState.isDenied && !newPermissionState.shouldShowRequestRationale
                     ) {
@@ -71,13 +57,13 @@ class OnboardingViewModel @Inject constructor(
                                 .firstOrNull() ?: false
                         if (hasPermissionRequiredRequestRationale) {
                             // User has denied the permission permanently
-                            showNextOnboardingPage()
+                            showNextOnboardingStep()
                         }
                     }
                 }
             }
         } else {
-            showNextOnboardingPage()
+            showNextOnboardingStep()
         }
     }
 
@@ -116,25 +102,52 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
-    private fun showNextOnboardingPage() {
-        if (currentOnboardingStepIndex.value != onboardingSteps.lastIndex) {
-            currentOnboardingStepIndex.value += 1
+    private fun showNextOnboardingStep() {
+        val steps = onboardingSteps.value
+        val currentStep = currentOnboardingStep.value
+        val currentStepIndex = steps.indexOf(currentStep)
+        val nextStepIndex = currentStepIndex + 1
+        if (nextStepIndex <= steps.lastIndex) {
+            val nextStep = steps[nextStepIndex]
+            savedStateHandle[KEY_CURRENT_ONBOARDING_STEP] = nextStep
         } else {
             // TODO: [High] Close onboarding
         }
     }
 
-    @Immutable
-    data class Onboarding(
-        val currentPage: Page,
-        val pageCount: Int,
-    ) {
-        @Immutable
-        data class Page(
-            val number: Int,
-            val step: OnboardingStep,
-        )
+    private fun createOnboardingSteps(): List<OnboardingStep> {
+        return buildList {
+            OnboardingStep.entries.forEach { step ->
+                when (step) {
+                    OnboardingStep.NOTIFICATIONS_SETUP -> {
+                        val isNotificationsPermissionGranted =
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                permissionManager.isPermissionGranted(Manifest.permission.POST_NOTIFICATIONS)
+                            } else {
+                                true
+                            }
+                        if (!isNotificationsPermissionGranted) {
+                            add(step)
+                        }
+                    }
+
+                    else -> add(step)
+                }
+            }
+        }
     }
 
     sealed interface SideEffect: SideEffectSource.SideEffect
+
+    @Parcelize
+    enum class OnboardingStep : Parcelable {
+        NOTIFICATIONS_SETUP,
+        CITY_DETECTION,
+        CITY_CONFIRMATION,
+    }
+
+    companion object {
+        private const val KEY_ONBOARDING_STEPS = "onboarding_steps"
+        private const val KEY_CURRENT_ONBOARDING_STEP = "current_onboarding_step"
+    }
 }

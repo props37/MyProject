@@ -24,9 +24,9 @@ import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.Background
-import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.OnboardingPage
+import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.OnboardingStep
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.ProgressIndicator
-import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.Onboarding
+import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.OnboardingStep
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 import ru.zarina.zarina.util.compose.HorizontalAndBottom
 
@@ -34,10 +34,12 @@ import ru.zarina.zarina.util.compose.HorizontalAndBottom
 fun OnboardingScreen(
     viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
-    val onboarding by viewModel.onboarding.collectAsStateWithLifecycle()
+    val onboardingSteps by viewModel.onboardingSteps.collectAsStateWithLifecycle()
+    val currentOnboardingStep by viewModel.currentOnboardingStep.collectAsStateWithLifecycle()
 
     ScreenContent(
-        onboarding = onboarding,
+        onboardingSteps = onboardingSteps,
+        currentOnboardingStep = currentOnboardingStep,
         onRequestNotificationsPermissionClicked = viewModel::onRequestNotificationsPermissionClicked,
         onDetectCityClicked = viewModel::onDetectCityClicked,
     )
@@ -45,7 +47,8 @@ fun OnboardingScreen(
 
 @Composable
 private fun ScreenContent(
-    onboarding: Onboarding,
+    onboardingSteps: List<OnboardingStep>,
+    currentOnboardingStep: OnboardingStep,
     onRequestNotificationsPermissionClicked: () -> Unit,
     onDetectCityClicked: () -> Unit,
 ) {
@@ -65,7 +68,8 @@ private fun ScreenContent(
                     .padding(top = 24.dp, bottom = 20.dp),
             ) {
                 ProgressIndicator(
-                    onboarding = onboarding,
+                    onboardingSteps = onboardingSteps,
+                    currentOnboardingStep = currentOnboardingStep,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
@@ -73,8 +77,9 @@ private fun ScreenContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                OnboardingPage(
-                    onboarding = onboarding,
+                OnboardingStep(
+                    onboardingSteps = onboardingSteps,
+                    currentOnboardingStep = currentOnboardingStep,
                     onRequestNotificationsPermissionClicked = onRequestNotificationsPermissionClicked,
                     onDetectCityClicked = onDetectCityClicked,
                     modifier = Modifier.fillMaxWidth(),

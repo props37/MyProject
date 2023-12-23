@@ -1,6 +1,8 @@
 package ru.zarina.zarina.ui.screen.onboarding
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -19,6 +21,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -27,11 +30,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.OnboardingStep
 import ru.zarina.zarina.ui.common.component.ZarinaLinearProgressIndicator
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
-import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.Onboarding
+import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.OnboardingStep
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.FontFeatureSettings
 
@@ -51,12 +53,16 @@ object OnboardingScreenComponents {
 
     @Composable
     fun ProgressIndicator(
-        onboarding: Onboarding,
+        onboardingSteps: List<OnboardingStep>,
+        currentOnboardingStep: OnboardingStep,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
-            val onboardingProgress = remember(onboarding) {
-                onboarding.currentPage.number / onboarding.pageCount.toFloat()
+            val currentOnboardingStepNumber = remember(onboardingSteps, currentOnboardingStep) {
+                onboardingSteps.indexOf(currentOnboardingStep) + 1
+            }
+            val onboardingProgress = remember(onboardingSteps, currentOnboardingStepNumber) {
+                currentOnboardingStepNumber / onboardingSteps.size.toFloat()
             }
 
             ZarinaLinearProgressIndicator(
@@ -77,22 +83,22 @@ object OnboardingScreenComponents {
                     color = UiKitTheme.colorsReworked.text.general.regular.default,
                 )
                 AnimatedContent(
-                    targetState = onboarding.currentPage.number,
+                    targetState = currentOnboardingStepNumber,
                     transitionSpec = {
                         // Default AnimatedContent transitionSpec without scaling
                         fadeIn(animationSpec = tween(durationMillis = 220, delayMillis = 90))
                             .togetherWith(fadeOut(animationSpec = tween(durationMillis = 90)))
                     },
-                    label = "ProgressIndicator current page number"
-                ) { pageNumber ->
+                    label = "ProgressIndicator current step number"
+                ) { stepNumber ->
                     Text(
-                        text = " $pageNumber",
+                        text = " $stepNumber",
                         style = textStyle.copy(fontFeatureSettings = FontFeatureSettings.Mono),
                         color = UiKitTheme.colorsReworked.text.general.regular.default,
                     )
                 }
                 Text(
-                    text = "/${onboarding.pageCount}",
+                    text = "/${onboardingSteps.size}",
                     style = textStyle.copy(fontFeatureSettings = FontFeatureSettings.Mono),
                     color = UiKitTheme.colorsReworked.text.general.regular.disabled,
                 )
@@ -101,15 +107,27 @@ object OnboardingScreenComponents {
     }
 
     @Composable
-    fun OnboardingPage(
-        onboarding: Onboarding,
+    fun OnboardingStep(
+        onboardingSteps: List<OnboardingStep>,
+        currentOnboardingStep: OnboardingStep,
         onRequestNotificationsPermissionClicked: () -> Unit,
         onDetectCityClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        val onboardingPage = remember(onboardingSteps, currentOnboardingStep) {
+            OnboardingPage(
+                step = currentOnboardingStep,
+                number = onboardingSteps.indexOf(currentOnboardingStep) + 1,
+            )
+        }
+
         AnimatedContent(
-            targetState = onboarding.currentPage,
+            targetState = onboardingPage,
             transitionSpec = {
+                if (targetState.step == initialState.step) {
+                    return@AnimatedContent EnterTransition.None togetherWith ExitTransition.None
+                }
+
                 val isForward = targetState.number > initialState.number
                 val slideInSign = if (isForward) 1 else -1
                 val animationSpec = tween<IntOffset>(durationMillis = 300, delayMillis = 1)
@@ -117,7 +135,7 @@ object OnboardingScreenComponents {
                 val exit = slideOutHorizontally(animationSpec) { -it * slideInSign }
                 (enter togetherWith exit).using(SizeTransform(clip = false))
             },
-            label = "OnboardingPage",
+            label = "OnboardingStep",
             modifier = modifier,
         ) { page ->
             Box(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -228,4 +246,10 @@ object OnboardingScreenComponents {
             buttons()
         }
     }
+
+    @Immutable
+    private data class OnboardingPage(
+        val step: OnboardingStep,
+        val number: Int,
+    )
 }
