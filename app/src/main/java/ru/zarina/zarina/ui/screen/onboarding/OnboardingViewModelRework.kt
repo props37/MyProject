@@ -30,6 +30,8 @@ class OnboardingViewModelRework @Inject constructor(
 
     private val currentOnboardingStepIndex = MutableStateFlow(0)
 
+    private val permissionManager = interactor.permissionManager
+
     val onboarding = currentOnboardingStepIndex
         .map { currentStepIndex ->
             val coercedStepIndex = currentStepIndex.coerceIn(0, onboardingSteps.lastIndex)
@@ -51,7 +53,6 @@ class OnboardingViewModelRework @Inject constructor(
 
     fun onRequestNotificationsPermissionClicked() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val permissionManager = interactor.permissionManager
             val permission = Manifest.permission.POST_NOTIFICATIONS
             viewModelScope.launch {
                 val currentPermissionState = permissionManager.getPermissionState(permission)
@@ -81,7 +82,6 @@ class OnboardingViewModelRework @Inject constructor(
     }
 
     fun onDetectCityClicked() {
-        val permissionManager = interactor.permissionManager
         val permissions = listOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
