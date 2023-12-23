@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.navigation.destinations
+package ru.zarina.zarina.ui.navigation.rework.graph
 
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
 import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
