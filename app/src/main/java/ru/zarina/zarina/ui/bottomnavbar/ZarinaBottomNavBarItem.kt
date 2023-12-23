@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.bottombar
+package ru.zarina.zarina.ui.bottomnavbar
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
