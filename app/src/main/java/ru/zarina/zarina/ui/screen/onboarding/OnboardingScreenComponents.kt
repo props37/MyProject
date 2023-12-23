@@ -31,7 +31,7 @@ import ru.zarina.zarina.domain.rework.OnboardingStep
 import ru.zarina.zarina.ui.common.component.ZarinaLinearProgressIndicator
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
-import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModelRework.Onboarding
+import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.Onboarding
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.FontFeatureSettings
 

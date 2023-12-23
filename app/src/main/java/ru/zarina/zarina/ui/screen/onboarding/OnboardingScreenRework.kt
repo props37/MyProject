@@ -26,13 +26,13 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.Background
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.OnboardingPage
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.ProgressIndicator
-import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModelRework.Onboarding
+import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.Onboarding
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 import ru.zarina.zarina.util.compose.HorizontalAndBottom
 
 @Composable
 fun OnboardingScreenRework(
-    viewModel: OnboardingViewModelRework = hiltViewModel(),
+    viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
     val onboarding by viewModel.onboarding.collectAsStateWithLifecycle()
 

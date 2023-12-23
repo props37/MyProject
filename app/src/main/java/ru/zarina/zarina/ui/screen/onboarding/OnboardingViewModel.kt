@@ -18,11 +18,11 @@ import ru.zarina.zarina.data.permissionmanager.shouldShowRequestRationale
 import ru.zarina.zarina.domain.rework.OnboardingStep
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
-import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModelRework.SideEffect
+import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
 import javax.inject.Inject
 
 @HiltViewModel
-class OnboardingViewModelRework @Inject constructor(
+class OnboardingViewModel @Inject constructor(
     private val interactor: OnboardingInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
