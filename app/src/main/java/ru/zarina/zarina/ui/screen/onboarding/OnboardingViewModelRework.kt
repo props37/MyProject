@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModelRework @Inject constructor(
-    private val interactor: OnboardingInteractorRework,
+    private val interactor: OnboardingInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val onboardingSteps = OnboardingStepsBuilder.build(interactor.permissionManager)
