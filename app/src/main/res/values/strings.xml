@@ -6,6 +6,11 @@
     <string name="no_change">Нет, изменить</string>
     <string name="configure_later">Настроить позже</string>
     <string name="step">Шаг</string>
+    <string name="catalog">Каталог</string>
+    <string name="favourites">Избранное</string>
+    <string name="home">Главная</string>
+    <string name="profile">Профиль</string>
+    <string name="cart">Корзина</string>
 
     <string name="onboarding_progress_text">Шаг %1$d/%2$d</string>
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
@@ -101,7 +106,6 @@
     <string name="unable_to_subscribe">Не удалось подписаться на товар</string>
     <string name="unable_to_load_cities">Не удалось загрузить список городов</string>
     <string name="unable_to_reserve">Не удалось зарезервировать товар</string>
-    <string name="catalog">Каталог</string>
     <string name="unable_to_load_categories">Не удалось загрузить категории</string>
     <string name="no_products">Нет товаров</string>
     <string name="plural_products_zero">%1$d товаров</string>
@@ -134,10 +138,7 @@
     <string name="selection_of_store">Выбор магазина</string>
     <string name="shop_list">Список магазинов</string>
     <string name="catalogue">Каталог</string>
-    <string name="favourites">Избранное</string>
     <string name="main_page">Главная</string>
-    <string name="profile">Профиль</string>
-    <string name="cart">Корзина</string>
     <string name="add_to_favorites">Добавить в избранное</string>
     <string name="remove_from_favorites">Удалить из избранного</string>
     <string name="favorites_are_empty">В избранном пусто</string>
