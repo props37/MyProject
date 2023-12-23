@@ -4,11 +4,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import ru.zarina.zarina.ui.bottomnavbar.ZarinaBottomNavBar
+import ru.zarina.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
+import ru.zarina.zarina.ui.common.behavior.bottomnavbar.rememberBottomNavBarBehaviorController
 import ru.zarina.zarina.ui.navigation.rework.ZarinaNavigation
 import ru.zarina.zarina.util.library.accompanist.rememberBottomSheetNavigator
 
@@ -17,20 +20,26 @@ import ru.zarina.zarina.util.library.accompanist.rememberBottomSheetNavigator
 fun ZarinaApp(
     modifier: Modifier = Modifier,
 ) {
+    val bottomNavBarBehaviorController = rememberBottomNavBarBehaviorController()
+
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberNavController(bottomSheetNavigator)
 
-    Box(modifier = modifier) {
-        ZarinaNavigation(
-            navController = navController,
-            modifier = Modifier.fillMaxSize(),
-        )
+    CompositionLocalProvider(
+        LocalBottomNavBarBehaviorController provides bottomNavBarBehaviorController,
+    ) {
+        Box(modifier = modifier) {
+            ZarinaNavigation(
+                navController = navController,
+                modifier = Modifier.fillMaxSize(),
+            )
 
-        ZarinaBottomNavBar(
-            navController = navController,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(),
-        )
+            ZarinaBottomNavBar(
+                navController = navController,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth(),
+            )
+        }
     }
 }
