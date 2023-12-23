@@ -8,11 +8,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.Icon
@@ -23,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.painterResource
@@ -39,11 +45,13 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
+import ru.zarina.zarina.util.compose.HorizontalAndBottom
 
 @Composable
 fun ZarinaBottomNavBar(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    windowInsets: WindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.HorizontalAndBottom),
 ) {
     val backgroundColor = UiKitTheme.colorsReworked.background.general.regular.background
     val topBorderColor = UiKitTheme.colorsReworked.border.general.default
@@ -65,8 +73,10 @@ fun ZarinaBottomNavBar(
                     strokeWidth = 1.dp.toPx(),
                 )
             }
-            .padding(top = 6.dp, bottom = 4.dp)
-            .selectableGroup(),
+            .selectableGroup()
+            .windowInsetsPadding(windowInsets)
+            .clipToBounds()
+            .padding(top = 6.dp, bottom = 4.dp),
     ) {
         BottomNavBarItem.ITEMS.forEach { item ->
             Item(
