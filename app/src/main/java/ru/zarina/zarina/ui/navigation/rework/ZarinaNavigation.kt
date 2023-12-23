@@ -6,7 +6,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import ru.zarina.zarina.ui.navigation.destinations.CommonDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.cartGraph
+import ru.zarina.zarina.ui.navigation.rework.destination.catalogGraph
+import ru.zarina.zarina.ui.navigation.rework.destination.favoritesGraph
+import ru.zarina.zarina.ui.navigation.rework.destination.homeGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.onboardingScreen
+import ru.zarina.zarina.ui.navigation.rework.destination.profileGraph
 import ru.zarina.zarina.util.library.accompanist.rememberBottomSheetNavigator
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
@@ -22,6 +27,12 @@ fun ZarinaNavigation(
         startDestination = CommonDestinations.Onboarding.route,
         modifier = modifier,
     ) {
+        catalogGraph(navController)
+        favoritesGraph(navController)
+        homeGraph(navController)
+        profileGraph(navController)
+        cartGraph(navController)
+
         onboardingScreen(navController)
     }
 }
