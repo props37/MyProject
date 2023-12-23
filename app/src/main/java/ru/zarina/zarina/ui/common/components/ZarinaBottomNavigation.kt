@@ -44,7 +44,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.base.behavior.BehaviorController
+import ru.zarina.zarina.ui.common.base.behavior.DefaultBehaviorController
 import ru.zarina.zarina.ui.common.behavior.navigationbar.LocalNavigationBarController
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarBehavior
 import ru.zarina.zarina.ui.navigation.base.Destination
@@ -59,10 +59,10 @@ private val BottomNavigationHeight = 56.dp
 @Composable
 fun ZarinaBottomNavigation(
     navController: NavController,
-    navigationBarController: BehaviorController<NavigationBarBehavior>,
+    navigationBarController: DefaultBehaviorController<NavigationBarBehavior>,
     modifier: Modifier = Modifier,
 ) {
-    val behavior by navigationBarController.current.collectAsStateWithLifecycle()
+    val behavior by navigationBarController.currentBehavior.collectAsStateWithLifecycle()
     val isVisible = behavior is NavigationBarBehavior.Visible
     val isAnimated = behavior.isAnimated
     AnimatedVisibility(
@@ -226,7 +226,7 @@ fun Modifier.bottomNavigationPadding(): Modifier = composed {
 
 @Composable
 fun bottomNavigationPaddingValues(): PaddingValues {
-    val behavior = LocalNavigationBarController.current.current.collectAsStateWithLifecycle()
+    val behavior = LocalNavigationBarController.current.currentBehavior.collectAsStateWithLifecycle()
     val isVisible = remember { derivedStateOf { behavior.value is NavigationBarBehavior.Visible } }
     return PaddingValues(bottom = if (isVisible.value) BottomNavigationHeight else 0.dp)
 }

@@ -14,9 +14,9 @@ fun NavigationBarState(
             NavigationBarBehavior.Visible(isAnimated)
         else
             NavigationBarBehavior.Hidden(isAnimated)
-        bottomBarController.push(behavior)
+        bottomBarController.pushBehavior(behavior)
         this.onDispose {
-            bottomBarController.pop(behavior)
+            bottomBarController.popBehavior(behavior)
         }
     }
 }

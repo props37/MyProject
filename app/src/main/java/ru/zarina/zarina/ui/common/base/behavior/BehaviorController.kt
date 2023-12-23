@@ -1,38 +1,11 @@
 package ru.zarina.zarina.ui.common.base.behavior
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
-open class BehaviorController<T : Behavior>(default: T) :
-    IBehaviorController<T> {
+interface BehaviorController<T : Behavior> {
+    val currentBehavior: StateFlow<T>
 
-    private var _default = default
-
-    private val stack = ArrayDeque<T>()
-    private val _current = MutableStateFlow(default)
-    override val current = _current.asStateFlow()
-
-    @Synchronized
-    override fun setDefault(behavior: T) {
-        _default = behavior
-        updateCurrent()
-    }
-
-    @Synchronized
-    override fun push(behavior: T) {
-        stack.addFirst(behavior)
-        updateCurrent()
-    }
-
-    @Synchronized
-    override fun pop(behavior: T) {
-        val lastIndex = stack.indexOfLast { it == behavior }
-        stack.removeAt(lastIndex)
-        updateCurrent()
-    }
-
-    private fun updateCurrent() {
-        _current.value = stack.firstOrNull() ?: _default
-    }
-
+    fun setDefaultBehavior(behavior: T)
+    fun pushBehavior(behavior: T)
+    fun popBehavior(behavior: T)
 }
