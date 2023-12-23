@@ -122,8 +122,16 @@ data class UiKitColorsReworked(
 
     @Immutable
     data class Border(
+        val general: General = General(),
         val button: Button = Button(),
     ) {
+        @Immutable
+        data class General(
+            val default: Color = Colors.Gallery,
+            val active: Color = Colors.MineShaftDark,
+            val disabled: Color = Colors.SilverChalice,
+        )
+
         @Immutable
         data class Button(
             val default: Color = Colors.MineShaftDark,

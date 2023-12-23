@@ -2,17 +2,19 @@ package ru.zarina.zarina.ui.bottomnavbar
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
@@ -21,23 +23,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
+import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
-
-// TODO: [High] Add top border
+import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 
 @Composable
 fun ZarinaBottomNavBar(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
+    val backgroundColor = UiKitTheme.colorsReworked.background.general.regular.background
+    val topBorderColor = UiKitTheme.colorsReworked.border.general.default
+
     // TODO: [High] Do not use restricted API
     val backStack by navController.currentBackStack.collectAsStateWithLifecycle()
 
@@ -46,7 +56,17 @@ fun ZarinaBottomNavBar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .heightIn(min = 56.dp)
-            .background(UiKitTheme.colorsReworked.background.general.regular.background),
+            .drawBehind {
+                drawRect(backgroundColor)
+                drawLine(
+                    color = topBorderColor,
+                    start = Offset.Zero,
+                    end = Offset(size.width, 0f),
+                    strokeWidth = 1.dp.toPx(),
+                )
+            }
+            .padding(top = 6.dp, bottom = 4.dp)
+            .selectableGroup(),
     ) {
         BottomNavBarItem.ITEMS.forEach { item ->
             Item(
@@ -125,4 +145,15 @@ private fun isItemSelected(
     return lastBottomNavItemEntry?.destination?.route == bottomNavItem.baseRoute.route
 }
 
-// TODO: [High] App preview
+@Preview
+@FontScalePreviews
+@DensityPreviews
+@Composable
+private fun Preview() {
+    ZarinaTheme {
+        ZarinaBottomNavBar(
+            navController = rememberNavController(),
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
