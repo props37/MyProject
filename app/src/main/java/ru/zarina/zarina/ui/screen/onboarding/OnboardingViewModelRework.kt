@@ -81,13 +81,38 @@ class OnboardingViewModelRework @Inject constructor(
     }
 
     fun onDetectCityClicked() {
+        val permissionManager = interactor.permissionManager
         val permissions = listOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
         )
         viewModelScope.launch {
-            interactor.permissionManager.requestMultiplePermissions(permissions)
-            // TODO: [High] Implement
+            val currentPermissionsState = permissionManager.getMultiplePermissionsState(permissions)
+            if (currentPermissionsState.any { it.value.isGranted }) {
+                // TODO: [High] Detect city
+            } else {
+                val newPermissionsState = permissionManager.requestMultiplePermissions(permissions)
+                if (newPermissionsState != currentPermissionsState) {
+                    // User has either granted or denied the permission
+                    if (newPermissionsState.any { it.value.isGranted }) {
+                        // TODO: [High] Detect city
+                    } else {
+                        // TODO: [High] Skip city detection
+                    }
+                } else if (
+                    // TODO: [High] Check
+                    newPermissionsState.all { it.value.isDenied }
+                    && newPermissionsState.any { !it.value.shouldShowRequestRationale }
+                ) {
+                    val havePermissionsRequiredRequestRationale =
+                        permissionManager.haveMultiplePermissionsRequiredRequestRationale(permissions)
+                            .firstOrNull() ?: emptyMap()
+                    if (havePermissionsRequiredRequestRationale.any { it.value == true }) {
+                        // User has denied the permission permanently
+                        // TODO: [High] Detect default city
+                    }
+                }
+            }
         }
     }
 
