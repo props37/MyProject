@@ -14,6 +14,7 @@ class CoilExtension : ApplicationExtension {
     override fun install(application: Application) {
         val factory = ImageLoaderFactory {
             ImageLoader.Builder(application)
+                .crossfade(true)
                 .memoryCache {
                     MemoryCache.Builder(application)
                         .maxSizePercent(MEMORY_CACHE_MAX_SIZE_PERCENT)
