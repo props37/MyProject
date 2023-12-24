@@ -79,11 +79,17 @@ data class UiKitColorsReworked(
         @Immutable
         data class General(
             val regular: Regular = Regular(),
+            val inversed: Inversed = Inversed(),
         ) {
             @Immutable
             data class Regular(
                 val default: Color = Colors.MineShaftDark,
                 val disabled: Color = Colors.SilverChalice,
+            )
+
+            @Immutable
+            data class Inversed(
+                val default: Color = Colors.White,
             )
         }
 
