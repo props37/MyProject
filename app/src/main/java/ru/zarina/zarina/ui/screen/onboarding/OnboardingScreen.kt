@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screen.onboarding
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +31,7 @@ import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.Onboardi
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.ProgressIndicator
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.OnboardingStep
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 import ru.zarina.zarina.util.compose.HorizontalAndBottom
 
@@ -81,7 +83,9 @@ private fun ScreenContent(
     )
 
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme.colorsReworked.background.general.regular.background),
     ) {
         Background(
             onboardingBackground = onboardingBackground,
