@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.rework.destination.cartGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.catalogGraph
+import ru.zarina.zarina.ui.navigation.rework.destination.citySelectorBottomSheetScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.favoritesGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.homeGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.onboardingScreen
@@ -30,5 +31,6 @@ fun ZarinaNavigation(
         cartGraph(navController)
 
         onboardingScreen(navController)
+        citySelectorBottomSheetScreen(navController)
     }
 }

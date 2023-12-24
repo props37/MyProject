@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.navigation.rework
 
 enum class BaseRouteReworked {
     ONBOARDING,
+    CITY_SELECTOR,
 
     CATALOG_GRAPH,
     CATALOG,

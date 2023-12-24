@@ -5,4 +5,6 @@ import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
 
 object UnscopedDestinations {
     data object Onboarding : SimpleDestination(BaseRouteReworked.ONBOARDING)
+
+    data object CitySelector : SimpleDestination(BaseRouteReworked.CITY_SELECTOR)
 }
