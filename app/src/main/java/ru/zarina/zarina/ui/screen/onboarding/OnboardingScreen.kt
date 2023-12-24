@@ -60,7 +60,7 @@ fun OnboardingScreen(
 private fun ScreenContent(
     onboardingSteps: List<OnboardingStep>,
     currentOnboardingStep: OnboardingStep,
-    currentCity: City,
+    currentCity: City?,
     isDetectCityButtonLoading: Boolean,
     sideEffects: Flow<SideEffect>,
     navigateForward: (OnboardingScreenAction) -> Unit,

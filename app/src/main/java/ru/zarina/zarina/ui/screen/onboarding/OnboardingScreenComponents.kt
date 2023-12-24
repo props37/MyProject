@@ -126,7 +126,7 @@ object OnboardingScreenComponents {
     fun OnboardingStep(
         onboardingSteps: List<OnboardingStep>,
         currentOnboardingStep: OnboardingStep,
-        currentCity: City,
+        currentCity: City?,
         isDetectCityButtonLoading: Boolean,
         onRequestNotificationsPermissionClicked: () -> Unit,
         onDetectCityClicked: () -> Unit,
@@ -204,7 +204,7 @@ object OnboardingScreenComponents {
                         OnboardingPageLayout(
                             title = stringResource(
                                 R.string.onboarding_city_confirmation_title,
-                                currentCity.name,
+                                currentCity?.name.orEmpty(),
                             ),
                             body = stringResource(R.string.onboarding_city_confirmation_body),
                             buttons = {

@@ -47,13 +47,13 @@ class OnboardingViewModel @Inject constructor(
         initialValue = onboardingSteps.value.firstOrNull() ?: OnboardingStep.CITY_DETECTION,
     )
 
-    val currentCity: StateFlow<City> = savedStateHandle
+    val currentCity: StateFlow<City?> = savedStateHandle
         .getStateFlow<CityParcelable?>(
             key = KEY_CURRENT_CITY,
-            initialValue = CityParcelable.fromCity(City.SAINT_PETERSBURG),
+            initialValue = null,
         )
         .mapState(viewModelScope) { cityParcelable ->
-            cityParcelable?.toCity() ?: City.SAINT_PETERSBURG
+            cityParcelable?.toCity()
         }
 
     val isDetectCityButtonLoading: StateFlow<Boolean> = operationTracker
@@ -110,8 +110,7 @@ class OnboardingViewModel @Inject constructor(
                     if (newPermissionsState.any { it.value.isGranted }) {
                         detectCity()
                     } else {
-                        val action = OnboardingScreenAction.OnboardingCompleted(currentCity = null)
-                        emitSideEffect(SideEffect.NavigateForward(action))
+                        closeOnboarding()
                     }
                 } else if (
                     // TODO: [High] Ensure this works correctly
@@ -133,8 +132,7 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun onSkipCityDetectionClicked() {
-        val action = OnboardingScreenAction.OnboardingCompleted(currentCity = null)
-        emitSideEffect(SideEffect.NavigateForward(action))
+        closeOnboarding()
     }
 
     private suspend fun detectCity() {
@@ -160,8 +158,13 @@ class OnboardingViewModel @Inject constructor(
             val nextStep = steps[nextStepIndex]
             savedStateHandle[KEY_CURRENT_ONBOARDING_STEP] = nextStep
         } else {
-            // TODO: [High] Close onboarding
+            closeOnboarding()
         }
+    }
+
+    private fun closeOnboarding() {
+        val action = OnboardingScreenAction.OnboardingCompleted(currentCity.value)
+        emitSideEffect(SideEffect.NavigateForward(action))
     }
 
     private fun createOnboardingSteps(): List<OnboardingStep> {
