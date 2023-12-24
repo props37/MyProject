@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import ru.zarina.zarina.ui.bottomnavbar.ZarinaBottomNavBar
@@ -18,8 +19,8 @@ import ru.zarina.zarina.util.library.accompanist.rememberBottomSheetNavigator
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 fun ZarinaApp(
-    viewModel: MainViewModel,
     modifier: Modifier = Modifier,
+    viewModel: AppViewModel = hiltViewModel(),
 ) {
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberNavController(bottomSheetNavigator)
