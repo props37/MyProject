@@ -84,6 +84,7 @@ class OnboardingViewModel @Inject constructor(
                         // TODO: [High] Detect city
                     } else {
                         // TODO: [High] Skip city detection
+                        emitSideEffect(SideEffect.NavigateForward)
                     }
                 } else if (
                     // TODO: [High] Check
@@ -100,6 +101,10 @@ class OnboardingViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun onSkipCityDetectionClicked() {
+        emitSideEffect(SideEffect.NavigateForward)
     }
 
     private fun showNextOnboardingStep() {
@@ -137,7 +142,9 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
-    sealed interface SideEffect: SideEffectSource.SideEffect
+    sealed interface SideEffect: SideEffectSource.SideEffect {
+        data object NavigateForward : SideEffect
+    }
 
     @Parcelize
     enum class OnboardingStep : Parcelable {

@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -27,11 +28,13 @@ import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.Backgrou
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.OnboardingStep
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.ProgressIndicator
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.OnboardingStep
+import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 import ru.zarina.zarina.util.compose.HorizontalAndBottom
 
 @Composable
 fun OnboardingScreen(
+    navigateForward: () -> Unit,
     viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
     val onboardingSteps by viewModel.onboardingSteps.collectAsStateWithLifecycle()
@@ -40,8 +43,11 @@ fun OnboardingScreen(
     ScreenContent(
         onboardingSteps = onboardingSteps,
         currentOnboardingStep = currentOnboardingStep,
+        sideEffects = viewModel.sideEffects,
+        navigateForward = navigateForward,
         onRequestNotificationsPermissionClicked = viewModel::onRequestNotificationsPermissionClicked,
         onDetectCityClicked = viewModel::onDetectCityClicked,
+        onSkipCityDetectionClicked = viewModel::onSkipCityDetectionClicked,
     )
 }
 
@@ -49,9 +55,17 @@ fun OnboardingScreen(
 private fun ScreenContent(
     onboardingSteps: List<OnboardingStep>,
     currentOnboardingStep: OnboardingStep,
+    sideEffects: Flow<SideEffect>,
+    navigateForward: () -> Unit,
     onRequestNotificationsPermissionClicked: () -> Unit,
     onDetectCityClicked: () -> Unit,
+    onSkipCityDetectionClicked: () -> Unit,
 ) {
+    OnboardingScreenBehavior(
+        sideEffects = sideEffects,
+        navigateForward = navigateForward,
+    )
+
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -82,6 +96,7 @@ private fun ScreenContent(
                     currentOnboardingStep = currentOnboardingStep,
                     onRequestNotificationsPermissionClicked = onRequestNotificationsPermissionClicked,
                     onDetectCityClicked = onDetectCityClicked,
+                    onSkipCityDetectionClicked = onSkipCityDetectionClicked,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
