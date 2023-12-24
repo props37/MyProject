@@ -4,22 +4,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.rework.destination.cartGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.catalogGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.favoritesGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.homeGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.onboardingScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.profileGraph
-import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 
 @Composable
 fun ZarinaNavigation(
     navController: NavHostController,
+    startDestination: Destination<Unit>,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController = navController,
-        startDestination = UnscopedDestinations.Onboarding.route,
+        startDestination = startDestination.routeSchema,
         modifier = modifier,
     ) {
         catalogGraph(navController)

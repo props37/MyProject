@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import ru.zarina.zarina.ui.MainViewModel
 import ru.zarina.zarina.ui.bottomnavbar.ZarinaBottomNavBar
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.rememberBottomNavBarBehaviorController
@@ -18,12 +19,13 @@ import ru.zarina.zarina.util.library.accompanist.rememberBottomSheetNavigator
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 fun ZarinaApp(
+    viewModel: MainViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val bottomNavBarBehaviorController = rememberBottomNavBarBehaviorController()
-
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberNavController(bottomSheetNavigator)
+
+    val bottomNavBarBehaviorController = rememberBottomNavBarBehaviorController()
 
     CompositionLocalProvider(
         LocalBottomNavBarBehaviorController provides bottomNavBarBehaviorController,
@@ -31,6 +33,7 @@ fun ZarinaApp(
         Box(modifier = modifier) {
             ZarinaNavigation(
                 navController = navController,
+                startDestination = viewModel.startDestination,
                 modifier = Modifier.fillMaxSize(),
             )
 
