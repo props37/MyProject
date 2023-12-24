@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -36,6 +37,8 @@ class OnboardingViewModel @Inject constructor(
     private val operationTracker = OperationTracker()
 
     private val permissionManager = interactor.permissionManager
+
+    private var detectCityJob: Job? = null
 
     val onboardingSteps: StateFlow<List<OnboardingStep>> = savedStateHandle.getStateFlow(
         key = KEY_ONBOARDING_STEPS,
@@ -95,11 +98,13 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun onDetectCityClicked() {
+        if (detectCityJob?.isActive == true) return
+
         val permissions = listOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
         )
-        viewModelScope.launch {
+        detectCityJob = viewModelScope.launch {
             val currentPermissionsState = permissionManager.getMultiplePermissionsState(permissions)
             if (currentPermissionsState.any { it.value.isGranted }) {
                 detectCity()
