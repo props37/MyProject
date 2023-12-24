@@ -35,16 +35,16 @@ class ZarinaApplication : Application() {
 
         installApplicationExtensions()
 
-        updateUnauthorizedUserAuthorizationTokens()
+        fetchUnauthorizedUserAuthorizationTokens()
     }
 
     private fun installApplicationExtensions() {
         applicationExtensionManager.extensions.forEach { it.install(this) }
     }
 
-    private fun updateUnauthorizedUserAuthorizationTokens() {
+    private fun fetchUnauthorizedUserAuthorizationTokens() {
         coroutineScope.launch {
-            interactor.updateUnauthorizedUserAuthorizationTokens.invoke()
+            interactor.fetchUnauthorizedUserAuthorizationTokensUseCase()
         }
     }
 }

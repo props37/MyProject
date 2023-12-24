@@ -14,8 +14,13 @@ class FetchUnauthorizedUserAuthorizationTokensUseCase @Inject constructor(
 ) : UseCase<Unit, Unit>(dispatcher) {
 
     override suspend fun execute(params: Unit) {
-        val tokens = authorizationRepository.requestUnauthorizedUserAuthorizationTokens()
-        authorizationRepository.setAuthorizationTokens(tokens)
-        Timber.v("Unauthorized user authorization tokens fetched")
+        val currentTokens = authorizationRepository.getAuthorizationTokens()
+        if (currentTokens == null) {
+            val tokens = authorizationRepository.requestUnauthorizedUserAuthorizationTokens()
+            authorizationRepository.setAuthorizationTokens(tokens)
+            Timber.v("Unauthorized user authorization tokens fetched")
+        } else {
+            Timber.v("No need to fetch authorization tokens since the tokens are present")
+        }
     }
 }
