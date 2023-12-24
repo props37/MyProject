@@ -8,14 +8,22 @@ import ru.zarina.zarina.ui.navigation.rework.graph.HomeGraph
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorBottomSheetScreen
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
+import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenAction
 
 fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
     composableDestination(UnscopedDestinations.Onboarding) {
         OnboardingScreen(
             navigateForward = { action ->
-                // TODO: [High] Handle actions
-                navController.navigate(HomeGraph.Home.route) {
-                    popUpTo(0)
+                when (action) {
+                    is OnboardingScreenAction.OnboardingCompleted -> {
+                        navController.navigate(HomeGraph.Home.route) {
+                            popUpTo(0)
+                        }
+                    }
+
+                    OnboardingScreenAction.SelectCityClicked -> {
+                        navController.navigate(UnscopedDestinations.CitySelector.route)
+                    }
                 }
             },
         )

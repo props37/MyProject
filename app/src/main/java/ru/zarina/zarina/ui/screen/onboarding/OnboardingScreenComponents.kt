@@ -145,6 +145,7 @@ object OnboardingScreenComponents {
         onDetectCityClicked: () -> Unit,
         onSkipCityDetectionClicked: () -> Unit,
         onConfirmCityClicked: () -> Unit,
+        onSelectCityClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val onboardingPage = remember(onboardingSteps, currentOnboardingStep) {
@@ -232,7 +233,7 @@ object OnboardingScreenComponents {
                                 Spacer(modifier = Modifier.height(8.dp))
 
                                 ZarinaButton(
-                                    onClick = { /*TODO*/ },
+                                    onClick = onSelectCityClicked,
                                     modifier = Modifier.fillMaxWidth(),
                                     colors = ZarinaButtonDefaults.outlineColors(),
                                 ) {

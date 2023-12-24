@@ -56,6 +56,7 @@ fun OnboardingScreen(
         onDetectCityClicked = viewModel::onDetectCityClicked,
         onSkipCityDetectionClicked = viewModel::onSkipCityDetectionClicked,
         onConfirmCityClicked = viewModel::onConfirmCityClicked,
+        onSelectCityClicked = viewModel::onSelectCityClicked,
     )
 }
 
@@ -72,6 +73,7 @@ private fun ScreenContent(
     onDetectCityClicked: () -> Unit,
     onSkipCityDetectionClicked: () -> Unit,
     onConfirmCityClicked: () -> Unit,
+    onSelectCityClicked: () -> Unit,
 ) {
     OnboardingScreenBehavior(
         sideEffects = sideEffects,
@@ -115,6 +117,7 @@ private fun ScreenContent(
                     onDetectCityClicked = onDetectCityClicked,
                     onSkipCityDetectionClicked = onSkipCityDetectionClicked,
                     onConfirmCityClicked = onConfirmCityClicked,
+                    onSelectCityClicked = onSelectCityClicked,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }

@@ -22,6 +22,7 @@ import ru.zarina.zarina.data.permissionmanager.isDenied
 import ru.zarina.zarina.data.permissionmanager.isGranted
 import ru.zarina.zarina.data.permissionmanager.shouldShowRequestRationale
 import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
@@ -40,6 +41,8 @@ class OnboardingViewModel @Inject constructor(
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val operationTracker = OperationTracker()
+
+    private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val permissionManager = interactor.permissionManager
 
@@ -156,6 +159,13 @@ class OnboardingViewModel @Inject constructor(
         closeOnboarding()
     }
 
+    fun onSelectCityClicked() {
+        navigationThrottler.throttle {
+            val action = OnboardingScreenAction.SelectCityClicked
+            emitSideEffect(SideEffect.NavigateForward(action))
+        }
+    }
+
     private suspend fun detectCity() {
         operationTracker.track(Operation.DETECT_CITY) {
             interactor.detectCurrentCity()
@@ -187,8 +197,10 @@ class OnboardingViewModel @Inject constructor(
             val setIsOnboardingCompletedParams =
                 SetIsOnboardingCompletedUseCase.Params(isCompleted = true)
             interactor.setIsOnboardingCompleted(setIsOnboardingCompletedParams)
-            val action = OnboardingScreenAction.OnboardingCompleted(currentCity.value)
-            emitSideEffect(SideEffect.NavigateForward(action))
+            navigationThrottler.throttle {
+                val action = OnboardingScreenAction.OnboardingCompleted(currentCity.value)
+                emitSideEffect(SideEffect.NavigateForward(action))
+            }
         }
     }
 
