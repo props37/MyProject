@@ -148,7 +148,6 @@ data class ZarinaButtonColors(
     val disabledBorderColor: Color,
 )
 
-@Immutable
 enum class ZarinaButtonSize { Large, Medium, Small }
 
 object ZarinaButtonDefaults {
