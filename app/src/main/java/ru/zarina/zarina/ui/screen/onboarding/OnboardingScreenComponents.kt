@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaLinearProgressIndicator
@@ -49,11 +50,11 @@ object OnboardingScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
-            Image(
-                painter = painterResource(R.drawable.onboarding_default_banner),
+            AsyncImage(
+                model = R.drawable.onboarding_default_banner,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize()
             )
 
             Image(
