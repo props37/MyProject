@@ -26,7 +26,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -53,15 +55,18 @@ object OnboardingScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
+            var isBackgroundDisplayed by remember { mutableStateOf(false) }
+
             AsyncImage(
                 model = onboardingBackground,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                onSuccess = { isBackgroundDisplayed = true },
+                modifier = Modifier.fillMaxSize(),
             )
 
             val logoColor by animateColorAsState(
-                targetValue = if (onboardingBackground != null) {
+                targetValue = if (isBackgroundDisplayed) {
                     UiKitTheme.colorsReworked.text.general.inversed.default
                 } else {
                     UiKitTheme.colorsReworked.text.general.regular.default
