@@ -9,7 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import ru.zarina.zarina.ui.MainViewModel
 import ru.zarina.zarina.ui.bottomnavbar.ZarinaBottomNavBar
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.rememberBottomNavBarBehaviorController
