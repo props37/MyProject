@@ -18,6 +18,7 @@ class DetectCurrentCityUseCase @Inject constructor(
 
     override suspend fun execute(params: Unit): City? {
         val location = locationRepository.getCurrentLocation()
+        Timber.v("Current location: $location")
         return if (location != null) {
             val city = geographyRepository.getCity(location)
             Timber.v("The city is detected: $city")
