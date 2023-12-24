@@ -121,7 +121,7 @@ class OnboardingViewModel @Inject constructor(
     }
 
     private suspend fun detectCity() {
-        interactor.detectCity()
+        interactor.detectCurrentCity()
             .onSuccess { city ->
                 savedStateHandle[KEY_CURRENT_CITY] = city?.let { CityParcelable.fromCity(it) }
                 showNextOnboardingStep()

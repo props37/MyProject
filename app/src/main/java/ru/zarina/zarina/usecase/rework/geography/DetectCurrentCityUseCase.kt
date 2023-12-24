@@ -9,7 +9,7 @@ import ru.zarina.zarina.domain.rework.geography.City
 import timber.log.Timber
 import javax.inject.Inject
 
-class DetectCityUseCase @Inject constructor(
+class DetectCurrentCityUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val locationRepository: LocationRepository,
