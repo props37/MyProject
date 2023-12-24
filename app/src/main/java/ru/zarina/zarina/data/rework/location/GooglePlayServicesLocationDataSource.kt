@@ -5,7 +5,6 @@ import com.google.android.gms.location.Priority
 import kotlinx.coroutines.tasks.await
 import ru.zarina.zarina.domain.exception.MissingPermissionException
 import ru.zarina.zarina.domain.rework.Location
-import timber.log.Timber
 import javax.inject.Inject
 
 class GooglePlayServicesLocationDataSource @Inject constructor(
@@ -16,9 +15,7 @@ class GooglePlayServicesLocationDataSource @Inject constructor(
             val androidLocation = fusedLocationProviderClient
                 .getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
                 .await()
-            val location = androidLocation?.toLocation()
-            Timber.v("Current location: $location")
-            return location
+            return androidLocation?.toLocation()
         } catch (e: SecurityException) {
             throw MissingPermissionException("Missing location permission")
         }
