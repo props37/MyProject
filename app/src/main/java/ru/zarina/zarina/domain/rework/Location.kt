@@ -5,6 +5,7 @@ data class Location(
     val longitude: Double,
 ) {
     companion object {
-        val SAINT_PETERSBURG = Location(59.937500, 30.308611)
+        val SAINT_PETERSBURG: Location
+            get() = Location(59.937500, 30.308611)
     }
 }

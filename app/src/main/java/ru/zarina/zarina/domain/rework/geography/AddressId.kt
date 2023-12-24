@@ -6,7 +6,10 @@ package ru.zarina.zarina.domain.rework.geography
 @JvmInline
 value class AddressId(val value: String) {
     companion object {
-        val MOSCOW = AddressId("7700000000000")
-        val SAINT_PETERSBURG = AddressId("7800000000000")
+        val MOSCOW: AddressId
+            get() = AddressId("7700000000000")
+
+        val SAINT_PETERSBURG: AddressId
+            get() = AddressId("7800000000000")
     }
 }
