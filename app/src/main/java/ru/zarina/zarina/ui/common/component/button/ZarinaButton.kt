@@ -1,11 +1,14 @@
 package ru.zarina.zarina.ui.common.component.button
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.ProvideTextStyle
@@ -38,12 +42,14 @@ import ru.zarina.zarina.ui.common.rippletheme.DarkRippleTheme
 import ru.zarina.zarina.ui.common.rippletheme.LightRippleTheme
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 
 @Composable
 fun ZarinaButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
+    isLoading: Boolean = false,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     size: ZarinaButtonSize = ZarinaButtonSize.Large,
     colors: ZarinaButtonColors = ZarinaButtonDefaults.primaryColors(),
@@ -95,9 +101,8 @@ fun ZarinaButton(
         LocalRippleTheme provides rippleTheme,
     ) {
         ProvideTextStyle(textStyle) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = modifier
                     .defaultMinSize(minHeight = minHeight)
                     .clip(shape)
@@ -111,8 +116,24 @@ fun ZarinaButton(
                         onClick = onClick,
                     )
                     .padding(contentPadding),
-                content = content,
-            )
+            ) {
+                AnimatedContent(
+                    targetState = isLoading,
+                    transitionSpec = {
+                        AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                    },
+                    contentAlignment = Alignment.Center,
+                    label = "ZarinaButton content",
+                ) { isLoading ->
+                    Row {
+                        if (!isLoading) {
+                            content()
+                        } else {
+                            ZarinaButtonCircularLoader(modifier = Modifier.size(24.dp))
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -135,7 +156,7 @@ object ZarinaButtonDefaults {
 
     val HeightLarge = 56.dp
     val HeightMedium = 48.dp
-    val HeightSmall = 36.dp
+    val HeightSmall = 40.dp
 
     val ContentPaddingLarge = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     val ContentPaddingMedium = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
