@@ -17,7 +17,7 @@ class AuthorizationRepository @Inject constructor(
         localDataSource.setAuthorizationTokens(tokens)
     }
 
-    suspend fun requestUnauthorizedUserAuthorizationTokens(): AuthorizationTokens {
+    suspend fun getNewUnauthorizedUserAuthorizationTokens(): AuthorizationTokens {
         return remoteDataSource.getUnauthorizedUserAuthorizationTokens()
     }
 
