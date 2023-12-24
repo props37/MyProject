@@ -10,7 +10,7 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import ru.zarina.zarina.base.application.extension.base.ApplicationExtensionManager
 import ru.zarina.zarina.di.appModule
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.usecase.rework.authorization.FetchUnauthorizedUserAuthorizationTokensUseCase
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -20,7 +20,7 @@ class ZarinaApplication : Application() {
     lateinit var coroutineScope: CoroutineScope
 
     @Inject
-    lateinit var interactor: ZarinaApplicationInteractor
+    lateinit var fetchUnauthorizedUserAuthorizationTokens: FetchUnauthorizedUserAuthorizationTokensUseCase
 
     private val applicationExtensionManager: ApplicationExtensionManager by inject()
 
@@ -44,7 +44,7 @@ class ZarinaApplication : Application() {
 
     private fun fetchUnauthorizedUserAuthorizationTokens() {
         coroutineScope.launch {
-            interactor.fetchUnauthorizedUserAuthorizationTokensUseCase()
+            fetchUnauthorizedUserAuthorizationTokens()
         }
     }
 }
