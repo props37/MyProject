@@ -7,14 +7,18 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import ru.zarina.zarina.data.permissionmanager.isDenied
 import ru.zarina.zarina.data.permissionmanager.isGranted
 import ru.zarina.zarina.data.permissionmanager.shouldShowRequestRationale
 import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.ui.common.base.operation.OperationKey
+import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.geography.CityParcelable
@@ -28,6 +32,8 @@ class OnboardingViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val interactor: OnboardingInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val operationTracker = OperationTracker()
 
     private val permissionManager = interactor.permissionManager
 
@@ -49,6 +55,14 @@ class OnboardingViewModel @Inject constructor(
         .mapState(viewModelScope) { cityParcelable ->
             cityParcelable?.toCity() ?: City.SAINT_PETERSBURG
         }
+
+    val isDetectCityButtonLoading: StateFlow<Boolean> = operationTracker
+        .isOperationOngoing(Operation.DETECT_CITY)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = false,
+        )
 
     fun onRequestNotificationsPermissionClicked() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -124,15 +138,17 @@ class OnboardingViewModel @Inject constructor(
     }
 
     private suspend fun detectCity() {
-        interactor.detectCurrentCity()
-            .onSuccess { city ->
-                savedStateHandle[KEY_CURRENT_CITY] = city?.let { CityParcelable.fromCity(it) }
-                showNextOnboardingStep()
-            }
-            .onFailure {
-                savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.fromCity(City.SAINT_PETERSBURG)
-                showNextOnboardingStep()
-            }
+        operationTracker.track(Operation.DETECT_CITY) {
+            interactor.detectCurrentCity()
+                .onSuccess { city ->
+                    savedStateHandle[KEY_CURRENT_CITY] = city?.let { CityParcelable.fromCity(it) }
+                    showNextOnboardingStep()
+                }
+                .onFailure {
+                    savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.fromCity(City.SAINT_PETERSBURG)
+                    showNextOnboardingStep()
+                }
+        }
     }
 
     private fun showNextOnboardingStep() {
@@ -180,6 +196,8 @@ class OnboardingViewModel @Inject constructor(
         CITY_DETECTION,
         CITY_CONFIRMATION,
     }
+
+    private enum class Operation : OperationKey { DETECT_CITY }
 
     companion object {
         private const val KEY_ONBOARDING_STEPS = "onboarding_steps"

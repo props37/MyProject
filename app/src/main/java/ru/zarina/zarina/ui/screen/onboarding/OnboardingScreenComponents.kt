@@ -127,6 +127,7 @@ object OnboardingScreenComponents {
         onboardingSteps: List<OnboardingStep>,
         currentOnboardingStep: OnboardingStep,
         currentCity: City,
+        isDetectCityButtonLoading: Boolean,
         onRequestNotificationsPermissionClicked: () -> Unit,
         onDetectCityClicked: () -> Unit,
         onSkipCityDetectionClicked: () -> Unit,
@@ -180,6 +181,7 @@ object OnboardingScreenComponents {
                             buttons = {
                                 ZarinaButton(
                                     onClick = onDetectCityClicked,
+                                    isLoading = isDetectCityButtonLoading,
                                     modifier = Modifier.fillMaxWidth(),
                                 ) {
                                     Text(text = stringResource(R.string.detect_city).uppercase())

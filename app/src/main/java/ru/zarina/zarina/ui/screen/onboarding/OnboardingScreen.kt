@@ -41,11 +41,13 @@ fun OnboardingScreen(
     val onboardingSteps by viewModel.onboardingSteps.collectAsStateWithLifecycle()
     val currentOnboardingStep by viewModel.currentOnboardingStep.collectAsStateWithLifecycle()
     val currentCity by viewModel.currentCity.collectAsStateWithLifecycle()
+    val isDetectCityButtonLoading by viewModel.isDetectCityButtonLoading.collectAsStateWithLifecycle()
 
     ScreenContent(
         onboardingSteps = onboardingSteps,
         currentOnboardingStep = currentOnboardingStep,
         currentCity = currentCity,
+        isDetectCityButtonLoading = isDetectCityButtonLoading,
         sideEffects = viewModel.sideEffects,
         navigateForward = navigateForward,
         onRequestNotificationsPermissionClicked = viewModel::onRequestNotificationsPermissionClicked,
@@ -59,6 +61,7 @@ private fun ScreenContent(
     onboardingSteps: List<OnboardingStep>,
     currentOnboardingStep: OnboardingStep,
     currentCity: City,
+    isDetectCityButtonLoading: Boolean,
     sideEffects: Flow<SideEffect>,
     navigateForward: (OnboardingScreenAction) -> Unit,
     onRequestNotificationsPermissionClicked: () -> Unit,
@@ -99,6 +102,7 @@ private fun ScreenContent(
                     onboardingSteps = onboardingSteps,
                     currentOnboardingStep = currentOnboardingStep,
                     currentCity = currentCity,
+                    isDetectCityButtonLoading = isDetectCityButtonLoading,
                     onRequestNotificationsPermissionClicked = onRequestNotificationsPermissionClicked,
                     onDetectCityClicked = onDetectCityClicked,
                     onSkipCityDetectionClicked = onSkipCityDetectionClicked,
