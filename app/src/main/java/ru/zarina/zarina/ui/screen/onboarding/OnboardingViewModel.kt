@@ -14,9 +14,13 @@ import kotlinx.parcelize.Parcelize
 import ru.zarina.zarina.data.permissionmanager.isDenied
 import ru.zarina.zarina.data.permissionmanager.isGranted
 import ru.zarina.zarina.data.permissionmanager.shouldShowRequestRationale
+import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
+import ru.zarina.zarina.util.library.coroutines.mapState
+import ru.zarina.zarina.utils.clean.invoke
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,6 +40,15 @@ class OnboardingViewModel @Inject constructor(
         key = KEY_CURRENT_ONBOARDING_STEP,
         initialValue = onboardingSteps.value.firstOrNull() ?: OnboardingStep.CITY_DETECTION,
     )
+
+    val currentCity: StateFlow<City> = savedStateHandle
+        .getStateFlow<CityParcelable?>(
+            key = KEY_CURRENT_CITY,
+            initialValue = CityParcelable.fromCity(City.SAINT_PETERSBURG),
+        )
+        .mapState(viewModelScope) { cityParcelable ->
+            cityParcelable?.toCity() ?: City.SAINT_PETERSBURG
+        }
 
     fun onRequestNotificationsPermissionClicked() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -75,13 +88,13 @@ class OnboardingViewModel @Inject constructor(
         viewModelScope.launch {
             val currentPermissionsState = permissionManager.getMultiplePermissionsState(permissions)
             if (currentPermissionsState.any { it.value.isGranted }) {
-                // TODO: [High] Detect city
+                detectCity()
             } else {
                 val newPermissionsState = permissionManager.requestMultiplePermissions(permissions)
                 if (newPermissionsState != currentPermissionsState) {
                     // User has either granted or denied the permission
                     if (newPermissionsState.any { it.value.isGranted }) {
-                        // TODO: [High] Detect city
+                        detectCity()
                     } else {
                         // TODO: [High] Skip city detection
                         emitSideEffect(SideEffect.NavigateForward)
@@ -105,6 +118,18 @@ class OnboardingViewModel @Inject constructor(
 
     fun onSkipCityDetectionClicked() {
         emitSideEffect(SideEffect.NavigateForward)
+    }
+
+    private suspend fun detectCity() {
+        interactor.detectCity()
+            .onSuccess { city ->
+                savedStateHandle[KEY_CURRENT_CITY] = city?.let { CityParcelable.fromCity(it) }
+                showNextOnboardingStep()
+            }
+            .onFailure {
+                savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.fromCity(City.SAINT_PETERSBURG)
+                showNextOnboardingStep()
+            }
     }
 
     private fun showNextOnboardingStep() {
@@ -156,5 +181,6 @@ class OnboardingViewModel @Inject constructor(
     companion object {
         private const val KEY_ONBOARDING_STEPS = "onboarding_steps"
         private const val KEY_CURRENT_ONBOARDING_STEP = "current_onboarding_step"
+        private const val KEY_CURRENT_CITY = "current_city"
     }
 }

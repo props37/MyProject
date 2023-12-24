@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaLinearProgressIndicator
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
@@ -125,6 +126,7 @@ object OnboardingScreenComponents {
     fun OnboardingStep(
         onboardingSteps: List<OnboardingStep>,
         currentOnboardingStep: OnboardingStep,
+        currentCity: City,
         onRequestNotificationsPermissionClicked: () -> Unit,
         onDetectCityClicked: () -> Unit,
         onSkipCityDetectionClicked: () -> Unit,
@@ -198,7 +200,10 @@ object OnboardingScreenComponents {
 
                     OnboardingStep.CITY_CONFIRMATION -> {
                         OnboardingPageLayout(
-                            title = stringResource(R.string.onboarding_city_confirmation_title),
+                            title = stringResource(
+                                R.string.onboarding_city_confirmation_title,
+                                currentCity.name,
+                            ),
                             body = stringResource(R.string.onboarding_city_confirmation_body),
                             buttons = {
                                 ZarinaButton(

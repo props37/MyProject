@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -39,10 +40,12 @@ fun OnboardingScreen(
 ) {
     val onboardingSteps by viewModel.onboardingSteps.collectAsStateWithLifecycle()
     val currentOnboardingStep by viewModel.currentOnboardingStep.collectAsStateWithLifecycle()
+    val currentCity by viewModel.currentCity.collectAsStateWithLifecycle()
 
     ScreenContent(
         onboardingSteps = onboardingSteps,
         currentOnboardingStep = currentOnboardingStep,
+        currentCity = currentCity,
         sideEffects = viewModel.sideEffects,
         navigateForward = navigateForward,
         onRequestNotificationsPermissionClicked = viewModel::onRequestNotificationsPermissionClicked,
@@ -55,6 +58,7 @@ fun OnboardingScreen(
 private fun ScreenContent(
     onboardingSteps: List<OnboardingStep>,
     currentOnboardingStep: OnboardingStep,
+    currentCity: City,
     sideEffects: Flow<SideEffect>,
     navigateForward: () -> Unit,
     onRequestNotificationsPermissionClicked: () -> Unit,
@@ -94,6 +98,7 @@ private fun ScreenContent(
                 OnboardingStep(
                     onboardingSteps = onboardingSteps,
                     currentOnboardingStep = currentOnboardingStep,
+                    currentCity = currentCity,
                     onRequestNotificationsPermissionClicked = onRequestNotificationsPermissionClicked,
                     onDetectCityClicked = onDetectCityClicked,
                     onSkipCityDetectionClicked = onSkipCityDetectionClicked,
