@@ -28,6 +28,7 @@ import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
+import ru.zarina.zarina.usecase.rework.device.SetIsOnboardingCompletedUseCase
 import ru.zarina.zarina.util.library.coroutines.mapState
 import ru.zarina.zarina.utils.clean.invoke
 import javax.inject.Inject
@@ -182,8 +183,13 @@ class OnboardingViewModel @Inject constructor(
     }
 
     private fun closeOnboarding() {
-        val action = OnboardingScreenAction.OnboardingCompleted(currentCity.value)
-        emitSideEffect(SideEffect.NavigateForward(action))
+        viewModelScope.launch {
+            val setIsOnboardingCompletedParams =
+                SetIsOnboardingCompletedUseCase.Params(isCompleted = true)
+            interactor.setIsOnboardingCompleted(setIsOnboardingCompletedParams)
+            val action = OnboardingScreenAction.OnboardingCompleted(currentCity.value)
+            emitSideEffect(SideEffect.NavigateForward(action))
+        }
     }
 
     private fun createOnboardingSteps(): List<OnboardingStep> {
