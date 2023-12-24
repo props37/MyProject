@@ -226,7 +226,7 @@ object OnboardingScreenComponents {
                                 Spacer(modifier = Modifier.height(8.dp))
 
                                 ZarinaButton(
-                                    onClick = { /*TODO*/ },
+                                    onClick = onSkipCityDetectionClicked,
                                     modifier = Modifier.fillMaxWidth(),
                                     colors = ZarinaButtonDefaults.secondaryColors(),
                                 ) {
