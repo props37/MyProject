@@ -151,6 +151,10 @@ class OnboardingViewModel @Inject constructor(
         closeOnboarding()
     }
 
+    fun onConfirmCityClicked() {
+        closeOnboarding()
+    }
+
     private suspend fun detectCity() {
         operationTracker.track(Operation.DETECT_CITY) {
             interactor.detectCurrentCity()
@@ -165,6 +169,7 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
+    // TODO: [High] Refactor
     private fun showNextOnboardingStep(currentStep: OnboardingStep) {
         val steps = onboardingSteps.value
         val currentStepIndex = steps.indexOf(currentStep)

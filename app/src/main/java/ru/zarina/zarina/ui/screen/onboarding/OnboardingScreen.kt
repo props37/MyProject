@@ -55,6 +55,7 @@ fun OnboardingScreen(
         onRequestNotificationsPermissionClicked = viewModel::onRequestNotificationsPermissionClicked,
         onDetectCityClicked = viewModel::onDetectCityClicked,
         onSkipCityDetectionClicked = viewModel::onSkipCityDetectionClicked,
+        onConfirmCityClicked = viewModel::onConfirmCityClicked,
     )
 }
 
@@ -70,6 +71,7 @@ private fun ScreenContent(
     onRequestNotificationsPermissionClicked: () -> Unit,
     onDetectCityClicked: () -> Unit,
     onSkipCityDetectionClicked: () -> Unit,
+    onConfirmCityClicked: () -> Unit,
 ) {
     OnboardingScreenBehavior(
         sideEffects = sideEffects,
@@ -112,6 +114,7 @@ private fun ScreenContent(
                     onRequestNotificationsPermissionClicked = onRequestNotificationsPermissionClicked,
                     onDetectCityClicked = onDetectCityClicked,
                     onSkipCityDetectionClicked = onSkipCityDetectionClicked,
+                    onConfirmCityClicked = onConfirmCityClicked,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }

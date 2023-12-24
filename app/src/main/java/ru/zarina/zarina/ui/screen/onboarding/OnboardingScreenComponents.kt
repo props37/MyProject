@@ -144,6 +144,7 @@ object OnboardingScreenComponents {
         onRequestNotificationsPermissionClicked: () -> Unit,
         onDetectCityClicked: () -> Unit,
         onSkipCityDetectionClicked: () -> Unit,
+        onConfirmCityClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val onboardingPage = remember(onboardingSteps, currentOnboardingStep) {
@@ -222,7 +223,7 @@ object OnboardingScreenComponents {
                             body = stringResource(R.string.onboarding_city_confirmation_body),
                             buttons = {
                                 ZarinaButton(
-                                    onClick = { /*TODO*/ },
+                                    onClick = onConfirmCityClicked,
                                     modifier = Modifier.fillMaxWidth(),
                                 ) {
                                     Text(text = stringResource(R.string.yes_correct).uppercase())
