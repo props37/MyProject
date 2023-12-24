@@ -96,11 +96,11 @@ class OnboardingViewModel @Inject constructor(
                     if (newPermissionsState.any { it.value.isGranted }) {
                         detectCity()
                     } else {
-                        // TODO: [High] Skip city detection
-                        emitSideEffect(SideEffect.NavigateForward)
+                        val action = OnboardingScreenAction.OnboardingCompleted(currentCity = null)
+                        emitSideEffect(SideEffect.NavigateForward(action))
                     }
                 } else if (
-                    // TODO: [High] Check
+                    // TODO: [High] Ensure this works correctly
                     newPermissionsState.all { it.value.isDenied }
                     && newPermissionsState.any { !it.value.shouldShowRequestRationale }
                 ) {
@@ -109,7 +109,9 @@ class OnboardingViewModel @Inject constructor(
                             .firstOrNull() ?: emptyMap()
                     if (havePermissionsRequiredRequestRationale.any { it.value == true }) {
                         // User has denied the permission permanently
-                        // TODO: [High] Detect default city
+                        savedStateHandle[KEY_CURRENT_CITY] =
+                            CityParcelable.fromCity(City.SAINT_PETERSBURG)
+                        showNextOnboardingStep()
                     }
                 }
             }
@@ -117,7 +119,8 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun onSkipCityDetectionClicked() {
-        emitSideEffect(SideEffect.NavigateForward)
+        val action = OnboardingScreenAction.OnboardingCompleted(currentCity = null)
+        emitSideEffect(SideEffect.NavigateForward(action))
     }
 
     private suspend fun detectCity() {
@@ -168,7 +171,7 @@ class OnboardingViewModel @Inject constructor(
     }
 
     sealed interface SideEffect: SideEffectSource.SideEffect {
-        data object NavigateForward : SideEffect
+        data class NavigateForward(val action: OnboardingScreenAction) : SideEffect
     }
 
     @Parcelize

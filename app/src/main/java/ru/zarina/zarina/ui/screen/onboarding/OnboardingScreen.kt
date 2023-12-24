@@ -35,7 +35,7 @@ import ru.zarina.zarina.util.compose.HorizontalAndBottom
 
 @Composable
 fun OnboardingScreen(
-    navigateForward: () -> Unit,
+    navigateForward: (OnboardingScreenAction) -> Unit,
     viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
     val onboardingSteps by viewModel.onboardingSteps.collectAsStateWithLifecycle()
@@ -60,7 +60,7 @@ private fun ScreenContent(
     currentOnboardingStep: OnboardingStep,
     currentCity: City,
     sideEffects: Flow<SideEffect>,
-    navigateForward: () -> Unit,
+    navigateForward: (OnboardingScreenAction) -> Unit,
     onRequestNotificationsPermissionClicked: () -> Unit,
     onDetectCityClicked: () -> Unit,
     onSkipCityDetectionClicked: () -> Unit,

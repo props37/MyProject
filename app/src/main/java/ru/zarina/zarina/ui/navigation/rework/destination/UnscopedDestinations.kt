@@ -10,7 +10,8 @@ import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
 fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
     composableDestination(UnscopedDestinations.Onboarding) {
         OnboardingScreen(
-            navigateForward = {
+            navigateForward = { action ->
+                // TODO: [High] Handle actions
                 navController.navigate(HomeGraph.Home.route) {
                     popUpTo(0)
                 }

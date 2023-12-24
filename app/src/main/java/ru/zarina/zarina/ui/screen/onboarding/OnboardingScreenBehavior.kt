@@ -10,14 +10,14 @@ import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
 @Composable
 fun OnboardingScreenBehavior(
     sideEffects: Flow<SideEffect>,
-    navigateForward: () -> Unit,
+    navigateForward: (OnboardingScreenAction) -> Unit,
 ) {
     val updatedNavigateForward by rememberUpdatedState(navigateForward)
 
     LaunchedEffect(sideEffects) {
         sideEffects.collect { sideEffect ->
             when (sideEffect) {
-                SideEffect.NavigateForward -> updatedNavigateForward()
+                is SideEffect.NavigateForward -> updatedNavigateForward(sideEffect.action)
             }
         }
     }
