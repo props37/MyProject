@@ -84,12 +84,12 @@ class OnboardingViewModel @Inject constructor(
             viewModelScope.launch {
                 val currentPermissionState = permissionManager.getPermissionState(permission)
                 if (currentPermissionState.isGranted) {
-                    showNextOnboardingStep(OnboardingStep.NOTIFICATIONS_SETUP)
+                    showNextOnboardingStepFor(OnboardingStep.NOTIFICATIONS_SETUP)
                 } else {
                     val newPermissionState = permissionManager.requestPermission(permission)
                     if (newPermissionState != currentPermissionState) {
                         // User has either granted or denied the permission
-                        showNextOnboardingStep(OnboardingStep.NOTIFICATIONS_SETUP)
+                        showNextOnboardingStepFor(OnboardingStep.NOTIFICATIONS_SETUP)
                     } else if (
                         newPermissionState.isDenied && !newPermissionState.shouldShowRequestRationale
                     ) {
@@ -98,13 +98,13 @@ class OnboardingViewModel @Inject constructor(
                                 .firstOrNull() ?: false
                         if (hasPermissionRequiredRequestRationale) {
                             // User has denied the permission permanently
-                            showNextOnboardingStep(OnboardingStep.NOTIFICATIONS_SETUP)
+                            showNextOnboardingStepFor(OnboardingStep.NOTIFICATIONS_SETUP)
                         }
                     }
                 }
             }
         } else {
-            showNextOnboardingStep(OnboardingStep.NOTIFICATIONS_SETUP)
+            showNextOnboardingStepFor(OnboardingStep.NOTIFICATIONS_SETUP)
         }
     }
 
@@ -140,7 +140,7 @@ class OnboardingViewModel @Inject constructor(
                         // User has denied the permission permanently
                         savedStateHandle[KEY_CURRENT_CITY] =
                             CityParcelable.fromCity(City.SAINT_PETERSBURG)
-                        showNextOnboardingStep(OnboardingStep.CITY_DETECTION)
+                        showNextOnboardingStepFor(OnboardingStep.CITY_DETECTION)
                     }
                 }
             }
@@ -160,17 +160,16 @@ class OnboardingViewModel @Inject constructor(
             interactor.detectCurrentCity()
                 .onSuccess { city ->
                     savedStateHandle[KEY_CURRENT_CITY] = city?.let { CityParcelable.fromCity(it) }
-                    showNextOnboardingStep(OnboardingStep.CITY_DETECTION)
+                    showNextOnboardingStepFor(OnboardingStep.CITY_DETECTION)
                 }
                 .onFailure {
                     savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.fromCity(City.SAINT_PETERSBURG)
-                    showNextOnboardingStep(OnboardingStep.CITY_DETECTION)
+                    showNextOnboardingStepFor(OnboardingStep.CITY_DETECTION)
                 }
         }
     }
 
-    // TODO: [High] Refactor
-    private fun showNextOnboardingStep(currentStep: OnboardingStep) {
+    private fun showNextOnboardingStepFor(currentStep: OnboardingStep) {
         val steps = onboardingSteps.value
         val currentStepIndex = steps.indexOf(currentStep)
         val nextStepIndex = currentStepIndex + 1
