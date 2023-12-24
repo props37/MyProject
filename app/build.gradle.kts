@@ -154,6 +154,8 @@ dependencies {
 
     implementation(libs.mindbox)
 
+    debugImplementation(libs.leakCanary)
+
     testImplementation(libs.junit)
     testImplementation(libs.kotlin.coroutines.test)
     testImplementation(libs.koin.test)
