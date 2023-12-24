@@ -38,12 +38,14 @@ fun OnboardingScreen(
     navigateForward: (OnboardingScreenAction) -> Unit,
     viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
+    val onboardingBackground by viewModel.onboardingBackground.collectAsStateWithLifecycle()
     val onboardingSteps by viewModel.onboardingSteps.collectAsStateWithLifecycle()
     val currentOnboardingStep by viewModel.currentOnboardingStep.collectAsStateWithLifecycle()
     val currentCity by viewModel.currentCity.collectAsStateWithLifecycle()
     val isDetectCityButtonLoading by viewModel.isDetectCityButtonLoading.collectAsStateWithLifecycle()
 
     ScreenContent(
+        onboardingBackground = onboardingBackground,
         onboardingSteps = onboardingSteps,
         currentOnboardingStep = currentOnboardingStep,
         currentCity = currentCity,
@@ -58,6 +60,7 @@ fun OnboardingScreen(
 
 @Composable
 private fun ScreenContent(
+    onboardingBackground: Int?,
     onboardingSteps: List<OnboardingStep>,
     currentOnboardingStep: OnboardingStep,
     currentCity: City?,
@@ -76,7 +79,10 @@ private fun ScreenContent(
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
-        Background(modifier = Modifier.fillMaxSize())
+        Background(
+            onboardingBackground = onboardingBackground,
+            modifier = Modifier.fillMaxSize(),
+        )
 
         ZarinaBottomSheet(
             modifier = Modifier.align(Alignment.BottomCenter),

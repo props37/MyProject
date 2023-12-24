@@ -8,12 +8,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
+import ru.zarina.zarina.R
 import ru.zarina.zarina.data.permissionmanager.isDenied
 import ru.zarina.zarina.data.permissionmanager.isGranted
 import ru.zarina.zarina.data.permissionmanager.shouldShowRequestRationale
@@ -39,6 +43,9 @@ class OnboardingViewModel @Inject constructor(
     private val permissionManager = interactor.permissionManager
 
     private var detectCityJob: Job? = null
+
+    private val _onboardingBackground = MutableStateFlow<Int?>(null)
+    val onboardingBackground = _onboardingBackground.asStateFlow()
 
     val onboardingSteps: StateFlow<List<OnboardingStep>> = savedStateHandle.getStateFlow(
         key = KEY_ONBOARDING_STEPS,
@@ -66,6 +73,10 @@ class OnboardingViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(),
             initialValue = false,
         )
+
+    init {
+        fetchBackground()
+    }
 
     fun onRequestNotificationsPermissionClicked() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -190,6 +201,14 @@ class OnboardingViewModel @Inject constructor(
                     else -> add(step)
                 }
             }
+        }
+    }
+
+    private fun fetchBackground() {
+        viewModelScope.launch {
+            // TODO: [High] Implement
+            delay(1000)
+            _onboardingBackground.value = R.drawable.onboarding_default_banner
         }
     }
 

@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -24,6 +25,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,20 +49,30 @@ object OnboardingScreenComponents {
 
     @Composable
     fun Background(
+        onboardingBackground: Int?,
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
             AsyncImage(
-                model = R.drawable.onboarding_default_banner,
+                model = onboardingBackground,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
 
+            val logoColor by animateColorAsState(
+                targetValue = if (onboardingBackground != null) {
+                    UiKitTheme.colorsReworked.text.general.inversed.default
+                } else {
+                    UiKitTheme.colorsReworked.text.general.regular.default
+                },
+                label = "Background logo color",
+            )
+
             Image(
                 painter = painterResource(R.drawable.zarina_logo),
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(UiKitTheme.colorsReworked.text.general.inversed.default),
+                colorFilter = ColorFilter.tint(logoColor),
                 modifier = Modifier
                     .align(Alignment.Center)
                     .size(SplashScreenLogoSize),
