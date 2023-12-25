@@ -53,36 +53,36 @@ import ru.zarina.zarina.util.compose.FontFeatureSettings
 object OnboardingScreenComponents {
 
     @Composable
-    fun Background(modifier: Modifier = Modifier) {
+    fun Banner(modifier: Modifier = Modifier) {
         Box(modifier = modifier) {
             val context = LocalContext.current
             val imageRequest = remember(context) {
                 ImageRequest.Builder(context)
-                    .data(OnboardingViewModel.ONBOARDING_BACKGROUND_URL)
+                    .data(OnboardingViewModel.ONBOARDING_BANNER_URL)
                     .size(Size.ORIGINAL)
                     .crossfade(true)
-                    .error(R.drawable.onboarding_default_background)
+                    .error(R.drawable.onboarding_default_banner)
                     .build()
             }
 
-            var isBackgroundDisplayed by remember { mutableStateOf(false) }
+            var isBannerDisplayed by remember { mutableStateOf(false) }
 
             AsyncImage(
                 model = imageRequest,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                onSuccess = { isBackgroundDisplayed = true },
-                onError = { isBackgroundDisplayed = true },
+                onSuccess = { isBannerDisplayed = true },
+                onError = { isBannerDisplayed = true },
                 modifier = Modifier.fillMaxSize(),
             )
 
             val logoColor by animateColorAsState(
-                targetValue = if (isBackgroundDisplayed) {
+                targetValue = if (isBannerDisplayed) {
                     UiKitTheme.colorsReworked.text.general.inversed.default
                 } else {
                     UiKitTheme.colorsReworked.text.general.regular.default
                 },
-                label = "Background logo color",
+                label = "Banner logo color",
             )
 
             Image(

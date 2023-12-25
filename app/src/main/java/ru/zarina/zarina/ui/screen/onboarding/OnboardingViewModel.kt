@@ -232,6 +232,6 @@ class OnboardingViewModel @Inject constructor(
         private const val KEY_CURRENT_ONBOARDING_STEP = "current_onboarding_step"
         private const val KEY_CURRENT_CITY = "current_city"
 
-        const val ONBOARDING_BACKGROUND_URL = "${BuildConfig.BACKEND_URL}/api/v1/main/splash/"
+        const val ONBOARDING_BANNER_URL = "${BuildConfig.BACKEND_URL}/api/v1/main/splash/"
     }
 }

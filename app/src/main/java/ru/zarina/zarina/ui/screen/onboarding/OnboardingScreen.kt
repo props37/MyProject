@@ -26,7 +26,7 @@ import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
-import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.Background
+import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.Banner
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.OnboardingStep
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.ProgressIndicator
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.OnboardingStep
@@ -84,7 +84,7 @@ private fun ScreenContent(
             .fillMaxSize()
             .background(UiKitTheme.colorsReworked.background.general.regular.background),
     ) {
-        Background(modifier = Modifier.fillMaxSize())
+        Banner(modifier = Modifier.fillMaxSize())
 
         ZarinaBottomSheet(
             modifier = Modifier.align(Alignment.BottomCenter),
