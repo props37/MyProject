@@ -40,7 +40,7 @@ object CitySelectorScreenComponents {
         ) {
             Text(
                 text = stringResource(R.string.city),
-                style = UiKitTheme.typographyReworked.primaryText.bold,
+                style = UiKitTheme.typographyReworked.primary.bold,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -77,7 +77,7 @@ object CitySelectorScreenComponents {
 
             Text(
                 text = city.name,
-                style = UiKitTheme.typographyReworked.secondaryText.light,
+                style = UiKitTheme.typographyReworked.secondary.light,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
             )
 
@@ -100,7 +100,7 @@ object CitySelectorScreenComponents {
     ) {
         Text(
             text = letter.toString(),
-            style = UiKitTheme.typographyReworked.primaryText.bold,
+            style = UiKitTheme.typographyReworked.primary.bold,
             color = UiKitTheme.colorsReworked.text.general.regular.default,
             modifier = modifier.padding(start = 16.dp, top = 20.dp, bottom = 4.dp),
         )

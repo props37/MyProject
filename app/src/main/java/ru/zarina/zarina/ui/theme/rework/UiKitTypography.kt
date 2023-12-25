@@ -38,9 +38,9 @@ data class UiKitTypographyReworked(
     val heading2: Heading2 = Heading2(),
     val heading3: Heading3 = Heading3(),
     val heading4: Heading4 = Heading4(),
-    val primaryText: PrimaryText = PrimaryText(),
-    val secondaryText: SecondaryText = SecondaryText(),
-    val tertiaryText: TertiaryText = TertiaryText(),
+    val primary: Primary = Primary(),
+    val secondary: Secondary = Secondary(),
+    val tertiary: Tertiary = Tertiary(),
     val footnote: Footnote = Footnote(),
     val caption1: Caption1 = Caption1(),
     val caption2: Caption2 = Caption2(),
@@ -119,7 +119,7 @@ data class UiKitTypographyReworked(
     )
 
     @Immutable
-    data class PrimaryText(
+    data class Primary(
         val bold: TextStyle = TextStyle(
             fontSize = 17.sp,
             lineHeight = 22.sp,
@@ -144,7 +144,7 @@ data class UiKitTypographyReworked(
     )
 
     @Immutable
-    data class SecondaryText(
+    data class Secondary(
         val bold: TextStyle = TextStyle(
             fontSize = 15.sp,
             lineHeight = 20.sp,
@@ -177,7 +177,7 @@ data class UiKitTypographyReworked(
     )
 
     @Immutable
-    data class TertiaryText(
+    data class Tertiary(
         val bold: TextStyle = TextStyle(
             fontSize = 13.sp,
             lineHeight = 18.sp,
