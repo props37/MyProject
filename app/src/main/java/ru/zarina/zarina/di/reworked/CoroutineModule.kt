@@ -17,7 +17,7 @@ class CoroutineModule {
     @Provides
     @Singleton
     fun provideApplicationCoroutineScope(): CoroutineScope {
-        return CoroutineScope(SupervisorJob())
+        return CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     }
 
     @Provides
