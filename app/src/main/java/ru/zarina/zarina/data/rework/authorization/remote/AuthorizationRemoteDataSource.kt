@@ -10,4 +10,8 @@ class AuthorizationRemoteDataSource @Inject constructor(
     suspend fun getUnauthorizedUserAuthorizationTokens(): AuthorizationTokens {
         return api.getUnauthorizedUserAuthorizationTokens().toAuthorizationTokens()
     }
+
+    suspend fun refreshAuthorizationTokens(tokens: AuthorizationTokens): AuthorizationTokens {
+        return api.refreshAuthorizationTokens(tokens).toAuthorizationTokens()
+    }
 }
