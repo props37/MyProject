@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component.button
+package ru.zarina.zarina.ui.common.component
 
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.LocalContentColor
@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ZarinaButtonCircularLoader(
+fun ZarinaCircularLoader(
     modifier: Modifier = Modifier,
     color: Color = LocalContentColor.current,
     strokeWidth: Dp = 2.dp,
