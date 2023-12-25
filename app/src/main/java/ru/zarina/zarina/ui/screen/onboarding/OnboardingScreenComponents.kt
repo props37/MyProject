@@ -33,11 +33,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import coil.size.Size
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaLinearProgressIndicator
@@ -50,18 +53,26 @@ import ru.zarina.zarina.util.compose.FontFeatureSettings
 object OnboardingScreenComponents {
 
     @Composable
-    fun Background(
-        onboardingBackground: Int?,
-        modifier: Modifier = Modifier,
-    ) {
+    fun Background(modifier: Modifier = Modifier) {
         Box(modifier = modifier) {
+            val context = LocalContext.current
+            val imageRequest = remember(context) {
+                ImageRequest.Builder(context)
+                    .data(OnboardingViewModel.ONBOARDING_BACKGROUND_URL)
+                    .size(Size.ORIGINAL)
+                    .crossfade(true)
+                    .error(R.drawable.onboarding_default_background)
+                    .build()
+            }
+
             var isBackgroundDisplayed by remember { mutableStateOf(false) }
 
             AsyncImage(
-                model = onboardingBackground,
+                model = imageRequest,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 onSuccess = { isBackgroundDisplayed = true },
+                onError = { isBackgroundDisplayed = true },
                 modifier = Modifier.fillMaxSize(),
             )
 

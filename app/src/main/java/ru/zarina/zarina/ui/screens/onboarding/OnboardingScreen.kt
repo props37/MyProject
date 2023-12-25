@@ -184,7 +184,7 @@ fun SplashBanner(
         when {
             splashState is OnboardingViewModel.SplashState.Loading -> Unit
             splashState is OnboardingViewModel.SplashState.Error || isUrlLoaded == false -> Image(
-                painter = painterResource(id = R.drawable.onboarding_default_banner),
+                painter = painterResource(id = R.drawable.onboarding_default_background),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.Center,
