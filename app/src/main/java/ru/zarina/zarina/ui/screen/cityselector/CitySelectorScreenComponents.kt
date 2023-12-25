@@ -92,6 +92,19 @@ object CitySelectorScreenComponents {
             )
         }
     }
+
+    @Composable
+    fun CityFirstLetterDivider(
+        letter: Char,
+        modifier: Modifier = Modifier,
+    ) {
+        Text(
+            text = letter.toString(),
+            style = UiKitTheme.typographyReworked.primaryText.bold,
+            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            modifier = modifier.padding(start = 16.dp, top = 20.dp, bottom = 4.dp),
+        )
+    }
 }
 
 // TODO: [High] Add PreviewParameterProvider
@@ -103,5 +116,23 @@ private fun CityPreview() {
             city = City.SAINT_PETERSBURG,
             onClick = {},
         )
+    }
+}
+
+@Preview
+@Composable
+private fun CityFirstLetterDividerPreview() {
+    ZarinaTheme {
+        Column {
+            CitySelectorScreenComponents.CityFirstLetterDivider(letter = 'С')
+            CitySelectorScreenComponents.City(
+                city = City.SAINT_PETERSBURG,
+                onClick = {},
+            )
+            CitySelectorScreenComponents.City(
+                city = City.SAINT_PETERSBURG,
+                onClick = {},
+            )
+        }
     }
 }
