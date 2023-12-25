@@ -32,6 +32,7 @@ import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.device.SetIsOnboardingCompletedUseCase
 import ru.zarina.zarina.util.library.coroutines.mapState
 import ru.zarina.zarina.utils.clean.invoke
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -88,12 +89,12 @@ class OnboardingViewModel @Inject constructor(
             viewModelScope.launch {
                 val currentPermissionState = permissionManager.getPermissionState(permission)
                 if (currentPermissionState.isGranted) {
-                    showNextOnboardingStepFor(OnboardingStep.NOTIFICATIONS_SETUP)
+                    showOnboardingStep(OnboardingStep.CITY_DETECTION)
                 } else {
                     val newPermissionState = permissionManager.requestPermission(permission)
                     if (newPermissionState != currentPermissionState) {
                         // User has either granted or denied the permission
-                        showNextOnboardingStepFor(OnboardingStep.NOTIFICATIONS_SETUP)
+                        showOnboardingStep(OnboardingStep.CITY_DETECTION)
                     } else if (
                         newPermissionState.isDenied && !newPermissionState.shouldShowRequestRationale
                     ) {
@@ -102,13 +103,13 @@ class OnboardingViewModel @Inject constructor(
                                 .firstOrNull() ?: false
                         if (hasPermissionRequiredRequestRationale) {
                             // User has denied the permission permanently
-                            showNextOnboardingStepFor(OnboardingStep.NOTIFICATIONS_SETUP)
+                            showOnboardingStep(OnboardingStep.CITY_DETECTION)
                         }
                     }
                 }
             }
         } else {
-            showNextOnboardingStepFor(OnboardingStep.NOTIFICATIONS_SETUP)
+            showOnboardingStep(OnboardingStep.CITY_DETECTION)
         }
     }
 
@@ -144,7 +145,7 @@ class OnboardingViewModel @Inject constructor(
                         // User has denied the permission permanently
                         savedStateHandle[KEY_CURRENT_CITY] =
                             CityParcelable.fromCity(City.SAINT_PETERSBURG)
-                        showNextOnboardingStepFor(OnboardingStep.CITY_DETECTION)
+                        showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
                     }
                 }
             }
@@ -171,24 +172,21 @@ class OnboardingViewModel @Inject constructor(
             interactor.detectCurrentCity()
                 .onSuccess { city ->
                     savedStateHandle[KEY_CURRENT_CITY] = city?.let { CityParcelable.fromCity(it) }
-                    showNextOnboardingStepFor(OnboardingStep.CITY_DETECTION)
+                    showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
                 }
                 .onFailure {
                     savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.fromCity(City.SAINT_PETERSBURG)
-                    showNextOnboardingStepFor(OnboardingStep.CITY_DETECTION)
+                    showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
                 }
         }
     }
 
-    private fun showNextOnboardingStepFor(currentStep: OnboardingStep) {
+    private fun showOnboardingStep(step: OnboardingStep) {
         val steps = onboardingSteps.value
-        val currentStepIndex = steps.indexOf(currentStep)
-        val nextStepIndex = currentStepIndex + 1
-        if (nextStepIndex <= steps.lastIndex) {
-            val nextStep = steps[nextStepIndex]
-            savedStateHandle[KEY_CURRENT_ONBOARDING_STEP] = nextStep
+        if (step in steps) {
+            savedStateHandle[KEY_CURRENT_ONBOARDING_STEP] = step
         } else {
-            closeOnboarding()
+            Timber.e("There is no step $step in onboarding steps")
         }
     }
 
