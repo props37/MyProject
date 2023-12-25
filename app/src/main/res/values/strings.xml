@@ -11,6 +11,8 @@
     <string name="home">Главная</string>
     <string name="profile">Профиль</string>
     <string name="cart">Корзина</string>
+    <string name="city">Город</string>
+    <string name="close">Закрыть</string>
 
     <string name="onboarding_progress_text">Шаг %1$d/%2$d</string>
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
@@ -39,7 +41,6 @@
     <string name="loading_error">Ошибка загрузки</string>
     <string name="check_connection_and_try_again_later">Проверьте соединение с интернетом и попробуйте позже</string>
     <string name="refresh">Обновить</string>
-    <string name="city">Город</string>
     <string name="currency_amount_rubles">%1$d ₽</string>
     <string name="discount_percentage">-%1$d%%</string>
     <string name="details">Детали</string>
@@ -126,7 +127,6 @@
     <string name="price">Цена</string>
     <string name="range">%1$s – %2$s</string>
     <string name="apply">Применить</string>
-    <string name="close">Закрыть</string>
     <string name="reset">Сбросить</string>
     <string name="selected">Выбран</string>
     <string name="attributes">Признаки</string>

@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 data class UiKitColorsReworked(
     val background: Background = Background(),
     val text: Text = Text(),
+    val icon: Icon = Icon(),
     val border: Border = Border(),
 ) {
     @Immutable
@@ -124,6 +125,16 @@ data class UiKitColorsReworked(
                 val disabled: Color = Colors.SilverChalice,
             )
         }
+    }
+
+    @Immutable
+    data class Icon(
+        val regular: Regular = Regular(),
+    ) {
+        @Immutable
+        data class Regular(
+            val default: Color = Colors.MineShaftDark,
+        )
     }
 
     @Immutable

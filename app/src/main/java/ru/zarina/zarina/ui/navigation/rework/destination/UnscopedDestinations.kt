@@ -7,6 +7,7 @@ import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.rework.graph.HomeGraph
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorBottomSheetScreen
+import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenResult
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenAction
 
@@ -32,6 +33,17 @@ fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
 
 fun NavGraphBuilder.citySelectorBottomSheetScreen(navController: NavHostController) {
     bottomSheetDestination(UnscopedDestinations.CitySelector) {
-        CitySelectorBottomSheetScreen()
+        CitySelectorBottomSheetScreen(
+            navigateBackward = { result ->
+                when (result) {
+                    CitySelectorScreenResult.ScreenClosed -> {
+                        navController.popBackStack(
+                            route = UnscopedDestinations.CitySelector.routeSchema,
+                            inclusive = true,
+                        )
+                    }
+                }
+            },
+        )
     }
 }
