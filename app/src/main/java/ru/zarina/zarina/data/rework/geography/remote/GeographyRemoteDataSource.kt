@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GeographyRemoteDataSource @Inject constructor(
     private val api: GeographyApi,
 ) {
-    suspend fun getCity(location: Location): City? {
-        TODO("Not yet implemented")
+    suspend fun getCity(location: Location): City {
+        return api.getCity(location).toCity()
     }
 }

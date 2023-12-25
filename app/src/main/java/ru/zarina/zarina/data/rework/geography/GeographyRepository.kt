@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GeographyRepository @Inject constructor(
     private val remoteDataSource: GeographyRemoteDataSource,
 ) {
-    suspend fun getCity(location: Location): City? {
+    suspend fun getCity(location: Location): City {
         return remoteDataSource.getCity(location)
     }
 }

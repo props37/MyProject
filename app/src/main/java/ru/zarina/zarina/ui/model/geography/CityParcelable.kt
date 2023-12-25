@@ -2,23 +2,29 @@ package ru.zarina.zarina.ui.model.geography
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import ru.zarina.zarina.domain.rework.geography.AddressId
 import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.rework.geography.KladrId
 
 @Parcelize
 data class CityParcelable(
-    val addressId: String,
     val name: String,
+    val fullName: String,
+    val region: String,
+    val kladrId: String,
 ) : Parcelable {
     fun toCity(): City = City(
-        addressId = AddressId(addressId),
         name = name,
+        fullName = fullName,
+        region = region,
+        kladrId = KladrId(kladrId),
     )
 
     companion object {
         fun fromCity(city: City): CityParcelable = CityParcelable(
-            addressId = city.addressId.value,
             name = city.name,
+            fullName = city.fullName,
+            region = city.region,
+            kladrId = city.kladrId.value,
         )
     }
 }
