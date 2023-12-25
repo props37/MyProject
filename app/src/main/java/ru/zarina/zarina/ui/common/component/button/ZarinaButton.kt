@@ -19,7 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LocalContentColor
-import androidx.compose.material.ProvideTextStyle
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
@@ -98,40 +98,39 @@ fun ZarinaButton(
     }
 
     CompositionLocalProvider(
+        LocalTextStyle provides textStyle,
         LocalContentColor provides contentColor.value,
         LocalRippleTheme provides rippleTheme,
     ) {
-        ProvideTextStyle(textStyle) {
-            Box(
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = modifier
+                .defaultMinSize(minHeight = minHeight)
+                .clip(shape)
+                .drawBehind { drawRect(backgroundColor.value) }
+                .border(width = 1.dp, color = borderColor.value, shape = shape)
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = LocalIndication.current,
+                    enabled = isEnabled,
+                    role = Role.Button,
+                    onClick = onClick,
+                )
+                .padding(contentPadding),
+        ) {
+            AnimatedContent(
+                targetState = isLoading,
+                transitionSpec = {
+                    AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                },
                 contentAlignment = Alignment.Center,
-                modifier = modifier
-                    .defaultMinSize(minHeight = minHeight)
-                    .clip(shape)
-                    .drawBehind { drawRect(backgroundColor.value) }
-                    .border(width = 1.dp, color = borderColor.value, shape = shape)
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = LocalIndication.current,
-                        enabled = isEnabled,
-                        role = Role.Button,
-                        onClick = onClick,
-                    )
-                    .padding(contentPadding),
-            ) {
-                AnimatedContent(
-                    targetState = isLoading,
-                    transitionSpec = {
-                        AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
-                    },
-                    contentAlignment = Alignment.Center,
-                    label = "ZarinaButton content",
-                ) { isLoading ->
-                    Row {
-                        if (!isLoading) {
-                            content()
-                        } else {
-                            ZarinaCircularLoader(modifier = Modifier.size(24.dp))
-                        }
+                label = "ZarinaButton content",
+            ) { isLoading ->
+                Row {
+                    if (!isLoading) {
+                        content()
+                    } else {
+                        ZarinaCircularLoader(modifier = Modifier.size(24.dp))
                     }
                 }
             }
