@@ -1,9 +1,14 @@
 package ru.zarina.zarina.ui.screen.cityselector
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -13,9 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 
 object CitySelectorScreenComponents {
 
@@ -52,5 +60,48 @@ object CitySelectorScreenComponents {
                 )
             }
         }
+    }
+
+    @Composable
+    fun City(
+        city: City,
+        onClick: (City) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(
+            modifier = modifier
+                .clickable { onClick(city) }
+                .padding(horizontal = 16.dp),
+        ) {
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = city.name,
+                style = UiKitTheme.typographyReworked.secondaryText.light,
+                color = UiKitTheme.colorsReworked.text.general.regular.default,
+            )
+
+            // TODO: [High] Add full name
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Divider(
+                color = UiKitTheme.colorsReworked.border.general.default,
+                thickness = 1.dp,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
+
+// TODO: [High] Add PreviewParameterProvider
+@Preview
+@Composable
+private fun CityPreview() {
+    ZarinaTheme {
+        CitySelectorScreenComponents.City(
+            city = City.SAINT_PETERSBURG,
+            onClick = {},
+        )
     }
 }
