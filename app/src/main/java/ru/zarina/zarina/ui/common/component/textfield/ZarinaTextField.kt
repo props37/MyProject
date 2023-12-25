@@ -40,6 +40,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 
+// TODO: [High] Add colors
 // TODO: [High] Migrate to BasicTextField2
 
 @Composable
