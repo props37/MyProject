@@ -18,6 +18,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 fun CloseButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    contentDescription: String = stringResource(R.string.close),
     isEnabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     indication: Indication = rememberRipple(bounded = false, radius = 24.dp),
@@ -31,7 +32,7 @@ fun CloseButton(
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_close_24),
-            contentDescription = stringResource(R.string.close),
+            contentDescription = contentDescription,
             tint = UiKitTheme.colorsReworked.icon.regular.default,
         )
     }
