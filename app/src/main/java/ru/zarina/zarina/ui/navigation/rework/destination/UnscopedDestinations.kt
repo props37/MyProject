@@ -22,8 +22,10 @@ fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
                         }
                     }
 
-                    OnboardingScreenAction.SelectCityClicked -> {
-                        navController.navigate(UnscopedDestinations.CitySelector.route)
+                    is OnboardingScreenAction.SelectCityClicked -> {
+                        val args = UnscopedDestinations.CitySelector.Args(action.currentCity)
+                        val route = UnscopedDestinations.CitySelector.createRoute(args)
+                        navController.navigate(route)
                     }
                 }
             },

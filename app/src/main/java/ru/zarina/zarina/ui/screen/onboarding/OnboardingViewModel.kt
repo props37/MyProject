@@ -152,7 +152,7 @@ class OnboardingViewModel @Inject constructor(
 
     fun onSelectCityClicked() {
         navigationThrottler.throttle {
-            val action = OnboardingScreenAction.SelectCityClicked
+            val action = OnboardingScreenAction.SelectCityClicked(currentCity.value)
             emitSideEffect(SideEffect.NavigateForward(action))
         }
     }

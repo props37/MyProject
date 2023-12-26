@@ -18,6 +18,8 @@ import ru.zarina.zarina.domain.rework.geography.KladrId
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.ui.model.geography.CityParcelable
+import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.geography.GetCitiesUseCase
 import javax.inject.Inject
@@ -31,6 +33,11 @@ class CitySelectorViewModel @Inject constructor(
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    val selectedCity = savedStateHandle.getStateFlow<CityParcelable?>(
+        key = UnscopedDestinations.CitySelector.ARG_KEY_CITY,
+        initialValue = null,
+    )
 
     val cityNameQuery: StateFlow<String> = savedStateHandle.getStateFlow(
         key = KEY_CITY_NAME_QUERY,
