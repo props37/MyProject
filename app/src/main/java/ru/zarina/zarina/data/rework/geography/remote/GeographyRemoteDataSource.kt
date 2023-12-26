@@ -1,5 +1,7 @@
 package ru.zarina.zarina.data.rework.geography.remote
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import ru.zarina.zarina.data.rework.geography.remote.api.GeographyApi
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.domain.rework.location.Location
@@ -12,7 +14,10 @@ class GeographyRemoteDataSource @Inject constructor(
         return api.getCity(location).toCity()
     }
 
-    suspend fun getCities(nameQuery: String?): List<City> {
-        return api.getCities(nameQuery).map { it.toCity() }
+    fun getCities(nameQuery: String?): Flow<List<City>> {
+        return flow {
+            val cities = api.getCities(nameQuery).map { it.toCity() }
+            emit(cities)
+        }
     }
 }
