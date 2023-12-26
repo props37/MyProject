@@ -26,7 +26,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class CitySelectorViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val interactor: CitySelectorInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
@@ -91,6 +91,10 @@ class CitySelectorViewModel @Inject constructor(
             val result = CitySelectorScreenResult.ScreenClosed
             emitSideEffect(SideEffect.NavigateBackward(result))
         }
+    }
+
+    fun onCityNameQueryChanged(query: String) {
+        savedStateHandle[KEY_CITY_NAME_QUERY] = query
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
