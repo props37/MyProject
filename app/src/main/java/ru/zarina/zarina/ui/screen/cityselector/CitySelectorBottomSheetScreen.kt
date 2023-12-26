@@ -94,6 +94,7 @@ private fun ScreenContent(
                                         City(
                                             city = item.city,
                                             onClick = {},
+                                            showFullName = item.showFullName,
                                             modifier = Modifier.fillMaxWidth(),
                                         )
                                     }

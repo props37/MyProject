@@ -15,4 +15,5 @@ object Colors {
     val SilverChalice = Color(0xFFA1A1A1)
     val AltoLight = Color(0xFFE0E0E0)
     val AltoDark = Color(0xFFD5D5D5)
+    val Boulder = Color(0xFF777777)
 }

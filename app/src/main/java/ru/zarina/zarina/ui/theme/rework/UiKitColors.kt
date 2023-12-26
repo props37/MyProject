@@ -86,6 +86,7 @@ data class UiKitColorsReworked(
             data class Regular(
                 val default: Color = Colors.MineShaftDark,
                 val disabled: Color = Colors.SilverChalice,
+                val muted: Color = Colors.Boulder,
             )
 
             @Immutable

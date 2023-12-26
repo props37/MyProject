@@ -58,6 +58,7 @@ object CitySelectorScreenComponents {
     fun City(
         city: City,
         onClick: (City) -> Unit,
+        showFullName: Boolean,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
@@ -75,7 +76,14 @@ object CitySelectorScreenComponents {
                     color = UiKitTheme.colorsReworked.text.general.regular.default,
                 )
 
-                // TODO: [High] Add full name
+                if (showFullName) {
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = city.fullName,
+                        style = UiKitTheme.typographyReworked.footnote.light,
+                        color = UiKitTheme.colorsReworked.text.general.regular.muted,
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(12.dp))
             }
@@ -109,10 +117,18 @@ object CitySelectorScreenComponents {
 @Composable
 private fun CityPreview() {
     ZarinaTheme {
-        CitySelectorScreenComponents.City(
-            city = City.SAINT_PETERSBURG,
-            onClick = {},
-        )
+        Column {
+            CitySelectorScreenComponents.City(
+                city = City.SAINT_PETERSBURG,
+                onClick = {},
+                showFullName = true,
+            )
+            CitySelectorScreenComponents.City(
+                city = City.SAINT_PETERSBURG,
+                onClick = {},
+                showFullName = false,
+            )
+        }
     }
 }
 
@@ -125,10 +141,12 @@ private fun CityFirstLetterHeaderPreview() {
             CitySelectorScreenComponents.City(
                 city = City.SAINT_PETERSBURG,
                 onClick = {},
+                showFullName = false,
             )
             CitySelectorScreenComponents.City(
                 city = City.SAINT_PETERSBURG,
                 onClick = {},
+                showFullName = true,
             )
         }
     }
