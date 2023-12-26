@@ -162,6 +162,10 @@ class CitySelectorViewModel @Inject constructor(
         }
     }
 
+    fun onErrorRefreshClicked() {
+        // TODO: [High] Implement
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateBackward(val result: CitySelectorScreenResult) : SideEffect
 

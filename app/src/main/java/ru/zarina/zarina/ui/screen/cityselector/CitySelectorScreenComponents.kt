@@ -63,6 +63,7 @@ import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.navigationBarsOrIme
 import ru.zarina.zarina.utils.compose.plus
+import java.net.ConnectException
 
 // TODO: [High] Add previews
 
@@ -179,6 +180,7 @@ object CitySelectorScreenComponents {
         onCityClicked: (City) -> Unit,
         isChangeCityButtonVisible: Boolean,
         onChangeCityClicked: () -> Unit,
+        onErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
@@ -252,8 +254,13 @@ object CitySelectorScreenComponents {
                     }
 
                     is CityListState.Error -> {
-                        // TODO: [High] Implement
-                        // TODO: [High] Add nav bar and IME padding
+                        CitySearchError(
+                            throwable = listState.throwable,
+                            onRefreshClicked = onErrorRefreshClicked,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .windowInsetsPadding(WindowInsets.navigationBarsOrIme),
+                        )
                     }
                 }
             }
@@ -383,6 +390,73 @@ object CitySelectorScreenComponents {
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 textAlign = TextAlign.Center,
             )
+        }
+    }
+
+    @Composable
+    private fun CitySearchError(
+        throwable: Throwable,
+        onRefreshClicked: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        val iconResId: Int
+        val titleResId: Int
+        val bodyResId: Int
+        when (throwable) {
+            is ConnectException -> {
+                iconResId = R.drawable.ic_wifi_error_24
+                titleResId = R.string.connection_error_title
+                bodyResId = R.string.connection_error_body
+            }
+
+            else -> {
+                iconResId = R.drawable.ic_heart_broken_24
+                titleResId = R.string.something_went_wrong
+                bodyResId = R.string.refresh_page_or_come_back_later
+            }
+        }
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier,
+        ) {
+            Spacer(modifier = Modifier.weight(1f))
+
+            Icon(
+                painter = painterResource(iconResId),
+                contentDescription = null,
+                tint = UiKitTheme.colorsReworked.icon.regular.disabled,
+                modifier = Modifier.size(64.dp),
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(titleResId),
+                style = UiKitTheme.typographyReworked.primary.bold,
+                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 24.dp),
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(bodyResId),
+                style = UiKitTheme.typographyReworked.secondary.regular,
+                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 24.dp),
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ZarinaButton(
+                onClick = onRefreshClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 20.dp),
+            ) {
+                Text(text = stringResource(R.string.refresh).uppercase())
+            }
         }
     }
 

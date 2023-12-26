@@ -19,6 +19,11 @@
     <string name="change">Изменить</string>
     <string name="cancel">Отменить</string>
     <string name="clear">Очистить</string>
+    <string name="refresh">Обновить</string>
+    <string name="connection_error_title">Проблемы с интернетом</string>
+    <string name="connection_error_body">Проверь соединение с интернетом или отключи VPN. Затем обнови страницу</string>
+    <string name="something_went_wrong">Что-то пошло не так</string>
+    <string name="refresh_page_or_come_back_later">Обнови страницу или зайди позже</string>
 
     <string name="onboarding_progress_text">Шаг %1$d/%2$d</string>
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
@@ -40,11 +45,9 @@
     <string name="is_your_city">Ваш город %1$s?</string>
     <string name="cant_save_selected_city">Не удалось сохранить выбранный город</string>
     <string name="city_search">Поиск по городам</string>
-    <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="try_again_later">Попробуйте повторить позднее</string>
     <string name="loading_error">Ошибка загрузки</string>
     <string name="check_connection_and_try_again_later">Проверьте соединение с интернетом и попробуйте позже</string>
-    <string name="refresh">Обновить</string>
     <string name="currency_amount_rubles">%1$d ₽</string>
     <string name="discount_percentage">-%1$d%%</string>
     <string name="details">Детали</string>

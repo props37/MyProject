@@ -44,6 +44,7 @@ fun CitySelectorBottomSheetScreen(
         onCityClicked = viewModel::onCityClicked,
         isChangeCityButtonVisible = isChangeCityButtonVisible,
         onChangeCityClicked = viewModel::onChangeCityClicked,
+        onErrorRefreshClicked = viewModel::onErrorRefreshClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
         navigateBackward = navigateBackward,
@@ -61,6 +62,7 @@ private fun ScreenContent(
     onCityClicked: (City) -> Unit,
     isChangeCityButtonVisible: Boolean,
     onChangeCityClicked: () -> Unit,
+    onErrorRefreshClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigateBackward: (CitySelectorScreenResult) -> Unit,
@@ -92,6 +94,7 @@ private fun ScreenContent(
                 onCityClicked = onCityClicked,
                 isChangeCityButtonVisible = isChangeCityButtonVisible,
                 onChangeCityClicked = onChangeCityClicked,
+                onErrorRefreshClicked = onErrorRefreshClicked,
             )
         }
     }
