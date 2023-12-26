@@ -4,11 +4,13 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.zarina.zarina.di.reworked.Qualifiers
 import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
 import ru.zarina.zarina.domain.rework.common.Token
 import javax.inject.Inject
 
 class AuthorizationEncryptedStorage @Inject constructor(
+    @Qualifiers.SharedPreferences(Qualifiers.ShapredPreferencesType.ENCRYPTED)
     private val encryptedSharedPreferences: SharedPreferences,
 ) {
     suspend fun getAuthorizationTokens(): AuthorizationTokens? {
