@@ -4,19 +4,24 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,6 +36,8 @@ import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListIte
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
+import ru.zarina.zarina.util.compose.navigationBarsOrIme
+import ru.zarina.zarina.utils.compose.plus
 
 // TODO: [High] Add previews
 
@@ -77,10 +84,11 @@ object CitySelectorScreenComponents {
         ) { listState ->
             when (listState) {
                 CityListState.InitialLoading -> {
-                    // TODO: [High] Add nav bar and IME padding
                     Box(
                         contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .windowInsetsPadding(WindowInsets.navigationBarsOrIme),
                     ) {
                         ZarinaCircularLoader(
                             color = UiKitTheme.colorsReworked.icon.regular.default,
@@ -90,7 +98,14 @@ object CitySelectorScreenComponents {
                 }
 
                 is CityListState.CityList -> {
-                    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                    val baseContentPadding = remember { PaddingValues(top = 8.dp) }
+                    val contentPadding =
+                        baseContentPadding + WindowInsets.navigationBarsOrIme.asPaddingValues()
+
+                    LazyColumn(
+                        contentPadding = contentPadding,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
                         items(
                             items = listState.list,
                             key = { getCityListItemKey(it) },
