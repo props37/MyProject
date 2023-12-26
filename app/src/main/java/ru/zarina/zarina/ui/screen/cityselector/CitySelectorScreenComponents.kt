@@ -86,7 +86,7 @@ object CitySelectorScreenComponents {
     }
 
     @Composable
-    fun CityFirstLetterDivider(
+    fun CityFirstLetterHeader(
         letter: Char,
         modifier: Modifier = Modifier,
     ) {
@@ -113,10 +113,10 @@ private fun CityPreview() {
 
 @Preview
 @Composable
-private fun CityFirstLetterDividerPreview() {
+private fun CityFirstLetterHeaderPreview() {
     ZarinaTheme {
         Column {
-            CitySelectorScreenComponents.CityFirstLetterDivider(letter = 'С')
+            CitySelectorScreenComponents.CityFirstLetterHeader(letter = 'С')
             CitySelectorScreenComponents.City(
                 city = City.SAINT_PETERSBURG,
                 onClick = {},
