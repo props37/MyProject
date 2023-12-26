@@ -1,7 +1,9 @@
 package ru.zarina.zarina.ui.screen.cityselector
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,14 +22,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -40,12 +47,14 @@ import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.button.CloseButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.navigationBarsOrIme
 import ru.zarina.zarina.utils.compose.plus
 
@@ -80,6 +89,58 @@ object CitySelectorScreenComponents {
                     .padding(end = 8.dp),
             )
         }
+    }
+
+    @Composable
+    fun CitySearchBar(
+        cityNameQuery: String,
+        onCityNameQueryChanged: (String) -> Unit,
+        onCancel: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        val focusState = remember { mutableStateOf<FocusState?>(null) }
+
+        ZarinaTextField(
+            value = cityNameQuery,
+            onValueChanged = onCityNameQueryChanged,
+            placeholder = {
+                Text(text = stringResource(R.string.search_cities))
+            },
+            leadingContent = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_search_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                )
+            },
+            outerTrailingContent = {
+                // TODO: [High] Migrate to cell ZarinaButton
+                val isCancelButtonVisible = focusState.value?.isFocused == true
+                AnimatedContent(
+                    targetState = isCancelButtonVisible,
+                    transitionSpec = {
+                        AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                    },
+                    contentAlignment = Alignment.Center,
+                    label = "CitySearchBar Cancel button",
+                ) { isVisible ->
+                    if (isVisible) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .heightIn(min = 40.dp)
+                                .clip(RoundedCornerShape(4.dp))
+                                .clickable(onClick = onCancel)
+                                .padding(horizontal = 8.dp, vertical = 8.dp),
+                        ) {
+                            Text(text = stringResource(R.string.cancel).uppercase())
+                        }
+                    }
+                }
+            },
+            maxLines = 1,
+            modifier = modifier.onFocusChanged { focusState.value = it },
+        )
     }
 
     @Composable

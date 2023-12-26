@@ -137,6 +137,10 @@ class CitySelectorViewModel @Inject constructor(
         savedStateHandle[KEY_CITY_NAME_QUERY] = query
     }
 
+    fun onCitySearchBarCancelClicked() {
+        emitSideEffect(SideEffect.FreeCitySearchBarFocus)
+    }
+
     fun onCityClicked(city: City) {
         val cityParcelable = CityParcelable.fromCity(city)
         savedStateHandle[KEY_SELECTED_CITY] = cityParcelable
@@ -152,6 +156,8 @@ class CitySelectorViewModel @Inject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateBackward(val result: CitySelectorScreenResult) : SideEffect
+
+        data object FreeCitySearchBarFocus : SideEffect
     }
 
     sealed class CityListState {

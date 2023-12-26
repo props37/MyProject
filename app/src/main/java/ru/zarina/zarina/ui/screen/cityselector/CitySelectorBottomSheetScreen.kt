@@ -1,19 +1,25 @@
 package ru.zarina.zarina.ui.screen.cityselector
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenComponents.CityList
+import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenComponents.CitySearchBar
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
@@ -31,6 +37,7 @@ fun CitySelectorBottomSheetScreen(
     ScreenContent(
         cityNameQuery = cityNameQuery,
         onCityNameQueryChanged = viewModel::onCityNameQueryChanged,
+        onCitySearchBarCancelClicked = viewModel::onCitySearchBarCancelClicked,
         cityListState = cityListState,
         selectedCity = selectedCity,
         onCityClicked = viewModel::onCityClicked,
@@ -46,6 +53,7 @@ fun CitySelectorBottomSheetScreen(
 private fun ScreenContent(
     cityNameQuery: String,
     onCityNameQueryChanged: (String) -> Unit,
+    onCitySearchBarCancelClicked: () -> Unit,
     cityListState: CityListState,
     selectedCity: City?,
     onCityClicked: (City) -> Unit,
@@ -63,6 +71,17 @@ private fun ScreenContent(
     ZarinaBottomSheet(windowInsets = WindowInsets.statusBars) {
         Column(modifier = Modifier.fillMaxSize()) {
             TopBar(onCloseClicked = onCloseClicked)
+
+            CitySearchBar(
+                cityNameQuery = cityNameQuery,
+                onCityNameQueryChanged = onCityNameQueryChanged,
+                onCancel = onCitySearchBarCancelClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
 
             CityList(
                 listState = cityListState,

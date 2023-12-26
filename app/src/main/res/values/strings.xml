@@ -17,6 +17,7 @@
     <string name="city_not_found">Город не найден</string>
     <string name="try_to_change_city_name">Попробуйте изменить название города</string>
     <string name="change">Изменить</string>
+    <string name="cancel">Отменить</string>
 
     <string name="onboarding_progress_text">Шаг %1$d/%2$d</string>
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
