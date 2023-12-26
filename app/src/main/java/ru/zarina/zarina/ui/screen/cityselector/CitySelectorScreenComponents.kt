@@ -24,9 +24,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.Text
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -43,6 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.ui.common.component.IconButtonCustom
 import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.button.CloseButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
@@ -91,11 +97,13 @@ object CitySelectorScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun CitySearchBar(
         cityNameQuery: String,
         onCityNameQueryChanged: (String) -> Unit,
-        onCancel: () -> Unit,
+        onClearClicked: () -> Unit,
+        onCancelClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val focusState = remember { mutableStateOf<FocusState?>(null) }
@@ -112,6 +120,27 @@ object CitySelectorScreenComponents {
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
                 )
+            },
+            innerTrailingContent = {
+                CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+                    AnimatedVisibility(
+                        visible = cityNameQuery.isNotEmpty(),
+                        enter = remember { AnimatedContentDefaultEnterTransition },
+                        exit = remember { AnimatedContentDefaultExitTransition },
+                    ) {
+                        IconButtonCustom(
+                            onClick = onClearClicked,
+                            indication = rememberRipple(bounded = false, radius = 8.dp),
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_clear_new_24),
+                                contentDescription = stringResource(R.string.clear),
+                                tint = Color.Unspecified,
+                                modifier = Modifier.size(20.dp),
+                            )
+                        }
+                    }
+                }
             },
             outerTrailingContent = {
                 // TODO: [High] Migrate to cell ZarinaButton
@@ -130,7 +159,7 @@ object CitySelectorScreenComponents {
                             modifier = Modifier
                                 .heightIn(min = 40.dp)
                                 .clip(RoundedCornerShape(4.dp))
-                                .clickable(onClick = onCancel)
+                                .clickable(onClick = onCancelClicked)
                                 .padding(horizontal = 8.dp, vertical = 8.dp),
                         ) {
                             Text(text = stringResource(R.string.cancel).uppercase())
@@ -138,7 +167,7 @@ object CitySelectorScreenComponents {
                     }
                 }
             },
-            maxLines = 1,
+            singleLine = true,
             modifier = modifier.onFocusChanged { focusState.value = it },
         )
     }

@@ -137,6 +137,10 @@ class CitySelectorViewModel @Inject constructor(
         savedStateHandle[KEY_CITY_NAME_QUERY] = query
     }
 
+    fun onCitySearchBarClearClicked() {
+        savedStateHandle[KEY_CITY_NAME_QUERY] = ""
+    }
+
     fun onCitySearchBarCancelClicked() {
         emitSideEffect(SideEffect.FreeCitySearchBarFocus)
     }

@@ -37,6 +37,7 @@ fun CitySelectorBottomSheetScreen(
     ScreenContent(
         cityNameQuery = cityNameQuery,
         onCityNameQueryChanged = viewModel::onCityNameQueryChanged,
+        onCitySearchBarClearClicked = viewModel::onCitySearchBarClearClicked,
         onCitySearchBarCancelClicked = viewModel::onCitySearchBarCancelClicked,
         cityListState = cityListState,
         selectedCity = selectedCity,
@@ -53,6 +54,7 @@ fun CitySelectorBottomSheetScreen(
 private fun ScreenContent(
     cityNameQuery: String,
     onCityNameQueryChanged: (String) -> Unit,
+    onCitySearchBarClearClicked: () -> Unit,
     onCitySearchBarCancelClicked: () -> Unit,
     cityListState: CityListState,
     selectedCity: City?,
@@ -75,7 +77,8 @@ private fun ScreenContent(
             CitySearchBar(
                 cityNameQuery = cityNameQuery,
                 onCityNameQueryChanged = onCityNameQueryChanged,
-                onCancel = onCitySearchBarCancelClicked,
+                onClearClicked = onCitySearchBarClearClicked,
+                onCancelClicked = onCitySearchBarCancelClicked,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),

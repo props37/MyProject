@@ -22,7 +22,7 @@ fun IconButtonCustom(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    indication: Indication = rememberRipple(bounded = false, radius = RippleRadius),
+    indication: Indication? = rememberRipple(bounded = false, radius = RippleRadius),
     content: @Composable () -> Unit,
 ) {
     Box(
