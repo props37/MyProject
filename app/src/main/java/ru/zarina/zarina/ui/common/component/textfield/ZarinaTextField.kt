@@ -17,6 +17,7 @@ import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextLayoutResult
@@ -244,9 +246,66 @@ private fun DecorationBox(
     }
 }
 
+@Immutable
+data class ZarinaTextFieldColors(
+    val textColor: Color,
+    val placeholderColor: Color,
+    val labelColor: Color,
+    val leadingContentColor: Color,
+    val innerTrailingContentColor: Color,
+    val outerTrailingContentColor: Color,
+    val descriptionColor: Color,
+    val indicationLineColor: Color,
+    val disabledTextColor: Color,
+    val disabledPlaceholderColor: Color,
+    val disabledLabelColor: Color,
+    val disabledLeadingContentColor: Color,
+    val disabledInnerTrailingContentColor: Color,
+    val disabledOuterTrailingContentColor: Color,
+    val disabledDescriptionColor: Color,
+    val disabledIndicationLineColor: Color,
+)
+
 enum class ZarinaTextFieldSize { Large, Small }
 
 object ZarinaTextFieldDefaults {
+    @Composable
+    fun colors(
+        textColor: Color = UiKitTheme.colorsReworked.text.general.regular.default,
+        placeholderColor: Color = UiKitTheme.colorsReworked.text.general.regular.muted,
+        labelColor: Color = UiKitTheme.colorsReworked.text.general.regular.muted,
+        leadingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.muted,
+        innerTrailingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.default,
+        outerTrailingContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.default, // TODO: [High] Change to button-cell-default
+        descriptionColor: Color = UiKitTheme.colorsReworked.text.general.regular.muted,
+        indicationLineColor: Color = UiKitTheme.colorsReworked.border.general.default,
+        disabledTextColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
+        disabledPlaceholderColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
+        disabledLabelColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
+        disabledLeadingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.disabled,
+        disabledInnerTrailingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.disabled,
+        disabledOuterTrailingContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.disabled, // TODO: [High] Change to button-cell-disabled
+        disabledDescriptionColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
+        disabledIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.disabled,
+    ): ZarinaTextFieldColors = ZarinaTextFieldColors(
+        textColor = textColor,
+        placeholderColor = placeholderColor,
+        labelColor = labelColor,
+        leadingContentColor = leadingContentColor,
+        innerTrailingContentColor = innerTrailingContentColor,
+        outerTrailingContentColor = outerTrailingContentColor,
+        descriptionColor = descriptionColor,
+        indicationLineColor = indicationLineColor,
+        disabledTextColor = disabledTextColor,
+        disabledPlaceholderColor = disabledPlaceholderColor,
+        disabledLabelColor = disabledLabelColor,
+        disabledLeadingContentColor = disabledLeadingContentColor,
+        disabledInnerTrailingContentColor = disabledInnerTrailingContentColor,
+        disabledOuterTrailingContentColor = disabledOuterTrailingContentColor,
+        disabledDescriptionColor = disabledDescriptionColor,
+        disabledIndicationLineColor = disabledIndicationLineColor,
+    )
+
     @Composable
     fun textStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
         ZarinaTextFieldSize.Large -> UiKitTheme.typographyReworked.primary.light
