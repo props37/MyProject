@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.common.component.textfield
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -60,6 +62,7 @@ fun ZarinaTextField(
     innerTrailingContent: (@Composable () -> Unit)? = null,
     outerTrailingContent: (@Composable () -> Unit)? = null,
     description: (@Composable () -> Unit)? = null,
+    colors: ZarinaTextFieldColors = ZarinaTextFieldDefaults.colors(),
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = false,
@@ -89,6 +92,7 @@ fun ZarinaTextField(
         decorationBox = { innerTextField ->
             DecorationBox(
                 value = textFieldValue.text,
+                isEnabled = isEnabled,
                 textStyle = textStyle,
                 size = size,
                 innerTextField = innerTextField,
@@ -98,6 +102,7 @@ fun ZarinaTextField(
                 innerTrailingContent = innerTrailingContent,
                 outerTrailingContent = outerTrailingContent,
                 description = description,
+                colors = colors,
             )
         },
     )
@@ -118,6 +123,7 @@ fun ZarinaTextField(
     innerTrailingContent: (@Composable () -> Unit)? = null,
     outerTrailingContent: (@Composable () -> Unit)? = null,
     description: (@Composable () -> Unit)? = null,
+    colors: ZarinaTextFieldColors = ZarinaTextFieldDefaults.colors(),
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = false,
@@ -147,6 +153,7 @@ fun ZarinaTextField(
         decorationBox = { innerTextField ->
             DecorationBox(
                 value = value,
+                isEnabled = isEnabled,
                 textStyle = textStyle,
                 size = size,
                 innerTextField = innerTextField,
@@ -156,6 +163,7 @@ fun ZarinaTextField(
                 innerTrailingContent = innerTrailingContent,
                 outerTrailingContent = outerTrailingContent,
                 description = description,
+                colors = colors,
             )
         },
     )
@@ -164,6 +172,7 @@ fun ZarinaTextField(
 @Composable
 private fun DecorationBox(
     value: String,
+    isEnabled: Boolean,
     textStyle: TextStyle,
     size: ZarinaTextFieldSize,
     innerTextField: @Composable () -> Unit,
@@ -173,21 +182,31 @@ private fun DecorationBox(
     innerTrailingContent: (@Composable () -> Unit)?,
     outerTrailingContent: (@Composable () -> Unit)?,
     description: (@Composable () -> Unit)?,
+    colors: ZarinaTextFieldColors,
 ) {
     // TODO: [High] Migrate to Layout?
     Column {
         label?.let { label ->
             val labelTextStyle = ZarinaTextFieldDefaults.labelTextStyleFromSize(size)
             val padding = ZarinaTextFieldDefaults.labelPaddingFromSize(size)
-            CompositionLocalProvider(LocalTextStyle provides labelTextStyle) {
+            val labelColor by animateColorAsState(
+                targetValue = colors.getLabelColor(isEnabled),
+                label = "Label color",
+            )
+            CompositionLocalProvider(
+                LocalTextStyle provides labelTextStyle,
+                LocalContentColor provides labelColor,
+            ) {
                 label()
             }
             Spacer(modifier = Modifier.height(padding))
         }
 
-        val indicationLineColor = UiKitTheme.colorsReworked.border.general.default
-
         Row(verticalAlignment = Alignment.CenterVertically) {
+            val indicationLineColor = animateColorAsState(
+                targetValue = colors.getIndicationLineColor(isEnabled),
+                label = "Indication line color",
+            )
             val verticalPadding = ZarinaTextFieldDefaults.textVerticalPaddingFromSize(size)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -196,7 +215,7 @@ private fun DecorationBox(
                     .drawBehind {
                         val width = 1.dp.toPx()
                         drawLine(
-                            color = indicationLineColor,
+                            color = indicationLineColor.value,
                             start = Offset(0f, this.size.height - width),
                             end = Offset(this.size.width, this.size.height - width),
                             strokeWidth = width,
@@ -205,29 +224,59 @@ private fun DecorationBox(
                     .padding(vertical = verticalPadding),
             ) {
                 leadingContent?.let { content ->
-                    content()
+                    val leadingContentColor by animateColorAsState(
+                        targetValue = colors.getLeadingContentColor(isEnabled),
+                        label = "Leading content color",
+                    )
+                    CompositionLocalProvider(LocalContentColor provides leadingContentColor) {
+                        content()
+                    }
                     Spacer(modifier = Modifier.width(8.dp))
                 }
 
                 Box {
-                    innerTextField()
+                    val textColor by animateColorAsState(
+                        targetValue = colors.getTextColor(isEnabled),
+                        label = "Text color",
+                    )
+                    CompositionLocalProvider(LocalContentColor provides textColor) {
+                        innerTextField()
+                    }
                     if (value.isEmpty() && placeholder != null) {
-                        CompositionLocalProvider(LocalTextStyle provides textStyle) {
+                        val placeholderColor by animateColorAsState(
+                            targetValue = colors.getPlaceholderColor(isEnabled),
+                            label = "Placeholder color",
+                        )
+                        CompositionLocalProvider(
+                            LocalTextStyle provides textStyle,
+                            LocalContentColor provides placeholderColor,
+                        ) {
                             placeholder()
                         }
                     }
                 }
 
                 innerTrailingContent?.let { content ->
+                    val innerTrailingContentColor by animateColorAsState(
+                        targetValue = colors.getInnerTrailingContentColor(isEnabled),
+                        label = "Inner trailing content color",
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
-                    content()
+                    CompositionLocalProvider(LocalContentColor provides innerTrailingContentColor) {
+                        content()
+                    }
                 }
             }
 
             outerTrailingContent?.let { content ->
                 Spacer(modifier = Modifier.width(8.dp))
+                val outerTrailingContentColor by animateColorAsState(
+                    targetValue = colors.getOuterTrailingContentColor(isEnabled),
+                    label = "Outer trailing content color",
+                )
                 CompositionLocalProvider(
                     LocalTextStyle provides UiKitTheme.typographyReworked.caption1.regular,
+                    LocalContentColor provides outerTrailingContentColor,
                 ) {
                     content()
                 }
@@ -239,7 +288,14 @@ private fun DecorationBox(
             Spacer(modifier = Modifier.height(padding))
             val descriptionTextStyle =
                 ZarinaTextFieldDefaults.descriptionTextStyleFromSize(size)
-            CompositionLocalProvider(LocalTextStyle provides descriptionTextStyle) {
+            val descriptionColor by animateColorAsState(
+                targetValue = colors.getDescriptionColor(isEnabled),
+                label = "Description color",
+            )
+            CompositionLocalProvider(
+                LocalTextStyle provides descriptionTextStyle,
+                LocalContentColor provides descriptionColor,
+            ) {
                 description()
             }
         }
@@ -264,7 +320,28 @@ data class ZarinaTextFieldColors(
     val disabledOuterTrailingContentColor: Color,
     val disabledDescriptionColor: Color,
     val disabledIndicationLineColor: Color,
-)
+) {
+    fun getTextColor(isEnabled: Boolean): Color = if (isEnabled) textColor else disabledTextColor
+
+    fun getPlaceholderColor(isEnabled: Boolean): Color =
+        if (isEnabled) placeholderColor else disabledPlaceholderColor
+
+    fun getLabelColor(isEnabled: Boolean): Color = if (isEnabled) labelColor else disabledLabelColor
+    fun getLeadingContentColor(isEnabled: Boolean): Color =
+        if (isEnabled) leadingContentColor else disabledLeadingContentColor
+
+    fun getInnerTrailingContentColor(isEnabled: Boolean): Color =
+        if (isEnabled) innerTrailingContentColor else disabledInnerTrailingContentColor
+
+    fun getOuterTrailingContentColor(isEnabled: Boolean): Color =
+        if (isEnabled) outerTrailingContentColor else disabledOuterTrailingContentColor
+
+    fun getDescriptionColor(isEnabled: Boolean): Color =
+        if (isEnabled) descriptionColor else disabledDescriptionColor
+
+    fun getIndicationLineColor(isEnabled: Boolean): Color =
+        if (isEnabled) indicationLineColor else disabledIndicationLineColor
+}
 
 enum class ZarinaTextFieldSize { Large, Small }
 
