@@ -40,8 +40,7 @@ android {
     defaultConfig {
         applicationId = appId
         minSdk = 24
-        // TODO: [High] Update to 34
-        targetSdk = 33
+        targetSdk = 34
         versionCode = generatedVersionCode
         versionName = generatedVersionName
 
