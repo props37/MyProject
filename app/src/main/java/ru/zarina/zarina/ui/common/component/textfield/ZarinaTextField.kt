@@ -190,6 +190,7 @@ private fun DecorationBox(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
+                    .weight(1f)
                     .drawBehind {
                         val width = 1.dp.toPx()
                         drawLine(
