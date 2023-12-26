@@ -14,17 +14,19 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.plus
+import ru.zarina.zarina.domain.rework.geography.KladrId
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.geography.GetCitiesUseCase
 import javax.inject.Inject
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class CitySelectorViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val interactor: CitySelectorInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
@@ -37,15 +39,38 @@ class CitySelectorViewModel @Inject constructor(
 
     // TODO: [High] Refactor
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val cityListState = cityNameQuery
-        .debounce(300.milliseconds) // TODO: [High] Is debounce needed?
+    val cityListState: StateFlow<CityListState> = cityNameQuery
+        .debounce { nameQuery ->
+            if (nameQuery.isBlank()) Duration.ZERO else 300.milliseconds
+        }
         .flatMapLatest { nameQuery ->
             val getCitiesParams = GetCitiesUseCase.Params(nameQuery)
             interactor.getCities(getCitiesParams).map { result ->
                 result.fold(
                     onSuccess = { cities ->
-                        val listItems = cities.map {
-                            CityListItem.City(it)
+                        val listItems = if (nameQuery.isBlank()) {
+                            buildList<CityListItem> {
+                                // Show main cities at the top
+                                val (mainCities, otherCities) = cities.partition { city ->
+                                    city.kladrId in MAIN_CITIES_KLADR_IDS
+                                }
+                                val mainCityItems = mainCities.map { CityListItem.City(it) }
+                                addAll(mainCityItems)
+
+                                // Show other cities grouped by the first letter
+                                val otherCitiesGrouped = otherCities.groupBy { city ->
+                                    city.name.firstOrNull()
+                                }
+                                otherCitiesGrouped.forEach { (firstLetter, cities) ->
+                                    if (firstLetter != null) {
+                                        add(CityListItem.CityFirstLetterHeader(firstLetter))
+                                    }
+                                    val cityItems = cities.map { CityListItem.City(it) }
+                                    addAll(cityItems)
+                                }
+                            }
+                        } else {
+                            cities.map { CityListItem.City(it, showFullName = true) }
                         }
                         CityListState.CityList(listItems)
                     },
@@ -73,7 +98,7 @@ class CitySelectorViewModel @Inject constructor(
     }
 
     sealed class CityListState {
-        data object InitialLoading : CityListItem()
+        data object InitialLoading : CityListState()
 
         data class CityList(val list: List<CityListItem>) : CityListState()
 
@@ -81,13 +106,18 @@ class CitySelectorViewModel @Inject constructor(
     }
 
     sealed class CityListItem {
-        data class City(val city: ru.zarina.zarina.domain.rework.geography.City) : CityListItem()
+        data class City(
+            val city: ru.zarina.zarina.domain.rework.geography.City,
+            val showFullName: Boolean = false,
+        ) : CityListItem()
 
         data class CityFirstLetterHeader(val letter: Char) : CityListItem()
     }
 
     companion object {
         private const val KEY_CITY_NAME_QUERY = "city_name_query"
+
+        private val MAIN_CITIES_KLADR_IDS = listOf(KladrId.MOSCOW, KladrId.SAINT_PETERSBURG)
     }
 }
 

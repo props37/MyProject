@@ -54,6 +54,7 @@ object CitySelectorScreenComponents {
         }
     }
 
+    // TODO: [High] Extract bottom divider from clickable area
     @Composable
     fun City(
         city: City,
