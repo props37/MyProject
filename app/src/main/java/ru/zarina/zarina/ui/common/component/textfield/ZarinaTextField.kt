@@ -246,7 +246,7 @@ private fun DecorationBox(
                     Spacer(modifier = Modifier.width(8.dp))
                 }
 
-                Box {
+                Box(modifier = Modifier.weight(1f)) {
                     val textColor by animateColorAsState(
                         targetValue = colors.getTextColor(isEnabled),
                         label = "Text color",
