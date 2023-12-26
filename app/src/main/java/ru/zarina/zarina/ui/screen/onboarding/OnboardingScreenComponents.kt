@@ -50,6 +50,8 @@ import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.OnboardingStep
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.FontFeatureSettings
 
+// TODO: [High] Add previews
+
 object OnboardingScreenComponents {
 
     @Composable
