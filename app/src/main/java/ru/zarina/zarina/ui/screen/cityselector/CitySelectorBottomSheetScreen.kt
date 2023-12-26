@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenComponents.CityList
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenComponents.TopBar
@@ -22,22 +23,32 @@ fun CitySelectorBottomSheetScreen(
     navigateBackward: (CitySelectorScreenResult) -> Unit,
     viewModel: CitySelectorViewModel = hiltViewModel(),
 ) {
+    val cityNameQuery by viewModel.cityNameQuery.collectAsStateWithLifecycle()
     val cityListState by viewModel.cityListState.collectAsStateWithLifecycle()
+    val selectedCity by viewModel.selectedCity.collectAsStateWithLifecycle()
 
     ScreenContent(
+        cityNameQuery = cityNameQuery,
+        onCityNameQueryChanged = viewModel::onCityNameQueryChanged,
         cityListState = cityListState,
+        selectedCity = selectedCity,
+        onCityClicked = viewModel::onCityClicked,
+        onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
         navigateBackward = navigateBackward,
-        onCloseClicked = viewModel::onCloseClicked,
     )
 }
 
 @Composable
 private fun ScreenContent(
+    cityNameQuery: String,
+    onCityNameQueryChanged: (String) -> Unit,
     cityListState: CityListState,
+    selectedCity: City?,
+    onCityClicked: (City) -> Unit,
+    onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigateBackward: (CitySelectorScreenResult) -> Unit,
-    onCloseClicked: () -> Unit,
 ) {
     CitySelectorScreenBehavior(
         sideEffects = sideEffects,
@@ -48,7 +59,11 @@ private fun ScreenContent(
         Column(modifier = Modifier.fillMaxSize()) {
             TopBar(onCloseClicked = onCloseClicked)
 
-            CityList(listState = cityListState)
+            CityList(
+                listState = cityListState,
+                selectedCity = selectedCity,
+                onCityClicked = onCityClicked,
+            )
         }
     }
 }

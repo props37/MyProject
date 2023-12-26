@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -15,16 +16,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -77,6 +81,8 @@ object CitySelectorScreenComponents {
     @Composable
     fun CityList(
         listState: CityListState,
+        selectedCity: City?,
+        onCityClicked: (City) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Crossfade(
@@ -118,8 +124,9 @@ object CitySelectorScreenComponents {
                                     is CityListItem.City -> {
                                         City(
                                             city = item.city,
-                                            onClick = {},
+                                            onClick = onCityClicked,
                                             showFullName = item.showFullName,
+                                            isSelected = item.city.kladrId == selectedCity?.kladrId,
                                             modifier = Modifier.fillMaxWidth(),
                                         )
                                     }
@@ -153,6 +160,7 @@ object CitySelectorScreenComponents {
         city: City,
         onClick: (City) -> Unit,
         showFullName: Boolean,
+        isSelected: Boolean,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
@@ -164,19 +172,33 @@ object CitySelectorScreenComponents {
             ) {
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Text(
-                    text = city.name,
-                    style = UiKitTheme.typographyReworked.secondary.light,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = city.name,
+                            style = UiKitTheme.typographyReworked.secondary.light,
+                            color = UiKitTheme.colorsReworked.text.general.regular.default,
+                        )
 
-                if (showFullName) {
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = city.fullName,
-                        style = UiKitTheme.typographyReworked.footnote.light,
-                        color = UiKitTheme.colorsReworked.text.general.regular.muted,
-                    )
+                        if (showFullName) {
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = city.fullName,
+                                style = UiKitTheme.typographyReworked.footnote.light,
+                                color = UiKitTheme.colorsReworked.text.general.regular.muted,
+                            )
+                        }
+                    }
+
+                    if (isSelected) {
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Icon(
+                            painter = painterResource(R.drawable.ic_check_24),
+                            contentDescription = null, // TODO: [High] Add content description
+                            tint = UiKitTheme.colorsReworked.icon.regular.default,
+                            modifier = Modifier.size(20.dp),
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -270,11 +292,13 @@ private fun CityPreview() {
                 city = City.SAINT_PETERSBURG,
                 onClick = {},
                 showFullName = true,
+                isSelected = false,
             )
             CitySelectorScreenComponents.City(
                 city = City.SAINT_PETERSBURG,
                 onClick = {},
                 showFullName = false,
+                isSelected = true,
             )
         }
     }
@@ -290,11 +314,13 @@ private fun CityFirstLetterHeaderPreview() {
                 city = City.SAINT_PETERSBURG,
                 onClick = {},
                 showFullName = false,
+                isSelected = false,
             )
             CitySelectorScreenComponents.City(
                 city = City.SAINT_PETERSBURG,
                 onClick = {},
                 showFullName = true,
+                isSelected = true,
             )
         }
     }

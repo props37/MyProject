@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.plus
+import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.domain.rework.geography.KladrId
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
@@ -22,6 +23,7 @@ import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.geography.GetCitiesUseCase
+import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -34,10 +36,8 @@ class CitySelectorViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    val selectedCity = savedStateHandle.getStateFlow<CityParcelable?>(
-        key = UnscopedDestinations.CitySelector.ARG_KEY_CITY,
-        initialValue = null,
-    )
+    private val initialCity: CityParcelable? =
+        savedStateHandle[UnscopedDestinations.CitySelector.ARG_KEY_CITY]
 
     val cityNameQuery: StateFlow<String> = savedStateHandle.getStateFlow(
         key = KEY_CITY_NAME_QUERY,
@@ -93,6 +93,16 @@ class CitySelectorViewModel @Inject constructor(
             initialValue = CityListState.InitialLoading,
         )
 
+    val selectedCity: StateFlow<City?> = savedStateHandle
+        .getStateFlow(
+            key = KEY_SELECTED_CITY,
+            initialValue = initialCity,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { it?.toCity() }
+
     fun onCloseClicked() {
         navigationThrottler.throttle {
             val result = CitySelectorScreenResult.ScreenClosed
@@ -102,6 +112,11 @@ class CitySelectorViewModel @Inject constructor(
 
     fun onCityNameQueryChanged(query: String) {
         savedStateHandle[KEY_CITY_NAME_QUERY] = query
+    }
+
+    fun onCityClicked(city: City) {
+        val cityParcelable = CityParcelable.fromCity(city)
+        savedStateHandle[KEY_SELECTED_CITY] = cityParcelable
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -126,6 +141,7 @@ class CitySelectorViewModel @Inject constructor(
     }
 
     companion object {
+        private const val KEY_SELECTED_CITY = "selected_city"
         private const val KEY_CITY_NAME_QUERY = "city_name_query"
 
         private val MAIN_CITIES_KLADR_IDS = listOf(KladrId.MOSCOW, KladrId.SAINT_PETERSBURG)
