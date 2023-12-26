@@ -19,4 +19,10 @@ class GeographyApi @Inject constructor(
             parameter("longitude", location.longitude)
         }.body()
     }
+
+    suspend fun getCities(nameQuery: String?): List<CityDto> {
+        return httpClient.get("/api/location/city/list") {
+            parameter("name", nameQuery)
+        }.body()
+    }
 }

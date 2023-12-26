@@ -11,4 +11,8 @@ class GeographyRemoteDataSource @Inject constructor(
     suspend fun getCity(location: Location): City {
         return api.getCity(location).toCity()
     }
+
+    suspend fun getCities(nameQuery: String?): List<City> {
+        return api.getCities(nameQuery).map { it.toCity() }
+    }
 }
