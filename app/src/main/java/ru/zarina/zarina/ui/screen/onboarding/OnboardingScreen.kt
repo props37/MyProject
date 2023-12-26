@@ -50,13 +50,13 @@ fun OnboardingScreen(
         currentOnboardingStep = currentOnboardingStep,
         currentCity = currentCity,
         isDetectCityButtonLoading = isDetectCityButtonLoading,
-        sideEffects = viewModel.sideEffects,
-        navigateForward = navigateForward,
         onRequestNotificationsPermissionClicked = viewModel::onRequestNotificationsPermissionClicked,
         onDetectCityClicked = viewModel::onDetectCityClicked,
         onSkipCityDetectionClicked = viewModel::onSkipCityDetectionClicked,
         onConfirmCityClicked = viewModel::onConfirmCityClicked,
         onSelectCityClicked = viewModel::onSelectCityClicked,
+        sideEffects = viewModel.sideEffects,
+        navigateForward = navigateForward,
     )
 }
 
@@ -66,13 +66,13 @@ private fun ScreenContent(
     currentOnboardingStep: OnboardingStep,
     currentCity: City?,
     isDetectCityButtonLoading: Boolean,
-    sideEffects: Flow<SideEffect>,
-    navigateForward: (OnboardingScreenAction) -> Unit,
     onRequestNotificationsPermissionClicked: () -> Unit,
     onDetectCityClicked: () -> Unit,
     onSkipCityDetectionClicked: () -> Unit,
     onConfirmCityClicked: () -> Unit,
     onSelectCityClicked: () -> Unit,
+    sideEffects: Flow<SideEffect>,
+    navigateForward: (OnboardingScreenAction) -> Unit,
 ) {
     OnboardingScreenBehavior(
         sideEffects = sideEffects,

@@ -61,7 +61,10 @@ class OnboardingViewModel @Inject constructor(
             key = KEY_CURRENT_CITY,
             initialValue = null,
         )
-        .mapState(viewModelScope) { cityParcelable ->
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { cityParcelable ->
             cityParcelable?.toCity()
         }
 
