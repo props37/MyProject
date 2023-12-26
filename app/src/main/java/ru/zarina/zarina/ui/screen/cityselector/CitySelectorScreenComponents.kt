@@ -54,34 +54,38 @@ object CitySelectorScreenComponents {
         }
     }
 
-    // TODO: [High] Extract bottom divider from clickable area
     @Composable
     fun City(
         city: City,
         onClick: (City) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        Column(
-            modifier = modifier
-                .clickable { onClick(city) }
-                .padding(horizontal = 16.dp),
-        ) {
-            Spacer(modifier = Modifier.height(12.dp))
+        Column(modifier = modifier) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onClick(city) }
+                    .padding(horizontal = 16.dp),
+            ) {
+                Spacer(modifier = Modifier.height(12.dp))
 
-            Text(
-                text = city.name,
-                style = UiKitTheme.typographyReworked.secondary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
-            )
+                Text(
+                    text = city.name,
+                    style = UiKitTheme.typographyReworked.secondary.light,
+                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                )
 
-            // TODO: [High] Add full name
+                // TODO: [High] Add full name
 
-            Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
             Divider(
                 color = UiKitTheme.colorsReworked.border.general.default,
                 thickness = 1.dp,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
             )
         }
     }
