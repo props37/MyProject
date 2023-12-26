@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -190,15 +189,10 @@ object CitySelectorScreenComponents {
                         }
                     }
 
-                    if (isSelected) {
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Icon(
-                            painter = painterResource(R.drawable.ic_check_24),
-                            contentDescription = null, // TODO: [High] Add content description
-                            tint = UiKitTheme.colorsReworked.icon.regular.default,
-                            modifier = Modifier.size(20.dp),
-                        )
-                    }
+                    CityCheckmark(
+                        isVisible = isSelected,
+                        modifier = Modifier.padding(start = if (isSelected) 16.dp else 0.dp),
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -210,6 +204,22 @@ object CitySelectorScreenComponents {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
+            )
+        }
+    }
+
+    // TODO: [High] Add animation
+    @Composable
+    private fun CityCheckmark(
+        isVisible: Boolean,
+        modifier: Modifier = Modifier,
+    ) {
+        if (isVisible) {
+            Icon(
+                painter = painterResource(R.drawable.ic_check_24),
+                contentDescription = null, // TODO: [High] Add content description
+                tint = UiKitTheme.colorsReworked.icon.regular.default,
+                modifier = modifier.size(20.dp),
             )
         }
     }
