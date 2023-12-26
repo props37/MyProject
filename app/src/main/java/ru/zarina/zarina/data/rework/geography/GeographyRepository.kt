@@ -34,4 +34,8 @@ class GeographyRepository @Inject constructor(
             }
         }
     }
+
+    suspend fun updateUserCity(city: City) {
+        remoteDataSource.updateUserCity(city)
+    }
 }

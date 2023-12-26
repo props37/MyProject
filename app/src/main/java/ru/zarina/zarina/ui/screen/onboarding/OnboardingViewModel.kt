@@ -11,6 +11,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -33,6 +34,7 @@ import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.device.SetIsOnboardingCompletedUseCase
+import ru.zarina.zarina.usecase.rework.geography.UpdateUserCityUseCase
 import ru.zarina.zarina.util.library.coroutines.mapState
 import ru.zarina.zarina.utils.clean.invoke
 import timber.log.Timber
@@ -195,14 +197,24 @@ class OnboardingViewModel @AssistedInject constructor(
     }
 
     private fun closeOnboarding() {
-        viewModelScope.launch {
-            val setIsOnboardingCompletedParams =
-                SetIsOnboardingCompletedUseCase.Params(isCompleted = true)
-            interactor.setIsOnboardingCompleted(setIsOnboardingCompletedParams)
-            navigationThrottler.throttle {
-                val action = OnboardingScreenAction.OnboardingCompleted(currentCity.value)
-                emitSideEffect(SideEffect.NavigateForward(action))
+        navigationThrottler.throttle {
+            val currentCity = currentCity.value
+
+            viewModelScope.launch(NonCancellable) {
+                val setIsOnboardingCompletedParams =
+                    SetIsOnboardingCompletedUseCase.Params(isCompleted = true)
+                interactor.setIsOnboardingCompleted(setIsOnboardingCompletedParams)
             }
+
+            if (currentCity != null) {
+                viewModelScope.launch(NonCancellable) {
+                    val updateUserCityParams = UpdateUserCityUseCase.Params(currentCity)
+                    interactor.updateUserCity(updateUserCityParams)
+                }
+            }
+
+            val action = OnboardingScreenAction.OnboardingCompleted(currentCity)
+            emitSideEffect(SideEffect.NavigateForward(action))
         }
     }
 

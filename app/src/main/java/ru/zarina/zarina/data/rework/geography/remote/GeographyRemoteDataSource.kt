@@ -20,4 +20,8 @@ class GeographyRemoteDataSource @Inject constructor(
             emit(cities)
         }
     }
+
+    suspend fun updateUserCity(city: City) {
+        api.updateUserCity(city)
+    }
 }
