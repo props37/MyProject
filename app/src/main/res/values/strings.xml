@@ -13,6 +13,9 @@
     <string name="cart">Корзина</string>
     <string name="city">Город</string>
     <string name="close">Закрыть</string>
+    <string name="search_cities">Поиск по городам</string>
+    <string name="city_not_found">Город не найден</string>
+    <string name="try_to_change_city_name">Попробуйте изменить название города</string>
 
     <string name="onboarding_progress_text">Шаг %1$d/%2$d</string>
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
@@ -35,7 +38,6 @@
     <string name="cant_save_selected_city">Не удалось сохранить выбранный город</string>
     <string name="city_search">Поиск по городам</string>
     <string name="clear">Очистить</string>
-    <string name="city_not_found">Город с таким названием не найден</string>
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="try_again_later">Попробуйте повторить позднее</string>
     <string name="loading_error">Ошибка загрузки</string>

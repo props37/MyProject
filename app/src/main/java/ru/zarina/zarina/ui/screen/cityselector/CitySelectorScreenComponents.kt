@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.screen.cityselector
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -98,34 +100,43 @@ object CitySelectorScreenComponents {
                 }
 
                 is CityListState.CityList -> {
-                    val baseContentPadding = remember { PaddingValues(top = 8.dp) }
-                    val contentPadding =
-                        baseContentPadding + WindowInsets.navigationBarsOrIme.asPaddingValues()
+                    if (listState.list.isNotEmpty()) {
+                        val baseContentPadding = remember { PaddingValues(top = 8.dp) }
+                        val contentPadding =
+                            baseContentPadding + WindowInsets.navigationBarsOrIme.asPaddingValues()
 
-                    LazyColumn(
-                        contentPadding = contentPadding,
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        items(
-                            items = listState.list,
-                            key = { getCityListItemKey(it) },
-                            contentType = { getCityListItemContentType(it) },
-                        ) { item ->
-                            when (item) {
-                                is CityListItem.City -> {
-                                    City(
-                                        city = item.city,
-                                        onClick = {},
-                                        showFullName = item.showFullName,
-                                        modifier = Modifier.fillMaxWidth(),
-                                    )
-                                }
+                        LazyColumn(
+                            contentPadding = contentPadding,
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            items(
+                                items = listState.list,
+                                key = { getCityListItemKey(it) },
+                                contentType = { getCityListItemContentType(it) },
+                            ) { item ->
+                                when (item) {
+                                    is CityListItem.City -> {
+                                        City(
+                                            city = item.city,
+                                            onClick = {},
+                                            showFullName = item.showFullName,
+                                            modifier = Modifier.fillMaxWidth(),
+                                        )
+                                    }
 
-                                is CityListItem.CityFirstLetterHeader -> {
-                                    CityFirstLetterHeader(item.letter)
+                                    is CityListItem.CityFirstLetterHeader -> {
+                                        CityFirstLetterHeader(item.letter)
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        CityNotFound(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .windowInsetsPadding(WindowInsets.navigationBarsOrIme)
+                                .padding(horizontal = 24.dp),
+                        )
                     }
                 }
 
@@ -192,6 +203,31 @@ object CitySelectorScreenComponents {
             color = UiKitTheme.colorsReworked.text.general.regular.default,
             modifier = modifier.padding(start = 16.dp, top = 20.dp, bottom = 4.dp),
         )
+    }
+    
+    @Composable
+    private fun CityNotFound(
+        modifier: Modifier = Modifier,
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier,
+        ) {
+            Text(
+                text = stringResource(R.string.city_not_found),
+                style = UiKitTheme.typographyReworked.primary.bold,
+                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.try_to_change_city_name),
+                style = UiKitTheme.typographyReworked.secondary.regular,
+                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                textAlign = TextAlign.Center,
+            )
+        }
     }
 
     @Stable
