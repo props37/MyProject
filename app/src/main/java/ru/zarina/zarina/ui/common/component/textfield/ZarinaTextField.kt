@@ -28,6 +28,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -73,10 +75,12 @@ fun ZarinaTextField(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     cursorBrush: Brush = SolidColor(UiKitTheme.colorsReworked.text.general.regular.default),
 ) {
+    var focusState by remember { mutableStateOf<FocusState?>(null) }
+
     BasicTextField(
         value = textFieldValue,
         onValueChange = onValueChanged,
-        modifier = modifier,
+        modifier = modifier.onFocusChanged { focusState = it },
         enabled = isEnabled,
         readOnly = readOnly,
         textStyle = textStyle,
@@ -93,6 +97,7 @@ fun ZarinaTextField(
             DecorationBox(
                 value = textFieldValue.text,
                 isEnabled = isEnabled,
+                focusState = focusState,
                 textStyle = textStyle,
                 size = size,
                 innerTextField = innerTextField,
@@ -134,10 +139,12 @@ fun ZarinaTextField(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     cursorBrush: Brush = SolidColor(UiKitTheme.colorsReworked.text.general.regular.default),
 ) {
+    var focusState by remember { mutableStateOf<FocusState?>(null) }
+
     BasicTextField(
         value = value,
         onValueChange = onValueChanged,
-        modifier = modifier,
+        modifier = modifier.onFocusChanged { focusState = it },
         enabled = isEnabled,
         readOnly = readOnly,
         textStyle = textStyle,
@@ -154,6 +161,7 @@ fun ZarinaTextField(
             DecorationBox(
                 value = value,
                 isEnabled = isEnabled,
+                focusState = focusState,
                 textStyle = textStyle,
                 size = size,
                 innerTextField = innerTextField,
@@ -173,6 +181,7 @@ fun ZarinaTextField(
 private fun DecorationBox(
     value: String,
     isEnabled: Boolean,
+    focusState: FocusState?,
     textStyle: TextStyle,
     size: ZarinaTextFieldSize,
     innerTextField: @Composable () -> Unit,
@@ -204,7 +213,10 @@ private fun DecorationBox(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             val indicationLineColor = animateColorAsState(
-                targetValue = colors.getIndicationLineColor(isEnabled),
+                targetValue = colors.getIndicationLineColor(
+                    isEnabled = isEnabled,
+                    isActive = focusState?.isFocused == true,
+                ),
                 label = "Indication line color",
             )
             val verticalPadding = ZarinaTextFieldDefaults.textVerticalPaddingFromSize(size)
@@ -312,6 +324,7 @@ data class ZarinaTextFieldColors(
     val outerTrailingContentColor: Color,
     val descriptionColor: Color,
     val indicationLineColor: Color,
+    val activeIndicationLineColor: Color,
     val disabledTextColor: Color,
     val disabledPlaceholderColor: Color,
     val disabledLabelColor: Color,
@@ -327,6 +340,7 @@ data class ZarinaTextFieldColors(
         if (isEnabled) placeholderColor else disabledPlaceholderColor
 
     fun getLabelColor(isEnabled: Boolean): Color = if (isEnabled) labelColor else disabledLabelColor
+
     fun getLeadingContentColor(isEnabled: Boolean): Color =
         if (isEnabled) leadingContentColor else disabledLeadingContentColor
 
@@ -339,8 +353,11 @@ data class ZarinaTextFieldColors(
     fun getDescriptionColor(isEnabled: Boolean): Color =
         if (isEnabled) descriptionColor else disabledDescriptionColor
 
-    fun getIndicationLineColor(isEnabled: Boolean): Color =
-        if (isEnabled) indicationLineColor else disabledIndicationLineColor
+    fun getIndicationLineColor(isEnabled: Boolean, isActive: Boolean): Color = when {
+        isActive -> activeIndicationLineColor
+        isEnabled -> indicationLineColor
+        else -> disabledIndicationLineColor
+    }
 }
 
 enum class ZarinaTextFieldSize { Large, Small }
@@ -356,6 +373,7 @@ object ZarinaTextFieldDefaults {
         outerTrailingContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.default, // TODO: [High] Change to button-cell-default
         descriptionColor: Color = UiKitTheme.colorsReworked.text.general.regular.muted,
         indicationLineColor: Color = UiKitTheme.colorsReworked.border.general.default,
+        activeIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.active,
         disabledTextColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
         disabledPlaceholderColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
         disabledLabelColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
@@ -373,6 +391,7 @@ object ZarinaTextFieldDefaults {
         outerTrailingContentColor = outerTrailingContentColor,
         descriptionColor = descriptionColor,
         indicationLineColor = indicationLineColor,
+        activeIndicationLineColor = activeIndicationLineColor,
         disabledTextColor = disabledTextColor,
         disabledPlaceholderColor = disabledPlaceholderColor,
         disabledLabelColor = disabledLabelColor,
