@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -108,18 +109,20 @@ class CitySelectorViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
         ) { it?.toCity() }
 
+    private val selectedCityHasChanged = MutableStateFlow(false)
+
     val isChangeCityButtonVisible: StateFlow<Boolean> = combine(
-        initialCity,
+        selectedCityHasChanged,
         selectedCity,
         cityListState,
-    ) { initialCity, selectedCity, cityListState ->
+    ) { selectedCityHasChanged, selectedCity, cityListState ->
         val visibleCities = (cityListState as? CityListState.CityList)
             ?.list
             ?.mapNotNull { listItem ->
                 (listItem as? CityListItem.City)?.city
             }
             ?: emptyList()
-        selectedCity?.kladrId != initialCity?.kladrId && selectedCity in visibleCities
+        selectedCityHasChanged && selectedCity in visibleCities
     }.stateIn(
         scope = viewModelScope + Dispatchers.Default,
         started = SharingStarted.WhileSubscribed(),
@@ -146,6 +149,7 @@ class CitySelectorViewModel @Inject constructor(
     }
 
     fun onCityClicked(city: City) {
+        selectedCityHasChanged.value = true
         val cityParcelable = CityParcelable.fromCity(city)
         savedStateHandle[KEY_SELECTED_CITY] = cityParcelable
     }
