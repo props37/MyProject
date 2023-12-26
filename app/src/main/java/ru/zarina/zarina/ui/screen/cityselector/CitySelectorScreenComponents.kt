@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screen.cityselector
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,10 +38,14 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.button.CloseButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 import ru.zarina.zarina.util.compose.navigationBarsOrIme
 import ru.zarina.zarina.utils.compose.plus
 
@@ -82,73 +87,102 @@ object CitySelectorScreenComponents {
         listState: CityListState,
         selectedCity: City?,
         onCityClicked: (City) -> Unit,
+        isChangeCityButtonVisible: Boolean,
+        onChangeCityClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        Crossfade(
-            targetState = listState,
-            label = "CityList",
-            modifier = modifier,
-        ) { listState ->
-            when (listState) {
-                CityListState.InitialLoading -> {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .windowInsetsPadding(WindowInsets.navigationBarsOrIme),
-                    ) {
-                        ZarinaCircularLoader(
-                            color = UiKitTheme.colorsReworked.icon.regular.default,
-                            modifier = Modifier.size(40.dp),
-                        )
-                    }
-                }
-
-                is CityListState.CityList -> {
-                    if (listState.list.isNotEmpty()) {
-                        val baseContentPadding = remember { PaddingValues(top = 8.dp) }
-                        val contentPadding =
-                            baseContentPadding + WindowInsets.navigationBarsOrIme.asPaddingValues()
-
-                        LazyColumn(
-                            contentPadding = contentPadding,
-                            modifier = Modifier.fillMaxWidth(),
+        Box(modifier = modifier) {
+            Crossfade(
+                targetState = listState,
+                label = "CityList",
+            ) { listState ->
+                when (listState) {
+                    CityListState.InitialLoading -> {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .windowInsetsPadding(WindowInsets.navigationBarsOrIme),
                         ) {
-                            items(
-                                items = listState.list,
-                                key = { getCityListItemKey(it) },
-                                contentType = { getCityListItemContentType(it) },
-                            ) { item ->
-                                when (item) {
-                                    is CityListItem.City -> {
-                                        City(
-                                            city = item.city,
-                                            onClick = onCityClicked,
-                                            showFullName = item.showFullName,
-                                            isSelected = item.city.kladrId == selectedCity?.kladrId,
-                                            modifier = Modifier.fillMaxWidth(),
-                                        )
-                                    }
+                            ZarinaCircularLoader(
+                                color = UiKitTheme.colorsReworked.icon.regular.default,
+                                modifier = Modifier.size(40.dp),
+                            )
+                        }
+                    }
 
-                                    is CityListItem.CityFirstLetterHeader -> {
-                                        CityFirstLetterHeader(item.letter)
+                    is CityListState.CityList -> {
+                        if (listState.list.isNotEmpty()) {
+                            val baseContentPadding = remember(isChangeCityButtonVisible) {
+                                val bottom = if (isChangeCityButtonVisible) {
+                                    val buttonHeight = ZarinaButtonDefaults.HeightLarge
+                                    buttonHeight + ConfirmButtonBottomPadding + 8.dp
+                                } else {
+                                    0.dp
+                                }
+                                PaddingValues(top = 8.dp, bottom = bottom)
+                            }
+                            val contentPadding =
+                                baseContentPadding + WindowInsets.navigationBarsOrIme.asPaddingValues()
+
+                            LazyColumn(
+                                contentPadding = contentPadding,
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                items(
+                                    items = listState.list,
+                                    key = { getCityListItemKey(it) },
+                                    contentType = { getCityListItemContentType(it) },
+                                ) { item ->
+                                    when (item) {
+                                        is CityListItem.City -> {
+                                            City(
+                                                city = item.city,
+                                                onClick = onCityClicked,
+                                                showFullName = item.showFullName,
+                                                isSelected = item.city.kladrId == selectedCity?.kladrId,
+                                                modifier = Modifier.fillMaxWidth(),
+                                            )
+                                        }
+
+                                        is CityListItem.CityFirstLetterHeader -> {
+                                            CityFirstLetterHeader(item.letter)
+                                        }
                                     }
                                 }
                             }
+                        } else {
+                            CityNotFound(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .windowInsetsPadding(WindowInsets.navigationBarsOrIme)
+                                    .padding(horizontal = 24.dp),
+                            )
                         }
-                    } else {
-                        CityNotFound(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .windowInsetsPadding(WindowInsets.navigationBarsOrIme)
-                                .padding(horizontal = 24.dp),
-                        )
+                    }
+
+                    is CityListState.Error -> {
+                        // TODO: [High] Implement
+                        // TODO: [High] Add nav bar and IME padding
                     }
                 }
+            }
 
-                is CityListState.Error -> {
-                    // TODO: [High] Implement
-                    // TODO: [High] Add nav bar and IME padding
+            AnimatedVisibility(
+                visible = isChangeCityButtonVisible,
+                enter = remember { AnimatedContentDefaultEnterTransition },
+                exit = remember { AnimatedContentDefaultExitTransition },
+                modifier = Modifier.align(Alignment.BottomCenter),
+            ) {
+                ZarinaButton(
+                    onClick = onChangeCityClicked,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .windowInsetsPadding(WindowInsets.navigationBarsOrIme)
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 20.dp),
+                ) {
+                    Text(text = stringResource(R.string.change).uppercase())
                 }
             }
         }
@@ -282,6 +316,8 @@ object CitySelectorScreenComponents {
 
         is CityListItem.CityFirstLetterHeader -> CityListItemCityFirstLetterHeaderContentType
     }
+
+    private val ConfirmButtonBottomPadding = 20.dp
 
     private const val CityListItemCityKeyPrefix = "City"
     private const val CityListItemCityFirstLetterHeaderKeyPrefix = "CityFirstLetterHeader"

@@ -9,6 +9,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -36,8 +37,12 @@ class CitySelectorViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val initialCity: CityParcelable? =
-        savedStateHandle[UnscopedDestinations.CitySelector.ARG_KEY_CITY]
+    private val initialCity: StateFlow<City?> = savedStateHandle
+        .getStateFlow<CityParcelable?>(
+            key = UnscopedDestinations.CitySelector.ARG_KEY_CITY,
+            initialValue = null,
+        )
+        .mapState(viewModelScope) { it?.toCity() }
 
     val cityNameQuery: StateFlow<String> = savedStateHandle.getStateFlow(
         key = KEY_CITY_NAME_QUERY,
@@ -96,12 +101,30 @@ class CitySelectorViewModel @Inject constructor(
     val selectedCity: StateFlow<City?> = savedStateHandle
         .getStateFlow(
             key = KEY_SELECTED_CITY,
-            initialValue = initialCity,
+            initialValue = initialCity.value?.let { CityParcelable.fromCity(it) },
         )
         .mapState(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
         ) { it?.toCity() }
+
+    val isChangeCityButtonVisible: StateFlow<Boolean> = combine(
+        initialCity,
+        selectedCity,
+        cityListState,
+    ) { initialCity, selectedCity, cityListState ->
+        val visibleCities = (cityListState as? CityListState.CityList)
+            ?.list
+            ?.mapNotNull { listItem ->
+                (listItem as? CityListItem.City)?.city
+            }
+            ?: emptyList()
+        selectedCity?.kladrId != initialCity?.kladrId && selectedCity in visibleCities
+    }.stateIn(
+        scope = viewModelScope + Dispatchers.Default,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = false,
+    )
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
@@ -117,6 +140,10 @@ class CitySelectorViewModel @Inject constructor(
     fun onCityClicked(city: City) {
         val cityParcelable = CityParcelable.fromCity(city)
         savedStateHandle[KEY_SELECTED_CITY] = cityParcelable
+    }
+
+    fun onChangeCityClicked() {
+        // TODO: [High] Navigate back with result
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

@@ -26,6 +26,7 @@ fun CitySelectorBottomSheetScreen(
     val cityNameQuery by viewModel.cityNameQuery.collectAsStateWithLifecycle()
     val cityListState by viewModel.cityListState.collectAsStateWithLifecycle()
     val selectedCity by viewModel.selectedCity.collectAsStateWithLifecycle()
+    val isChangeCityButtonVisible by viewModel.isChangeCityButtonVisible.collectAsStateWithLifecycle()
 
     ScreenContent(
         cityNameQuery = cityNameQuery,
@@ -33,6 +34,8 @@ fun CitySelectorBottomSheetScreen(
         cityListState = cityListState,
         selectedCity = selectedCity,
         onCityClicked = viewModel::onCityClicked,
+        isChangeCityButtonVisible = isChangeCityButtonVisible,
+        onChangeCityClicked = viewModel::onChangeCityClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
         navigateBackward = navigateBackward,
@@ -46,6 +49,8 @@ private fun ScreenContent(
     cityListState: CityListState,
     selectedCity: City?,
     onCityClicked: (City) -> Unit,
+    isChangeCityButtonVisible: Boolean,
+    onChangeCityClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigateBackward: (CitySelectorScreenResult) -> Unit,
@@ -63,6 +68,8 @@ private fun ScreenContent(
                 listState = cityListState,
                 selectedCity = selectedCity,
                 onCityClicked = onCityClicked,
+                isChangeCityButtonVisible = isChangeCityButtonVisible,
+                onChangeCityClicked = onChangeCityClicked,
             )
         }
     }
