@@ -6,11 +6,16 @@ import android.os.Parcelable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -25,15 +30,17 @@ import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.geography.CityParcelable
+import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.device.SetIsOnboardingCompletedUseCase
 import ru.zarina.zarina.util.library.coroutines.mapState
 import ru.zarina.zarina.utils.clean.invoke
 import timber.log.Timber
-import javax.inject.Inject
 
-@HiltViewModel
-class OnboardingViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = OnboardingViewModel.Factory::class)
+class OnboardingViewModel @AssistedInject constructor(
+    @Assisted
+    backStackEntrySavedStateHandle: SavedStateHandle,
     private val savedStateHandle: SavedStateHandle,
     private val interactor: OnboardingInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
@@ -45,6 +52,10 @@ class OnboardingViewModel @Inject constructor(
     private val permissionManager = interactor.permissionManager
 
     private var detectCityJob: Job? = null
+
+    init {
+        handleCitySelectorResult(backStackEntrySavedStateHandle)
+    }
 
     val onboardingSteps: StateFlow<List<OnboardingStep>> = savedStateHandle.getStateFlow(
         key = KEY_ONBOARDING_STEPS,
@@ -195,6 +206,20 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
+    private fun handleCitySelectorResult(backStackEntrySavedStateHandle: SavedStateHandle) {
+        backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.CitySelector.Result?>(
+            key = UnscopedDestinations.CitySelector.RESULT_KEY,
+            initialValue = null,
+        )
+            .onEach { result ->
+                if (result != null) {
+                    Timber.v("CitySelector screen result: $result")
+                    savedStateHandle[KEY_CURRENT_CITY] = result.city
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
     private fun createOnboardingSteps(): List<OnboardingStep> {
         return buildList {
             OnboardingStep.entries.forEach { step ->
@@ -229,6 +254,11 @@ class OnboardingViewModel @Inject constructor(
     }
 
     private enum class Operation : OperationKey { DETECT_CITY }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(backStackEntrySavedStateHandle: SavedStateHandle): OnboardingViewModel
+    }
 
     companion object {
         private const val KEY_ONBOARDING_STEPS = "onboarding_steps"

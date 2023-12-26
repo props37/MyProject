@@ -1,9 +1,11 @@
 package ru.zarina.zarina.ui.navigation.rework.graph
 
 import android.net.Uri
+import android.os.Parcelable
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.zarina.zarina.domain.rework.geography.City
@@ -20,6 +22,8 @@ object UnscopedDestinations {
 
     data object CitySelector : Destination<CitySelector.Args>() {
         const val ARG_KEY_CITY = "arg_city"
+
+        const val RESULT_KEY = "city_selector_result"
 
         private val routeBase: String
             get() = BaseRouteReworked.CITY_SELECTOR.route
@@ -48,5 +52,8 @@ object UnscopedDestinations {
             )
 
         data class Args(val city: City? = null)
+
+        @Parcelize
+        data class Result(val city: CityParcelable) : Parcelable
     }
 }

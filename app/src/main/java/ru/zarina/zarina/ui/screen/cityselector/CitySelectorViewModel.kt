@@ -143,7 +143,11 @@ class CitySelectorViewModel @Inject constructor(
     }
 
     fun onChangeCityClicked() {
-        // TODO: [High] Navigate back with result
+        val city = selectedCity.value ?: return
+        navigationThrottler.throttle {
+            val result = CitySelectorScreenResult.CitySelected(city)
+            emitSideEffect(SideEffect.NavigateBackward(result))
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
