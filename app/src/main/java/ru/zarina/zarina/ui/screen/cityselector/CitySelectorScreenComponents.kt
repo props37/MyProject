@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,8 +39,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -339,18 +344,40 @@ object CitySelectorScreenComponents {
         }
     }
 
-    // TODO: [High] Add animation
+    // TODO: [High] Write custom animation
     @Composable
     private fun CityCheckmark(
         isVisible: Boolean,
         modifier: Modifier = Modifier,
     ) {
-        if (isVisible) {
+        Box(modifier = modifier) {
             Icon(
                 painter = painterResource(R.drawable.ic_check_24),
-                contentDescription = null, // TODO: [High] Add content description
+                contentDescription = stringResource(R.string.checked),
                 tint = UiKitTheme.colorsReworked.icon.regular.default,
-                modifier = modifier.size(20.dp),
+                modifier = Modifier.size(20.dp),
+            )
+
+            val maskWidthFraction = animateFloatAsState(
+                targetValue = if (isVisible) 0f else 1f,
+                animationSpec = tween(durationMillis = 200),
+                label = "CityCheckmark",
+            )
+            val maskColor = UiKitTheme.colorsReworked.background.general.regular.background
+
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .drawBehind {
+                        val width = size.width * maskWidthFraction.value
+                        val topLeft = Offset(size.width - width, 0f)
+                        val size = Size(width, size.height)
+                        drawRect(
+                            color = maskColor,
+                            topLeft = topLeft,
+                            size = size,
+                        )
+                    }
             )
         }
     }

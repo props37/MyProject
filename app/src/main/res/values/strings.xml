@@ -24,6 +24,7 @@
     <string name="connection_error_body">Проверь соединение с интернетом или отключи VPN. Затем обнови страницу</string>
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="refresh_page_or_come_back_later">Обнови страницу или зайди позже</string>
+    <string name="checked">Отмечено</string>
 
     <string name="onboarding_progress_text">Шаг %1$d/%2$d</string>
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
