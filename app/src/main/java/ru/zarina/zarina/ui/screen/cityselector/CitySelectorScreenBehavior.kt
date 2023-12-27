@@ -20,7 +20,11 @@ fun CitySelectorScreenBehavior(
     LaunchedEffect(sideEffects) {
         sideEffects.collect { sideEffect ->
             when (sideEffect) {
-                is SideEffect.NavigateBackward -> updatedNavigateBackward(sideEffect.result)
+                is SideEffect.NavigateBackward -> {
+                    updatedFocusManager.clearFocus(force = true)
+                    updatedNavigateBackward(sideEffect.result)
+                }
+
                 SideEffect.FreeCitySearchBarFocus -> updatedFocusManager.clearFocus(force = true)
             }
         }
