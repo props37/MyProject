@@ -4,6 +4,7 @@ androidGradlePlugin = "8.2.0"
 googlePlayServices-plugin = "4.4.0"
 firebase-crashlyticsPlugin = "2.9.9"
 androidGitVersion = "0.4.14"
+checkDependencyUpdates = "1.5.0"
 
 kotlin = "1.9.21"
 kotlin-ksp = "1.9.21-1.0.15"
@@ -20,15 +21,19 @@ jetpack-room = "2.6.1"
 jetpack-splashScreen = "1.0.1"
 jetpack-media3 = "1.2.0"
 jetpack-paging = "3.2.1"
+jetpack-security-cripto = "1.0.0"
 jetpack-junit = "1.1.5"
 jetpack-uiAutomator = "2.2.0"
 jetpack-espresso = "3.5.1"
 jetpack-benchmark = "1.2.2"
 
 jetpack-compose-bom = "2023.10.01"
-jetpack-compose-compiler = "1.5.6"
+jetpack-compose-compiler = "1.5.7"
 
 ktor = "2.3.6"
+
+hilt = "2.49"
+hilt-navigationCompose = "1.2.0-alpha01"
 
 koin-annotations = "1.2.2"
 koin-core = "3.4.2"
@@ -40,6 +45,7 @@ accompanist = "0.32.0"
 coil = "2.5.0"
 
 timber = "5.0.1"
+leakCanary = "2.12"
 
 googlePlayServices-location = "21.0.1"
 googlePlayServices-maps = "18.2.0"
@@ -51,6 +57,8 @@ firebase-performance = "1.4.2"
 mindbox = "2.5.0"
 
 junit = "4.13.2"
+
+lint-composeChecks = "1.2.0"
 
 
 [libraries]
@@ -67,6 +75,7 @@ jetpack-splashScreen = { group = "androidx.core", name = "core-splashscreen", ve
 jetpack-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "jetpack-media3" }
 jetpack-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "jetpack-media3" }
 jetpack-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "jetpack-paging" }
+jetpack-security-cripto = { group = "androidx.security", name = "security-crypto", version.ref = "jetpack-security-cripto" }
 jetpack-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "jetpack-junit" }
 jetpack-test-uiAutomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "jetpack-uiAutomator" }
 jetpack-espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "jetpack-espresso" }
@@ -95,6 +104,10 @@ ktor-client-contentNegotiation = { group = "io.ktor", name = "ktor-client-conten
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging-jvm", version.ref = "ktor" }
 ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
+hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-navigationCompose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigationCompose" }
+
 koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-annotations" }
 koin-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-annotations" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin-core" }
@@ -109,6 +122,7 @@ accompanist-webview = { group = "com.google.accompanist", name = "accompanist-we
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+leakCanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakCanary" }
 
 googlePlayServices-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "googlePlayServices-location" }
 googlePlayServices-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "googlePlayServices-maps" }
@@ -121,6 +135,8 @@ firebase-performance = { group = "com.google.firebase", name = "firebase-perf-kt
 mindbox = { group = "cloud.mindbox", name = "mobile-sdk", version.ref = "mindbox" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+lint-composeChecks = { group = "com.slack.lint.compose", name = "compose-lint-checks", version.ref = "lint-composeChecks" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -135,7 +151,9 @@ kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
-google-play-services = { id = "com.google.gms.google-services", version.ref = "googlePlayServices-plugin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+googlePlayServices = { id = "com.google.gms.google-services", version.ref = "googlePlayServices-plugin" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlyticsPlugin" }
 firebase-performance = { id = "com.google.firebase.firebase-perf", version.ref = "firebase-performance" }
 androidGitVersion = { id = "com.gladed.androidgitversion", version.ref = "androidGitVersion" }
+checkDependencyUpdates = { id = "name.remal.check-dependency-updates", version.ref = "checkDependencyUpdates" }

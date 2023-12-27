@@ -43,7 +43,6 @@ fun minIntrinsicMeasurePolicy(
 }
 
 open class DefaultMeasurePolicy : MeasurePolicy {
-
     override fun MeasureScope.measure(
         measurables: List<Measurable>,
         constraints: Constraints,
@@ -57,7 +56,6 @@ open class DefaultMeasurePolicy : MeasurePolicy {
             }
         }
     }
-
 }
 
 class ForcedIntrinsicMeasurePolicy(
@@ -66,7 +64,6 @@ class ForcedIntrinsicMeasurePolicy(
     val maxIntrinsicWidth: Int?,
     val maxIntrinsicHeight: Int?,
 ) : DefaultMeasurePolicy() {
-
     private val defaultImplementation = DefaultMeasurePolicy()
 
     override fun IntrinsicMeasureScope.minIntrinsicWidth(
@@ -100,9 +97,8 @@ class ForcedIntrinsicMeasurePolicy(
         measurables: List<IntrinsicMeasurable>,
         height: Int,
     ): Int {
-        return minIntrinsicHeight ?: with(defaultImplementation) {
+        return maxIntrinsicWidth ?: with(defaultImplementation) {
             this@maxIntrinsicWidth.maxIntrinsicWidth(measurables, height)
         }
     }
-
 }

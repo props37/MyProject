@@ -7,8 +7,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import ru.zarina.zarina.ui.theme.rework.LocalUiKitColorsReworked
+import ru.zarina.zarina.ui.theme.rework.LocalUiKitTypographyReworked
+import ru.zarina.zarina.ui.theme.rework.UiKitColorsReworked
+import ru.zarina.zarina.ui.theme.rework.UiKitTypographyReworked
 
 object UiKitTheme {
+    val colorsReworked: UiKitColorsReworked
+        @Composable
+        get() = LocalUiKitColorsReworked.current
+
+    val typographyReworked: UiKitTypographyReworked
+        @Composable
+        get() = LocalUiKitTypographyReworked.current
+
     val colors: UiKitColors
         @Composable
         get() = LocalUiKitColors.current

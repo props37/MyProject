@@ -1,4 +1,40 @@
 <resources>
+    <string name="continue_">Продолжить</string>
+    <string name="detect_city">Определить город</string>
+    <string name="skip">Пропустить</string>
+    <string name="yes_correct">Да, верно</string>
+    <string name="no_change">Нет, изменить</string>
+    <string name="configure_later">Настроить позже</string>
+    <string name="step">Шаг</string>
+    <string name="catalog">Каталог</string>
+    <string name="favorites">Избранное</string>
+    <string name="home">Главная</string>
+    <string name="profile">Профиль</string>
+    <string name="cart">Корзина</string>
+    <string name="city">Город</string>
+    <string name="close">Закрыть</string>
+    <string name="search_cities">Поиск по городам</string>
+    <string name="city_not_found">Город не найден</string>
+    <string name="try_to_change_city_name">Попробуйте изменить название города</string>
+    <string name="change">Изменить</string>
+    <string name="cancel">Отменить</string>
+    <string name="clear">Очистить</string>
+    <string name="refresh">Обновить</string>
+    <string name="connection_error_title">Проблемы с интернетом</string>
+    <string name="connection_error_body">Проверь соединение с интернетом или отключи VPN. Затем обнови страницу</string>
+    <string name="something_went_wrong">Что-то пошло не так</string>
+    <string name="refresh_page_or_come_back_later">Обнови страницу или зайди позже</string>
+    <string name="checked">Отмечено</string>
+
+    <string name="onboarding_progress_text">Шаг %1$d/%2$d</string>
+    <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
+    <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
+    <string name="onboarding_city_selection_title">Определяем твой город</string>
+    <string name="onboarding_city_selection_body">Для актуальной информации об акциях и наличии товаров в розничных магазинах ZARINA.</string>
+    <string name="onboarding_city_confirmation_title">Твой город %1$s?</string>
+    <string name="onboarding_city_confirmation_body">Ты можешь изменить геолокацию сейчас или настроить её позже.</string>
+
+    <!-- TODO: [High] Remove -->
     <string name="select_your_city">Выберите ваш город</string>
     <string name="to_see_in_your_city">чтобы видеть актуальное наличие товаров и акции в вашем городе</string>
     <string name="select_automatically">Выбрать автоматически</string>
@@ -8,19 +44,11 @@
     <string name="cant_detect_city">Не удалось определить город</string>
     <string name="network_error">Ошибка сети. Проверьте подключение к интернету и попробуйте ещё раз</string>
     <string name="is_your_city">Ваш город %1$s?</string>
-    <string name="yes_correct">Да, верно</string>
-    <string name="no_change">Нет, изменить</string>
     <string name="cant_save_selected_city">Не удалось сохранить выбранный город</string>
-    <string name="skip">Пропустить</string>
     <string name="city_search">Поиск по городам</string>
-    <string name="clear">Очистить</string>
-    <string name="city_not_found">Город с таким названием не найден</string>
-    <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="try_again_later">Попробуйте повторить позднее</string>
     <string name="loading_error">Ошибка загрузки</string>
     <string name="check_connection_and_try_again_later">Проверьте соединение с интернетом и попробуйте позже</string>
-    <string name="refresh">Обновить</string>
-    <string name="city">Город</string>
     <string name="currency_amount_rubles">%1$d ₽</string>
     <string name="discount_percentage">-%1$d%%</string>
     <string name="details">Детали</string>
@@ -87,7 +115,6 @@
     <string name="unable_to_subscribe">Не удалось подписаться на товар</string>
     <string name="unable_to_load_cities">Не удалось загрузить список городов</string>
     <string name="unable_to_reserve">Не удалось зарезервировать товар</string>
-    <string name="catalog">Каталог</string>
     <string name="unable_to_load_categories">Не удалось загрузить категории</string>
     <string name="no_products">Нет товаров</string>
     <string name="plural_products_zero">%1$d товаров</string>
@@ -108,7 +135,6 @@
     <string name="price">Цена</string>
     <string name="range">%1$s – %2$s</string>
     <string name="apply">Применить</string>
-    <string name="close">Закрыть</string>
     <string name="reset">Сбросить</string>
     <string name="selected">Выбран</string>
     <string name="attributes">Признаки</string>
@@ -120,10 +146,7 @@
     <string name="selection_of_store">Выбор магазина</string>
     <string name="shop_list">Список магазинов</string>
     <string name="catalogue">Каталог</string>
-    <string name="favourites">Избранное</string>
     <string name="main_page">Главная</string>
-    <string name="profile">Профиль</string>
-    <string name="cart">Корзина</string>
     <string name="add_to_favorites">Добавить в избранное</string>
     <string name="remove_from_favorites">Удалить из избранного</string>
     <string name="favorites_are_empty">В избранном пусто</string>

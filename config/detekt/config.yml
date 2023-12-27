@@ -16,12 +16,8 @@ style:
   MagicNumber:
     ignorePropertyDeclaration: true
   UnusedPrivateMember:
-    ignoreAnnotated: ['Preview', 'ThemePreviews', 'FontSizePreviews', 'DensityPreviews', 'LocalePreviews']
+    ignoreAnnotated: ['Preview', 'FontScalePreviews', 'DensityPreviews']
   WildcardImport:
-    active: false
-
-exceptions:
-  TooGenericExceptionCaught:
     active: false
 
 formatting:

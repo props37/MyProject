@@ -21,7 +21,7 @@ class GetSelectionsUseCase(
     private val favoritesRepository: IFavoritesRepository,
 ) : FlowUseCase<Unit, List<Selection>>(dispatcher) {
 
-    override fun execute(params: Unit): Flow<Result<List<Selection>>> {
+    override fun execute(params: Unit): Flow<List<Selection>> {
         val selectionsFlow = contentRepository.getSelections()
             .onEach { selections ->
                 Timber.v("Loaded ${selections.size} selections")
@@ -29,7 +29,7 @@ class GetSelectionsUseCase(
             }
         val favoritesFlow = favoritesRepository.getIds()
         return combine(selectionsFlow, favoritesFlow) { selections, favorites ->
-            val result = selections.map { selection ->
+            selections.map { selection ->
                 if (selection !is Selection.Products) {
                     selection
                 } else {
@@ -46,7 +46,6 @@ class GetSelectionsUseCase(
                     selection.copy(products = newProducts)
                 }
             }
-            Result.success(result)
         }
     }
 }

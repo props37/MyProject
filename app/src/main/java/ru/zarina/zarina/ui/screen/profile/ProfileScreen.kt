@@ -1,0 +1,24 @@
+package ru.zarina.zarina.ui.screen.profile
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
+import ru.zarina.zarina.util.compose.ScreenPlaceholder
+
+@Composable
+fun ProfileScreen() {
+    ScreenContent()
+}
+
+@Composable
+private fun ScreenContent() {
+    ForcedBottomNavBarBehavior(isVisible = true)
+
+    ScreenPlaceholder(title = "Профиль")
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    // TODO: [High] Add preview
+}

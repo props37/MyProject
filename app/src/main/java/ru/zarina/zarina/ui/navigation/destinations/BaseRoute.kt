@@ -36,5 +36,7 @@ enum class BaseRoute {
     SEARCH_SELECT_SORT,
     SEARCH_FILTERS,
     SEARCH_LIST_FILTER,
-    SEARCH_TREE_FILTER,
+    SEARCH_TREE_FILTER;
+
+    val route: String get() = name.lowercase()
 }

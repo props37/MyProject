@@ -1,11 +1,8 @@
 package ru.zarina.zarina.ui.navigation.base
 
-import ru.zarina.zarina.ui.navigation.destinations.BaseRoute
-
 /**
  * Contains helper methods for generating Jetpack Navigation route schemas and routes.
  */
-@Suppress("unused")
 object RouteUtils {
 
     /**
@@ -25,19 +22,18 @@ object RouteUtils {
      * Use [generateRoute] if you need a string with parameter values to use as a route for
      * NavController navigation.
      *
-     * @param baseRoute unchanging beginning of the route.
+     * @param routeBase unchanging beginning of the route.
      * @param argNames names of mandatory arguments.
      * @param optionalArgNames names of optional arguments.
      * @see [generateRoute]
      * @return string that can be used as a route schema for a destination.
      */
-    @Suppress("MemberVisibilityCanBePrivate")
     fun generateRouteSchema(
-        baseRoute: BaseRoute,
+        routeBase: String,
         argNames: Array<String> = emptyArray(),
         optionalArgNames: Array<String> = emptyArray(),
     ): String = buildString {
-        append(baseRoute.name)
+        append(routeBase)
 
         if (argNames.isNotEmpty()) {
             if (!this.endsWith(MandatoryArgumentsSeparator)) append(MandatoryArgumentsSeparator)
@@ -73,20 +69,19 @@ object RouteUtils {
      * Use [generateRouteSchema] if you need a string with parameter names to use as a
      * route schema for a destination.
      *
-     * @param baseRoute unchanging beginning of the route.
+     * @param routeBase unchanging beginning of the route.
      * @param args values of mandatory arguments. **The order should be preserved as in
      * the route schema**.
      * @param optionalArgs array of [OptionalNavArg]s.
      * @see [generateRouteSchema]
      * @return string that can be used as a route for NavController navigation.
      */
-    @Suppress("MemberVisibilityCanBePrivate")
     fun generateRoute(
-        baseRoute: BaseRoute,
+        routeBase: String,
         args: Array<Any> = emptyArray(),
         optionalArgs: Array<OptionalNavArg> = emptyArray(),
     ): String = buildString {
-        append(baseRoute.name)
+        append(routeBase)
 
         if (args.isNotEmpty()) {
             if (!this.endsWith(MandatoryArgumentsSeparator)) append(MandatoryArgumentsSeparator)

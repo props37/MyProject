@@ -8,11 +8,13 @@ plugins {
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.google.play.services)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.googlePlayServices)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.firebase.performance)
 
     alias(libs.plugins.androidGitVersion)
+    alias(libs.plugins.checkDependencyUpdates)
 }
 
 androidGitVersion {
@@ -38,8 +40,7 @@ android {
     defaultConfig {
         applicationId = appId
         minSdk = 24
-        // TODO: [High] Update to 34
-        targetSdk = 33
+        targetSdk = 34
         versionCode = generatedVersionCode
         versionName = generatedVersionName
 
@@ -103,6 +104,7 @@ dependencies {
     implementation(libs.jetpack.media3.exoplayer)
     implementation(libs.jetpack.media3.ui)
     implementation(libs.jetpack.paging.compose)
+    implementation(libs.jetpack.security.cripto)
 
     implementation(platform(libs.jetpack.compose.bom))
     implementation(libs.jetpack.compose.ui)
@@ -122,6 +124,10 @@ dependencies {
     implementation(libs.ktor.client.contentNegotiation)
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.serialization.json)
+
+    implementation(libs.hilt)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigationCompose)
 
     implementation(libs.koin.annotations)
     implementation(libs.koin.android)
@@ -147,6 +153,8 @@ dependencies {
 
     implementation(libs.mindbox)
 
+    debugImplementation(libs.leakCanary)
+
     testImplementation(libs.junit)
     testImplementation(libs.kotlin.coroutines.test)
     testImplementation(libs.koin.test)
@@ -154,4 +162,6 @@ dependencies {
     androidTestImplementation(libs.jetpack.espresso)
     androidTestImplementation(platform(libs.jetpack.compose.bom))
     androidTestImplementation(libs.jetpack.compose.junit4)
+
+    lintChecks(libs.lint.composeChecks)
 }

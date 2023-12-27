@@ -52,7 +52,7 @@ fun FavoritesScreenContent(
     ZarinaScaffold(
         toolbar = {
             ScreenToolbar(
-                title = stringResource(id = R.string.favourites),
+                title = stringResource(id = R.string.favorites),
                 isElevated = productListState.canScrollBackward,
             )
         }

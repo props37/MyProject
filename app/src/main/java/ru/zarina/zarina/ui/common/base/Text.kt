@@ -4,13 +4,13 @@ import android.content.Context
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 
 /**
  * Returns String value of the given [Text].
  */
-@Suppress("Unused")
 @Composable
 fun textString(text: Text): String {
     // Will be recomposed when Configuration gets updated.
@@ -22,19 +22,17 @@ fun textString(text: Text): String {
 /**
  * Abstraction that allows to present a text in different forms.
  */
-// Text is sealed class because the Compose compiler treats such a class as stable by default.
-sealed class Text {
-
+@Stable
+sealed interface Text {
     /**
      * Returns a [String] value of the text.
      */
-    abstract fun getString(context: Context): kotlin.String
+    fun getString(context: Context): kotlin.String
 
     /**
      * Represents an empty text with a value of empty [String].
      */
-    @Suppress("Unused")
-    object Empty : Text() {
+    data object Empty : Text {
         override fun getString(context: Context): kotlin.String = ""
     }
 
@@ -44,12 +42,11 @@ sealed class Text {
      * @property resourceId id of the resource string.
      * @property args parameters for the parametrized string.
      */
-    @Suppress("Unused")
     class Resource(
-        @StringRes val resourceId: Int,
+        @StringRes
+        val resourceId: Int,
         private vararg val args: Any = emptyArray(),
-    ) : Text() {
-
+    ) : Text {
         override fun getString(context: Context): kotlin.String {
             @Suppress("SpreadOperator")
             return context.resources.getString(this.resourceId, *this.args)
@@ -57,12 +54,12 @@ sealed class Text {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
-            if (other !is Resource) return false
+            if (javaClass != other?.javaClass) return false
+
+            other as Resource
 
             if (resourceId != other.resourceId) return false
-            if (!args.contentEquals(other.args)) return false
-
-            return true
+            return args.contentEquals(other.args)
         }
 
         override fun hashCode(): Int {
@@ -70,7 +67,6 @@ sealed class Text {
             result = 31 * result + args.contentHashCode()
             return result
         }
-
     }
 
     /**
@@ -80,13 +76,12 @@ sealed class Text {
      * @property count the number used to get the correct string for the plural rules.
      * @property args parameters for the parametrized string.
      */
-    @Suppress("Unused")
     class PluralsResource(
-        @PluralsRes val resourceId: Int,
+        @PluralsRes
+        val resourceId: Int,
         private val count: Int,
         private vararg val args: Any = emptyArray(),
-    ) : Text() {
-
+    ) : Text {
         override fun getString(context: Context): kotlin.String {
             @Suppress("SpreadOperator")
             return context.resources.getQuantityString(this.resourceId, this.count, *this.args)
@@ -94,13 +89,13 @@ sealed class Text {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
-            if (other !is PluralsResource) return false
+            if (javaClass != other?.javaClass) return false
+
+            other as PluralsResource
 
             if (resourceId != other.resourceId) return false
             if (count != other.count) return false
-            if (!args.contentEquals(other.args)) return false
-
-            return true
+            return args.contentEquals(other.args)
         }
 
         override fun hashCode(): Int {
@@ -109,27 +104,12 @@ sealed class Text {
             result = 31 * result + args.contentHashCode()
             return result
         }
-
     }
 
     /**
      * Represents the plain [String] text.
      */
-    class String(private val text: kotlin.String) : Text() {
-
+    data class String(private val text: kotlin.String) : Text {
         override fun getString(context: Context): kotlin.String = text
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (other !is String) return false
-
-            if (text != other.text) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int = text.hashCode()
-
     }
-
 }
