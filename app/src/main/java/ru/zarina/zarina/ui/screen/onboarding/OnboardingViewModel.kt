@@ -77,9 +77,7 @@ class OnboardingViewModel @AssistedInject constructor(
         .mapState(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
-        ) { cityParcelable ->
-            cityParcelable?.toCity()
-        }
+        ) { it?.toCity() }
 
     val isDetectCityButtonLoading: StateFlow<Boolean> = operationTracker
         .isOperationOngoing(Operation.DETECT_CITY)

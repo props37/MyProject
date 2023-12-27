@@ -45,7 +45,10 @@ class CitySelectorViewModel @Inject constructor(
             key = UnscopedDestinations.CitySelector.ARG_KEY_CITY,
             initialValue = null,
         )
-        .mapState(viewModelScope) { it?.toCity() }
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { it?.toCity() }
 
     val cityNameQuery: StateFlow<String> = savedStateHandle.getStateFlow(
         key = KEY_CITY_NAME_QUERY,
