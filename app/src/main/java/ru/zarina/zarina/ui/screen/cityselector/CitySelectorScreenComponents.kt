@@ -2,7 +2,6 @@ package ru.zarina.zarina.ui.screen.cityselector
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -66,6 +65,7 @@ import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.util.compose.Crossfade
 import ru.zarina.zarina.util.compose.navigationBarsOrIme
 import ru.zarina.zarina.utils.compose.plus
 import java.net.ConnectException
@@ -189,6 +189,7 @@ object CitySelectorScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
+            // TODO: [High] Specify contentKey
             Crossfade(
                 targetState = listState,
                 label = "CityList",
