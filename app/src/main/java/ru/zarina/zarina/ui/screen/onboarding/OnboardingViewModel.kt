@@ -172,17 +172,19 @@ class OnboardingViewModel @AssistedInject constructor(
     }
 
     private suspend fun detectCity() {
+        fun onFailure() {
+            savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.fromCity(City.SAINT_PETERSBURG)
+            showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
+        }
+
         operationTracker.track(Operation.DETECT_CITY) {
-            interactor.detectCurrentCity()
-                .onSuccess { city ->
+            interactor.detectCurrentCity().firstOrNull()
+                ?.onSuccess { city ->
                     savedStateHandle[KEY_CURRENT_CITY] = city?.let { CityParcelable.fromCity(it) }
                     showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
                 }
-                .onFailure {
-                    savedStateHandle[KEY_CURRENT_CITY] =
-                        CityParcelable.fromCity(City.SAINT_PETERSBURG)
-                    showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
-                }
+                ?.onFailure { onFailure() }
+                ?.let { onFailure() }
         }
     }
 
