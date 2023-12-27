@@ -189,6 +189,7 @@ class CitySelectorViewModel @Inject constructor(
 
         data class CityList(val list: List<CityListItem>) : CityListState()
 
+        // TODO: [High] Use enum Error instead of Throwable
         data class Error(val throwable: Throwable) : CityListState()
     }
 
