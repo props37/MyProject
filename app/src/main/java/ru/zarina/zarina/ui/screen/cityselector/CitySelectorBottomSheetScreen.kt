@@ -94,12 +94,8 @@ private fun ScreenContent(
 
             AnimatedVisibility(
                 visible = isCitySearchBarVisible,
-                enter = remember {
-                    fadeIn(animationSpec = tween(durationMillis = 220, delayMillis = 90))
-                },
-                exit = remember {
-                    fadeOut(animationSpec = tween(durationMillis = 90))
-                },
+                enter = remember { fadeIn(tween()) },
+                exit = remember { fadeOut(tween()) },
             ) {
                 CitySearchBar(
                     cityNameQuery = cityNameQuery,
