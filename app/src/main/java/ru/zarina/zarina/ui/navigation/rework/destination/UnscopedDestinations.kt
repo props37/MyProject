@@ -47,7 +47,7 @@ fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
                             popUpTo(0)
                         }
 
-                        if (action.currentCity == null) {
+                        if (action.selectedCity == null) {
                             navController.navigate(UnscopedDestinations.DefaultCityDialog.route)
                         }
                     }

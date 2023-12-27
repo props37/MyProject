@@ -135,7 +135,7 @@ class OnboardingViewModel @AssistedInject constructor(
                     if (newPermissionsState.any { it.value.isGranted }) {
                         detectCity()
                     } else {
-                        closeOnboarding(currentCity = null)
+                        completeOnboarding(selectedCity = null)
                     }
                 } else if (
                     // TODO: [High] Ensure this works correctly
@@ -157,11 +157,11 @@ class OnboardingViewModel @AssistedInject constructor(
     }
 
     fun onSkipCityDetectionClicked() {
-        closeOnboarding(currentCity = null)
+        completeOnboarding(selectedCity = null)
     }
 
     fun onConfirmCityClicked() {
-        closeOnboarding(currentCity.value)
+        completeOnboarding(currentCity.value)
     }
 
     fun onSelectCityClicked() {
@@ -195,7 +195,7 @@ class OnboardingViewModel @AssistedInject constructor(
         }
     }
 
-    private fun closeOnboarding(currentCity: City?) {
+    private fun completeOnboarding(selectedCity: City?) {
         navigationThrottler.throttle {
             viewModelScope.launch(NonCancellable) {
                 val setIsOnboardingCompletedParams =
@@ -204,12 +204,12 @@ class OnboardingViewModel @AssistedInject constructor(
             }
 
             viewModelScope.launch(NonCancellable) {
-                val userCity = currentCity ?: City.SAINT_PETERSBURG
+                val userCity = selectedCity ?: City.SAINT_PETERSBURG
                 val updateUserCityParams = UpdateUserCityUseCase.Params(userCity)
                 interactor.updateUserCity(updateUserCityParams)
             }
 
-            val action = OnboardingScreenAction.OnboardingCompleted(currentCity)
+            val action = OnboardingScreenAction.OnboardingCompleted(selectedCity)
             emitSideEffect(SideEffect.NavigateForward(action))
         }
     }
