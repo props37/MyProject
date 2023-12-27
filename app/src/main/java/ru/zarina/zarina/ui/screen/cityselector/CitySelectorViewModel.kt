@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.plus
 import ru.zarina.zarina.domain.rework.geography.City
@@ -50,9 +52,16 @@ class CitySelectorViewModel @Inject constructor(
         initialValue = "",
     )
 
+    private val refreshRequests = Channel<Unit>(Channel.UNLIMITED).apply { trySend(Unit) }
+
     // TODO: [High] Refactor
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val cityListState: StateFlow<CityListState> = cityNameQuery
+    val cityListState: StateFlow<CityListState> = combine(
+        cityNameQuery,
+        refreshRequests.receiveAsFlow(),
+    ) { cityNameQuery, _ ->
+        cityNameQuery
+    }
         .debounce { nameQuery ->
             if (nameQuery.isBlank()) Duration.ZERO else 300.milliseconds
         }
@@ -166,7 +175,7 @@ class CitySelectorViewModel @Inject constructor(
     }
 
     fun onErrorRefreshClicked() {
-        // TODO: [High] Implement
+        refreshRequests.trySend(Unit)
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
