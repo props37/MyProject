@@ -345,7 +345,7 @@ object CitySelectorScreenComponents {
         }
     }
 
-    // TODO: [High] Write custom animation
+    // TODO: [Low] Write custom animation
     @Composable
     private fun CityCheckmark(
         isVisible: Boolean,

@@ -15,10 +15,10 @@ data class HomeBanners(
         @JvmInline
         value class Id(val value: Long)
 
-        // TODO: [High] Extract?
+        // TODO: [Low] Extract?
         enum class MediaType { IMAGE, VIDEO }
 
-        // TODO: [High] Extract?
+        // TODO: [Low] Extract?
         enum class View { FULLSCREEN, GRID }
     }
 }

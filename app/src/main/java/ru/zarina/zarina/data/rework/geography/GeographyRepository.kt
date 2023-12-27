@@ -18,7 +18,7 @@ class GeographyRepository @Inject constructor(
         return remoteDataSource.getCity(location)
     }
 
-    // TODO: [High] Refactor to Flow APIs?
+    // TODO: [Low] Refactor to Flow APIs?
     fun getCities(nameQuery: String?): Flow<List<City>> = flow {
         val cached = localDataSource.getCities(nameQuery).firstOrNull()
         if (cached != null) {
