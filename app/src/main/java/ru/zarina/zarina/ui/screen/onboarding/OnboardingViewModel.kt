@@ -179,7 +179,8 @@ class OnboardingViewModel @AssistedInject constructor(
                     showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
                 }
                 .onFailure {
-                    savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.fromCity(City.SAINT_PETERSBURG)
+                    savedStateHandle[KEY_CURRENT_CITY] =
+                        CityParcelable.fromCity(City.SAINT_PETERSBURG)
                     showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
                 }
         }
@@ -202,11 +203,10 @@ class OnboardingViewModel @AssistedInject constructor(
                 interactor.setIsOnboardingCompleted(setIsOnboardingCompletedParams)
             }
 
-            if (currentCity != null) {
-                viewModelScope.launch(NonCancellable) {
-                    val updateUserCityParams = UpdateUserCityUseCase.Params(currentCity)
-                    interactor.updateUserCity(updateUserCityParams)
-                }
+            viewModelScope.launch(NonCancellable) {
+                val userCity = currentCity ?: City.SAINT_PETERSBURG
+                val updateUserCityParams = UpdateUserCityUseCase.Params(userCity)
+                interactor.updateUserCity(updateUserCityParams)
             }
 
             val action = OnboardingScreenAction.OnboardingCompleted(currentCity)
@@ -250,7 +250,7 @@ class OnboardingViewModel @AssistedInject constructor(
         }
     }
 
-    sealed interface SideEffect: SideEffectSource.SideEffect {
+    sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateForward(val action: OnboardingScreenAction) : SideEffect
     }
 
