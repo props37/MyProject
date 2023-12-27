@@ -2,6 +2,8 @@ package ru.zarina.zarina.data.common.remote.headerprovider
 
 import javax.inject.Inject
 
+// TODO: [High] Add User-Agent header
+
 class ZarinaApiHeaderProvider @Inject constructor() : HeaderProvider {
     override fun provide(): Map<String, String> {
         return mapOf(getClientSourceHeader())
