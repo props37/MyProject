@@ -1,5 +1,9 @@
 package ru.zarina.zarina.ui.screen.cityselector
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -10,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,6 +36,7 @@ fun CitySelectorBottomSheetScreen(
 ) {
     val cityNameQuery by viewModel.cityNameQuery.collectAsStateWithLifecycle()
     val cityListState by viewModel.cityListState.collectAsStateWithLifecycle()
+    val isCitySearchBarVisible by viewModel.isCitySearchBarVisible.collectAsStateWithLifecycle()
     val selectedCity by viewModel.selectedCity.collectAsStateWithLifecycle()
     val isChangeCityButtonVisible by viewModel.isChangeCityButtonVisible.collectAsStateWithLifecycle()
 
@@ -40,6 +46,7 @@ fun CitySelectorBottomSheetScreen(
         onCitySearchBarClearClicked = viewModel::onCitySearchBarClearClicked,
         onCitySearchBarCancelClicked = viewModel::onCitySearchBarCancelClicked,
         cityListState = cityListState,
+        isCitySearchBarVisible = isCitySearchBarVisible,
         selectedCity = selectedCity,
         onCityClicked = viewModel::onCityClicked,
         isChangeCityButtonVisible = isChangeCityButtonVisible,
@@ -58,6 +65,7 @@ private fun ScreenContent(
     onCitySearchBarClearClicked: () -> Unit,
     onCitySearchBarCancelClicked: () -> Unit,
     cityListState: CityListState,
+    isCitySearchBarVisible: Boolean,
     selectedCity: City?,
     onCityClicked: (City) -> Unit,
     isChangeCityButtonVisible: Boolean,
@@ -76,15 +84,25 @@ private fun ScreenContent(
         Column(modifier = Modifier.fillMaxSize()) {
             TopBar(onCloseClicked = onCloseClicked)
 
-            CitySearchBar(
-                cityNameQuery = cityNameQuery,
-                onCityNameQueryChanged = onCityNameQueryChanged,
-                onClearClicked = onCitySearchBarClearClicked,
-                onCancelClicked = onCitySearchBarCancelClicked,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-            )
+            AnimatedVisibility(
+                visible = isCitySearchBarVisible,
+                enter = remember {
+                    fadeIn(animationSpec = tween(durationMillis = 220, delayMillis = 90))
+                },
+                exit = remember {
+                    fadeOut(animationSpec = tween(durationMillis = 90))
+                },
+            ) {
+                CitySearchBar(
+                    cityNameQuery = cityNameQuery,
+                    onCityNameQueryChanged = onCityNameQueryChanged,
+                    onClearClicked = onCitySearchBarClearClicked,
+                    onCancelClicked = onCitySearchBarCancelClicked,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                )
+            }
 
             Spacer(modifier = Modifier.height(4.dp))
 

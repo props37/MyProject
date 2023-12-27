@@ -99,6 +99,9 @@ class CitySelectorViewModel @Inject constructor(
             initialValue = CityListState.InitialLoading,
         )
 
+    val isCitySearchBarVisible: StateFlow<Boolean> = cityListState
+        .mapState(viewModelScope) { it is CityListState.CityList }
+
     val selectedCity: StateFlow<City?> = savedStateHandle
         .getStateFlow(
             key = KEY_SELECTED_CITY,
