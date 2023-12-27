@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.navigation.rework
 enum class BaseRouteReworked {
     ONBOARDING,
     CITY_SELECTOR,
+    DEFAULT_CITY_DIALOG,
 
     CATALOG_GRAPH,
     CATALOG,

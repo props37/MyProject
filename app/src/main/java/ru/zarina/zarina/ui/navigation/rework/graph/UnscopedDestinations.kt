@@ -56,4 +56,6 @@ object UnscopedDestinations {
         @Parcelize
         data class Result(val city: CityParcelable) : Parcelable
     }
+
+    data object DefaultCityDialog : SimpleDestination(BaseRouteReworked.DEFAULT_CITY_DIALOG)
 }

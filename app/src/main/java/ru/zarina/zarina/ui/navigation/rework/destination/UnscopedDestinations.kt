@@ -2,16 +2,20 @@ package ru.zarina.zarina.ui.navigation.rework.destination
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
 import ru.zarina.zarina.ui.navigation.base.composableDestination
+import ru.zarina.zarina.ui.navigation.base.dialogDestination
 import ru.zarina.zarina.ui.navigation.rework.graph.HomeGraph
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorBottomSheetScreen
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenResult
+import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreen
+import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreenResult
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenAction
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel
@@ -41,6 +45,10 @@ fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
                     is OnboardingScreenAction.OnboardingCompleted -> {
                         navController.navigate(HomeGraph.route) {
                             popUpTo(0)
+                        }
+
+                        if (action.currentCity == null) {
+                            navController.navigate(UnscopedDestinations.DefaultCityDialog.route)
                         }
                     }
 
@@ -79,6 +87,29 @@ fun NavGraphBuilder.citySelectorBottomSheetScreen(navController: NavHostControll
                     }
                 }
             },
+        )
+    }
+}
+
+fun NavGraphBuilder.defaultCityDialogScreen(navController: NavHostController) {
+    dialogDestination(
+        destination = UnscopedDestinations.DefaultCityDialog,
+        dialogProperties = DialogProperties(
+            dismissOnClickOutside = false,
+            usePlatformDefaultWidth = false,
+        ),
+    ) {
+        DefaultCityDialogScreen(
+            navigateBackward = { result ->
+                when (result) {
+                    DefaultCityDialogScreenResult.ScreenClosed -> {
+                        navController.popBackStack(
+                            route = UnscopedDestinations.DefaultCityDialog.routeSchema,
+                            inclusive = true,
+                        )
+                    }
+                }
+            }
         )
     }
 }

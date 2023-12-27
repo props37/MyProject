@@ -135,7 +135,7 @@ class OnboardingViewModel @AssistedInject constructor(
                     if (newPermissionsState.any { it.value.isGranted }) {
                         detectCity()
                     } else {
-                        closeOnboarding()
+                        closeOnboarding(currentCity = null)
                     }
                 } else if (
                     // TODO: [High] Ensure this works correctly
@@ -157,11 +157,11 @@ class OnboardingViewModel @AssistedInject constructor(
     }
 
     fun onSkipCityDetectionClicked() {
-        closeOnboarding()
+        closeOnboarding(currentCity = null)
     }
 
     fun onConfirmCityClicked() {
-        closeOnboarding()
+        closeOnboarding(currentCity.value)
     }
 
     fun onSelectCityClicked() {
@@ -194,10 +194,8 @@ class OnboardingViewModel @AssistedInject constructor(
         }
     }
 
-    private fun closeOnboarding() {
+    private fun closeOnboarding(currentCity: City?) {
         navigationThrottler.throttle {
-            val currentCity = currentCity.value
-
             viewModelScope.launch(NonCancellable) {
                 val setIsOnboardingCompletedParams =
                     SetIsOnboardingCompletedUseCase.Params(isCompleted = true)
