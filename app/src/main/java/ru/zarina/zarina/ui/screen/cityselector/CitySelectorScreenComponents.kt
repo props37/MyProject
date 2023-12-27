@@ -68,7 +68,6 @@ import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.Crossfade
 import ru.zarina.zarina.util.compose.navigationBarsOrIme
 import ru.zarina.zarina.utils.compose.plus
-import java.net.ConnectException
 
 // TODO: [High] Add previews
 
@@ -261,7 +260,7 @@ object CitySelectorScreenComponents {
 
                     is CityListState.Error -> {
                         CitySearchError(
-                            throwable = listState.throwable,
+                            errorType = listState.type,
                             onRefreshClicked = onErrorRefreshClicked,
                             modifier = Modifier
                                 .fillMaxSize()
@@ -423,21 +422,20 @@ object CitySelectorScreenComponents {
 
     @Composable
     private fun CitySearchError(
-        throwable: Throwable,
+        errorType: CityListState.Error.Type,
         onRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val iconResId: Int
         val titleResId: Int
         val bodyResId: Int
-        when (throwable) {
-            is ConnectException -> {
+        when (errorType) {
+            CityListState.Error.Type.NETWORK -> {
                 iconResId = R.drawable.ic_wifi_error_24
                 titleResId = R.string.connection_error_title
                 bodyResId = R.string.connection_error_body
             }
-
-            else -> {
+            CityListState.Error.Type.OTHER -> {
                 iconResId = R.drawable.ic_heart_broken_24
                 titleResId = R.string.something_went_wrong
                 bodyResId = R.string.refresh_page_or_come_back_later

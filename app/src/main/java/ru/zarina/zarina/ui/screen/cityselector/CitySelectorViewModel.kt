@@ -28,6 +28,7 @@ import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.geography.GetCitiesUseCase
 import ru.zarina.zarina.util.library.coroutines.mapState
+import java.io.IOException
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -100,7 +101,11 @@ class CitySelectorViewModel @Inject constructor(
                         CityListState.CityList(listItems)
                     },
                     onFailure = { throwable ->
-                        CityListState.Error(throwable)
+                        val type = when (throwable) {
+                            is IOException -> CityListState.Error.Type.NETWORK
+                            else -> CityListState.Error.Type.OTHER
+                        }
+                        CityListState.Error(type)
                     }
                 )
             }
@@ -192,8 +197,9 @@ class CitySelectorViewModel @Inject constructor(
 
         data class CityList(val list: List<CityListItem>) : CityListState()
 
-        // TODO: [High] Use enum Error instead of Throwable
-        data class Error(val throwable: Throwable) : CityListState()
+        data class Error(val type: Type) : CityListState() {
+            enum class Type { NETWORK, OTHER }
+        }
     }
 
     sealed class CityListItem {
