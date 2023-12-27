@@ -23,7 +23,7 @@ fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
             navigateForward = { action ->
                 when (action) {
                     is OnboardingScreenAction.OnboardingCompleted -> {
-                        navController.navigate(HomeGraph.Home.route) {
+                        navController.navigate(HomeGraph.route) {
                             popUpTo(0)
                         }
                     }
