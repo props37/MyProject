@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,9 +16,11 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import ru.zarina.zarina.ui.bottomnavbar.ZarinaBottomNavBar
+import ru.zarina.zarina.ui.common.behavior.bottomnavbar.BottomNavBarBehavior
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.rememberBottomNavBarBehaviorController
 import ru.zarina.zarina.ui.navigation.rework.ZarinaNavigation
+import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.util.library.accompanist.rememberBottomSheetNavigator
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
@@ -29,7 +32,17 @@ fun ZarinaApp(
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberNavController(bottomSheetNavigator)
 
-    val bottomNavBarBehaviorController = rememberBottomNavBarBehaviorController()
+    val defaultBottomNavBarBehavior = remember(viewModel.startDestination) {
+        when (viewModel.startDestination.routeSchema) {
+            UnscopedDestinations.Onboarding.routeSchema -> {
+                BottomNavBarBehavior.Hidden(isAnimated = false)
+            }
+
+            else -> BottomNavBarBehavior.Visible(isAnimated = false)
+        }
+    }
+    val bottomNavBarBehaviorController =
+        rememberBottomNavBarBehaviorController(defaultBottomNavBarBehavior)
 
     CompositionLocalProvider(
         LocalBottomNavBarBehaviorController provides bottomNavBarBehaviorController,
