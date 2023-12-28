@@ -11,7 +11,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -31,10 +30,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -44,6 +41,7 @@ import coil.size.Size
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaLinearProgressIndicator
+import ru.zarina.zarina.ui.common.component.ZarinaLogo
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.OnboardingStep
@@ -88,10 +86,9 @@ object OnboardingScreenComponents {
                 label = "Banner logo color",
             )
 
-            Image(
-                painter = painterResource(R.drawable.zarina_logo),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(logoColor),
+            ZarinaLogo(
+                color = logoColor,
+                animate = !isBannerDisplayed,
                 modifier = Modifier
                     .align(Alignment.Center)
                     .size(SplashScreenLogoSize),
