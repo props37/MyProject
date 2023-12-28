@@ -39,8 +39,8 @@ fun ZarinaError(
     when (error) {
         UiError.NETWORK -> {
             iconResId = R.drawable.ic_wifi_error_24
-            titleResId = R.string.connection_error_title
-            bodyResId = R.string.connection_error_body
+            titleResId = R.string.internet_connection_error
+            bodyResId = R.string.check_internet_connection
         }
 
         UiError.UNKNOWN -> {
