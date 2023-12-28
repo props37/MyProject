@@ -21,7 +21,6 @@ import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.geography.GetCitiesUseCase
 import ru.zarina.zarina.util.library.coroutines.mapState
-import java.io.IOException
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -154,11 +153,7 @@ class CitySelectorViewModel @Inject constructor(
                     CityListState.CityList(listItems)
                 },
                 onFailure = { throwable ->
-                    val errorType = when (throwable) {
-                        is IOException -> CityListState.Error.Type.NETWORK
-                        else -> CityListState.Error.Type.OTHER
-                    }
-                    CityListState.Error(errorType)
+                    CityListState.Error(throwable)
                 },
             )
             _cityListState.value = cityListState
@@ -176,9 +171,7 @@ class CitySelectorViewModel @Inject constructor(
 
         data class CityList(val list: List<CityListItem>) : CityListState()
 
-        data class Error(val type: Type) : CityListState() {
-            enum class Type { NETWORK, OTHER }
-        }
+        data class Error(val throwable: Throwable) : CityListState()
     }
 
     sealed class CityListItem {

@@ -57,6 +57,8 @@ import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.button.CloseButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.component.error.ZarinaError
+import ru.zarina.zarina.ui.common.component.error.ZarinaErrorType
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
@@ -259,11 +261,13 @@ object CitySelectorScreenComponents {
                     }
 
                     is CityListState.Error -> {
-                        CitySearchError(
-                            errorType = listState.type,
+                        ZarinaError(
+                            type = ZarinaErrorType.fromThrowable(listState.throwable),
                             onRefreshClicked = onErrorRefreshClicked,
                             modifier = Modifier
                                 .fillMaxSize()
+                                .padding(horizontal = 16.dp)
+                                .padding(bottom = 20.dp)
                                 .windowInsetsPadding(WindowInsets.navigationBarsOrIme),
                         )
                     }
@@ -417,72 +421,6 @@ object CitySelectorScreenComponents {
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 textAlign = TextAlign.Center,
             )
-        }
-    }
-
-    @Composable
-    private fun CitySearchError(
-        errorType: CityListState.Error.Type,
-        onRefreshClicked: () -> Unit,
-        modifier: Modifier = Modifier,
-    ) {
-        val iconResId: Int
-        val titleResId: Int
-        val bodyResId: Int
-        when (errorType) {
-            CityListState.Error.Type.NETWORK -> {
-                iconResId = R.drawable.ic_wifi_error_24
-                titleResId = R.string.connection_error_title
-                bodyResId = R.string.connection_error_body
-            }
-            CityListState.Error.Type.OTHER -> {
-                iconResId = R.drawable.ic_heart_broken_24
-                titleResId = R.string.something_went_wrong
-                bodyResId = R.string.refresh_page_or_come_back_later
-            }
-        }
-
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier,
-        ) {
-            Spacer(modifier = Modifier.weight(1f))
-
-            Icon(
-                painter = painterResource(iconResId),
-                contentDescription = null,
-                tint = UiKitTheme.colorsReworked.icon.regular.disabled,
-                modifier = Modifier.size(64.dp),
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = stringResource(titleResId),
-                style = UiKitTheme.typographyReworked.primary.bold,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 24.dp),
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(bodyResId),
-                style = UiKitTheme.typographyReworked.secondary.regular,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 24.dp),
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ZarinaButton(
-                onClick = onRefreshClicked,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 20.dp),
-            ) {
-                Text(text = stringResource(R.string.refresh).uppercase())
-            }
         }
     }
 
