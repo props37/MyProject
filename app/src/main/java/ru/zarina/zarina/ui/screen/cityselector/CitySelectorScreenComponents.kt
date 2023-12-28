@@ -187,7 +187,7 @@ object CitySelectorScreenComponents {
         onErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        Box(modifier = modifier) {
+        Box(modifier = modifier.fillMaxSize()) {
             Crossfade(
                 targetState = listState,
                 contentKey = { getCityListContentKey(it) },
