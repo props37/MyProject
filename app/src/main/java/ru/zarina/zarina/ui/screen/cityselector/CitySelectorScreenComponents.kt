@@ -58,7 +58,6 @@ import ru.zarina.zarina.ui.common.component.button.CloseButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.error.ZarinaError
-import ru.zarina.zarina.ui.common.component.error.ZarinaErrorType
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
@@ -262,7 +261,7 @@ object CitySelectorScreenComponents {
 
                     is CityListState.Error -> {
                         ZarinaError(
-                            type = ZarinaErrorType.fromThrowable(listState.throwable),
+                            error = listState.error,
                             onRefreshClicked = onErrorRefreshClicked,
                             modifier = Modifier
                                 .fillMaxSize()

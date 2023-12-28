@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.domain.rework.geography.KladrId
+import ru.zarina.zarina.ui.common.UiError
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
@@ -126,7 +127,7 @@ class CitySelectorViewModel @Inject constructor(
                         cityListStateFromFetchCitiesSuccess(cityNameQuery, cities)
                     },
                     onFailure = { throwable ->
-                        CityListState.Error(throwable)
+                        CityListState.Error(UiError.fromThrowable(throwable))
                     },
                 )
                 _cityListState.value = cityListState
@@ -176,7 +177,7 @@ class CitySelectorViewModel @Inject constructor(
 
         data class CityList(val list: List<CityListItem>) : CityListState()
 
-        data class Error(val throwable: Throwable) : CityListState()
+        data class Error(val error: UiError) : CityListState()
     }
 
     sealed class CityListItem {

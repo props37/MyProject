@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
+import ru.zarina.zarina.ui.common.UiError
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -28,21 +29,21 @@ import java.io.IOException
 
 @Composable
 fun ZarinaError(
-    type: ZarinaErrorType,
+    error: UiError,
     onRefreshClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val iconResId: Int
     val titleResId: Int
     val bodyResId: Int
-    when (type) {
-        ZarinaErrorType.Network -> {
+    when (error) {
+        UiError.NETWORK -> {
             iconResId = R.drawable.ic_wifi_error_24
             titleResId = R.string.connection_error_title
             bodyResId = R.string.connection_error_body
         }
 
-        ZarinaErrorType.Unknown -> {
+        UiError.UNKNOWN -> {
             iconResId = R.drawable.ic_heart_broken_24
             titleResId = R.string.something_went_wrong
             bodyResId = R.string.refresh_page_or_come_back_later
@@ -108,7 +109,7 @@ enum class ZarinaErrorType {
 private fun NetworkErrorPreview() {
     ZarinaTheme {
         ZarinaError(
-            type = ZarinaErrorType.Network,
+            error = UiError.NETWORK,
             onRefreshClicked = {},
             modifier = Modifier
                 .background(Color.White)
@@ -124,7 +125,7 @@ private fun NetworkErrorPreview() {
 private fun UnknownErrorPreview() {
     ZarinaTheme {
         ZarinaError(
-            type = ZarinaErrorType.Unknown,
+            error = UiError.UNKNOWN,
             onRefreshClicked = {},
             modifier = Modifier
                 .background(Color.White)
