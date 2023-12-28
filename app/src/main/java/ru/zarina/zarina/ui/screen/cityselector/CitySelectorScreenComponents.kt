@@ -500,9 +500,9 @@ object CitySelectorScreenComponents {
 
     @Stable
     private fun getCityListItemKey(item: CityListItem): String = when (item) {
-        is CityListItem.City -> "$CityListItemCityKeyPrefix ${item.city.kladrId.value}"
+        is CityListItem.City -> "$CityListItemKeyPrefixCity ${item.city.kladrId.value}"
         is CityListItem.CityFirstLetterHeader -> {
-            "$CityListItemCityFirstLetterHeaderKeyPrefix ${item.letter}"
+            "$CityListItemKeyPrefixCityFirstLetterHeader ${item.letter}"
         }
     }
 
@@ -510,29 +510,31 @@ object CitySelectorScreenComponents {
     private fun getCityListItemContentType(item: CityListItem): String = when (item) {
         is CityListItem.City -> {
             if (!item.showFullName) {
-                CityListItemCityContentType
+                CityListItemContentTypeCity
             } else {
-                CityListItemCityWithFullNameContentType
+                CityListItemContentTypeCityWithFullName
             }
         }
 
-        is CityListItem.CityFirstLetterHeader -> CityListItemCityFirstLetterHeaderContentType
+        is CityListItem.CityFirstLetterHeader -> CityListItemContentTypeCityFirstLetterHeader
     }
 
     private val ConfirmButtonBottomPadding = 20.dp
 
-    private const val CityListContentKeyLoading = "CityListLoading"
-    private const val CityListContentKeyCities = "CityListCities"
-    private const val CityListContentKeyCityNotFound = "CityListCityNotFound"
-    private const val CityListContentKeyError = "CityListError"
+    private const val CityListContentKeyLoading = "CityListContentKeyLoading"
+    private const val CityListContentKeyCities = "CityListContentKeyCities"
+    private const val CityListContentKeyCityNotFound = "CityListContentKeyCityNotFound"
+    private const val CityListContentKeyError = "CityListContentKeyError"
 
-    private const val CityListItemCityKeyPrefix = "City"
-    private const val CityListItemCityFirstLetterHeaderKeyPrefix = "CityFirstLetterHeader"
+    private const val CityListItemKeyPrefixCity = "CityListItemKeyPrefixCity"
+    private const val CityListItemKeyPrefixCityFirstLetterHeader =
+        "CityListItemKeyPrefixCityFirstLetterHeader"
 
-    private const val CityListItemCityContentType = "CityContentType"
-    private const val CityListItemCityWithFullNameContentType = "CityWithFullNameContentType"
-    private const val CityListItemCityFirstLetterHeaderContentType =
-        "CityFirstLetterHeaderContentType"
+    private const val CityListItemContentTypeCity = "CityListItemContentTypeCity"
+    private const val CityListItemContentTypeCityWithFullName =
+        "CityListItemContentTypeCityWithFullName"
+    private const val CityListItemContentTypeCityFirstLetterHeader =
+        "CityListItemContentTypeCityFirstLetterHeader"
 }
 
 // TODO: [High] Add PreviewParameterProvider
