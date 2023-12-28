@@ -6,6 +6,7 @@ class ApplicationExtensionManager @Inject constructor(
     timber: TimberExtension,
     mindbox: MindboxExtension,
     coil: CoilExtension,
+    authorizationTokensFetcherExtension: AuthorizationTokensFetcherExtension,
 ) {
-    val extensions = listOf(timber, mindbox, coil)
+    val extensions = listOf(timber, mindbox, coil, authorizationTokensFetcherExtension)
 }
