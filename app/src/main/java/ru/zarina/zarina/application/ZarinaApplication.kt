@@ -4,7 +4,6 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -21,9 +20,10 @@ class ZarinaApplication : Application() {
     lateinit var coroutineScope: CoroutineScope
 
     @Inject
-    lateinit var fetchUnauthorizedUserAuthorizationTokensUseCase: FetchUnauthorizedUserAuthorizationTokensUseCase
+    lateinit var applicationExtensionManager: ApplicationExtensionManager
 
-    private val applicationExtensionManager: ApplicationExtensionManager by inject()
+    @Inject
+    lateinit var fetchUnauthorizedUserAuthorizationTokensUseCase: FetchUnauthorizedUserAuthorizationTokensUseCase
 
     override fun onCreate() {
         super.onCreate()

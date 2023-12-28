@@ -1,9 +1,8 @@
 package ru.zarina.zarina.application.extension
 
-import org.koin.core.annotation.Factory
+import javax.inject.Inject
 
-@Factory
-class ApplicationExtensionManager(
+class ApplicationExtensionManager @Inject constructor(
     timber: TimberExtension,
     mindbox: MindboxExtension,
     coil: CoilExtension,

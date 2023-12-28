@@ -6,11 +6,10 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
-import org.koin.core.annotation.Factory
 import ru.zarina.zarina.application.extension.base.ApplicationExtension
+import javax.inject.Inject
 
-@Factory
-class CoilExtension : ApplicationExtension {
+class CoilExtension @Inject constructor() : ApplicationExtension {
     override fun install(application: Application) {
         val factory = ImageLoaderFactory {
             ImageLoader.Builder(application)
