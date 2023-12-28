@@ -1,4 +1,4 @@
-package ru.zarina.zarina
+package ru.zarina.zarina.application
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
@@ -8,7 +8,7 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import ru.zarina.zarina.base.application.extension.base.ApplicationExtensionManager
+import ru.zarina.zarina.application.extension.ApplicationExtensionManager
 import ru.zarina.zarina.di.appModule
 import ru.zarina.zarina.usecase.rework.authorization.FetchUnauthorizedUserAuthorizationTokensUseCase
 import ru.zarina.zarina.utils.clean.invoke

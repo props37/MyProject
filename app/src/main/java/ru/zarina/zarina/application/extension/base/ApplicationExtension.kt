@@ -1,4 +1,4 @@
-package ru.zarina.zarina.base.application.extension.base
+package ru.zarina.zarina.application.extension.base
 
 import android.app.Application
 

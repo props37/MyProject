@@ -1,11 +1,11 @@
-package ru.zarina.zarina.base.application.extension
+package ru.zarina.zarina.application.extension
 
 import android.app.Application
 import cloud.mindbox.mobile_sdk.Mindbox
 import cloud.mindbox.mobile_sdk.MindboxConfiguration
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.BuildConfig
-import ru.zarina.zarina.base.application.extension.base.ApplicationExtension
+import ru.zarina.zarina.application.extension.base.ApplicationExtension
 
 @Factory
 class MindboxExtension : ApplicationExtension {
