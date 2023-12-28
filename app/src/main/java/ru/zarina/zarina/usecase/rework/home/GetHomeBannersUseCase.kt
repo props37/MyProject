@@ -2,10 +2,10 @@ package ru.zarina.zarina.usecase.rework.home
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.base.clean.FlowUseCase
 import ru.zarina.zarina.data.rework.home.HomeRepository
 import ru.zarina.zarina.di.reworked.Qualifiers
 import ru.zarina.zarina.domain.rework.home.HomeBanners
+import ru.zarina.zarina.usecase.base.FlowUseCase
 import javax.inject.Inject
 
 class GetHomeBannersUseCase @Inject constructor(

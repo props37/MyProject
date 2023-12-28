@@ -3,12 +3,12 @@ package ru.zarina.zarina.usecase.shop
 import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
-import ru.zarina.zarina.base.clean.UseCase
 import ru.zarina.zarina.data.product.IProductRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.usecase.base.UseCase
 import timber.log.Timber
 
 @Factory

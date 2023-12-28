@@ -1,4 +1,4 @@
-package ru.zarina.zarina.base.clean
+package ru.zarina.zarina.usecase.base
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow

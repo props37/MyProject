@@ -1,9 +1,9 @@
 package ru.zarina.zarina.usecase.rework.device
 
 import kotlinx.coroutines.CoroutineDispatcher
-import ru.zarina.zarina.base.clean.UseCase
 import ru.zarina.zarina.data.rework.device.DeviceRepository
 import ru.zarina.zarina.di.reworked.Qualifiers
+import ru.zarina.zarina.usecase.base.UseCase
 import timber.log.Timber
 import javax.inject.Inject
 

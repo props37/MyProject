@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
-import ru.zarina.zarina.base.clean.FlowUseCase
 import ru.zarina.zarina.data.favorites.IFavoritesRepository
 import ru.zarina.zarina.data.product.IProductRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.usecase.base.FlowUseCase
 
 @Factory
 class GetProductUseCase(
