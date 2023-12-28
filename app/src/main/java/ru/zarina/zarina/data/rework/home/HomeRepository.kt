@@ -8,5 +8,7 @@ import javax.inject.Inject
 class HomeRepository @Inject constructor(
     private val remoteDataSource: HomeRemoteDataSource,
 ) {
-    fun getBanners(): Flow<HomeBanners> = remoteDataSource.getBanners()
+    fun getBanners(): Flow<HomeBanners> {
+        return remoteDataSource.getBanners()
+    }
 }
