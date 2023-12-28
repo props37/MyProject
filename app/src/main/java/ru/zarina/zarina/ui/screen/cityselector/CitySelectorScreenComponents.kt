@@ -188,9 +188,9 @@ object CitySelectorScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
-            // TODO: [High] Specify contentKey
             Crossfade(
                 targetState = listState,
+                contentKey = { getCityListContentKey(it) },
                 label = "CityList",
             ) { listState ->
                 when (listState) {
@@ -487,6 +487,18 @@ object CitySelectorScreenComponents {
     }
 
     @Stable
+    private fun getCityListContentKey(state: CityListState): String {
+        return when (state) {
+            CityListState.Loading -> CityListContentKeyLoading
+            is CityListState.CityList -> {
+                if (state.list.isNotEmpty()) CityListContentKeyCities else CityListContentKeyCityNotFound
+            }
+
+            is CityListState.Error -> CityListContentKeyError
+        }
+    }
+
+    @Stable
     private fun getCityListItemKey(item: CityListItem): String = when (item) {
         is CityListItem.City -> "$CityListItemCityKeyPrefix ${item.city.kladrId.value}"
         is CityListItem.CityFirstLetterHeader -> {
@@ -508,6 +520,11 @@ object CitySelectorScreenComponents {
     }
 
     private val ConfirmButtonBottomPadding = 20.dp
+
+    private const val CityListContentKeyLoading = "CityListLoading"
+    private const val CityListContentKeyCities = "CityListCities"
+    private const val CityListContentKeyCityNotFound = "CityListCityNotFound"
+    private const val CityListContentKeyError = "CityListError"
 
     private const val CityListItemCityKeyPrefix = "City"
     private const val CityListItemCityFirstLetterHeaderKeyPrefix = "CityFirstLetterHeader"
