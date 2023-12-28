@@ -44,7 +44,7 @@ android {
         versionCode = generatedVersionCode
         versionName = generatedVersionName
 
-        // TODO: [Low] Specify resourceConfigurations?
+        resourceConfigurations.add("ru")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
