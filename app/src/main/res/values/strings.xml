@@ -26,7 +26,6 @@
     <string name="refresh_page_or_come_back_later">Обнови страницу или зайди позже</string>
     <string name="checked">Отмечено</string>
 
-    <string name="onboarding_progress_text">Шаг %1$d/%2$d</string>
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
     <string name="onboarding_city_selection_title">Определяем твой город</string>
@@ -160,6 +159,5 @@
     <string name="search_history">История поиска</string>
     <string name="remove_from_history">Удалить из истории</string>
     <string name="nothing_found">Ничего не нашлось</string>
-    <string name="reword_your_query">Напишите свой запрос другими словами или воспользуйтесь каталогом товаров</string>
     <string name="recommended_for_you">Рекомендуем для вас</string>
 </resources>
