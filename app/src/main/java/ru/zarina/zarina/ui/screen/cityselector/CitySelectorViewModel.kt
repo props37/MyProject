@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.domain.rework.geography.KladrId
-import ru.zarina.zarina.ui.common.UiError
 import ru.zarina.zarina.ui.common.base.Throttler
+import ru.zarina.zarina.ui.common.base.UiError
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.geography.CityParcelable

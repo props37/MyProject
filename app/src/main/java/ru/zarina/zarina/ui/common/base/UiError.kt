@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common
+package ru.zarina.zarina.ui.common.base
 
 import java.io.IOException
 
