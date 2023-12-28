@@ -32,7 +32,7 @@ class CitySelectorViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private var searchCitiesJob: Job? = null
+    private var fetchCitiesJob: Job? = null
 
     private val initialCity: StateFlow<City?> = savedStateHandle
         .getStateFlow<CityParcelable?>(
@@ -70,8 +70,8 @@ class CitySelectorViewModel @Inject constructor(
     val isChangeCityButtonVisible: StateFlow<Boolean> = hasSelectedCityChanged.asStateFlow()
 
     init {
-        searchCitiesJob = viewModelScope.launch {
-            searchCities(cityNameQuery.value)
+        fetchCitiesJob = viewModelScope.launch {
+            fetchCities(cityNameQuery = null)
         }
     }
 
@@ -84,10 +84,10 @@ class CitySelectorViewModel @Inject constructor(
 
     fun onCityNameQueryChanged(query: String) {
         savedStateHandle[KEY_CITY_NAME_QUERY] = query
-        searchCitiesJob?.cancel()
-        searchCitiesJob = viewModelScope.launch {
+        fetchCitiesJob?.cancel()
+        fetchCitiesJob = viewModelScope.launch {
             delay(SEARCH_CITIES_BY_NAME_QUERY_DELAY)
-            searchCities(query)
+            fetchCities(query)
         }
     }
 
@@ -117,18 +117,18 @@ class CitySelectorViewModel @Inject constructor(
 
     fun onErrorRefreshClicked() {
         _cityListState.value = CityListState.Loading
-        searchCitiesJob?.cancel()
-        searchCitiesJob = viewModelScope.launch {
-            searchCities(cityNameQuery.value)
+        fetchCitiesJob?.cancel()
+        fetchCitiesJob = viewModelScope.launch {
+            fetchCities(cityNameQuery.value)
         }
     }
 
-    private suspend fun searchCities(nameQuery: String?) {
-        val getCitiesParams = GetCitiesUseCase.Params(nameQuery)
+    private suspend fun fetchCities(cityNameQuery: String?) {
+        val getCitiesParams = GetCitiesUseCase.Params(cityNameQuery)
         interactor.getCities(getCitiesParams).collect { result ->
             val cityListState = result.fold(
                 onSuccess = { cities ->
-                    val listItems = if (nameQuery.isNullOrBlank()) {
+                    val listItems = if (cityNameQuery.isNullOrBlank()) {
                         buildList<CityListItem> {
                             // Show main cities at the top
                             val (mainCities, otherCities) = cities.partition { city ->
