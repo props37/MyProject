@@ -54,6 +54,7 @@ import ru.zarina.zarina.util.compose.FontFeatureSettings
 
 object OnboardingScreenComponents {
 
+    // TODO: [High] Use custom ImageLoader to set timeouts
     @Composable
     fun Banner(modifier: Modifier = Modifier) {
         Box(modifier = modifier) {
