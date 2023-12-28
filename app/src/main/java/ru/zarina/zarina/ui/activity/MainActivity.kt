@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui
+package ru.zarina.zarina.ui.activity
 
 import android.graphics.Color
 import android.os.Bundle
