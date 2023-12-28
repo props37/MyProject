@@ -54,6 +54,7 @@ import ru.zarina.zarina.util.compose.FontFeatureSettings
 
 object OnboardingScreenComponents {
 
+    // TODO: [High] Use custom ImageLoader to set timeouts
     @Composable
     fun Banner(modifier: Modifier = Modifier) {
         Box(modifier = modifier) {
@@ -182,7 +183,7 @@ object OnboardingScreenComponents {
 
                 val isForward = targetState.number > initialState.number
                 val slideInSign = if (isForward) 1 else -1
-                val animationSpec = tween<IntOffset>(durationMillis = 300, delayMillis = 1)
+                val animationSpec = tween<IntOffset>(durationMillis = 300)
                 val enter = slideInHorizontally(animationSpec) { it * slideInSign }
                 val exit = slideOutHorizontally(animationSpec) { -it * slideInSign }
                 (enter togetherWith exit).using(SizeTransform(clip = false))

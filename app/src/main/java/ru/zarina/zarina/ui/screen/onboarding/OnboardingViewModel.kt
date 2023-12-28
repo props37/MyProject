@@ -77,9 +77,7 @@ class OnboardingViewModel @AssistedInject constructor(
         .mapState(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
-        ) { cityParcelable ->
-            cityParcelable?.toCity()
-        }
+        ) { it?.toCity() }
 
     val isDetectCityButtonLoading: StateFlow<Boolean> = operationTracker
         .isOperationOngoing(Operation.DETECT_CITY)
@@ -137,7 +135,7 @@ class OnboardingViewModel @AssistedInject constructor(
                     if (newPermissionsState.any { it.value.isGranted }) {
                         detectCity()
                     } else {
-                        closeOnboarding()
+                        completeOnboarding(selectedCity = null)
                     }
                 } else if (
                     // TODO: [High] Ensure this works correctly
@@ -159,11 +157,11 @@ class OnboardingViewModel @AssistedInject constructor(
     }
 
     fun onSkipCityDetectionClicked() {
-        closeOnboarding()
+        completeOnboarding(selectedCity = null)
     }
 
     fun onConfirmCityClicked() {
-        closeOnboarding()
+        completeOnboarding(currentCity.value)
     }
 
     fun onSelectCityClicked() {
@@ -174,16 +172,19 @@ class OnboardingViewModel @AssistedInject constructor(
     }
 
     private suspend fun detectCity() {
+        fun onFailure() {
+            savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.fromCity(City.SAINT_PETERSBURG)
+            showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
+        }
+
         operationTracker.track(Operation.DETECT_CITY) {
-            interactor.detectCurrentCity()
-                .onSuccess { city ->
+            interactor.detectCurrentCity().firstOrNull()
+                ?.onSuccess { city ->
                     savedStateHandle[KEY_CURRENT_CITY] = city?.let { CityParcelable.fromCity(it) }
                     showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
                 }
-                .onFailure {
-                    savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.fromCity(City.SAINT_PETERSBURG)
-                    showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
-                }
+                ?.onFailure { onFailure() }
+                ?.let { onFailure() }
         }
     }
 
@@ -196,24 +197,21 @@ class OnboardingViewModel @AssistedInject constructor(
         }
     }
 
-    private fun closeOnboarding() {
+    private fun completeOnboarding(selectedCity: City?) {
         navigationThrottler.throttle {
-            val currentCity = currentCity.value
-
             viewModelScope.launch(NonCancellable) {
                 val setIsOnboardingCompletedParams =
                     SetIsOnboardingCompletedUseCase.Params(isCompleted = true)
                 interactor.setIsOnboardingCompleted(setIsOnboardingCompletedParams)
             }
 
-            if (currentCity != null) {
-                viewModelScope.launch(NonCancellable) {
-                    val updateUserCityParams = UpdateUserCityUseCase.Params(currentCity)
-                    interactor.updateUserCity(updateUserCityParams)
-                }
+            viewModelScope.launch(NonCancellable) {
+                val userCity = selectedCity ?: City.SAINT_PETERSBURG
+                val updateUserCityParams = UpdateUserCityUseCase.Params(userCity)
+                interactor.updateUserCity(updateUserCityParams)
             }
 
-            val action = OnboardingScreenAction.OnboardingCompleted(currentCity)
+            val action = OnboardingScreenAction.OnboardingCompleted(selectedCity)
             emitSideEffect(SideEffect.NavigateForward(action))
         }
     }
@@ -254,7 +252,7 @@ class OnboardingViewModel @AssistedInject constructor(
         }
     }
 
-    sealed interface SideEffect: SideEffectSource.SideEffect {
+    sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateForward(val action: OnboardingScreenAction) : SideEffect
     }
 

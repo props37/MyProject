@@ -8,6 +8,7 @@ import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.rework.destination.cartGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.catalogGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.citySelectorBottomSheetScreen
+import ru.zarina.zarina.ui.navigation.rework.destination.defaultCityDialogScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.favoritesGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.homeGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.onboardingScreen
@@ -24,6 +25,7 @@ fun ZarinaNavigation(
         startDestination = startDestination.routeSchema,
         modifier = modifier,
     ) {
+        // Bottom nav bar graphs
         catalogGraph(navController)
         favoritesGraph(navController)
         homeGraph(navController)
@@ -32,5 +34,6 @@ fun ZarinaNavigation(
 
         onboardingScreen(navController)
         citySelectorBottomSheetScreen(navController)
+        defaultCityDialogScreen(navController)
     }
 }

@@ -34,7 +34,10 @@
     <string name="onboarding_city_confirmation_title">Твой город %1$s?</string>
     <string name="onboarding_city_confirmation_body">Ты можешь изменить геолокацию сейчас или настроить её позже.</string>
 
-    <!-- TODO: [High] Remove -->
+    <string name="default_city_dialog_title">Мы определили твой город</string>
+    <string name="default_city_dialog_body">Текущая геолокация: %1$s. Ты можешь изменить геолокацию в любой момент в настройках Профиля.</string>
+
+    <!-- TODO: [Low] Remove -->
     <string name="select_your_city">Выберите ваш город</string>
     <string name="to_see_in_your_city">чтобы видеть актуальное наличие товаров и акции в вашем городе</string>
     <string name="select_automatically">Выбрать автоматически</string>

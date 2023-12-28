@@ -2,11 +2,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.Zarina" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:background">@color/white</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
-    <!-- TODO: [High] Make icon animated -->
+    <!-- TODO: [Low] Make icon animated -->
     <style name="Theme.Zarina.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/white</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_logo</item>

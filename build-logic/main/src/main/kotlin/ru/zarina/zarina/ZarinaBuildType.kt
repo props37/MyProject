@@ -36,6 +36,9 @@ sealed interface ZarinaBuildType {
     val matchingFallbacks: List<ZarinaBuildType>
         get() = emptyList()
 
+    val isLoggingEnabled: Boolean
+        get() = isDebuggable
+
     val backendUrl: String
         get() = "https://zarina.ru"
 
@@ -61,6 +64,7 @@ sealed interface ZarinaBuildType {
 
     object Qa : ZarinaBuildType {
         override val name = "qa"
+        override val isLoggingEnabled = true
         override val backendUrl = "https://test7.zarina.ru"
     }
 
@@ -120,6 +124,7 @@ fun Project.configureBuildTypes(
 }
 
 private fun ApplicationBuildType.fillBuildConfigFields(buildType: ZarinaBuildType) {
+    buildConfigBooleanField("IS_LOGGING_ENABLED", buildType.isLoggingEnabled)
     buildConfigStringField("BACKEND_URL", buildType.backendUrl)
     buildConfigStringField("MINDBOX_ENDPOINT", buildType.mindboxEndpoint)
     buildConfigStringField("MINDBOX_SECRET", buildType.mindboxSecret)
@@ -130,9 +135,10 @@ private fun ApplicationBuildType.fillManifestPlaceholders(buildType: ZarinaBuild
     manifestPlaceholders["GOOGLE_MAPS_SECRET"] = buildType.googleMapsSecret
 }
 
-private fun ApplicationBuildType.buildConfigStringField(
-    name: String,
-    value: String,
-) {
+private fun ApplicationBuildType.buildConfigStringField(name: String, value: String) {
     buildConfigField("String", name, "\"$value\"")
+}
+
+private fun ApplicationBuildType.buildConfigBooleanField(name: String, value: Boolean) {
+    buildConfigField("boolean", name, "$value")
 }

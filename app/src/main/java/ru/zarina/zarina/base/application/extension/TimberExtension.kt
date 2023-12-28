@@ -9,6 +9,6 @@ import timber.log.Timber
 @Factory
 class TimberExtension : ApplicationExtension {
     override fun install(application: Application) {
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+        if (BuildConfig.IS_LOGGING_ENABLED) Timber.plant(Timber.DebugTree())
     }
 }

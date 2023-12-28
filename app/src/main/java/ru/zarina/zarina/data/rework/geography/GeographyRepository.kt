@@ -18,19 +18,17 @@ class GeographyRepository @Inject constructor(
         return remoteDataSource.getCity(location)
     }
 
-    // TODO: [High] Refactor to Flow APIs?
-    fun getCities(nameQuery: String?): Flow<List<City>> {
-        return flow {
-            val cached = localDataSource.getCities(nameQuery).firstOrNull()
-            if (cached != null) {
-                Timber.v("Get cached cities for name query $nameQuery")
-                emit(cached)
-            } else {
-                val cities = remoteDataSource.getCities(nameQuery).firstOrNull()
-                if (cities != null) {
-                    localDataSource.setCities(nameQuery, cities)
-                    emit(cities)
-                }
+    // TODO: [Low] Refactor to Flow APIs?
+    fun getCities(nameQuery: String?): Flow<List<City>> = flow {
+        val cached = localDataSource.getCities(nameQuery).firstOrNull()
+        if (cached != null) {
+            Timber.v("Get cached cities for name query $nameQuery")
+            emit(cached)
+        } else {
+            val cities = remoteDataSource.getCities(nameQuery).firstOrNull()
+            if (cities != null) {
+                localDataSource.setCities(nameQuery, cities)
+                emit(cities)
             }
         }
     }

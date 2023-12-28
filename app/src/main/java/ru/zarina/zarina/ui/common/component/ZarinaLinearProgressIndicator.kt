@@ -21,7 +21,7 @@ fun ZarinaLinearProgressIndicator(
 ) {
     val animatedProgress by animateFloatAsState(
         targetValue = progress.coerceIn(0f, 1f),
-        animationSpec = remember { tween(durationMillis = 200, delayMillis = 1) },
+        animationSpec = remember { tween(durationMillis = 200) },
         label = "ZarinaLinearProgressIndicator progress",
     )
 
