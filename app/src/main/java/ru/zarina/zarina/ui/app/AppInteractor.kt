@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.rework
+package ru.zarina.zarina.ui.app
 
 import ru.zarina.zarina.usecase.rework.device.GetIsOnboardingCompletedUseCase
 import javax.inject.Inject

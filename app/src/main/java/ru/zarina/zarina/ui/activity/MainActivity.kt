@@ -9,7 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
 import ru.zarina.zarina.data.permissionmanager.PermissionManager
-import ru.zarina.zarina.ui.rework.ZarinaApp
+import ru.zarina.zarina.ui.app.ZarinaApp
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.util.library.activity.DefaultDarkScrim
 import javax.inject.Inject
