@@ -2,6 +2,8 @@ package ru.zarina.zarina.ui.common.base
 
 import java.io.IOException
 
+// TODO: [High] Rework
+
 enum class UiError {
     NETWORK,
     UNKNOWN;

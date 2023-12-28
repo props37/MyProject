@@ -27,6 +27,8 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 import java.io.IOException
 
+// TODO: [High] Rework
+
 @Composable
 fun ZarinaError(
     error: UiError,
