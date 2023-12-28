@@ -147,8 +147,7 @@ class OnboardingViewModel @AssistedInject constructor(
                             .firstOrNull() ?: emptyMap()
                     if (havePermissionsRequiredRequestRationale.any { it.value == true }) {
                         // User has denied the permission permanently
-                        savedStateHandle[KEY_CURRENT_CITY] =
-                            CityParcelable.fromCity(City.SAINT_PETERSBURG)
+                        savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.fromCity(City.DEFAULT)
                         showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
                     }
                 }
@@ -173,7 +172,7 @@ class OnboardingViewModel @AssistedInject constructor(
 
     private suspend fun detectCity() {
         fun onFailure() {
-            savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.fromCity(City.SAINT_PETERSBURG)
+            savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.fromCity(City.DEFAULT)
             showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
         }
 
@@ -206,7 +205,7 @@ class OnboardingViewModel @AssistedInject constructor(
             }
 
             viewModelScope.launch(NonCancellable) {
-                val userCity = selectedCity ?: City.SAINT_PETERSBURG
+                val userCity = selectedCity ?: City.DEFAULT
                 val updateUserCityParams = UpdateUserCityUseCase.Params(userCity)
                 interactor.updateUserCity(updateUserCityParams)
             }

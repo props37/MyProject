@@ -86,7 +86,7 @@ private fun ScreenContent(
 private fun Preview() {
     ZarinaTheme {
         ScreenContent(
-            defaultCity = City.SAINT_PETERSBURG,
+            defaultCity = City.DEFAULT,
             onCloseClicked = {},
             sideEffects = remember { flowOf() },
             navigateBackward = {},

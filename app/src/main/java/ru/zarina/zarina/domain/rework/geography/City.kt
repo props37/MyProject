@@ -7,7 +7,10 @@ data class City(
     val kladrId: KladrId,
 ) {
     companion object {
-        val SAINT_PETERSBURG: City
+        val DEFAULT: City
+            get() = SAINT_PETERSBURG
+
+        private val SAINT_PETERSBURG: City
             get() = City(
                 name = "Санкт-Петербург",
                 fullName = "г Санкт-Петербург",

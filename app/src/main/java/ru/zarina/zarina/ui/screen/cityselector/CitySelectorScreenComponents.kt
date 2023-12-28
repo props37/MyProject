@@ -482,13 +482,13 @@ private fun CityPreview() {
     ZarinaTheme {
         Column {
             CitySelectorScreenComponents.City(
-                city = City.SAINT_PETERSBURG,
+                city = City.DEFAULT,
                 onClick = {},
                 showFullName = true,
                 isSelected = false,
             )
             CitySelectorScreenComponents.City(
-                city = City.SAINT_PETERSBURG,
+                city = City.DEFAULT,
                 onClick = {},
                 showFullName = false,
                 isSelected = true,
@@ -504,13 +504,13 @@ private fun CityFirstLetterHeaderPreview() {
         Column {
             CitySelectorScreenComponents.CityFirstLetterHeader(letter = 'С')
             CitySelectorScreenComponents.City(
-                city = City.SAINT_PETERSBURG,
+                city = City.DEFAULT,
                 onClick = {},
                 showFullName = false,
                 isSelected = false,
             )
             CitySelectorScreenComponents.City(
-                city = City.SAINT_PETERSBURG,
+                city = City.DEFAULT,
                 onClick = {},
                 showFullName = true,
                 isSelected = true,
