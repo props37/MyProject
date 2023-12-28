@@ -1,4 +1,4 @@
-package ru.zarina.zarina.util.compose
+package ru.zarina.zarina.ui.common.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
