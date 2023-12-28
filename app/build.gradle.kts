@@ -140,6 +140,7 @@ dependencies {
     implementation(libs.accompanist.webview)
 
     implementation(libs.coil.compose)
+    implementation(libs.composeShimmer)
 
     implementation(libs.timber)
 
