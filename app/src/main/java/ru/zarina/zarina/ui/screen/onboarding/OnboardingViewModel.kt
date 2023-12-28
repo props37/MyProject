@@ -196,6 +196,8 @@ class OnboardingViewModel @AssistedInject constructor(
         }
     }
 
+    // TODO: [High] Do not close the screen until the SetIsOnboardingCompletedUseCase is completed
+    // TODO: [High] Do not close the screen until the UpdateUserCityUseCase is completed?
     private fun completeOnboarding(selectedCity: City?) {
         navigationThrottler.throttle {
             viewModelScope.launch(NonCancellable) {
@@ -274,6 +276,7 @@ class OnboardingViewModel @AssistedInject constructor(
         private const val KEY_CURRENT_ONBOARDING_STEP = "current_onboarding_step"
         private const val KEY_CURRENT_CITY = "current_city"
 
+        // TODO: [Low] Move to data layer
         const val ONBOARDING_BANNER_URL = "${BuildConfig.BACKEND_URL}/api/v1/main/splash/"
     }
 }
