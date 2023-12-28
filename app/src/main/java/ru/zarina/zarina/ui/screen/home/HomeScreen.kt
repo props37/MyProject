@@ -2,11 +2,14 @@ package ru.zarina.zarina.ui.screen.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.zarina.zarina.util.compose.ScreenPlaceholder
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel(),
+) {
     ScreenContent()
 }
 

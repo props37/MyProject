@@ -21,4 +21,9 @@ data class HomeBanners(
         // TODO: [Low] Extract?
         enum class View { FULLSCREEN, GRID }
     }
+
+    companion object {
+        val EMPTY: HomeBanners
+            get() = HomeBanners(woman = emptyList(), man = emptyList())
+    }
 }
