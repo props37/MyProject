@@ -194,7 +194,7 @@ object CitySelectorScreenComponents {
                 label = "CityList",
             ) { listState ->
                 when (listState) {
-                    CityListState.InitialLoading -> {
+                    CityListState.Loading -> {
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
