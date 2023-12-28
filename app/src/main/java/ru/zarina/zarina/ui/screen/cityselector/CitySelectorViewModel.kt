@@ -22,6 +22,7 @@ import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.geography.GetCitiesUseCase
 import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
@@ -70,9 +71,7 @@ class CitySelectorViewModel @Inject constructor(
     val isChangeCityButtonVisible: StateFlow<Boolean> = hasSelectedCityChanged.asStateFlow()
 
     init {
-        fetchCitiesJob = viewModelScope.launch {
-            fetchCities(cityNameQuery = null)
-        }
+        fetchCities(cityNameQuery = null)
     }
 
     fun onCloseClicked() {
@@ -84,11 +83,7 @@ class CitySelectorViewModel @Inject constructor(
 
     fun onCityNameQueryChanged(query: String) {
         savedStateHandle[KEY_CITY_NAME_QUERY] = query
-        fetchCitiesJob?.cancel()
-        fetchCitiesJob = viewModelScope.launch {
-            delay(SEARCH_CITIES_BY_NAME_QUERY_DELAY)
-            fetchCities(query)
-        }
+        fetchCities(query, delay = SEARCH_CITIES_BY_NAME_QUERY_DELAY)
     }
 
     fun onCitySearchBarClearClicked() {
@@ -117,47 +112,57 @@ class CitySelectorViewModel @Inject constructor(
 
     fun onErrorRefreshClicked() {
         _cityListState.value = CityListState.Loading
+        fetchCities(cityNameQuery.value)
+    }
+
+    private fun fetchCities(cityNameQuery: String?, delay: Duration = Duration.ZERO) {
         fetchCitiesJob?.cancel()
         fetchCitiesJob = viewModelScope.launch {
-            fetchCities(cityNameQuery.value)
+            delay(delay)
+            val getCitiesParams = GetCitiesUseCase.Params(cityNameQuery)
+            interactor.getCities(getCitiesParams).collect { result ->
+                val cityListState = result.fold(
+                    onSuccess = { cities ->
+                        cityListStateFromFetchCitiesSuccess(cityNameQuery, cities)
+                    },
+                    onFailure = { throwable ->
+                        CityListState.Error(throwable)
+                    },
+                )
+                _cityListState.value = cityListState
+            }
         }
     }
 
-    private suspend fun fetchCities(cityNameQuery: String?) {
-        val getCitiesParams = GetCitiesUseCase.Params(cityNameQuery)
-        interactor.getCities(getCitiesParams).collect { result ->
-            val cityListState = result.fold(
-                onSuccess = { cities ->
-                    val listItems = if (cityNameQuery.isNullOrBlank()) {
-                        buildList<CityListItem> {
-                            // Show main cities at the top
-                            val (mainCities, otherCities) = cities.partition { city ->
-                                city.kladrId in MAIN_CITIES_KLADR_IDS
-                            }
-                            val mainCityItems = mainCities.map { CityListItem.City(it) }
-                            addAll(mainCityItems)
+    private fun cityListStateFromFetchCitiesSuccess(
+        cityNameQuery: String?,
+        cities: List<City>,
+    ): CityListState {
+        val listItems = if (cityNameQuery.isNullOrBlank()) {
+            buildList<CityListItem> {
+                // Show main cities at the top
+                val (mainCities, otherCities) = cities.partition { city ->
+                    city.kladrId in MAIN_CITIES_KLADR_IDS
+                }
+                val mainCityItems = mainCities.map { CityListItem.City(it) }
+                addAll(mainCityItems)
 
-                            // Show other cities grouped by the first letter
-                            val otherCitiesGrouped = otherCities.groupBy { it.name.firstOrNull() }
-                            otherCitiesGrouped.forEach { (firstLetter, cities) ->
-                                if (firstLetter != null) {
-                                    add(CityListItem.CityFirstLetterHeader(firstLetter))
-                                }
-                                val cityItems = cities.map { CityListItem.City(it) }
-                                addAll(cityItems)
-                            }
-                        }
-                    } else {
-                        cities.map { CityListItem.City(it, showFullName = true) }
+                // Show other cities grouped by the first letter
+                val otherCitiesGrouped = otherCities.groupBy { city ->
+                    city.name.firstOrNull()
+                }
+                otherCitiesGrouped.forEach { (firstLetter, cities) ->
+                    if (firstLetter != null) {
+                        add(CityListItem.CityFirstLetterHeader(firstLetter))
                     }
-                    CityListState.CityList(listItems)
-                },
-                onFailure = { throwable ->
-                    CityListState.Error(throwable)
-                },
-            )
-            _cityListState.value = cityListState
+                    val cityItems = cities.map { CityListItem.City(it) }
+                    addAll(cityItems)
+                }
+            }
+        } else {
+            cities.map { CityListItem.City(it, showFullName = true) }
         }
+        return CityListState.CityList(listItems)
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
