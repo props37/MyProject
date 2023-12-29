@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
@@ -28,7 +29,7 @@ import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 @Composable
 fun ZarinaLogo(
     modifier: Modifier = Modifier,
-    contentDescription: String? = null,
+    contentDescription: String? = stringResource(R.string.zarina),
     color: Color = UiKitTheme.colorsReworked.icon.regular.default,
     animate: Boolean = false,
 ) {
