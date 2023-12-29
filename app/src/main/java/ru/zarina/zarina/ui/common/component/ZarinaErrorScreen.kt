@@ -1,5 +1,7 @@
 package ru.zarina.zarina.ui.common.component
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,39 +21,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.base.UiError
+import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
-import java.io.IOException
-
-// TODO: [High] Rework
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 
 @Composable
-fun ZarinaError(
-    error: UiError,
+fun ZarinaErrorScreen(
+    state: ErrorStateRework,
     onRefreshClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val iconResId: Int
-    val titleResId: Int
-    val bodyResId: Int
-    when (error) {
-        UiError.NETWORK -> {
-            iconResId = R.drawable.ic_wifi_error_24
-            titleResId = R.string.internet_connection_error
-            bodyResId = R.string.check_internet_connection
-        }
-
-        UiError.UNKNOWN -> {
-            iconResId = R.drawable.ic_heart_broken_24
-            titleResId = R.string.something_went_wrong
-            bodyResId = R.string.refresh_page_or_come_back_later
-        }
-    }
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier,
@@ -59,14 +43,14 @@ fun ZarinaError(
         Spacer(modifier = Modifier.weight(1f))
 
         Icon(
-            painter = painterResource(iconResId),
+            painter = painterResource(state.iconResId),
             contentDescription = null,
             tint = UiKitTheme.colorsReworked.icon.regular.disabled,
             modifier = Modifier.size(64.dp),
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = stringResource(titleResId),
+            text = textString(state.title),
             style = UiKitTheme.typographyReworked.primary.bold,
             color = UiKitTheme.colorsReworked.text.general.regular.default,
             textAlign = TextAlign.Center,
@@ -74,7 +58,7 @@ fun ZarinaError(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = stringResource(bodyResId),
+            text = textString(state.body),
             style = UiKitTheme.typographyReworked.secondary.regular,
             color = UiKitTheme.colorsReworked.text.general.regular.default,
             textAlign = TextAlign.Center,
@@ -83,23 +67,21 @@ fun ZarinaError(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        ZarinaButton(
-            onClick = onRefreshClicked,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(text = stringResource(R.string.refresh).uppercase())
-        }
-    }
-}
-
-enum class ZarinaErrorType {
-    Network,
-    Unknown;
-
-    companion object {
-        fun fromThrowable(throwable: Throwable): ZarinaErrorType = when (throwable) {
-            is IOException -> Network
-            else -> Unknown
+        AnimatedContent(
+            targetState = state.isRefreshButtonVisible,
+            transitionSpec = {
+                AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+            },
+            label = "ZarinaErrorScreen Refresh button",
+        ) { isVisible ->
+            if (isVisible) {
+                ZarinaButton(
+                    onClick = onRefreshClicked,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(text = stringResource(R.string.refresh).uppercase())
+                }
+            }
         }
     }
 }
@@ -110,8 +92,8 @@ enum class ZarinaErrorType {
 @Composable
 private fun NetworkErrorPreview() {
     ZarinaTheme {
-        ZarinaError(
-            error = UiError.NETWORK,
+        ZarinaErrorScreen(
+            state = ErrorStateRework.NETWORK,
             onRefreshClicked = {},
             modifier = Modifier
                 .background(Color.White)
@@ -124,10 +106,10 @@ private fun NetworkErrorPreview() {
 @DensityPreviews
 @FontScalePreviews
 @Composable
-private fun UnknownErrorPreview() {
+private fun GenericErrorPreview() {
     ZarinaTheme {
-        ZarinaError(
-            error = UiError.UNKNOWN,
+        ZarinaErrorScreen(
+            state = ErrorStateRework.GENERIC,
             onRefreshClicked = {},
             modifier = Modifier
                 .background(Color.White)

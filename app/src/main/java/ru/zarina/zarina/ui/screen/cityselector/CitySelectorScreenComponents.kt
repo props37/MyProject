@@ -48,13 +48,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.IconButtonCustom
 import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
-import ru.zarina.zarina.ui.common.component.ZarinaError
+import ru.zarina.zarina.ui.common.component.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.button.CloseButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
@@ -62,7 +61,6 @@ import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
@@ -260,8 +258,8 @@ object CitySelectorScreenComponents {
                     }
 
                     is CityListState.Error -> {
-                        ZarinaError(
-                            error = listState.error,
+                        ZarinaErrorScreen(
+                            state = listState.errorState,
                             onRefreshClicked = onErrorRefreshClicked,
                             modifier = Modifier
                                 .fillMaxSize()
@@ -472,48 +470,4 @@ object CitySelectorScreenComponents {
         "CityListItemContentTypeCityWithFullName"
     private const val CityListItemContentTypeCityFirstLetterHeader =
         "CityListItemContentTypeCityFirstLetterHeader"
-}
-
-// TODO: [High] Add PreviewParameterProvider
-@Preview
-@Composable
-private fun CityPreview() {
-    ZarinaTheme {
-        Column {
-            CitySelectorScreenComponents.City(
-                city = City.DEFAULT,
-                onClick = {},
-                showFullName = true,
-                isSelected = false,
-            )
-            CitySelectorScreenComponents.City(
-                city = City.DEFAULT,
-                onClick = {},
-                showFullName = false,
-                isSelected = true,
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun CityFirstLetterHeaderPreview() {
-    ZarinaTheme {
-        Column {
-            CitySelectorScreenComponents.CityFirstLetterHeader(letter = 'С')
-            CitySelectorScreenComponents.City(
-                city = City.DEFAULT,
-                onClick = {},
-                showFullName = false,
-                isSelected = false,
-            )
-            CitySelectorScreenComponents.City(
-                city = City.DEFAULT,
-                onClick = {},
-                showFullName = true,
-                isSelected = true,
-            )
-        }
-    }
 }

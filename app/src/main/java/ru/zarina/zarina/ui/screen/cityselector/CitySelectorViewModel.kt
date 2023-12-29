@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.domain.rework.geography.KladrId
+import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.Throttler
-import ru.zarina.zarina.ui.common.base.UiError
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.geography.CityParcelable
@@ -22,6 +22,7 @@ import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.geography.GetCitiesUseCase
 import ru.zarina.zarina.util.library.coroutines.mapState
+import java.io.IOException
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -127,7 +128,11 @@ class CitySelectorViewModel @Inject constructor(
                         cityListStateFromFetchCitiesSuccess(cityNameQuery, cities)
                     },
                     onFailure = { throwable ->
-                        CityListState.Error(UiError.fromThrowable(throwable))
+                        val errorState = when (throwable) {
+                            is IOException -> ErrorStateRework.NETWORK
+                            else -> ErrorStateRework.GENERIC
+                        }
+                        CityListState.Error(errorState)
                     },
                 )
                 _cityListState.value = cityListState
@@ -177,7 +182,7 @@ class CitySelectorViewModel @Inject constructor(
 
         data class CityList(val list: List<CityListItem>) : CityListState()
 
-        data class Error(val error: UiError) : CityListState()
+        data class Error(val errorState: ErrorStateRework) : CityListState()
     }
 
     sealed class CityListItem {
