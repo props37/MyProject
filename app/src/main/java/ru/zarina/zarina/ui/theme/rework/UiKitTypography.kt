@@ -11,20 +11,23 @@ import androidx.compose.ui.unit.sp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.util.compose.W350
 
-private val CirceBold = Font(
-    resId = R.font.circe_bold,
-    weight = FontWeight.W700,
-)
+private val CirceBold: Font
+    get() = Font(
+        resId = R.font.circe_bold,
+        weight = FontWeight.W700,
+    )
 
-private val CirceRegular = Font(
-    resId = R.font.circe_regular,
-    weight = FontWeight.W400,
-)
+private val CirceRegular: Font
+    get() = Font(
+        resId = R.font.circe_regular,
+        weight = FontWeight.W400,
+    )
 
-private val CirceLight = Font(
-    resId = R.font.circe_light,
-    weight = FontWeight.W350,
-)
+private val CirceLight: Font
+    get() = Font(
+        resId = R.font.circe_light,
+        weight = FontWeight.W350,
+    )
 
 private val CirceFamily = FontFamily(CirceBold, CirceRegular, CirceLight)
 

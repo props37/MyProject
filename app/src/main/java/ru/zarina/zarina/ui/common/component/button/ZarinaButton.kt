@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.rippletheme.DarkRippleTheme
@@ -155,9 +156,9 @@ enum class ZarinaButtonSize { Large, Medium, Small }
 object ZarinaButtonDefaults {
     val Shape = RoundedCornerShape(2.dp)
 
-    val HeightLarge = 56.dp
-    val HeightMedium = 48.dp
-    val HeightSmall = 40.dp
+    val HeightLarge: Dp get() = 56.dp
+    val HeightMedium: Dp get() = 48.dp
+    val HeightSmall: Dp get() = 40.dp
 
     val ContentPaddingLarge: PaddingValues
         get() = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
@@ -171,9 +172,9 @@ object ZarinaButtonDefaults {
     val ContentPaddingEven: PaddingValues
         get() = PaddingValues(8.dp)
 
-    val IconSizeLarge = 20.dp
-    val IconSizeMedium = 16.dp
-    val IconSizeSmall = 12.dp
+    val IconSizeLarge: Dp get() = 20.dp
+    val IconSizeMedium: Dp get() = 16.dp
+    val IconSizeSmall: Dp get() = 12.dp
 
     @Composable
     fun primaryColors(

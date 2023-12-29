@@ -200,7 +200,8 @@ class CitySelectorViewModel @Inject constructor(
 
         private val SEARCH_CITIES_BY_NAME_QUERY_DELAY = 200.milliseconds
 
-        private val MAIN_CITIES_KLADR_IDS = listOf(KladrId.MOSCOW, KladrId.SAINT_PETERSBURG)
+        private val MAIN_CITIES_KLADR_IDS: List<KladrId>
+            get() = listOf(KladrId.MOSCOW, KladrId.SAINT_PETERSBURG)
     }
 }
 
