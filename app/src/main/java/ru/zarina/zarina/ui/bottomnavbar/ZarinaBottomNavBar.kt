@@ -7,6 +7,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
@@ -213,14 +214,18 @@ private fun isItemSelected(
 }
 
 private const val BottomNavBarAnimationSpringStiffness = Spring.StiffnessMedium
-private val BottomNavBarAnimationSpec = spring(
-    stiffness = BottomNavBarAnimationSpringStiffness,
-    visibilityThreshold = IntSize.VisibilityThreshold,
-)
-private val BottomNavBarContentAnimationSpec = spring(
-    stiffness = BottomNavBarAnimationSpringStiffness,
-    visibilityThreshold = IntOffset.VisibilityThreshold,
-)
+
+private val BottomNavBarAnimationSpec: SpringSpec<IntSize>
+    get() = spring(
+        stiffness = BottomNavBarAnimationSpringStiffness,
+        visibilityThreshold = IntSize.VisibilityThreshold,
+    )
+
+private val BottomNavBarContentAnimationSpec: SpringSpec<IntOffset>
+    get() = spring(
+        stiffness = BottomNavBarAnimationSpringStiffness,
+        visibilityThreshold = IntOffset.VisibilityThreshold,
+    )
 
 @Preview
 @FontScalePreviews
