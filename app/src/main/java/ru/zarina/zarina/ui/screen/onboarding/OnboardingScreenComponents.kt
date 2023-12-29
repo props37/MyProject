@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -301,7 +300,6 @@ object OnboardingScreenComponents {
         }
     }
 
-    @Immutable
     private data class OnboardingPage(
         val step: OnboardingStep,
         val number: Int,

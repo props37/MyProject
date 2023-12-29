@@ -24,7 +24,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -138,7 +137,6 @@ fun ZarinaButton(
     }
 }
 
-@Immutable
 data class ZarinaButtonColors(
     val backgroundColor: Color,
     val contentColor: Color,
