@@ -3,8 +3,6 @@ package ru.zarina.zarina.ui.theme.rework
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-// TODO: [Low] Use single class to represent different buttons, texts etc?
-
 data class UiKitColorsReworked(
     val background: Background = Background(),
     val text: Text = Text(),
@@ -14,113 +12,129 @@ data class UiKitColorsReworked(
     data class Background(
         val general: General = General(),
         val button: Button = Button(),
+        val skeleton: Color = Colors.Gallery,
     ) {
         data class General(
-            val regular: Regular = Regular(),
-            val inverse: Inverse = Inverse(),
+            val regular: Generic = Generic(
+                default = Colors.White,
+                disabled = Colors.SilverChalice,
+                muted = Colors.AltoDark,
+            ),
+            val inversed: Generic = Generic(
+                default = Colors.MineShaftDark,
+                disabled = Colors.Gray,
+                muted = Colors.Scorpion,
+            ),
         ) {
-            data class Regular(
-                val background: Color = Colors.White,
-                val muted: Color = Colors.AltoDark,
-            )
-
-            data class Inverse(
-                val inverse: Color = Colors.MineShaftDark,
-            )
+            data class Generic(val default: Color, val disabled: Color, val muted: Color)
         }
 
         data class Button(
-            val primary: Primary = Primary(),
-            val secondary: Secondary = Secondary(),
-            val tertiary: Tertiary = Tertiary(),
-            val outline: Outline = Outline(),
+            val primary: Generic = Generic(
+                default = Colors.MineShaftLight,
+                active = Colors.MineShaftDark,
+                disabled = Colors.Scorpion,
+            ),
+            val secondary: Generic = Generic(
+                default = Colors.White,
+                active = Colors.Gallery,
+                disabled = Colors.White,
+            ),
+            val tertiary: Generic = Generic(
+                default = Colors.WildSand,
+                active = Colors.AltoLight,
+                disabled = Colors.WildSand,
+            ),
+            val outline: Generic = Generic(
+                default = Colors.White,
+                active = Colors.Gallery,
+                disabled = Colors.White,
+            ),
         ) {
-            data class Primary(
-                val default: Color = Colors.MineShaftLight,
-                val active: Color = Colors.MineShaftDark,
-                val disabled: Color = Colors.Scorpion,
-            )
-
-            data class Secondary(
-                val default: Color = Colors.White,
-                val active: Color = Colors.Gallery,
-                val disabled: Color = Colors.White,
-            )
-
-            data class Tertiary(
-                val default: Color = Colors.WildSand,
-                val active: Color = Colors.AltoLight,
-                val disabled: Color = Colors.WildSand,
-            )
-
-            data class Outline(
-                val default: Color = Colors.White,
-                val active: Color = Colors.Gallery,
-                val disabled: Color = Colors.White,
-            )
+            data class Generic(val default: Color, val active: Color, val disabled: Color)
         }
     }
 
     data class Text(
         val general: General = General(),
         val button: Button = Button(),
+        val label: Label = Label(),
     ) {
         data class General(
-            val regular: Regular = Regular(),
-            val inversed: Inversed = Inversed(),
+            val regular: Generic = Generic(
+                default = Colors.MineShaftDark,
+                disabled = Colors.SilverChalice,
+                muted = Colors.Boulder,
+            ),
+            val inversed: Generic = Generic(
+                default = Colors.White,
+                disabled = Colors.Gray,
+                muted = Colors.Silver,
+            ),
+            val accent: Accent = Accent(),
         ) {
-            data class Regular(
-                val default: Color = Colors.MineShaftDark,
-                val disabled: Color = Colors.SilverChalice,
-                val muted: Color = Colors.Boulder,
-            )
+            data class Generic(val default: Color, val disabled: Color, val muted: Color)
 
-            data class Inversed(
-                val default: Color = Colors.White,
+            data class Accent(
+                val blue: Color = Colors.CuriousBlue,
+                val red: Color = Colors.Scarlet,
+                val redDisabled: Color = Colors.VividTangerine,
             )
         }
 
         data class Button(
-            val primary: Primary = Primary(),
-            val secondary: Secondary = Secondary(),
-            val tertiary: Tertiary = Tertiary(),
-            val outline: Outline = Outline(),
-            val backless: Backless = Backless(),
+            val primary: Generic = Generic(
+                default = Colors.White,
+                disabled = Colors.Gray
+            ),
+            val secondary: Generic = Generic(
+                default = Colors.MineShaftDark,
+                disabled = Colors.SilverChalice
+            ),
+            val tertiary: Generic = Generic(
+                default = Colors.MineShaftDark,
+                disabled = Colors.SilverChalice,
+            ),
+            val outline: Generic = Generic(
+                default = Colors.MineShaftDark,
+                disabled = Colors.SilverChalice,
+            ),
+            // Also used for Cell buttons from design kit
+            val backless: Generic = Generic(
+                default = Colors.MineShaftDark,
+                disabled = Colors.SilverChalice,
+            ),
+            val error: Generic = Generic(
+                default = Colors.Scarlet,
+                disabled = Colors.VividTangerine,
+            ),
         ) {
-            data class Primary(
-                val default: Color = Colors.White,
-                val disabled: Color = Colors.Gray,
-            )
-
-            data class Secondary(
-                val default: Color = Colors.MineShaftDark,
-                val disabled: Color = Colors.SilverChalice,
-            )
-
-            data class Tertiary(
-                val default: Color = Colors.MineShaftDark,
-                val disabled: Color = Colors.SilverChalice,
-            )
-
-            data class Outline(
-                val default: Color = Colors.MineShaftDark,
-                val disabled: Color = Colors.SilverChalice,
-            )
-
-            data class Backless(
-                val default: Color = Colors.MineShaftDark,
-                val disabled: Color = Colors.SilverChalice,
-            )
+            data class Generic(val default: Color, val disabled: Color)
         }
+
+        data class Label(
+            val default: Color = Colors.MineShaftDark,
+            val success: Color = Colors.FunGreen,
+            val warning: Color = Colors.Flamenco,
+            val danger: Color = Colors.Scarlet,
+        )
     }
 
     data class Icon(
         val regular: Regular = Regular(),
+        val inversed: Inversed = Inversed(),
     ) {
         data class Regular(
             val default: Color = Colors.MineShaftDark,
-            val muted: Color = Colors.Boulder,
             val disabled: Color = Colors.SilverChalice,
+            val muted: Color = Colors.Boulder,
+            val error: Color = Colors.Scarlet,
+            val errorDisabled: Color = Colors.VividTangerine,
+        )
+
+        data class Inversed(
+            val default: Color = Colors.White,
+            val disabled: Color = Colors.Gray,
         )
     }
 
@@ -132,11 +146,14 @@ data class UiKitColorsReworked(
             val default: Color = Colors.Gallery,
             val active: Color = Colors.MineShaftDark,
             val disabled: Color = Colors.SilverChalice,
+            val error: Color = Colors.Scarlet,
+            val errorDisabled: Color = Colors.VividTangerine,
         )
 
         data class Button(
             val default: Color = Colors.MineShaftDark,
             val disabled: Color = Colors.SilverChalice,
+            val errorDisabled: Color = Colors.VividTangerine,
         )
     }
 }

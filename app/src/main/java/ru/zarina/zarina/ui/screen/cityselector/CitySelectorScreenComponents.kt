@@ -362,7 +362,7 @@ object CitySelectorScreenComponents {
                 animationSpec = tween(durationMillis = 200),
                 label = "CityCheckmark",
             )
-            val maskColor = UiKitTheme.colorsReworked.background.general.regular.background
+            val maskColor = UiKitTheme.colorsReworked.background.general.regular.default
 
             Box(
                 modifier = Modifier

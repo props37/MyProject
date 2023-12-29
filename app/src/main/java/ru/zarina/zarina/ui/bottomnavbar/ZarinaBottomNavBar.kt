@@ -93,7 +93,7 @@ fun ZarinaBottomNavBar(
         },
         modifier = modifier,
     ) {
-        val backgroundColor = UiKitTheme.colorsReworked.background.general.regular.background
+        val backgroundColor = UiKitTheme.colorsReworked.background.general.regular.default
         val topBorderColor = UiKitTheme.colorsReworked.border.general.default
 
         Row(

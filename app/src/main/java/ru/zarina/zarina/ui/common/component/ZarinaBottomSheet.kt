@@ -25,7 +25,7 @@ fun ZarinaBottomSheet(
             .windowInsetsPadding(windowInsets)
             .shadow(elevation = 16.dp, shape = shape)
             .background(
-                color = UiKitTheme.colorsReworked.background.general.regular.background,
+                color = UiKitTheme.colorsReworked.background.general.regular.default,
                 shape = shape,
             ),
     ) {

@@ -84,7 +84,7 @@ private fun ScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colorsReworked.background.general.regular.background),
+            .background(UiKitTheme.colorsReworked.background.general.regular.default),
     ) {
         Banner(modifier = Modifier.fillMaxSize())
 
