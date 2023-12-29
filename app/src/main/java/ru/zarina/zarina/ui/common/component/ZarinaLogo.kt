@@ -6,8 +6,9 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -70,6 +71,9 @@ private fun getShimmerTheme(): ShimmerTheme {
     )
 }
 
+// According to R.drawable.zarina_logo size
+const val ZarinaLogoAspectRatio = 100f / 10
+
 @Preview
 @Composable
 private fun Preview() {
@@ -78,8 +82,9 @@ private fun Preview() {
             ZarinaLogo(
                 animate = true,
                 modifier = Modifier
-                    .size(200.dp)
-                    .padding(32.dp),
+                    .padding(32.dp)
+                    .width(200.dp)
+                    .aspectRatio(ZarinaLogoAspectRatio),
             )
         }
     }
