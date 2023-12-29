@@ -51,9 +51,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.ui.common.component.IconButtonCustom
 import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.button.CloseButton
+import ru.zarina.zarina.ui.common.component.button.IconButtonCustom
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
