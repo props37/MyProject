@@ -85,6 +85,7 @@ data class UiKitColorsReworked(
             val secondary: Secondary = Secondary(),
             val tertiary: Tertiary = Tertiary(),
             val outline: Outline = Outline(),
+            val backless: Backless = Backless(),
         ) {
             data class Primary(
                 val default: Color = Colors.White,
@@ -102,6 +103,11 @@ data class UiKitColorsReworked(
             )
 
             data class Outline(
+                val default: Color = Colors.MineShaftDark,
+                val disabled: Color = Colors.SilverChalice,
+            )
+
+            data class Backless(
                 val default: Color = Colors.MineShaftDark,
                 val disabled: Color = Colors.SilverChalice,
             )

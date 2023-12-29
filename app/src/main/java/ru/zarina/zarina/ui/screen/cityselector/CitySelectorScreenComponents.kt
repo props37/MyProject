@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -37,7 +36,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
@@ -56,6 +54,7 @@ import ru.zarina.zarina.ui.common.component.button.CloseButton
 import ru.zarina.zarina.ui.common.component.button.IconButtonCustom
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
@@ -147,7 +146,6 @@ object CitySelectorScreenComponents {
                 }
             },
             outerTrailingContent = {
-                // TODO: [High] Migrate to cell ZarinaButton
                 val isCancelButtonVisible = focusState.value?.isFocused == true
                 AnimatedContent(
                     targetState = isCancelButtonVisible,
@@ -158,15 +156,15 @@ object CitySelectorScreenComponents {
                     label = "CitySearchBar Cancel button",
                 ) { isVisible ->
                     if (isVisible) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .heightIn(min = 40.dp)
-                                .clip(RoundedCornerShape(4.dp))
-                                .clickable(onClick = onCancelClicked)
-                                .padding(horizontal = 8.dp, vertical = 8.dp),
+                        ZarinaButton(
+                            onClick = onCancelClicked,
+                            size = ZarinaButtonSize.Small,
+                            colors = ZarinaButtonDefaults.backlessColors(),
                         ) {
-                            Text(text = stringResource(R.string.cancel).uppercase())
+                            Text(
+                                text = stringResource(R.string.cancel).uppercase(),
+                                style = UiKitTheme.typographyReworked.caption1.regular,
+                            )
                         }
                     }
                 }

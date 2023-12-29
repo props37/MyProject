@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.isUnspecified
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
@@ -88,10 +89,13 @@ fun ZarinaButton(
             providedRippleTheme
         } else {
             val backgroundColorLuminance = colors.backgroundColor.luminance()
-            if (backgroundColorLuminance <= MaxBackgroundColorLuminanceForLightRippleTheme) {
-                LightRippleTheme
-            } else {
-                DarkRippleTheme
+            when {
+                colors.backgroundColor.isUnspecified -> DarkRippleTheme
+                backgroundColorLuminance <= MaxBackgroundColorLuminanceForLightRippleTheme -> {
+                    LightRippleTheme
+                }
+
+                else -> DarkRippleTheme
             }
         }
     }
@@ -155,9 +159,17 @@ object ZarinaButtonDefaults {
     val HeightMedium = 48.dp
     val HeightSmall = 40.dp
 
-    val ContentPaddingLarge = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-    val ContentPaddingMedium = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
-    val ContentPaddingSmall = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
+    val ContentPaddingLarge: PaddingValues
+        get() = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+
+    val ContentPaddingMedium: PaddingValues
+        get() = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
+
+    val ContentPaddingSmall: PaddingValues
+        get() = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
+
+    val ContentPaddingEven: PaddingValues
+        get() = PaddingValues(8.dp)
 
     val IconSizeLarge = 20.dp
     val IconSizeMedium = 16.dp
@@ -222,6 +234,24 @@ object ZarinaButtonDefaults {
         disabledContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.disabled,
         borderColor: Color = UiKitTheme.colorsReworked.border.button.default,
         disabledBorderColor: Color = UiKitTheme.colorsReworked.border.button.disabled,
+    ): ZarinaButtonColors = ZarinaButtonColors(
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        disabledBackgroundColor = disabledBackgroundColor,
+        disabledContentColor = disabledContentColor,
+        borderColor = borderColor,
+        disabledBorderColor = disabledBorderColor,
+    )
+
+    // Also used for Cell buttons from design kit
+    @Composable
+    fun backlessColors(
+        backgroundColor: Color = Color.Unspecified,
+        contentColor: Color = UiKitTheme.colorsReworked.text.button.backless.default,
+        disabledBackgroundColor: Color = Color.Unspecified,
+        disabledContentColor: Color = UiKitTheme.colorsReworked.text.button.backless.disabled,
+        borderColor: Color = Color.Unspecified,
+        disabledBorderColor: Color = Color.Unspecified,
     ): ZarinaButtonColors = ZarinaButtonColors(
         backgroundColor = backgroundColor,
         contentColor = contentColor,
