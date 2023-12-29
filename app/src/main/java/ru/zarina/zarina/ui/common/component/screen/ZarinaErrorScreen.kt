@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component
+package ru.zarina.zarina.ui.common.component.screen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
