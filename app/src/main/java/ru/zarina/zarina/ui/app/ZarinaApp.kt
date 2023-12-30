@@ -15,7 +15,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import ru.zarina.zarina.ui.bottomnavbar.LocalBottomNavBarSizeTracker
 import ru.zarina.zarina.ui.bottomnavbar.ZarinaBottomNavBar
+import ru.zarina.zarina.ui.bottomnavbar.rememberBottomNavBarSizeTracker
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.BottomNavBarBehavior
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.rememberBottomNavBarBehaviorController
@@ -44,8 +46,11 @@ fun ZarinaApp(
     val bottomNavBarBehaviorController =
         rememberBottomNavBarBehaviorController(defaultBottomNavBarBehavior)
 
+    val bottomNavBarSizeTracker = rememberBottomNavBarSizeTracker()
+
     CompositionLocalProvider(
         LocalBottomNavBarBehaviorController provides bottomNavBarBehaviorController,
+        LocalBottomNavBarSizeTracker provides bottomNavBarSizeTracker,
     ) {
         ModalBottomSheetLayout(
             bottomSheetNavigator = bottomSheetNavigator,
