@@ -6,9 +6,15 @@ import kotlinx.coroutines.flow.StateFlow
 class NoopBehaviorController<T : Behavior>(defaultBehavior: T) : BehaviorController<T> {
     override val currentBehavior: StateFlow<T> = MutableStateFlow(defaultBehavior)
 
-    override fun setDefaultBehavior(behavior: T): Unit = throw NotImplementedError()
+    override fun setDefaultBehavior(behavior: T) {
+        throw NotImplementedError()
+    }
 
-    override fun pushBehavior(behavior: T): Unit = throw NotImplementedError()
+    override fun push(behavior: T) {
+        throw NotImplementedError()
+    }
 
-    override fun popBehavior(behavior: T): Unit = throw NotImplementedError()
+    override fun pop(behavior: T) {
+        throw NotImplementedError()
+    }
 }

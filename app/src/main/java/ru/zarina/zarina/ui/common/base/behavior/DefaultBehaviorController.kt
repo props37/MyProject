@@ -19,13 +19,13 @@ class DefaultBehaviorController<T : Behavior>(
     }
 
     @Synchronized
-    override fun pushBehavior(behavior: T) {
+    override fun push(behavior: T) {
         behaviorStack.addFirst(behavior)
         updateCurrentBehavior()
     }
 
     @Synchronized
-    override fun popBehavior(behavior: T) {
+    override fun pop(behavior: T) {
         behaviorStack.remove(behavior)
         updateCurrentBehavior()
     }

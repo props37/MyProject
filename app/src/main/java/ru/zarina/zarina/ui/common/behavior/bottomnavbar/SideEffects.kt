@@ -12,7 +12,7 @@ fun ForcedBottomNavBarBehavior(isVisible: Boolean, isAnimated: Boolean = true) {
         } else {
             BottomNavBarBehavior.Hidden(isAnimated)
         }
-        controller.pushBehavior(behavior)
-        onDispose { controller.popBehavior(behavior) }
+        controller.push(behavior)
+        onDispose { controller.pop(behavior) }
     }
 }
