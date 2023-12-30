@@ -18,6 +18,8 @@ import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import ru.zarina.zarina.ui.bottomnavbar.LocalBottomNavBarSizeTracker
 import ru.zarina.zarina.ui.bottomnavbar.ZarinaBottomNavBar
 import ru.zarina.zarina.ui.bottomnavbar.rememberBottomNavBarSizeTracker
+import ru.zarina.zarina.ui.common.base.LocalToastController
+import ru.zarina.zarina.ui.common.base.rememberToastController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.BottomNavBarBehavior
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.rememberBottomNavBarBehaviorController
@@ -34,6 +36,8 @@ fun ZarinaApp(
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberNavController(bottomSheetNavigator)
 
+    val toastController = rememberToastController()
+
     val defaultBottomNavBarBehavior = remember(viewModel.startDestination) {
         when (viewModel.startDestination.routeSchema) {
             UnscopedDestinations.Onboarding.routeSchema -> {
@@ -49,6 +53,7 @@ fun ZarinaApp(
     val bottomNavBarSizeTracker = rememberBottomNavBarSizeTracker()
 
     CompositionLocalProvider(
+        LocalToastController provides toastController,
         LocalBottomNavBarBehaviorController provides bottomNavBarBehaviorController,
         LocalBottomNavBarSizeTracker provides bottomNavBarSizeTracker,
     ) {
