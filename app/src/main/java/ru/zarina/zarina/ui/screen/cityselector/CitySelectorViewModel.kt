@@ -85,11 +85,11 @@ class CitySelectorViewModel @Inject constructor(
 
     fun onCityNameQueryChanged(query: String) {
         savedStateHandle[KEY_CITY_NAME_QUERY] = query
-        fetchCities(query, delay = SEARCH_CITIES_BY_NAME_QUERY_DELAY)
+        fetchCities(query, delay = SEARCH_CITIES_BY_NAME_DELAY)
     }
 
     fun onCitySearchBarClearClicked() {
-        onCityNameQueryChanged("")
+        onCityNameQueryChanged(query = "")
     }
 
     fun onCitySearchBarCancelClicked() {
@@ -198,7 +198,7 @@ class CitySelectorViewModel @Inject constructor(
         private const val KEY_SELECTED_CITY = "selected_city"
         private const val KEY_CITY_NAME_QUERY = "city_name_query"
 
-        private val SEARCH_CITIES_BY_NAME_QUERY_DELAY = 200.milliseconds
+        private val SEARCH_CITIES_BY_NAME_DELAY = 200.milliseconds
 
         private val MAIN_CITIES_KLADR_IDS: List<KladrId>
             get() = listOf(KladrId.MOSCOW, KladrId.SAINT_PETERSBURG)
