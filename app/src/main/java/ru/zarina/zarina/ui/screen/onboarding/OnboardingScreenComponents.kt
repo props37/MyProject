@@ -154,8 +154,10 @@ object OnboardingScreenComponents {
     fun OnboardingStep(
         onboardingSteps: List<OnboardingStep>,
         currentOnboardingStep: OnboardingStep,
-        currentCity: City?,
+        userCity: City?,
+        isSkipCityDetectionButtonLoading: Boolean,
         isDetectCityButtonLoading: Boolean,
+        isConfirmCityButtonLoading: Boolean,
         onRequestNotificationsPermissionClicked: () -> Unit,
         onDetectCityClicked: () -> Unit,
         onSkipCityDetectionClicked: () -> Unit,
@@ -221,6 +223,7 @@ object OnboardingScreenComponents {
 
                                 ZarinaButton(
                                     onClick = onSkipCityDetectionClicked,
+                                    isLoading = isSkipCityDetectionButtonLoading,
                                     modifier = Modifier.fillMaxWidth(),
                                     colors = ZarinaButtonDefaults.secondaryColors(),
                                 ) {
@@ -234,12 +237,13 @@ object OnboardingScreenComponents {
                         OnboardingPageLayout(
                             title = stringResource(
                                 R.string.onboarding_city_confirmation_title,
-                                currentCity?.name.orEmpty(),
+                                userCity?.name.orEmpty(),
                             ),
                             body = stringResource(R.string.onboarding_city_confirmation_body),
                             buttons = {
                                 ZarinaButton(
                                     onClick = onConfirmCityClicked,
+                                    isLoading = isConfirmCityButtonLoading,
                                     modifier = Modifier.fillMaxWidth(),
                                 ) {
                                     Text(text = stringResource(R.string.yes_correct).uppercase())
@@ -259,6 +263,7 @@ object OnboardingScreenComponents {
 
                                 ZarinaButton(
                                     onClick = onSkipCityDetectionClicked,
+                                    isLoading = isSkipCityDetectionButtonLoading,
                                     modifier = Modifier.fillMaxWidth(),
                                     colors = ZarinaButtonDefaults.secondaryColors(),
                                 ) {

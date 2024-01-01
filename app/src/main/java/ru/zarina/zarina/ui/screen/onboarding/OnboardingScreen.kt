@@ -44,14 +44,18 @@ fun OnboardingScreen(
 ) {
     val onboardingSteps by viewModel.onboardingSteps.collectAsStateWithLifecycle()
     val currentOnboardingStep by viewModel.currentOnboardingStep.collectAsStateWithLifecycle()
-    val currentCity by viewModel.currentCity.collectAsStateWithLifecycle()
+    val userCity by viewModel.userCity.collectAsStateWithLifecycle()
+    val isSkipCityDetectionButtonLoading by viewModel.isSkipCityDetectionButtonLoading.collectAsStateWithLifecycle()
     val isDetectCityButtonLoading by viewModel.isDetectCityButtonLoading.collectAsStateWithLifecycle()
+    val isConfirmCityButtonLoading by viewModel.isConfirmCityButtonLoading.collectAsStateWithLifecycle()
 
     ScreenContent(
         onboardingSteps = onboardingSteps,
         currentOnboardingStep = currentOnboardingStep,
-        currentCity = currentCity,
+        userCity = userCity,
+        isSkipCityDetectionButtonLoading = isSkipCityDetectionButtonLoading,
         isDetectCityButtonLoading = isDetectCityButtonLoading,
+        isConfirmCityButtonLoading = isConfirmCityButtonLoading,
         onRequestNotificationsPermissionClicked = viewModel::onRequestNotificationsPermissionClicked,
         onDetectCityClicked = viewModel::onDetectCityClicked,
         onSkipCityDetectionClicked = viewModel::onSkipCityDetectionClicked,
@@ -66,8 +70,10 @@ fun OnboardingScreen(
 private fun ScreenContent(
     onboardingSteps: List<OnboardingStep>,
     currentOnboardingStep: OnboardingStep,
-    currentCity: City?,
+    userCity: City?,
+    isSkipCityDetectionButtonLoading: Boolean,
     isDetectCityButtonLoading: Boolean,
+    isConfirmCityButtonLoading: Boolean,
     onRequestNotificationsPermissionClicked: () -> Unit,
     onDetectCityClicked: () -> Unit,
     onSkipCityDetectionClicked: () -> Unit,
@@ -113,8 +119,10 @@ private fun ScreenContent(
                 OnboardingStep(
                     onboardingSteps = onboardingSteps,
                     currentOnboardingStep = currentOnboardingStep,
-                    currentCity = currentCity,
+                    userCity = userCity,
+                    isSkipCityDetectionButtonLoading = isSkipCityDetectionButtonLoading,
                     isDetectCityButtonLoading = isDetectCityButtonLoading,
+                    isConfirmCityButtonLoading = isConfirmCityButtonLoading,
                     onRequestNotificationsPermissionClicked = onRequestNotificationsPermissionClicked,
                     onDetectCityClicked = onDetectCityClicked,
                     onSkipCityDetectionClicked = onSkipCityDetectionClicked,
