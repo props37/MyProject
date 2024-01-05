@@ -8,7 +8,7 @@ import ru.zarina.zarina.usecase.rework.authorization.FetchUnauthorizedUserAuthor
 import ru.zarina.zarina.utils.clean.invoke
 import javax.inject.Inject
 
-class AuthorizationTokensFetcherExtension @Inject constructor(
+class AuthorizationTokensFetcherApplicationExtension @Inject constructor(
     private val coroutineScope: CoroutineScope,
     private val fetchUnauthorizedUserAuthorizationTokens: FetchUnauthorizedUserAuthorizationTokensUseCase,
 ) : ApplicationExtension {

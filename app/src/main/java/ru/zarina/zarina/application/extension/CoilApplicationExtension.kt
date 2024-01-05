@@ -9,7 +9,7 @@ import coil.memory.MemoryCache
 import ru.zarina.zarina.application.extension.base.ApplicationExtension
 import javax.inject.Inject
 
-class CoilExtension @Inject constructor() : ApplicationExtension {
+class CoilApplicationExtension @Inject constructor() : ApplicationExtension {
     override fun install(application: Application) {
         val factory = ImageLoaderFactory {
             ImageLoader.Builder(application)
