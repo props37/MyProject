@@ -1,14 +1,14 @@
-package ru.zarina.zarina.ui.activity.extension
+package ru.zarina.zarina.ui.activity.observer
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import ru.zarina.zarina.data.permissionmanager.PermissionManager
-import ru.zarina.zarina.ui.activity.extension.base.ActivityExtension
+import ru.zarina.zarina.ui.activity.observer.base.ActivityLifecycleObserver
 import javax.inject.Inject
 
-class PermissionManagerActivityExtension @Inject constructor(
+class PermissionManagerActivityLifecycleObserver @Inject constructor(
     private val permissionManager: PermissionManager,
-) : ActivityExtension {
+) : ActivityLifecycleObserver {
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         val activity = source.asActivity()
         when (event) {

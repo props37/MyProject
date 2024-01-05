@@ -8,7 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
-import ru.zarina.zarina.ui.activity.extension.ActivityExtensionManager
+import ru.zarina.zarina.ui.activity.observer.ActivityLifecycleObserverManager
 import ru.zarina.zarina.ui.app.ZarinaApp
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.util.library.activity.DefaultDarkScrim
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var activityExtensionManager: ActivityExtensionManager
+    lateinit var activityLifecycleObserverManager: ActivityLifecycleObserverManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
             ),
         )
         super.onCreate(savedInstanceState)
-        installActivityExtensions()
+        addActivityLifecycleObservers()
 
         setContent {
             ZarinaTheme {
@@ -39,9 +39,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun installActivityExtensions() {
-        activityExtensionManager.extensions.forEach { extension ->
-            lifecycle.addObserver(extension)
+    private fun addActivityLifecycleObservers() {
+        activityLifecycleObserverManager.observers.forEach { observer ->
+            lifecycle.addObserver(observer)
         }
     }
 }
