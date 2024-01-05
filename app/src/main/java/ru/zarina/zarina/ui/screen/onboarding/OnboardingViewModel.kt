@@ -40,6 +40,7 @@ import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.device.SetIsOnboardingCompletedUseCase
 import ru.zarina.zarina.usecase.rework.geography.UpdateUserCityUseCase
+import ru.zarina.zarina.util.library.coroutines.WhileSubscribedDelay
 import ru.zarina.zarina.util.library.coroutines.mapState
 import ru.zarina.zarina.utils.clean.invoke
 import timber.log.Timber
@@ -92,7 +93,7 @@ class OnboardingViewModel @AssistedInject constructor(
                 && onboardingCompletionTrigger == OnboardingCompletionTrigger.CITY_DETECTION_SKIPPED
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
+        started = SharingStarted.WhileSubscribed(SharingStarted.WhileSubscribedDelay),
         initialValue = false,
     )
 
@@ -100,7 +101,7 @@ class OnboardingViewModel @AssistedInject constructor(
         .isOperationOngoing(Operation.DETECT_CITY)
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
+            started = SharingStarted.WhileSubscribed(SharingStarted.WhileSubscribedDelay),
             initialValue = false,
         )
 
@@ -112,7 +113,7 @@ class OnboardingViewModel @AssistedInject constructor(
                 onboardingCompletionTrigger == OnboardingCompletionTrigger.CITY_CONFIRMED
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
+        started = SharingStarted.WhileSubscribed(SharingStarted.WhileSubscribedDelay),
         initialValue = false,
     )
 
