@@ -7,7 +7,7 @@ import androidx.lifecycle.LifecycleOwner
 interface ActivityLifecycleObserver : LifecycleEventObserver {
     fun LifecycleOwner.asActivity(): ComponentActivity {
         return checkNotNull(this as? ComponentActivity) {
-            "ActivityExtension should be attached to Activity lifecycle"
+            "ActivityLifecycleObserver should be attached to Activity lifecycle"
         }
     }
 }
