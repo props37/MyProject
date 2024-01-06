@@ -8,9 +8,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.rework.content.HomeBanners
+import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.utils.clean.invoke
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,7 +38,11 @@ class HomeViewModel @Inject constructor(
                         BannersState.Banners(banners)
                     },
                     onFailure = { throwable ->
-                        BannersState.Error(throwable)
+                        val errorState = when (throwable) {
+                            is IOException -> ErrorStateRework.NETWORK
+                            else -> ErrorStateRework.GENERIC
+                        }
+                        BannersState.Error(errorState)
                     },
                 )
                 _bannersState.value = bannersState
@@ -51,6 +57,6 @@ class HomeViewModel @Inject constructor(
 
         data class Banners(val banners: HomeBanners) : BannersState()
 
-        data class Error(val throwable: Throwable) : BannersState()
+        data class Error(val errorState: ErrorStateRework) : BannersState()
     }
 }
