@@ -11,7 +11,7 @@ class HomeApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
     private val httpClient: HttpClient,
 ) {
-    suspend fun getBanners(): HomeBannersDto {
+    suspend fun getHomeBanners(): HomeBannersDto {
         return httpClient.get("/api/v1/main/banners").body()
     }
 }

@@ -15,6 +15,6 @@ class GetHomeBannersUseCase @Inject constructor(
 ) : FlowUseCase<Unit, HomeBanners>(dispatcher) {
 
     override fun execute(params: Unit): Flow<HomeBanners> {
-        return homeRepository.getBanners()
+        return homeRepository.getHomeBanners()
     }
 }

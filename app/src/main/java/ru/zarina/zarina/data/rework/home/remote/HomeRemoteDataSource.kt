@@ -9,8 +9,8 @@ import javax.inject.Inject
 class HomeRemoteDataSource @Inject constructor(
     private val api: HomeApi,
 ) {
-    fun getBanners(): Flow<HomeBanners> = flow {
-        val homeBanners = api.getBanners().toHomeBanners()
+    fun getHomeBanners(): Flow<HomeBanners> = flow {
+        val homeBanners = api.getHomeBanners().toHomeBanners()
         emit(homeBanners)
     }
 }
