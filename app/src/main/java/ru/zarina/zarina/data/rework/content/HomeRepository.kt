@@ -1,7 +1,7 @@
-package ru.zarina.zarina.data.rework.home
+package ru.zarina.zarina.data.rework.content
 
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.data.rework.home.remote.HomeRemoteDataSource
+import ru.zarina.zarina.data.rework.content.remote.HomeRemoteDataSource
 import ru.zarina.zarina.domain.rework.home.HomeBanners
 import javax.inject.Inject
 
