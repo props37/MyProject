@@ -1,4 +1,4 @@
-package ru.zarina.zarina.di.reworked
+package ru.zarina.zarina.di.rework
 
 import android.content.Context
 import androidx.datastore.core.DataStore

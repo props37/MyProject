@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.zarina.zarina.data.rework.geography.GeographyRepository
 import ru.zarina.zarina.data.rework.location.LocationRepository
-import ru.zarina.zarina.di.reworked.Qualifiers
+import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.usecase.base.FlowUseCase
 import timber.log.Timber

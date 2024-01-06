@@ -1,4 +1,4 @@
-package ru.zarina.zarina.di.reworked
+package ru.zarina.zarina.di.rework
 
 import dagger.Module
 import dagger.Provides
