@@ -1,4 +1,4 @@
-package ru.zarina.zarina.usecase.rework.home
+package ru.zarina.zarina.usecase.rework.content
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
