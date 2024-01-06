@@ -43,6 +43,7 @@ import ru.zarina.zarina.ui.common.component.ZarinaLinearProgressIndicator
 import ru.zarina.zarina.ui.common.component.ZarinaLogo
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.util.SplashScreenLogoSize
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.OnboardingStep
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.FontFeatureSettings
@@ -309,7 +310,4 @@ object OnboardingScreenComponents {
         val step: OnboardingStep,
         val number: Int,
     )
-
-    // According to https://developer.android.com/develop/ui/views/launch/splash-screen
-    private val SplashScreenLogoSize = 192.dp
 }
