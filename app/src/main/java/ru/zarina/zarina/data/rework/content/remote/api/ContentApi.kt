@@ -7,7 +7,7 @@ import ru.zarina.zarina.data.rework.content.remote.api.dto.HomeBannersDto
 import ru.zarina.zarina.di.rework.Qualifiers
 import javax.inject.Inject
 
-class HomeApi @Inject constructor(
+class ContentApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
     private val httpClient: HttpClient,
 ) {
