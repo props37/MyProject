@@ -3,7 +3,7 @@ package ru.zarina.zarina.data.rework.content.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.rework.common.Url
-import ru.zarina.zarina.domain.rework.home.HomeBanners
+import ru.zarina.zarina.domain.rework.content.HomeBanners
 
 @Serializable
 data class HomeBannersDto(

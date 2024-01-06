@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.rework.home
+package ru.zarina.zarina.domain.rework.content
 
 import ru.zarina.zarina.domain.rework.common.Url
 

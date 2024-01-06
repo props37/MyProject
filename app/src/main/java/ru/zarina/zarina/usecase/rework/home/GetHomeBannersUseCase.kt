@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.data.rework.content.ContentRepository
 import ru.zarina.zarina.di.rework.Qualifiers
-import ru.zarina.zarina.domain.rework.home.HomeBanners
+import ru.zarina.zarina.domain.rework.content.HomeBanners
 import ru.zarina.zarina.usecase.base.FlowUseCase
 import javax.inject.Inject
 
