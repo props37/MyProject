@@ -8,7 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
-import ru.zarina.zarina.ui.activity.observer.ActivityLifecycleObserverManager
+import ru.zarina.zarina.ui.activity.lifecycleobserver.ActivityLifecycleObserverManager
 import ru.zarina.zarina.ui.app.ZarinaApp
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.util.library.activity.DefaultDarkScrim

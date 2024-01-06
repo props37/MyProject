@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.activity.observer
+package ru.zarina.zarina.ui.activity.lifecycleobserver
 
 import javax.inject.Inject
 
