@@ -14,8 +14,8 @@ data class HomeBannersDto(
     val man: List<Banner>? = null,
 ) {
     fun toHomeBanners(): HomeBanners = HomeBanners(
-        woman = woman?.map { it.toHomeBanner() } ?: emptyList(),
-        man = man?.map { it.toHomeBanner() } ?: emptyList(),
+        womenBanners = woman?.map { it.toHomeBanner() } ?: emptyList(),
+        menBanners = man?.map { it.toHomeBanner() } ?: emptyList(),
     )
 
     @Serializable

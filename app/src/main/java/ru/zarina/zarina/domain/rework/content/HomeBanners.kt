@@ -3,8 +3,8 @@ package ru.zarina.zarina.domain.rework.content
 import ru.zarina.zarina.domain.rework.common.Url
 
 data class HomeBanners(
-    val woman: List<Banner>,
-    val man: List<Banner>,
+    val womenBanners: List<Banner>,
+    val menBanners: List<Banner>,
 ) {
     data class Banner(
         val id: Id,
@@ -24,6 +24,6 @@ data class HomeBanners(
 
     companion object {
         val EMPTY: HomeBanners
-            get() = HomeBanners(woman = emptyList(), man = emptyList())
+            get() = HomeBanners(womenBanners = emptyList(), menBanners = emptyList())
     }
 }
