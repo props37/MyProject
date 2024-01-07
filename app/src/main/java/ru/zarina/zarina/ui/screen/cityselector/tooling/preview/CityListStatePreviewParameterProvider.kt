@@ -1,0 +1,44 @@
+package ru.zarina.zarina.ui.screen.cityselector.tooling.preview
+
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.rework.geography.KladrId
+import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
+import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
+
+class CityListStatePreviewParameterProvider : PreviewParameterProvider<CityListState> {
+    override val values: Sequence<CityListState>
+        get() = sequenceOf(
+            CityListState.Loading,
+            CityListState.CityList(getCityListItems()),
+            CityListState.Error(ErrorStateRework.NETWORK),
+        )
+
+    private fun getCityListItems(): List<CityListItem> {
+        val saintPetersburg = City(
+            name = "Санкт-Петербург",
+            fullName = "Санкт-Петербург",
+            region = "Санкт-Петербург",
+            kladrId = KladrId("0"),
+        )
+        val moscow = City(
+            name = "Москва",
+            fullName = "Москва",
+            region = "Москва",
+            kladrId = KladrId("1"),
+        )
+        val anapa = City(
+            name = "Анапа",
+            fullName = "Анапа",
+            region = "Анапа",
+            kladrId = KladrId("2"),
+        )
+        return listOf(
+            CityListItem.City(saintPetersburg),
+            CityListItem.City(moscow),
+            CityListItem.CityFirstLetterHeader('А'),
+            CityListItem.City(anapa),
+        )
+    }
+}

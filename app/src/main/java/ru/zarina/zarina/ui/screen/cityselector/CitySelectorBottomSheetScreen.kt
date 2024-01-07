@@ -21,17 +21,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
+import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
+import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
+import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenComponents.CityList
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenComponents.CitySearchBar
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
+import ru.zarina.zarina.ui.screen.cityselector.tooling.preview.CityListStatePreviewParameterProvider
 
 @Composable
 fun CitySelectorBottomSheetScreen(
@@ -123,7 +129,29 @@ private fun ScreenContent(
 }
 
 @Preview
+@FontScalePreviews
+@DensityPreviews
 @Composable
-private fun Preview() {
-    // TODO: [High] Add preview
+private fun Preview(
+    @PreviewParameter(CityListStatePreviewParameterProvider::class)
+    cityListState: CityListState,
+) {
+    ZarinaPreview {
+        ScreenContent(
+            cityNameQuery = "",
+            onCityNameQueryChanged = {},
+            onCitySearchBarClearClicked = {},
+            onCitySearchBarCancelClicked = {},
+            cityListState = cityListState,
+            isCitySearchBarVisible = cityListState is CityListState.CityList,
+            selectedCity = remember { City.DEFAULT },
+            onCityClicked = {},
+            isChangeCityButtonVisible = false,
+            onChangeCityClicked = {},
+            onErrorRefreshClicked = {},
+            onCloseClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigateBackward = {},
+        )
+    }
 }
