@@ -1,6 +1,5 @@
 plugins {
     id("zarina.android.application")
-    id("zarina.compose.metrics")
 
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -166,4 +165,19 @@ dependencies {
     androidTestImplementation(libs.jetpack.compose.junit4)
 
     lintChecks(libs.lint.composeChecks)
+}
+
+// Compose compiler metrics
+// Command: ./gradlew assembleRelease -P.enableComposeCompilerReports=true --rerun-tasks
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    val buildDir = project.layout.buildDirectory.asFile.get()
+    val metricsDir = "${buildDir.absolutePath}/compose_metrics"
+    kotlinOptions.freeCompilerArgs += listOf(
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=$metricsDir",
+    )
+    kotlinOptions.freeCompilerArgs += listOf(
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$metricsDir",
+    )
 }
