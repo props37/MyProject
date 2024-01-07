@@ -18,7 +18,7 @@ plugins {
 
 androidGitVersion {
     codeFormat = "MNNPPP"
-    format = "%tag%%--branch%%--commit%"
+    format = "%tag%%-branch%%-commit%"
 }
 
 kapt {
