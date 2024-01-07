@@ -29,7 +29,7 @@ class KtorAnyQuerySearchApi(
             parameter("fullData", false)
             parameter("regionId", "global")
 
-            parameter("apiKey", BuildConfig.ANYQUERY_SECRET)
+            parameter("apiKey", BuildConfig.ANY_QUERY_KEY)
         }
         return response.body()
     }
@@ -58,7 +58,7 @@ class KtorAnyQuerySearchApi(
                 parameter("filter", it)
             }
 
-            parameter("apiKey", BuildConfig.ANYQUERY_SECRET)
+            parameter("apiKey", BuildConfig.ANY_QUERY_KEY)
         }
 
         return response.body()
