@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screen.onboarding
 
+import android.content.Context
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -11,6 +12,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -34,9 +36,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
+import coil.imageLoader
 import coil.request.ImageRequest
 import coil.size.Size
+import okhttp3.OkHttpClient
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaLinearProgressIndicator
@@ -47,31 +52,42 @@ import ru.zarina.zarina.ui.common.util.SplashScreenLogoSize
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.OnboardingStep
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.FontFeatureSettings
+import java.util.concurrent.TimeUnit
 
 object OnboardingScreenComponents {
 
-    // TODO: [High] Use custom ImageLoader to set timeouts
     @Composable
     fun Banner(modifier: Modifier = Modifier) {
         Box(modifier = modifier) {
             val context = LocalContext.current
-            val imageRequest = remember(context) {
-                ImageRequest.Builder(context)
-                    .data(OnboardingViewModel.ONBOARDING_BANNER_URL)
-                    .size(Size.ORIGINAL)
-                    .crossfade(true)
-                    .error(R.drawable.onboarding_default_banner)
-                    .build()
-            }
 
             var isBannerDisplayed by remember { mutableStateOf(false) }
 
-            AsyncImage(
+            val imageLoader = remember(context) {
+                getBannerImageLoader(context)
+            }
+            val imageRequest = remember(context) {
+                val fallbackBannerResId = R.drawable.onboarding_default_banner
+                ImageRequest.Builder(context)
+                    .data(OnboardingViewModel.ONBOARDING_BANNER_URL)
+                    .size(Size.ORIGINAL)
+                    .error(fallbackBannerResId)
+                    .fallback(fallbackBannerResId)
+                    .build()
+            }
+            val contentScale = ContentScale.Crop
+            val painter = rememberAsyncImagePainter(
                 model = imageRequest,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+                imageLoader = imageLoader,
+                contentScale = contentScale,
                 onSuccess = { isBannerDisplayed = true },
                 onError = { isBannerDisplayed = true },
+            )
+
+            Image(
+                painter = painter,
+                contentDescription = null,
+                contentScale = contentScale,
                 modifier = Modifier.fillMaxSize(),
             )
 
@@ -304,8 +320,21 @@ object OnboardingScreenComponents {
         }
     }
 
+    private fun getBannerImageLoader(context: Context): ImageLoader {
+        return context.imageLoader.newBuilder()
+            .okHttpClient {
+                OkHttpClient.Builder()
+                    .connectTimeout(BANNER_IMAGE_LOADER_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                    .readTimeout(BANNER_IMAGE_LOADER_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                    .build()
+            }
+            .build()
+    }
+
     private data class OnboardingPage(
         val step: OnboardingStep,
         val number: Int,
     )
+
+    private const val BANNER_IMAGE_LOADER_TIMEOUT_SECONDS = 3L
 }
