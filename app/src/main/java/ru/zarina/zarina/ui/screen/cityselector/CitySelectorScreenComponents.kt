@@ -67,8 +67,6 @@ import ru.zarina.zarina.util.compose.Crossfade
 import ru.zarina.zarina.util.compose.navigationBarsOrIme
 import ru.zarina.zarina.utils.compose.plus
 
-// TODO: [High] Add previews
-
 object CitySelectorScreenComponents {
 
     @Composable
