@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
@@ -88,7 +88,7 @@ private fun Preview() {
         ScreenContent(
             defaultCity = City.DEFAULT,
             onCloseClicked = {},
-            sideEffects = remember { flowOf() },
+            sideEffects = remember { emptyFlow() },
             navigateBackward = {},
         )
     }

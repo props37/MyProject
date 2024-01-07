@@ -17,24 +17,28 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
+import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.Banner
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.OnboardingStep
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.ProgressIndicator
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.OnboardingStep
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
+import ru.zarina.zarina.ui.screen.onboarding.tooling.preview.OnboardingStepPreviewParameterProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 import ru.zarina.zarina.util.compose.HorizontalAndBottom
 
 @Composable
@@ -139,8 +143,25 @@ private fun ScreenContent(
 @FontScalePreviews
 @DensityPreviews
 @Composable
-private fun Preview() {
-    ZarinaTheme {
-        // TODO: [High] Add preview
+private fun Preview(
+    @PreviewParameter(OnboardingStepPreviewParameterProvider::class)
+    onboardingStep: OnboardingStep,
+) {
+    ZarinaPreview {
+        ScreenContent(
+            onboardingSteps = remember { OnboardingStep.entries.toList() },
+            currentOnboardingStep = onboardingStep,
+            userCity = remember { City.DEFAULT },
+            isSkipCityDetectionButtonLoading = false,
+            isDetectCityButtonLoading = false,
+            isConfirmCityButtonLoading = false,
+            onRequestNotificationsPermissionClicked = {},
+            onDetectCityClicked = {},
+            onSkipCityDetectionClicked = {},
+            onConfirmCityClicked = {},
+            onSelectCityClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigateForward = {},
+        )
     }
 }
