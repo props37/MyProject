@@ -1,6 +1,6 @@
 package ru.zarina.zarina.ui.common.behavior.navigationbar
 
-import ru.zarina.zarina.ui.common.base.behavior.Behavior
+import ru.zarina.zarina.ui.common.behavior.base.Behavior
 
 sealed interface NavigationBarBehavior : Behavior {
 

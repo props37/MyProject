@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
-import ru.zarina.zarina.ui.common.base.behavior.BehaviorController
-import ru.zarina.zarina.ui.common.base.behavior.DefaultBehaviorController
-import ru.zarina.zarina.ui.common.base.behavior.NoopBehaviorController
+import ru.zarina.zarina.ui.common.behavior.base.BehaviorController
+import ru.zarina.zarina.ui.common.behavior.base.DefaultBehaviorController
+import ru.zarina.zarina.ui.common.behavior.base.NoopBehaviorController
 
 typealias BottomNavBarBehaviorController = BehaviorController<BottomNavBarBehavior>
 

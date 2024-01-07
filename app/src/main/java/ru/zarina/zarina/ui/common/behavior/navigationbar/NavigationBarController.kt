@@ -1,8 +1,8 @@
 package ru.zarina.zarina.ui.common.behavior.navigationbar
 
 import androidx.compose.runtime.staticCompositionLocalOf
-import ru.zarina.zarina.ui.common.base.behavior.BehaviorController
-import ru.zarina.zarina.ui.common.base.behavior.NoopBehaviorController
+import ru.zarina.zarina.ui.common.behavior.base.BehaviorController
+import ru.zarina.zarina.ui.common.behavior.base.NoopBehaviorController
 
 typealias NavigationBarController = BehaviorController<NavigationBarBehavior>
 
