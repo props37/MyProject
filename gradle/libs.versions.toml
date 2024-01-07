@@ -121,6 +121,7 @@ accompanist-navigationMaterial = { group = "com.google.accompanist", name = "acc
 accompanist-webview = { group = "com.google.accompanist", name = "accompanist-webview", version.ref = "accompanist" }
 
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
 composeShimmer = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version.ref = "composeShimmer" }
 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
