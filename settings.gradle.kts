@@ -16,4 +16,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Zarina"
 include(":app")
-include(":macrobenchmark")
