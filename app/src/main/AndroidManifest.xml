@@ -39,9 +39,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${GOOGLE_MAPS_KEY}" />
 
-        <!-- TODO: [High] Remove? -->
-        <profileable android:shell="true" />
-
     </application>
 
     <queries>
