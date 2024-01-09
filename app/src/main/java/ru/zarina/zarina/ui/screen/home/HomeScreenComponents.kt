@@ -33,7 +33,6 @@ object HomeScreenComponents {
 
     // TODO: [High] Rename
     @OptIn(ExperimentalFoundationApi::class)
-    @androidx.annotation.OptIn(UnstableApi::class)
     @Composable
     fun Banners(
         banners: HomeBanners,
