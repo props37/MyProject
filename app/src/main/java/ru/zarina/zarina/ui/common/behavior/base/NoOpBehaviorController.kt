@@ -3,7 +3,7 @@ package ru.zarina.zarina.ui.common.behavior.base
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class NoopBehaviorController<T : Behavior>(
+class NoOpBehaviorController<T : Behavior>(
     defaultBehavior: T,
     private val throwExceptions: Boolean = true,
 ) : BehaviorController<T> {

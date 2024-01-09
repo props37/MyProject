@@ -9,7 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import java.lang.ref.WeakReference
 
 val LocalToastController = staticCompositionLocalOf<ToastController> {
-    NoopToastController()
+    NoOpToastController()
 }
 
 @Composable
@@ -47,7 +47,7 @@ class ToastControllerImpl(private val context: Context) : ToastController {
     }
 }
 
-private class NoopToastController : ToastController {
+private class NoOpToastController : ToastController {
     override fun show(text: CharSequence, duration: Int) {
         throw NotImplementedError()
     }

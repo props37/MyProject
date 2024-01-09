@@ -8,7 +8,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.IntSize
 
 val LocalBottomNavBarSizeTracker = staticCompositionLocalOf<BottomNavBarSizeTracker> {
-    NoopBottomNavBarSizeTracker()
+    NoOpBottomNavBarSizeTracker()
 }
 
 @Composable
@@ -31,7 +31,7 @@ class BottomNavBarSizeTrackerImpl : BottomNavBarSizeTracker {
     }
 }
 
-private class NoopBottomNavBarSizeTracker : BottomNavBarSizeTracker {
+private class NoOpBottomNavBarSizeTracker : BottomNavBarSizeTracker {
     override val sizePx: State<IntSize>
         get() = throw NotImplementedError()
 
