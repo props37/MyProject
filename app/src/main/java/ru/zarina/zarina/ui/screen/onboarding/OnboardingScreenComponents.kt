@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screen.onboarding
 
+import android.content.Context
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -24,58 +25,69 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
+import coil.imageLoader
 import coil.request.ImageRequest
 import coil.size.Size
+import okhttp3.OkHttpClient
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaLinearProgressIndicator
+import ru.zarina.zarina.ui.common.component.ZarinaLogo
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.util.SplashScreenLogoSize
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.OnboardingStep
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.FontFeatureSettings
-
-// TODO: [High] Add previews
+import java.util.concurrent.TimeUnit
 
 object OnboardingScreenComponents {
 
-    // TODO: [High] Use custom ImageLoader to set timeouts
     @Composable
     fun Banner(modifier: Modifier = Modifier) {
         Box(modifier = modifier) {
             val context = LocalContext.current
-            val imageRequest = remember(context) {
-                ImageRequest.Builder(context)
-                    .data(OnboardingViewModel.ONBOARDING_BANNER_URL)
-                    .size(Size.ORIGINAL)
-                    .crossfade(true)
-                    .error(R.drawable.onboarding_default_banner)
-                    .build()
-            }
 
             var isBannerDisplayed by remember { mutableStateOf(false) }
 
-            AsyncImage(
+            val imageLoader = remember(context) {
+                getBannerImageLoader(context)
+            }
+            val imageRequest = remember(context) {
+                val fallbackBannerResId = R.drawable.onboarding_default_banner
+                ImageRequest.Builder(context)
+                    .data(OnboardingViewModel.ONBOARDING_BANNER_URL)
+                    .size(Size.ORIGINAL)
+                    .error(fallbackBannerResId)
+                    .fallback(fallbackBannerResId)
+                    .build()
+            }
+            val contentScale = ContentScale.Crop
+            val painter = rememberAsyncImagePainter(
                 model = imageRequest,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+                imageLoader = imageLoader,
+                contentScale = contentScale,
                 onSuccess = { isBannerDisplayed = true },
                 onError = { isBannerDisplayed = true },
+            )
+
+            Image(
+                painter = painter,
+                contentDescription = null,
+                contentScale = contentScale,
                 modifier = Modifier.fillMaxSize(),
             )
 
@@ -88,10 +100,9 @@ object OnboardingScreenComponents {
                 label = "Banner logo color",
             )
 
-            Image(
-                painter = painterResource(R.drawable.zarina_logo),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(logoColor),
+            ZarinaLogo(
+                color = logoColor,
+                animate = !isBannerDisplayed,
                 modifier = Modifier
                     .align(Alignment.Center)
                     .size(SplashScreenLogoSize),
@@ -158,8 +169,10 @@ object OnboardingScreenComponents {
     fun OnboardingStep(
         onboardingSteps: List<OnboardingStep>,
         currentOnboardingStep: OnboardingStep,
-        currentCity: City?,
+        userCity: City?,
+        isSkipCityDetectionButtonLoading: Boolean,
         isDetectCityButtonLoading: Boolean,
+        isConfirmCityButtonLoading: Boolean,
         onRequestNotificationsPermissionClicked: () -> Unit,
         onDetectCityClicked: () -> Unit,
         onSkipCityDetectionClicked: () -> Unit,
@@ -225,6 +238,7 @@ object OnboardingScreenComponents {
 
                                 ZarinaButton(
                                     onClick = onSkipCityDetectionClicked,
+                                    isLoading = isSkipCityDetectionButtonLoading,
                                     modifier = Modifier.fillMaxWidth(),
                                     colors = ZarinaButtonDefaults.secondaryColors(),
                                 ) {
@@ -238,12 +252,13 @@ object OnboardingScreenComponents {
                         OnboardingPageLayout(
                             title = stringResource(
                                 R.string.onboarding_city_confirmation_title,
-                                currentCity?.name.orEmpty(),
+                                userCity?.name.orEmpty(),
                             ),
                             body = stringResource(R.string.onboarding_city_confirmation_body),
                             buttons = {
                                 ZarinaButton(
                                     onClick = onConfirmCityClicked,
+                                    isLoading = isConfirmCityButtonLoading,
                                     modifier = Modifier.fillMaxWidth(),
                                 ) {
                                     Text(text = stringResource(R.string.yes_correct).uppercase())
@@ -263,6 +278,7 @@ object OnboardingScreenComponents {
 
                                 ZarinaButton(
                                     onClick = onSkipCityDetectionClicked,
+                                    isLoading = isSkipCityDetectionButtonLoading,
                                     modifier = Modifier.fillMaxWidth(),
                                     colors = ZarinaButtonDefaults.secondaryColors(),
                                 ) {
@@ -304,12 +320,21 @@ object OnboardingScreenComponents {
         }
     }
 
-    @Immutable
+    private fun getBannerImageLoader(context: Context): ImageLoader {
+        return context.imageLoader.newBuilder()
+            .okHttpClient {
+                OkHttpClient.Builder()
+                    .connectTimeout(BANNER_IMAGE_LOADER_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                    .readTimeout(BANNER_IMAGE_LOADER_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                    .build()
+            }
+            .build()
+    }
+
     private data class OnboardingPage(
         val step: OnboardingStep,
         val number: Int,
     )
 
-    // According to https://developer.android.com/develop/ui/views/launch/splash-screen
-    private val SplashScreenLogoSize = 192.dp
+    private const val BANNER_IMAGE_LOADER_TIMEOUT_SECONDS = 3L
 }

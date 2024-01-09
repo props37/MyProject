@@ -6,12 +6,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onEach
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
-import ru.zarina.zarina.base.clean.FlowUseCase
 import ru.zarina.zarina.data.favorites.IFavoritesRepository
 import ru.zarina.zarina.data.recommendation.IRecommendationRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.RecommendationType
+import ru.zarina.zarina.usecase.base.FlowUseCase
 import timber.log.Timber
 
 @Factory

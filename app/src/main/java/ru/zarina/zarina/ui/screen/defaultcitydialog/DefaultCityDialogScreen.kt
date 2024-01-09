@@ -14,17 +14,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.dialog.ZarinaDialogContainer
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
+import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreenComponents.bodyText
 import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogViewModel.SideEffect
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 
 @Composable
 fun DefaultCityDialogScreen(
@@ -84,11 +84,11 @@ private fun ScreenContent(
 @DensityPreviews
 @Composable
 private fun Preview() {
-    ZarinaTheme {
+    ZarinaPreview {
         ScreenContent(
-            defaultCity = City.SAINT_PETERSBURG,
+            defaultCity = City.DEFAULT,
             onCloseClicked = {},
-            sideEffects = remember { flowOf() },
+            sideEffects = remember { emptyFlow() },
             navigateBackward = {},
         )
     }

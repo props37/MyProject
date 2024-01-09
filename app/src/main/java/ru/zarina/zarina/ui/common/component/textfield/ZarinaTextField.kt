@@ -19,7 +19,6 @@ import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -313,7 +312,6 @@ private fun DecorationBox(
     }
 }
 
-@Immutable
 data class ZarinaTextFieldColors(
     val textColor: Color,
     val placeholderColor: Color,

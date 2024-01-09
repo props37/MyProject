@@ -15,7 +15,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 fun ZarinaLinearProgressIndicator(
     progress: Float,
     modifier: Modifier = Modifier,
-    color: Color = UiKitTheme.colorsReworked.background.general.inverse.inverse,
+    color: Color = UiKitTheme.colorsReworked.background.general.inversed.default,
     backgroundColor: Color = UiKitTheme.colorsReworked.background.general.regular.muted,
     strokeCap: StrokeCap = StrokeCap.Round,
 ) {

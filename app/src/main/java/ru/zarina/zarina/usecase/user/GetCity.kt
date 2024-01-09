@@ -4,10 +4,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
-import ru.zarina.zarina.base.clean.UseCase
 import ru.zarina.zarina.data.user.IUserRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.usecase.base.UseCase
 import timber.log.Timber
 
 @Factory

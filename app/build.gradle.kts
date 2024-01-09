@@ -1,7 +1,8 @@
-plugins {
-    id("zarina.android.application")
-    id("zarina.compose.metrics")
+import com.android.build.api.dsl.VariantDimension
+import java.io.FileInputStream
+import java.util.Properties
 
+plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
@@ -18,8 +19,8 @@ plugins {
 }
 
 androidGitVersion {
-    codeFormat = "MNNNPP"
-    format = "%tag%--%branch%--%commit%"
+    codeFormat = "MNNPPP"
+    format = "%tag%%-branch%%-commit%"
 }
 
 kapt {
@@ -44,12 +45,26 @@ android {
         versionCode = generatedVersionCode
         versionName = generatedVersionName
 
-        // TODO: [Low] Specify resourceConfigurations?
+        resourceConfigurations.add("ru")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables {
             useSupportLibrary = true
+        }
+    }
+
+    signingConfigs {
+        ZarinaSigningVariant.values().forEach { variant ->
+            maybeCreate(variant.name).apply {
+                val signingDir = File(rootDir, "/signing/${variant.name.lowercase()}")
+                val signingFile = File(signingDir, "signing.properties")
+                val properties = Properties().apply { load(FileInputStream(signingFile)) }
+                storeFile = properties.getProperty("storeFile")?.let { File(project.rootDir, it) }
+                storePassword = properties.getProperty("storePassword")
+                keyAlias = properties.getProperty("keyAlias")
+                keyPassword = properties.getProperty("keyPassword")
+            }
         }
     }
 
@@ -59,6 +74,27 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+        }
+
+        ZarinaBuildType.all.forEach { buildType ->
+            maybeCreate(buildType.name).apply {
+                isDebuggable = buildType.isDebuggable
+                isMinifyEnabled = buildType.isMinifyEnabled
+                isShrinkResources = buildType.isShrinkResources
+
+                applicationIdSuffix = buildType.applicationIdSuffix
+                versionNameSuffix = buildType.versionNameSuffix
+
+                signingConfig = signingConfigs.getByName(buildType.signingVariant.name)
+
+                resStringValue(Keys.APP_NAME, buildType.applicationName)
+                buildConfigBooleanField(Keys.IS_LOGGING_ENABLED, buildType.isLoggingEnabled)
+                buildConfigStringField(Keys.BACKEND_URL, buildType.backendUrl)
+                buildConfigStringField(Keys.MINDBOX_ENDPOINT, buildType.mindboxEndpoint)
+                buildConfigStringField(Keys.MINDBOX_KEY, buildType.mindboxKey)
+                buildConfigStringField(Keys.ANY_QUERY_KEY, buildType.anyQueryKey)
+                manifestPlaceholders[Keys.GOOGLE_MAPS_KEY] = buildType.googleMapsKey
+            }
         }
     }
 
@@ -81,7 +117,7 @@ android {
     }
 
     ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
+        arg("room.schemaLocation", "$projectDir/room_schemas")
     }
 
     packaging {
@@ -89,6 +125,21 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+// Compose compiler metrics
+// Command: ./gradlew assembleRelease -P.enableComposeCompilerReports=true --rerun-tasks
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    val buildDir = project.layout.buildDirectory.asFile.get()
+    val metricsDir = "${buildDir.absolutePath}/compose_metrics"
+    kotlinOptions.freeCompilerArgs += listOf(
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=$metricsDir",
+    )
+    kotlinOptions.freeCompilerArgs += listOf(
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$metricsDir",
+    )
 }
 
 dependencies {
@@ -140,6 +191,8 @@ dependencies {
     implementation(libs.accompanist.webview)
 
     implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
+    implementation(libs.composeShimmer)
 
     implementation(libs.timber)
 
@@ -164,4 +217,16 @@ dependencies {
     androidTestImplementation(libs.jetpack.compose.junit4)
 
     lintChecks(libs.lint.composeChecks)
+}
+
+fun VariantDimension.buildConfigStringField(name: String, value: String) {
+    buildConfigField("String", name, "\"$value\"")
+}
+
+fun VariantDimension.buildConfigBooleanField(name: String, value: Boolean) {
+    buildConfigField("boolean", name, "$value")
+}
+
+fun VariantDimension.resStringValue(name: String, value: String) {
+    resValue("string", name, value)
 }

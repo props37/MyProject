@@ -3,9 +3,9 @@ package ru.zarina.zarina.usecase.search
 import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
-import ru.zarina.zarina.base.clean.UseCase
 import ru.zarina.zarina.data.search.ISearchRepository
 import ru.zarina.zarina.di.Qualifiers
+import ru.zarina.zarina.usecase.base.UseCase
 
 @Factory
 class AddToSearchHistoryUseCase(

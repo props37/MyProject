@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -37,7 +36,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
@@ -48,28 +46,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.ui.common.component.IconButtonCustom
 import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.button.CloseButton
+import ru.zarina.zarina.ui.common.component.button.IconButtonCustom
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.Crossfade
 import ru.zarina.zarina.util.compose.navigationBarsOrIme
 import ru.zarina.zarina.utils.compose.plus
-
-// TODO: [High] Add previews
 
 object CitySelectorScreenComponents {
 
@@ -148,7 +144,6 @@ object CitySelectorScreenComponents {
                 }
             },
             outerTrailingContent = {
-                // TODO: [High] Migrate to cell ZarinaButton
                 val isCancelButtonVisible = focusState.value?.isFocused == true
                 AnimatedContent(
                     targetState = isCancelButtonVisible,
@@ -159,15 +154,15 @@ object CitySelectorScreenComponents {
                     label = "CitySearchBar Cancel button",
                 ) { isVisible ->
                     if (isVisible) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .heightIn(min = 40.dp)
-                                .clip(RoundedCornerShape(4.dp))
-                                .clickable(onClick = onCancelClicked)
-                                .padding(horizontal = 8.dp, vertical = 8.dp),
+                        ZarinaButton(
+                            onClick = onCancelClicked,
+                            size = ZarinaButtonSize.Small,
+                            colors = ZarinaButtonDefaults.backlessColors(),
                         ) {
-                            Text(text = stringResource(R.string.cancel).uppercase())
+                            Text(
+                                text = stringResource(R.string.cancel).uppercase(),
+                                style = UiKitTheme.typographyReworked.caption1.regular,
+                            )
                         }
                     }
                 }
@@ -259,11 +254,13 @@ object CitySelectorScreenComponents {
                     }
 
                     is CityListState.Error -> {
-                        CitySearchError(
-                            errorType = listState.type,
+                        ZarinaErrorScreen(
+                            state = listState.errorState,
                             onRefreshClicked = onErrorRefreshClicked,
                             modifier = Modifier
                                 .fillMaxSize()
+                                .padding(horizontal = 16.dp)
+                                .padding(bottom = 20.dp)
                                 .windowInsetsPadding(WindowInsets.navigationBarsOrIme),
                         )
                     }
@@ -363,7 +360,7 @@ object CitySelectorScreenComponents {
                 animationSpec = tween(durationMillis = 200),
                 label = "CityCheckmark",
             )
-            val maskColor = UiKitTheme.colorsReworked.background.general.regular.background
+            val maskColor = UiKitTheme.colorsReworked.background.general.regular.default
 
             Box(
                 modifier = Modifier
@@ -420,72 +417,6 @@ object CitySelectorScreenComponents {
         }
     }
 
-    @Composable
-    private fun CitySearchError(
-        errorType: CityListState.Error.Type,
-        onRefreshClicked: () -> Unit,
-        modifier: Modifier = Modifier,
-    ) {
-        val iconResId: Int
-        val titleResId: Int
-        val bodyResId: Int
-        when (errorType) {
-            CityListState.Error.Type.NETWORK -> {
-                iconResId = R.drawable.ic_wifi_error_24
-                titleResId = R.string.connection_error_title
-                bodyResId = R.string.connection_error_body
-            }
-            CityListState.Error.Type.OTHER -> {
-                iconResId = R.drawable.ic_heart_broken_24
-                titleResId = R.string.something_went_wrong
-                bodyResId = R.string.refresh_page_or_come_back_later
-            }
-        }
-
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier,
-        ) {
-            Spacer(modifier = Modifier.weight(1f))
-
-            Icon(
-                painter = painterResource(iconResId),
-                contentDescription = null,
-                tint = UiKitTheme.colorsReworked.icon.regular.disabled,
-                modifier = Modifier.size(64.dp),
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = stringResource(titleResId),
-                style = UiKitTheme.typographyReworked.primary.bold,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 24.dp),
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(bodyResId),
-                style = UiKitTheme.typographyReworked.secondary.regular,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 24.dp),
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ZarinaButton(
-                onClick = onRefreshClicked,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 20.dp),
-            ) {
-                Text(text = stringResource(R.string.refresh).uppercase())
-            }
-        }
-    }
-
     @Stable
     private fun getCityListContentKey(state: CityListState): String {
         return when (state) {
@@ -535,48 +466,4 @@ object CitySelectorScreenComponents {
         "CityListItemContentTypeCityWithFullName"
     private const val CityListItemContentTypeCityFirstLetterHeader =
         "CityListItemContentTypeCityFirstLetterHeader"
-}
-
-// TODO: [High] Add PreviewParameterProvider
-@Preview
-@Composable
-private fun CityPreview() {
-    ZarinaTheme {
-        Column {
-            CitySelectorScreenComponents.City(
-                city = City.SAINT_PETERSBURG,
-                onClick = {},
-                showFullName = true,
-                isSelected = false,
-            )
-            CitySelectorScreenComponents.City(
-                city = City.SAINT_PETERSBURG,
-                onClick = {},
-                showFullName = false,
-                isSelected = true,
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun CityFirstLetterHeaderPreview() {
-    ZarinaTheme {
-        Column {
-            CitySelectorScreenComponents.CityFirstLetterHeader(letter = 'С')
-            CitySelectorScreenComponents.City(
-                city = City.SAINT_PETERSBURG,
-                onClick = {},
-                showFullName = false,
-                isSelected = false,
-            )
-            CitySelectorScreenComponents.City(
-                city = City.SAINT_PETERSBURG,
-                onClick = {},
-                showFullName = true,
-                isSelected = true,
-            )
-        }
-    }
 }

@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.domain.rework.geography.KladrId
+import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
@@ -20,9 +21,11 @@ import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.geography.GetCitiesUseCase
+import ru.zarina.zarina.util.library.coroutines.WhileSubscribedDelay
 import ru.zarina.zarina.util.library.coroutines.mapState
 import java.io.IOException
 import javax.inject.Inject
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
@@ -33,7 +36,7 @@ class CitySelectorViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private var searchCitiesJob: Job? = null
+    private var fetchCitiesJob: Job? = null
 
     private val initialCity: StateFlow<City?> = savedStateHandle
         .getStateFlow<CityParcelable?>(
@@ -65,15 +68,15 @@ class CitySelectorViewModel @Inject constructor(
     private val _cityListState = MutableStateFlow<CityListState>(CityListState.Loading)
     val cityListState = _cityListState.asStateFlow()
 
-    val isCitySearchBarVisible: StateFlow<Boolean> = cityListState
-        .mapState(viewModelScope) { it is CityListState.CityList }
+    val isCitySearchBarVisible: StateFlow<Boolean> = cityListState.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(SharingStarted.WhileSubscribedDelay),
+    ) { it is CityListState.CityList }
 
     val isChangeCityButtonVisible: StateFlow<Boolean> = hasSelectedCityChanged.asStateFlow()
 
     init {
-        searchCitiesJob = viewModelScope.launch {
-            searchCities(cityNameQuery.value)
-        }
+        fetchCities(cityNameQuery = null)
     }
 
     fun onCloseClicked() {
@@ -85,15 +88,11 @@ class CitySelectorViewModel @Inject constructor(
 
     fun onCityNameQueryChanged(query: String) {
         savedStateHandle[KEY_CITY_NAME_QUERY] = query
-        searchCitiesJob?.cancel()
-        searchCitiesJob = viewModelScope.launch {
-            delay(SEARCH_CITIES_BY_NAME_QUERY_DELAY)
-            searchCities(query)
-        }
+        fetchCities(query, delay = SEARCH_CITIES_BY_NAME_DELAY)
     }
 
     fun onCitySearchBarClearClicked() {
-        onCityNameQueryChanged("")
+        onCityNameQueryChanged(query = "")
     }
 
     fun onCitySearchBarCancelClicked() {
@@ -118,51 +117,61 @@ class CitySelectorViewModel @Inject constructor(
 
     fun onErrorRefreshClicked() {
         _cityListState.value = CityListState.Loading
-        searchCitiesJob?.cancel()
-        searchCitiesJob = viewModelScope.launch {
-            searchCities(cityNameQuery.value)
+        fetchCities(cityNameQuery.value)
+    }
+
+    private fun fetchCities(cityNameQuery: String?, delay: Duration = Duration.ZERO) {
+        fetchCitiesJob?.cancel()
+        fetchCitiesJob = viewModelScope.launch {
+            delay(delay)
+            val getCitiesParams = GetCitiesUseCase.Params(cityNameQuery)
+            interactor.getCities(getCitiesParams).collect { result ->
+                val cityListState = result.fold(
+                    onSuccess = { cities ->
+                        cityListStateFromFetchCitiesSuccess(cityNameQuery, cities)
+                    },
+                    onFailure = { throwable ->
+                        val errorState = when (throwable) {
+                            is IOException -> ErrorStateRework.NETWORK
+                            else -> ErrorStateRework.GENERIC
+                        }
+                        CityListState.Error(errorState)
+                    },
+                )
+                _cityListState.value = cityListState
+            }
         }
     }
 
-    private suspend fun searchCities(nameQuery: String?) {
-        val getCitiesParams = GetCitiesUseCase.Params(nameQuery)
-        interactor.getCities(getCitiesParams).collect { result ->
-            val cityListState = result.fold(
-                onSuccess = { cities ->
-                    val listItems = if (nameQuery.isNullOrBlank()) {
-                        buildList<CityListItem> {
-                            // Show main cities at the top
-                            val (mainCities, otherCities) = cities.partition { city ->
-                                city.kladrId in MAIN_CITIES_KLADR_IDS
-                            }
-                            val mainCityItems = mainCities.map { CityListItem.City(it) }
-                            addAll(mainCityItems)
+    private fun cityListStateFromFetchCitiesSuccess(
+        cityNameQuery: String?,
+        cities: List<City>,
+    ): CityListState {
+        val listItems = if (cityNameQuery.isNullOrBlank()) {
+            buildList<CityListItem> {
+                // Show main cities at the top
+                val (mainCities, otherCities) = cities.partition { city ->
+                    city.kladrId in MAIN_CITIES_KLADR_IDS
+                }
+                val mainCityItems = mainCities.map { CityListItem.City(it) }
+                addAll(mainCityItems)
 
-                            // Show other cities grouped by the first letter
-                            val otherCitiesGrouped = otherCities.groupBy { it.name.firstOrNull() }
-                            otherCitiesGrouped.forEach { (firstLetter, cities) ->
-                                if (firstLetter != null) {
-                                    add(CityListItem.CityFirstLetterHeader(firstLetter))
-                                }
-                                val cityItems = cities.map { CityListItem.City(it) }
-                                addAll(cityItems)
-                            }
-                        }
-                    } else {
-                        cities.map { CityListItem.City(it, showFullName = true) }
+                // Show other cities grouped by the first letter
+                val otherCitiesGrouped = otherCities.groupBy { city ->
+                    city.name.firstOrNull()
+                }
+                otherCitiesGrouped.forEach { (firstLetter, cities) ->
+                    if (firstLetter != null) {
+                        add(CityListItem.CityFirstLetterHeader(firstLetter))
                     }
-                    CityListState.CityList(listItems)
-                },
-                onFailure = { throwable ->
-                    val errorType = when (throwable) {
-                        is IOException -> CityListState.Error.Type.NETWORK
-                        else -> CityListState.Error.Type.OTHER
-                    }
-                    CityListState.Error(errorType)
-                },
-            )
-            _cityListState.value = cityListState
+                    val cityItems = cities.map { CityListItem.City(it) }
+                    addAll(cityItems)
+                }
+            }
+        } else {
+            cities.map { CityListItem.City(it, showFullName = true) }
         }
+        return CityListState.CityList(listItems)
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -176,9 +185,7 @@ class CitySelectorViewModel @Inject constructor(
 
         data class CityList(val list: List<CityListItem>) : CityListState()
 
-        data class Error(val type: Type) : CityListState() {
-            enum class Type { NETWORK, OTHER }
-        }
+        data class Error(val errorState: ErrorStateRework) : CityListState()
     }
 
     sealed class CityListItem {
@@ -194,9 +201,10 @@ class CitySelectorViewModel @Inject constructor(
         private const val KEY_SELECTED_CITY = "selected_city"
         private const val KEY_CITY_NAME_QUERY = "city_name_query"
 
-        private val SEARCH_CITIES_BY_NAME_QUERY_DELAY = 200.milliseconds
+        private val SEARCH_CITIES_BY_NAME_DELAY = 200.milliseconds
 
-        private val MAIN_CITIES_KLADR_IDS = listOf(KladrId.MOSCOW, KladrId.SAINT_PETERSBURG)
+        private val MAIN_CITIES_KLADR_IDS: List<KladrId>
+            get() = listOf(KladrId.MOSCOW, KladrId.SAINT_PETERSBURG)
     }
 }
 

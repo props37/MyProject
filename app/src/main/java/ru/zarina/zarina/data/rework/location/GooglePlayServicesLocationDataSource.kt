@@ -24,5 +24,7 @@ class GooglePlayServicesLocationDataSource @Inject constructor(
         }
     }
 
-    private fun android.location.Location.toLocation(): Location = Location(latitude, longitude)
+    private fun android.location.Location.toLocation(): Location {
+        return Location(latitude, longitude)
+    }
 }

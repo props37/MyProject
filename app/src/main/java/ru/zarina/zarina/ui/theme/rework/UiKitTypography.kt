@@ -1,6 +1,5 @@
 package ru.zarina.zarina.ui.theme.rework
 
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
@@ -12,27 +11,29 @@ import androidx.compose.ui.unit.sp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.util.compose.W350
 
-private val CirceBold = Font(
-    resId = R.font.circe_bold,
-    weight = FontWeight.W700,
-)
+private val CirceBold: Font
+    get() = Font(
+        resId = R.font.circe_bold,
+        weight = FontWeight.W700,
+    )
 
-private val CirceRegular = Font(
-    resId = R.font.circe_regular,
-    weight = FontWeight.W400,
-)
+private val CirceRegular: Font
+    get() = Font(
+        resId = R.font.circe_regular,
+        weight = FontWeight.W400,
+    )
 
-private val CirceLight = Font(
-    resId = R.font.circe_light,
-    weight = FontWeight.W350,
-)
+private val CirceLight: Font
+    get() = Font(
+        resId = R.font.circe_light,
+        weight = FontWeight.W350,
+    )
 
 private val CirceFamily = FontFamily(CirceBold, CirceRegular, CirceLight)
 
 // TODO: [High] Remove after updating to Compose 1.6.0
 private val PlatformStyle = PlatformTextStyle(includeFontPadding = false)
 
-@Immutable
 data class UiKitTypographyReworked(
     val heading1: Heading1 = Heading1(),
     val heading2: Heading2 = Heading2(),
@@ -46,7 +47,6 @@ data class UiKitTypographyReworked(
     val caption2: Caption2 = Caption2(),
     val caption3: Caption3 = Caption3(),
 ) {
-    @Immutable
     data class Heading1(
         val bold: TextStyle = TextStyle(
             fontSize = 34.sp,
@@ -64,7 +64,6 @@ data class UiKitTypographyReworked(
         ),
     )
 
-    @Immutable
     data class Heading2(
         val bold: TextStyle = TextStyle(
             fontSize = 28.sp,
@@ -82,7 +81,6 @@ data class UiKitTypographyReworked(
         ),
     )
 
-    @Immutable
     data class Heading3(
         val bold: TextStyle = TextStyle(
             fontSize = 24.sp,
@@ -100,7 +98,6 @@ data class UiKitTypographyReworked(
         ),
     )
 
-    @Immutable
     data class Heading4(
         val bold: TextStyle = TextStyle(
             fontSize = 20.sp,
@@ -118,7 +115,6 @@ data class UiKitTypographyReworked(
         ),
     )
 
-    @Immutable
     data class Primary(
         val bold: TextStyle = TextStyle(
             fontSize = 17.sp,
@@ -143,7 +139,6 @@ data class UiKitTypographyReworked(
         ),
     )
 
-    @Immutable
     data class Secondary(
         val bold: TextStyle = TextStyle(
             fontSize = 15.sp,
@@ -176,7 +171,6 @@ data class UiKitTypographyReworked(
         ),
     )
 
-    @Immutable
     data class Tertiary(
         val bold: TextStyle = TextStyle(
             fontSize = 13.sp,
@@ -201,7 +195,6 @@ data class UiKitTypographyReworked(
         ),
     )
 
-    @Immutable
     data class Footnote(
         val bold: TextStyle = TextStyle(
             fontSize = 12.sp,
@@ -234,7 +227,6 @@ data class UiKitTypographyReworked(
         ),
     )
 
-    @Immutable
     data class Caption1(
         val bold: TextStyle = TextStyle(
             fontSize = 11.sp,
@@ -259,7 +251,6 @@ data class UiKitTypographyReworked(
         ),
     )
 
-    @Immutable
     data class Caption2(
         val bold: TextStyle = TextStyle(
             fontSize = 10.sp,
@@ -279,7 +270,6 @@ data class UiKitTypographyReworked(
         ),
     )
 
-    @Immutable
     data class Caption3(
         val bold: TextStyle = TextStyle(
             fontSize = 9.sp,

@@ -28,7 +28,7 @@ import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 @Composable
 fun ZarinaDialogContainer(
     modifier: Modifier = Modifier,
-    color: Color = UiKitTheme.colorsReworked.background.general.regular.background,
+    color: Color = UiKitTheme.colorsReworked.background.general.regular.default,
     shape: Shape = RoundedCornerShape(4.dp),
     elevation: Dp = 12.dp,
     contentPadding: PaddingValues = PaddingValues(24.dp),

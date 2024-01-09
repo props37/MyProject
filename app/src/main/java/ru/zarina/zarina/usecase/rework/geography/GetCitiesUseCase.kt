@@ -2,10 +2,10 @@ package ru.zarina.zarina.usecase.rework.geography
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.base.clean.FlowUseCase
 import ru.zarina.zarina.data.rework.geography.GeographyRepository
-import ru.zarina.zarina.di.reworked.Qualifiers
+import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.usecase.base.FlowUseCase
 import javax.inject.Inject
 
 class GetCitiesUseCase @Inject constructor(

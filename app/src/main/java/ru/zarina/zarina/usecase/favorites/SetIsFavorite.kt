@@ -3,10 +3,10 @@ package ru.zarina.zarina.usecase.favorites
 import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
-import ru.zarina.zarina.base.clean.UseCase
 import ru.zarina.zarina.data.favorites.IFavoritesRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.usecase.base.UseCase
 
 @Factory
 class SetIsFavoriteUseCase(

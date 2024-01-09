@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger
 // Made because the original version doesn't support token expiry detection customization.
 // TODO: [High] Replace if it get fixed, follow the issue https://youtrack.jetbrains.com/issue/KTOR-5817
 
-internal val LOGGER = KtorSimpleLogger("io.ktor.client.plugins.auth.Auth")
+private val LOGGER = KtorSimpleLogger("io.ktor.client.plugins.auth.Auth")
 
 private class AtomicCounter {
     val atomic = AtomicInteger(0)

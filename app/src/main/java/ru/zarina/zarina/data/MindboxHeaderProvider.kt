@@ -13,7 +13,7 @@ class MindboxHeaderProvider {
     fun getHeaders(): Map<String, String> = headers
 
     private fun getAuthorizationHeader(): Pair<String, String> {
-        val value = "Mindbox secretKey=\"${BuildConfig.MINDBOX_SECRET}\""
+        val value = "Mindbox secretKey=\"${BuildConfig.MINDBOX_KEY}\""
         return KEY_AUTHORIZATION to value
     }
 

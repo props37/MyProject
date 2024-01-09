@@ -1,6 +1,6 @@
 [versions]
 # Plugins
-androidGradlePlugin = "8.2.0"
+androidGradlePlugin = "8.2.1"
 googlePlayServices-plugin = "4.4.0"
 firebase-crashlyticsPlugin = "2.9.9"
 androidGitVersion = "0.4.14"
@@ -43,6 +43,7 @@ koin-test = "3.4.1"
 accompanist = "0.32.0"
 
 coil = "2.5.0"
+composeShimmer = "1.2.0"
 
 timber = "5.0.1"
 leakCanary = "2.12"
@@ -120,6 +121,8 @@ accompanist-navigationMaterial = { group = "com.google.accompanist", name = "acc
 accompanist-webview = { group = "com.google.accompanist", name = "accompanist-webview", version.ref = "accompanist" }
 
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
+composeShimmer = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version.ref = "composeShimmer" }
 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 leakCanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakCanary" }
@@ -137,10 +140,6 @@ mindbox = { group = "cloud.mindbox", name = "mobile-sdk", version.ref = "mindbox
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 lint-composeChecks = { group = "com.slack.lint.compose", name = "compose-lint-checks", version.ref = "lint-composeChecks" }
-
-# Dependencies of the included build-logic
-android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
-kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 
 
 [plugins]

@@ -8,7 +8,7 @@ import io.ktor.client.request.get
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.rework.authorization.remote.api.dto.AuthorizationTokensDto
-import ru.zarina.zarina.di.reworked.Qualifiers
+import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
 import ru.zarina.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject

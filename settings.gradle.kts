@@ -1,5 +1,4 @@
 pluginManagement {
-    includeBuild("build-logic")
     repositories {
         gradlePluginPortal()
         google()
@@ -17,4 +16,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Zarina"
 include(":app")
-include(":macrobenchmark")

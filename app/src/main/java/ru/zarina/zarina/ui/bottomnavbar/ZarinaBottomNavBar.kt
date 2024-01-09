@@ -6,7 +6,9 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
@@ -35,13 +37,17 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -74,8 +80,24 @@ fun ZarinaBottomNavBar(
     val isBottomNavBarVisible = behavior is BottomNavBarBehavior.Visible
     val isBottomNavBarAnimated = behavior.isAnimated
 
+    val sizeTracker = LocalBottomNavBarSizeTracker.current
+
+    val visibleState = remember { MutableTransitionState(isBottomNavBarVisible) }
+    DisposableEffect(isBottomNavBarVisible) {
+        visibleState.targetState = isBottomNavBarVisible
+        onDispose {}
+    }
+
+    LaunchedEffect(visibleState, sizeTracker) {
+        snapshotFlow { visibleState.currentState }.collect { isVisible ->
+            if (!isVisible) {
+                sizeTracker.onSizeChanged(IntSize.Zero)
+            }
+        }
+    }
+
     AnimatedVisibility(
-        visible = isBottomNavBarVisible,
+        visibleState = visibleState,
         enter = remember(isBottomNavBarAnimated) {
             if (isBottomNavBarAnimated) {
                 expandVertically(BottomNavBarAnimationSpec)
@@ -90,9 +112,11 @@ fun ZarinaBottomNavBar(
                 ExitTransition.None
             }
         },
-        modifier = modifier,
+        modifier = modifier.onSizeChanged { size ->
+            sizeTracker.onSizeChanged(size)
+        },
     ) {
-        val backgroundColor = UiKitTheme.colorsReworked.background.general.regular.background
+        val backgroundColor = UiKitTheme.colorsReworked.background.general.regular.default
         val topBorderColor = UiKitTheme.colorsReworked.border.general.default
 
         Row(
@@ -213,14 +237,18 @@ private fun isItemSelected(
 }
 
 private const val BottomNavBarAnimationSpringStiffness = Spring.StiffnessMedium
-private val BottomNavBarAnimationSpec = spring(
-    stiffness = BottomNavBarAnimationSpringStiffness,
-    visibilityThreshold = IntSize.VisibilityThreshold,
-)
-private val BottomNavBarContentAnimationSpec = spring(
-    stiffness = BottomNavBarAnimationSpringStiffness,
-    visibilityThreshold = IntOffset.VisibilityThreshold,
-)
+
+private val BottomNavBarAnimationSpec: SpringSpec<IntSize>
+    get() = spring(
+        stiffness = BottomNavBarAnimationSpringStiffness,
+        visibilityThreshold = IntSize.VisibilityThreshold,
+    )
+
+private val BottomNavBarContentAnimationSpec: SpringSpec<IntOffset>
+    get() = spring(
+        stiffness = BottomNavBarAnimationSpringStiffness,
+        visibilityThreshold = IntOffset.VisibilityThreshold,
+    )
 
 @Preview
 @FontScalePreviews

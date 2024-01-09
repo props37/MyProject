@@ -1,4 +1,6 @@
 <resources>
+    <string name="zarina" translatable="false">Zarina</string>
+
     <string name="continue_">Продолжить</string>
     <string name="detect_city">Определить город</string>
     <string name="skip">Пропустить</string>
@@ -20,13 +22,15 @@
     <string name="cancel">Отменить</string>
     <string name="clear">Очистить</string>
     <string name="refresh">Обновить</string>
-    <string name="connection_error_title">Проблемы с интернетом</string>
-    <string name="connection_error_body">Проверь соединение с интернетом или отключи VPN. Затем обнови страницу</string>
+    <string name="internet_connection_error">Проблемы с интернетом</string>
+    <string name="check_internet_connection_and_refresh_page">Проверь соединение с интернетом или отключи VPN. Затем обнови страницу</string>
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="refresh_page_or_come_back_later">Обнови страницу или зайди позже</string>
     <string name="checked">Отмечено</string>
+    <string name="loading">Загрузка</string>
+    <string name="for_women">Женщинам</string>
+    <string name="for_men">Мужчинам</string>
 
-    <string name="onboarding_progress_text">Шаг %1$d/%2$d</string>
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
     <string name="onboarding_city_selection_title">Определяем твой город</string>
@@ -160,6 +164,5 @@
     <string name="search_history">История поиска</string>
     <string name="remove_from_history">Удалить из истории</string>
     <string name="nothing_found">Ничего не нашлось</string>
-    <string name="reword_your_query">Напишите свой запрос другими словами или воспользуйтесь каталогом товаров</string>
     <string name="recommended_for_you">Рекомендуем для вас</string>
 </resources>

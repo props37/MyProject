@@ -17,7 +17,7 @@ class DefaultCityDialogViewModel @Inject constructor() : ViewModel(),
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    val defaultCity = MutableStateFlow(City.SAINT_PETERSBURG).asStateFlow()
+    val defaultCity = MutableStateFlow(City.DEFAULT).asStateFlow()
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
