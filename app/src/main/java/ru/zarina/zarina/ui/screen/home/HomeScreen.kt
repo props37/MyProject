@@ -63,6 +63,7 @@ private fun ScreenContent(
                     val pagerState = rememberPagerState { 2 }
                     HorizontalPager(
                         state = pagerState,
+                        beyondBoundsPageCount = 0,
                         userScrollEnabled = false,
                         modifier = Modifier.fillMaxSize(),
                     ) { pageIndex ->
