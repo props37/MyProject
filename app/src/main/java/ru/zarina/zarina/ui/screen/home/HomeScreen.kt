@@ -34,12 +34,14 @@ fun HomeScreen(
 
     ScreenContent(
         bannersState = bannersState,
+        onBannersErrorRefreshClicked = viewModel::onBannersErrorRefreshClicked,
     )
 }
 
 @Composable
 private fun ScreenContent(
     bannersState: BannersState,
+    onBannersErrorRefreshClicked: () -> Unit,
 ) {
     ForcedBottomNavBarBehavior(isVisible = true)
 
@@ -69,7 +71,7 @@ private fun ScreenContent(
                 is BannersState.Error -> {
                     ZarinaErrorScreen(
                         state = bannersState.errorState,
-                        onRefreshClicked = { /*TODO*/ },
+                        onRefreshClicked = onBannersErrorRefreshClicked,
                         modifier = Modifier
                             .fillMaxSize()
                             .windowInsetsPadding(

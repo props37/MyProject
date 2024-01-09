@@ -29,6 +29,11 @@ class HomeViewModel @Inject constructor(
         fetchBanners()
     }
 
+    fun onBannersErrorRefreshClicked() {
+        _bannersState.value = BannersState.Loading
+        fetchBanners()
+    }
+
     private fun fetchBanners() {
         fetchHomeBanners?.cancel()
         fetchHomeBanners = viewModelScope.launch {
