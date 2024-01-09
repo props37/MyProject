@@ -86,7 +86,7 @@ private fun ScreenContent(
                         )
 
                         Banners(
-                            pageCount = tabs.size,
+                            tabs = tabs,
                             currentPage = tabs.indexOf(currentTab),
                             banners = bannersState.banners,
                             modifier = Modifier

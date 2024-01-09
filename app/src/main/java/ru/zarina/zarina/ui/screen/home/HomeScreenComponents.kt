@@ -109,14 +109,14 @@ object HomeScreenComponents {
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun Banners(
-        pageCount: Int,
+        tabs: List<Tab>,
         currentPage: Int,
         banners: HomeBanners,
         modifier: Modifier = Modifier,
     ) {
         val pagerState = rememberPagerState(
             initialPage = currentPage,
-            pageCount = { pageCount },
+            pageCount = { tabs.size },
         )
 
         LaunchedEffect(currentPage) {
@@ -128,14 +128,13 @@ object HomeScreenComponents {
             beyondBoundsPageCount = 0,
             userScrollEnabled = false,
             modifier = modifier,
-        ) { pageIndex ->
+        ) { page ->
             val listState = rememberLazyListState()
             val flingBehavior = rememberSnapFlingBehavior(listState)
-            // TODO: [High] Do not hardcode
-            val items = when (pageIndex) {
-                0 -> banners.womenBanners
-                1 -> banners.menBanners
-                else -> error("Unknown page $pageIndex")
+
+            val items = when (tabs[page]) {
+                Tab.FOR_WOMEN -> banners.womenBanners
+                Tab.FOR_MEN -> banners.menBanners
             }
 
             val visibleBannersIndicesState = remember {
