@@ -35,7 +35,7 @@ class HomeViewModel @Inject constructor(
             interactor.getHomeBanners().collect { result ->
                 val bannersState = result.fold(
                     onSuccess = { banners ->
-                        BannersState.Banners(banners)
+                        BannersState.Success(banners)
                     },
                     onFailure = { throwable ->
                         val errorState = when (throwable) {
@@ -55,7 +55,7 @@ class HomeViewModel @Inject constructor(
     sealed class BannersState {
         data object Loading : BannersState()
 
-        data class Banners(val banners: HomeBanners) : BannersState()
+        data class Success(val banners: HomeBanners) : BannersState()
 
         data class Error(val errorState: ErrorStateRework) : BannersState()
     }
