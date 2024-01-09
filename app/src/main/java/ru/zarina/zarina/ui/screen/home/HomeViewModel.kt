@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
-import ru.zarina.zarina.domain.rework.content.HomeBanners
+import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
@@ -24,7 +24,7 @@ class HomeViewModel @Inject constructor(
     private val interactor: HomeInteractor,
 ) : ViewModel(), SideEffectSource<HomeViewModel.SideEffect> by SideEffectSourceImpl() {
 
-    private var fetchHomeBanners: Job? = null
+    private var fetchContentJob: Job? = null
 
     val tabs = MutableStateFlow(Tab.entries.toList()).asStateFlow()
 
@@ -34,55 +34,55 @@ class HomeViewModel @Inject constructor(
         initialValue = Tab.FOR_WOMEN,
     )
 
-    private val _bannersState = MutableStateFlow<BannersState>(BannersState.Loading)
-    val bannersState = _bannersState.asStateFlow()
+    private val _contentState = MutableStateFlow<ContentState>(ContentState.Loading)
+    val contentState = _contentState.asStateFlow()
 
     init {
-        fetchBanners()
+        fetchContent()
     }
 
     fun onTabClicked(tab: Tab) {
         savedStateHandle[KEY_CURRENT_TAB] = tab
     }
 
-    fun onBannersErrorRefreshClicked() {
-        _bannersState.value = BannersState.Loading
-        fetchBanners()
+    fun onContentErrorRefreshClicked() {
+        _contentState.value = ContentState.Loading
+        fetchContent()
     }
 
-    private fun fetchBanners() {
-        fetchHomeBanners?.cancel()
-        fetchHomeBanners = viewModelScope.launch {
-            interactor.getHomeBanners().collect { result ->
-                val bannersState = result.fold(
-                    onSuccess = { banners ->
-                        BannersState.Success(banners)
+    private fun fetchContent() {
+        fetchContentJob?.cancel()
+        fetchContentJob = viewModelScope.launch {
+            interactor.getHomeContent().collect { result ->
+                val contentState = result.fold(
+                    onSuccess = { content ->
+                        ContentState.Success(content)
                     },
                     onFailure = { throwable ->
                         val errorState = when (throwable) {
                             is IOException -> ErrorStateRework.NETWORK
                             else -> ErrorStateRework.GENERIC
                         }
-                        BannersState.Error(errorState)
+                        ContentState.Error(errorState)
                     },
                 )
-                _bannersState.value = bannersState
+                _contentState.value = contentState
             }
         }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect
 
-    sealed class BannersState {
-        data object Loading : BannersState()
-
-        data class Success(val banners: HomeBanners) : BannersState()
-
-        data class Error(val errorState: ErrorStateRework) : BannersState()
-    }
-
     @Parcelize
     enum class Tab : Parcelable { FOR_WOMEN, FOR_MEN }
+
+    sealed class ContentState {
+        data object Loading : ContentState()
+
+        data class Success(val content: HomeContent) : ContentState()
+
+        data class Error(val errorState: ErrorStateRework) : ContentState()
+    }
 
     companion object {
         private const val KEY_CURRENT_TAB = "current_tab"

@@ -39,7 +39,8 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import coil.compose.AsyncImage
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.content.HomeBanners
+import ru.zarina.zarina.domain.rework.common.MediaType
+import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.common.component.LooseTabRow
 import ru.zarina.zarina.ui.common.component.LooseTabRowDefaults.looseTabIndicatorOffset
 import ru.zarina.zarina.ui.common.component.VideoPlayer
@@ -105,13 +106,12 @@ object HomeScreenComponents {
         }
     }
 
-    // TODO: [High] Rename
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun Banners(
+    fun ContentPager(
         tabs: List<Tab>,
         currentPage: Int,
-        banners: HomeBanners,
+        content: HomeContent,
         modifier: Modifier = Modifier,
     ) {
         val pagerState = rememberPagerState(
@@ -132,9 +132,9 @@ object HomeScreenComponents {
             val listState = rememberLazyListState()
             val flingBehavior = rememberSnapFlingBehavior(listState)
 
-            val items = when (tabs[page]) {
-                Tab.FOR_WOMEN -> banners.womenBanners
-                Tab.FOR_MEN -> banners.menBanners
+            val banners = when (tabs[page]) {
+                Tab.FOR_WOMEN -> content.womenBanners
+                Tab.FOR_MEN -> content.menBanners
             }
 
             val visibleBannersIndicesState = remember {
@@ -149,12 +149,12 @@ object HomeScreenComponents {
                 modifier = Modifier.fillMaxSize(),
             ) {
                 itemsIndexed(
-                    items = items,
+                    items = banners,
                     key = { _, banner -> banner.id.value },
                     contentType = { _, banner -> banner.mediaType }, // TODO: [High] Implement
                 ) { index, banner ->
                     when (banner.mediaType) {
-                        HomeBanners.Banner.MediaType.IMAGE -> {
+                        MediaType.IMAGE -> {
                             AsyncImage(
                                 model = banner.mediaUrl.value,
                                 contentDescription = null, // TODO: [High] Implement
@@ -163,7 +163,7 @@ object HomeScreenComponents {
                             )
                         }
 
-                        HomeBanners.Banner.MediaType.VIDEO -> {
+                        MediaType.VIDEO -> {
                             val updatedIndex by rememberUpdatedState(index)
                             val isVisible by remember {
                                 derivedStateOf { updatedIndex in visibleBannersIndicesState.value }
@@ -186,7 +186,7 @@ object HomeScreenComponents {
     @androidx.annotation.OptIn(UnstableApi::class)
     @Composable
     private fun VideoBanner(
-        banner: HomeBanners.Banner,
+        banner: HomeContent.Banner,
         isVisible: Boolean,
         modifier: Modifier = Modifier,
     ) {

@@ -1,8 +1,9 @@
 package ru.zarina.zarina.domain.rework.content
 
+import ru.zarina.zarina.domain.rework.common.MediaType
 import ru.zarina.zarina.domain.rework.common.Url
 
-data class HomeBanners(
+data class HomeContent(
     val womenBanners: List<Banner>,
     val menBanners: List<Banner>,
 ) {
@@ -10,20 +11,17 @@ data class HomeBanners(
         val id: Id,
         val mediaType: MediaType,
         val mediaUrl: Url,
-        val view: View,
+        val viewType: ViewType,
     ) {
         @JvmInline
         value class Id(val value: Long)
 
         // TODO: [Low] Extract?
-        enum class MediaType { IMAGE, VIDEO }
-
-        // TODO: [Low] Extract?
-        enum class View { FULLSCREEN, GRID }
+        enum class ViewType { FULLSCREEN, GRID }
     }
 
     companion object {
-        val EMPTY: HomeBanners
-            get() = HomeBanners(womenBanners = emptyList(), menBanners = emptyList())
+        val EMPTY: HomeContent
+            get() = HomeContent(womenBanners = emptyList(), menBanners = emptyList())
     }
 }

@@ -24,9 +24,9 @@ import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavi
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.Banners
+import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.ContentPager
 import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.TabBar
-import ru.zarina.zarina.ui.screen.home.HomeViewModel.BannersState
+import ru.zarina.zarina.ui.screen.home.HomeViewModel.ContentState
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.Tab
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.Crossfade
@@ -37,14 +37,14 @@ fun HomeScreen(
 ) {
     val tabs by viewModel.tabs.collectAsStateWithLifecycle()
     val currentTab by viewModel.currentTab.collectAsStateWithLifecycle()
-    val bannersState by viewModel.bannersState.collectAsStateWithLifecycle()
+    val contentState by viewModel.contentState.collectAsStateWithLifecycle()
 
     ScreenContent(
         tabs = tabs,
         currentTab = currentTab,
         onTabClicked = viewModel::onTabClicked,
-        bannersState = bannersState,
-        onBannersErrorRefreshClicked = viewModel::onBannersErrorRefreshClicked,
+        contentState = contentState,
+        onContentErrorRefreshClicked = viewModel::onContentErrorRefreshClicked,
     )
 }
 
@@ -53,8 +53,8 @@ private fun ScreenContent(
     tabs: List<Tab>,
     currentTab: Tab,
     onTabClicked: (Tab) -> Unit,
-    bannersState: BannersState,
-    onBannersErrorRefreshClicked: () -> Unit,
+    contentState: ContentState,
+    onContentErrorRefreshClicked: () -> Unit,
 ) {
     ForcedBottomNavBarBehavior(isVisible = true)
 
@@ -64,15 +64,15 @@ private fun ScreenContent(
             .background(UiKitTheme.colorsReworked.background.general.regular.default),
     ) {
         Crossfade(
-            targetState = bannersState,
+            targetState = contentState,
             modifier = Modifier.fillMaxSize(),
-        ) { bannersState ->
-            when (bannersState) {
-                BannersState.Loading -> {
+        ) { contentState ->
+            when (contentState) {
+                ContentState.Loading -> {
                     ZarinaLoadingScreen(modifier = Modifier.fillMaxSize())
                 }
 
-                is BannersState.Success -> {
+                is ContentState.Success -> {
                     Box(modifier = Modifier.fillMaxSize()) {
                         TabBar(
                             tabs = tabs,
@@ -85,10 +85,10 @@ private fun ScreenContent(
                                 .padding(top = 16.dp),
                         )
 
-                        Banners(
+                        ContentPager(
                             tabs = tabs,
                             currentPage = tabs.indexOf(currentTab),
-                            banners = bannersState.banners,
+                            content = contentState.content,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .bottomNavBarPadding(),
@@ -96,10 +96,10 @@ private fun ScreenContent(
                     }
                 }
 
-                is BannersState.Error -> {
+                is ContentState.Error -> {
                     ZarinaErrorScreen(
-                        state = bannersState.errorState,
-                        onRefreshClicked = onBannersErrorRefreshClicked,
+                        state = contentState.errorState,
+                        onRefreshClicked = onContentErrorRefreshClicked,
                         modifier = Modifier
                             .fillMaxSize()
                             .windowInsetsPadding(
