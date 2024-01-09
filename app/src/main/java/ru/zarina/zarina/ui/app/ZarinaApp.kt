@@ -18,11 +18,11 @@ import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import ru.zarina.zarina.ui.bottomnavbar.LocalBottomNavBarSizeTracker
 import ru.zarina.zarina.ui.bottomnavbar.ZarinaBottomNavBar
 import ru.zarina.zarina.ui.bottomnavbar.rememberBottomNavBarSizeTracker
-import ru.zarina.zarina.ui.common.base.LocalToastController
-import ru.zarina.zarina.ui.common.base.rememberToastController
+import ru.zarina.zarina.ui.common.LocalToastController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.BottomNavBarBehavior
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.rememberBottomNavBarBehaviorController
+import ru.zarina.zarina.ui.common.rememberToastController
 import ru.zarina.zarina.ui.navigation.rework.ZarinaNavigation
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.util.library.accompanist.rememberBottomSheetNavigator

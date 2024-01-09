@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.base
+package ru.zarina.zarina.ui.common
 
 import android.content.Context
 import android.widget.Toast
@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
+import ru.zarina.zarina.ui.common.base.Text
 import java.lang.ref.WeakReference
 
 val LocalToastController = staticCompositionLocalOf<ToastController> {
