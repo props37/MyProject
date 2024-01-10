@@ -1,6 +1,11 @@
 package ru.zarina.zarina.ui.screen.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,8 +31,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,6 +55,7 @@ import coil.compose.AsyncImage
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.common.MediaType
 import ru.zarina.zarina.domain.rework.content.HomeContent
+import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarHeightAsState
 import ru.zarina.zarina.ui.common.component.LooseTabRow
 import ru.zarina.zarina.ui.common.component.LooseTabRowDefaults.looseTabIndicatorOffset
 import ru.zarina.zarina.ui.common.component.VideoPlayer
@@ -56,6 +64,7 @@ import ru.zarina.zarina.ui.common.component.ZarinaLogoAspectRatio
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
 import ru.zarina.zarina.ui.common.media.exoplayer.LocalExoPlayerCacheHolder
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.Tab
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -189,31 +198,56 @@ object HomeScreenComponents {
         }
     }
 
-    // TODO: [High] Add loader
     @Composable
     private fun Banner(
         banner: HomeContent.Banner,
         isVisible: Boolean,
         modifier: Modifier = Modifier,
     ) {
-        when (banner) {
-            is HomeContent.Banner.SingleItem -> {
-                FullscreenBanner(
-                    banner = banner,
-                    isVisible = isVisible,
-                    modifier = modifier,
-                )
-            }
+        Box(modifier = modifier) {
+            var isBannerDisplayed by remember(banner) { mutableStateOf(false) }
 
-            is HomeContent.Banner.MultipleItems -> {
-                when (banner.viewType) {
-                    HomeContent.Banner.MultipleItems.ViewType.GRID -> {
-                        GridBanner(
-                            banner = banner,
-                            modifier = modifier,
-                        )
+            when (banner) {
+                is HomeContent.Banner.SingleItem -> {
+                    FullscreenBanner(
+                        banner = banner,
+                        isVisible = isVisible,
+                        onBannerDisplayed = { isBannerDisplayed = true },
+                        modifier = Modifier.matchParentSize(),
+                    )
+                }
+
+                is HomeContent.Banner.MultipleItems -> {
+                    when (banner.viewType) {
+                        HomeContent.Banner.MultipleItems.ViewType.GRID -> {
+                            GridBanner(
+                                banner = banner,
+                                onBannerDisplayed = { isBannerDisplayed = true },
+                                modifier = Modifier.matchParentSize(),
+                            )
+                        }
                     }
                 }
+            }
+
+            AnimatedVisibility(
+                visible = !isBannerDisplayed,
+                enter = remember {
+                    fadeIn(tween(BannerLoaderAnimationDuration))
+                },
+                exit = remember {
+                    fadeOut(tween(BannerLoaderAnimationDuration))
+                },
+                modifier = Modifier.matchParentSize(),
+            ) {
+                ZarinaLoadingScreen(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(UiKitTheme.colorsReworked.background.general.regular.default)
+                        // Add bottomNavBar padding at the top to align the loader at the center
+                        // of the entire screen
+                        .padding(top = bottomNavBarHeightAsState().value),
+                )
             }
         }
     }
@@ -222,6 +256,7 @@ object HomeScreenComponents {
     private fun FullscreenBanner(
         banner: HomeContent.Banner.SingleItem,
         isVisible: Boolean,
+        onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         when (banner.item.mediaType) {
@@ -229,6 +264,7 @@ object HomeScreenComponents {
                 ImageBanner(
                     bannerItem = banner.item,
                     showTitle = false,
+                    onBannerDisplayed = onBannerDisplayed,
                     modifier = modifier,
                 )
             }
@@ -237,6 +273,7 @@ object HomeScreenComponents {
                 VideoBanner(
                     bannerItem = banner.item,
                     isVisible = isVisible,
+                    onBannerDisplayed = onBannerDisplayed,
                     modifier = modifier,
                 )
             }
@@ -246,6 +283,7 @@ object HomeScreenComponents {
     @Composable
     private fun GridBanner(
         banner: HomeContent.Banner.MultipleItems,
+        onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
@@ -267,6 +305,7 @@ object HomeScreenComponents {
                                 ImageBanner(
                                     bannerItem = item,
                                     showTitle = true,
+                                    onBannerDisplayed = onBannerDisplayed,
                                     modifier = itemModifier,
                                 )
                             }
@@ -292,6 +331,7 @@ object HomeScreenComponents {
     private fun ImageBanner(
         bannerItem: HomeContent.Banner.Item,
         showTitle: Boolean,
+        onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
@@ -299,6 +339,7 @@ object HomeScreenComponents {
                 model = bannerItem.mediaUrl.value,
                 contentDescription = bannerItem.title,
                 contentScale = ContentScale.Crop,
+                onSuccess = { onBannerDisplayed() },
                 modifier = Modifier.matchParentSize(),
             )
 
@@ -322,15 +363,26 @@ object HomeScreenComponents {
     private fun VideoBanner(
         bannerItem: HomeContent.Banner.Item,
         isVisible: Boolean,
+        onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val context = LocalContext.current
 
+        val updatedOnBannerDisplayed by rememberUpdatedState(onBannerDisplayed)
         val exoPlayer = remember(context) {
             ExoPlayer.Builder(context)
                 .build()
                 .apply {
                     repeatMode = Player.REPEAT_MODE_ONE
+
+                    val listener = object : Player.Listener {
+                        override fun onPlaybackStateChanged(playbackState: Int) {
+                            if (playbackState == Player.STATE_READY) {
+                                updatedOnBannerDisplayed()
+                            }
+                        }
+                    }
+                    addListener(listener)
                 }
         }
 
@@ -387,6 +439,8 @@ object HomeScreenComponents {
     private const val BannerListContentTypeFullscreenImage = "BannerListContentTypeFullscreenImage"
     private const val BannerListContentTypeFullscreenVideo = "BannerListContentTypeFullscreenVideo"
     private const val BannerListContentTypeGrid = "BannerListContentTypeGrid"
+
+    private const val BannerLoaderAnimationDuration = 250
 
     private const val GridBannerItemCount = 4
     private const val GridBannerRowItemCount = GridBannerItemCount / 2
