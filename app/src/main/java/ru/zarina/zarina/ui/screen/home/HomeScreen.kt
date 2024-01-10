@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,11 +25,14 @@ import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
+import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
+import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.ContentPager
 import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.TabBar
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.ContentState
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.Tab
+import ru.zarina.zarina.ui.screen.home.tooling.preview.ContentStatePreviewParameterProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.Crossfade
 
@@ -117,9 +122,20 @@ private fun ScreenContent(
 }
 
 @Preview
+@FontScalePreviews
+@DensityPreviews
 @Composable
-private fun Preview() {
+private fun Preview(
+    @PreviewParameter(ContentStatePreviewParameterProvider::class)
+    contentState: ContentState,
+) {
     ZarinaPreview {
-        // TODO: [High] Add preview
+        ScreenContent(
+            tabs = remember { Tab.entries.toList() },
+            currentTab = Tab.FOR_WOMEN,
+            onTabClicked = {},
+            contentState = contentState,
+            onContentErrorRefreshClicked = {},
+        )
     }
 }

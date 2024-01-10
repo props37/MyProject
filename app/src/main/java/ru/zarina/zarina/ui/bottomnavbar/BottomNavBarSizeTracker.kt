@@ -31,11 +31,17 @@ class BottomNavBarSizeTrackerImpl : BottomNavBarSizeTracker {
     }
 }
 
-private class NoOpBottomNavBarSizeTracker : BottomNavBarSizeTracker {
+class NoOpBottomNavBarSizeTracker(
+    private val throwExceptions: Boolean = true,
+) : BottomNavBarSizeTracker {
     override val sizePx: State<IntSize>
-        get() = throw NotImplementedError()
+        get() = if (throwExceptions) {
+            throw NotImplementedError()
+        } else {
+            mutableStateOf(IntSize.Zero)
+        }
 
     override fun onSizeChanged(sizePx: IntSize) {
-        throw NotImplementedError()
+        if (throwExceptions) throw NotImplementedError()
     }
 }
