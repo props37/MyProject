@@ -4,8 +4,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -20,6 +22,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -201,8 +204,14 @@ object HomeScreenComponents {
             }
 
             is HomeContent.Banner.MultipleItems -> {
-                // TODO: [High] Implement
-                Box(modifier = modifier)
+                when (banner.viewType) {
+                    HomeContent.Banner.MultipleItems.ViewType.GRID -> {
+                        GridBanner(
+                            banner = banner,
+                            modifier = modifier,
+                        )
+                    }
+                }
             }
         }
     }
@@ -227,6 +236,51 @@ object HomeScreenComponents {
                     isVisible = isVisible,
                     modifier = modifier,
                 )
+            }
+        }
+    }
+
+    // TODO: [High] Add text titles
+    @Composable
+    private fun GridBanner(
+        banner: HomeContent.Banner.MultipleItems,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            val items = remember(banner.items) {
+                List(GridBannerItemCount) { index -> banner.items.getOrNull(index) }
+            }
+
+            items.chunked(GridBannerRowItemCount).forEach { rowItems ->
+                Row(modifier = Modifier.weight(1f)) {
+                    val itemModifier = remember {
+                        Modifier
+                            .fillMaxHeight()
+                            .weight(1f)
+                    }
+
+                    rowItems.forEach { item ->
+                        when (item?.mediaType) {
+                            MediaType.IMAGE -> {
+                                ImageBanner(
+                                    bannerItem = item,
+                                    modifier = itemModifier,
+                                )
+                            }
+
+                            MediaType.VIDEO -> {
+                                SideEffect {
+                                    Timber.w("Video banners are not supported in Grid view")
+                                }
+                                Box(modifier = itemModifier)
+                            }
+
+                            null -> {
+                                Box(modifier = itemModifier)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -314,4 +368,7 @@ object HomeScreenComponents {
     private const val BannerListContentTypeFullscreenImage = "BannerListContentTypeFullscreenImage"
     private const val BannerListContentTypeFullscreenVideo = "BannerListContentTypeFullscreenVideo"
     private const val BannerListContentTypeGrid = "BannerListContentTypeGrid"
+
+    private const val GridBannerItemCount = 4
+    private const val GridBannerRowItemCount = GridBannerItemCount / 2
 }
