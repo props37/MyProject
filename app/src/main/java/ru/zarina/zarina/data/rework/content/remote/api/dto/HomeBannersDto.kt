@@ -2,9 +2,9 @@ package ru.zarina.zarina.data.rework.content.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.data.rework.common.remote.api.dto.MediaTypeDto
 import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.content.HomeContent
-import ru.zarina.zarina.domain.rework.common.MediaType as DomainMediaType
 
 @Serializable
 data class HomeBannersDto(
@@ -54,7 +54,7 @@ data class HomeBannersDto(
             val id: Long? = null,
 
             @SerialName("media_type")
-            val mediaType: MediaType? = null,
+            val mediaType: MediaTypeDto? = null,
 
             @SerialName("media_url")
             val mediaUrl: String? = null,
@@ -72,17 +72,6 @@ data class HomeBannersDto(
                     mediaUrl = Url(mediaUrl),
                     title = title,
                 )
-            }
-
-            // TODO: [High] Extract?
-            @Serializable
-            @JvmInline
-            value class MediaType(val value: String) {
-                fun toMediaType(): DomainMediaType = when (value) {
-                    "image" -> DomainMediaType.IMAGE
-                    "video" -> DomainMediaType.VIDEO
-                    else -> error("Unknown media type $value")
-                }
             }
         }
 
