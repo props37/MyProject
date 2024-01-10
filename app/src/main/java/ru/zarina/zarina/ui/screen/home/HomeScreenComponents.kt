@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -33,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.media3.common.MediaItem
@@ -226,6 +228,7 @@ object HomeScreenComponents {
             MediaType.IMAGE -> {
                 ImageBanner(
                     bannerItem = banner.item,
+                    showTitle = false,
                     modifier = modifier,
                 )
             }
@@ -240,7 +243,6 @@ object HomeScreenComponents {
         }
     }
 
-    // TODO: [High] Add text titles
     @Composable
     private fun GridBanner(
         banner: HomeContent.Banner.MultipleItems,
@@ -264,6 +266,7 @@ object HomeScreenComponents {
                             MediaType.IMAGE -> {
                                 ImageBanner(
                                     bannerItem = item,
+                                    showTitle = true,
                                     modifier = itemModifier,
                                 )
                             }
@@ -288,14 +291,30 @@ object HomeScreenComponents {
     @Composable
     private fun ImageBanner(
         bannerItem: HomeContent.Banner.Item,
+        showTitle: Boolean,
         modifier: Modifier = Modifier,
     ) {
-        AsyncImage(
-            model = bannerItem.mediaUrl.value,
-            contentDescription = bannerItem.title,
-            contentScale = ContentScale.Crop,
-            modifier = modifier,
-        )
+        Box(modifier = modifier) {
+            AsyncImage(
+                model = bannerItem.mediaUrl.value,
+                contentDescription = bannerItem.title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.matchParentSize(),
+            )
+
+            if (showTitle) {
+                Text(
+                    text = bannerItem.title?.uppercase().orEmpty(),
+                    style = UiKitTheme.typographyReworked.tertiary.regular,
+                    color = UiKitTheme.colorsReworked.text.general.inversed.default,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 12.dp)
+                        .padding(horizontal = 12.dp),
+                )
+            }
+        }
     }
 
     @androidx.annotation.OptIn(UnstableApi::class)
