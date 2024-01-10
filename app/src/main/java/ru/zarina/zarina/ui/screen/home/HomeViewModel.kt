@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.utils.clean.invoke
@@ -23,6 +24,8 @@ class HomeViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val interactor: HomeInteractor,
 ) : ViewModel(), SideEffectSource<HomeViewModel.SideEffect> by SideEffectSourceImpl() {
+
+    private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private var fetchContentJob: Job? = null
 
@@ -43,6 +46,12 @@ class HomeViewModel @Inject constructor(
 
     fun onTabClicked(tab: Tab) {
         savedStateHandle[KEY_CURRENT_TAB] = tab
+    }
+
+    fun onBannerClicked(banner: HomeContent.Banner) {
+        navigationThrottler.throttle {
+            // TODO: [High] Implement
+        }
     }
 
     fun onContentErrorRefreshClicked() {

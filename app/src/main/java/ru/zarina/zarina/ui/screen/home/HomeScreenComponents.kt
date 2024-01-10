@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -130,6 +131,7 @@ object HomeScreenComponents {
         tabs: List<Tab>,
         currentPage: Int,
         content: HomeContent,
+        onBannerClicked: (HomeContent.Banner) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val pagerState = rememberPagerState(
@@ -154,6 +156,7 @@ object HomeScreenComponents {
 
             BannerList(
                 banners = banners,
+                onBannerClicked = onBannerClicked,
                 modifier = Modifier.fillMaxSize(),
             )
         }
@@ -163,6 +166,7 @@ object HomeScreenComponents {
     @Composable
     private fun BannerList(
         banners: List<HomeContent.BannerContainer>,
+        onBannerClicked: (HomeContent.Banner) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val listState = rememberLazyListState()
@@ -193,6 +197,7 @@ object HomeScreenComponents {
 
                 Banner(
                     bannerContainer = bannerContainer,
+                    onBannerClicked = onBannerClicked,
                     isVisible = isVisible,
                     modifier = Modifier.fillParentMaxSize(),
                 )
@@ -203,6 +208,7 @@ object HomeScreenComponents {
     @Composable
     private fun Banner(
         bannerContainer: HomeContent.BannerContainer,
+        onBannerClicked: (HomeContent.Banner) -> Unit,
         isVisible: Boolean,
         modifier: Modifier = Modifier,
     ) {
@@ -213,6 +219,7 @@ object HomeScreenComponents {
                 is HomeContent.BannerContainer.SingleBanner -> {
                     FullscreenBanner(
                         bannerContainer = bannerContainer,
+                        onBannerClicked = onBannerClicked,
                         isVisible = isVisible,
                         onBannerDisplayed = { isBannerDisplayed = true },
                         modifier = Modifier.matchParentSize(),
@@ -224,6 +231,7 @@ object HomeScreenComponents {
                         HomeContent.BannerContainer.MultipleBanners.Arrangement.GRID -> {
                             GridBanners(
                                 bannerContainer = bannerContainer,
+                                onBannerClicked = onBannerClicked,
                                 onBannerDisplayed = { isBannerDisplayed = true },
                                 modifier = Modifier.matchParentSize(),
                             )
@@ -257,6 +265,7 @@ object HomeScreenComponents {
     @Composable
     private fun FullscreenBanner(
         bannerContainer: HomeContent.BannerContainer.SingleBanner,
+        onBannerClicked: (HomeContent.Banner) -> Unit,
         isVisible: Boolean,
         onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
@@ -265,6 +274,7 @@ object HomeScreenComponents {
             MediaType.IMAGE -> {
                 ImageBanner(
                     banner = bannerContainer.banner,
+                    onBannerClicked = onBannerClicked,
                     showTitle = false,
                     onBannerDisplayed = onBannerDisplayed,
                     modifier = modifier,
@@ -274,6 +284,7 @@ object HomeScreenComponents {
             MediaType.VIDEO -> {
                 VideoBanner(
                     banner = bannerContainer.banner,
+                    onBannerClicked = onBannerClicked,
                     isVisible = isVisible,
                     onBannerDisplayed = onBannerDisplayed,
                     modifier = modifier,
@@ -285,6 +296,7 @@ object HomeScreenComponents {
     @Composable
     private fun GridBanners(
         bannerContainer: HomeContent.BannerContainer.MultipleBanners,
+        onBannerClicked: (HomeContent.Banner) -> Unit,
         onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -306,6 +318,7 @@ object HomeScreenComponents {
                             MediaType.IMAGE -> {
                                 ImageBanner(
                                     banner = banner,
+                                    onBannerClicked = onBannerClicked,
                                     showTitle = true,
                                     onBannerDisplayed = onBannerDisplayed,
                                     modifier = bannerModifier,
@@ -332,11 +345,18 @@ object HomeScreenComponents {
     @Composable
     private fun ImageBanner(
         banner: HomeContent.Banner,
+        onBannerClicked: (HomeContent.Banner) -> Unit,
         showTitle: Boolean,
         onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        Box(modifier = modifier) {
+        Box(
+            modifier = modifier
+                .clickable(
+                    enabled = banner.clickAction != null,
+                    onClick = { onBannerClicked(banner) },
+                ),
+        ) {
             AsyncImage(
                 model = banner.mediaUrl.value,
                 contentDescription = banner.title,
@@ -364,6 +384,7 @@ object HomeScreenComponents {
     @Composable
     private fun VideoBanner(
         banner: HomeContent.Banner,
+        onBannerClicked: (HomeContent.Banner) -> Unit,
         isVisible: Boolean,
         onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
@@ -417,7 +438,11 @@ object HomeScreenComponents {
         VideoPlayer(
             exoPlayer = exoPlayer,
             resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM,
-            modifier = modifier,
+            modifier = modifier
+                .clickable(
+                    enabled = banner.clickAction != null,
+                    onClick = { onBannerClicked(banner) },
+                ),
         )
     }
 

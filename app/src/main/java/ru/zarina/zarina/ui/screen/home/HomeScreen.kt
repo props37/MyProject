@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
@@ -49,6 +50,7 @@ fun HomeScreen(
         currentTab = currentTab,
         onTabClicked = viewModel::onTabClicked,
         contentState = contentState,
+        onBannerClicked = viewModel::onBannerClicked,
         onContentErrorRefreshClicked = viewModel::onContentErrorRefreshClicked,
     )
 }
@@ -59,6 +61,7 @@ private fun ScreenContent(
     currentTab: Tab,
     onTabClicked: (Tab) -> Unit,
     contentState: ContentState,
+    onBannerClicked: (HomeContent.Banner) -> Unit,
     onContentErrorRefreshClicked: () -> Unit,
 ) {
     ForcedBottomNavBarBehavior(isVisible = true)
@@ -95,6 +98,7 @@ private fun ScreenContent(
                             tabs = tabs,
                             currentPage = tabs.indexOf(currentTab),
                             content = contentState.content,
+                            onBannerClicked = onBannerClicked,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .bottomNavBarPadding(),
@@ -136,6 +140,7 @@ private fun Preview(
             currentTab = Tab.FOR_WOMEN,
             onTabClicked = {},
             contentState = contentState,
+            onBannerClicked = {},
             onContentErrorRefreshClicked = {},
         )
     }
