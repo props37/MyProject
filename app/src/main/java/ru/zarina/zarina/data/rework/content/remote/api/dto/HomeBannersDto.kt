@@ -42,7 +42,7 @@ data class HomeBannersDto(
                 id = HomeContent.Banner.Id(id),
                 mediaType = mediaType.toMediaType(),
                 mediaUrl = Url(mediaUrl),
-                viewType = view.toHomeBannerView(),
+                viewType = view.toHomeBannerViewType(),
             )
         }
 
@@ -61,7 +61,7 @@ data class HomeBannersDto(
         @Serializable
         @JvmInline
         value class View(val value: String) {
-            fun toHomeBannerView(): HomeContent.Banner.ViewType = when (value) {
+            fun toHomeBannerViewType(): HomeContent.Banner.ViewType = when (value) {
                 "fullscreen" -> HomeContent.Banner.ViewType.FULLSCREEN
                 "grid" -> HomeContent.Banner.ViewType.GRID
                 else -> error("Unknown view $value")
