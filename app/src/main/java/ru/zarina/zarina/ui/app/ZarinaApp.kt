@@ -22,6 +22,8 @@ import ru.zarina.zarina.ui.common.LocalToastController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.BottomNavBarBehavior
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.rememberBottomNavBarBehaviorController
+import ru.zarina.zarina.ui.common.media.exoplayer.LocalExoPlayerCacheHolder
+import ru.zarina.zarina.ui.common.media.exoplayer.rememberExoPlayerCacheHolder
 import ru.zarina.zarina.ui.common.rememberToastController
 import ru.zarina.zarina.ui.navigation.rework.ZarinaNavigation
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
@@ -52,10 +54,16 @@ fun ZarinaApp(
 
     val bottomNavBarSizeTracker = rememberBottomNavBarSizeTracker()
 
+    val exoPlayerCacheHolder = rememberExoPlayerCacheHolder(
+        cache = viewModel.exoPlayerCache,
+        cacheDataSourceFactory = viewModel.exoPlayerCacheDataSourceFactory,
+    )
+
     CompositionLocalProvider(
         LocalToastController provides toastController,
         LocalBottomNavBarBehaviorController provides bottomNavBarBehaviorController,
         LocalBottomNavBarSizeTracker provides bottomNavBarSizeTracker,
+        LocalExoPlayerCacheHolder provides exoPlayerCacheHolder,
     ) {
         ModalBottomSheetLayout(
             bottomSheetNavigator = bottomSheetNavigator,
