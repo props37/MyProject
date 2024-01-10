@@ -31,7 +31,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
-import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -186,7 +185,6 @@ object HomeScreenComponents {
     }
 
     // TODO: [High] Add loader
-    // TODO: [High] Add caching
     @androidx.annotation.OptIn(UnstableApi::class)
     @Composable
     private fun VideoBanner(
@@ -201,7 +199,6 @@ object HomeScreenComponents {
                 .build()
                 .apply {
                     repeatMode = Player.REPEAT_MODE_ONE
-                    videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
                 }
         }
 
