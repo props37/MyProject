@@ -35,7 +35,9 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.AspectRatioFrameLayout
 import coil.compose.AsyncImage
 import ru.zarina.zarina.R
@@ -49,8 +51,10 @@ import ru.zarina.zarina.ui.common.component.ZarinaLogoAspectRatio
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.media.exoplayer.LocalExoPlayerCacheHolder
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.Tab
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import timber.log.Timber
 
 object HomeScreenComponents {
 
@@ -208,9 +212,16 @@ object HomeScreenComponents {
 
         // Set media to ExoPlayer
         val mediaUrl = banner.mediaUrl.value
-        LaunchedEffect(exoPlayer, mediaUrl) {
+        val cacheDataSourceFactory = LocalExoPlayerCacheHolder.current?.cacheDataSourceFactory
+        LaunchedEffect(exoPlayer, mediaUrl, cacheDataSourceFactory) {
+            val dataSourceFactory = cacheDataSourceFactory ?: run {
+                Timber.w("CacheDataSource factory is null. Use fallback DataSource factory instead")
+                DefaultHttpDataSource.Factory()
+            }
             val mediaItem = MediaItem.fromUri(mediaUrl)
-            exoPlayer.setMediaItem(mediaItem)
+            val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(mediaItem)
+            exoPlayer.setMediaSource(mediaSource)
             exoPlayer.prepare()
         }
 
