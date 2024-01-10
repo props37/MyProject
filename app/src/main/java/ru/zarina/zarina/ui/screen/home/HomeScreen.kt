@@ -88,7 +88,7 @@ private fun ScreenContent(
                                 .zIndex(1f)
                                 .align(Alignment.TopCenter)
                                 .statusBarsPadding()
-                                .padding(top = 16.dp),
+                                .padding(top = 12.dp),
                         )
 
                         ContentPager(
