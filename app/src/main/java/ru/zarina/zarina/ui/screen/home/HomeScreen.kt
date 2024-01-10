@@ -79,6 +79,7 @@ private fun ScreenContent(
 
                 is ContentState.Success -> {
                     Box(modifier = Modifier.fillMaxSize()) {
+                        // TODO: [Medium] Hide TabBar on scroll
                         TabBar(
                             tabs = tabs,
                             currentTab = currentTab,
