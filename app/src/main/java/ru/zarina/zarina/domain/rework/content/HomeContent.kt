@@ -1,5 +1,6 @@
 package ru.zarina.zarina.domain.rework.content
 
+import ru.zarina.zarina.domain.rework.common.ClickAction
 import ru.zarina.zarina.domain.rework.common.MediaType
 import ru.zarina.zarina.domain.rework.common.Url
 
@@ -25,6 +26,7 @@ data class HomeContent(
             val mediaType: MediaType,
             val mediaUrl: Url,
             val title: String?,
+            val clickAction: ClickAction?,
         ) {
             @JvmInline
             value class Id(val value: Long)

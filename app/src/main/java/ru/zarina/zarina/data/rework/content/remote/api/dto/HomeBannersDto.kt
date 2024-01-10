@@ -2,6 +2,7 @@ package ru.zarina.zarina.data.rework.content.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.data.rework.common.remote.api.dto.ClickActionDto
 import ru.zarina.zarina.data.rework.common.remote.api.dto.MediaTypeDto
 import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.content.HomeContent
@@ -61,6 +62,9 @@ data class HomeBannersDto(
 
             @SerialName("title")
             val title: String? = null,
+
+            @SerialName("click")
+            val clickAction: ClickActionDto? = null,
         ) {
             fun toBannerItem(): HomeContent.Banner.Item {
                 checkNotNull(id) { "id is null" }
@@ -71,6 +75,7 @@ data class HomeBannersDto(
                     mediaType = mediaType.toMediaType(),
                     mediaUrl = Url(mediaUrl),
                     title = title,
+                    clickAction = clickAction?.toClickAction(),
                 )
             }
         }

@@ -22,6 +22,7 @@ class ContentStatePreviewParameterProvider : PreviewParameterProvider<HomeViewMo
             mediaType = MediaType.IMAGE,
             mediaUrl = Url(""),
             title = "Заголовок",
+            clickAction = null,
         )
         val womenBanners = listOf(
             HomeContent.Banner.SingleItem(bannerItem),
