@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.screen.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -132,75 +133,121 @@ object HomeScreenComponents {
             userScrollEnabled = false,
             modifier = modifier,
         ) { page ->
-            val listState = rememberLazyListState()
-            val flingBehavior = rememberSnapFlingBehavior(listState)
-
             val banners = when (tabs[page]) {
                 Tab.FOR_WOMEN -> content.womenBanners
                 Tab.FOR_MEN -> content.menBanners
             }
 
-            val visibleBannersIndicesState = remember {
-                derivedStateOf {
-                    listState.layoutInfo.visibleItemsInfo.map { it.index }
-                }
-            }
-
-            LazyColumn(
-                state = listState,
-                flingBehavior = flingBehavior,
+            BannerList(
+                banners = banners,
                 modifier = Modifier.fillMaxSize(),
-            ) {
-                itemsIndexed(
-                    items = banners,
-                    key = { _, banner -> banner.id.value },
-                    contentType = { _, banner -> banner.mediaType }, // TODO: [High] Implement
-                ) { index, banner ->
-                    when (banner.mediaType) {
-                        MediaType.IMAGE -> {
-                            ImageBanner(
-                                banner = banner,
-                                modifier = Modifier.fillParentMaxSize(),
-                            )
-                        }
+            )
+        }
+    }
 
-                        MediaType.VIDEO -> {
-                            val updatedIndex by rememberUpdatedState(index)
-                            val isVisible by remember {
-                                derivedStateOf { updatedIndex in visibleBannersIndicesState.value }
-                            }
+    @OptIn(ExperimentalFoundationApi::class)
+    @Composable
+    private fun BannerList(
+        banners: List<HomeContent.Banner>,
+        modifier: Modifier = Modifier,
+    ) {
+        val listState = rememberLazyListState()
+        val flingBehavior = rememberSnapFlingBehavior(listState)
 
-                            VideoBanner(
-                                banner = banner,
-                                isVisible = isVisible,
-                                modifier = Modifier.fillParentMaxSize(),
-                            )
-                        }
-                    }
+        val visibleBannersIndicesState = remember {
+            derivedStateOf {
+                listState.layoutInfo.visibleItemsInfo.map { it.index }
+            }
+        }
+
+        LazyColumn(
+            state = listState,
+            flingBehavior = flingBehavior,
+            modifier = modifier,
+        ) {
+            itemsIndexed(
+                items = banners,
+                key = { _, banner -> banner.id.value },
+                contentType = { _, banner -> createBannerListContentType(banner) },
+            ) { index, banner ->
+                val updatedIndex by rememberUpdatedState(index)
+                val isVisible by remember {
+                    derivedStateOf { updatedIndex in visibleBannersIndicesState.value }
                 }
+
+                Banner(
+                    banner = banner,
+                    isVisible = isVisible,
+                    modifier = Modifier.fillParentMaxSize(),
+                )
             }
         }
     }
 
     // TODO: [High] Add loader
     @Composable
-    private fun ImageBanner(
+    private fun Banner(
         banner: HomeContent.Banner,
+        isVisible: Boolean,
+        modifier: Modifier = Modifier,
+    ) {
+        when (banner) {
+            is HomeContent.Banner.SingleItem -> {
+                FullscreenBanner(
+                    banner = banner,
+                    isVisible = isVisible,
+                    modifier = modifier,
+                )
+            }
+
+            is HomeContent.Banner.MultipleItems -> {
+                // TODO: [High] Implement
+                Box(modifier = modifier)
+            }
+        }
+    }
+
+    @Composable
+    private fun FullscreenBanner(
+        banner: HomeContent.Banner.SingleItem,
+        isVisible: Boolean,
+        modifier: Modifier = Modifier,
+    ) {
+        when (banner.item.mediaType) {
+            MediaType.IMAGE -> {
+                ImageBanner(
+                    bannerItem = banner.item,
+                    modifier = modifier,
+                )
+            }
+
+            MediaType.VIDEO -> {
+                VideoBanner(
+                    bannerItem = banner.item,
+                    isVisible = isVisible,
+                    modifier = modifier,
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun ImageBanner(
+        bannerItem: HomeContent.Banner.Item,
         modifier: Modifier = Modifier,
     ) {
         AsyncImage(
-            model = banner.mediaUrl.value,
-            contentDescription = null, // TODO: [High] Implement
+            model = bannerItem.mediaUrl.value,
+            contentDescription = bannerItem.title,
             contentScale = ContentScale.Crop,
             modifier = modifier,
         )
     }
 
-    // TODO: [High] Add loader
     @androidx.annotation.OptIn(UnstableApi::class)
     @Composable
     private fun VideoBanner(
-        banner: HomeContent.Banner,
+        bannerItem: HomeContent.Banner.Item,
         isVisible: Boolean,
         modifier: Modifier = Modifier,
     ) {
@@ -220,7 +267,7 @@ object HomeScreenComponents {
         }
 
         // Set media to ExoPlayer
-        val mediaUrl = banner.mediaUrl.value
+        val mediaUrl = bannerItem.mediaUrl.value
         val cacheDataSourceFactory = LocalExoPlayerCacheHolder.current?.cacheDataSourceFactory
         LaunchedEffect(exoPlayer, mediaUrl, cacheDataSourceFactory) {
             val dataSourceFactory = cacheDataSourceFactory ?: run {
@@ -246,4 +293,25 @@ object HomeScreenComponents {
             modifier = modifier,
         )
     }
+
+    private fun createBannerListContentType(banner: HomeContent.Banner): String {
+        return when (banner) {
+            is HomeContent.Banner.SingleItem -> {
+                when (banner.item.mediaType) {
+                    MediaType.IMAGE -> BannerListContentTypeFullscreenImage
+                    MediaType.VIDEO -> BannerListContentTypeFullscreenVideo
+                }
+            }
+
+            is HomeContent.Banner.MultipleItems -> {
+                when (banner.viewType) {
+                    HomeContent.Banner.MultipleItems.ViewType.GRID -> BannerListContentTypeGrid
+                }
+            }
+        }
+    }
+
+    private const val BannerListContentTypeFullscreenImage = "BannerListContentTypeFullscreenImage"
+    private const val BannerListContentTypeFullscreenVideo = "BannerListContentTypeFullscreenVideo"
+    private const val BannerListContentTypeGrid = "BannerListContentTypeGrid"
 }
