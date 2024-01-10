@@ -162,7 +162,7 @@ object HomeScreenComponents {
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun BannerList(
-        banners: List<HomeContent.Banner>,
+        banners: List<HomeContent.BannerContainer>,
         modifier: Modifier = Modifier,
     ) {
         val listState = rememberLazyListState()
@@ -181,16 +181,18 @@ object HomeScreenComponents {
         ) {
             itemsIndexed(
                 items = banners,
-                key = { _, banner -> banner.id.value },
-                contentType = { _, banner -> createBannerListContentType(banner) },
-            ) { index, banner ->
+                key = { _, bannerContainer -> bannerContainer.id.value },
+                contentType = { _, bannerContainer ->
+                    createBannerListContentType(bannerContainer)
+                },
+            ) { index, bannerContainer ->
                 val updatedIndex by rememberUpdatedState(index)
                 val isVisible by remember {
                     derivedStateOf { updatedIndex in visibleBannersIndicesState.value }
                 }
 
                 Banner(
-                    banner = banner,
+                    bannerContainer = bannerContainer,
                     isVisible = isVisible,
                     modifier = Modifier.fillParentMaxSize(),
                 )
@@ -200,28 +202,28 @@ object HomeScreenComponents {
 
     @Composable
     private fun Banner(
-        banner: HomeContent.Banner,
+        bannerContainer: HomeContent.BannerContainer,
         isVisible: Boolean,
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
-            var isBannerDisplayed by remember(banner) { mutableStateOf(false) }
+            var isBannerDisplayed by remember(bannerContainer) { mutableStateOf(false) }
 
-            when (banner) {
-                is HomeContent.Banner.SingleItem -> {
+            when (bannerContainer) {
+                is HomeContent.BannerContainer.SingleBanner -> {
                     FullscreenBanner(
-                        banner = banner,
+                        bannerContainer = bannerContainer,
                         isVisible = isVisible,
                         onBannerDisplayed = { isBannerDisplayed = true },
                         modifier = Modifier.matchParentSize(),
                     )
                 }
 
-                is HomeContent.Banner.MultipleItems -> {
-                    when (banner.viewType) {
-                        HomeContent.Banner.MultipleItems.ViewType.GRID -> {
-                            GridBanner(
-                                banner = banner,
+                is HomeContent.BannerContainer.MultipleBanners -> {
+                    when (bannerContainer.arrangement) {
+                        HomeContent.BannerContainer.MultipleBanners.Arrangement.GRID -> {
+                            GridBanners(
+                                bannerContainer = bannerContainer,
                                 onBannerDisplayed = { isBannerDisplayed = true },
                                 modifier = Modifier.matchParentSize(),
                             )
@@ -254,15 +256,15 @@ object HomeScreenComponents {
 
     @Composable
     private fun FullscreenBanner(
-        banner: HomeContent.Banner.SingleItem,
+        bannerContainer: HomeContent.BannerContainer.SingleBanner,
         isVisible: Boolean,
         onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        when (banner.item.mediaType) {
+        when (bannerContainer.banner.mediaType) {
             MediaType.IMAGE -> {
                 ImageBanner(
-                    bannerItem = banner.item,
+                    banner = bannerContainer.banner,
                     showTitle = false,
                     onBannerDisplayed = onBannerDisplayed,
                     modifier = modifier,
@@ -271,7 +273,7 @@ object HomeScreenComponents {
 
             MediaType.VIDEO -> {
                 VideoBanner(
-                    bannerItem = banner.item,
+                    banner = bannerContainer.banner,
                     isVisible = isVisible,
                     onBannerDisplayed = onBannerDisplayed,
                     modifier = modifier,
@@ -281,32 +283,32 @@ object HomeScreenComponents {
     }
 
     @Composable
-    private fun GridBanner(
-        banner: HomeContent.Banner.MultipleItems,
+    private fun GridBanners(
+        bannerContainer: HomeContent.BannerContainer.MultipleBanners,
         onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
-            val items = remember(banner.items) {
-                List(GridBannerItemCount) { index -> banner.items.getOrNull(index) }
+            val banners = remember(bannerContainer.banners) {
+                List(GridBannersItemCount) { index -> bannerContainer.banners.getOrNull(index) }
             }
 
-            items.chunked(GridBannerRowItemCount).forEach { rowItems ->
+            banners.chunked(GridBannersRowItemCount).forEach { rowBanners ->
                 Row(modifier = Modifier.weight(1f)) {
-                    val itemModifier = remember {
+                    val bannerModifier = remember {
                         Modifier
                             .fillMaxHeight()
                             .weight(1f)
                     }
 
-                    rowItems.forEach { item ->
-                        when (item?.mediaType) {
+                    rowBanners.forEach { banner ->
+                        when (banner?.mediaType) {
                             MediaType.IMAGE -> {
                                 ImageBanner(
-                                    bannerItem = item,
+                                    banner = banner,
                                     showTitle = true,
                                     onBannerDisplayed = onBannerDisplayed,
-                                    modifier = itemModifier,
+                                    modifier = bannerModifier,
                                 )
                             }
 
@@ -314,11 +316,11 @@ object HomeScreenComponents {
                                 SideEffect {
                                     Timber.w("Video banners are not supported in Grid view")
                                 }
-                                Box(modifier = itemModifier)
+                                Box(modifier = bannerModifier)
                             }
 
                             null -> {
-                                Box(modifier = itemModifier)
+                                Box(modifier = bannerModifier)
                             }
                         }
                     }
@@ -329,15 +331,15 @@ object HomeScreenComponents {
 
     @Composable
     private fun ImageBanner(
-        bannerItem: HomeContent.Banner.Item,
+        banner: HomeContent.Banner,
         showTitle: Boolean,
         onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
             AsyncImage(
-                model = bannerItem.mediaUrl.value,
-                contentDescription = bannerItem.title,
+                model = banner.mediaUrl.value,
+                contentDescription = banner.title,
                 contentScale = ContentScale.Crop,
                 onSuccess = { onBannerDisplayed() },
                 modifier = Modifier.matchParentSize(),
@@ -345,7 +347,7 @@ object HomeScreenComponents {
 
             if (showTitle) {
                 Text(
-                    text = bannerItem.title?.uppercase().orEmpty(),
+                    text = banner.title?.uppercase().orEmpty(),
                     style = UiKitTheme.typographyReworked.tertiary.regular,
                     color = UiKitTheme.colorsReworked.text.general.inversed.default,
                     textAlign = TextAlign.Center,
@@ -361,7 +363,7 @@ object HomeScreenComponents {
     @androidx.annotation.OptIn(UnstableApi::class)
     @Composable
     private fun VideoBanner(
-        bannerItem: HomeContent.Banner.Item,
+        banner: HomeContent.Banner,
         isVisible: Boolean,
         onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
@@ -392,7 +394,7 @@ object HomeScreenComponents {
         }
 
         // Set media to ExoPlayer
-        val mediaUrl = bannerItem.mediaUrl.value
+        val mediaUrl = banner.mediaUrl.value
         val cacheDataSourceFactory = LocalExoPlayerCacheHolder.current?.cacheDataSourceFactory
         LaunchedEffect(exoPlayer, mediaUrl, cacheDataSourceFactory) {
             val dataSourceFactory = cacheDataSourceFactory ?: run {
@@ -419,18 +421,19 @@ object HomeScreenComponents {
         )
     }
 
-    private fun createBannerListContentType(banner: HomeContent.Banner): String {
-        return when (banner) {
-            is HomeContent.Banner.SingleItem -> {
-                when (banner.item.mediaType) {
+    private fun createBannerListContentType(bannerContainer: HomeContent.BannerContainer): String {
+        return when (bannerContainer) {
+            is HomeContent.BannerContainer.SingleBanner -> {
+                when (bannerContainer.banner.mediaType) {
                     MediaType.IMAGE -> BannerListContentTypeFullscreenImage
                     MediaType.VIDEO -> BannerListContentTypeFullscreenVideo
                 }
             }
 
-            is HomeContent.Banner.MultipleItems -> {
-                when (banner.viewType) {
-                    HomeContent.Banner.MultipleItems.ViewType.GRID -> BannerListContentTypeGrid
+            is HomeContent.BannerContainer.MultipleBanners -> {
+                when (bannerContainer.arrangement) {
+                    HomeContent.BannerContainer.MultipleBanners.Arrangement.GRID ->
+                        BannerListContentTypeGrid
                 }
             }
         }
@@ -442,6 +445,6 @@ object HomeScreenComponents {
 
     private const val BannerLoaderAnimationDuration = 250
 
-    private const val GridBannerItemCount = 4
-    private const val GridBannerRowItemCount = GridBannerItemCount / 2
+    private const val GridBannersItemCount = 4
+    private const val GridBannersRowItemCount = GridBannersItemCount / 2
 }

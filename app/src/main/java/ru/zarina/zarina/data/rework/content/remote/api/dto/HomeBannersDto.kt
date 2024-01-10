@@ -10,14 +10,14 @@ import ru.zarina.zarina.domain.rework.content.HomeContent
 @Serializable
 data class HomeBannersDto(
     @SerialName("woman")
-    val woman: List<Banner>? = null,
-    
+    val womenBanners: List<Banner>? = null,
+
     @SerialName("man")
-    val man: List<Banner>? = null,
+    val menBanners: List<Banner>? = null,
 ) {
     fun toHomeContent(): HomeContent = HomeContent(
-        womenBanners = woman?.map { it.toHomeContentBanner() } ?: emptyList(),
-        menBanners = man?.map { it.toHomeContentBanner() } ?: emptyList(),
+        womenBanners = womenBanners?.map { it.toBannerContainer() } ?: emptyList(),
+        menBanners = menBanners?.map { it.toBannerContainer() } ?: emptyList(),
     )
 
     @Serializable
@@ -28,20 +28,20 @@ data class HomeBannersDto(
         @SerialName("items")
         val items: List<Item>? = null,
     ) {
-        fun toHomeContentBanner(): HomeContent.Banner {
+        fun toBannerContainer(): HomeContent.BannerContainer {
             checkNotNull(viewType) { "viewType is null" }
             checkNotNull(items) { "items is null" }
             check(items.isNotEmpty()) { "items is empty" }
-            val bannerItems = items.map { it.toBannerItem() }
+            val bannerItems = items.map { it.toBanner() }
             return when (viewType) {
                 VIEW_TYPE_FULLSCREEN -> {
-                    HomeContent.Banner.SingleItem(bannerItems.first())
+                    HomeContent.BannerContainer.SingleBanner(bannerItems.first())
                 }
 
                 VIEW_TYPE_GRID -> {
-                    HomeContent.Banner.MultipleItems(
-                        items = bannerItems,
-                        viewType = HomeContent.Banner.MultipleItems.ViewType.GRID,
+                    HomeContent.BannerContainer.MultipleBanners(
+                        banners = bannerItems,
+                        arrangement = HomeContent.BannerContainer.MultipleBanners.Arrangement.GRID,
                     )
                 }
 
@@ -66,12 +66,12 @@ data class HomeBannersDto(
             @SerialName("click")
             val clickAction: ClickActionDto? = null,
         ) {
-            fun toBannerItem(): HomeContent.Banner.Item {
+            fun toBanner(): HomeContent.Banner {
                 checkNotNull(id) { "id is null" }
                 checkNotNull(mediaType) { "mediaType is null" }
                 checkNotNull(mediaUrl) { "mediaUrl is null" }
-                return HomeContent.Banner.Item(
-                    id = HomeContent.Banner.Item.Id(id),
+                return HomeContent.Banner(
+                    id = HomeContent.Banner.Id(id),
                     mediaType = mediaType.toMediaType(),
                     mediaUrl = Url(mediaUrl),
                     title = title,

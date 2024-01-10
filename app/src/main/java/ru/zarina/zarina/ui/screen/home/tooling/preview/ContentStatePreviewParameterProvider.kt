@@ -17,20 +17,20 @@ class ContentStatePreviewParameterProvider : PreviewParameterProvider<HomeViewMo
         )
 
     private fun getHomeContent(): HomeContent {
-        val bannerItem = HomeContent.Banner.Item(
-            id = HomeContent.Banner.Item.Id(Random.nextLong()),
+        val banner = HomeContent.Banner(
+            id = HomeContent.Banner.Id(Random.nextLong()),
             mediaType = MediaType.IMAGE,
             mediaUrl = Url(""),
             title = "Заголовок",
             clickAction = null,
         )
         val womenBanners = listOf(
-            HomeContent.Banner.SingleItem(bannerItem),
-            HomeContent.Banner.MultipleItems(
-                items = listOf(bannerItem, bannerItem, bannerItem, bannerItem),
-                viewType = HomeContent.Banner.MultipleItems.ViewType.GRID,
+            HomeContent.BannerContainer.SingleBanner(banner),
+            HomeContent.BannerContainer.MultipleBanners(
+                banners = listOf(banner, banner, banner, banner),
+                arrangement = HomeContent.BannerContainer.MultipleBanners.Arrangement.GRID,
             ),
-            HomeContent.Banner.SingleItem(bannerItem),
+            HomeContent.BannerContainer.SingleBanner(banner),
         )
         return HomeContent(
             womenBanners = womenBanners,

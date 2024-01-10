@@ -5,32 +5,33 @@ import ru.zarina.zarina.domain.rework.common.MediaType
 import ru.zarina.zarina.domain.rework.common.Url
 
 data class HomeContent(
-    val womenBanners: List<Banner>,
-    val menBanners: List<Banner>,
+    val womenBanners: List<BannerContainer>,
+    val menBanners: List<BannerContainer>,
 ) {
-    sealed class Banner(open val id: Id) {
-        data class SingleItem(val item: Item) : Banner(id = item.createBannerId())
+    sealed class BannerContainer(open val id: Id) {
+        data class SingleBanner(val banner: Banner) :
+            BannerContainer(id = banner.createBannerContainerId())
 
-        data class MultipleItems(
-            val items: List<Item>,
-            val viewType: ViewType,
-        ) : Banner(id = items.createBannerId()) {
-            enum class ViewType { GRID }
+        data class MultipleBanners(
+            val banners: List<Banner>,
+            val arrangement: Arrangement,
+        ) : BannerContainer(id = banners.createBannerContainerId()) {
+            enum class Arrangement { GRID }
         }
 
         @JvmInline
         value class Id(val value: String)
+    }
 
-        data class Item(
-            val id: Id,
-            val mediaType: MediaType,
-            val mediaUrl: Url,
-            val title: String?,
-            val clickAction: ClickAction?,
-        ) {
-            @JvmInline
-            value class Id(val value: Long)
-        }
+    data class Banner(
+        val id: Id,
+        val mediaType: MediaType,
+        val mediaUrl: Url,
+        val title: String?,
+        val clickAction: ClickAction?,
+    ) {
+        @JvmInline
+        value class Id(val value: Long)
     }
 
     companion object {
@@ -39,13 +40,13 @@ data class HomeContent(
     }
 }
 
-private fun HomeContent.Banner.Item.createBannerId(): HomeContent.Banner.Id {
-    return HomeContent.Banner.Id(this.id.value.toString())
+private fun HomeContent.Banner.createBannerContainerId(): HomeContent.BannerContainer.Id {
+    return HomeContent.BannerContainer.Id(this.id.value.toString())
 }
 
-private fun List<HomeContent.Banner.Item>.createBannerId(): HomeContent.Banner.Id {
+private fun List<HomeContent.Banner>.createBannerContainerId(): HomeContent.BannerContainer.Id {
     val stringId = this.fold(initial = "") { acc, item ->
         acc + item.id.value.toString()
     }
-    return HomeContent.Banner.Id(stringId)
+    return HomeContent.BannerContainer.Id(stringId)
 }
