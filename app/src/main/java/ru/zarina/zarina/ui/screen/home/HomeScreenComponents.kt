@@ -158,10 +158,8 @@ object HomeScreenComponents {
                 ) { index, banner ->
                     when (banner.mediaType) {
                         MediaType.IMAGE -> {
-                            AsyncImage(
-                                model = banner.mediaUrl.value,
-                                contentDescription = null, // TODO: [High] Implement
-                                contentScale = ContentScale.Crop,
+                            ImageBanner(
+                                banner = banner,
                                 modifier = Modifier.fillParentMaxSize(),
                             )
                         }
@@ -182,6 +180,20 @@ object HomeScreenComponents {
                 }
             }
         }
+    }
+
+    // TODO: [High] Add loader
+    @Composable
+    private fun ImageBanner(
+        banner: HomeContent.Banner,
+        modifier: Modifier = Modifier,
+    ) {
+        AsyncImage(
+            model = banner.mediaUrl.value,
+            contentDescription = null, // TODO: [High] Implement
+            contentScale = ContentScale.Crop,
+            modifier = modifier,
+        )
     }
 
     // TODO: [High] Add loader
