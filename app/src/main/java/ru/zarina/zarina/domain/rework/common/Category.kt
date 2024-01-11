@@ -4,6 +4,8 @@ data class Category(
     val id: Id,
     val code: Code,
     val name: String,
+    val label: String?,
+    val color: Color.Code?,
     val children: List<Category>?,
 ) {
     @JvmInline

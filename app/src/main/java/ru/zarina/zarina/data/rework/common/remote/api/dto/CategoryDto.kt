@@ -3,6 +3,7 @@ package ru.zarina.zarina.data.rework.common.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.rework.common.Category
+import ru.zarina.zarina.domain.rework.common.Color
 
 @Serializable
 data class CategoryDto(
@@ -15,6 +16,12 @@ data class CategoryDto(
     @SerialName("name")
     val name: String? = null,
 
+    @SerialName("label")
+    val label: String? = null,
+
+    @SerialName("color")
+    val color: String? = null,
+
     @SerialName("childs")
     val children: List<CategoryDto>? = null,
 ) {
@@ -26,6 +33,8 @@ data class CategoryDto(
             id = Category.Id(id),
             code = Category.Code(code),
             name = name,
+            label = label,
+            color = color?.let { Color.Code(it) },
             children = children?.map { it.toCategory() },
         )
     }
