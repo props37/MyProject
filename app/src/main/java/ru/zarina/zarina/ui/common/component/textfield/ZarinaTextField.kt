@@ -13,10 +13,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
@@ -34,6 +37,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
@@ -42,6 +46,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
+import ru.zarina.zarina.ui.common.component.button.IconButtonCustom
+import ru.zarina.zarina.ui.common.component.button.ZarinaButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 
@@ -360,6 +368,50 @@ data class ZarinaTextFieldColors(
 enum class ZarinaTextFieldSize { Large, Small }
 
 object ZarinaTextFieldDefaults {
+    val IconSizeLarge: Dp get() = 20.dp
+    val IconSizeSmall: Dp get() = 16.dp
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun ClearButton(
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+        iconSize: Dp = IconSizeLarge,
+    ) {
+        CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+            IconButtonCustom(
+                onClick = onClick,
+                indication = rememberRipple(bounded = false, radius = 8.dp),
+                modifier = modifier,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_clear_new_24),
+                    contentDescription = stringResource(R.string.clear),
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(iconSize),
+                )
+            }
+        }
+    }
+
+    @Composable
+    fun CancelButton(
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        ZarinaButton(
+            onClick = onClick,
+            size = ZarinaButtonSize.Small,
+            colors = ZarinaButtonDefaults.backlessColors(),
+            modifier = modifier,
+        ) {
+            Text(
+                text = stringResource(R.string.cancel).uppercase(),
+                style = UiKitTheme.typographyReworked.caption1.regular,
+            )
+        }
+    }
+
     @Composable
     fun colors(
         textColor: Color = UiKitTheme.colorsReworked.text.general.regular.default,

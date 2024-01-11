@@ -26,11 +26,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,7 +38,6 @@ import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -52,12 +48,11 @@ import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.button.CloseButton
-import ru.zarina.zarina.ui.common.component.button.IconButtonCustom
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
-import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
+import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -124,29 +119,15 @@ object CitySelectorScreenComponents {
                 )
             },
             innerTrailingContent = {
-                // TODO: [High] Extract
-                CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-                    AnimatedVisibility(
-                        visible = cityNameQuery.isNotEmpty(),
-                        enter = remember { AnimatedContentDefaultEnterTransition },
-                        exit = remember { AnimatedContentDefaultExitTransition },
-                    ) {
-                        IconButtonCustom(
-                            onClick = onClearClicked,
-                            indication = rememberRipple(bounded = false, radius = 8.dp),
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_clear_new_24),
-                                contentDescription = stringResource(R.string.clear),
-                                tint = Color.Unspecified,
-                                modifier = Modifier.size(20.dp),
-                            )
-                        }
-                    }
+                AnimatedVisibility(
+                    visible = cityNameQuery.isNotEmpty(),
+                    enter = remember { AnimatedContentDefaultEnterTransition },
+                    exit = remember { AnimatedContentDefaultExitTransition },
+                ) {
+                    ZarinaTextFieldDefaults.ClearButton(onClick = onClearClicked)
                 }
             },
             outerTrailingContent = {
-                // TODO: [High] Extract
                 val isCancelButtonVisible = focusState.value?.isFocused == true
                 AnimatedContent(
                     targetState = isCancelButtonVisible,
@@ -157,16 +138,7 @@ object CitySelectorScreenComponents {
                     label = "CitySearchBar Cancel button",
                 ) { isVisible ->
                     if (isVisible) {
-                        ZarinaButton(
-                            onClick = onCancelClicked,
-                            size = ZarinaButtonSize.Small,
-                            colors = ZarinaButtonDefaults.backlessColors(),
-                        ) {
-                            Text(
-                                text = stringResource(R.string.cancel).uppercase(),
-                                style = UiKitTheme.typographyReworked.caption1.regular,
-                            )
-                        }
+                        ZarinaTextFieldDefaults.CancelButton(onClick = onCancelClicked)
                     }
                 }
             },
