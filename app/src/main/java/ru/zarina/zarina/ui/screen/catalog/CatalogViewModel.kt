@@ -12,5 +12,28 @@ class CatalogViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel(), SideEffectSource<CatalogViewModel.SideEffect> by SideEffectSourceImpl() {
 
-    sealed interface SideEffect : SideEffectSource.SideEffect
+    val searchQuery = savedStateHandle.getStateFlow(
+        key = KEY_SEARCH_QUERY,
+        initialValue = "",
+    )
+
+    fun onSearchQueryChanged(query: String) {
+        savedStateHandle[KEY_SEARCH_QUERY] = query
+    }
+
+    fun onSearchBarClearClicked() {
+        savedStateHandle[KEY_SEARCH_QUERY] = ""
+    }
+
+    fun onSearchBarCancelClicked() {
+        emitSideEffect(SideEffect.FreeSearchBarFocus)
+    }
+
+    sealed interface SideEffect : SideEffectSource.SideEffect {
+        data object FreeSearchBarFocus : SideEffect
+    }
+
+    companion object {
+        private const val KEY_SEARCH_QUERY = "search_query"
+    }
 }

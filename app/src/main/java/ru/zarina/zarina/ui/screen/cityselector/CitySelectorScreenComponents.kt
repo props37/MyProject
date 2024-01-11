@@ -49,6 +49,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.ui.common.component.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.button.CloseButton
 import ru.zarina.zarina.ui.common.component.button.IconButtonCustom
@@ -77,8 +78,8 @@ object CitySelectorScreenComponents {
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .heightIn(min = 56.dp)
-                .padding(vertical = 8.dp),
+                .heightIn(min = TopBarDefaults.MinHeight)
+                .padding(vertical = TopBarDefaults.VerticalPadding),
         ) {
             Text(
                 text = stringResource(R.string.city),
@@ -123,6 +124,7 @@ object CitySelectorScreenComponents {
                 )
             },
             innerTrailingContent = {
+                // TODO: [High] Extract
                 CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
                     AnimatedVisibility(
                         visible = cityNameQuery.isNotEmpty(),
@@ -144,6 +146,7 @@ object CitySelectorScreenComponents {
                 }
             },
             outerTrailingContent = {
+                // TODO: [High] Extract
                 val isCancelButtonVisible = focusState.value?.isFocused == true
                 AnimatedContent(
                     targetState = isCancelButtonVisible,
