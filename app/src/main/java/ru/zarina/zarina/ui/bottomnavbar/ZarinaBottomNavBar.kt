@@ -23,13 +23,15 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -73,7 +75,7 @@ import ru.zarina.zarina.util.compose.HorizontalAndBottom
 fun ZarinaBottomNavBar(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    windowInsets: WindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.HorizontalAndBottom),
+    windowInsets: WindowInsets = DefaultWindowInsets,
 ) {
     val behaviorController = LocalBottomNavBarBehaviorController.current
     val behavior by behaviorController.currentBehavior.collectAsStateWithLifecycle()
@@ -235,6 +237,12 @@ private fun isItemSelected(
     }
     return lastBottomNavItemEntry?.destination?.route == bottomNavItem.baseRoute.route
 }
+
+private val DefaultWindowInsets: WindowInsets
+    @Composable
+    get() = WindowInsets.navigationBars
+        .union(WindowInsets.displayCutout)
+        .only(WindowInsetsSides.HorizontalAndBottom)
 
 private const val BottomNavBarAnimationSpringStiffness = Spring.StiffnessMedium
 
