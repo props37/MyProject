@@ -244,6 +244,7 @@ object CitySelectorScreenComponents {
                                 }
                             }
                         } else {
+                            // TODO: [High] Implement as CityListState.Error
                             CityNotFound(
                                 modifier = Modifier
                                     .fillMaxSize()
