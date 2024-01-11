@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
@@ -89,7 +90,9 @@ object CatalogScreenComponents {
                     }
                 },
                 singleLine = true,
-                modifier = Modifier.onFocusChanged { focusState.value = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged { focusState.value = it },
             )
         }
     }
