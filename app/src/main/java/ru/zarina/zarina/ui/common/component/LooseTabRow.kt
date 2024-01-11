@@ -21,15 +21,15 @@ import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.zarina.zarina.ui.common.component.DynamicTabRowDefaults.dynamicTabIndicatorOffset
+import ru.zarina.zarina.ui.common.component.LooseTabRowDefaults.looseTabIndicatorOffset
 
 @Composable
-fun DynamicTabRow(
+fun LooseTabRow(
     selectedTabIndex: Int,
     modifier: Modifier = Modifier,
-    indicator: @Composable (tabPositions: List<DynamicTabPosition>) -> Unit = { tabPositions ->
+    indicator: @Composable (tabPositions: List<LooseTabPosition>) -> Unit = { tabPositions ->
         TabRowDefaults.Indicator(
-            modifier = Modifier.dynamicTabIndicatorOffset(tabPositions[selectedTabIndex]),
+            modifier = Modifier.looseTabIndicatorOffset(tabPositions[selectedTabIndex]),
         )
     },
     tabs: @Composable () -> Unit,
@@ -50,7 +50,7 @@ fun DynamicTabRow(
         val tabPositions = List(tabCount) { index ->
             val tabPlaceable = tabPlaceables[index]
             val tabWidthDp = tabPlaceable.width.toDp()
-            val tabPosition = DynamicTabPosition(tabPositionLeft, tabWidthDp)
+            val tabPosition = LooseTabPosition(tabPositionLeft, tabWidthDp)
             tabPositionLeft += tabWidthDp
             tabPosition
         }
@@ -76,9 +76,9 @@ fun DynamicTabRow(
     }
 }
 
-object DynamicTabRowDefaults {
-    fun Modifier.dynamicTabIndicatorOffset(
-        currentTabPosition: DynamicTabPosition,
+object LooseTabRowDefaults {
+    fun Modifier.looseTabIndicatorOffset(
+        currentTabPosition: LooseTabPosition,
         animationSpec: AnimationSpec<Dp> = tween(durationMillis = 250, easing = FastOutSlowInEasing),
     ): Modifier = composed(
         inspectorInfo = debugInspectorInfo {
@@ -89,12 +89,12 @@ object DynamicTabRowDefaults {
         val currentTabWidth by animateDpAsState(
             targetValue = currentTabPosition.width,
             animationSpec = animationSpec,
-            label = "dynamicTabIndicatorOffset current tab width",
+            label = "looseTabIndicatorOffset current tab width",
         )
         val indicatorOffset by animateDpAsState(
             targetValue = currentTabPosition.left,
             animationSpec = animationSpec,
-            label = "dynamicTabIndicatorOffset indicator offset",
+            label = "looseTabIndicatorOffset indicator offset",
         )
         fillMaxWidth()
             .wrapContentSize(Alignment.BottomStart)
@@ -104,12 +104,12 @@ object DynamicTabRowDefaults {
 }
 
 @Immutable
-class DynamicTabPosition(val left: Dp, val width: Dp) {
+class LooseTabPosition(val left: Dp, val width: Dp) {
     val right: Dp get() = left + width
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is DynamicTabPosition) return false
+        if (other !is LooseTabPosition) return false
 
         if (left != other.left) return false
         if (width != other.width) return false

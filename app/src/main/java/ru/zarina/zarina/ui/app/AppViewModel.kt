@@ -24,4 +24,7 @@ class AppViewModel @Inject constructor(
             UnscopedDestinations.Onboarding
         }
     }
+
+    val exoPlayerCache = interactor.getExoPlayerCache()
+    val exoPlayerCacheDataSourceFactory = interactor.getExoPlayerCacheDataSourceFactory()
 }

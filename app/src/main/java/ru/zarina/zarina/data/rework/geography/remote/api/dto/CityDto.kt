@@ -20,7 +20,7 @@ data class CityDto(
     val kladrId: String? = null,
 ) {
     fun toCity(): City {
-        val kladrId = checkNotNull(kladrId) { "kladrId is null" }
+        checkNotNull(kladrId) { "kladrId is null" }
         return City(
             name = checkNotNull(name) { "name is null" },
             fullName = checkNotNull(fullName) { "fullName is null" },

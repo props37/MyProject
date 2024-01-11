@@ -1,29 +1,45 @@
 package ru.zarina.zarina.ui.screen.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
-import ru.zarina.zarina.domain.rework.content.HomeBanners
+import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
-import ru.zarina.zarina.ui.screen.home.HomeViewModel.BannersState
+import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
+import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
+import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.ContentPager
+import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.TabBar
+import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.rememberTabBarScrollBehavior
+import ru.zarina.zarina.ui.screen.home.HomeViewModel.ContentState
+import ru.zarina.zarina.ui.screen.home.HomeViewModel.Tab
+import ru.zarina.zarina.ui.screen.home.tooling.preview.ContentStatePreviewParameterProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.Crossfade
 
@@ -31,17 +47,28 @@ import ru.zarina.zarina.util.compose.Crossfade
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val bannersState by viewModel.bannersState.collectAsStateWithLifecycle()
+    val tabs by viewModel.tabs.collectAsStateWithLifecycle()
+    val currentTab by viewModel.currentTab.collectAsStateWithLifecycle()
+    val contentState by viewModel.contentState.collectAsStateWithLifecycle()
 
     ScreenContent(
-        bannersState = bannersState,
+        tabs = tabs,
+        currentTab = currentTab,
+        onTabClicked = viewModel::onTabClicked,
+        contentState = contentState,
+        onBannerClicked = viewModel::onBannerClicked,
+        onContentErrorRefreshClicked = viewModel::onContentErrorRefreshClicked,
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ScreenContent(
-    bannersState: BannersState,
+    tabs: List<Tab>,
+    currentTab: Tab,
+    onTabClicked: (Tab) -> Unit,
+    contentState: ContentState,
+    onBannerClicked: (HomeContent.Banner) -> Unit,
+    onContentErrorRefreshClicked: () -> Unit,
 ) {
     ForcedBottomNavBarBehavior(isVisible = true)
 
@@ -51,66 +78,64 @@ private fun ScreenContent(
             .background(UiKitTheme.colorsReworked.background.general.regular.default),
     ) {
         Crossfade(
-            targetState = bannersState,
+            targetState = contentState,
             modifier = Modifier.fillMaxSize(),
-        ) { bannersState ->
-            when (bannersState) {
-                BannersState.Loading -> {
+        ) { contentState ->
+            when (contentState) {
+                ContentState.Loading -> {
                     ZarinaLoadingScreen(modifier = Modifier.fillMaxSize())
                 }
 
-                is BannersState.Banners -> {
-                    val pagerState = rememberPagerState { 2 }
-                    HorizontalPager(
-                        state = pagerState,
-                        userScrollEnabled = false,
-                        modifier = Modifier.fillMaxSize(),
-                    ) { pageIndex ->
-                        val listState = rememberLazyListState()
-                        val flingBehavior = rememberSnapFlingBehavior(listState)
-                        val items = when (pageIndex) {
-                            0 -> bannersState.banners.womenBanners
-                            1 -> bannersState.banners.menBanners
-                            else -> error("Unknown page $pageIndex")
-                        }
+                is ContentState.Success -> {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        val tabBarScrollBehavior = rememberTabBarScrollBehavior()
 
-                        LazyColumn(
-                            state = listState,
-                            flingBehavior = flingBehavior,
+                        TabBar(
+                            tabs = tabs,
+                            currentTab = currentTab,
+                            onTabClicked = onTabClicked,
+                            modifier = Modifier
+                                .zIndex(1f)
+                                .align(Alignment.TopCenter)
+                                .onSizeChanged {
+                                    tabBarScrollBehavior.onTabBarHeightChanged(it.height)
+                                }
+                                .statusBarsPadding()
+                                .padding(top = 12.dp)
+                                .offset {
+                                    IntOffset(0, tabBarScrollBehavior.yOffset.intValue)
+                                }
+                                .graphicsLayer {
+                                    alpha = tabBarScrollBehavior.alpha.floatValue
+                                },
+                        )
+
+                        ContentPager(
+                            tabs = tabs,
+                            currentPage = tabs.indexOf(currentTab),
+                            content = contentState.content,
+                            onBannerClicked = onBannerClicked,
                             modifier = Modifier
                                 .fillMaxSize()
-                                .bottomNavBarPadding(),
-                        ) {
-                            items(
-                                items = items,
-                                key = { it.id.value },
-                                contentType = { null }, // TODO: [High] Implement
-                            ) { banner ->
-                                when (banner.mediaType) {
-                                    HomeBanners.Banner.MediaType.IMAGE -> {
-                                        AsyncImage(
-                                            model = banner.mediaUrl.value,
-                                            contentDescription = null, // TODO: [High] Implement
-                                            contentScale = ContentScale.Crop,
-                                            modifier = Modifier.fillParentMaxSize(),
-                                        )
-                                    }
-
-                                    HomeBanners.Banner.MediaType.VIDEO -> {
-                                        // TODO: [High] Implement
-                                        Box(modifier = Modifier.fillParentMaxSize())
-                                    }
-                                }
-                            }
-                        }
+                                .bottomNavBarPadding()
+                                .nestedScroll(tabBarScrollBehavior.nestedScrollConnection),
+                        )
                     }
                 }
 
-                is BannersState.Error -> {
+                is ContentState.Error -> {
                     ZarinaErrorScreen(
-                        state = bannersState.errorState,
-                        onRefreshClicked = { /*TODO*/ },
-                        modifier = Modifier.fillMaxSize(),
+                        state = contentState.errorState,
+                        onRefreshClicked = onContentErrorRefreshClicked,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .windowInsetsPadding(
+                                WindowInsets.statusBars
+                                    .union(WindowInsets.displayCutout),
+                            )
+                            .bottomNavBarPadding()
+                            .padding(horizontal = 16.dp)
+                            .padding(bottom = 16.dp),
                     )
                 }
             }
@@ -119,7 +144,21 @@ private fun ScreenContent(
 }
 
 @Preview
+@FontScalePreviews
+@DensityPreviews
 @Composable
-private fun Preview() {
-    // TODO: [High] Add preview
+private fun Preview(
+    @PreviewParameter(ContentStatePreviewParameterProvider::class)
+    contentState: ContentState,
+) {
+    ZarinaPreview {
+        ScreenContent(
+            tabs = remember { Tab.entries.toList() },
+            currentTab = Tab.FOR_WOMEN,
+            onTabClicked = {},
+            contentState = contentState,
+            onBannerClicked = {},
+            onContentErrorRefreshClicked = {},
+        )
+    }
 }

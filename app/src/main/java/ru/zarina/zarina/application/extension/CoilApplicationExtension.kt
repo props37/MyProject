@@ -46,7 +46,7 @@ class CoilApplicationExtension @Inject constructor() : ApplicationExtension {
 
     private fun createDiskCache(context: Context): DiskCache {
         return DiskCache.Builder()
-            .directory(context.cacheDir.resolve(DISK_CACHE_DIRECTORY_NAME))
+            .directory(context.cacheDir.resolve(DISK_CACHE_DIR))
             .maxSizePercent(DISK_CACHE_MAX_SIZE_PERCENT)
             .build()
     }
@@ -54,7 +54,7 @@ class CoilApplicationExtension @Inject constructor() : ApplicationExtension {
     companion object {
         private const val MEMORY_CACHE_MAX_SIZE_PERCENT = 0.2
 
-        private const val DISK_CACHE_DIRECTORY_NAME = "image_cache"
+        private const val DISK_CACHE_DIR = "coil_cache"
         private const val DISK_CACHE_MAX_SIZE_PERCENT = 0.02
     }
 }

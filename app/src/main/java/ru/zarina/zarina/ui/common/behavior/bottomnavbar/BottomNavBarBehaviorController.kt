@@ -6,12 +6,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import ru.zarina.zarina.ui.common.behavior.base.BehaviorController
 import ru.zarina.zarina.ui.common.behavior.base.DefaultBehaviorController
-import ru.zarina.zarina.ui.common.behavior.base.NoopBehaviorController
+import ru.zarina.zarina.ui.common.behavior.base.NoOpBehaviorController
 
 typealias BottomNavBarBehaviorController = BehaviorController<BottomNavBarBehavior>
 
 val LocalBottomNavBarBehaviorController = staticCompositionLocalOf<BottomNavBarBehaviorController> {
-    NoopBehaviorController(DefaultBehavior)
+    NoOpBehaviorController(DefaultBehavior)
 }
 
 @Composable

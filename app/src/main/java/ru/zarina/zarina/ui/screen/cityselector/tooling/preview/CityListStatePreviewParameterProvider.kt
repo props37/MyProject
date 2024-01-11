@@ -10,8 +10,8 @@ import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListSta
 class CityListStatePreviewParameterProvider : PreviewParameterProvider<CityListState> {
     override val values: Sequence<CityListState>
         get() = sequenceOf(
-            CityListState.Loading,
             CityListState.CityList(getCityListItems()),
+            CityListState.Loading,
             CityListState.Error(ErrorStateRework.NETWORK),
         )
 

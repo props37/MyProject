@@ -14,8 +14,8 @@ data class AuthorizationTokensDto(
     val refreshToken: String? = null,
 ) {
     fun toAuthorizationTokens(): AuthorizationTokens {
-        val accessToken = checkNotNull(accessToken) { "accessToken is null" }
-        val refreshToken = checkNotNull(refreshToken) { "refreshToken is null" }
+        checkNotNull(accessToken) { "accessToken is null" }
+        checkNotNull(refreshToken) { "refreshToken is null" }
         return AuthorizationTokens(
             accessToken = Token(accessToken),
             refreshToken = Token(refreshToken),
