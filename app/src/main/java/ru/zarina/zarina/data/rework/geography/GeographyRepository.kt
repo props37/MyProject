@@ -26,10 +26,9 @@ class GeographyRepository @Inject constructor(
             emit(cached)
         } else {
             val cities = remoteDataSource.getCities(nameQuery).firstOrNull()
-            if (cities != null) {
-                localDataSource.setCities(nameQuery, cities)
-                emit(cities)
-            }
+            checkNotNull(cities) { "Failed to fetch cities for query $nameQuery" }
+            localDataSource.setCities(nameQuery, cities)
+            emit(cities)
         }
     }
 
