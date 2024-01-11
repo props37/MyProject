@@ -127,9 +127,15 @@ object HomeScreenComponents {
                         size = ZarinaButtonSize.Medium,
                         colors = ZarinaButtonDefaults.backlessColors(),
                     ) {
+                        val style = if (tab == currentTab) {
+                            UiKitTheme.typographyReworked.tertiary.regular
+                        } else {
+                            UiKitTheme.typographyReworked.tertiary.light
+                        }
+
                         Text(
                             text = stringResource(textResId).uppercase(),
-                            style = UiKitTheme.typographyReworked.tertiary.regular,
+                            style = style,
                             color = UiKitTheme.colorsReworked.text.general.regular.default,
                         )
                     }
