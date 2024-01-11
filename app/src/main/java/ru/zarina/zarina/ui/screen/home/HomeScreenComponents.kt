@@ -37,6 +37,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.asFloatState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -115,16 +116,16 @@ object HomeScreenComponents {
                 },
             ) {
                 tabs.forEach { tab ->
-                    val textResId = when (tab) {
-                        Tab.FOR_WOMEN -> R.string.for_women
-                        Tab.FOR_MEN -> R.string.for_men
-                    }
-
                     ZarinaButton(
                         onClick = { onTabClicked(tab) },
                         size = ZarinaButtonSize.Medium,
                         colors = ZarinaButtonDefaults.backlessColors(),
                     ) {
+                        val textResId = when (tab) {
+                            Tab.FOR_WOMEN -> R.string.for_women
+                            Tab.FOR_MEN -> R.string.for_men
+                        }
+
                         val style = if (tab == currentTab) {
                             UiKitTheme.typographyReworked.tertiary.regular
                         } else {
