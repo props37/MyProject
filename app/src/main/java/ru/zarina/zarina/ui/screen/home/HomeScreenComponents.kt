@@ -26,8 +26,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -46,7 +44,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -74,6 +71,7 @@ import ru.zarina.zarina.ui.common.component.LooseTabRowDefaults.looseTabIndicato
 import ru.zarina.zarina.ui.common.component.VideoPlayer
 import ru.zarina.zarina.ui.common.component.ZarinaLogo
 import ru.zarina.zarina.ui.common.component.ZarinaLogoAspectRatio
+import ru.zarina.zarina.ui.common.component.ZarinaTabIndicator
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
@@ -109,10 +107,8 @@ object HomeScreenComponents {
             LooseTabRow(
                 selectedTabIndex = selectedTabIndex,
                 indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(
-                        modifier = Modifier
-                            .looseTabIndicatorOffset(tabPositions[selectedTabIndex])
-                            .clip(CircleShape),
+                    ZarinaTabIndicator(
+                        modifier = Modifier.looseTabIndicatorOffset(tabPositions[selectedTabIndex]),
                     )
                 },
             ) {
