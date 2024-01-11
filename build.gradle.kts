@@ -12,7 +12,7 @@ plugins {
     alias(libs.plugins.firebase.performance) apply false
 
     alias(libs.plugins.androidGitVersion) apply false
-    alias(libs.plugins.checkDependencyUpdates) apply false
+    alias(libs.plugins.gradleVersions) apply false
 }
 
 buildscript {
