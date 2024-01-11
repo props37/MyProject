@@ -13,4 +13,9 @@ data class Category(
 
     @JvmInline
     value class Code(val value: String)
+
+    companion object {
+        val WOMEN_MAIN_CATEGORY_ID: Id get() = Id(1460)
+        val MEN_MAIN_CATEGORY_ID: Id get() = Id(1461)
+    }
 }
