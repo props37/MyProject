@@ -1,6 +1,9 @@
 package ru.zarina.zarina.ui.screen.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.AnimationState
+import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.animateTo
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -28,10 +31,15 @@ import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.FloatState
+import androidx.compose.runtime.IntState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.asFloatState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -39,10 +47,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.media3.common.MediaItem
@@ -70,6 +82,7 @@ import ru.zarina.zarina.ui.common.media.exoplayer.LocalExoPlayerCacheHolder
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.Tab
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import timber.log.Timber
+import kotlin.math.roundToInt
 
 object HomeScreenComponents {
 
@@ -446,6 +459,11 @@ object HomeScreenComponents {
         )
     }
 
+    @Composable
+    fun rememberTabBarScrollBehavior(): TabBarScrollBehavior {
+        return remember { TabBarScrollBehavior() }
+    }
+
     private fun createBannerListContentType(bannerContainer: HomeContent.BannerContainer): String {
         return when (bannerContainer) {
             is HomeContent.BannerContainer.SingleBanner -> {
@@ -464,6 +482,54 @@ object HomeScreenComponents {
         }
     }
 
+    // TODO: [High] Add ability to disable scroll, e.g. if the list is empty
+    @Stable
+    class TabBarScrollBehavior {
+        private val height = mutableIntStateOf(0)
+
+        private val _yOffset = mutableIntStateOf(TabBarMaxYOffset)
+        val yOffset: IntState = _yOffset
+
+        val alpha: FloatState = derivedStateOf {
+            val scrollProgress = -yOffset.intValue.toFloat() / height.intValue
+            1f - scrollProgress * TabBarAlphaProgressFactor
+        }.asFloatState()
+
+        val nestedScrollConnection = object : NestedScrollConnection {
+            override fun onPreScroll(
+                available: Offset,
+                source: NestedScrollSource,
+            ): Offset {
+                val minYOffset = -height.intValue
+                val newTabBarYOffset = (yOffset.intValue + available.y.roundToInt())
+                    .coerceIn(minYOffset, TabBarMaxYOffset)
+                _yOffset.intValue = newTabBarYOffset
+                return super.onPreScroll(available, source)
+            }
+
+            override suspend fun onPostFling(
+                consumed: Velocity,
+                available: Velocity,
+            ): Velocity {
+                // Settle tab bar if it is between states
+                val minYOffset = -height.intValue
+                val targetYOffset =
+                    if (yOffset.intValue <= minYOffset / 2) minYOffset else TabBarMaxYOffset
+                AnimationState(
+                    initialValue = yOffset.intValue,
+                    typeConverter = Int.VectorConverter,
+                ).animateTo(targetValue = targetYOffset) {
+                    _yOffset.intValue = value
+                }
+                return super.onPostFling(consumed, available)
+            }
+        }
+
+        fun onTabBarHeightChanged(height: Int) {
+            this.height.intValue = height
+        }
+    }
+
     private const val BannerListContentTypeFullscreenImage = "BannerListContentTypeFullscreenImage"
     private const val BannerListContentTypeFullscreenVideo = "BannerListContentTypeFullscreenVideo"
     private const val BannerListContentTypeGrid = "BannerListContentTypeGrid"
@@ -472,4 +538,7 @@ object HomeScreenComponents {
 
     private const val GridBannersItemCount = 4
     private const val GridBannersRowItemCount = GridBannersItemCount / 2
+
+    private const val TabBarMaxYOffset = 0
+    private const val TabBarAlphaProgressFactor = 2
 }

@@ -1,8 +1,5 @@
 package ru.zarina.zarina.ui.screen.home
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.VectorConverter
-import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -15,29 +12,20 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
@@ -48,12 +36,12 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.ContentPager
 import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.TabBar
+import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.rememberTabBarScrollBehavior
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.ContentState
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.Tab
 import ru.zarina.zarina.ui.screen.home.tooling.preview.ContentStatePreviewParameterProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.Crossfade
-import kotlin.math.roundToInt
 
 @Composable
 fun HomeScreen(
@@ -100,24 +88,7 @@ private fun ScreenContent(
 
                 is ContentState.Success -> {
                     Box(modifier = Modifier.fillMaxSize()) {
-                        // TODO: [High] Refactor
-                        val tabBarHeightPx = remember { mutableIntStateOf(0) }
-                        val tabBarYOffsetChannel = remember { Channel<Int>(Channel.UNLIMITED) }
-                        val tabBarYOffsetAnimatable = remember {
-                            Animatable(0, Int.VectorConverter, Int.VisibilityThreshold)
-                        }
-                        val tabBarAlpha = remember(tabBarYOffsetAnimatable) {
-                            derivedStateOf {
-                                (1f - (tabBarYOffsetAnimatable.value.toFloat() * 2 / -tabBarHeightPx.intValue))
-                                    .coerceIn(0f, 1f)
-                            }
-                        }
-
-                        LaunchedEffect(tabBarYOffsetAnimatable, tabBarYOffsetChannel) {
-                            tabBarYOffsetChannel.receiveAsFlow().collect { yOffset ->
-                                tabBarYOffsetAnimatable.snapTo(yOffset)
-                            }
-                        }
+                        val tabBarScrollBehavior = rememberTabBarScrollBehavior()
 
                         TabBar(
                             tabs = tabs,
@@ -126,40 +97,18 @@ private fun ScreenContent(
                             modifier = Modifier
                                 .zIndex(1f)
                                 .align(Alignment.TopCenter)
-                                .onSizeChanged { tabBarHeightPx.intValue = it.height }
+                                .onSizeChanged {
+                                    tabBarScrollBehavior.onTabBarHeightChanged(it.height)
+                                }
                                 .statusBarsPadding()
                                 .padding(top = 12.dp)
-                                .offset { IntOffset(0, tabBarYOffsetAnimatable.value) }
-                                .graphicsLayer { alpha = tabBarAlpha.value },
+                                .offset {
+                                    IntOffset(0, tabBarScrollBehavior.yOffset.intValue)
+                                }
+                                .graphicsLayer {
+                                    alpha = tabBarScrollBehavior.alpha.floatValue
+                                },
                         )
-
-                        val nestedScrollConnection = remember {
-                            object : NestedScrollConnection {
-                                override fun onPreScroll(
-                                    available: Offset,
-                                    source: NestedScrollSource,
-                                ): Offset {
-                                    val newTabBarYOffset = (tabBarYOffsetAnimatable.value + available.y.roundToInt())
-                                        .coerceIn(-tabBarHeightPx.intValue, 0)
-                                    tabBarYOffsetChannel.trySend(newTabBarYOffset)
-                                    return super.onPreScroll(available, source)
-                                }
-
-                                override suspend fun onPostFling(
-                                    consumed: Velocity,
-                                    available: Velocity,
-                                ): Velocity {
-                                    val currentYOffset = tabBarYOffsetAnimatable.value
-                                    val settleYOffset = if (currentYOffset <= (-tabBarHeightPx.intValue / 2)) {
-                                        -tabBarHeightPx.intValue
-                                    } else {
-                                        0
-                                    }
-                                    tabBarYOffsetAnimatable.animateTo(settleYOffset)
-                                    return super.onPostFling(consumed, available)
-                                }
-                            }
-                        }
 
                         ContentPager(
                             tabs = tabs,
@@ -167,9 +116,9 @@ private fun ScreenContent(
                             content = contentState.content,
                             onBannerClicked = onBannerClicked,
                             modifier = Modifier
-                                .nestedScroll(nestedScrollConnection)
                                 .fillMaxSize()
-                                .bottomNavBarPadding(),
+                                .bottomNavBarPadding()
+                                .nestedScroll(tabBarScrollBehavior.nestedScrollConnection),
                         )
                     }
                 }
