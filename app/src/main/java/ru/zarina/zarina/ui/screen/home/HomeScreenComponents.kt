@@ -103,7 +103,9 @@ object HomeScreenComponents {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            val selectedTabIndex = tabs.indexOf(currentTab)
+            val selectedTabIndex = remember(tabs, currentTab) {
+                tabs.indexOf(currentTab)
+            }
             LooseTabRow(
                 selectedTabIndex = selectedTabIndex,
                 indicator = { tabPositions ->
