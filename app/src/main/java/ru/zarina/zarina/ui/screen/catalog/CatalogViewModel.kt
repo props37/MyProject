@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import ru.zarina.zarina.domain.rework.common.Category
+import ru.zarina.zarina.domain.rework.common.findMenMainCategory
+import ru.zarina.zarina.domain.rework.common.findWomenMainCategory
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
@@ -71,14 +73,10 @@ class CatalogViewModel @Inject constructor(
             interactor.getCategories().collect { result ->
                 val categoryListState = result.fold(
                     onSuccess = { categories ->
-                        val womenCategories = categories
-                            .find { it.id == Category.WOMEN_MAIN_CATEGORY_ID }
-                            ?.children
-                            ?: emptyList()
-                        val menCategories = categories
-                            .find { it.id == Category.MEN_MAIN_CATEGORY_ID }
-                            ?.children
-                            ?: emptyList()
+                        val womenCategories =
+                            categories.findWomenMainCategory()?.children ?: emptyList()
+                        val menCategories =
+                            categories.findMenMainCategory()?.children ?: emptyList()
                         CategoryListState.Success(womenCategories, menCategories)
                     },
                     onFailure = { throwable ->
