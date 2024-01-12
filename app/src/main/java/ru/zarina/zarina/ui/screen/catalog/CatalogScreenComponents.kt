@@ -180,6 +180,7 @@ object CatalogScreenComponents {
         genders: List<GenderTab>,
         currentGender: GenderTab,
         categoryListState: CategoryListState,
+        onCategoryClicked: (Category) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val pagerState = rememberPagerState(
@@ -200,6 +201,7 @@ object CatalogScreenComponents {
             CategoryList(
                 gender = genders[page],
                 state = categoryListState,
+                onCategoryClicked = onCategoryClicked,
                 modifier = Modifier.fillMaxSize(),
             )
         }
@@ -209,6 +211,7 @@ object CatalogScreenComponents {
     private fun CategoryList(
         gender: GenderTab,
         state: CategoryListState,
+        onCategoryClicked: (Category) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         // TODO: [High] Specify content key
@@ -230,6 +233,7 @@ object CatalogScreenComponents {
                         ) { index, category ->
                             CategoryItem(
                                 category = category,
+                                onCategoryClicked = onCategoryClicked,
                                 isDividerVisible = index != categories.lastIndex,
                             )
                         }
@@ -250,6 +254,7 @@ object CatalogScreenComponents {
     @Composable
     private fun CategoryItem(
         category: Category,
+        onCategoryClicked: (Category) -> Unit,
         isDividerVisible: Boolean,
         modifier: Modifier = Modifier,
     ) {
@@ -257,7 +262,7 @@ object CatalogScreenComponents {
             Box(
                 modifier = Modifier
                     .heightIn(min = CategoryItemMinHeight)
-                    .clickable { /* TODO */ }
+                    .clickable { onCategoryClicked(category) }
                     .padding(horizontal = 16.dp, vertical = 8.dp),
             ) {
                 Row(

@@ -61,6 +61,10 @@ class CatalogViewModel @Inject constructor(
         savedStateHandle[KEY_CURRENT_GENDER_TAB] = tab
     }
 
+    fun onCategoryClicked(category: Category) {
+        // TODO: [High] Implement
+    }
+
     private fun fetchCategories() {
         fetchCategoriesJob?.cancel()
         fetchCategoriesJob = viewModelScope.launch {

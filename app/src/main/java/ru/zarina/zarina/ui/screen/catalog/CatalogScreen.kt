@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.domain.rework.common.Category
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderCategoryPager
@@ -52,6 +53,7 @@ fun CatalogScreen(
         currentGenderTab = currentGenderTab,
         onGenderTabClicked = viewModel::onGenderTabClicked,
         categoryListState = categoryListState,
+        onCategoryClicked = viewModel::onCategoryClicked,
         sideEffects = viewModel.sideEffects,
     )
 }
@@ -66,6 +68,7 @@ private fun ScreenContent(
     currentGenderTab: GenderTab,
     onGenderTabClicked: (GenderTab) -> Unit,
     categoryListState: CategoryListState,
+    onCategoryClicked: (Category) -> Unit,
     sideEffects: Flow<SideEffect>,
 ) {
     CatalogScreenBehavior(
@@ -109,6 +112,7 @@ private fun ScreenContent(
             genders = genderTabs,
             currentGender = currentGenderTab,
             categoryListState = categoryListState,
+            onCategoryClicked = onCategoryClicked,
             modifier = Modifier.fillMaxSize(),
         )
     }
