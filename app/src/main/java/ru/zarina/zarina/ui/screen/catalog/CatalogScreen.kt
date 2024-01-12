@@ -24,7 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.CategoryList
+import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderCategoryPager
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderPicker
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.SearchBar
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
@@ -102,8 +102,10 @@ private fun ScreenContent(
                 .padding(horizontal = 16.dp),
         )
 
-        CategoryList(
-            state = categoryListState,
+        GenderCategoryPager(
+            genderPickerTabs = genderPickerTabs,
+            currentGenderPickerTab = currentGenderPickerTab,
+            categoryListState = categoryListState,
             modifier = Modifier.fillMaxSize(),
         )
     }

@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.screen.catalog
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,12 +13,15 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -160,8 +164,38 @@ object CatalogScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun CategoryList(
+    fun GenderCategoryPager(
+        genderPickerTabs: List<GenderPickerTab>,
+        currentGenderPickerTab: GenderPickerTab,
+        categoryListState: CategoryListState,
+        modifier: Modifier = Modifier,
+    ) {
+        val pagerState = rememberPagerState(
+            initialPage = remember { genderPickerTabs.indexOf(currentGenderPickerTab) },
+            pageCount = { genderPickerTabs.size },
+        )
+
+        LaunchedEffect(pagerState, genderPickerTabs, currentGenderPickerTab) {
+            val page = genderPickerTabs.indexOf(currentGenderPickerTab)
+            pagerState.animateScrollToPage(page)
+        }
+
+        HorizontalPager(
+            state = pagerState,
+            userScrollEnabled = false,
+            modifier = modifier,
+        ) { page ->
+            CategoryList(
+                state = categoryListState,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+    }
+
+    @Composable
+    private fun CategoryList(
         state: CategoryListState,
         modifier: Modifier = Modifier,
     ) {
