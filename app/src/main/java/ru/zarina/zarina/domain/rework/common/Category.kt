@@ -19,3 +19,9 @@ data class Category(
         val MEN_MAIN_CATEGORY_ID: Id get() = Id(1461)
     }
 }
+
+fun Category.getFlattenedChildren(): List<Category>? {
+    return children?.let {
+        children + children.flatMap { it.getFlattenedChildren() ?: emptyList() }
+    }
+}
