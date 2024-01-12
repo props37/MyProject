@@ -7,7 +7,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -234,8 +233,16 @@ object CatalogScreenComponents {
                             CategoryItem(
                                 category = category,
                                 onCategoryClicked = onCategoryClicked,
-                                isDividerVisible = index != categories.lastIndex,
                             )
+
+                            if (index != categories.lastIndex) {
+                                Divider(
+                                    color = UiKitTheme.colorsReworked.border.general.default,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp),
+                                )
+                            }
                         }
                     }
                 }
@@ -255,64 +262,48 @@ object CatalogScreenComponents {
     private fun CategoryItem(
         category: Category,
         onCategoryClicked: (Category) -> Unit,
-        isDividerVisible: Boolean,
         modifier: Modifier = Modifier,
     ) {
-        Column(modifier = modifier) {
-            Box(
-                modifier = Modifier
-                    .heightIn(min = CategoryItemMinHeight)
-                    .clickable { onCategoryClicked(category) }
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .heightIn(min = CategoryItemMinHeight)
+                .clickable { onCategoryClicked(category) }
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f),
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.align(Alignment.CenterStart),
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.weight(1f),
-                    ) {
-                        val color = category.color?.toComposeColor()
-                            ?: UiKitTheme.colorsReworked.text.general.regular.default
+                val color = category.color?.toComposeColor()
+                    ?: UiKitTheme.colorsReworked.text.general.regular.default
 
-                        // TODO: [High] Make multiline?
-                        Text(
-                            text = category.name.uppercase(),
-                            style = UiKitTheme.typographyReworked.tertiary.light,
-                            color = color,
-                            maxLines = 1,
-                        )
+                // TODO: [High] Make multiline?
+                Text(
+                    text = category.name.uppercase(),
+                    style = UiKitTheme.typographyReworked.tertiary.light,
+                    color = color,
+                    maxLines = 1,
+                )
 
-                        if (category.label != null) {
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = category.label.uppercase(),
-                                style = UiKitTheme.typographyReworked.caption2.light,
-                                color = color,
-                                maxLines = 1,
-                                modifier = Modifier.align(Alignment.Top),
-                            )
-                        }
-                    }
-
-                    if (!category.children.isNullOrEmpty()) {
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Icon(
-                            painter = painterResource(R.drawable.ic_small_arrow_up_24),
-                            contentDescription = null, // TODO: [High] Add content description
-                            modifier = Modifier.size(16.dp),
-                        )
-                    }
+                if (category.label != null) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = category.label.uppercase(),
+                        style = UiKitTheme.typographyReworked.caption2.light,
+                        color = color,
+                        maxLines = 1,
+                        modifier = Modifier.align(Alignment.Top),
+                    )
                 }
             }
 
-            if (isDividerVisible) {
-                Divider(
-                    color = UiKitTheme.colorsReworked.border.general.default,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+            if (!category.children.isNullOrEmpty()) {
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    painter = painterResource(R.drawable.ic_small_arrow_up_24),
+                    contentDescription = null, // TODO: [High] Add content description
+                    modifier = Modifier.size(16.dp),
                 )
             }
         }
@@ -332,8 +323,16 @@ object CatalogScreenComponents {
                 CategoryListSkeletonItem(
                     index = index,
                     shimmer = shimmer,
-                    isDividerVisible = index != CategoryListSkeletonItemCount - 1,
                 )
+
+                if (index != CategoryListSkeletonItemCount - 1) {
+                    Divider(
+                        color = UiKitTheme.colorsReworked.border.general.default,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    )
+                }
             }
         }
     }
@@ -342,48 +341,42 @@ object CatalogScreenComponents {
     private fun CategoryListSkeletonItem(
         index: Int,
         shimmer: Shimmer,
-        isDividerVisible: Boolean,
         modifier: Modifier = Modifier,
     ) {
-        Column(modifier = modifier.padding(horizontal = 16.dp)) {
-            Box(modifier = Modifier.heightIn(min = CategoryItemMinHeight)) {
-                @Suppress("MagicNumber")
-                val widthFraction = when (index % 4) {
-                    0 -> 0.6f
-                    1 -> 0.72f
-                    2 -> 0.48f
-                    3 -> 0.4f
-                    else -> 0.4f
-                }
-                val height = 16.dp
-                val shape = remember { RoundedCornerShape(2.dp) }
-
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .fillMaxWidth(widthFraction)
-                        .height(height)
-                        .clip(shape)
-                        .shimmer(shimmer)
-                        .background(UiKitTheme.colorsReworked.background.skeleton),
-                )
-
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .size(height)
-                        .clip(shape)
-                        .shimmer(shimmer)
-                        .background(UiKitTheme.colorsReworked.background.skeleton),
-                )
+        Box(
+            modifier = modifier
+                .heightIn(min = CategoryItemMinHeight)
+                .padding(horizontal = 16.dp),
+        ) {
+            @Suppress("MagicNumber")
+            val widthFraction = when (index % 4) {
+                0 -> 0.6f
+                1 -> 0.72f
+                2 -> 0.48f
+                3 -> 0.4f
+                else -> 0.4f
             }
+            val height = 16.dp
+            val shape = remember { RoundedCornerShape(2.dp) }
 
-            if (isDividerVisible) {
-                Divider(
-                    color = UiKitTheme.colorsReworked.border.general.default,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .fillMaxWidth(widthFraction)
+                    .height(height)
+                    .clip(shape)
+                    .shimmer(shimmer)
+                    .background(UiKitTheme.colorsReworked.background.skeleton),
+            )
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .size(height)
+                    .clip(shape)
+                    .shimmer(shimmer)
+                    .background(UiKitTheme.colorsReworked.background.skeleton),
+            )
         }
     }
 
