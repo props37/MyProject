@@ -217,7 +217,6 @@ object CatalogScreenComponents {
         ) { state ->
             when (state) {
                 is CategoryListState.Success -> {
-                    // TODO: [High] Implement
                     val categories = when (gender) {
                         GenderTab.WOMEN -> state.womenCategories
                         GenderTab.MEN -> state.menCategories
