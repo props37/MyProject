@@ -3,10 +3,16 @@ package ru.zarina.zarina.ui.screen.catalog
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
@@ -16,25 +22,32 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.shimmer
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.component.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.ZarinaTabIndicator
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
+import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderPickerTab
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.util.compose.Crossfade
 
 object CatalogScreenComponents {
 
@@ -146,4 +159,107 @@ object CatalogScreenComponents {
             }
         }
     }
+
+    @Composable
+    fun CategoryList(
+        state: CategoryListState,
+        modifier: Modifier = Modifier,
+    ) {
+        // TODO: [High] Specify content key
+        Crossfade(
+            targetState = state,
+            modifier = modifier,
+        ) { state ->
+            when (state) {
+                is CategoryListState.Success -> {
+                    // TODO: [High] Implement
+                }
+
+                CategoryListState.Loading -> {
+                    CategoryListSkeleton(modifier = Modifier.fillMaxSize())
+                }
+
+                is CategoryListState.Error -> {
+                    // TODO: [High] Implement
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun CategoryListSkeleton(
+        modifier: Modifier = Modifier,
+    ) {
+        val shimmer = rememberSkeletonShimmer(ShimmerBounds.Window)
+
+        LazyColumn(modifier = modifier) {
+            items(
+                count = CategoryListSkeletonItemCount,
+                key = { it },
+            ) { index ->
+                CategoryListSkeletonItem(
+                    index = index,
+                    shimmer = shimmer,
+                    isDividerVisible = index != CategoryListSkeletonItemCount - 1,
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun CategoryListSkeletonItem(
+        index: Int,
+        shimmer: Shimmer,
+        isDividerVisible: Boolean,
+        modifier: Modifier = Modifier,
+    ) {
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(56.dp) // TODO: [High] Extract?
+                .padding(horizontal = 16.dp),
+        ) {
+            @Suppress("MagicNumber")
+            val widthFraction = when (index % 4) {
+                0 -> 0.6f
+                1 -> 0.72f
+                2 -> 0.48f
+                3 -> 0.4f
+                else -> 0.4f
+            }
+            val height = 16.dp
+            val shape = remember { RoundedCornerShape(2.dp) }
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .fillMaxWidth(widthFraction)
+                    .height(height)
+                    .clip(shape)
+                    .shimmer(shimmer)
+                    .background(UiKitTheme.colorsReworked.background.skeleton),
+            )
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .size(height)
+                    .clip(shape)
+                    .shimmer(shimmer)
+                    .background(UiKitTheme.colorsReworked.background.skeleton),
+            )
+
+            if (isDividerVisible) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(UiKitTheme.colorsReworked.border.general.default),
+                )
+            }
+        }
+    }
+
+    private const val CategoryListSkeletonItemCount = 20
 }

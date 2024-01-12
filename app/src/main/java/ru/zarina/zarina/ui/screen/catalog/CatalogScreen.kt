@@ -22,9 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.CategoryList
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderPicker
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.SearchBar
+import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderPickerTab
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.SideEffect
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -36,6 +39,7 @@ fun CatalogScreen(
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val genderPickerTabs by viewModel.genderPickerTabs.collectAsStateWithLifecycle()
     val currentGenderPickerTab by viewModel.currentGenderPickerTab.collectAsStateWithLifecycle()
+    val categoryListState by viewModel.categoryListState.collectAsStateWithLifecycle()
 
     ScreenContent(
         searchQuery = searchQuery,
@@ -45,6 +49,7 @@ fun CatalogScreen(
         genderPickerTabs = genderPickerTabs,
         currentGenderPickerTab = currentGenderPickerTab,
         onGenderPickerTabClicked = viewModel::onGenderPickerTabClicked,
+        categoryListState = categoryListState,
         sideEffects = viewModel.sideEffects,
     )
 }
@@ -58,6 +63,7 @@ private fun ScreenContent(
     genderPickerTabs: List<GenderPickerTab>,
     currentGenderPickerTab: GenderPickerTab,
     onGenderPickerTabClicked: (GenderPickerTab) -> Unit,
+    categoryListState: CategoryListState,
     sideEffects: Flow<SideEffect>,
 ) {
     CatalogScreenBehavior(
@@ -72,7 +78,8 @@ private fun ScreenContent(
                 WindowInsets.statusBars
                     .union(WindowInsets.displayCutout)
                     .only(WindowInsetsSides.Top),
-            ),
+            )
+            .bottomNavBarPadding(),
     ) {
         SearchBar(
             searchQuery = searchQuery,
@@ -93,6 +100,11 @@ private fun ScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
+        )
+
+        CategoryList(
+            state = categoryListState,
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }
