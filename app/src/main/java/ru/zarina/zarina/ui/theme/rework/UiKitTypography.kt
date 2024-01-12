@@ -268,6 +268,14 @@ data class UiKitTypographyReworked(
             letterSpacing = 0.12.sp,
             platformStyle = PlatformStyle,
         ),
+        val light: TextStyle = TextStyle(
+            fontSize = 10.sp,
+            lineHeight = 12.sp,
+            fontFamily = CirceFamily,
+            fontWeight = FontWeight.W350,
+            letterSpacing = 0.12.sp,
+            platformStyle = PlatformStyle,
+        ),
     )
 
     data class Caption3(

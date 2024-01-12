@@ -5,17 +5,24 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
@@ -32,6 +39,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
@@ -45,6 +53,7 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
+import ru.zarina.zarina.ui.common.util.domain.toComposeColor
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderTab
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -186,8 +195,9 @@ object CatalogScreenComponents {
             state = pagerState,
             userScrollEnabled = false,
             modifier = modifier,
-        ) {
+        ) { page ->
             CategoryList(
+                gender = genders[page],
                 state = categoryListState,
                 modifier = Modifier.fillMaxSize(),
             )
@@ -196,6 +206,7 @@ object CatalogScreenComponents {
 
     @Composable
     private fun CategoryList(
+        gender: GenderTab,
         state: CategoryListState,
         modifier: Modifier = Modifier,
     ) {
@@ -207,6 +218,57 @@ object CatalogScreenComponents {
             when (state) {
                 is CategoryListState.Success -> {
                     // TODO: [High] Implement
+                    val categories = when (gender) {
+                        GenderTab.WOMEN -> state.womenCategories
+                        GenderTab.MEN -> state.menCategories
+                    }
+
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        itemsIndexed(
+                            items = categories,
+                            key = { _, category -> category.id.value },
+                        ) { index, category ->
+                            Column(modifier = Modifier.heightIn(min = CategoryItemMinHeight)) {
+                                Box(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterHorizontally)
+                                        .fillMaxWidth()
+                                        .weight(1f)
+                                        .clickable { /* TODO */ }
+                                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                                ) {
+                                    Row(modifier = Modifier.align(Alignment.CenterStart)) {
+                                        val color = category.color?.toComposeColor()
+                                            ?: UiKitTheme.colorsReworked.text.general.regular.default
+
+                                        Text(
+                                            text = category.name.uppercase(),
+                                            style = UiKitTheme.typographyReworked.tertiary.light,
+                                            color = color,
+                                        )
+
+                                        if (category.label != null) {
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(
+                                                text = category.label.uppercase(),
+                                                style = UiKitTheme.typographyReworked.caption2.light,
+                                                color = color,
+                                            )
+                                        }
+                                    }
+                                }
+
+                                if (index != categories.lastIndex) {
+                                    Divider(
+                                        color = UiKitTheme.colorsReworked.border.general.default,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 16.dp),
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
 
                 CategoryListState.Loading -> {
@@ -250,7 +312,7 @@ object CatalogScreenComponents {
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .height(56.dp) // TODO: [High] Extract?
+                .height(CategoryItemMinHeight)
                 .padding(horizontal = 16.dp),
         ) {
             @Suppress("MagicNumber")
@@ -284,16 +346,17 @@ object CatalogScreenComponents {
             )
 
             if (isDividerVisible) {
-                Box(
+                Divider(
+                    color = UiKitTheme.colorsReworked.border.general.default,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(UiKitTheme.colorsReworked.border.general.default),
+                        .fillMaxWidth(),
                 )
             }
         }
     }
+
+    private val CategoryItemMinHeight: Dp get() = 56.dp
 
     private const val CategoryListSkeletonItemCount = 20
 }
