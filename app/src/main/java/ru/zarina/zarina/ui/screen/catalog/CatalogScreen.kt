@@ -96,7 +96,7 @@ private fun ScreenContent(
         GenderPicker(
             genders = genderTabs,
             currentGender = currentGenderTab,
-            onTabClicked = onGenderTabClicked,
+            onGenderClicked = onGenderTabClicked,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),

@@ -118,7 +118,7 @@ object CatalogScreenComponents {
     fun GenderPicker(
         genders: List<GenderTab>,
         currentGender: GenderTab,
-        onTabClicked: (GenderTab) -> Unit,
+        onGenderClicked: (GenderTab) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val selectedTabIndex = remember(genders, currentGender) {
@@ -136,19 +136,19 @@ object CatalogScreenComponents {
             divider = {},
             modifier = modifier,
         ) {
-            genders.forEach { tab ->
+            genders.forEach { gender ->
                 ZarinaButton(
-                    onClick = { onTabClicked(tab) },
+                    onClick = { onGenderClicked(gender) },
                     size = ZarinaButtonSize.Medium,
                     colors = ZarinaButtonDefaults.backlessColors(),
                     contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
                 ) {
-                    val textResId = when (tab) {
+                    val textResId = when (gender) {
                         GenderTab.WOMEN -> R.string.for_women
                         GenderTab.MEN -> R.string.for_men
                     }
 
-                    val style = if (tab == currentGender) {
+                    val style = if (gender == currentGender) {
                         UiKitTheme.typographyReworked.tertiary.regular
                     } else {
                         UiKitTheme.typographyReworked.tertiary.light
