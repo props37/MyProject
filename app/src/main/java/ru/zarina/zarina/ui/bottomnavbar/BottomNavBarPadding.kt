@@ -1,5 +1,7 @@
 package ru.zarina.zarina.ui.bottomnavbar
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.ime
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
@@ -31,14 +33,26 @@ fun bottomNavBarHeightAsState(): State<Dp> {
     }
 }
 
-fun Modifier.bottomNavBarPadding(): Modifier = this then BottomNavBarPaddingElement()
+/**
+ * @param windowInsets [WindowInsets] whose bottom padding will be used when calculating
+ * the bottom padding. The bottom padding will be the largest value
+ * of the height of the bottom navigation bar and the bottom padding of the [windowInsets].
+ * The most common example will be [ime].
+ */
+fun Modifier.bottomNavBarPadding(
+    windowInsets: WindowInsets? = null,
+): Modifier = this then BottomNavBarPaddingElement(windowInsets)
 
-private class BottomNavBarPaddingElement : ModifierNodeElement<BottomNavBarPaddingNode>() {
+private class BottomNavBarPaddingElement(
+    val windowInsets: WindowInsets?,
+) : ModifierNodeElement<BottomNavBarPaddingNode>() {
     override fun create(): BottomNavBarPaddingNode {
-        return BottomNavBarPaddingNode()
+        return BottomNavBarPaddingNode(windowInsets)
     }
 
-    override fun update(node: BottomNavBarPaddingNode) {}
+    override fun update(node: BottomNavBarPaddingNode) {
+        node.windowInsets = windowInsets
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -50,7 +64,9 @@ private class BottomNavBarPaddingElement : ModifierNodeElement<BottomNavBarPaddi
     }
 }
 
-private class BottomNavBarPaddingNode : Modifier.Node(), LayoutModifierNode,
+private class BottomNavBarPaddingNode(
+    var windowInsets: WindowInsets?,
+) : Modifier.Node(), LayoutModifierNode,
     CompositionLocalConsumerModifierNode {
 
     override fun MeasureScope.measure(
@@ -60,10 +76,16 @@ private class BottomNavBarPaddingNode : Modifier.Node(), LayoutModifierNode,
         val bottomNavBarSizeTracker = currentValueOf(LocalBottomNavBarSizeTracker)
         val bottomNavBarHeight = bottomNavBarSizeTracker.sizePx.value.height
 
-        val placeable = measurable.measure(constraints.offset(vertical = -bottomNavBarHeight))
+        val bottomPadding = windowInsets?.let {
+            val density = currentValueOf(LocalDensity)
+            val windowInsetsBottomPadding = it.getBottom(density)
+            (bottomNavBarHeight - windowInsetsBottomPadding).coerceAtLeast(0)
+        } ?: bottomNavBarHeight
+
+        val placeable = measurable.measure(constraints.offset(vertical = -bottomPadding))
 
         val width = constraints.constrainWidth(placeable.width)
-        val height = constraints.constrainHeight(placeable.height + bottomNavBarHeight)
+        val height = constraints.constrainHeight(placeable.height + bottomPadding)
         return layout(width, height) {
             placeable.placeRelative(0, 0)
         }
