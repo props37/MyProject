@@ -28,7 +28,7 @@ import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderCategory
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderPicker
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.SearchBar
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
-import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderPickerTab
+import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderTab
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.SideEffect
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
@@ -37,8 +37,8 @@ fun CatalogScreen(
     viewModel: CatalogViewModel = hiltViewModel(),
 ) {
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
-    val genderPickerTabs by viewModel.genderPickerTabs.collectAsStateWithLifecycle()
-    val currentGenderPickerTab by viewModel.currentGenderPickerTab.collectAsStateWithLifecycle()
+    val genderTabs by viewModel.genderTabs.collectAsStateWithLifecycle()
+    val currentGenderTab by viewModel.currentGenderTab.collectAsStateWithLifecycle()
     val categoryListState by viewModel.categoryListState.collectAsStateWithLifecycle()
 
     ScreenContent(
@@ -46,9 +46,9 @@ fun CatalogScreen(
         onSearchQueryChanged = viewModel::onSearchQueryChanged,
         onSearchBarClearClicked = viewModel::onSearchBarClearClicked,
         onSearchBarCancelClicked = viewModel::onSearchBarCancelClicked,
-        genderPickerTabs = genderPickerTabs,
-        currentGenderPickerTab = currentGenderPickerTab,
-        onGenderPickerTabClicked = viewModel::onGenderPickerTabClicked,
+        genderTabs = genderTabs,
+        currentGenderTab = currentGenderTab,
+        onGenderTabClicked = viewModel::onGenderTabClicked,
         categoryListState = categoryListState,
         sideEffects = viewModel.sideEffects,
     )
@@ -60,9 +60,9 @@ private fun ScreenContent(
     onSearchQueryChanged: (String) -> Unit,
     onSearchBarClearClicked: () -> Unit,
     onSearchBarCancelClicked: () -> Unit,
-    genderPickerTabs: List<GenderPickerTab>,
-    currentGenderPickerTab: GenderPickerTab,
-    onGenderPickerTabClicked: (GenderPickerTab) -> Unit,
+    genderTabs: List<GenderTab>,
+    currentGenderTab: GenderTab,
+    onGenderTabClicked: (GenderTab) -> Unit,
     categoryListState: CategoryListState,
     sideEffects: Flow<SideEffect>,
 ) {
@@ -94,17 +94,17 @@ private fun ScreenContent(
         Spacer(modifier = Modifier.height(4.dp))
 
         GenderPicker(
-            tabs = genderPickerTabs,
-            currentTab = currentGenderPickerTab,
-            onTabClicked = onGenderPickerTabClicked,
+            genders = genderTabs,
+            currentGender = currentGenderTab,
+            onTabClicked = onGenderTabClicked,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
         )
 
         GenderCategoryPager(
-            genderPickerTabs = genderPickerTabs,
-            currentGenderPickerTab = currentGenderPickerTab,
+            genders = genderTabs,
+            currentGender = currentGenderTab,
             categoryListState = categoryListState,
             modifier = Modifier.fillMaxSize(),
         )

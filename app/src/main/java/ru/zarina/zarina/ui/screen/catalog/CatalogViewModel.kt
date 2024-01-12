@@ -31,11 +31,11 @@ class CatalogViewModel @Inject constructor(
         initialValue = "",
     )
 
-    val genderPickerTabs = MutableStateFlow(GenderPickerTab.entries.toList()).asStateFlow()
+    val genderTabs = MutableStateFlow(GenderTab.entries.toList()).asStateFlow()
 
-    val currentGenderPickerTab = savedStateHandle.getStateFlow(
-        key = KEY_CURRENT_GENDER_PICKER_TAB,
-        initialValue = GenderPickerTab.FOR_WOMEN,
+    val currentGenderTab = savedStateHandle.getStateFlow(
+        key = KEY_CURRENT_GENDER_TAB,
+        initialValue = GenderTab.WOMEN,
     )
 
     private val _categoryListState = MutableStateFlow<CategoryListState>(CategoryListState.Loading)
@@ -57,8 +57,8 @@ class CatalogViewModel @Inject constructor(
         emitSideEffect(SideEffect.FreeSearchBarFocus)
     }
 
-    fun onGenderPickerTabClicked(tab: GenderPickerTab) {
-        savedStateHandle[KEY_CURRENT_GENDER_PICKER_TAB] = tab
+    fun onGenderTabClicked(tab: GenderTab) {
+        savedStateHandle[KEY_CURRENT_GENDER_TAB] = tab
     }
 
     private fun fetchCategories() {
@@ -95,7 +95,7 @@ class CatalogViewModel @Inject constructor(
     }
 
     @Parcelize
-    enum class GenderPickerTab : Parcelable { FOR_WOMEN, FOR_MEN }
+    enum class GenderTab : Parcelable { WOMEN, MEN }
 
     sealed class CategoryListState {
         data object Loading : CategoryListState()
@@ -110,6 +110,6 @@ class CatalogViewModel @Inject constructor(
 
     companion object {
         private const val KEY_SEARCH_QUERY = "search_query"
-        private const val KEY_CURRENT_GENDER_PICKER_TAB = "current_gender_picker_tab"
+        private const val KEY_CURRENT_GENDER_TAB = "current_gender_tab"
     }
 }

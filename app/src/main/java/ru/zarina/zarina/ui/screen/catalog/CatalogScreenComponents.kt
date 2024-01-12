@@ -46,7 +46,7 @@ import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
-import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderPickerTab
+import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderTab
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
@@ -116,13 +116,13 @@ object CatalogScreenComponents {
 
     @Composable
     fun GenderPicker(
-        tabs: List<GenderPickerTab>,
-        currentTab: GenderPickerTab,
-        onTabClicked: (GenderPickerTab) -> Unit,
+        genders: List<GenderTab>,
+        currentGender: GenderTab,
+        onTabClicked: (GenderTab) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val selectedTabIndex = remember(tabs, currentTab) {
-            tabs.indexOf(currentTab)
+        val selectedTabIndex = remember(genders, currentGender) {
+            genders.indexOf(currentGender)
         }
 
         TabRow(
@@ -136,7 +136,7 @@ object CatalogScreenComponents {
             divider = {},
             modifier = modifier,
         ) {
-            tabs.forEach { tab ->
+            genders.forEach { tab ->
                 ZarinaButton(
                     onClick = { onTabClicked(tab) },
                     size = ZarinaButtonSize.Medium,
@@ -144,11 +144,11 @@ object CatalogScreenComponents {
                     contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
                 ) {
                     val textResId = when (tab) {
-                        GenderPickerTab.FOR_WOMEN -> R.string.for_women
-                        GenderPickerTab.FOR_MEN -> R.string.for_men
+                        GenderTab.WOMEN -> R.string.for_women
+                        GenderTab.MEN -> R.string.for_men
                     }
 
-                    val style = if (tab == currentTab) {
+                    val style = if (tab == currentGender) {
                         UiKitTheme.typographyReworked.tertiary.regular
                     } else {
                         UiKitTheme.typographyReworked.tertiary.light
@@ -167,18 +167,18 @@ object CatalogScreenComponents {
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun GenderCategoryPager(
-        genderPickerTabs: List<GenderPickerTab>,
-        currentGenderPickerTab: GenderPickerTab,
+        genders: List<GenderTab>,
+        currentGender: GenderTab,
         categoryListState: CategoryListState,
         modifier: Modifier = Modifier,
     ) {
         val pagerState = rememberPagerState(
-            initialPage = remember { genderPickerTabs.indexOf(currentGenderPickerTab) },
-            pageCount = { genderPickerTabs.size },
+            initialPage = remember { genders.indexOf(currentGender) },
+            pageCount = { genders.size },
         )
 
-        LaunchedEffect(pagerState, genderPickerTabs, currentGenderPickerTab) {
-            val page = genderPickerTabs.indexOf(currentGenderPickerTab)
+        LaunchedEffect(pagerState, genders, currentGender) {
+            val page = genders.indexOf(currentGender)
             pagerState.animateScrollToPage(page)
         }
 
@@ -186,7 +186,7 @@ object CatalogScreenComponents {
             state = pagerState,
             userScrollEnabled = false,
             modifier = modifier,
-        ) { page ->
+        ) {
             CategoryList(
                 state = categoryListState,
                 modifier = Modifier.fillMaxSize(),
