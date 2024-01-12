@@ -29,12 +29,12 @@ class HomeViewModel @Inject constructor(
 
     private var fetchContentJob: Job? = null
 
-    val tabs = MutableStateFlow(Tab.entries.toList()).asStateFlow()
+    val genderTabs = MutableStateFlow(GenderTab.entries.toList()).asStateFlow()
 
     // TODO: [Low] Store the last selected tab on the disk
-    val currentTab = savedStateHandle.getStateFlow(
-        key = KEY_CURRENT_TAB,
-        initialValue = Tab.FOR_WOMEN,
+    val currentGenderTab = savedStateHandle.getStateFlow(
+        key = KEY_CURRENT_GENDER_TAB,
+        initialValue = GenderTab.WOMEN,
     )
 
     private val _contentState = MutableStateFlow<ContentState>(ContentState.Loading)
@@ -44,8 +44,8 @@ class HomeViewModel @Inject constructor(
         fetchContent()
     }
 
-    fun onTabClicked(tab: Tab) {
-        savedStateHandle[KEY_CURRENT_TAB] = tab
+    fun onGenderTabClicked(tab: GenderTab) {
+        savedStateHandle[KEY_CURRENT_GENDER_TAB] = tab
     }
 
     fun onBannerClicked(banner: HomeContent.Banner) {
@@ -83,7 +83,7 @@ class HomeViewModel @Inject constructor(
     sealed interface SideEffect : SideEffectSource.SideEffect
 
     @Parcelize
-    enum class Tab : Parcelable { FOR_WOMEN, FOR_MEN }
+    enum class GenderTab : Parcelable { WOMEN, MEN }
 
     sealed class ContentState {
         data object Loading : ContentState()
@@ -94,6 +94,6 @@ class HomeViewModel @Inject constructor(
     }
 
     companion object {
-        private const val KEY_CURRENT_TAB = "current_tab"
+        private const val KEY_CURRENT_GENDER_TAB = "current_gender_tab"
     }
 }
