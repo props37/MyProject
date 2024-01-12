@@ -34,7 +34,7 @@ data class CategoryDto(
             code = Category.Code(code),
             name = name,
             label = label,
-            color = color?.let { Color.Code(it) },
+            color = color?.let { Color(it) },
             children = children?.map { it.toCategory() },
         )
     }
