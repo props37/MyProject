@@ -177,7 +177,7 @@ object CitySelectorScreenComponents {
                     }
 
                     is CityListState.CityList -> {
-                        if (listState.cities.isNotEmpty()) {
+                        if (listState.items.isNotEmpty()) {
                             val baseContentPadding = remember(isChangeCityButtonVisible) {
                                 val bottom = if (isChangeCityButtonVisible) {
                                     val buttonHeight = ZarinaButtonDefaults.HeightLarge
@@ -195,7 +195,7 @@ object CitySelectorScreenComponents {
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
                                 items(
-                                    items = listState.cities,
+                                    items = listState.items,
                                     key = { getCityListItemKey(it) },
                                     contentType = { getCityListItemContentType(it) },
                                 ) { item ->
@@ -396,7 +396,7 @@ object CitySelectorScreenComponents {
         return when (state) {
             CityListState.Loading -> CityListContentKeyLoading
             is CityListState.CityList -> {
-                if (state.cities.isNotEmpty()) CityListContentKeyCities else CityListContentKeyCityNotFound
+                if (state.items.isNotEmpty()) CityListContentKeyCities else CityListContentKeyCityNotFound
             }
 
             is CityListState.Error -> CityListContentKeyError

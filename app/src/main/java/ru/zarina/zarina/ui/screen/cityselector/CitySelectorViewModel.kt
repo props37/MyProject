@@ -6,6 +6,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,7 +71,7 @@ class CitySelectorViewModel @Inject constructor(
     )
 
     private val _cityListState = MutableStateFlow<CityListState>(CityListState.Loading)
-    val cityListState = _cityListState.asStateFlow()
+    val cityListState: StateFlow<CityListState> = _cityListState.asStateFlow()
 
     val isCitySearchBarVisible: StateFlow<Boolean> = cityListState.mapState(
         scope = viewModelScope,
@@ -173,7 +175,7 @@ class CitySelectorViewModel @Inject constructor(
             }
         } else {
             cities.map { CityListItem.City(it, showFullName = true) }
-        }
+        }.toImmutableList()
         return CityListState.CityList(listItems)
     }
 
@@ -188,7 +190,7 @@ class CitySelectorViewModel @Inject constructor(
         data object Loading : CityListState()
 
         @Immutable
-        data class CityList(val cities: List<CityListItem>) : CityListState()
+        data class CityList(val items: ImmutableList<CityListItem>) : CityListState()
 
         @Immutable
         data class Error(val errorState: ErrorStateRework) : CityListState()
