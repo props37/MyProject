@@ -8,7 +8,7 @@ import javax.inject.Inject
 class ContentRepository @Inject constructor(
     private val remoteDataSource: ContentRemoteDataSource,
 ) {
-    fun getHomeContent(): Flow<HomeContent> {
-        return remoteDataSource.getHomeContent()
+    fun getHomeContentFlow(): Flow<HomeContent> {
+        return remoteDataSource.getHomeContentFlow()
     }
 }

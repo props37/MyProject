@@ -8,13 +8,13 @@ import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.usecase.base.FlowUseCase
 import javax.inject.Inject
 
-class GetHomeContentUseCase @Inject constructor(
+class GetHomeContentFlowUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val contentRepository: ContentRepository,
 ) : FlowUseCase<Unit, HomeContent>(dispatcher) {
 
     override fun execute(params: Unit): Flow<HomeContent> {
-        return contentRepository.getHomeContent()
+        return contentRepository.getHomeContentFlow()
     }
 }

@@ -9,7 +9,7 @@ import javax.inject.Inject
 class ContentRemoteDataSource @Inject constructor(
     private val api: ContentApi,
 ) {
-    fun getHomeContent(): Flow<HomeContent> = flow {
+    fun getHomeContentFlow(): Flow<HomeContent> = flow {
         val homeBanners = api.getHomeBanners().toHomeContent()
         emit(homeBanners)
     }

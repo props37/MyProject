@@ -68,7 +68,7 @@ class HomeViewModel @Inject constructor(
     private fun fetchContent() {
         fetchContentJob?.cancel()
         fetchContentJob = viewModelScope.launch {
-            interactor.getHomeContent().collect { result ->
+            interactor.getHomeContentFlow().collect { result ->
                 val contentState = result.fold(
                     onSuccess = { content ->
                         ContentState.Success(content)
