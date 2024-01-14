@@ -20,16 +20,17 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
-import ru.zarina.zarina.BuildConfig
 import ru.zarina.zarina.R
 import ru.zarina.zarina.data.permissionmanager.isDenied
 import ru.zarina.zarina.data.permissionmanager.isGranted
 import ru.zarina.zarina.data.permissionmanager.shouldShowRequestRationale
+import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
@@ -66,6 +67,15 @@ class OnboardingViewModel @AssistedInject constructor(
     private var completeOnboardingJob: Job? = null
 
     private val onboardingCompletionTrigger = MutableStateFlow<OnboardingCompletionTrigger?>(null)
+
+    val bannerUrl: StateFlow<Url?> = flow {
+        val url = interactor.getOnboardingBannerUrl().getOrNull()
+        emit(url)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(SharingStarted.WhileSubscribedDelay),
+        initialValue = null,
+    )
 
     val onboardingSteps: StateFlow<ImmutableList<OnboardingStep>> = savedStateHandle
         .getStateFlow<List<OnboardingStep>>(
@@ -346,9 +356,6 @@ class OnboardingViewModel @AssistedInject constructor(
         private const val KEY_ONBOARDING_STEPS = "onboarding_steps"
         private const val KEY_CURRENT_ONBOARDING_STEP = "current_onboarding_step"
         private const val KEY_CURRENT_CITY = "current_city"
-
-        // TODO: [Low] Move to data layer
-        const val ONBOARDING_BANNER_URL = "${BuildConfig.BACKEND_URL}/api/v1/main/splash/"
 
         private val LOCATION_PERMISSIONS: List<String>
             get() = listOf(
