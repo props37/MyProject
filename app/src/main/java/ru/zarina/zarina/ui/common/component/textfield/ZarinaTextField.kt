@@ -53,7 +53,7 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 
-// TODO: [High] Migrate to BasicTextField2
+// TODO: [Low] Migrate to BasicTextField2
 
 @Composable
 fun ZarinaTextField(
@@ -419,7 +419,7 @@ object ZarinaTextFieldDefaults {
         labelColor: Color = UiKitTheme.colorsReworked.text.general.regular.muted,
         leadingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.muted,
         innerTrailingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.default,
-        outerTrailingContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.default, // TODO: [High] Change to button-cell-default
+        outerTrailingContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.default, // TODO: [Low] Change to button-cell-default
         descriptionColor: Color = UiKitTheme.colorsReworked.text.general.regular.muted,
         indicationLineColor: Color = UiKitTheme.colorsReworked.border.general.default,
         activeIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.active,
@@ -428,7 +428,7 @@ object ZarinaTextFieldDefaults {
         disabledLabelColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
         disabledLeadingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.disabled,
         disabledInnerTrailingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.disabled,
-        disabledOuterTrailingContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.disabled, // TODO: [High] Change to button-cell-disabled
+        disabledOuterTrailingContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.disabled, // TODO: [Low] Change to button-cell-disabled
         disabledDescriptionColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
         disabledIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.disabled,
     ): ZarinaTextFieldColors = ZarinaTextFieldColors(

@@ -157,7 +157,7 @@ fun ZarinaBottomNavBar(
                 .clipToBounds()
                 .padding(top = 6.dp, bottom = 4.dp),
         ) {
-            // TODO: [High] Do not use restricted API
+            // TODO: [Medium] Do not use restricted API
             val backStack by navController.currentBackStack.collectAsStateWithLifecycle()
 
             BottomNavBarItem.ITEMS.forEach { item ->

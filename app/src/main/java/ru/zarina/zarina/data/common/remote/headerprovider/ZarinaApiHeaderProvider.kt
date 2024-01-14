@@ -2,7 +2,7 @@ package ru.zarina.zarina.data.common.remote.headerprovider
 
 import javax.inject.Inject
 
-// TODO: [High] Add User-Agent header
+// TODO: [Low] Add User-Agent header?
 
 class ZarinaApiHeaderProvider @Inject constructor() : HeaderProvider {
     override fun provide(): Map<String, String> {
@@ -16,7 +16,7 @@ class ZarinaApiHeaderProvider @Inject constructor() : HeaderProvider {
     companion object {
         private const val KEY_CLIENT_SOURCE = "x-client-source"
 
-        // TODO: [High] Hide from code
+        // TODO: [Medium] Hide from code
         private const val VALUE_CLIENT_SOURCE = "phoh8Meimu1uQuoH"
     }
 }

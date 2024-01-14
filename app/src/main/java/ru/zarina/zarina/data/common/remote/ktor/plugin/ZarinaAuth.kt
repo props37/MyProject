@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 // This is a slightly modified version of https://github.com/ktorio/ktor/blob/main/ktor-client/ktor-client-plugins/ktor-client-auth/common/src/io/ktor/client/plugins/auth/Auth.kt
 // Made because the original version doesn't support token expiry detection customization.
-// TODO: [High] Replace if it get fixed, follow the issue https://youtrack.jetbrains.com/issue/KTOR-5817
+// TODO: [Medium] Replace if it get fixed, follow the issue https://youtrack.jetbrains.com/issue/KTOR-5817
 
 private val LOGGER = KtorSimpleLogger("io.ktor.client.plugins.auth.Auth")
 

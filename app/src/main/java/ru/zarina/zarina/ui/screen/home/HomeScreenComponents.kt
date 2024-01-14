@@ -489,7 +489,7 @@ object HomeScreenComponents {
         }
     }
 
-    // TODO: [High] Add ability to disable scroll, e.g. if the list is empty
+    // TODO: [Medium] Add ability to disable scroll, e.g. if the list is empty
     @Stable
     class TabBarScrollBehavior {
         private val height = mutableIntStateOf(0)

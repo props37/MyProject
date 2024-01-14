@@ -22,6 +22,6 @@ private fun ScreenContent() {
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [High] Add preview
+        // TODO: [Low] Add preview
     }
 }
