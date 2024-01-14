@@ -16,7 +16,7 @@ class AppViewModel @Inject constructor(
 ) : ViewModel() {
 
     val startDestination: Destination<Unit> = runBlocking {
-        val isOnboardingCompleted = interactor.getIsOnboardingCompleted()
+        val isOnboardingCompleted = interactor.getIsOnboardingCompletedFlow()
             .firstOrNull()?.getOrNull() ?: false
         if (isOnboardingCompleted) {
             HomeGraph

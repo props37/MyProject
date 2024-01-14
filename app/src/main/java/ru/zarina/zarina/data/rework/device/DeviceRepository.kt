@@ -7,8 +7,8 @@ import javax.inject.Inject
 class DeviceRepository @Inject constructor(
     private val localDataSource: DeviceLocalDataSource,
 ) {
-    fun getIsOnboardingCompleted(): Flow<Boolean> {
-        return localDataSource.getIsOnboardingCompleted()
+    fun getIsOnboardingCompletedFlow(): Flow<Boolean> {
+        return localDataSource.getIsOnboardingCompletedFlow()
     }
 
     suspend fun setIsOnboardingCompleted(isCompleted: Boolean) {
