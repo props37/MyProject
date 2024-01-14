@@ -1,5 +1,7 @@
 package ru.zarina.zarina.ui.screen.cityselector
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -180,20 +182,26 @@ class CitySelectorViewModel @Inject constructor(
         data object FreeCitySearchBarFocus : SideEffect
     }
 
+    @Stable
     sealed class CityListState {
         data object Loading : CityListState()
 
+        @Immutable
         data class CityList(val list: List<CityListItem>) : CityListState()
 
+        @Immutable
         data class Error(val errorState: ErrorStateRework) : CityListState()
     }
 
+    @Stable
     sealed class CityListItem {
+        @Immutable
         data class City(
             val city: ru.zarina.zarina.domain.rework.geography.City,
             val showFullName: Boolean = false,
         ) : CityListItem()
 
+        @Immutable
         data class CityFirstLetterHeader(val letter: Char) : CityListItem()
     }
 

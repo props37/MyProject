@@ -1,6 +1,8 @@
 package ru.zarina.zarina.ui.screen.catalog
 
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -99,16 +101,28 @@ class CatalogViewModel @Inject constructor(
     @Parcelize
     enum class GenderTab : Parcelable { WOMEN, MEN }
 
+    @Stable
     sealed class CategoryListState {
         data object Loading : CategoryListState()
 
+        @Immutable
         data class Success(
             val womenCategories: List<Category>,
             val menCategories: List<Category>,
         ) : CategoryListState()
 
+        @Immutable
         data class Error(val state: ErrorStateRework) : CategoryListState()
     }
+
+    @Immutable
+    data class CategoryItem(
+        val category: Category,
+        val isVisible: Boolean,
+        val nestingLevel: Int,
+        val isExpandable: Boolean,
+        val isExpanded: Boolean,
+    )
 
     companion object {
         private const val KEY_SEARCH_QUERY = "search_query"

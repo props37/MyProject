@@ -1,6 +1,8 @@
 package ru.zarina.zarina.ui.screen.home
 
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -85,11 +87,14 @@ class HomeViewModel @Inject constructor(
     @Parcelize
     enum class GenderTab : Parcelable { WOMEN, MEN }
 
+    @Stable
     sealed class ContentState {
         data object Loading : ContentState()
 
+        @Immutable
         data class Success(val content: HomeContent) : ContentState()
 
+        @Immutable
         data class Error(val errorState: ErrorStateRework) : ContentState()
     }
 
