@@ -29,6 +29,7 @@ import java.io.IOException
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import ru.zarina.zarina.domain.rework.geography.City as DomainCity
 
 @HiltViewModel
 class CitySelectorViewModel @Inject constructor(
@@ -197,7 +198,7 @@ class CitySelectorViewModel @Inject constructor(
     sealed class CityListItem {
         @Immutable
         data class City(
-            val city: ru.zarina.zarina.domain.rework.geography.City,
+            val city: DomainCity,
             val showFullName: Boolean = false,
         ) : CityListItem()
 
