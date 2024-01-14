@@ -134,6 +134,7 @@ object CatalogScreenComponents {
             genders.indexOf(currentGender)
         }
 
+        // TODO: [Medium] Extract?
         TabRow(
             selectedTabIndex = selectedTabIndex,
             backgroundColor = Color.Unspecified,

@@ -107,6 +107,7 @@ object HomeScreenComponents {
             val selectedTabIndex = remember(genders, currentGender) {
                 genders.indexOf(currentGender)
             }
+            // TODO: [Medium] Extract?
             LooseTabRow(
                 selectedTabIndex = selectedTabIndex,
                 indicator = { tabPositions ->
