@@ -42,6 +42,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.size.Size
+import kotlinx.collections.immutable.ImmutableList
 import okhttp3.OkHttpClient
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
@@ -113,7 +114,7 @@ object OnboardingScreenComponents {
 
     @Composable
     fun ProgressIndicator(
-        onboardingSteps: List<OnboardingStep>,
+        onboardingSteps: ImmutableList<OnboardingStep>,
         currentOnboardingStep: OnboardingStep,
         modifier: Modifier = Modifier,
     ) {
@@ -168,7 +169,7 @@ object OnboardingScreenComponents {
 
     @Composable
     fun OnboardingStep(
-        onboardingSteps: List<OnboardingStep>,
+        onboardingSteps: ImmutableList<OnboardingStep>,
         currentOnboardingStep: OnboardingStep,
         userCity: City?,
         isSkipCityDetectionButtonLoading: Boolean,

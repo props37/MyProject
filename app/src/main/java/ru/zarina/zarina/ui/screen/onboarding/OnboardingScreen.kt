@@ -25,6 +25,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.domain.rework.geography.City
@@ -72,7 +74,7 @@ fun OnboardingScreen(
 
 @Composable
 private fun ScreenContent(
-    onboardingSteps: List<OnboardingStep>,
+    onboardingSteps: ImmutableList<OnboardingStep>,
     currentOnboardingStep: OnboardingStep,
     userCity: City?,
     isSkipCityDetectionButtonLoading: Boolean,
@@ -149,7 +151,7 @@ private fun Preview(
 ) {
     ZarinaPreview {
         ScreenContent(
-            onboardingSteps = remember { OnboardingStep.entries.toList() },
+            onboardingSteps = remember { OnboardingStep.entries.toImmutableList() },
             currentOnboardingStep = onboardingStep,
             userCity = remember { City.DEFAULT },
             isSkipCityDetectionButtonLoading = false,

@@ -11,6 +11,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -65,10 +67,15 @@ class OnboardingViewModel @AssistedInject constructor(
 
     private val onboardingCompletionTrigger = MutableStateFlow<OnboardingCompletionTrigger?>(null)
 
-    val onboardingSteps: StateFlow<List<OnboardingStep>> = savedStateHandle.getStateFlow(
-        key = KEY_ONBOARDING_STEPS,
-        initialValue = createOnboardingSteps(),
-    )
+    val onboardingSteps: StateFlow<ImmutableList<OnboardingStep>> = savedStateHandle
+        .getStateFlow<List<OnboardingStep>>(
+            key = KEY_ONBOARDING_STEPS,
+            initialValue = createOnboardingSteps(),
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { it.toImmutableList() }
 
     val currentOnboardingStep: StateFlow<OnboardingStep> = savedStateHandle.getStateFlow(
         key = KEY_CURRENT_ONBOARDING_STEP,
@@ -289,7 +296,7 @@ class OnboardingViewModel @AssistedInject constructor(
             .launchIn(viewModelScope)
     }
 
-    private fun createOnboardingSteps(): List<OnboardingStep> {
+    private fun createOnboardingSteps(): ImmutableList<OnboardingStep> {
         return buildList {
             OnboardingStep.entries.forEach { step ->
                 when (step) {
@@ -308,7 +315,7 @@ class OnboardingViewModel @AssistedInject constructor(
                     else -> add(step)
                 }
             }
-        }
+        }.toImmutableList()
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
