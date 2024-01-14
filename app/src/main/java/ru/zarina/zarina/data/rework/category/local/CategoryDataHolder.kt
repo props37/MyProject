@@ -10,7 +10,7 @@ import javax.inject.Singleton
 class CategoryDataHolder @Inject constructor() {
     private val categories = MutableStateFlow<List<Category>?>(null)
 
-    fun getCategories(): Flow<List<Category>?> {
+    fun getCategoriesFlow(): Flow<List<Category>?> {
         return categories
     }
 

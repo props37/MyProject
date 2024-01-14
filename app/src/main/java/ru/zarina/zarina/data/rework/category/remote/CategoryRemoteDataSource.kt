@@ -9,7 +9,7 @@ import javax.inject.Inject
 class CategoryRemoteDataSource @Inject constructor(
     private val api: CategoryApi,
 ) {
-    fun getCategories(): Flow<List<Category>> = flow {
+    fun getCategoriesFlow(): Flow<List<Category>> = flow {
         val categories = api.getCategories().map { it.toCategory() }
         emit(categories)
     }

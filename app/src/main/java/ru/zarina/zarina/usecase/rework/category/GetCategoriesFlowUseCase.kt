@@ -8,13 +8,13 @@ import ru.zarina.zarina.domain.rework.common.Category
 import ru.zarina.zarina.usecase.base.FlowUseCase
 import javax.inject.Inject
 
-class GetCategoriesUseCase @Inject constructor(
+class GetCategoriesFlowUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val categoryRepository: CategoryRepository,
 ) : FlowUseCase<Unit, List<Category>>(dispatcher) {
 
     override fun execute(params: Unit): Flow<List<Category>> {
-        return categoryRepository.getCategories()
+        return categoryRepository.getCategoriesFlow()
     }
 }

@@ -72,7 +72,7 @@ class CatalogViewModel @Inject constructor(
     private fun fetchCategories() {
         fetchCategoriesJob?.cancel()
         fetchCategoriesJob = viewModelScope.launch {
-            interactor.getCategories().collect { result ->
+            interactor.getCategoriesFlow().collect { result ->
                 val categoryListState = result.fold(
                     onSuccess = { categories ->
                         val womenCategories =

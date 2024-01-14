@@ -7,8 +7,8 @@ import javax.inject.Inject
 class CategoryLocalDataSource @Inject constructor(
     private val dataHolder: CategoryDataHolder,
 ) {
-    fun getCategories(): Flow<List<Category>?> {
-        return dataHolder.getCategories()
+    fun getCategoriesFlow(): Flow<List<Category>?> {
+        return dataHolder.getCategoriesFlow()
     }
 
     fun setCategories(categories: List<Category>) {

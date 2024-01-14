@@ -13,13 +13,13 @@ class CategoryRepository @Inject constructor(
     private val remoteDataSource: CategoryRemoteDataSource,
     private val localDataSource: CategoryLocalDataSource,
 ) {
-    fun getCategories(): Flow<List<Category>> = flow {
-        val cached = localDataSource.getCategories().firstOrNull()
+    fun getCategoriesFlow(): Flow<List<Category>> = flow {
+        val cached = localDataSource.getCategoriesFlow().firstOrNull()
         if (cached != null) {
             Timber.v("Get cached categories")
             emit(cached)
         } else {
-            val categories = remoteDataSource.getCategories().firstOrNull()
+            val categories = remoteDataSource.getCategoriesFlow().firstOrNull()
             checkNotNull(categories) { "Failed to fetch categories" }
             localDataSource.setCategories(categories)
             emit(categories)
