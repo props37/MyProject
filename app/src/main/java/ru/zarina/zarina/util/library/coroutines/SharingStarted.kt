@@ -10,5 +10,5 @@ import kotlinx.coroutines.flow.SharingStarted
  * See [Migrating from LiveData to Kotlin’s Flow](https://medium.com/androiddevelopers/migrating-from-livedata-to-kotlins-flow-379292f419fb)
  * Medium article for more details
  */
-val SharingStarted.Companion.WhileSubscribedDelay: Long
+val SharingStarted.Companion.WhileSubscribedAndroidUiDelay: Long
     get() = 5000L
