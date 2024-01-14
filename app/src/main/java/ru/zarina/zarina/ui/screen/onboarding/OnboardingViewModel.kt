@@ -238,7 +238,7 @@ class OnboardingViewModel @AssistedInject constructor(
         }
 
         operationTracker.track(Operation.DETECT_CITY) {
-            interactor.detectCurrentCity().firstOrNull()
+            interactor.getCurrentCityFlow().firstOrNull()
                 ?.onSuccess { city ->
                     savedStateHandle[KEY_CURRENT_CITY] = city?.let { CityParcelable.fromCity(it) }
                     showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class LocationRepository @Inject constructor(
     private val dataSource: LocationDataSource,
 ) {
-    fun getCurrentLocation(): Flow<Location?> = flow {
+    fun getCurrentLocationFlow(): Flow<Location?> = flow {
         emit(dataSource.getCurrentLocation())
     }
 }
