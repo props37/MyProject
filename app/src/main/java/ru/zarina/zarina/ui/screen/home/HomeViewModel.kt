@@ -7,8 +7,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -31,16 +34,17 @@ class HomeViewModel @Inject constructor(
 
     private var fetchContentJob: Job? = null
 
-    val genderTabs = MutableStateFlow(GenderTab.entries.toList()).asStateFlow()
+    val genderTabs: StateFlow<ImmutableList<GenderTab>> =
+        MutableStateFlow(GenderTab.entries.toImmutableList()).asStateFlow()
 
     // TODO: [Low] Store the last selected tab on the disk
-    val currentGenderTab = savedStateHandle.getStateFlow(
+    val currentGenderTab: StateFlow<GenderTab> = savedStateHandle.getStateFlow(
         key = KEY_CURRENT_GENDER_TAB,
         initialValue = GenderTab.WOMEN,
     )
 
     private val _contentState = MutableStateFlow<ContentState>(ContentState.Loading)
-    val contentState = _contentState.asStateFlow()
+    val contentState: StateFlow<ContentState> = _contentState.asStateFlow()
 
     init {
         fetchContent()

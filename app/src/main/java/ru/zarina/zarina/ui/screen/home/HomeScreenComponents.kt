@@ -62,6 +62,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.AspectRatioFrameLayout
 import coil.compose.AsyncImage
+import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.common.MediaType
 import ru.zarina.zarina.domain.rework.content.HomeContent
@@ -86,7 +87,7 @@ object HomeScreenComponents {
 
     @Composable
     fun GenderPicker(
-        genders: List<GenderTab>,
+        genders: ImmutableList<GenderTab>,
         currentGender: GenderTab,
         onGenderClicked: (GenderTab) -> Unit,
         modifier: Modifier = Modifier,
@@ -145,7 +146,7 @@ object HomeScreenComponents {
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun GenderContentPager(
-        genders: List<GenderTab>,
+        genders: ImmutableList<GenderTab>,
         currentGender: GenderTab,
         content: HomeContent,
         onBannerClicked: (HomeContent.Banner) -> Unit,

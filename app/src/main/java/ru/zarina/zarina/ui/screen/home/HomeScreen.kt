@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
@@ -63,7 +65,7 @@ fun HomeScreen(
 
 @Composable
 private fun ScreenContent(
-    genderTabs: List<GenderTab>,
+    genderTabs: ImmutableList<GenderTab>,
     currentGenderTab: GenderTab,
     onGenderTabClicked: (GenderTab) -> Unit,
     contentState: ContentState,
@@ -153,7 +155,7 @@ private fun Preview(
 ) {
     ZarinaPreview {
         ScreenContent(
-            genderTabs = remember { GenderTab.entries.toList() },
+            genderTabs = remember { GenderTab.entries.toImmutableList() },
             currentGenderTab = GenderTab.WOMEN,
             onGenderTabClicked = {},
             contentState = contentState,
