@@ -14,7 +14,7 @@ class GeographyRemoteDataSource @Inject constructor(
         return api.getCity(location).toCity()
     }
 
-    fun getCities(nameQuery: String?): Flow<List<City>> = flow {
+    fun getCitiesFlow(nameQuery: String?): Flow<List<City>> = flow {
         val cities = api.getCities(nameQuery).map { it.toCity() }
         emit(cities)
     }

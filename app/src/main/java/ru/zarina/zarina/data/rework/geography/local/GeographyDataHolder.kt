@@ -18,7 +18,7 @@ class GeographyDataHolder @Inject constructor() {
         ensureCitiesToNameQueryCacheSize()
     }
 
-    fun getCities(nameQuery: String?): Flow<List<City>?> {
+    fun getCitiesFlow(nameQuery: String?): Flow<List<City>?> {
         return citiesToNameQuery.map { map ->
             map[nameQuery]
         }

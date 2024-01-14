@@ -24,7 +24,7 @@ import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
-import ru.zarina.zarina.usecase.rework.geography.GetCitiesUseCase
+import ru.zarina.zarina.usecase.rework.geography.GetCitiesFlowUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileSubscribedDelay
 import ru.zarina.zarina.util.library.coroutines.mapState
 import java.io.IOException
@@ -129,8 +129,8 @@ class CitySelectorViewModel @Inject constructor(
         fetchCitiesJob?.cancel()
         fetchCitiesJob = viewModelScope.launch {
             delay(delay)
-            val getCitiesParams = GetCitiesUseCase.Params(cityNameQuery)
-            interactor.getCities(getCitiesParams).collect { result ->
+            val getCitiesParams = GetCitiesFlowUseCase.Params(cityNameQuery)
+            interactor.getCitiesFlow(getCitiesParams).collect { result ->
                 val cityListState = result.fold(
                     onSuccess = { cities ->
                         cityListStateFromFetchCitiesSuccess(cityNameQuery, cities)
