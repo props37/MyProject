@@ -187,7 +187,7 @@ class CitySelectorViewModel @Inject constructor(
         data object Loading : CityListState()
 
         @Immutable
-        data class CityList(val list: List<CityListItem>) : CityListState()
+        data class CityList(val cities: List<CityListItem>) : CityListState()
 
         @Immutable
         data class Error(val errorState: ErrorStateRework) : CityListState()

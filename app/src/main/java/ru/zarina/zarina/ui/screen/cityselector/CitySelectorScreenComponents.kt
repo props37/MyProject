@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -94,7 +93,6 @@ object CitySelectorScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun CitySearchBar(
         cityNameQuery: String,
@@ -179,7 +177,7 @@ object CitySelectorScreenComponents {
                     }
 
                     is CityListState.CityList -> {
-                        if (listState.list.isNotEmpty()) {
+                        if (listState.cities.isNotEmpty()) {
                             val baseContentPadding = remember(isChangeCityButtonVisible) {
                                 val bottom = if (isChangeCityButtonVisible) {
                                     val buttonHeight = ZarinaButtonDefaults.HeightLarge
@@ -197,7 +195,7 @@ object CitySelectorScreenComponents {
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
                                 items(
-                                    items = listState.list,
+                                    items = listState.cities,
                                     key = { getCityListItemKey(it) },
                                     contentType = { getCityListItemContentType(it) },
                                 ) { item ->
@@ -398,7 +396,7 @@ object CitySelectorScreenComponents {
         return when (state) {
             CityListState.Loading -> CityListContentKeyLoading
             is CityListState.CityList -> {
-                if (state.list.isNotEmpty()) CityListContentKeyCities else CityListContentKeyCityNotFound
+                if (state.cities.isNotEmpty()) CityListContentKeyCities else CityListContentKeyCityNotFound
             }
 
             is CityListState.Error -> CityListContentKeyError
