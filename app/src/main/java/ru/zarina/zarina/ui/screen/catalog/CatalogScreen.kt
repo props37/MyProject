@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.domain.rework.common.Category
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
@@ -67,7 +68,7 @@ private fun ScreenContent(
     onSearchQueryChanged: (String) -> Unit,
     onSearchBarClearClicked: () -> Unit,
     onSearchBarCancelClicked: () -> Unit,
-    genderTabs: List<GenderTab>,
+    genderTabs: ImmutableList<GenderTab>,
     currentGenderTab: GenderTab,
     onGenderTabClicked: (GenderTab) -> Unit,
     categoryListState: CategoryListState,

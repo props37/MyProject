@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.shimmer
+import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.common.Category
 import ru.zarina.zarina.ui.common.component.TopBarDefaults
@@ -126,7 +127,7 @@ object CatalogScreenComponents {
 
     @Composable
     fun GenderPicker(
-        genders: List<GenderTab>,
+        genders: ImmutableList<GenderTab>,
         currentGender: GenderTab,
         onGenderClicked: (GenderTab) -> Unit,
         modifier: Modifier = Modifier,
@@ -178,7 +179,7 @@ object CatalogScreenComponents {
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun GenderCategoryPager(
-        genders: List<GenderTab>,
+        genders: ImmutableList<GenderTab>,
         currentGender: GenderTab,
         categoryListState: CategoryListState,
         categoryListItemsState: CategoryListItemsState,

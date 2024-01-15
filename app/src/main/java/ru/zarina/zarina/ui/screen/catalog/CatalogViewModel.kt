@@ -40,14 +40,15 @@ class CatalogViewModel @Inject constructor(
     private val interactor: CatalogInteractor,
 ) : ViewModel(), SideEffectSource<CatalogViewModel.SideEffect> by SideEffectSourceImpl() {
 
-    val searchQuery = savedStateHandle.getStateFlow(
+    val searchQuery: StateFlow<String> = savedStateHandle.getStateFlow(
         key = KEY_SEARCH_QUERY,
         initialValue = "",
     )
 
-    val genderTabs = MutableStateFlow(GenderTab.entries.toList()).asStateFlow()
+    val genderTabs: StateFlow<ImmutableList<GenderTab>> =
+        MutableStateFlow(GenderTab.entries.toImmutableList()).asStateFlow()
 
-    val currentGenderTab = savedStateHandle.getStateFlow(
+    val currentGenderTab: StateFlow<GenderTab> = savedStateHandle.getStateFlow(
         key = KEY_CURRENT_GENDER_TAB,
         initialValue = GenderTab.WOMEN,
     )
