@@ -370,7 +370,7 @@ object CatalogScreenComponents {
                 Spacer(modifier = Modifier.width(8.dp))
 
                 val rotation = animateFloatAsState(
-                    targetValue = if (isExpanded) 180f else 0f,
+                    targetValue = if (isExpanded) 0f else 180f,
                     animationSpec = tween(durationMillis = 200),
                     label = "CategoryItem Expand icon rotation",
                 )
