@@ -272,7 +272,7 @@ object CatalogScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         LazyColumn(modifier = modifier) {
-            items.forEachIndexed { index, item ->
+            items.forEach { item ->
                 val isVisible = when (item) {
                     is CategoryListItem.CategoryItem -> {
                         item.category.id in itemsState.visibleCategoryIds
@@ -310,14 +310,12 @@ object CatalogScreenComponents {
                             }
                         }
 
-                        if (index != items.lastIndex) {
-                            Divider(
-                                color = UiKitTheme.colorsReworked.border.general.default,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp),
-                            )
-                        }
+                        Divider(
+                            color = UiKitTheme.colorsReworked.border.general.default,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
                     }
                 }
             }
