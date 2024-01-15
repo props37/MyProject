@@ -18,13 +18,17 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderCategoryPager
@@ -35,6 +39,7 @@ import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListItemsStat
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderTab
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.SideEffect
+import ru.zarina.zarina.ui.screen.catalog.tooling.preview.CategoryListStatePreviewParameterProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
@@ -129,8 +134,26 @@ private fun ScreenContent(
 
 @Preview
 @Composable
-private fun Preview() {
+private fun Preview(
+    @PreviewParameter(CategoryListStatePreviewParameterProvider::class)
+    categoryListState: CategoryListState,
+) {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        ScreenContent(
+            searchQuery = "",
+            onSearchQueryChanged = {},
+            onSearchBarClearClicked = {},
+            onSearchBarCancelClicked = {},
+            genderTabs = remember { GenderTab.entries.toImmutableList() },
+            currentGenderTab = GenderTab.WOMEN,
+            onGenderTabClicked = {},
+            categoryListState = categoryListState,
+            categoryListItemsState = remember {
+                CategoryListStatePreviewParameterProvider.getCategoryListItemsStatePreview()
+            },
+            onCategoryListItemClicked = {},
+            onCategoryListErrorRefreshClicked = {},
+            sideEffects = remember { emptyFlow() },
+        )
     }
 }
