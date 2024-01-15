@@ -61,6 +61,7 @@ class CatalogViewModel @Inject constructor(
 
     private val expandedCategories = MutableStateFlow<Set<Category>>(emptySet())
 
+    // TODO: [High] Add "See all" item for each nested category group
     val categoryListState: StateFlow<CategoryListState> = categoriesResult
         .map { result ->
             result?.fold(
