@@ -125,6 +125,7 @@ class CitySelectorViewModel @Inject constructor(
         fetchCities(cityNameQuery.value)
     }
 
+    // TODO: [Medium] Migrate to Flow APIs to not collect Flows without considering UI lifecycle. See CatalogViewModel as example
     private fun fetchCities(cityNameQuery: String?, delay: Duration = Duration.ZERO) {
         fetchCitiesJob?.cancel()
         fetchCitiesJob = viewModelScope.launch {
