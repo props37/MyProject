@@ -58,6 +58,7 @@ fun CatalogScreen(
         categoryListState = categoryListState,
         categoryListItemsState = categoryListItemsState,
         onCategoryListItemClicked = viewModel::onCategoryListItemClicked,
+        onCategoryListErrorRefreshClicked = viewModel::onCategoryListErrorRefreshClicked,
         sideEffects = viewModel.sideEffects,
     )
 }
@@ -74,6 +75,7 @@ private fun ScreenContent(
     categoryListState: CategoryListState,
     categoryListItemsState: CategoryListItemsState,
     onCategoryListItemClicked: (CategoryListItem) -> Unit,
+    onCategoryListErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
 ) {
     CatalogScreenBehavior(
@@ -119,6 +121,7 @@ private fun ScreenContent(
             categoryListState = categoryListState,
             categoryListItemsState = categoryListItemsState,
             onCategoryListItemClicked = onCategoryListItemClicked,
+            onCategoryListErrorRefreshClicked = onCategoryListErrorRefreshClicked,
             modifier = Modifier.fillMaxSize(),
         )
     }

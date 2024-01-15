@@ -54,6 +54,7 @@ import ru.zarina.zarina.ui.common.component.ZarinaTabIndicator
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
@@ -188,6 +189,7 @@ object CatalogScreenComponents {
         categoryListState: CategoryListState,
         categoryListItemsState: CategoryListItemsState,
         onCategoryListItemClicked: (CategoryListItem) -> Unit,
+        onCategoryListErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val pagerState = rememberPagerState(
@@ -210,6 +212,7 @@ object CatalogScreenComponents {
                 state = categoryListState,
                 itemsState = categoryListItemsState,
                 onItemClicked = onCategoryListItemClicked,
+                onErrorRefreshClicked = onCategoryListErrorRefreshClicked,
                 modifier = Modifier.fillMaxSize(),
             )
         }
@@ -221,6 +224,7 @@ object CatalogScreenComponents {
         state: CategoryListState,
         itemsState: CategoryListItemsState,
         onItemClicked: (CategoryListItem) -> Unit,
+        onErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Crossfade(
@@ -248,7 +252,13 @@ object CatalogScreenComponents {
                 }
 
                 is CategoryListState.Error -> {
-                    // TODO: [High] Implement
+                    ZarinaErrorScreen(
+                        state = state.state,
+                        onRefreshClicked = onErrorRefreshClicked,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                    )
                 }
             }
         }
@@ -417,6 +427,7 @@ object CatalogScreenComponents {
                 CategoryListSkeletonItem(
                     index = index,
                     shimmer = shimmer,
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
                 if (index != CategoryListSkeletonItemCount - 1) {

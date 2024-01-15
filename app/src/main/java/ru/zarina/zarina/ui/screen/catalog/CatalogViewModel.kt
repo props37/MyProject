@@ -13,12 +13,15 @@ import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.plus
@@ -53,7 +56,16 @@ class CatalogViewModel @Inject constructor(
         initialValue = GenderTab.WOMEN,
     )
 
-    private val categoriesResult: StateFlow<Result<Categories>?> = interactor.getCategoriesFlow()
+    private val categoriesFetchRequests = MutableSharedFlow<Unit>(replay = 1).also { it.tryEmit(Unit) }
+
+    private val isFetchingCategories = MutableStateFlow(false)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val categoriesResult: StateFlow<Result<Categories>?> = categoriesFetchRequests
+        .flatMapLatest {
+            interactor.getCategoriesFlow()
+        }
+        .onEach { isFetchingCategories.value = false }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
@@ -62,10 +74,14 @@ class CatalogViewModel @Inject constructor(
 
     private val expandedCategories = MutableStateFlow<Set<Category>>(emptySet())
 
-    // TODO: [High] Add "See all" item for each nested category group
-    val categoryListState: StateFlow<CategoryListState> = categoriesResult
-        .map { result ->
-            result?.fold(
+    val categoryListState: StateFlow<CategoryListState> = combine(
+        isFetchingCategories,
+        categoriesResult,
+    ) { isFetchingCategories, categoriesResult ->
+        if (isFetchingCategories || categoriesResult == null) {
+            CategoryListState.Loading
+        } else {
+            categoriesResult.fold(
                 onSuccess = { categories ->
                     val womenCategoryItems = categories.women
                         .flatMapToCategoryItems(CategoryListItem.NESTING_LEVEL_MIN_VALUE)
@@ -82,13 +98,13 @@ class CatalogViewModel @Inject constructor(
                     }
                     CategoryListState.Error(state)
                 },
-            ) ?: CategoryListState.Loading
+            )
         }
-        .stateIn(
-            scope = viewModelScope + Dispatchers.Default,
-            started = SharingStarted.WhileAndroidUiSubscribed,
-            initialValue = CategoryListState.Loading,
-        )
+    }.stateIn(
+        scope = viewModelScope + Dispatchers.Default,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+        initialValue = CategoryListState.Loading,
+    )
 
     val categoryListItemsState: StateFlow<CategoryListItemsState> = combine(
         categoriesResult,
@@ -136,6 +152,11 @@ class CatalogViewModel @Inject constructor(
             is CategoryListItem.CategoryItem -> onCategoryItemClicked(item)
             is CategoryListItem.SeeWholeCategoryItem -> onSeeWholeCategoryItemClicked(item)
         }
+    }
+
+    fun onCategoryListErrorRefreshClicked() {
+        isFetchingCategories.value = true
+        categoriesFetchRequests.tryEmit(Unit)
     }
 
     private fun onCategoryItemClicked(item: CategoryListItem.CategoryItem) {
