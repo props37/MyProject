@@ -198,12 +198,14 @@ class CitySelectorViewModel @Inject constructor(
 
     @Stable
     sealed class CityListItem {
+        // TODO: [Low] Rename to CityItem
         @Immutable
         data class City(
             val city: DomainCity,
             val showFullName: Boolean = false,
         ) : CityListItem()
 
+        // TODO: [Low] Rename to CityFirstLetterHeaderItem
         @Immutable
         data class CityFirstLetterHeader(val letter: Char) : CityListItem()
     }
