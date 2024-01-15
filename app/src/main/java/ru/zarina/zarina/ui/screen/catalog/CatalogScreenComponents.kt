@@ -9,6 +9,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +30,7 @@ import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -47,7 +49,6 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.shimmer
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.common.Category
 import ru.zarina.zarina.ui.common.component.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.ZarinaTabIndicator
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
@@ -57,7 +58,7 @@ import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.util.domain.toComposeColor
-import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryItem
+import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListItem
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListItemsState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderTab
@@ -186,7 +187,7 @@ object CatalogScreenComponents {
         currentGender: GenderTab,
         categoryListState: CategoryListState,
         categoryListItemsState: CategoryListItemsState,
-        onCategoryClicked: (Category) -> Unit,
+        onCategoryListItemClicked: (CategoryListItem) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val pagerState = rememberPagerState(
@@ -208,7 +209,7 @@ object CatalogScreenComponents {
                 gender = genders[page],
                 state = categoryListState,
                 itemsState = categoryListItemsState,
-                onCategoryClicked = onCategoryClicked,
+                onItemClicked = onCategoryListItemClicked,
                 modifier = Modifier.fillMaxSize(),
             )
         }
@@ -219,7 +220,7 @@ object CatalogScreenComponents {
         gender: GenderTab,
         state: CategoryListState,
         itemsState: CategoryListItemsState,
-        onCategoryClicked: (Category) -> Unit,
+        onItemClicked: (CategoryListItem) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Crossfade(
@@ -229,37 +230,17 @@ object CatalogScreenComponents {
         ) { state ->
             when (state) {
                 is CategoryListState.Success -> {
-                    val categories = when (gender) {
-                        GenderTab.WOMEN -> state.womenCategories
-                        GenderTab.MEN -> state.menCategories
+                    val items = when (gender) {
+                        GenderTab.WOMEN -> state.womenItems
+                        GenderTab.MEN -> state.menItems
                     }
 
-                    LazyColumn(modifier = Modifier.fillMaxSize()) {
-                        categories.forEachIndexed { index, categoryItem ->
-                            val isVisible = categoryItem.category.id in itemsState.visibleCategoryIds
-                            if (isVisible) {
-                                item(key = categoryItem.category.id.value) {
-                                    val isExpanded = categoryItem.isExpandable
-                                            && categoryItem.category.id in itemsState.expandedCategoryIds
-
-                                    CategoryItem(
-                                        categoryItem = categoryItem,
-                                        onCategoryClicked = onCategoryClicked,
-                                        isExpanded = isExpanded,
-                                    )
-
-                                    if (index != categories.lastIndex) {
-                                        Divider(
-                                            color = UiKitTheme.colorsReworked.border.general.default,
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(horizontal = 16.dp),
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    CategoryListImpl(
+                        items = items,
+                        itemsState = itemsState,
+                        onItemClicked = onItemClicked,
+                        modifier = Modifier.fillMaxSize(),
+                    )
                 }
 
                 CategoryListState.Loading -> {
@@ -274,39 +255,99 @@ object CatalogScreenComponents {
     }
 
     @Composable
+    private fun CategoryListImpl(
+        items: ImmutableList<CategoryListItem>,
+        itemsState: CategoryListItemsState,
+        onItemClicked: (CategoryListItem) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        LazyColumn(modifier = modifier) {
+            items.forEachIndexed { index, item ->
+                val isVisible = when (item) {
+                    is CategoryListItem.CategoryItem -> {
+                        item.category.id in itemsState.visibleCategoryIds
+                    }
+
+                    is CategoryListItem.SeeWholeCategoryItem -> {
+                        item.category.id in itemsState.expandedCategoryIds
+                    }
+                }
+
+                if (isVisible) {
+                    item(
+                        key = item.id.value,
+                        contentType = getCategoryListItemContentType(item),
+                    ) {
+                        when (item) {
+                            is CategoryListItem.CategoryItem -> {
+                                val isExpanded =
+                                    item.category.id in itemsState.expandedCategoryIds
+
+                                CategoryItem(
+                                    item = item,
+                                    onItemClicked = onItemClicked,
+                                    isExpanded = isExpanded,
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
+                            }
+
+                            is CategoryListItem.SeeWholeCategoryItem -> {
+                                SeeWholeCategoryItem(
+                                    item = item,
+                                    onItemClicked = onItemClicked,
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
+                            }
+                        }
+
+                        if (index != items.lastIndex) {
+                            Divider(
+                                color = UiKitTheme.colorsReworked.border.general.default,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
     private fun CategoryItem(
-        categoryItem: CategoryItem,
-        onCategoryClicked: (Category) -> Unit,
+        item: CategoryListItem.CategoryItem,
+        onItemClicked: (CategoryListItem.CategoryItem) -> Unit,
         isExpanded: Boolean,
         modifier: Modifier = Modifier,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
-                .heightIn(min = CategoryItemMinHeight)
-                .clickable { onCategoryClicked(categoryItem.category) }
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .padding(start = 20.dp * categoryItem.nestingLevel),
+                .heightIn(min = CategoryListItemMinHeight)
+                .clickable { onItemClicked(item) }
+                .padding(CategoryListItemContentPadding)
+                .padding(start = CategoryListItemNestingStartPadding * item.nestingLevel),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f),
             ) {
-                val color = categoryItem.category.color?.toComposeColor()
+                val color = item.category.color?.toComposeColor()
                     ?: UiKitTheme.colorsReworked.text.general.regular.default
 
                 // TODO: [High] Make multiline?
                 Text(
-                    text = categoryItem.category.name.uppercase(),
+                    text = item.category.name.uppercase(),
                     style = UiKitTheme.typographyReworked.tertiary.light,
                     color = color,
                     maxLines = 1,
                 )
 
-                if (categoryItem.category.label != null) {
+                if (item.category.label != null) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = categoryItem.category.label.uppercase(),
+                        text = item.category.label.uppercase(),
                         style = UiKitTheme.typographyReworked.caption2.light,
                         color = color,
                         maxLines = 1,
@@ -315,7 +356,7 @@ object CatalogScreenComponents {
                 }
             }
 
-            if (categoryItem.isExpandable) {
+            if (item.isExpandable) {
                 Spacer(modifier = Modifier.width(8.dp))
 
                 val rotation = animateFloatAsState(
@@ -336,6 +377,29 @@ object CatalogScreenComponents {
                         },
                 )
             }
+        }
+    }
+
+    @Composable
+    private fun SeeWholeCategoryItem(
+        item: CategoryListItem.SeeWholeCategoryItem,
+        onItemClicked: (CategoryListItem.SeeWholeCategoryItem) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Box(
+            contentAlignment = Alignment.CenterStart,
+            modifier = modifier
+                .heightIn(min = CategoryListItemMinHeight)
+                .clickable { onItemClicked(item) }
+                .padding(CategoryListItemContentPadding)
+                .padding(start = CategoryListItemNestingStartPadding * item.nestingLevel),
+        ) {
+            Text(
+                text = stringResource(R.string.see_all).uppercase(),
+                style = UiKitTheme.typographyReworked.tertiary.light,
+                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                maxLines = 1,
+            )
         }
     }
 
@@ -375,7 +439,7 @@ object CatalogScreenComponents {
     ) {
         Box(
             modifier = modifier
-                .heightIn(min = CategoryItemMinHeight)
+                .heightIn(min = CategoryListItemMinHeight)
                 .padding(horizontal = 16.dp),
         ) {
             @Suppress("MagicNumber")
@@ -418,9 +482,26 @@ object CatalogScreenComponents {
         }
     }
 
+    @Stable
+    private fun getCategoryListItemContentType(item: CategoryListItem): String {
+        return when (item) {
+            is CategoryListItem.CategoryItem -> CategoryListItemContentTypeCategoryItem
+            is CategoryListItem.SeeWholeCategoryItem ->
+                CategoryListItemContentTypeSeeWholeCategoryItem
+        }
+    }
+
+    private val CategoryListItemMinHeight: Dp get() = 56.dp
+    private val CategoryListItemNestingStartPadding: Dp get() = 20.dp
+    private val CategoryListItemContentPadding: PaddingValues
+        get() = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+
     private const val CategoryListContentKeySuccess = "CategoryListContentKeySuccess"
 
-    private val CategoryItemMinHeight: Dp get() = 56.dp
+    private const val CategoryListItemContentTypeCategoryItem =
+        "CategoryListItemContentTypeCategoryItem"
+    private const val CategoryListItemContentTypeSeeWholeCategoryItem =
+        "CategoryListItemContentTypeSeeWholeCategoryItem"
 
     private const val CategoryListSkeletonItemCount = 20
 }

@@ -68,10 +68,10 @@ class CatalogViewModel @Inject constructor(
             result?.fold(
                 onSuccess = { categories ->
                     val womenCategoryItems = categories.women
-                        .flatMapToCategoryItems(CategoryItem.NESTING_LEVEL_MIN_VALUE)
+                        .flatMapToCategoryItems(CategoryListItem.NESTING_LEVEL_MIN_VALUE)
                         .toImmutableList()
                     val menCategoryItems = categories.men
-                        .flatMapToCategoryItems(CategoryItem.NESTING_LEVEL_MIN_VALUE)
+                        .flatMapToCategoryItems(CategoryListItem.NESTING_LEVEL_MIN_VALUE)
                         .toImmutableList()
                     CategoryListState.Success(womenCategoryItems, menCategoryItems)
                 },
@@ -131,7 +131,15 @@ class CatalogViewModel @Inject constructor(
         savedStateHandle[KEY_CURRENT_GENDER_TAB] = tab
     }
 
-    fun onCategoryClicked(category: Category) {
+    fun onCategoryListItemClicked(item: CategoryListItem) {
+        when (item) {
+            is CategoryListItem.CategoryItem -> onCategoryItemClicked(item)
+            is CategoryListItem.SeeWholeCategoryItem -> onSeeWholeCategoryItemClicked(item)
+        }
+    }
+
+    private fun onCategoryItemClicked(item: CategoryListItem.CategoryItem) {
+        val category = item.category
         if (category.children.isNullOrEmpty()) {
             // TODO: [High] Implement navigation
         } else {
@@ -147,22 +155,32 @@ class CatalogViewModel @Inject constructor(
         }
     }
 
-    private fun List<Category>.flatMapToCategoryItems(initialNestingLevel: Int): List<CategoryItem> {
+    private fun onSeeWholeCategoryItemClicked(item: CategoryListItem.SeeWholeCategoryItem) {
+        // TODO: [High] Implement navigation
+    }
+
+    private fun List<Category>.flatMapToCategoryItems(initialNestingLevel: Int): List<CategoryListItem> {
         return this.flatMap { category ->
             category.flatMapToCategoryItems(initialNestingLevel)
         }
     }
 
-    private fun Category.flatMapToCategoryItems(initialNestingLevel: Int): List<CategoryItem> {
+    private fun Category.flatMapToCategoryItems(initialNestingLevel: Int): List<CategoryListItem> {
         val category = this
         return buildList {
-            val item = CategoryItem.fromCategory(category, initialNestingLevel)
+            val item = CategoryListItem.fromCategory(category, initialNestingLevel)
             add(item)
 
+            val childItemsNestingLevel = initialNestingLevel + 1
             val childItems = category.children?.flatMap { category ->
-                category.flatMapToCategoryItems(initialNestingLevel + 1)
+                category.flatMapToCategoryItems(childItemsNestingLevel)
             }
             if (childItems != null) {
+                val seeWholeCategoryItem = CategoryListItem.SeeWholeCategoryItem(
+                    category = category,
+                    nestingLevel = childItemsNestingLevel,
+                )
+                add(seeWholeCategoryItem)
                 addAll(childItems)
             }
         }
@@ -181,8 +199,8 @@ class CatalogViewModel @Inject constructor(
 
         @Immutable
         data class Success(
-            val womenCategories: ImmutableList<CategoryItem>,
-            val menCategories: ImmutableList<CategoryItem>,
+            val womenItems: ImmutableList<CategoryListItem>,
+            val menItems: ImmutableList<CategoryListItem>,
         ) : CategoryListState()
 
         @Immutable
@@ -195,13 +213,56 @@ class CatalogViewModel @Inject constructor(
         val expandedCategoryIds: ImmutableSet<Category.Id>,
     )
 
-    @Immutable
-    data class CategoryItem(
-        val category: Category,
-        val nestingLevel: Int,
-        val isExpandable: Boolean,
+    @Stable
+    sealed class CategoryListItem(
+        open val id: Id,
+        open val nestingLevel: Int,
     ) {
-        init {
+        @Immutable
+        data class CategoryItem(
+            val category: Category,
+            override val nestingLevel: Int,
+            val isExpandable: Boolean,
+        ) : CategoryListItem(
+            id = createId(category),
+            nestingLevel = nestingLevel,
+        ) {
+            init {
+                checkNestingLevel()
+            }
+
+            companion object {
+                private fun createId(category: Category): Id {
+                    return Id(category.id.value.toString())
+                }
+            }
+        }
+
+        @Immutable
+        data class SeeWholeCategoryItem(
+            val category: Category,
+            override val nestingLevel: Int,
+        ) : CategoryListItem(
+            id = createId(category),
+            nestingLevel = nestingLevel,
+        ) {
+            init {
+                checkNestingLevel()
+            }
+
+            companion object {
+                private const val ID_PREFIX = "see_whole_category"
+
+                private fun createId(category: Category): Id {
+                    return Id("$ID_PREFIX${category.id.value}")
+                }
+            }
+        }
+
+        @JvmInline
+        value class Id(val value: String)
+
+        protected fun checkNestingLevel() {
             check(nestingLevel >= NESTING_LEVEL_MIN_VALUE) {
                 "nestingLevel $nestingLevel must be at least $NESTING_LEVEL_MIN_VALUE"
             }

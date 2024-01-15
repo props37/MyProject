@@ -25,12 +25,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.domain.rework.common.Category
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderCategoryPager
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderPicker
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.SearchBar
+import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListItem
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListItemsState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderTab
@@ -57,7 +57,7 @@ fun CatalogScreen(
         onGenderTabClicked = viewModel::onGenderTabClicked,
         categoryListState = categoryListState,
         categoryListItemsState = categoryListItemsState,
-        onCategoryClicked = viewModel::onCategoryClicked,
+        onCategoryListItemClicked = viewModel::onCategoryListItemClicked,
         sideEffects = viewModel.sideEffects,
     )
 }
@@ -73,7 +73,7 @@ private fun ScreenContent(
     onGenderTabClicked: (GenderTab) -> Unit,
     categoryListState: CategoryListState,
     categoryListItemsState: CategoryListItemsState,
-    onCategoryClicked: (Category) -> Unit,
+    onCategoryListItemClicked: (CategoryListItem) -> Unit,
     sideEffects: Flow<SideEffect>,
 ) {
     CatalogScreenBehavior(
@@ -118,7 +118,7 @@ private fun ScreenContent(
             currentGender = currentGenderTab,
             categoryListState = categoryListState,
             categoryListItemsState = categoryListItemsState,
-            onCategoryClicked = onCategoryClicked,
+            onCategoryListItemClicked = onCategoryListItemClicked,
             modifier = Modifier.fillMaxSize(),
         )
     }
