@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -54,6 +53,8 @@ import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.util.domain.toComposeColor
+import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryItem
+import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListItemsState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderTab
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -180,6 +181,7 @@ object CatalogScreenComponents {
         genders: List<GenderTab>,
         currentGender: GenderTab,
         categoryListState: CategoryListState,
+        categoryListItemsState: CategoryListItemsState,
         onCategoryClicked: (Category) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -201,6 +203,7 @@ object CatalogScreenComponents {
             CategoryList(
                 gender = genders[page],
                 state = categoryListState,
+                itemsState = categoryListItemsState,
                 onCategoryClicked = onCategoryClicked,
                 modifier = Modifier.fillMaxSize(),
             )
@@ -211,12 +214,13 @@ object CatalogScreenComponents {
     private fun CategoryList(
         gender: GenderTab,
         state: CategoryListState,
+        itemsState: CategoryListItemsState,
         onCategoryClicked: (Category) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        // TODO: [High] Specify content key
         Crossfade(
             targetState = state,
+            contentKey = { getCategoryListContentKey(it) },
             modifier = modifier,
         ) { state ->
             when (state) {
@@ -227,22 +231,23 @@ object CatalogScreenComponents {
                     }
 
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
-                        itemsIndexed(
-                            items = categories,
-                            key = { _, category -> category.id.value },
-                        ) { index, category ->
-                            CategoryItem(
-                                category = category,
-                                onCategoryClicked = onCategoryClicked,
-                            )
+                        categories.forEachIndexed { index, categoryItem ->
+                            if (categoryItem.category.id in itemsState.visibleCategoryIds) {
+                                item(key = categoryItem.category.id.value) {
+                                    CategoryItem(
+                                        categoryItem = categoryItem,
+                                        onCategoryClicked = onCategoryClicked,
+                                    )
 
-                            if (index != categories.lastIndex) {
-                                Divider(
-                                    color = UiKitTheme.colorsReworked.border.general.default,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 16.dp),
-                                )
+                                    if (index != categories.lastIndex) {
+                                        Divider(
+                                            color = UiKitTheme.colorsReworked.border.general.default,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 16.dp),
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
@@ -261,7 +266,7 @@ object CatalogScreenComponents {
 
     @Composable
     private fun CategoryItem(
-        category: Category,
+        categoryItem: CategoryItem,
         onCategoryClicked: (Category) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -269,28 +274,29 @@ object CatalogScreenComponents {
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .heightIn(min = CategoryItemMinHeight)
-                .clickable { onCategoryClicked(category) }
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .clickable { onCategoryClicked(categoryItem.category) }
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(start = 20.dp * categoryItem.nestingLevel),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f),
             ) {
-                val color = category.color?.toComposeColor()
+                val color = categoryItem.category.color?.toComposeColor()
                     ?: UiKitTheme.colorsReworked.text.general.regular.default
 
                 // TODO: [High] Make multiline?
                 Text(
-                    text = category.name.uppercase(),
+                    text = categoryItem.category.name.uppercase(),
                     style = UiKitTheme.typographyReworked.tertiary.light,
                     color = color,
                     maxLines = 1,
                 )
 
-                if (category.label != null) {
+                if (categoryItem.category.label != null) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = category.label.uppercase(),
+                        text = categoryItem.category.label.uppercase(),
                         style = UiKitTheme.typographyReworked.caption2.light,
                         color = color,
                         maxLines = 1,
@@ -299,7 +305,7 @@ object CatalogScreenComponents {
                 }
             }
 
-            if (!category.children.isNullOrEmpty()) {
+            if (categoryItem.isExpandable) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
                     painter = painterResource(R.drawable.ic_small_arrow_up_24),
@@ -380,6 +386,16 @@ object CatalogScreenComponents {
             )
         }
     }
+
+    private fun getCategoryListContentKey(state: CategoryListState): Any {
+        return when (state) {
+            CategoryListState.Loading -> state
+            is CategoryListState.Success -> CategoryListContentKeySuccess
+            is CategoryListState.Error -> state
+        }
+    }
+
+    private const val CategoryListContentKeySuccess = "CategoryListContentKeySuccess"
 
     private val CategoryItemMinHeight: Dp get() = 56.dp
 

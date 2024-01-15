@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import ru.zarina.zarina.data.rework.category.local.CategoryLocalDataSource
 import ru.zarina.zarina.data.rework.category.remote.CategoryRemoteDataSource
-import ru.zarina.zarina.domain.rework.common.Category
+import ru.zarina.zarina.domain.rework.common.Categories
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -13,7 +13,7 @@ class CategoryRepository @Inject constructor(
     private val remoteDataSource: CategoryRemoteDataSource,
     private val localDataSource: CategoryLocalDataSource,
 ) {
-    fun getCategoriesFlow(): Flow<List<Category>> = flow {
+    fun getCategoriesFlow(): Flow<Categories> = flow {
         val cached = localDataSource.getCategoriesFlow().firstOrNull()
         if (cached != null) {
             Timber.v("Get cached categories")

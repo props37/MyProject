@@ -391,6 +391,7 @@ object CitySelectorScreenComponents {
         }
     }
 
+    // TODO: [Medium] Rework. Use the state itself when possible (at least for Error states)
     @Stable
     private fun getCityListContentKey(state: CityListState): String {
         return when (state) {

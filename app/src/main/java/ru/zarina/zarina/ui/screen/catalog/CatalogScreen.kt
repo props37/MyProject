@@ -30,6 +30,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderCategoryPager
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderPicker
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.SearchBar
+import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListItemsState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderTab
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.SideEffect
@@ -43,6 +44,7 @@ fun CatalogScreen(
     val genderTabs by viewModel.genderTabs.collectAsStateWithLifecycle()
     val currentGenderTab by viewModel.currentGenderTab.collectAsStateWithLifecycle()
     val categoryListState by viewModel.categoryListState.collectAsStateWithLifecycle()
+    val categoryListItemsState by viewModel.categoryListItemsState.collectAsStateWithLifecycle()
 
     ScreenContent(
         searchQuery = searchQuery,
@@ -53,6 +55,7 @@ fun CatalogScreen(
         currentGenderTab = currentGenderTab,
         onGenderTabClicked = viewModel::onGenderTabClicked,
         categoryListState = categoryListState,
+        categoryListItemsState = categoryListItemsState,
         onCategoryClicked = viewModel::onCategoryClicked,
         sideEffects = viewModel.sideEffects,
     )
@@ -68,6 +71,7 @@ private fun ScreenContent(
     currentGenderTab: GenderTab,
     onGenderTabClicked: (GenderTab) -> Unit,
     categoryListState: CategoryListState,
+    categoryListItemsState: CategoryListItemsState,
     onCategoryClicked: (Category) -> Unit,
     sideEffects: Flow<SideEffect>,
 ) {
@@ -112,6 +116,7 @@ private fun ScreenContent(
             genders = genderTabs,
             currentGender = currentGenderTab,
             categoryListState = categoryListState,
+            categoryListItemsState = categoryListItemsState,
             onCategoryClicked = onCategoryClicked,
             modifier = Modifier.fillMaxSize(),
         )

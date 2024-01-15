@@ -2,7 +2,6 @@ package ru.zarina.zarina.domain.rework.common
 
 data class Category(
     val id: Id,
-    val code: Code,
     val name: String,
     val label: String?,
     val color: Color?,
@@ -10,26 +9,25 @@ data class Category(
 ) {
     @JvmInline
     value class Id(val value: Long)
+}
 
-    @JvmInline
-    value class Code(val value: String)
-
-    companion object {
-        val WOMEN_MAIN_CATEGORY_ID: Id get() = Id(1460)
-        val MEN_MAIN_CATEGORY_ID: Id get() = Id(1461)
+fun Category.withFlattenedChildren(): List<Category> {
+    val category = this
+    return buildList {
+        add(category)
+        val flattenedChildren = category.getFlattenedChildren()
+        if (flattenedChildren != null) {
+            addAll(flattenedChildren)
+        }
     }
 }
 
 fun Category.getFlattenedChildren(): List<Category>? {
-    return children?.let {
-        children + children.flatMap { it.getFlattenedChildren() ?: emptyList() }
+    return this.children?.let { categories ->
+        buildList {
+            addAll(categories)
+            val flattenedChildren = categories.flatMap { it.getFlattenedChildren() ?: emptyList() }
+            addAll(flattenedChildren)
+        }
     }
-}
-
-fun List<Category>.findWomenMainCategory(): Category? {
-    return this.find { it.id == Category.WOMEN_MAIN_CATEGORY_ID }
-}
-
-fun List<Category>.findMenMainCategory(): Category? {
-    return this.find { it.id == Category.WOMEN_MAIN_CATEGORY_ID }
 }

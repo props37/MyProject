@@ -27,11 +27,9 @@ data class CategoryDto(
 ) {
     fun toCategory(): Category {
         checkNotNull(id) { "id is null" }
-        checkNotNull(code) { "code is null" }
         checkNotNull(name) { "name is null" }
         return Category(
             id = Category.Id(id),
-            code = Category.Code(code),
             name = name,
             label = label,
             color = color?.let { Color(it) },
