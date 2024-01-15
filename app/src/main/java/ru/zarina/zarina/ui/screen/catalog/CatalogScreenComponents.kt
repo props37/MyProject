@@ -323,9 +323,12 @@ object CatalogScreenComponents {
                     animationSpec = tween(durationMillis = 200),
                     label = "CategoryItem Expand icon rotation",
                 )
+                val contentDescriptionResId =
+                    if (isExpanded) R.string.collapse else R.string.expand
+
                 Icon(
                     painter = painterResource(R.drawable.ic_small_arrow_up_24),
-                    contentDescription = null, // TODO: [High] Add content description
+                    contentDescription = stringResource(contentDescriptionResId),
                     modifier = Modifier
                         .size(16.dp)
                         .graphicsLayer {
