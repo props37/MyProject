@@ -3,6 +3,8 @@ package ru.zarina.zarina.ui.screen.catalog
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -233,11 +236,16 @@ object CatalogScreenComponents {
 
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         categories.forEachIndexed { index, categoryItem ->
-                            if (categoryItem.category.id in itemsState.visibleCategoryIds) {
+                            val isVisible = categoryItem.category.id in itemsState.visibleCategoryIds
+                            if (isVisible) {
                                 item(key = categoryItem.category.id.value) {
+                                    val isExpanded = categoryItem.isExpandable
+                                            && categoryItem.category.id in itemsState.expandedCategoryIds
+
                                     CategoryItem(
                                         categoryItem = categoryItem,
                                         onCategoryClicked = onCategoryClicked,
+                                        isExpanded = isExpanded,
                                     )
 
                                     if (index != categories.lastIndex) {
@@ -269,6 +277,7 @@ object CatalogScreenComponents {
     private fun CategoryItem(
         categoryItem: CategoryItem,
         onCategoryClicked: (Category) -> Unit,
+        isExpanded: Boolean,
         modifier: Modifier = Modifier,
     ) {
         Row(
@@ -308,10 +317,20 @@ object CatalogScreenComponents {
 
             if (categoryItem.isExpandable) {
                 Spacer(modifier = Modifier.width(8.dp))
+
+                val rotation = animateFloatAsState(
+                    targetValue = if (isExpanded) 180f else 0f,
+                    animationSpec = tween(durationMillis = 200),
+                    label = "CategoryItem Expand icon rotation",
+                )
                 Icon(
                     painter = painterResource(R.drawable.ic_small_arrow_up_24),
                     contentDescription = null, // TODO: [High] Add content description
-                    modifier = Modifier.size(16.dp),
+                    modifier = Modifier
+                        .size(16.dp)
+                        .graphicsLayer {
+                            rotationZ = rotation.value
+                        },
                 )
             }
         }
