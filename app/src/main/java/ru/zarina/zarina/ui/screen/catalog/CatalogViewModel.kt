@@ -30,6 +30,7 @@ import ru.zarina.zarina.domain.rework.common.Categories
 import ru.zarina.zarina.domain.rework.common.Category
 import ru.zarina.zarina.domain.rework.common.withFlattenedChildren
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.util.library.coroutines.WhileAndroidUiSubscribed
@@ -42,6 +43,8 @@ class CatalogViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val interactor: CatalogInteractor,
 ) : ViewModel(), SideEffectSource<CatalogViewModel.SideEffect> by SideEffectSourceImpl() {
+
+    private val navigationThrottler = Throttler.getNavigationThrottler()
 
     val searchQuery: StateFlow<String> = savedStateHandle.getStateFlow(
         key = KEY_SEARCH_QUERY,
@@ -162,8 +165,10 @@ class CatalogViewModel @Inject constructor(
     private fun onCategoryItemClicked(item: CategoryListItem.CategoryItem) {
         val category = item.category
         if (category.children.isNullOrEmpty()) {
-            val action = CatalogScreenAction.CategoryClicked(item.category)
-            emitSideEffect(SideEffect.NavigateForward(action))
+            navigationThrottler.throttle {
+                val action = CatalogScreenAction.CategoryClicked(item.category)
+                emitSideEffect(SideEffect.NavigateForward(action))
+            }
         } else {
             expandedCategories.update { set ->
                 val ids = set.mapTo(mutableSetOf()) { it.id }
@@ -178,8 +183,10 @@ class CatalogViewModel @Inject constructor(
     }
 
     private fun onSeeWholeCategoryItemClicked(item: CategoryListItem.SeeWholeCategoryItem) {
-        val action = CatalogScreenAction.CategoryClicked(item.category)
-        emitSideEffect(SideEffect.NavigateForward(action))
+        navigationThrottler.throttle {
+            val action = CatalogScreenAction.CategoryClicked(item.category)
+            emitSideEffect(SideEffect.NavigateForward(action))
+        }
     }
 
     private fun List<Category>.flatMapToCategoryItems(initialNestingLevel: Int): List<CategoryListItem> {
