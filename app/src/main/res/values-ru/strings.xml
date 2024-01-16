@@ -33,6 +33,10 @@
     <string name="expand">Развернуть</string>
     <string name="collapse">Свернуть</string>
     <string name="see_all">Смотреть всё</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="remove_from_favorites">Удалить из избранное</string>
+    <string name="add_to_cart">Добавить в корзину</string>
+    <string name="remove_from_cart">Удалить из корзины</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -157,8 +161,6 @@
     <string name="shop_list">Список магазинов</string>
     <string name="catalogue">Каталог</string>
     <string name="main_page">Главная</string>
-    <string name="add_to_favorites">Добавить в избранное</string>
-    <string name="remove_from_favorites">Удалить из избранного</string>
     <string name="favorites_are_empty">В избранном пусто</string>
     <string name="save_interesting_products_to_favorites">Сохраняйте понравившиеся товары в Избранное</string>
     <string name="search">Поиск</string>
