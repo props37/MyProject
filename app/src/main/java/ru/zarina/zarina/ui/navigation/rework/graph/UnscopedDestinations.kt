@@ -58,4 +58,6 @@ object UnscopedDestinations {
     }
 
     data object DefaultCityDialog : SimpleDestination(BaseRouteReworked.DEFAULT_CITY_DIALOG)
+
+    data object Products : SimpleDestination(BaseRouteReworked.PRODUCTS)
 }
