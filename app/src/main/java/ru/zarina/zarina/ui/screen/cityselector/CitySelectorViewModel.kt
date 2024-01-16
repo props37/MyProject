@@ -1,9 +1,13 @@
 package ru.zarina.zarina.ui.screen.cityselector
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,13 +24,14 @@ import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
-import ru.zarina.zarina.usecase.rework.geography.GetCitiesUseCase
-import ru.zarina.zarina.util.library.coroutines.WhileSubscribedDelay
+import ru.zarina.zarina.usecase.rework.geography.GetCitiesFlowUseCase
+import ru.zarina.zarina.util.library.coroutines.WhileAndroidUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import java.io.IOException
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import ru.zarina.zarina.domain.rework.geography.City as DomainCity
 
 @HiltViewModel
 class CitySelectorViewModel @Inject constructor(
@@ -66,11 +71,11 @@ class CitySelectorViewModel @Inject constructor(
     )
 
     private val _cityListState = MutableStateFlow<CityListState>(CityListState.Loading)
-    val cityListState = _cityListState.asStateFlow()
+    val cityListState: StateFlow<CityListState> = _cityListState.asStateFlow()
 
     val isCitySearchBarVisible: StateFlow<Boolean> = cityListState.mapState(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(SharingStarted.WhileSubscribedDelay),
+        started = SharingStarted.WhileAndroidUiSubscribed,
     ) { it is CityListState.CityList }
 
     val isChangeCityButtonVisible: StateFlow<Boolean> = hasSelectedCityChanged.asStateFlow()
@@ -120,12 +125,13 @@ class CitySelectorViewModel @Inject constructor(
         fetchCities(cityNameQuery.value)
     }
 
+    // TODO: [Medium] Migrate to Flow APIs to not collect Flows without considering UI lifecycle. See CatalogViewModel as example
     private fun fetchCities(cityNameQuery: String?, delay: Duration = Duration.ZERO) {
         fetchCitiesJob?.cancel()
         fetchCitiesJob = viewModelScope.launch {
             delay(delay)
-            val getCitiesParams = GetCitiesUseCase.Params(cityNameQuery)
-            interactor.getCities(getCitiesParams).collect { result ->
+            val getCitiesParams = GetCitiesFlowUseCase.Params(cityNameQuery)
+            interactor.getCitiesFlow(getCitiesParams).collect { result ->
                 val cityListState = result.fold(
                     onSuccess = { cities ->
                         cityListStateFromFetchCitiesSuccess(cityNameQuery, cities)
@@ -170,7 +176,7 @@ class CitySelectorViewModel @Inject constructor(
             }
         } else {
             cities.map { CityListItem.City(it, showFullName = true) }
-        }
+        }.toImmutableList()
         return CityListState.CityList(listItems)
     }
 
@@ -180,20 +186,28 @@ class CitySelectorViewModel @Inject constructor(
         data object FreeCitySearchBarFocus : SideEffect
     }
 
+    @Stable
     sealed class CityListState {
         data object Loading : CityListState()
 
-        data class CityList(val list: List<CityListItem>) : CityListState()
+        @Immutable
+        data class CityList(val items: ImmutableList<CityListItem>) : CityListState()
 
+        @Immutable
         data class Error(val errorState: ErrorStateRework) : CityListState()
     }
 
+    @Stable
     sealed class CityListItem {
+        // TODO: [Low] Rename to CityItem
+        @Immutable
         data class City(
-            val city: ru.zarina.zarina.domain.rework.geography.City,
+            val city: DomainCity,
             val showFullName: Boolean = false,
         ) : CityListItem()
 
+        // TODO: [Low] Rename to CityFirstLetterHeaderItem
+        @Immutable
         data class CityFirstLetterHeader(val letter: Char) : CityListItem()
     }
 

@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,8 +42,10 @@ import coil.compose.rememberAsyncImagePainter
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.size.Size
+import kotlinx.collections.immutable.ImmutableList
 import okhttp3.OkHttpClient
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaLinearProgressIndicator
 import ru.zarina.zarina.ui.common.component.ZarinaLogo
@@ -57,7 +60,10 @@ import java.util.concurrent.TimeUnit
 object OnboardingScreenComponents {
 
     @Composable
-    fun Banner(modifier: Modifier = Modifier) {
+    fun Banner(
+        url: Url?,
+        modifier: Modifier = Modifier,
+    ) {
         Box(modifier = modifier) {
             val context = LocalContext.current
 
@@ -66,30 +72,32 @@ object OnboardingScreenComponents {
             val imageLoader = remember(context) {
                 getBannerImageLoader(context)
             }
-            val imageRequest = remember(context) {
-                val fallbackBannerResId = R.drawable.onboarding_default_banner
-                ImageRequest.Builder(context)
-                    .data(OnboardingViewModel.ONBOARDING_BANNER_URL)
-                    .size(Size.ORIGINAL)
-                    .error(fallbackBannerResId)
-                    .fallback(fallbackBannerResId)
-                    .build()
-            }
-            val contentScale = ContentScale.Crop
-            val painter = rememberAsyncImagePainter(
-                model = imageRequest,
-                imageLoader = imageLoader,
-                contentScale = contentScale,
-                onSuccess = { isBannerDisplayed = true },
-                onError = { isBannerDisplayed = true },
-            )
+            if (url != null) {
+                val imageRequest = remember(context, url) {
+                    val fallbackBannerResId = R.drawable.onboarding_default_banner
+                    ImageRequest.Builder(context)
+                        .data(url.value)
+                        .size(Size.ORIGINAL)
+                        .error(fallbackBannerResId)
+                        .fallback(fallbackBannerResId)
+                        .build()
+                }
+                val contentScale = ContentScale.Crop
+                val painter = rememberAsyncImagePainter(
+                    model = imageRequest,
+                    imageLoader = imageLoader,
+                    contentScale = contentScale,
+                    onSuccess = { isBannerDisplayed = true },
+                    onError = { isBannerDisplayed = true },
+                )
 
-            Image(
-                painter = painter,
-                contentDescription = null,
-                contentScale = contentScale,
-                modifier = Modifier.fillMaxSize(),
-            )
+                Image(
+                    painter = painter,
+                    contentDescription = null,
+                    contentScale = contentScale,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
 
             val logoColor by animateColorAsState(
                 targetValue = if (isBannerDisplayed) {
@@ -112,7 +120,7 @@ object OnboardingScreenComponents {
 
     @Composable
     fun ProgressIndicator(
-        onboardingSteps: List<OnboardingStep>,
+        onboardingSteps: ImmutableList<OnboardingStep>,
         currentOnboardingStep: OnboardingStep,
         modifier: Modifier = Modifier,
     ) {
@@ -167,7 +175,7 @@ object OnboardingScreenComponents {
 
     @Composable
     fun OnboardingStep(
-        onboardingSteps: List<OnboardingStep>,
+        onboardingSteps: ImmutableList<OnboardingStep>,
         currentOnboardingStep: OnboardingStep,
         userCity: City?,
         isSkipCityDetectionButtonLoading: Boolean,
@@ -331,6 +339,7 @@ object OnboardingScreenComponents {
             .build()
     }
 
+    @Immutable
     private data class OnboardingPage(
         val step: OnboardingStep,
         val number: Int,

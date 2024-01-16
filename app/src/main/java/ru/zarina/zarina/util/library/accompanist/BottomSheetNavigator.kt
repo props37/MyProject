@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 
+// TODO: [Low] Remove when accompanist ModalBottomSheetLayout will expose sheetGesturesEnabled parameter
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialNavigationApi::class)
 @Composable
 fun rememberBottomSheetNavigator(

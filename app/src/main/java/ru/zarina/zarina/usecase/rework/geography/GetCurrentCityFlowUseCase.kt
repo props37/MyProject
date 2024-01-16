@@ -11,7 +11,7 @@ import ru.zarina.zarina.usecase.base.FlowUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
-class DetectCurrentCityUseCase @Inject constructor(
+class GetCurrentCityFlowUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val locationRepository: LocationRepository,
@@ -19,7 +19,7 @@ class DetectCurrentCityUseCase @Inject constructor(
 ) : FlowUseCase<Unit, City?>(dispatcher) {
 
     override fun execute(params: Unit): Flow<City?> {
-        return locationRepository.getCurrentLocation().map { location ->
+        return locationRepository.getCurrentLocationFlow().map { location ->
             Timber.v("Current location: $location")
             if (location != null) {
                 val city = geographyRepository.getCity(location)

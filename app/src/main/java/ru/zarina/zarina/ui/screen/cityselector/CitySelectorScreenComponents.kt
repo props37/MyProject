@@ -24,13 +24,9 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,7 +37,6 @@ import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -49,14 +44,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.ui.common.component.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.button.CloseButton
-import ru.zarina.zarina.ui.common.component.button.IconButtonCustom
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
-import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
+import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -77,8 +72,8 @@ object CitySelectorScreenComponents {
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .heightIn(min = 56.dp)
-                .padding(vertical = 8.dp),
+                .heightIn(min = TopBarDefaults.MinHeight)
+                .padding(vertical = TopBarDefaults.VerticalPadding),
         ) {
             Text(
                 text = stringResource(R.string.city),
@@ -98,7 +93,6 @@ object CitySelectorScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun CitySearchBar(
         cityNameQuery: String,
@@ -123,24 +117,12 @@ object CitySelectorScreenComponents {
                 )
             },
             innerTrailingContent = {
-                CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-                    AnimatedVisibility(
-                        visible = cityNameQuery.isNotEmpty(),
-                        enter = remember { AnimatedContentDefaultEnterTransition },
-                        exit = remember { AnimatedContentDefaultExitTransition },
-                    ) {
-                        IconButtonCustom(
-                            onClick = onClearClicked,
-                            indication = rememberRipple(bounded = false, radius = 8.dp),
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_clear_new_24),
-                                contentDescription = stringResource(R.string.clear),
-                                tint = Color.Unspecified,
-                                modifier = Modifier.size(20.dp),
-                            )
-                        }
-                    }
+                AnimatedVisibility(
+                    visible = cityNameQuery.isNotEmpty(),
+                    enter = remember { AnimatedContentDefaultEnterTransition },
+                    exit = remember { AnimatedContentDefaultExitTransition },
+                ) {
+                    ZarinaTextFieldDefaults.ClearButton(onClick = onClearClicked)
                 }
             },
             outerTrailingContent = {
@@ -154,16 +136,7 @@ object CitySelectorScreenComponents {
                     label = "CitySearchBar Cancel button",
                 ) { isVisible ->
                     if (isVisible) {
-                        ZarinaButton(
-                            onClick = onCancelClicked,
-                            size = ZarinaButtonSize.Small,
-                            colors = ZarinaButtonDefaults.backlessColors(),
-                        ) {
-                            Text(
-                                text = stringResource(R.string.cancel).uppercase(),
-                                style = UiKitTheme.typographyReworked.caption1.regular,
-                            )
-                        }
+                        ZarinaTextFieldDefaults.CancelButton(onClick = onCancelClicked)
                     }
                 }
             },
@@ -204,7 +177,7 @@ object CitySelectorScreenComponents {
                     }
 
                     is CityListState.CityList -> {
-                        if (listState.list.isNotEmpty()) {
+                        if (listState.items.isNotEmpty()) {
                             val baseContentPadding = remember(isChangeCityButtonVisible) {
                                 val bottom = if (isChangeCityButtonVisible) {
                                     val buttonHeight = ZarinaButtonDefaults.HeightLarge
@@ -222,7 +195,7 @@ object CitySelectorScreenComponents {
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
                                 items(
-                                    items = listState.list,
+                                    items = listState.items,
                                     key = { getCityListItemKey(it) },
                                     contentType = { getCityListItemContentType(it) },
                                 ) { item ->
@@ -244,6 +217,7 @@ object CitySelectorScreenComponents {
                                 }
                             }
                         } else {
+                            // TODO: [Low] Implement as CityListState.Error?
                             CityNotFound(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -417,12 +391,13 @@ object CitySelectorScreenComponents {
         }
     }
 
+    // TODO: [Medium] Rework. Use the state itself when possible (at least for Error states)
     @Stable
     private fun getCityListContentKey(state: CityListState): String {
         return when (state) {
             CityListState.Loading -> CityListContentKeyLoading
             is CityListState.CityList -> {
-                if (state.list.isNotEmpty()) CityListContentKeyCities else CityListContentKeyCityNotFound
+                if (state.items.isNotEmpty()) CityListContentKeyCities else CityListContentKeyCityNotFound
             }
 
             is CityListState.Error -> CityListContentKeyError

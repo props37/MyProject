@@ -1,8 +1,8 @@
 package ru.zarina.zarina.ui.screen.cityselector
 
-import ru.zarina.zarina.usecase.rework.geography.GetCitiesUseCase
+import ru.zarina.zarina.usecase.rework.geography.GetCitiesFlowUseCase
 import javax.inject.Inject
 
 class CitySelectorInteractor @Inject constructor(
-    val getCities: GetCitiesUseCase
+    val getCitiesFlow: GetCitiesFlowUseCase
 )

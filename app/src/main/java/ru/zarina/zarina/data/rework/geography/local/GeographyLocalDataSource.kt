@@ -11,7 +11,7 @@ class GeographyLocalDataSource @Inject constructor(
         dataHolder.setCities(nameQuery, cities)
     }
 
-    fun getCities(nameQuery: String?): Flow<List<City>?> {
-        return dataHolder.getCities(nameQuery)
+    fun getCitiesFlow(nameQuery: String?): Flow<List<City>?> {
+        return dataHolder.getCitiesFlow(nameQuery)
     }
 }

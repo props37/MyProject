@@ -29,6 +29,10 @@
     <string name="loading">Загрузка</string>
     <string name="for_women">Женщинам</string>
     <string name="for_men">Мужчинам</string>
+    <string name="find_products">Найти товары</string>
+    <string name="expand">Развернуть</string>
+    <string name="collapse">Свернуть</string>
+    <string name="see_all">Смотреть всё</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>

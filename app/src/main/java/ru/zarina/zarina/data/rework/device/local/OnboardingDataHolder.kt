@@ -12,7 +12,7 @@ import javax.inject.Inject
 class OnboardingDataHolder @Inject constructor(
     private val preferencesDataStore: DataStore<Preferences>,
 ) {
-    fun getIsOnboardingCompleted(): Flow<Boolean> {
+    fun getIsOnboardingCompletedFlow(): Flow<Boolean> {
         return preferencesDataStore.safeData.map { data ->
             data[KEY_IS_ONBOARDING_COMPLETED] ?: false
         }

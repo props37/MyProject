@@ -1,14 +1,16 @@
 package ru.zarina.zarina.ui.screen.onboarding
 
 import ru.zarina.zarina.data.permissionmanager.PermissionManager
+import ru.zarina.zarina.usecase.rework.content.GetOnboardingBannerUrlUseCase
 import ru.zarina.zarina.usecase.rework.device.SetIsOnboardingCompletedUseCase
-import ru.zarina.zarina.usecase.rework.geography.DetectCurrentCityUseCase
+import ru.zarina.zarina.usecase.rework.geography.GetCurrentCityFlowUseCase
 import ru.zarina.zarina.usecase.rework.geography.UpdateUserCityUseCase
 import javax.inject.Inject
 
 class OnboardingInteractor @Inject constructor(
     val permissionManager: PermissionManager,
-    val detectCurrentCity: DetectCurrentCityUseCase,
+    val getOnboardingBannerUrl: GetOnboardingBannerUrlUseCase,
+    val getCurrentCityFlow: GetCurrentCityFlowUseCase,
     val setIsOnboardingCompleted: SetIsOnboardingCompletedUseCase,
     val updateUserCity: UpdateUserCityUseCase,
 )

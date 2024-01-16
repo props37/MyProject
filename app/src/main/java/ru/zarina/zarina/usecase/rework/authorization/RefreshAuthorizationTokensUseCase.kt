@@ -8,7 +8,7 @@ import ru.zarina.zarina.utils.clean.invoke
 import timber.log.Timber
 import javax.inject.Inject
 
-// TODO: [High] Is synchronization needed?
+// TODO: [Medium] Is synchronization needed?
 
 class RefreshAuthorizationTokensUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)

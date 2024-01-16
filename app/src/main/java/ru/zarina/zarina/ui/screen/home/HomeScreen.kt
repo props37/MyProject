@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
@@ -34,11 +36,11 @@ import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.ContentPager
-import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.TabBar
+import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.GenderContentPager
+import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.GenderPicker
 import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.rememberTabBarScrollBehavior
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.ContentState
-import ru.zarina.zarina.ui.screen.home.HomeViewModel.Tab
+import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
 import ru.zarina.zarina.ui.screen.home.tooling.preview.ContentStatePreviewParameterProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.Crossfade
@@ -47,14 +49,14 @@ import ru.zarina.zarina.util.compose.Crossfade
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val tabs by viewModel.tabs.collectAsStateWithLifecycle()
-    val currentTab by viewModel.currentTab.collectAsStateWithLifecycle()
+    val genderTabs by viewModel.genderTabs.collectAsStateWithLifecycle()
+    val currentGenderTab by viewModel.currentGenderTab.collectAsStateWithLifecycle()
     val contentState by viewModel.contentState.collectAsStateWithLifecycle()
 
     ScreenContent(
-        tabs = tabs,
-        currentTab = currentTab,
-        onTabClicked = viewModel::onTabClicked,
+        genderTabs = genderTabs,
+        currentGenderTab = currentGenderTab,
+        onGenderTabClicked = viewModel::onGenderTabClicked,
         contentState = contentState,
         onBannerClicked = viewModel::onBannerClicked,
         onContentErrorRefreshClicked = viewModel::onContentErrorRefreshClicked,
@@ -63,9 +65,9 @@ fun HomeScreen(
 
 @Composable
 private fun ScreenContent(
-    tabs: List<Tab>,
-    currentTab: Tab,
-    onTabClicked: (Tab) -> Unit,
+    genderTabs: ImmutableList<GenderTab>,
+    currentGenderTab: GenderTab,
+    onGenderTabClicked: (GenderTab) -> Unit,
     contentState: ContentState,
     onBannerClicked: (HomeContent.Banner) -> Unit,
     onContentErrorRefreshClicked: () -> Unit,
@@ -90,10 +92,10 @@ private fun ScreenContent(
                     Box(modifier = Modifier.fillMaxSize()) {
                         val tabBarScrollBehavior = rememberTabBarScrollBehavior()
 
-                        TabBar(
-                            tabs = tabs,
-                            currentTab = currentTab,
-                            onTabClicked = onTabClicked,
+                        GenderPicker(
+                            genders = genderTabs,
+                            currentGender = currentGenderTab,
+                            onGenderClicked = onGenderTabClicked,
                             modifier = Modifier
                                 .zIndex(1f)
                                 .align(Alignment.TopCenter)
@@ -110,9 +112,9 @@ private fun ScreenContent(
                                 },
                         )
 
-                        ContentPager(
-                            tabs = tabs,
-                            currentPage = tabs.indexOf(currentTab),
+                        GenderContentPager(
+                            genders = genderTabs,
+                            currentGender = currentGenderTab,
                             content = contentState.content,
                             onBannerClicked = onBannerClicked,
                             modifier = Modifier
@@ -153,9 +155,9 @@ private fun Preview(
 ) {
     ZarinaPreview {
         ScreenContent(
-            tabs = remember { Tab.entries.toList() },
-            currentTab = Tab.FOR_WOMEN,
-            onTabClicked = {},
+            genderTabs = remember { GenderTab.entries.toImmutableList() },
+            currentGenderTab = GenderTab.WOMEN,
+            onGenderTabClicked = {},
             contentState = contentState,
             onBannerClicked = {},
             onContentErrorRefreshClicked = {},

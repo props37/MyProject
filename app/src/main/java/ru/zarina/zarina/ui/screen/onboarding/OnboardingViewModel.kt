@@ -11,6 +11,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,16 +20,17 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
-import ru.zarina.zarina.BuildConfig
 import ru.zarina.zarina.R
 import ru.zarina.zarina.data.permissionmanager.isDenied
 import ru.zarina.zarina.data.permissionmanager.isGranted
 import ru.zarina.zarina.data.permissionmanager.shouldShowRequestRationale
+import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
@@ -40,7 +43,7 @@ import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.device.SetIsOnboardingCompletedUseCase
 import ru.zarina.zarina.usecase.rework.geography.UpdateUserCityUseCase
-import ru.zarina.zarina.util.library.coroutines.WhileSubscribedDelay
+import ru.zarina.zarina.util.library.coroutines.WhileAndroidUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import ru.zarina.zarina.utils.clean.invoke
 import timber.log.Timber
@@ -65,10 +68,24 @@ class OnboardingViewModel @AssistedInject constructor(
 
     private val onboardingCompletionTrigger = MutableStateFlow<OnboardingCompletionTrigger?>(null)
 
-    val onboardingSteps: StateFlow<List<OnboardingStep>> = savedStateHandle.getStateFlow(
-        key = KEY_ONBOARDING_STEPS,
-        initialValue = createOnboardingSteps(),
+    val bannerUrl: StateFlow<Url?> = flow {
+        val url = interactor.getOnboardingBannerUrl().getOrNull()
+        emit(url)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+        initialValue = null,
     )
+
+    val onboardingSteps: StateFlow<ImmutableList<OnboardingStep>> = savedStateHandle
+        .getStateFlow<List<OnboardingStep>>(
+            key = KEY_ONBOARDING_STEPS,
+            initialValue = createOnboardingSteps(),
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { it.toImmutableList() }
 
     val currentOnboardingStep: StateFlow<OnboardingStep> = savedStateHandle.getStateFlow(
         key = KEY_CURRENT_ONBOARDING_STEP,
@@ -93,7 +110,7 @@ class OnboardingViewModel @AssistedInject constructor(
                 && onboardingCompletionTrigger == OnboardingCompletionTrigger.CITY_DETECTION_SKIPPED
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(SharingStarted.WhileSubscribedDelay),
+        started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = false,
     )
 
@@ -101,7 +118,7 @@ class OnboardingViewModel @AssistedInject constructor(
         .isOperationOngoing(Operation.DETECT_CITY)
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(SharingStarted.WhileSubscribedDelay),
+            started = SharingStarted.WhileAndroidUiSubscribed,
             initialValue = false,
         )
 
@@ -113,7 +130,7 @@ class OnboardingViewModel @AssistedInject constructor(
                 onboardingCompletionTrigger == OnboardingCompletionTrigger.CITY_CONFIRMED
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(SharingStarted.WhileSubscribedDelay),
+        started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = false,
     )
 
@@ -231,7 +248,7 @@ class OnboardingViewModel @AssistedInject constructor(
         }
 
         operationTracker.track(Operation.DETECT_CITY) {
-            interactor.detectCurrentCity().firstOrNull()
+            interactor.getCurrentCityFlow().firstOrNull()
                 ?.onSuccess { city ->
                     savedStateHandle[KEY_CURRENT_CITY] = city?.let { CityParcelable.fromCity(it) }
                     showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
@@ -289,7 +306,7 @@ class OnboardingViewModel @AssistedInject constructor(
             .launchIn(viewModelScope)
     }
 
-    private fun createOnboardingSteps(): List<OnboardingStep> {
+    private fun createOnboardingSteps(): ImmutableList<OnboardingStep> {
         return buildList {
             OnboardingStep.entries.forEach { step ->
                 when (step) {
@@ -308,7 +325,7 @@ class OnboardingViewModel @AssistedInject constructor(
                     else -> add(step)
                 }
             }
-        }
+        }.toImmutableList()
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -339,9 +356,6 @@ class OnboardingViewModel @AssistedInject constructor(
         private const val KEY_ONBOARDING_STEPS = "onboarding_steps"
         private const val KEY_CURRENT_ONBOARDING_STEP = "current_onboarding_step"
         private const val KEY_CURRENT_CITY = "current_city"
-
-        // TODO: [Low] Move to data layer
-        const val ONBOARDING_BANNER_URL = "${BuildConfig.BACKEND_URL}/api/v1/main/splash/"
 
         private val LOCATION_PERMISSIONS: List<String>
             get() = listOf(

@@ -31,7 +31,7 @@ private val CirceLight: Font
 
 private val CirceFamily = FontFamily(CirceBold, CirceRegular, CirceLight)
 
-// TODO: [High] Remove after updating to Compose 1.6.0
+// TODO: [Medium] Remove after updating to Compose 1.6.0
 private val PlatformStyle = PlatformTextStyle(includeFontPadding = false)
 
 data class UiKitTypographyReworked(
@@ -265,6 +265,14 @@ data class UiKitTypographyReworked(
             lineHeight = 12.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W400,
+            letterSpacing = 0.12.sp,
+            platformStyle = PlatformStyle,
+        ),
+        val light: TextStyle = TextStyle(
+            fontSize = 10.sp,
+            lineHeight = 12.sp,
+            fontFamily = CirceFamily,
+            fontWeight = FontWeight.W350,
             letterSpacing = 0.12.sp,
             platformStyle = PlatformStyle,
         ),

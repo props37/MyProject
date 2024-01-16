@@ -1,12 +1,17 @@
 package ru.zarina.zarina.ui.screen.home
 
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -29,23 +34,24 @@ class HomeViewModel @Inject constructor(
 
     private var fetchContentJob: Job? = null
 
-    val tabs = MutableStateFlow(Tab.entries.toList()).asStateFlow()
+    val genderTabs: StateFlow<ImmutableList<GenderTab>> =
+        MutableStateFlow(GenderTab.entries.toImmutableList()).asStateFlow()
 
     // TODO: [Low] Store the last selected tab on the disk
-    val currentTab = savedStateHandle.getStateFlow(
-        key = KEY_CURRENT_TAB,
-        initialValue = Tab.FOR_WOMEN,
+    val currentGenderTab: StateFlow<GenderTab> = savedStateHandle.getStateFlow(
+        key = KEY_CURRENT_GENDER_TAB,
+        initialValue = GenderTab.WOMEN,
     )
 
     private val _contentState = MutableStateFlow<ContentState>(ContentState.Loading)
-    val contentState = _contentState.asStateFlow()
+    val contentState: StateFlow<ContentState> = _contentState.asStateFlow()
 
     init {
         fetchContent()
     }
 
-    fun onTabClicked(tab: Tab) {
-        savedStateHandle[KEY_CURRENT_TAB] = tab
+    fun onGenderTabClicked(tab: GenderTab) {
+        savedStateHandle[KEY_CURRENT_GENDER_TAB] = tab
     }
 
     fun onBannerClicked(banner: HomeContent.Banner) {
@@ -59,10 +65,11 @@ class HomeViewModel @Inject constructor(
         fetchContent()
     }
 
+    // TODO: [Medium] Migrate to Flow APIs to not collect Flows without considering UI lifecycle. See CatalogViewModel as example
     private fun fetchContent() {
         fetchContentJob?.cancel()
         fetchContentJob = viewModelScope.launch {
-            interactor.getHomeContent().collect { result ->
+            interactor.getHomeContentFlow().collect { result ->
                 val contentState = result.fold(
                     onSuccess = { content ->
                         ContentState.Success(content)
@@ -83,17 +90,20 @@ class HomeViewModel @Inject constructor(
     sealed interface SideEffect : SideEffectSource.SideEffect
 
     @Parcelize
-    enum class Tab : Parcelable { FOR_WOMEN, FOR_MEN }
+    enum class GenderTab : Parcelable { WOMEN, MEN }
 
+    @Stable
     sealed class ContentState {
         data object Loading : ContentState()
 
+        @Immutable
         data class Success(val content: HomeContent) : ContentState()
 
+        @Immutable
         data class Error(val errorState: ErrorStateRework) : ContentState()
     }
 
     companion object {
-        private const val KEY_CURRENT_TAB = "current_tab"
+        private const val KEY_CURRENT_GENDER_TAB = "current_gender_tab"
     }
 }

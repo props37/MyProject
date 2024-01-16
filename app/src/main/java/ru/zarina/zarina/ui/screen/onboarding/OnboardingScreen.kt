@@ -25,8 +25,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -46,6 +49,7 @@ fun OnboardingScreen(
     navigateForward: (OnboardingScreenAction) -> Unit,
     viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
+    val bannerUrl by viewModel.bannerUrl.collectAsStateWithLifecycle()
     val onboardingSteps by viewModel.onboardingSteps.collectAsStateWithLifecycle()
     val currentOnboardingStep by viewModel.currentOnboardingStep.collectAsStateWithLifecycle()
     val userCity by viewModel.userCity.collectAsStateWithLifecycle()
@@ -54,6 +58,7 @@ fun OnboardingScreen(
     val isConfirmCityButtonLoading by viewModel.isConfirmCityButtonLoading.collectAsStateWithLifecycle()
 
     ScreenContent(
+        bannerUrl = bannerUrl,
         onboardingSteps = onboardingSteps,
         currentOnboardingStep = currentOnboardingStep,
         userCity = userCity,
@@ -72,7 +77,8 @@ fun OnboardingScreen(
 
 @Composable
 private fun ScreenContent(
-    onboardingSteps: List<OnboardingStep>,
+    bannerUrl: Url?,
+    onboardingSteps: ImmutableList<OnboardingStep>,
     currentOnboardingStep: OnboardingStep,
     userCity: City?,
     isSkipCityDetectionButtonLoading: Boolean,
@@ -96,7 +102,10 @@ private fun ScreenContent(
             .fillMaxSize()
             .background(UiKitTheme.colorsReworked.background.general.regular.default),
     ) {
-        Banner(modifier = Modifier.fillMaxSize())
+        Banner(
+            url = bannerUrl,
+            modifier = Modifier.fillMaxSize(),
+        )
 
         ZarinaBottomSheet(
             modifier = Modifier.align(Alignment.BottomCenter),
@@ -149,7 +158,8 @@ private fun Preview(
 ) {
     ZarinaPreview {
         ScreenContent(
-            onboardingSteps = remember { OnboardingStep.entries.toList() },
+            bannerUrl = null,
+            onboardingSteps = remember { OnboardingStep.entries.toImmutableList() },
             currentOnboardingStep = onboardingStep,
             userCity = remember { City.DEFAULT },
             isSkipCityDetectionButtonLoading = false,

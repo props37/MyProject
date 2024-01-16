@@ -26,8 +26,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -46,7 +44,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -65,6 +62,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.AspectRatioFrameLayout
 import coil.compose.AsyncImage
+import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.common.MediaType
 import ru.zarina.zarina.domain.rework.content.HomeContent
@@ -74,12 +72,13 @@ import ru.zarina.zarina.ui.common.component.LooseTabRowDefaults.looseTabIndicato
 import ru.zarina.zarina.ui.common.component.VideoPlayer
 import ru.zarina.zarina.ui.common.component.ZarinaLogo
 import ru.zarina.zarina.ui.common.component.ZarinaLogoAspectRatio
+import ru.zarina.zarina.ui.common.component.ZarinaTabIndicator
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
 import ru.zarina.zarina.ui.common.media.exoplayer.LocalExoPlayerCacheHolder
-import ru.zarina.zarina.ui.screen.home.HomeViewModel.Tab
+import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import timber.log.Timber
 import kotlin.math.roundToInt
@@ -87,10 +86,10 @@ import kotlin.math.roundToInt
 object HomeScreenComponents {
 
     @Composable
-    fun TabBar(
-        tabs: List<Tab>,
-        currentTab: Tab,
-        onTabClicked: (Tab) -> Unit,
+    fun GenderPicker(
+        genders: ImmutableList<GenderTab>,
+        currentGender: GenderTab,
+        onGenderClicked: (GenderTab) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(
@@ -105,31 +104,38 @@ object HomeScreenComponents {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            val selectedTabIndex = tabs.indexOf(currentTab)
+            val selectedTabIndex = remember(genders, currentGender) {
+                genders.indexOf(currentGender)
+            }
+            // TODO: [Medium] Extract?
             LooseTabRow(
                 selectedTabIndex = selectedTabIndex,
                 indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(
-                        modifier = Modifier
-                            .looseTabIndicatorOffset(tabPositions[selectedTabIndex])
-                            .clip(CircleShape),
+                    ZarinaTabIndicator(
+                        modifier = Modifier.looseTabIndicatorOffset(tabPositions[selectedTabIndex]),
                     )
                 },
             ) {
-                tabs.forEach { tab ->
-                    val textResId = when (tab) {
-                        Tab.FOR_WOMEN -> R.string.for_women
-                        Tab.FOR_MEN -> R.string.for_men
-                    }
-
+                genders.forEach { gender ->
                     ZarinaButton(
-                        onClick = { onTabClicked(tab) },
+                        onClick = { onGenderClicked(gender) },
                         size = ZarinaButtonSize.Medium,
                         colors = ZarinaButtonDefaults.backlessColors(),
                     ) {
+                        val textResId = when (gender) {
+                            GenderTab.WOMEN -> R.string.for_women
+                            GenderTab.MEN -> R.string.for_men
+                        }
+
+                        val style = if (gender == currentGender) {
+                            UiKitTheme.typographyReworked.tertiary.regular
+                        } else {
+                            UiKitTheme.typographyReworked.tertiary.light
+                        }
+
                         Text(
                             text = stringResource(textResId).uppercase(),
-                            style = UiKitTheme.typographyReworked.tertiary.regular,
+                            style = style,
                             color = UiKitTheme.colorsReworked.text.general.regular.default,
                         )
                     }
@@ -140,20 +146,21 @@ object HomeScreenComponents {
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun ContentPager(
-        tabs: List<Tab>,
-        currentPage: Int,
+    fun GenderContentPager(
+        genders: ImmutableList<GenderTab>,
+        currentGender: GenderTab,
         content: HomeContent,
         onBannerClicked: (HomeContent.Banner) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val pagerState = rememberPagerState(
-            initialPage = currentPage,
-            pageCount = { tabs.size },
+            initialPage = remember { genders.indexOf(currentGender) },
+            pageCount = { genders.size },
         )
 
-        LaunchedEffect(currentPage) {
-            pagerState.animateScrollToPage(currentPage)
+        LaunchedEffect(pagerState, genders, currentGender) {
+            val page = genders.indexOf(currentGender)
+            pagerState.animateScrollToPage(page)
         }
 
         HorizontalPager(
@@ -162,9 +169,9 @@ object HomeScreenComponents {
             userScrollEnabled = false,
             modifier = modifier,
         ) { page ->
-            val banners = when (tabs[page]) {
-                Tab.FOR_WOMEN -> content.womenBanners
-                Tab.FOR_MEN -> content.menBanners
+            val banners = when (genders[page]) {
+                GenderTab.WOMEN -> content.womenBanners
+                GenderTab.MEN -> content.menBanners
             }
 
             BannerList(
@@ -482,7 +489,7 @@ object HomeScreenComponents {
         }
     }
 
-    // TODO: [High] Add ability to disable scroll, e.g. if the list is empty
+    // TODO: [Medium] Add ability to disable scroll, e.g. if the list is empty
     @Stable
     class TabBarScrollBehavior {
         private val height = mutableIntStateOf(0)
