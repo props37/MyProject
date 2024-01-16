@@ -5,12 +5,24 @@ import androidx.navigation.NavHostController
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.rework.graph.CatalogGraph
+import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreen
+import ru.zarina.zarina.ui.screen.catalog.CatalogScreenAction
 
 fun NavGraphBuilder.catalogGraph(navController: NavHostController) {
     navigationGraph(CatalogGraph) {
         composableDestination(CatalogGraph.Catalog) {
-            CatalogScreen()
+            CatalogScreen(
+                navigateForward = { action ->
+                    when (action) {
+                        is CatalogScreenAction.CategoryClicked -> {
+                            val args = UnscopedDestinations.Products.Args(action.category.id.value)
+                            val route = UnscopedDestinations.Products.createRoute(args)
+                            navController.navigate(route)
+                        }
+                    }
+                },
+            )
         }
     }
 }

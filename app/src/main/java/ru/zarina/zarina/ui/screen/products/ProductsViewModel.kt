@@ -1,16 +1,37 @@
 package ru.zarina.zarina.ui.screen.products
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import ru.zarina.zarina.domain.rework.common.Category
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
+import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
 @HiltViewModel
 class ProductsViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val interactor: ProductsInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val categoryId: StateFlow<Category.Id> = savedStateHandle
+        .getStateFlow<Long?>(
+            key = UnscopedDestinations.Products.ARG_KEY_CATEGORY_ID,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { value ->
+            checkNotNull(value) { "categoryId is null" }
+            Category.Id(value)
+        }
 
     sealed interface SideEffect : SideEffectSource.SideEffect
 }

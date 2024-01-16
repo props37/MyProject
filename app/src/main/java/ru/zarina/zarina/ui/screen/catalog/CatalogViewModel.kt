@@ -162,7 +162,8 @@ class CatalogViewModel @Inject constructor(
     private fun onCategoryItemClicked(item: CategoryListItem.CategoryItem) {
         val category = item.category
         if (category.children.isNullOrEmpty()) {
-            // TODO: [High] Implement navigation
+            val action = CatalogScreenAction.CategoryClicked(item.category)
+            emitSideEffect(SideEffect.NavigateForward(action))
         } else {
             expandedCategories.update { set ->
                 val ids = set.mapTo(mutableSetOf()) { it.id }
@@ -177,7 +178,8 @@ class CatalogViewModel @Inject constructor(
     }
 
     private fun onSeeWholeCategoryItemClicked(item: CategoryListItem.SeeWholeCategoryItem) {
-        // TODO: [High] Implement navigation
+        val action = CatalogScreenAction.CategoryClicked(item.category)
+        emitSideEffect(SideEffect.NavigateForward(action))
     }
 
     private fun List<Category>.flatMapToCategoryItems(initialNestingLevel: Int): List<CategoryListItem> {
@@ -208,6 +210,7 @@ class CatalogViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class NavigateForward(val action: CatalogScreenAction) : SideEffect
         data object FreeSearchBarFocus : SideEffect
     }
 
