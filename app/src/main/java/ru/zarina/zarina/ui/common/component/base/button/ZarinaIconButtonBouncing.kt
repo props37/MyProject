@@ -20,26 +20,34 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.collectLatest
 import ru.zarina.zarina.R
+import ru.zarina.zarina.ui.theme.UiKitTheme
 
 // TODO: [Low] Process so that fast clicks lead to playing a full animation
 
 @Composable
-fun IconButtonBouncing(
+fun ZarinaIconButtonBouncing(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    indication: Indication? = rememberRipple(bounded = false, radius = 24.dp),
+    isLoading: Boolean = false,
+    loaderSize: Dp = 24.dp,
+    loaderColor: Color = UiKitTheme.colorsReworked.icon.regular.default,
     isBouncingEnabled: Boolean = true,
     pressedScale: Float = PressedScale,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    indication: Indication? = rememberRipple(bounded = false, radius = 24.dp),
     content: @Composable () -> Unit,
 ) {
-    IconButtonCustom(
+    ZarinaIconButton(
         onClick = onClick,
-        enabled = isEnabled,
+        isEnabled = isEnabled,
+        isLoading = isLoading,
+        loaderSize = loaderSize,
+        loaderColor = loaderColor,
         interactionSource = interactionSource,
         indication = indication,
         modifier = modifier,
@@ -79,7 +87,7 @@ fun IconButtonBouncing(
 @Preview
 @Composable
 private fun Preview() {
-    IconButtonBouncing(
+    ZarinaIconButtonBouncing(
         onClick = {},
         modifier = Modifier
             .background(Color.White)
