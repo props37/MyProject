@@ -4,13 +4,18 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.rework.common.Category
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
+import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase
 import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
@@ -32,6 +37,18 @@ class ProductsViewModel @Inject constructor(
             checkNotNull(value) { "categoryId is null" }
             Category.Id(value)
         }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val category: StateFlow<Category?> = categoryId
+        .flatMapLatest { id ->
+            interactor.getCategoryFlow(GetCategoryFlowUseCase.Params(id))
+                .map { result -> result.getOrNull() }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = null,
+        )
 
     sealed interface SideEffect : SideEffectSource.SideEffect
 }

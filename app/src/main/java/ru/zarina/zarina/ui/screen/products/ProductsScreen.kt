@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.ui.common.component.base.ScreenPlaceholder
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 
 @Composable
@@ -21,7 +22,7 @@ private fun ScreenContent(
 ) {
     ProductsScreenBehavior(sideEffects = sideEffects)
 
-
+    ScreenPlaceholder("Products")
 }
 
 @Preview
