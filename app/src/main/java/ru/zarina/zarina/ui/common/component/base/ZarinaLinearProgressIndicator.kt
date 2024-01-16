@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component
+package ru.zarina.zarina.ui.common.component.base
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween

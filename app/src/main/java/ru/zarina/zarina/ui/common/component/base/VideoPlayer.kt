@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component
+package ru.zarina.zarina.ui.common.component.base
 
 import androidx.annotation.OptIn
 import androidx.compose.runtime.Composable

@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component.screen
+package ru.zarina.zarina.ui.common.component.base.screen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.textString
-import ru.zarina.zarina.ui.common.component.button.ZarinaButton
+import ru.zarina.zarina.ui.common.component.base.button.ZarinaButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme

@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component.skeleton
+package ru.zarina.zarina.ui.common.component.base.skeleton
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode

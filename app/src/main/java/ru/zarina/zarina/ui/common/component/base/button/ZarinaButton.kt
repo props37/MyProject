@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component.button
+package ru.zarina.zarina.ui.common.component.base.button
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
@@ -39,7 +39,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
+import ru.zarina.zarina.ui.common.component.base.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.rippletheme.DarkRippleTheme
 import ru.zarina.zarina.ui.common.rippletheme.LightRippleTheme
 import ru.zarina.zarina.ui.theme.UiKitTheme

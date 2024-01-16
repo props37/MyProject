@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component.textfield
+package ru.zarina.zarina.ui.common.component.base.textfield
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -46,10 +46,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.component.button.IconButtonCustom
-import ru.zarina.zarina.ui.common.component.button.ZarinaButton
-import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
-import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.component.base.button.IconButtonCustom
+import ru.zarina.zarina.ui.common.component.base.button.ZarinaButton
+import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 

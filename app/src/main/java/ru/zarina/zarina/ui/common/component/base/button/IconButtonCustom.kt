@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component.button
+package ru.zarina.zarina.ui.common.component.base.button
 
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.clickable

@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component.dialog
+package ru.zarina.zarina.ui.common.component.base.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.zarina.zarina.ui.common.component.button.ZarinaButton
+import ru.zarina.zarina.ui.common.component.base.button.ZarinaButton
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 

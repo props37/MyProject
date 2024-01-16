@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component.screen
+package ru.zarina.zarina.ui.common.component.base.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,8 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.component.ZarinaLogo
-import ru.zarina.zarina.ui.common.component.ZarinaLogoAspectRatio
+import ru.zarina.zarina.ui.common.component.base.ZarinaLogo
+import ru.zarina.zarina.ui.common.component.base.ZarinaLogoAspectRatio
 import ru.zarina.zarina.ui.common.util.SplashScreenLogoSize
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme

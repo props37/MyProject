@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component
+package ru.zarina.zarina.ui.common.component.base
 
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.LocalContentColor
