@@ -56,7 +56,8 @@ class HomeViewModel @Inject constructor(
 
     fun onBannerClicked(banner: HomeContent.Banner) {
         navigationThrottler.throttle {
-            // TODO: [High] Implement
+            val action = HomeScreenAction.BannerClicked(banner)
+            emitSideEffect(SideEffect.NavigateForward(action))
         }
     }
 
@@ -87,7 +88,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    sealed interface SideEffect : SideEffectSource.SideEffect
+    sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class NavigateForward(val action: HomeScreenAction) : SideEffect
+    }
 
     @Parcelize
     enum class GenderTab : Parcelable { WOMEN, MEN }

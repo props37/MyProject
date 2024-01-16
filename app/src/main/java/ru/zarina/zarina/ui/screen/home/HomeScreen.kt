@@ -49,6 +49,7 @@ import ru.zarina.zarina.util.compose.Crossfade
 
 @Composable
 fun HomeScreen(
+    navigateForward: (HomeScreenAction) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val genderTabs by viewModel.genderTabs.collectAsStateWithLifecycle()
@@ -63,6 +64,7 @@ fun HomeScreen(
         onBannerClicked = viewModel::onBannerClicked,
         onContentErrorRefreshClicked = viewModel::onContentErrorRefreshClicked,
         sideEffects = viewModel.sideEffects,
+        navigateForward = navigateForward,
     )
 }
 
@@ -75,8 +77,12 @@ private fun ScreenContent(
     onBannerClicked: (HomeContent.Banner) -> Unit,
     onContentErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
+    navigateForward: (HomeScreenAction) -> Unit,
 ) {
-    HomeScreenBehavior(sideEffects = sideEffects)
+    HomeScreenBehavior(
+        sideEffects = sideEffects,
+        navigateForward = navigateForward,
+    )
 
     Box(
         modifier = Modifier
@@ -166,6 +172,7 @@ private fun Preview(
             onBannerClicked = {},
             onContentErrorRefreshClicked = {},
             sideEffects = remember { emptyFlow() },
+            navigateForward = {},
         )
     }
 }
