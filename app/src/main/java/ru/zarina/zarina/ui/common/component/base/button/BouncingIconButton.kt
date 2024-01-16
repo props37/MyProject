@@ -33,6 +33,7 @@ fun BouncingIconButton(
     isEnabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     indication: Indication? = rememberRipple(bounded = false, radius = 24.dp),
+    isBouncingEnabled: Boolean = true,
     pressedScale: Float = PressedScale,
     content: @Composable () -> Unit,
 ) {
@@ -64,8 +65,10 @@ fun BouncingIconButton(
         Box(
             modifier = Modifier
                 .graphicsLayer {
-                    scaleX = scaleAnimatable.value
-                    scaleY = scaleAnimatable.value
+                    if (isBouncingEnabled) {
+                        scaleX = scaleAnimatable.value
+                        scaleY = scaleAnimatable.value
+                    }
                 },
         ) {
             content()
@@ -76,17 +79,16 @@ fun BouncingIconButton(
 @Preview
 @Composable
 private fun Preview() {
-    Box(
+    BouncingIconButton(
+        onClick = {},
         modifier = Modifier
             .background(Color.White)
             .padding(16.dp)
     ) {
-        BouncingIconButton(onClick = {}) {
-            Icon(
-                painter = painterResource(R.drawable.ic_heart_outline_24),
-                contentDescription = null,
-            )
-        }
+        Icon(
+            painter = painterResource(R.drawable.ic_heart_outline_24),
+            contentDescription = null,
+        )
     }
 }
 
