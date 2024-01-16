@@ -28,9 +28,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
-import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -41,6 +42,7 @@ import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.GenderPicker
 import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.rememberTabBarScrollBehavior
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.ContentState
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
+import ru.zarina.zarina.ui.screen.home.HomeViewModel.SideEffect
 import ru.zarina.zarina.ui.screen.home.tooling.preview.ContentStatePreviewParameterProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.Crossfade
@@ -60,6 +62,7 @@ fun HomeScreen(
         contentState = contentState,
         onBannerClicked = viewModel::onBannerClicked,
         onContentErrorRefreshClicked = viewModel::onContentErrorRefreshClicked,
+        sideEffects = viewModel.sideEffects,
     )
 }
 
@@ -71,8 +74,9 @@ private fun ScreenContent(
     contentState: ContentState,
     onBannerClicked: (HomeContent.Banner) -> Unit,
     onContentErrorRefreshClicked: () -> Unit,
+    sideEffects: Flow<SideEffect>,
 ) {
-    ForcedBottomNavBarBehavior(isVisible = true)
+    HomeScreenBehavior(sideEffects = sideEffects)
 
     Box(
         modifier = Modifier
@@ -161,6 +165,7 @@ private fun Preview(
             contentState = contentState,
             onBannerClicked = {},
             onContentErrorRefreshClicked = {},
+            sideEffects = remember { emptyFlow() },
         )
     }
 }
