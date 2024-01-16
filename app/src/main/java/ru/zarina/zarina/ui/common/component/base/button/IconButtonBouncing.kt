@@ -27,7 +27,7 @@ import ru.zarina.zarina.R
 // TODO: [Low] Process so that fast clicks lead to playing a full animation
 
 @Composable
-fun BouncingIconButton(
+fun IconButtonBouncing(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
@@ -79,7 +79,7 @@ fun BouncingIconButton(
 @Preview
 @Composable
 private fun Preview() {
-    BouncingIconButton(
+    IconButtonBouncing(
         onClick = {},
         modifier = Modifier
             .background(Color.White)
