@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.common.remote.headerprovider
+package ru.zarina.zarina.data.rework.common.remote.headerprovider
 
 interface HeaderProvider {
     fun provide(): Map<String, String>

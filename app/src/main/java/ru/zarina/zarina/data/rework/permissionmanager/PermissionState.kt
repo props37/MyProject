@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.permissionmanager
+package ru.zarina.zarina.data.rework.permissionmanager
 
 /**
  * Represents the state of a permission.

@@ -18,9 +18,9 @@ import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import ru.zarina.zarina.BuildConfig
-import ru.zarina.zarina.data.common.remote.headerprovider.ZarinaApiHeaderProvider
-import ru.zarina.zarina.data.common.remote.ktor.plugin.ZarinaAuth
-import ru.zarina.zarina.data.common.remote.ktor.plugin.bearer
+import ru.zarina.zarina.data.rework.common.remote.headerprovider.ZarinaApiHeaderProvider
+import ru.zarina.zarina.data.rework.common.remote.ktor.plugin.ZarinaAuth
+import ru.zarina.zarina.data.rework.common.remote.ktor.plugin.bearer
 import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
 import ru.zarina.zarina.usecase.rework.authorization.GetAuthorizationTokensUseCase
 import ru.zarina.zarina.usecase.rework.authorization.RefreshAuthorizationTokensUseCase

@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.permissionmanager
+package ru.zarina.zarina.data.rework.permissionmanager
 
 import android.content.Context
 import android.content.pm.PackageManager
