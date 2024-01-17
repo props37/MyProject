@@ -127,9 +127,10 @@ android {
     }
 }
 
-// Compose compiler metrics
-// Command: ./gradlew assembleRelease -P.enableComposeCompilerReports=true --rerun-tasks
+// Compose compiler setup
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    // Compiler metrics
+    // ./gradlew assembleRelease -P.enableComposeCompilerReports=true --rerun-tasks
     val buildDir = project.layout.buildDirectory.asFile.get()
     val metricsDir = "${buildDir.absolutePath}/compose_metrics"
     kotlinOptions.freeCompilerArgs += listOf(
@@ -139,6 +140,13 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     kotlinOptions.freeCompilerArgs += listOf(
         "-P",
         "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$metricsDir",
+    )
+
+    // Compiler stability config
+    val stabilityConfigPath = "${project.rootDir.absolutePath}/config/compose/stability_config.txt"
+    kotlinOptions.freeCompilerArgs += listOf(
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:stabilityConfigurationPath=$stabilityConfigPath",
     )
 }
 
