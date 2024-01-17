@@ -86,6 +86,7 @@ object CitySelectorScreenComponents {
 
             CloseIconButton(
                 onClick = onCloseClicked,
+                iconSize = 20.dp,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
                     .padding(end = 8.dp),
