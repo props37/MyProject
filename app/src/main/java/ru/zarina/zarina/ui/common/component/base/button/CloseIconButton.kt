@@ -21,7 +21,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
-fun CloseButton(
+fun CloseIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentDescription: String = stringResource(R.string.close),
@@ -55,7 +55,7 @@ fun CloseButton(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        CloseButton(
+        CloseIconButton(
             onClick = {},
             modifier = Modifier
                 .background(Color.White)

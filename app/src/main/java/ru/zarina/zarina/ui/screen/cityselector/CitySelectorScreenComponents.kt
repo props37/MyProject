@@ -46,7 +46,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.base.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.base.ZarinaCircularLoader
-import ru.zarina.zarina.ui.common.component.base.button.CloseButton
+import ru.zarina.zarina.ui.common.component.base.button.CloseIconButton
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.base.screen.ZarinaErrorScreen
@@ -84,7 +84,7 @@ object CitySelectorScreenComponents {
                 modifier = Modifier.align(Alignment.Center),
             )
 
-            CloseButton(
+            CloseIconButton(
                 onClick = onCloseClicked,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
