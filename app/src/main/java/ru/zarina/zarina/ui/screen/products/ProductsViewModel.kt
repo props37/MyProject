@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.rework.common.Category
+import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
@@ -24,6 +25,8 @@ class ProductsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val interactor: ProductsInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val categoryId: StateFlow<Category.Id> = savedStateHandle
         .getStateFlow<Long?>(
@@ -50,6 +53,22 @@ class ProductsViewModel @Inject constructor(
             initialValue = null,
         )
 
-    sealed interface SideEffect : SideEffectSource.SideEffect
+    fun onBackClicked() {
+        navigationThrottler.throttle {
+            emitSideEffect(SideEffect.NavigateBackward)
+        }
+    }
+
+    fun onSearchClicked() {
+        // TODO: [High] Implement
+    }
+
+    fun onFiltersClicked() {
+        // TODO: [High] Implement
+    }
+
+    sealed interface SideEffect : SideEffectSource.SideEffect {
+        data object NavigateBackward : SideEffect
+    }
 }
 

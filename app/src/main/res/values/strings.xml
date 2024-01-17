@@ -39,6 +39,8 @@
     <string name="add_to_cart">Добавить в корзину</string>
     <string name="remove_from_cart">Удалить из корзины</string>
     <string name="back">Назад</string>
+    <string name="search">Поиск</string>
+    <string name="filters">Фильтры</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -146,7 +148,6 @@
     <string name="by_price_descending">По убыванию цены</string>
     <string name="by_popularity">По популярности</string>
     <string name="by_discount">По скидке</string>
-    <string name="filters">Фильтры</string>
     <string name="price">Цена</string>
     <string name="range">%1$s – %2$s</string>
     <string name="apply">Применить</string>
@@ -164,7 +165,6 @@
     <string name="main_page">Главная</string>
     <string name="favorites_are_empty">В избранном пусто</string>
     <string name="save_interesting_products_to_favorites">Сохраняйте понравившиеся товары в Избранное</string>
-    <string name="search">Поиск</string>
     <string name="search_products">Искать товары</string>
     <string name="frequently_searched">Часто ищут</string>
     <string name="search_history">История поиска</string>

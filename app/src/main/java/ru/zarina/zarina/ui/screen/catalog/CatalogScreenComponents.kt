@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.TabRow
@@ -55,6 +54,7 @@ import ru.zarina.zarina.ui.common.component.base.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.base.screen.ZarinaErrorScreen
+import ru.zarina.zarina.ui.common.component.base.skeleton.SkeletonTextShape
 import ru.zarina.zarina.ui.common.component.base.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.base.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.base.textfield.ZarinaTextFieldDefaults
@@ -460,7 +460,7 @@ object CatalogScreenComponents {
                 else -> 0.4f
             }
             val height = 16.dp
-            val shape = remember { RoundedCornerShape(2.dp) }
+            val shape = remember { SkeletonTextShape }
 
             Box(
                 modifier = Modifier

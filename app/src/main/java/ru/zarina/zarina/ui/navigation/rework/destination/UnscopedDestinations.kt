@@ -117,6 +117,13 @@ fun NavGraphBuilder.defaultCityDialogScreen(navController: NavHostController) {
 
 fun NavGraphBuilder.productsScreen(navController: NavHostController) {
     composableDestination(UnscopedDestinations.Products) {
-        ProductsScreen()
+        ProductsScreen(
+            navigateBackward = {
+                navController.popBackStack(
+                    route = UnscopedDestinations.Products.routeSchema,
+                    inclusive = true,
+                )
+            },
+        )
     }
 }
