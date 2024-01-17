@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -58,6 +57,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.common.tooling.preview.parameterprovider.ProductPreviewParameterProvider
 import ru.zarina.zarina.ui.common.util.domain.toComposeColor
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.rememberEndlessPagerState
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
@@ -74,7 +74,7 @@ fun ProductCard(
                 .fillMaxWidth()
                 .aspectRatio(ImagePagerAspectRatio),
         ) {
-            val pagerState = rememberPagerState { product.media.size }
+            val pagerState = rememberEndlessPagerState(itemCount = product.media.size)
 
             ImagePager(
                 pagerState = pagerState,
@@ -149,7 +149,7 @@ fun ProductCard(
             }
         }
 
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Colors(
             colors = remember(product.colors) { product.colors.toImmutableList() },
