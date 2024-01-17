@@ -27,11 +27,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -44,6 +46,7 @@ import ru.zarina.zarina.ui.common.component.base.button.ZarinaIconButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.zarina.zarina.ui.common.tooling.preview.parameterprovider.ProductPreviewParameterProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -199,9 +202,18 @@ private fun AddToCartIconButton(
 @FontScalePreviews
 @DensityPreviews
 @Composable
-private fun ProductCardPreview() {
+private fun ProductCardPreview(
+    @PreviewParameter(ProductPreviewParameterProvider::class, 1)
+    product: Product,
+) {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        ProductCard(
+            product = product,
+            onClicked = {},
+            onAddToFavoritesClicked = {},
+            onAddToCartClicked = {},
+            modifier = Modifier.background(Color.White),
+        )
     }
 }
 
