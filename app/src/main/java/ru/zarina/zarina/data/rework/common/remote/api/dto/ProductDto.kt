@@ -32,7 +32,9 @@ data class ProductDto(
             price = price.toPrice(),
             colors = colors,
             media = media,
-            isInFavorites = false, // The state is not present in this DTO
+            // States that are not present in the DTO
+            isInFavorites = false,
+            isInCart = false,
         )
     }
 }

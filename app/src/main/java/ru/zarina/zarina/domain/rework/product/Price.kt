@@ -6,3 +6,6 @@ data class Price(
     val discountPrice: Long,
     val discountPercent: Int,
 )
+
+val Price.currentPrice: Long
+    get() = if (hasDiscount) discountPrice else commonPrice

@@ -9,6 +9,7 @@ data class Product(
     val colors: List<ProductColor>,
     val media: List<Media>,
     val isInFavorites: Boolean,
+    val isInCart: Boolean,
 ) {
     @JvmInline
     value class Id(val value: String)

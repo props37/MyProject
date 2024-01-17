@@ -41,6 +41,8 @@
     <string name="back">Назад</string>
     <string name="search">Поиск</string>
     <string name="filters">Фильтры</string>
+    <string name="price_in_rubles">%1$d ₽</string>
+    <string name="discount_percent">-%1$d%%</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>

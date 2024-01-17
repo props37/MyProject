@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.common.component
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,16 +24,21 @@ import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.common.Media
+import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.rework.product.currentPrice
 import ru.zarina.zarina.ui.common.component.base.button.LikeIconButton
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaIconButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -43,24 +49,29 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductCard(
+    product: Product,
+    onClicked: () -> Unit,
+    onAddToFavoritesClicked: () -> Unit,
+    onAddToCartClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.clickable(onClick = onClicked)) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(ImagePagerAspectRatio),
         ) {
-            val pagerState = rememberPagerState { 0 }
+            val pagerState = rememberPagerState { product.media.size }
 
             ImagePager(
                 pagerState = pagerState,
+                media = remember(product.media) { product.media.toImmutableList() },
                 modifier = Modifier.matchParentSize(),
             )
 
             LikeIconButton(
-                isLiked = false, // TODO: [High] Implement
-                onClick = { /*TODO*/ },
+                isLiked = product.isInFavorites,
+                onClick = onAddToFavoritesClicked,
                 iconSize = 16.dp,
                 indication = rememberRipple(bounded = false, radius = 16.dp),
                 modifier = Modifier
@@ -75,7 +86,7 @@ fun ProductCard(
             modifier = Modifier.padding(start = 16.dp, end = 4.dp),
         ) {
             Text(
-                text = "Свитер из вискозы", // TODO: [High] Implement
+                text = product.name,
                 style = UiKitTheme.typographyReworked.tertiary.light,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 maxLines = 1,
@@ -84,8 +95,8 @@ fun ProductCard(
             )
             Spacer(modifier = Modifier.width(8.dp))
             AddToCartIconButton(
-                isAdded = false, // TODO: [High] Implement
-                onClick = { /*TODO*/ },
+                isAdded = product.isInCart,
+                onClick = onAddToCartClicked,
                 modifier = Modifier.size(32.dp),
             )
         }
@@ -95,29 +106,31 @@ fun ProductCard(
             modifier = Modifier.padding(horizontal = 16.dp),
         ) {
             Text(
-                text = "2 599 ₽", // TODO: [High] Implement
+                text = stringResource(R.string.price_in_rubles, product.price.currentPrice),
                 style = UiKitTheme.typographyReworked.tertiary.regular,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "3 599 ₽", // TODO: [High] Implement
-                style = UiKitTheme.typographyReworked.tertiary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.disabled,
-                textDecoration = TextDecoration.LineThrough,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "−27%", // TODO: [High] Implement
-                style = UiKitTheme.typographyReworked.caption2.bold,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            if (product.price.hasDiscount) {
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.price_in_rubles, product.price.commonPrice),
+                    style = UiKitTheme.typographyReworked.tertiary.light,
+                    color = UiKitTheme.colorsReworked.text.general.regular.disabled,
+                    textDecoration = TextDecoration.LineThrough,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.discount_percent, product.price.discountPercent),
+                    style = UiKitTheme.typographyReworked.caption2.bold,
+                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
 
         // TODO: [High] Add colors
@@ -128,11 +141,12 @@ fun ProductCard(
 @Composable
 private fun ImagePager(
     pagerState: PagerState,
+    media: ImmutableList<Media>,
     modifier: Modifier = Modifier,
 ) {
-    // TODO: [High] Specify key
     HorizontalPager(
         state = pagerState,
+        key = { media[it].url.value },
         modifier = modifier,
     ) { page ->
         // TODO: [High] Implement
@@ -187,7 +201,7 @@ private fun AddToCartIconButton(
 @Composable
 private fun ProductCardPreview() {
     ZarinaPreview {
-        ProductCard(modifier = Modifier.background(Color.White))
+        // TODO: [Low] Add preview
     }
 }
 
