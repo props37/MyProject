@@ -63,12 +63,12 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 @Composable
 fun ProductCard(
     product: Product,
-    onClicked: () -> Unit,
+    onClick: () -> Unit,
     onAddToFavoritesClicked: () -> Unit,
     onAddToCartClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.clickable(onClick = onClicked)) {
+    Column(modifier = modifier.clickable(onClick = onClick)) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,7 +81,6 @@ fun ProductCard(
                 media = remember(product.media) { product.media.toImmutableList() },
                 modifier = Modifier.matchParentSize(),
             )
-
             LikeIconButton(
                 isLiked = product.isInFavorites,
                 onClick = onAddToFavoritesClicked,
@@ -89,7 +88,6 @@ fun ProductCard(
                 indication = rememberRipple(bounded = false, radius = 16.dp),
                 modifier = Modifier.align(Alignment.TopEnd),
             )
-
             // TODO: [High] Add pager indicator
         }
         
@@ -171,7 +169,7 @@ private fun ImagePager(
 ) {
     HorizontalPager(
         state = pagerState,
-        key = { media[it].url.value },
+        // TODO: [High] Specify key. Do not use URLs as keys since there are no guarantee they are unique
         modifier = modifier,
     ) { page ->
         // TODO: [High] Implement
@@ -272,7 +270,7 @@ private fun ProductCardPreview(
     ZarinaPreview {
         ProductCard(
             product = product,
-            onClicked = {},
+            onClick = {},
             onAddToFavoritesClicked = {},
             onAddToCartClicked = {},
             modifier = Modifier.background(Color.White),
@@ -280,7 +278,7 @@ private fun ProductCardPreview(
     }
 }
 
-private const val ImagePagerAspectRatio = 0.69f
+private const val ImagePagerAspectRatio = 0.68f
 
 private const val WhiteColorLuminanceThreshold = 0.95f
 
