@@ -30,6 +30,8 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
+import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
+import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderCategoryPager
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderPicker
@@ -137,6 +139,8 @@ private fun ScreenContent(
 }
 
 @Preview
+@FontScalePreviews
+@DensityPreviews
 @Composable
 private fun Preview(
     @PreviewParameter(CategoryListStatePreviewParameterProvider::class)
