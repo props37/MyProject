@@ -38,6 +38,7 @@
     <string name="remove_from_favorites">Удалить из избранное</string>
     <string name="add_to_cart">Добавить в корзину</string>
     <string name="remove_from_cart">Удалить из корзины</string>
+    <string name="back">Назад</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -76,7 +77,6 @@
     <string name="tomorrow">Завтра</string>
     <string name="day_after_tomorrow">Послезавтра</string>
     <string name="three_days_or_more">От двух дней</string>
-    <string name="back">Назад</string>
     <string name="out_of_stock">Нет в наличии</string>
     <string name="buy_complete_look">Купить образ</string>
     <string name="find_and_pickup">Найти и забрать в магазине</string>
