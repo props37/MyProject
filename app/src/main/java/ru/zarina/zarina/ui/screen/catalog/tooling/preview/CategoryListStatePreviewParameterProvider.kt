@@ -4,7 +4,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentSet
-import ru.zarina.zarina.domain.rework.common.Category
+import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel
 

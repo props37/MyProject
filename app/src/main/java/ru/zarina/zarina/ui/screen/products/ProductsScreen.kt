@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.domain.rework.common.Category
+import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBar

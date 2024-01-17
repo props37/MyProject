@@ -1,8 +1,8 @@
 package ru.zarina.zarina.data.rework.category.local
 
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.domain.rework.common.Categories
-import ru.zarina.zarina.domain.rework.common.Category
+import ru.zarina.zarina.domain.rework.category.Categories
+import ru.zarina.zarina.domain.rework.category.Category
 import javax.inject.Inject
 
 class CategoryLocalDataSource @Inject constructor(

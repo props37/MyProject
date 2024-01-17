@@ -26,9 +26,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.plus
 import kotlinx.parcelize.Parcelize
-import ru.zarina.zarina.domain.rework.common.Categories
-import ru.zarina.zarina.domain.rework.common.Category
-import ru.zarina.zarina.domain.rework.common.withFlattenedChildren
+import ru.zarina.zarina.domain.rework.category.Categories
+import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.rework.category.withFlattenedChildren
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource

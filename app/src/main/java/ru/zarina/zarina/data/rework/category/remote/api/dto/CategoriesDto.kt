@@ -3,7 +3,7 @@ package ru.zarina.zarina.data.rework.category.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.rework.common.remote.api.dto.CategoryDto
-import ru.zarina.zarina.domain.rework.common.Categories
+import ru.zarina.zarina.domain.rework.category.Categories
 
 @Serializable
 data class CategoriesDto(

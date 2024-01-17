@@ -1,4 +1,6 @@
-package ru.zarina.zarina.domain.rework.common
+package ru.zarina.zarina.domain.rework.product
+
+import ru.zarina.zarina.domain.rework.common.Color
 
 data class ProductColor(
     val id: Id,
