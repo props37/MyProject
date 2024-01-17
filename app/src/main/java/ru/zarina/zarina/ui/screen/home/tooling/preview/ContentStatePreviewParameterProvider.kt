@@ -1,7 +1,7 @@
 package ru.zarina.zarina.ui.screen.home.tooling.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import ru.zarina.zarina.domain.rework.common.MediaType
+import ru.zarina.zarina.domain.rework.common.Media
 import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
@@ -19,8 +19,10 @@ class ContentStatePreviewParameterProvider : PreviewParameterProvider<HomeViewMo
     private fun getHomeContent(): HomeContent {
         val banner = HomeContent.Banner(
             id = HomeContent.Banner.Id(Random.nextLong()),
-            mediaType = MediaType.IMAGE,
-            mediaUrl = Url(""),
+            media = Media(
+                url = Url(""),
+                type = Media.Type.IMAGE,
+            ),
             title = "Заголовок",
             clickAction = null,
         )

@@ -64,7 +64,7 @@ import androidx.media3.ui.AspectRatioFrameLayout
 import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.common.MediaType
+import ru.zarina.zarina.domain.rework.common.Media
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarHeightAsState
 import ru.zarina.zarina.ui.common.component.base.LooseTabRow
@@ -290,8 +290,8 @@ object HomeScreenComponents {
         onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        when (bannerContainer.banner.mediaType) {
-            MediaType.IMAGE -> {
+        when (bannerContainer.banner.media.type) {
+            Media.Type.IMAGE -> {
                 ImageBanner(
                     banner = bannerContainer.banner,
                     onBannerClicked = onBannerClicked,
@@ -301,7 +301,7 @@ object HomeScreenComponents {
                 )
             }
 
-            MediaType.VIDEO -> {
+            Media.Type.VIDEO -> {
                 VideoBanner(
                     banner = bannerContainer.banner,
                     onBannerClicked = onBannerClicked,
@@ -334,8 +334,8 @@ object HomeScreenComponents {
                     }
 
                     rowBanners.forEach { banner ->
-                        when (banner?.mediaType) {
-                            MediaType.IMAGE -> {
+                        when (banner?.media?.type) {
+                            Media.Type.IMAGE -> {
                                 ImageBanner(
                                     banner = banner,
                                     onBannerClicked = onBannerClicked,
@@ -345,7 +345,7 @@ object HomeScreenComponents {
                                 )
                             }
 
-                            MediaType.VIDEO -> {
+                            Media.Type.VIDEO -> {
                                 SideEffect {
                                     Timber.w("Video banners are not supported in Grid view")
                                 }
@@ -378,7 +378,7 @@ object HomeScreenComponents {
                 ),
         ) {
             AsyncImage(
-                model = banner.mediaUrl.value,
+                model = banner.media.url.value,
                 contentDescription = banner.title,
                 contentScale = ContentScale.Crop,
                 onSuccess = { onBannerDisplayed() },
@@ -436,7 +436,7 @@ object HomeScreenComponents {
         }
 
         // Set media to ExoPlayer
-        val mediaUrl = banner.mediaUrl.value
+        val mediaUrl = banner.media.url.value
         val cacheDataSourceFactory = LocalExoPlayerCacheHolder.current?.cacheDataSourceFactory
         LaunchedEffect(exoPlayer, mediaUrl, cacheDataSourceFactory) {
             val dataSourceFactory = cacheDataSourceFactory ?: run {
@@ -475,9 +475,9 @@ object HomeScreenComponents {
     private fun createBannerListContentType(bannerContainer: HomeContent.BannerContainer): String {
         return when (bannerContainer) {
             is HomeContent.BannerContainer.SingleBanner -> {
-                when (bannerContainer.banner.mediaType) {
-                    MediaType.IMAGE -> BannerListContentTypeFullscreenImage
-                    MediaType.VIDEO -> BannerListContentTypeFullscreenVideo
+                when (bannerContainer.banner.media.type) {
+                    Media.Type.IMAGE -> BannerListContentTypeFullscreenImage
+                    Media.Type.VIDEO -> BannerListContentTypeFullscreenVideo
                 }
             }
 
