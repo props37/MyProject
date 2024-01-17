@@ -1,10 +1,8 @@
 package ru.zarina.zarina.domain.rework.product
 
-import android.icu.math.BigDecimal
-
 data class Price(
-    val commonPrice: BigDecimal,
+    val commonPrice: Long,
     val hasDiscount: Boolean,
-    val discountPrice: BigDecimal,
+    val discountPrice: Long,
     val discountPercent: Int,
 )

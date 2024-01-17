@@ -2,6 +2,7 @@ package ru.zarina.zarina.data.rework.common.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.domain.rework.product.Product
 
 @Serializable
 data class ProductDto(
@@ -19,4 +20,18 @@ data class ProductDto(
 
     @SerialName("media")
     val media: List<MediaDto>? = null,
-)
+) {
+    fun toProduct(): Product {
+        checkNotNull(id) { "id is null" }
+        checkNotNull(price) { "price is null" }
+        val colors = colors?.map { it.toProductColor() } ?: emptyList()
+        val media = media?.map { it.toMedia() } ?: emptyList()
+        return Product(
+            id = Product.Id(id),
+            name = checkNotNull(name) { "name is null" },
+            price = price.toPrice(),
+            colors = colors,
+            media = media,
+        )
+    }
+}
