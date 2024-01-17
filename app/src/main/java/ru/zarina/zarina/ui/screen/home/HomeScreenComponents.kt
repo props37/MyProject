@@ -416,6 +416,7 @@ object HomeScreenComponents {
             ExoPlayer.Builder(context)
                 .build()
                 .apply {
+                    volume = 0f
                     repeatMode = Player.REPEAT_MODE_ONE
 
                     val listener = object : Player.Listener {
