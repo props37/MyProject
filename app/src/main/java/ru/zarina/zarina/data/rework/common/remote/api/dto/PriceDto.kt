@@ -7,7 +7,7 @@ import ru.zarina.zarina.domain.rework.product.Price
 @Serializable
 data class PriceDto(
     @SerialName("common_price")
-    val commonPrice: Long? = null,
+    val originalPrice: Long? = null,
 
     @SerialName("has_discount")
     val hasDiscount: Boolean? = null,
@@ -20,7 +20,7 @@ data class PriceDto(
 ) {
     fun toPrice(): Price {
         return Price(
-            commonPrice = checkNotNull(commonPrice) { "commonPrice is null" },
+            originalPrice = checkNotNull(originalPrice) { "commonPrice is null" },
             hasDiscount = checkNotNull(hasDiscount) { "hasDiscount is null" },
             discountPrice = checkNotNull(discountPrice) { "discountPrice is null" },
             discountPercent = checkNotNull(discountPercent) { "discountPercent is null" },

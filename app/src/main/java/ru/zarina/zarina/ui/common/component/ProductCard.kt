@@ -115,7 +115,7 @@ fun ProductCard(
             if (product.price.hasDiscount) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = stringResource(R.string.price_in_rubles, product.price.commonPrice),
+                    text = stringResource(R.string.price_in_rubles, product.price.originalPrice),
                     style = UiKitTheme.typographyReworked.tertiary.light,
                     color = UiKitTheme.colorsReworked.text.general.regular.disabled,
                     textDecoration = TextDecoration.LineThrough,
