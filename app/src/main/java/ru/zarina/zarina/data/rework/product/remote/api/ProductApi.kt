@@ -15,6 +15,7 @@ class ProductApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
     private val httpClient: HttpClient,
 ) {
+    // TODO: [High] Migrate from parameters to body?
     suspend fun getFilteredProducts(
         categoryId: Category.Id,
         page: Int,
@@ -23,7 +24,7 @@ class ProductApi @Inject constructor(
         return httpClient.get("/api/v1/products") {
             parameter("category_id", categoryId.value)
             parameter("page", page)
-            parameter("sort", SortingDto.from(sorting))
+            parameter("sort", SortingDto.from(sorting).value)
         }.body()
     }
 }
