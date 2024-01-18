@@ -4,11 +4,12 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.rework.common.remote.api.dto.ProductDto
 import ru.zarina.zarina.domain.rework.common.Page
-import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.rework.filter.Filters
+import ru.zarina.zarina.domain.rework.product.FilteredProducts
 import ru.zarina.zarina.domain.rework.common.PaginationInfo as DomainPaginationInfo
 
 @Serializable
-data class ProductsDto(
+data class FilteredProductsDto(
     @SerialName("items_count")
     val itemCount: Int? = null,
 
@@ -18,10 +19,14 @@ data class ProductsDto(
     @SerialName("pagination")
     val paginationInfo: PaginationInfo? = null,
 ) {
-    fun toProductPage(): Page<List<Product>> {
+    fun toFilteredProductPage(): Page<FilteredProducts> {
         checkNotNull(products) { "products is null" }
+        val filteredProducts = FilteredProducts(
+            products = products.map { it.toProduct() },
+            filters = Filters(),
+        )
         return Page(
-            data = products.map { it.toProduct() },
+            data = filteredProducts,
             paginationInfo = getPaginationInfo(),
         )
     }
