@@ -1,9 +1,12 @@
 package ru.zarina.zarina.ui.screen.products
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,16 +16,26 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
+import ru.zarina.zarina.ui.common.component.ProductCard
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBarActions
@@ -45,6 +58,7 @@ fun ProductsScreen(
 
     ScreenContent(
         category = category,
+        productPagingDataFlow = viewModel.productPagingDataFlow,
         topBarActions = topBarActions,
         sideEffects = viewModel.sideEffects,
         navigateBackward = navigateBackward,
@@ -54,6 +68,7 @@ fun ProductsScreen(
 @Composable
 private fun ScreenContent(
     category: Category?,
+    productPagingDataFlow: Flow<PagingData<Product>>,
     topBarActions: TopBarActions,
     sideEffects: Flow<ProductsViewModel.SideEffect>,
     navigateBackward: () -> Unit,
@@ -80,6 +95,45 @@ private fun ScreenContent(
             actions = topBarActions,
             modifier = Modifier.fillMaxWidth(),
         )
+
+        val productPagingItems = productPagingDataFlow.collectAsLazyPagingItems()
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            items(
+                count = productPagingItems.itemCount,
+                span = { index ->
+                    if ((index + 1) % 5 == 0) {
+                        GridItemSpan(2)
+                    } else {
+                        GridItemSpan(1)
+                    }
+                },
+                key = productPagingItems.itemKey { it.id.value },
+            ) { index ->
+                val product = productPagingItems[index]
+                if (product != null) {
+                    ProductCard(
+                        product = product,
+                        onClick = { /*TODO*/ },
+                        onAddToFavoritesClicked = { /*TODO*/ },
+                        onAddToCartClicked = { /*TODO*/ },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                            .background(Color.Red)
+                    )
+                }
+            }
+        }
     }
 }
 
