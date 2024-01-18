@@ -18,7 +18,7 @@ data class ProductsDto(
     @SerialName("pagination")
     val paginationInfo: PaginationInfo? = null,
 ) {
-    fun toProductPage(): Page<Product> {
+    fun toProductPage(): Page<List<Product>> {
         checkNotNull(products) { "products is null" }
         return Page(
             data = products.map { it.toProduct() },

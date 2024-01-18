@@ -10,7 +10,7 @@ import javax.inject.Inject
 class ProductRepository @Inject constructor(
     private val remoteDataSource: ProductRemoteDataSource,
 ) {
-    fun getProductPageFlow(categoryId: Category.Id, page: Int): Flow<Page<Product>> {
+    fun getProductPageFlow(categoryId: Category.Id, page: Int): Flow<Page<List<Product>>> {
         return remoteDataSource.getProductPageFlow(categoryId, page)
     }
 }

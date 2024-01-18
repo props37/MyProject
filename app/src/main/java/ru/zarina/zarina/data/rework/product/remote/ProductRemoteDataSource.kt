@@ -11,7 +11,7 @@ import javax.inject.Inject
 class ProductRemoteDataSource @Inject constructor(
     private val api: ProductApi,
 ) {
-    fun getProductPageFlow(categoryId: Category.Id, page: Int): Flow<Page<Product>> = flow {
+    fun getProductPageFlow(categoryId: Category.Id, page: Int): Flow<Page<List<Product>>> = flow {
         val productPage = api.getProducts(categoryId, page).toProductPage()
         emit(productPage)
     }
