@@ -11,9 +11,11 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.ui.model.common.SortingParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase
@@ -53,6 +55,16 @@ class ProductsViewModel @Inject constructor(
             initialValue = null,
         )
 
+    private val currentSorting: StateFlow<Sorting> = savedStateHandle
+        .getStateFlow<SortingParcelable?>(
+            key = KEY_CURRENT_SORTING,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { it?.toSorting() ?: Sorting.NEW }
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             emitSideEffect(SideEffect.NavigateBackward)
@@ -69,6 +81,10 @@ class ProductsViewModel @Inject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data object NavigateBackward : SideEffect
+    }
+
+    companion object {
+        private const val KEY_CURRENT_SORTING = "current_sorting"
     }
 }
 
