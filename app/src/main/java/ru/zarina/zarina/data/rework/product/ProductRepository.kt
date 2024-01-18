@@ -4,13 +4,18 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.data.rework.product.remote.ProductRemoteDataSource
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Page
+import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.domain.rework.product.Product
 import javax.inject.Inject
 
 class ProductRepository @Inject constructor(
     private val remoteDataSource: ProductRemoteDataSource,
 ) {
-    fun getProductPageFlow(categoryId: Category.Id, page: Int): Flow<Page<List<Product>>> {
-        return remoteDataSource.getProductPageFlow(categoryId, page)
+    fun getProductPageFlow(
+        categoryId: Category.Id,
+        sorting: Sorting,
+        page: Int,
+    ): Flow<Page<List<Product>>> {
+        return remoteDataSource.getProductPageFlow(categoryId, sorting, page)
     }
 }
