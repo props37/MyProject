@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -33,12 +34,16 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
+import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.component.ProductCard
 import ru.zarina.zarina.ui.common.component.ProductCardPlaceholder
+import ru.zarina.zarina.ui.common.component.base.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBarActions
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.Crossfade
+import java.io.IOException
 
 @Composable
 fun ProductsScreen(
@@ -96,52 +101,77 @@ private fun ScreenContent(
         )
 
         // TODO: [High] Refactor
+
         val productPagingItems = productPagingDataFlow.collectAsLazyPagingItems()
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+        Crossfade(
+            targetState = productPagingItems.loadState.refresh,
+            contentKey = { it !is LoadState.Error },
+            label = "", // TODO: [High] Add label
             modifier = Modifier.fillMaxSize(),
-        ) {
-            if (productPagingItems.loadState.refresh == LoadState.Loading) {
-                items(
-                    count = 20,
-                    span = { index ->
-                        if ((index + 1) % 5 == 0) {
-                            GridItemSpan(2)
-                        } else {
-                            GridItemSpan(1)
-                        }
-                    },
+        ) { loadState ->
+            if (loadState !is LoadState.Error) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2), // TODO: [High] Extract
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.fillMaxSize(),
                 ) {
-                    ProductCardPlaceholder(modifier = Modifier.fillMaxWidth())
-                }
-            } else {
-                items(
-                    count = productPagingItems.itemCount,
-                    span = { index ->
-                        if ((index + 1) % 5 == 0) {
-                            GridItemSpan(2)
-                        } else {
-                            GridItemSpan(1)
+                    if (loadState is LoadState.NotLoading) {
+                        items(
+                            count = productPagingItems.itemCount,
+                            span = { index ->
+                                if ((index + 1) % 5 == 0) {
+                                    GridItemSpan(2)
+                                } else {
+                                    GridItemSpan(1)
+                                }
+                            },
+                            key = productPagingItems.itemKey { it.id.value },
+                        ) { index ->
+                            val product = productPagingItems[index]
+                            if (product != null) {
+                                ProductCard(
+                                    product = product,
+                                    onClick = { /*TODO*/ },
+                                    onAddToFavoritesClicked = { /*TODO*/ },
+                                    onAddToCartClicked = { /*TODO*/ },
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
+                            } else {
+                                ProductCardPlaceholder(modifier = Modifier.fillMaxWidth())
+                            }
                         }
-                    },
-                    key = productPagingItems.itemKey { it.id.value },
-                ) { index ->
-                    val product = productPagingItems[index]
-                    if (product != null) {
-                        ProductCard(
-                            product = product,
-                            onClick = { /*TODO*/ },
-                            onAddToFavoritesClicked = { /*TODO*/ },
-                            onAddToCartClicked = { /*TODO*/ },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
                     } else {
-                        ProductCardPlaceholder(modifier = Modifier.fillMaxWidth())
+                        items(
+                            count = 20,
+                            span = { index ->
+                                if ((index + 1) % 5 == 0) {
+                                    GridItemSpan(2)
+                                } else {
+                                    GridItemSpan(1)
+                                }
+                            },
+                        ) {
+                            ProductCardPlaceholder(modifier = Modifier.fillMaxWidth())
+                        }
                     }
                 }
+            } else {
+                val state = remember(loadState.error) {
+                    when (loadState.error) {
+                        is IOException -> ErrorStateRework.NETWORK
+                        else -> ErrorStateRework.GENERIC
+                    }
+                }
+
+                ZarinaErrorScreen(
+                    state = state,
+                    onRefreshClicked = { productPagingItems.retry() },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                )
             }
         }
     }

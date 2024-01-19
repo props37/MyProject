@@ -66,6 +66,7 @@ fun ZarinaErrorScreen(
         )
 
         Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(16.dp))
 
         AnimatedContent(
             targetState = state.isRefreshButtonVisible,
