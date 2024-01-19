@@ -18,7 +18,9 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -39,6 +41,7 @@ import ru.zarina.zarina.ui.common.component.ProductCard
 import ru.zarina.zarina.ui.common.component.ProductCardPlaceholder
 import ru.zarina.zarina.ui.common.component.base.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.zarina.zarina.ui.common.util.library.paging.retryAppendPrependErrors
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBarActions
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -102,7 +105,12 @@ private fun ScreenContent(
 
         // TODO: [High] Refactor
 
+        val gridState = rememberLazyGridState()
         val productPagingItems = productPagingDataFlow.collectAsLazyPagingItems()
+
+        LaunchedEffect(gridState, productPagingItems) {
+            productPagingItems.retryAppendPrependErrors(gridState)
+        }
 
         Crossfade(
             targetState = productPagingItems.loadState.refresh,
@@ -113,6 +121,7 @@ private fun ScreenContent(
             if (loadState !is LoadState.Error) {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2), // TODO: [High] Extract
+                    state = gridState,
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     modifier = Modifier.fillMaxSize(),
