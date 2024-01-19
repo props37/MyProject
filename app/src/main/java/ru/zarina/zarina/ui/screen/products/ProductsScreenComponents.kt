@@ -4,8 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,19 +20,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.valentinilk.shimmer.shimmer
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.component.base.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.base.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaIconButton
-import ru.zarina.zarina.ui.common.component.base.skeleton.SkeletonTextShape
-import ru.zarina.zarina.ui.common.component.base.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.base.skeleton.Skeleton
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 object ProductsScreenComponents {
@@ -76,15 +71,11 @@ object ProductsScreenComponents {
                         overflow = TextOverflow.Ellipsis,
                     )
                 } else {
-                    val shimmer = rememberSkeletonShimmer()
-                    Box(
+                    Skeleton(
                         modifier = Modifier
                             .wrapContentWidth(align = Alignment.Start)
                             .fillMaxWidth(fraction = 0.5f)
-                            .height(20.dp)
-                            .clip(SkeletonTextShape)
-                            .shimmer(shimmer)
-                            .background(UiKitTheme.colorsReworked.background.skeleton),
+                            .height(20.dp),
                     )
                 }
             }

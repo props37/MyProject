@@ -6,7 +6,6 @@ import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -45,7 +44,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.shimmer
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.component.base.TopBarDefaults
@@ -54,6 +52,7 @@ import ru.zarina.zarina.ui.common.component.base.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.base.screen.ZarinaErrorScreen
+import ru.zarina.zarina.ui.common.component.base.skeleton.Skeleton
 import ru.zarina.zarina.ui.common.component.base.skeleton.SkeletonTextShape
 import ru.zarina.zarina.ui.common.component.base.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.base.textfield.ZarinaTextField
@@ -462,23 +461,21 @@ object CatalogScreenComponents {
             val height = 16.dp
             val shape = remember { SkeletonTextShape }
 
-            Box(
+            Skeleton(
+                shimmer = shimmer,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .fillMaxWidth(widthFraction)
                     .height(height)
-                    .clip(shape)
-                    .shimmer(shimmer)
-                    .background(UiKitTheme.colorsReworked.background.skeleton),
+                    .clip(shape),
             )
 
-            Box(
+            Skeleton(
+                shimmer = shimmer,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
                     .size(height)
-                    .clip(shape)
-                    .shimmer(shimmer)
-                    .background(UiKitTheme.colorsReworked.background.skeleton),
+                    .clip(shape),
             )
         }
     }
