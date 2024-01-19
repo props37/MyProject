@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
@@ -43,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import ru.zarina.zarina.R
@@ -61,6 +63,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.parameterprovider.ProductPrevi
 import ru.zarina.zarina.ui.common.util.domain.toComposeColor
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.rememberEndlessPagerState
+import ru.zarina.zarina.util.kotlin.loopingGet
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
@@ -79,9 +82,9 @@ fun ProductCard(
         ) {
             val pagerState = rememberEndlessPagerState(itemCount = product.media.size)
 
-            MediaPager(
+            MediaHorizontalPager(
                 pagerState = pagerState,
-                media = remember(product.media) { product.media.toImmutableList() },
+                medias = remember(product.media) { product.media.toImmutableList() },
                 modifier = Modifier.matchParentSize(),
             )
             LikeIconButton(
@@ -242,11 +245,12 @@ fun ProductCardPlaceholder(
     }
 }
 
+// TODO: [High] Extract
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun MediaPager(
+private fun MediaHorizontalPager(
     pagerState: PagerState,
-    media: ImmutableList<Media>,
+    medias: ImmutableList<Media>,
     modifier: Modifier = Modifier,
 ) {
     HorizontalPager(
@@ -254,12 +258,25 @@ private fun MediaPager(
         // TODO: [High] Specify key. Do not use URLs as keys since there are no guarantee they are unique
         modifier = modifier,
     ) { page ->
-        // TODO: [High] Implement
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(UiKitTheme.colorsReworked.background.skeleton),
-        )
+        val media = medias.loopingGet(page)
+        when (media?.type) {
+            Media.Type.IMAGE -> {
+                AsyncImage(
+                    model = media.url.value,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(UiKitTheme.colorsReworked.background.skeleton),
+                )
+            }
+
+            Media.Type.VIDEO -> {
+                // TODO: [High] Implement
+            }
+
+            null -> Unit
+        }
     }
 }
 
