@@ -16,7 +16,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
-import ru.zarina.zarina.domain.rework.common.Media
+import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.ui.common.media.exoplayer.LocalExoPlayerCacheHolder
 import ru.zarina.zarina.ui.common.media.exoplayer.rememberExoPlayer
 import timber.log.Timber
@@ -24,9 +24,9 @@ import timber.log.Timber
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayer(
-    media: Media,
+    url: Url,
     modifier: Modifier = Modifier,
-    isVisibleToUser: Boolean = true,
+    isOnScreen: Boolean = true,
     playWhenReady: Boolean = true,
     repeatMode: Int = Player.REPEAT_MODE_ONE,
     isVolumeEnabled: Boolean = false,
@@ -75,18 +75,17 @@ fun VideoPlayer(
     }
 
     // Set media
-    val mediaUrl = media.url.value
     val cacheDataSourceFactory = if (useCache) {
         LocalExoPlayerCacheHolder.current?.cacheDataSourceFactory
     } else {
         null
     }
-    DisposableEffect(exoPlayer, mediaUrl, cacheDataSourceFactory) {
+    DisposableEffect(exoPlayer, url, cacheDataSourceFactory) {
         val dataSourceFactory = cacheDataSourceFactory ?: run {
             Timber.w("CacheDataSource factory is null. Use fallback DataSource factory instead")
             DefaultHttpDataSource.Factory()
         }
-        val mediaItem = MediaItem.fromUri(mediaUrl)
+        val mediaItem = MediaItem.fromUri(url.value)
         val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
             .createMediaSource(mediaItem)
         exoPlayer.setMediaSource(mediaSource)
@@ -96,8 +95,10 @@ fun VideoPlayer(
     }
 
     // Control playback state
-    LifecycleStartEffect(exoPlayer, isVisibleToUser, playWhenReady) {
-        if (isVisibleToUser && playWhenReady) exoPlayer.play()
+    LifecycleStartEffect(exoPlayer, isOnScreen, playWhenReady) {
+        if (isOnScreen && playWhenReady) {
+            exoPlayer.play()
+        }
         onStopOrDispose { exoPlayer.pause() }
     }
 

@@ -28,7 +28,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.FloatState
 import androidx.compose.runtime.IntState
 import androidx.compose.runtime.LaunchedEffect
@@ -48,19 +47,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LifecycleStartEffect
-import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.DefaultHttpDataSource
-import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import androidx.media3.ui.AspectRatioFrameLayout
 import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
@@ -77,7 +68,6 @@ import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.base.media.VideoPlayer
 import ru.zarina.zarina.ui.common.component.base.screen.ZarinaLoadingScreen
-import ru.zarina.zarina.ui.common.media.exoplayer.LocalExoPlayerCacheHolder
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import timber.log.Timber
@@ -211,14 +201,14 @@ object HomeScreenComponents {
                 },
             ) { index, bannerContainer ->
                 val updatedIndex by rememberUpdatedState(index)
-                val isVisible by remember {
+                val isOnScreen by remember {
                     derivedStateOf { updatedIndex in visibleBannersIndicesState.value }
                 }
 
                 Banner(
                     bannerContainer = bannerContainer,
                     onBannerClicked = onBannerClicked,
-                    isVisible = isVisible,
+                    isOnScreen = isOnScreen,
                     modifier = Modifier.fillParentMaxSize(),
                 )
             }
@@ -229,7 +219,7 @@ object HomeScreenComponents {
     private fun Banner(
         bannerContainer: HomeContent.BannerContainer,
         onBannerClicked: (HomeContent.Banner) -> Unit,
-        isVisible: Boolean,
+        isOnScreen: Boolean,
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
@@ -240,7 +230,7 @@ object HomeScreenComponents {
                     FullscreenBanner(
                         bannerContainer = bannerContainer,
                         onBannerClicked = onBannerClicked,
-                        isVisible = isVisible,
+                        isOnScreen = isOnScreen,
                         onBannerDisplayed = { isBannerDisplayed = true },
                         modifier = Modifier.matchParentSize(),
                     )
@@ -286,7 +276,7 @@ object HomeScreenComponents {
     private fun FullscreenBanner(
         bannerContainer: HomeContent.BannerContainer.SingleBanner,
         onBannerClicked: (HomeContent.Banner) -> Unit,
-        isVisible: Boolean,
+        isOnScreen: Boolean,
         onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -305,7 +295,7 @@ object HomeScreenComponents {
                 VideoBanner(
                     banner = bannerContainer.banner,
                     onBannerClicked = onBannerClicked,
-                    isVisible = isVisible,
+                    isOnScreen = isOnScreen,
                     onBannerDisplayed = onBannerDisplayed,
                     modifier = modifier,
                 )
@@ -405,65 +395,19 @@ object HomeScreenComponents {
     private fun VideoBanner(
         banner: HomeContent.Banner,
         onBannerClicked: (HomeContent.Banner) -> Unit,
-        isVisible: Boolean,
+        isOnScreen: Boolean,
         onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val context = LocalContext.current
-
-        val updatedOnBannerDisplayed by rememberUpdatedState(onBannerDisplayed)
-        val exoPlayer = remember(context) {
-            ExoPlayer.Builder(context)
-                .build()
-                .apply {
-                    volume = 0f
-                    repeatMode = Player.REPEAT_MODE_ONE
-
-                    val listener = object : Player.Listener {
-                        override fun onPlaybackStateChanged(playbackState: Int) {
-                            if (playbackState == Player.STATE_READY) {
-                                updatedOnBannerDisplayed()
-                            }
-                        }
-                    }
-                    addListener(listener)
-                }
-        }
-
-        // Release ExoPlayer when it is no longer needed
-        DisposableEffect(exoPlayer) {
-            onDispose { exoPlayer.release() }
-        }
-
-        // Set media to ExoPlayer
-        val mediaUrl = banner.media.url.value
-        val cacheDataSourceFactory = LocalExoPlayerCacheHolder.current?.cacheDataSourceFactory
-        LaunchedEffect(exoPlayer, mediaUrl, cacheDataSourceFactory) {
-            val dataSourceFactory = cacheDataSourceFactory ?: run {
-                Timber.w("CacheDataSource factory is null. Use fallback DataSource factory instead")
-                DefaultHttpDataSource.Factory()
-            }
-            val mediaItem = MediaItem.fromUri(mediaUrl)
-            val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(mediaItem)
-            exoPlayer.setMediaSource(mediaSource)
-            exoPlayer.prepare()
-        }
-
-        // Control the playback state of the media
-        LifecycleStartEffect(exoPlayer, isVisible) {
-            if (isVisible) exoPlayer.play()
-            onStopOrDispose { exoPlayer.pause() }
-        }
-
         VideoPlayer(
-            exoPlayer = exoPlayer,
-            resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM,
+            url = banner.media.url,
+            isOnScreen = isOnScreen,
+            onReadyToPlay = onBannerDisplayed,
             modifier = modifier
                 .clickable(
                     enabled = banner.clickAction != null,
                     onClick = { onBannerClicked(banner) },
-                ),
+                )
         )
     }
 

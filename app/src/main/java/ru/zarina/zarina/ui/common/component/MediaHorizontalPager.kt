@@ -52,7 +52,7 @@ fun MediaHorizontalPager(
 
                 Media.Type.VIDEO -> {
                     VideoPlayer(
-                        media = media,
+                        url = media.url,
                         onReadyToPlay = { isMediaDisplayed = true },
                         modifier = Modifier.fillMaxSize(),
                     )
