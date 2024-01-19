@@ -56,4 +56,4 @@ private fun getShimmerTheme(
 }
 
 private const val DurationMillis = 1500
-private val Width: Dp get() = 100.dp
+private val Width: Dp get() = 200.dp
