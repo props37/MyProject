@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -51,6 +52,8 @@ import ru.zarina.zarina.domain.rework.product.ProductColor
 import ru.zarina.zarina.domain.rework.product.currentPrice
 import ru.zarina.zarina.ui.common.component.base.button.LikeIconButton
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaIconButton
+import ru.zarina.zarina.ui.common.component.base.skeleton.Skeleton
+import ru.zarina.zarina.ui.common.component.base.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -72,11 +75,11 @@ fun ProductCard(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(ImagePagerAspectRatio),
+                .aspectRatio(MediaAspectRatio),
         ) {
             val pagerState = rememberEndlessPagerState(itemCount = product.media.size)
 
-            ImagePager(
+            MediaPager(
                 pagerState = pagerState,
                 media = remember(product.media) { product.media.toImmutableList() },
                 modifier = Modifier.matchParentSize(),
@@ -160,9 +163,88 @@ fun ProductCard(
     }
 }
 
+@Composable
+fun ProductCardPlaceholder(
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        val smallShimmer = rememberSkeletonShimmer()
+        Skeleton(
+            shimmer = rememberSkeletonShimmer(width = 300.dp),
+            shape = RectangleShape,
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(MediaAspectRatio),
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
+            val height = 16.dp
+            Skeleton(
+                shimmer = smallShimmer,
+                modifier = Modifier
+                    .weight(1f)
+                    .height(height),
+            )
+            Spacer(modifier = Modifier.width(24.dp))
+            Skeleton(
+                shimmer = smallShimmer,
+                modifier = Modifier.size(height),
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
+            val height = 10.dp
+            Skeleton(
+                shimmer = smallShimmer,
+                modifier = Modifier
+                    .width(44.dp)
+                    .height(height),
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Skeleton(
+                shimmer = smallShimmer,
+                modifier = Modifier
+                    .width(48.dp)
+                    .height(height),
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Skeleton(
+                shimmer = smallShimmer,
+                modifier = Modifier
+                    .width(28.dp)
+                    .height(height),
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Skeleton(
+            shimmer = smallShimmer,
+            modifier = Modifier
+                .padding(start = 16.dp)
+                .width(40.dp)
+                .height(8.dp),
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun ImagePager(
+private fun MediaPager(
     pagerState: PagerState,
     media: ImmutableList<Media>,
     modifier: Modifier = Modifier,
@@ -278,7 +360,15 @@ private fun ProductCardPreview(
     }
 }
 
-private const val ImagePagerAspectRatio = 0.68f
+@Preview
+@Composable
+private fun ProductCardPreview() {
+    ZarinaPreview {
+        ProductCardPlaceholder(modifier = Modifier.background(Color.White))
+    }
+}
+
+private const val MediaAspectRatio = 0.68f
 
 private const val WhiteColorLuminanceThreshold = 0.95f
 

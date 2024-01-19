@@ -2,11 +2,9 @@ package ru.zarina.zarina.ui.screen.products
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,11 +21,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -36,6 +34,7 @@ import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.component.ProductCard
+import ru.zarina.zarina.ui.common.component.ProductCardPlaceholder
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBarActions
@@ -96,6 +95,7 @@ private fun ScreenContent(
             modifier = Modifier.fillMaxWidth(),
         )
 
+        // TODO: [High] Refactor
         val productPagingItems = productPagingDataFlow.collectAsLazyPagingItems()
 
         LazyVerticalGrid(
@@ -104,33 +104,43 @@ private fun ScreenContent(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier.fillMaxSize(),
         ) {
-            items(
-                count = productPagingItems.itemCount,
-                span = { index ->
-                    if ((index + 1) % 5 == 0) {
-                        GridItemSpan(2)
+            if (productPagingItems.loadState.refresh == LoadState.Loading) {
+                items(
+                    count = 20,
+                    span = { index ->
+                        if ((index + 1) % 5 == 0) {
+                            GridItemSpan(2)
+                        } else {
+                            GridItemSpan(1)
+                        }
+                    },
+                ) {
+                    ProductCardPlaceholder(modifier = Modifier.fillMaxWidth())
+                }
+            } else {
+                items(
+                    count = productPagingItems.itemCount,
+                    span = { index ->
+                        if ((index + 1) % 5 == 0) {
+                            GridItemSpan(2)
+                        } else {
+                            GridItemSpan(1)
+                        }
+                    },
+                    key = productPagingItems.itemKey { it.id.value },
+                ) { index ->
+                    val product = productPagingItems[index]
+                    if (product != null) {
+                        ProductCard(
+                            product = product,
+                            onClick = { /*TODO*/ },
+                            onAddToFavoritesClicked = { /*TODO*/ },
+                            onAddToCartClicked = { /*TODO*/ },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
                     } else {
-                        GridItemSpan(1)
+                        ProductCardPlaceholder(modifier = Modifier.fillMaxWidth())
                     }
-                },
-                key = productPagingItems.itemKey { it.id.value },
-            ) { index ->
-                val product = productPagingItems[index]
-                if (product != null) {
-                    ProductCard(
-                        product = product,
-                        onClick = { /*TODO*/ },
-                        onAddToFavoritesClicked = { /*TODO*/ },
-                        onAddToCartClicked = { /*TODO*/ },
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1f)
-                            .background(Color.Red)
-                    )
                 }
             }
         }
