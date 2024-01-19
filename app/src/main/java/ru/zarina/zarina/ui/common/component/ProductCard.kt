@@ -11,14 +11,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -35,7 +32,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
@@ -44,11 +40,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.common.Media
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductColor
 import ru.zarina.zarina.domain.rework.product.currentPrice
@@ -63,7 +57,6 @@ import ru.zarina.zarina.ui.common.tooling.preview.parameterprovider.ProductPrevi
 import ru.zarina.zarina.ui.common.util.domain.toComposeColor
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.rememberEndlessPagerState
-import ru.zarina.zarina.util.kotlin.loopingGet
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
@@ -242,41 +235,6 @@ fun ProductCardPlaceholder(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-    }
-}
-
-// TODO: [High] Extract
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun MediaHorizontalPager(
-    pagerState: PagerState,
-    medias: ImmutableList<Media>,
-    modifier: Modifier = Modifier,
-) {
-    HorizontalPager(
-        state = pagerState,
-        // TODO: [High] Specify key. Do not use URLs as keys since there are no guarantee they are unique
-        modifier = modifier,
-    ) { page ->
-        val media = medias.loopingGet(page)
-        when (media?.type) {
-            Media.Type.IMAGE -> {
-                AsyncImage(
-                    model = media.url.value,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(UiKitTheme.colorsReworked.background.skeleton),
-                )
-            }
-
-            Media.Type.VIDEO -> {
-                // TODO: [High] Implement
-            }
-
-            null -> Unit
-        }
     }
 }
 

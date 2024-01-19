@@ -69,13 +69,13 @@ import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarHeightAsState
 import ru.zarina.zarina.ui.common.component.base.LooseTabRow
 import ru.zarina.zarina.ui.common.component.base.LooseTabRowDefaults.looseTabIndicatorOffset
-import ru.zarina.zarina.ui.common.component.base.VideoPlayer
 import ru.zarina.zarina.ui.common.component.base.ZarinaLogo
 import ru.zarina.zarina.ui.common.component.base.ZarinaLogoAspectRatio
 import ru.zarina.zarina.ui.common.component.base.ZarinaTabIndicator
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.component.base.media.VideoPlayer
 import ru.zarina.zarina.ui.common.component.base.screen.ZarinaLoadingScreen
 import ru.zarina.zarina.ui.common.media.exoplayer.LocalExoPlayerCacheHolder
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
