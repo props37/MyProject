@@ -413,6 +413,7 @@ object HomeScreenComponents {
         )
     }
 
+    // TODO: [Low] Remove if not needed
     @Composable
     fun rememberTabBarScrollBehavior(): TabBarScrollBehavior {
         return remember { TabBarScrollBehavior() }
@@ -436,6 +437,7 @@ object HomeScreenComponents {
         }
     }
 
+    // TODO: [Low] Remove if not needed
     // TODO: [Medium] Add ability to disable scroll, e.g. if the list is empty
     @Stable
     class TabBarScrollBehavior {

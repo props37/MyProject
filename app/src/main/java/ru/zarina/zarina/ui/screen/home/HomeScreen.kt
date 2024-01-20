@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -19,12 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,7 +37,6 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.GenderContentPager
 import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.TopBar
-import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.rememberTabBarScrollBehavior
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.ContentState
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.SideEffect
@@ -104,7 +98,6 @@ private fun ScreenContent(
                 is ContentState.Success -> {
                     Box(modifier = Modifier.fillMaxSize()) {
                         // TODO: [High] Make system status bar white
-                        val tabBarScrollBehavior = rememberTabBarScrollBehavior()
                         val topBarScrimColor = UiKitTheme.colorsReworked.background.general.inversed.default
                         val topBarBrush = remember(topBarScrimColor) {
                             val colors =
@@ -120,18 +113,9 @@ private fun ScreenContent(
                                 .zIndex(1f)
                                 .align(Alignment.TopCenter)
                                 .fillMaxWidth()
-                                .onSizeChanged {
-                                    tabBarScrollBehavior.onTabBarHeightChanged(it.height)
-                                }
                                 .background(topBarBrush)
                                 .statusBarsPadding()
-                                .padding(top = 12.dp, bottom = 80.dp)
-                                .offset {
-                                    IntOffset(0, tabBarScrollBehavior.yOffset.intValue)
-                                }
-                                .graphicsLayer {
-                                    alpha = tabBarScrollBehavior.alpha.floatValue
-                                },
+                                .padding(top = 12.dp, bottom = 80.dp),
                         )
 
                         GenderContentPager(
@@ -141,8 +125,7 @@ private fun ScreenContent(
                             onBannerClicked = onBannerClicked,
                             modifier = Modifier
                                 .fillMaxSize()
-                                .bottomNavBarPadding()
-                                .nestedScroll(tabBarScrollBehavior.nestedScrollConnection),
+                                .bottomNavBarPadding(),
                         )
                     }
                 }
