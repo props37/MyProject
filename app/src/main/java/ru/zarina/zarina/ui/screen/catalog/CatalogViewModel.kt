@@ -59,12 +59,14 @@ class CatalogViewModel @Inject constructor(
         initialValue = GenderTab.WOMEN,
     )
 
-    private val categoriesFetchRequests = MutableSharedFlow<Unit>(replay = 1).also { it.tryEmit(Unit) }
+    private val categoriesFetchRequests = MutableSharedFlow<Unit>(replay = 1)
+        .also { it.tryEmit(Unit) }
 
     private val isFetchingCategories = MutableStateFlow(false)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val categoriesResult: StateFlow<Result<Categories>?> = categoriesFetchRequests
+        .onEach { isFetchingCategories.value = true }
         .flatMapLatest {
             interactor.getCategoriesFlow()
         }
@@ -74,8 +76,6 @@ class CatalogViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(),
             initialValue = null,
         )
-
-    private val expandedCategories = MutableStateFlow<Set<Category>>(emptySet())
 
     val categoryListState: StateFlow<CategoryListState> = combine(
         isFetchingCategories,
@@ -108,6 +108,8 @@ class CatalogViewModel @Inject constructor(
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = CategoryListState.Loading,
     )
+
+    private val expandedCategories = MutableStateFlow<Set<Category>>(emptySet())
 
     val categoryListItemsState: StateFlow<CategoryListItemsState> = combine(
         categoriesResult,
@@ -158,7 +160,6 @@ class CatalogViewModel @Inject constructor(
     }
 
     fun onCategoryListErrorRefreshClicked() {
-        isFetchingCategories.value = true
         categoriesFetchRequests.tryEmit(Unit)
     }
 
