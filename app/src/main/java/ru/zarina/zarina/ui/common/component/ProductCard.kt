@@ -48,6 +48,7 @@ import ru.zarina.zarina.domain.rework.product.ProductColor
 import ru.zarina.zarina.domain.rework.product.currentPrice
 import ru.zarina.zarina.ui.common.component.base.button.LikeIconButton
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaIconButton
+import ru.zarina.zarina.ui.common.component.base.pager.HorizontalPagerIndicator
 import ru.zarina.zarina.ui.common.component.base.skeleton.Skeleton
 import ru.zarina.zarina.ui.common.component.base.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -87,7 +88,13 @@ fun ProductCard(
                 indication = rememberRipple(bounded = false, radius = 16.dp),
                 modifier = Modifier.align(Alignment.TopEnd),
             )
-            // TODO: [High] Add pager indicator
+            HorizontalPagerIndicator(
+                pagerState = pagerState,
+                itemCount = product.media.size,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = 16.dp, bottom = 8.dp),
+            )
         }
         
         Spacer(modifier = Modifier.height(8.dp))
