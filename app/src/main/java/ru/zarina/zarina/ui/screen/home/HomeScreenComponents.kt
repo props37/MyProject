@@ -76,7 +76,7 @@ import kotlin.math.roundToInt
 object HomeScreenComponents {
 
     @Composable
-    fun GenderPicker(
+    fun TopBar(
         genders: ImmutableList<GenderTab>,
         currentGender: GenderTab,
         onGenderClicked: (GenderTab) -> Unit,

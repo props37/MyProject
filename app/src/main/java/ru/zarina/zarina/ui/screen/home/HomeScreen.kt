@@ -38,7 +38,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.GenderContentPager
-import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.GenderPicker
+import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.rememberTabBarScrollBehavior
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.ContentState
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
@@ -102,7 +102,7 @@ private fun ScreenContent(
                     Box(modifier = Modifier.fillMaxSize()) {
                         val tabBarScrollBehavior = rememberTabBarScrollBehavior()
 
-                        GenderPicker(
+                        TopBar(
                             genders = genderTabs,
                             currentGender = currentGenderTab,
                             onGenderClicked = onGenderTabClicked,
