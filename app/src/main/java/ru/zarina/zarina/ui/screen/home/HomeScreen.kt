@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
@@ -16,6 +17,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
@@ -100,7 +103,14 @@ private fun ScreenContent(
 
                 is ContentState.Success -> {
                     Box(modifier = Modifier.fillMaxSize()) {
+                        // TODO: [High] Make system status bar white
                         val tabBarScrollBehavior = rememberTabBarScrollBehavior()
+                        val topBarScrimColor = UiKitTheme.colorsReworked.background.general.inversed.default
+                        val topBarBrush = remember(topBarScrimColor) {
+                            val colors =
+                                listOf(topBarScrimColor.copy(alpha = 0.24f), Color.Transparent)
+                            Brush.verticalGradient(colors)
+                        }
 
                         TopBar(
                             genders = genderTabs,
@@ -109,11 +119,13 @@ private fun ScreenContent(
                             modifier = Modifier
                                 .zIndex(1f)
                                 .align(Alignment.TopCenter)
+                                .fillMaxWidth()
                                 .onSizeChanged {
                                     tabBarScrollBehavior.onTabBarHeightChanged(it.height)
                                 }
+                                .background(topBarBrush)
                                 .statusBarsPadding()
-                                .padding(top = 12.dp)
+                                .padding(top = 12.dp, bottom = 80.dp)
                                 .offset {
                                     IntOffset(0, tabBarScrollBehavior.yOffset.intValue)
                                 }

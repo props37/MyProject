@@ -82,11 +82,13 @@ object HomeScreenComponents {
         onGenderClicked: (GenderTab) -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        val color = UiKitTheme.colorsReworked.text.general.inversed.default
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier,
         ) {
             ZarinaLogo(
+                color = color,
                 modifier = Modifier
                     .width(140.dp)
                     .aspectRatio(ZarinaLogoAspectRatio),
@@ -102,6 +104,7 @@ object HomeScreenComponents {
                 selectedTabIndex = selectedTabIndex,
                 indicator = { tabPositions ->
                     ZarinaTabIndicator(
+                        color = color,
                         modifier = Modifier.looseTabIndicatorOffset(tabPositions[selectedTabIndex]),
                     )
                 },
@@ -110,7 +113,7 @@ object HomeScreenComponents {
                     ZarinaButton(
                         onClick = { onGenderClicked(gender) },
                         size = ZarinaButtonSize.Medium,
-                        colors = ZarinaButtonDefaults.backlessColors(),
+                        colors = ZarinaButtonDefaults.backlessColors(contentColor = color),
                     ) {
                         val textResId = when (gender) {
                             GenderTab.WOMEN -> R.string.for_women
@@ -126,7 +129,6 @@ object HomeScreenComponents {
                         Text(
                             text = stringResource(textResId).uppercase(),
                             style = style,
-                            color = UiKitTheme.colorsReworked.text.general.regular.default,
                         )
                     }
                 }
