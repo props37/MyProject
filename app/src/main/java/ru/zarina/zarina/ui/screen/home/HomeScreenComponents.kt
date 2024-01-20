@@ -44,6 +44,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.layout.ContentScale
@@ -413,6 +415,18 @@ object HomeScreenComponents {
         )
     }
 
+    @Composable
+    fun rememberTopBarScrimBrush(): Brush {
+        val scrimColor = UiKitTheme.colorsReworked.background.general.inversed.default
+        return remember(scrimColor) {
+            val colors = listOf(
+                scrimColor.copy(alpha = TopBarScrimAlpha),
+                Color.Transparent,
+            )
+            Brush.verticalGradient(colors)
+        }
+    }
+
     // TODO: [Low] Remove if not needed
     @Composable
     fun rememberTabBarScrollBehavior(): TabBarScrollBehavior {
@@ -497,4 +511,6 @@ object HomeScreenComponents {
 
     private const val TabBarMaxYOffset = 0
     private const val TabBarAlphaProgressFactor = 2
+
+    private const val TopBarScrimAlpha = 0.24f
 }

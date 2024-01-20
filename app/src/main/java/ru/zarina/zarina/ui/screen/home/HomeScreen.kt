@@ -16,8 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -37,6 +35,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.GenderContentPager
 import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.TopBar
+import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.rememberTopBarScrimBrush
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.ContentState
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.SideEffect
@@ -98,13 +97,6 @@ private fun ScreenContent(
                 is ContentState.Success -> {
                     Box(modifier = Modifier.fillMaxSize()) {
                         // TODO: [High] Make system status bar white
-                        val topBarScrimColor = UiKitTheme.colorsReworked.background.general.inversed.default
-                        val topBarBrush = remember(topBarScrimColor) {
-                            val colors =
-                                listOf(topBarScrimColor.copy(alpha = 0.24f), Color.Transparent)
-                            Brush.verticalGradient(colors)
-                        }
-
                         TopBar(
                             genders = genderTabs,
                             currentGender = currentGenderTab,
@@ -113,7 +105,7 @@ private fun ScreenContent(
                                 .zIndex(1f)
                                 .align(Alignment.TopCenter)
                                 .fillMaxWidth()
-                                .background(topBarBrush)
+                                .background(rememberTopBarScrimBrush())
                                 .statusBarsPadding()
                                 .padding(top = 12.dp, bottom = 80.dp),
                         )
