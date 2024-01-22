@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.screen.home.tooling.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import ru.zarina.zarina.domain.rework.common.Media
+import ru.zarina.zarina.domain.rework.common.MediaType
 import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
@@ -21,7 +22,7 @@ class ContentStatePreviewParameterProvider : PreviewParameterProvider<HomeViewMo
             id = HomeContent.Banner.Id(Random.nextLong()),
             media = Media(
                 url = Url(""),
-                type = Media.Type.IMAGE,
+                type = MediaType.IMAGE,
             ),
             title = "Заголовок",
             clickAction = null,

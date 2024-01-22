@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.common.tooling
 
 import ru.zarina.zarina.domain.rework.common.Color
 import ru.zarina.zarina.domain.rework.common.Media
+import ru.zarina.zarina.domain.rework.common.MediaType
 import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.product.Price
 import ru.zarina.zarina.domain.rework.product.Product
@@ -44,7 +45,7 @@ object FakeDataGenerator {
 
     fun getMedia(
         url: Url = Url(getRandomString()),
-        type: Media.Type = Media.Type.IMAGE,
+        type: MediaType = MediaType.IMAGE,
     ): Media = Media(
         url = url,
         type = type,

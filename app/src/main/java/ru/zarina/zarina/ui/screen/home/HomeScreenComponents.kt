@@ -57,7 +57,7 @@ import androidx.media3.common.util.UnstableApi
 import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.common.Media
+import ru.zarina.zarina.domain.rework.common.MediaType
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarHeightAsState
 import ru.zarina.zarina.ui.common.component.base.LooseTabRow
@@ -285,7 +285,7 @@ object HomeScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         when (bannerContainer.banner.media.type) {
-            Media.Type.IMAGE -> {
+            MediaType.IMAGE -> {
                 ImageBanner(
                     banner = bannerContainer.banner,
                     onBannerClicked = onBannerClicked,
@@ -295,7 +295,7 @@ object HomeScreenComponents {
                 )
             }
 
-            Media.Type.VIDEO -> {
+            MediaType.VIDEO -> {
                 VideoBanner(
                     banner = bannerContainer.banner,
                     onBannerClicked = onBannerClicked,
@@ -329,7 +329,7 @@ object HomeScreenComponents {
 
                     rowBanners.forEach { banner ->
                         when (banner?.media?.type) {
-                            Media.Type.IMAGE -> {
+                            MediaType.IMAGE -> {
                                 ImageBanner(
                                     banner = banner,
                                     onBannerClicked = onBannerClicked,
@@ -339,7 +339,7 @@ object HomeScreenComponents {
                                 )
                             }
 
-                            Media.Type.VIDEO -> {
+                            MediaType.VIDEO -> {
                                 SideEffect {
                                     Timber.w("Video banners are not supported in Grid view")
                                 }
@@ -437,8 +437,8 @@ object HomeScreenComponents {
         return when (bannerContainer) {
             is HomeContent.BannerContainer.SingleBanner -> {
                 when (bannerContainer.banner.media.type) {
-                    Media.Type.IMAGE -> BannerListContentTypeFullscreenImage
-                    Media.Type.VIDEO -> BannerListContentTypeFullscreenVideo
+                    MediaType.IMAGE -> BannerListContentTypeFullscreenImage
+                    MediaType.VIDEO -> BannerListContentTypeFullscreenVideo
                 }
             }
 

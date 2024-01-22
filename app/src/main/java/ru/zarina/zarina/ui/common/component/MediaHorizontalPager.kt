@@ -19,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
 import com.valentinilk.shimmer.Shimmer
 import ru.zarina.zarina.domain.rework.common.Media
+import ru.zarina.zarina.domain.rework.common.MediaType
 import ru.zarina.zarina.ui.common.component.base.media.VideoPlayer
 import ru.zarina.zarina.ui.common.component.base.skeleton.Skeleton
 import ru.zarina.zarina.ui.common.component.base.skeleton.rememberSkeletonShimmer
@@ -45,7 +46,7 @@ fun MediaHorizontalPager(
 
         Box(modifier = Modifier.fillMaxSize()) {
             when (media?.type) {
-                Media.Type.IMAGE -> {
+                MediaType.IMAGE -> {
                     AsyncImage(
                         model = media.url.value,
                         contentDescription = null,
@@ -55,7 +56,7 @@ fun MediaHorizontalPager(
                     )
                 }
 
-                Media.Type.VIDEO -> {
+                MediaType.VIDEO -> {
                     VideoPlayer(
                         url = media.url,
                         onReadyToPlay = { isMediaDisplayed = true },
