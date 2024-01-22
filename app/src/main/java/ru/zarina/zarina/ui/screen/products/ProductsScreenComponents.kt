@@ -189,6 +189,7 @@ object ProductsScreenComponents {
             ) { loadState ->
                 if (loadState !is LoadState.Error) {
                     val placeholderShimmer = rememberSkeletonShimmer()
+                    val itemModifier = Modifier.matchParentSize()
 
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(ProductGridCellInRowCount),
@@ -214,24 +215,24 @@ object ProductsScreenComponents {
                                         onAddToFavoritesClicked = { /*TODO*/ },
                                         onAddToCartClicked = { /*TODO*/ },
                                         shimmer = placeholderShimmer,
-                                        modifier = Modifier.fillMaxWidth(),
+                                        modifier = itemModifier,
                                     )
                                 } else {
                                     ProductCardPlaceholder(
                                         shimmer = placeholderShimmer,
-                                        modifier = Modifier.fillMaxWidth(),
+                                        modifier = itemModifier,
                                     )
                                 }
                             }
                         } else {
                             items(
-                                count = 20,
+                                count = ProductGridPlaceholderCount,
                                 span = { index -> getProductGridItemSpan(index) },
                                 contentType = { ProductGridContentTypeProductCardPlaceholder },
                             ) {
                                 ProductCardPlaceholder(
                                     shimmer = placeholderShimmer,
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = itemModifier,
                                 )
                             }
                         }
@@ -305,6 +306,8 @@ object ProductsScreenComponents {
 
     private const val ProductGridCellInRowCount = 2
     private const val ProductGridFullscreenItemIndex = 5
+
+    private const val ProductGridPlaceholderCount = 20
 
     private const val ProductGridContentTypeProductCard = "ProductGridContentTypeProduct"
     private const val ProductGridContentTypeProductCardPlaceholder =
