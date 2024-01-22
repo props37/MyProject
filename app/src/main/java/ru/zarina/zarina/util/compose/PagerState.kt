@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun rememberEndlessPagerState(itemCount: Int): PagerState {
-    val pageCount = Int.MAX_VALUE
+    val pageCount = PAGE_COUNT
     return rememberPagerState(
         initialPage = (pageCount / 2).roundToProductOf(itemCount),
         pageCount = { pageCount },
@@ -24,3 +24,5 @@ private fun Int.roundToProductOf(other: Int): Int {
         else -> this - divisionReminder
     }
 }
+
+private const val PAGE_COUNT = 100_000
