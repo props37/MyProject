@@ -35,8 +35,9 @@ suspend fun <T : Any> LazyPagingItems<T>.retryAppendErrors(
 ) {
     var lastAttemptTimestamp = 0L
 
-    val lastVisibleItemIndexFlow = snapshotFlow { lazyGridState.layoutInfo.visibleItemsInfo }
-        .map { it.lastOrNull()?.index }
+    val lastVisibleItemIndexFlow = snapshotFlow {
+        lazyGridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+    }
 
     snapshotFlow { this.loadState.append }
         .map { it is LoadState.Error }
