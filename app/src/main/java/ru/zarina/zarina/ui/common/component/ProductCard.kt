@@ -65,7 +65,7 @@ fun ProductCard(
     onAddToFavoritesClicked: () -> Unit,
     onAddToCartClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    isMediaShimmerEnabled: Boolean = false,
+    shimmer: Shimmer? = rememberSkeletonShimmer(),
 ) {
     Column(modifier = modifier.clickable(onClick = onClick)) {
         Box(
@@ -78,7 +78,7 @@ fun ProductCard(
             MediaHorizontalPager(
                 pagerState = pagerState,
                 medias = product.media,
-                isShimmerEnabled = isMediaShimmerEnabled,
+                shimmer = shimmer,
                 modifier = Modifier.matchParentSize(),
             )
             LikeIconButton(

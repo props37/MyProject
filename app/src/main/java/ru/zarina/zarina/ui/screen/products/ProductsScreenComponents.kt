@@ -213,6 +213,7 @@ object ProductsScreenComponents {
                                         onClick = { /*TODO*/ },
                                         onAddToFavoritesClicked = { /*TODO*/ },
                                         onAddToCartClicked = { /*TODO*/ },
+                                        shimmer = placeholderShimmer,
                                         modifier = Modifier.fillMaxWidth(),
                                     )
                                 } else {
