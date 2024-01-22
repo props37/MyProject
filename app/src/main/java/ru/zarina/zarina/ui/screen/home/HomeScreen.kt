@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
+import ru.zarina.zarina.ui.common.behavior.systembars.ForcedSystemBarsBehavior
 import ru.zarina.zarina.ui.common.component.base.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.base.screen.ZarinaLoadingScreen
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -96,7 +97,8 @@ private fun ScreenContent(
 
                 is ContentState.Success -> {
                     Box(modifier = Modifier.fillMaxSize()) {
-                        // TODO: [High] Make system status bar white
+                        ForcedSystemBarsBehavior(isStatusBarContentLight = true)
+
                         TopBar(
                             genders = genderTabs,
                             currentGender = currentGenderTab,
