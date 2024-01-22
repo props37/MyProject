@@ -176,6 +176,8 @@ object ProductsScreenComponents {
             PullRefreshIndicator(
                 refreshing = isRefreshing,
                 state = pullRefreshState,
+                backgroundColor = UiKitTheme.colorsReworked.background.general.regular.default,
+                contentColor = UiKitTheme.colorsReworked.icon.regular.default,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .zIndex(1f),
