@@ -2,6 +2,7 @@ package ru.zarina.zarina.data.rework.common.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.domain.rework.common.Media
 import ru.zarina.zarina.domain.rework.product.Product
 
 @Serializable
@@ -25,7 +26,12 @@ data class ProductDto(
         checkNotNull(id) { "id is null" }
         checkNotNull(price) { "price is null" }
         val colors = colors?.map { it.toProductColor() } ?: emptyList()
-        val media = media?.map { it.toMedia() } ?: emptyList()
+        val media = media
+            ?.map { it.toMedia() }
+            // Filter out videos until a good decision is found on how to display multiple videos
+            // simultaneously in product list
+            ?.filter { it.type == Media.Type.IMAGE }
+            ?: emptyList()
         return Product(
             id = Product.Id(id),
             name = checkNotNull(name) { "name is null" },
