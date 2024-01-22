@@ -35,23 +35,22 @@ fun HorizontalPagerIndicator(
         horizontalArrangement = Arrangement.spacedBy(segmentSpacedBy),
         modifier = modifier,
     ) {
-        val currentPageIndexState = rememberUpdatedState(pagerState.currentPage % itemCount)
-
         for (pageIndex in 0 until itemCount) {
             Segment(
                 progress = {
-                    val currentPageIndex = currentPageIndexState.value
                     val currentPageOffsetFraction = pagerState.currentPageOffsetFraction
                     when {
-                        currentPageIndex == pageIndex -> {
+                        pagerState.currentPage % itemCount == pageIndex -> {
                             1f - abs(pagerState.currentPageOffsetFraction)
                         }
 
-                        currentPageIndex == pageIndex - 1 && currentPageOffsetFraction > 0f -> {
+                        (pagerState.currentPage + 1) % itemCount == pageIndex
+                                && currentPageOffsetFraction > 0f -> {
                             abs(pagerState.currentPageOffsetFraction)
                         }
 
-                        currentPageIndex == pageIndex + 1 && currentPageOffsetFraction < 0f -> {
+                        (pagerState.currentPage - 1) % itemCount == pageIndex
+                                && currentPageOffsetFraction < 0f -> {
                             abs(pagerState.currentPageOffsetFraction)
                         }
 
