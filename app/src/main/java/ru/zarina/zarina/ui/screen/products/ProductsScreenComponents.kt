@@ -30,7 +30,6 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,6 +60,7 @@ import ru.zarina.zarina.ui.common.component.base.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaIconButton
 import ru.zarina.zarina.ui.common.component.base.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.base.skeleton.Skeleton
+import ru.zarina.zarina.ui.common.component.base.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.util.library.paging.retryAppendPrependErrors
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.Crossfade
@@ -188,6 +188,8 @@ object ProductsScreenComponents {
                 modifier = Modifier.matchParentSize(),
             ) { loadState ->
                 if (loadState !is LoadState.Error) {
+                    val placeholderShimmer = rememberSkeletonShimmer()
+
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(ProductGridCellInRowCount),
                         state = gridState,
@@ -214,7 +216,10 @@ object ProductsScreenComponents {
                                         modifier = Modifier.fillMaxWidth(),
                                     )
                                 } else {
-                                    ProductCardPlaceholder(modifier = Modifier.fillMaxWidth())
+                                    ProductCardPlaceholder(
+                                        shimmer = placeholderShimmer,
+                                        modifier = Modifier.fillMaxWidth(),
+                                    )
                                 }
                             }
                         } else {
@@ -223,7 +228,10 @@ object ProductsScreenComponents {
                                 span = { index -> getProductGridItemSpan(index) },
                                 contentType = { ProductGridContentTypeProductCardPlaceholder },
                             ) {
-                                ProductCardPlaceholder(modifier = Modifier.fillMaxWidth())
+                                ProductCardPlaceholder(
+                                    shimmer = placeholderShimmer,
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
                             }
                         }
                     }

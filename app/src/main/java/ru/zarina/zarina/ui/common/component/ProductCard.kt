@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.Shimmer
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductColor
@@ -168,11 +169,11 @@ fun ProductCard(
 @Composable
 fun ProductCardPlaceholder(
     modifier: Modifier = Modifier,
+    shimmer: Shimmer = rememberSkeletonShimmer(),
 ) {
     Column(modifier = modifier) {
-        val smallShimmer = rememberSkeletonShimmer()
         Skeleton(
-            shimmer = rememberSkeletonShimmer(width = 300.dp),
+            shimmer = rememberSkeletonShimmer(width = 350.dp),
             shape = RectangleShape,
             modifier = Modifier
                 .fillMaxWidth()
@@ -188,14 +189,14 @@ fun ProductCardPlaceholder(
         ) {
             val height = 16.dp
             Skeleton(
-                shimmer = smallShimmer,
+                shimmer = shimmer,
                 modifier = Modifier
                     .weight(1f)
                     .height(height),
             )
             Spacer(modifier = Modifier.width(24.dp))
             Skeleton(
-                shimmer = smallShimmer,
+                shimmer = shimmer,
                 modifier = Modifier.size(height),
             )
         }
@@ -209,21 +210,21 @@ fun ProductCardPlaceholder(
         ) {
             val height = 10.dp
             Skeleton(
-                shimmer = smallShimmer,
+                shimmer = shimmer,
                 modifier = Modifier
                     .width(44.dp)
                     .height(height),
             )
             Spacer(modifier = Modifier.width(8.dp))
             Skeleton(
-                shimmer = smallShimmer,
+                shimmer = shimmer,
                 modifier = Modifier
                     .width(48.dp)
                     .height(height),
             )
             Spacer(modifier = Modifier.width(8.dp))
             Skeleton(
-                shimmer = smallShimmer,
+                shimmer = shimmer,
                 modifier = Modifier
                     .width(28.dp)
                     .height(height),
@@ -233,7 +234,7 @@ fun ProductCardPlaceholder(
         Spacer(modifier = Modifier.height(8.dp))
 
         Skeleton(
-            shimmer = smallShimmer,
+            shimmer = shimmer,
             modifier = Modifier
                 .padding(start = 16.dp)
                 .width(40.dp)
