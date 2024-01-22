@@ -7,6 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +26,7 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -279,20 +281,42 @@ private fun AddToCartIconButton(
     }
 }
 
-// TODO: [Medium] Respect available width
 @Composable
 private fun Colors(
     colors: List<ProductColor>,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(ColorSize),
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier,
-    ) {
-        colors.forEach {
-            key(it.id.value) {
-                Color(color = it.color.toComposeColor())
+    BoxWithConstraints(modifier = modifier) {
+        val maxWidth = maxWidth
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(ColorSpacedBy),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            val colorsFit = remember(maxWidth, colors.size) {
+                val colorsAvailableWidth = maxWidth - ColorsMoreWidth
+                (colorsAvailableWidth / (ColorSize + ColorSpacedBy))
+                    .toInt()
+                    .coerceIn(0, colors.size)
+            }
+            val colorsLeft = remember(colorsFit, colors.size) {
+                (colors.size - colorsFit).coerceIn(0, colors.size)
+            }
+
+            for (i in 0 until colorsFit) {
+                val color = colors.getOrNull(i)
+                if (color != null) {
+                    key(color.id.value) {
+                        Color(color = color.color.toComposeColor())
+                    }
+                }
+            }
+
+            if (colorsLeft > 0) {
+                Text(
+                    text = "+$colorsLeft",
+                    style = UiKitTheme.typographyReworked.caption2.regular,
+                    color = UiKitTheme.colorsReworked.text.general.regular.muted,
+                )
             }
         }
     }
@@ -355,3 +379,5 @@ private const val MediaAspectRatio = 0.68f
 private const val WhiteColorLuminanceThreshold = 0.95f
 
 private val ColorSize: Dp get() = 8.dp
+private val ColorSpacedBy: Dp get() = ColorSize
+private val ColorsMoreWidth = 16.dp
