@@ -21,6 +21,7 @@ import com.valentinilk.shimmer.Shimmer
 import ru.zarina.zarina.domain.rework.common.Media
 import ru.zarina.zarina.ui.common.component.base.media.VideoPlayer
 import ru.zarina.zarina.ui.common.component.base.skeleton.Skeleton
+import ru.zarina.zarina.ui.common.component.base.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.kotlin.loopingGet
 
@@ -30,7 +31,7 @@ fun MediaHorizontalPager(
     pagerState: PagerState,
     medias: List<Media>,
     modifier: Modifier = Modifier,
-    shimmer: Shimmer? = null,
+    shimmer: Shimmer? = rememberSkeletonShimmer(),
 ) {
     val placeholderEnterTransition = remember { fadeIn() }
     val placeholderExitTransition = remember { fadeOut() }
