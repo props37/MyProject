@@ -4,8 +4,11 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -13,11 +16,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -25,12 +43,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.component.ProductCard
+import ru.zarina.zarina.ui.common.component.ProductCardPlaceholder
 import ru.zarina.zarina.ui.common.component.base.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.base.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaIconButton
+import ru.zarina.zarina.ui.common.component.base.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.base.skeleton.Skeleton
+import ru.zarina.zarina.ui.common.util.library.paging.retryAppendPrependErrors
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.Crossfade
+import java.io.IOException
 
 object ProductsScreenComponents {
 
@@ -108,6 +142,131 @@ object ProductsScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun Products(
+        productPagingDataFlow: Flow<PagingData<Product>>,
+        modifier: Modifier = Modifier,
+    ) {
+        val gridState = rememberLazyGridState()
+        val productPagingItems = productPagingDataFlow.collectAsLazyPagingItems()
+
+        LaunchedEffect(gridState, productPagingItems) {
+            productPagingItems.retryAppendPrependErrors(gridState)
+        }
+
+        Box(modifier = modifier) {
+            var canPullRefreshIndicatorBeShown by remember(productPagingItems) {
+                mutableStateOf(false)
+            }
+            LaunchedEffect(productPagingItems) {
+                snapshotFlow { productPagingItems.loadState.refresh }
+                    .firstOrNull { it is LoadState.NotLoading }
+                    .also { canPullRefreshIndicatorBeShown = true }
+            }
+
+            val isRefreshing = canPullRefreshIndicatorBeShown
+                    && productPagingItems.loadState.refresh is LoadState.Loading
+
+            val pullRefreshState = rememberPullRefreshState(
+                refreshing = isRefreshing,
+                onRefresh = { productPagingItems.refresh() },
+            )
+
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .zIndex(1f),
+            )
+
+            Crossfade(
+                targetState = productPagingItems.loadState.refresh,
+                contentKey = { it !is LoadState.Error },
+                label = "Products content",
+                modifier = Modifier.matchParentSize(),
+            ) { loadState ->
+                if (loadState !is LoadState.Error) {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(ProductGridCellInRowCount),
+                        state = gridState,
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier.pullRefresh(pullRefreshState),
+                    ) {
+                        if (loadState is LoadState.NotLoading) {
+                            items(
+                                count = productPagingItems.itemCount,
+                                span = { index -> getProductGridItemSpan(index) },
+                                key = productPagingItems.itemKey { it.id.value },
+                                contentType = { index ->
+                                    getProductGridItemContentType(index, productPagingItems)
+                                },
+                            ) { index ->
+                                val product = productPagingItems[index]
+                                if (product != null) {
+                                    ProductCard(
+                                        product = product,
+                                        onClick = { /*TODO*/ },
+                                        onAddToFavoritesClicked = { /*TODO*/ },
+                                        onAddToCartClicked = { /*TODO*/ },
+                                        modifier = Modifier.fillMaxWidth(),
+                                    )
+                                } else {
+                                    ProductCardPlaceholder(modifier = Modifier.fillMaxWidth())
+                                }
+                            }
+                        } else {
+                            items(
+                                count = 20,
+                                span = { index -> getProductGridItemSpan(index) },
+                                contentType = { ProductGridContentTypeProductCardPlaceholder },
+                            ) {
+                                ProductCardPlaceholder(modifier = Modifier.fillMaxWidth())
+                            }
+                        }
+                    }
+                } else {
+                    val state = remember(loadState.error) {
+                        when (loadState.error) {
+                            is IOException -> ErrorStateRework.NETWORK
+                            else -> ErrorStateRework.GENERIC
+                        }
+                    }
+
+                    ZarinaErrorScreen(
+                        state = state,
+                        onRefreshClicked = { productPagingItems.retry() },
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                    )
+                }
+            }
+        }
+    }
+
+    private fun getProductGridItemSpan(index: Int): GridItemSpan {
+        return if ((index + 1) % ProductGridFullscreenItemIndex == 0) {
+            GridItemSpan(ProductGridCellInRowCount)
+        } else {
+            GridItemSpan(1)
+        }
+    }
+
+    private fun getProductGridItemContentType(
+        index: Int,
+        productPagingItems: LazyPagingItems<Product>,
+    ): String {
+        val product = productPagingItems.peek(index)
+        return if (product != null) {
+            ProductGridContentTypeProductCard
+        } else {
+            ProductGridContentTypeProductCardPlaceholder
+        }
+    }
+
     @Stable
     class TopBarActions(
         val onBackClicked: () -> Unit,
@@ -134,4 +293,11 @@ object ProductsScreenComponents {
     }
 
     private val TopBarIconSize: Dp get() = 20.dp
+
+    private const val ProductGridCellInRowCount = 2
+    private const val ProductGridFullscreenItemIndex = 5
+
+    private const val ProductGridContentTypeProductCard = "ProductGridContentTypeProduct"
+    private const val ProductGridContentTypeProductCardPlaceholder =
+        "ProductGridContentTypeProductCardPlaceholder"
 }

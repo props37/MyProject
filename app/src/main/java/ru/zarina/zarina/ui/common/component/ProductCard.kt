@@ -25,7 +25,6 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.key
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,8 +39,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductColor
@@ -67,6 +64,7 @@ fun ProductCard(
     onAddToFavoritesClicked: () -> Unit,
     onAddToCartClicked: () -> Unit,
     modifier: Modifier = Modifier,
+    isMediaShimmerEnabled: Boolean = false,
 ) {
     Column(modifier = modifier.clickable(onClick = onClick)) {
         Box(
@@ -78,7 +76,8 @@ fun ProductCard(
 
             MediaHorizontalPager(
                 pagerState = pagerState,
-                medias = remember(product.media) { product.media.toImmutableList() },
+                medias = product.media,
+                isShimmerEnabled = isMediaShimmerEnabled,
                 modifier = Modifier.matchParentSize(),
             )
             LikeIconButton(
@@ -158,7 +157,7 @@ fun ProductCard(
         Spacer(modifier = Modifier.height(8.dp))
 
         Colors(
-            colors = remember(product.colors) { product.colors.toImmutableList() },
+            colors = product.colors,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
 
@@ -282,7 +281,7 @@ private fun AddToCartIconButton(
 // TODO: [Medium] Respect available width
 @Composable
 private fun Colors(
-    colors: ImmutableList<ProductColor>,
+    colors: List<ProductColor>,
     modifier: Modifier = Modifier,
 ) {
     Row(

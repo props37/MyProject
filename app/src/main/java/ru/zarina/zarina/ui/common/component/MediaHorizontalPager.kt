@@ -17,10 +17,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
-import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.domain.rework.common.Media
 import ru.zarina.zarina.ui.common.component.base.media.VideoPlayer
 import ru.zarina.zarina.ui.common.component.base.skeleton.Skeleton
+import ru.zarina.zarina.ui.common.component.base.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.kotlin.loopingGet
 
@@ -28,9 +28,14 @@ import ru.zarina.zarina.util.kotlin.loopingGet
 @Composable
 fun MediaHorizontalPager(
     pagerState: PagerState,
-    medias: ImmutableList<Media>,
+    medias: List<Media>,
     modifier: Modifier = Modifier,
+    isShimmerEnabled: Boolean = false,
 ) {
+    val shimmer = if (isShimmerEnabled) rememberSkeletonShimmer() else null
+    val placeholderEnterTransition = remember { fadeIn() }
+    val placeholderExitTransition = remember { fadeOut() }
+
     HorizontalPager(
         state = pagerState,
         modifier = modifier,
@@ -46,7 +51,7 @@ fun MediaHorizontalPager(
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         onSuccess = { isMediaDisplayed = true },
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.matchParentSize(),
                     )
                 }
 
@@ -54,7 +59,7 @@ fun MediaHorizontalPager(
                     VideoPlayer(
                         url = media.url,
                         onReadyToPlay = { isMediaDisplayed = true },
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.matchParentSize(),
                     )
                 }
 
@@ -63,11 +68,12 @@ fun MediaHorizontalPager(
 
             AnimatedVisibility(
                 visible = !isMediaDisplayed,
-                enter = fadeIn(),
-                exit = fadeOut(),
+                enter = placeholderEnterTransition,
+                exit = placeholderExitTransition,
                 modifier = Modifier.fillMaxSize(),
             ) {
                 Skeleton(
+                    shimmer = shimmer,
                     modifier = Modifier
                         .fillMaxSize()
                         .background(UiKitTheme.colorsReworked.background.general.regular.default),
