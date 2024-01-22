@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -16,37 +16,37 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
-import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
-import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
-import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
+import ru.zarina.zarina.ui.common.behavior.systembars.ForcedSystemBarsBehavior
+import ru.zarina.zarina.ui.common.component.base.screen.ZarinaErrorScreen
+import ru.zarina.zarina.ui.common.component.base.screen.ZarinaLoadingScreen
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.GenderContentPager
-import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.GenderPicker
-import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.rememberTabBarScrollBehavior
+import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.TopBar
+import ru.zarina.zarina.ui.screen.home.HomeScreenComponents.rememberTopBarScrimBrush
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.ContentState
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
+import ru.zarina.zarina.ui.screen.home.HomeViewModel.SideEffect
 import ru.zarina.zarina.ui.screen.home.tooling.preview.ContentStatePreviewParameterProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.Crossfade
 
 @Composable
 fun HomeScreen(
+    navigateForward: (HomeScreenAction) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val genderTabs by viewModel.genderTabs.collectAsStateWithLifecycle()
@@ -60,6 +60,8 @@ fun HomeScreen(
         contentState = contentState,
         onBannerClicked = viewModel::onBannerClicked,
         onContentErrorRefreshClicked = viewModel::onContentErrorRefreshClicked,
+        sideEffects = viewModel.sideEffects,
+        navigateForward = navigateForward,
     )
 }
 
@@ -71,8 +73,13 @@ private fun ScreenContent(
     contentState: ContentState,
     onBannerClicked: (HomeContent.Banner) -> Unit,
     onContentErrorRefreshClicked: () -> Unit,
+    sideEffects: Flow<SideEffect>,
+    navigateForward: (HomeScreenAction) -> Unit,
 ) {
-    ForcedBottomNavBarBehavior(isVisible = true)
+    HomeScreenBehavior(
+        sideEffects = sideEffects,
+        navigateForward = navigateForward,
+    )
 
     Box(
         modifier = Modifier
@@ -90,26 +97,19 @@ private fun ScreenContent(
 
                 is ContentState.Success -> {
                     Box(modifier = Modifier.fillMaxSize()) {
-                        val tabBarScrollBehavior = rememberTabBarScrollBehavior()
+                        ForcedSystemBarsBehavior(isStatusBarContentLight = true)
 
-                        GenderPicker(
+                        TopBar(
                             genders = genderTabs,
                             currentGender = currentGenderTab,
                             onGenderClicked = onGenderTabClicked,
                             modifier = Modifier
                                 .zIndex(1f)
                                 .align(Alignment.TopCenter)
-                                .onSizeChanged {
-                                    tabBarScrollBehavior.onTabBarHeightChanged(it.height)
-                                }
+                                .fillMaxWidth()
+                                .background(rememberTopBarScrimBrush())
                                 .statusBarsPadding()
-                                .padding(top = 12.dp)
-                                .offset {
-                                    IntOffset(0, tabBarScrollBehavior.yOffset.intValue)
-                                }
-                                .graphicsLayer {
-                                    alpha = tabBarScrollBehavior.alpha.floatValue
-                                },
+                                .padding(top = 12.dp, bottom = 80.dp),
                         )
 
                         GenderContentPager(
@@ -119,8 +119,7 @@ private fun ScreenContent(
                             onBannerClicked = onBannerClicked,
                             modifier = Modifier
                                 .fillMaxSize()
-                                .bottomNavBarPadding()
-                                .nestedScroll(tabBarScrollBehavior.nestedScrollConnection),
+                                .bottomNavBarPadding(),
                         )
                     }
                 }
@@ -161,6 +160,8 @@ private fun Preview(
             contentState = contentState,
             onBannerClicked = {},
             onContentErrorRefreshClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigateForward = {},
         )
     }
 }

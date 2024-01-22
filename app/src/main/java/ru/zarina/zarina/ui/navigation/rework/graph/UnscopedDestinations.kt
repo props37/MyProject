@@ -58,4 +58,31 @@ object UnscopedDestinations {
     }
 
     data object DefaultCityDialog : SimpleDestination(BaseRouteReworked.DEFAULT_CITY_DIALOG)
+
+    data object Products : Destination<Products.Args>() {
+        const val ARG_KEY_CATEGORY_ID = "arg_category_id"
+
+        private val baseRoute: String
+            get() = BaseRouteReworked.PRODUCTS.route
+
+        override val routeSchema: String
+            get() = RouteUtils.generateRouteSchema(
+                routeBase = baseRoute,
+                argNames = arrayOf(ARG_KEY_CATEGORY_ID),
+            )
+
+        override fun createRoute(args: Args): String {
+            return RouteUtils.generateRoute(
+                routeBase = baseRoute,
+                args = arrayOf(args.categoryId),
+            )
+        }
+
+        override val arguments: List<NamedNavArgument>
+            get() = listOf(
+                navArgument(ARG_KEY_CATEGORY_ID) { type = NavType.LongType },
+            )
+
+        data class Args(val categoryId: Long)
+    }
 }

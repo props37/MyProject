@@ -30,6 +30,8 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
+import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
+import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderCategoryPager
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenComponents.GenderPicker
@@ -44,6 +46,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun CatalogScreen(
+    navigateForward: (CatalogScreenAction) -> Unit,
     viewModel: CatalogViewModel = hiltViewModel(),
 ) {
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -65,6 +68,7 @@ fun CatalogScreen(
         onCategoryListItemClicked = viewModel::onCategoryListItemClicked,
         onCategoryListErrorRefreshClicked = viewModel::onCategoryListErrorRefreshClicked,
         sideEffects = viewModel.sideEffects,
+        navigateForward = navigateForward,
     )
 }
 
@@ -82,9 +86,11 @@ private fun ScreenContent(
     onCategoryListItemClicked: (CategoryListItem) -> Unit,
     onCategoryListErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
+    navigateForward: (CatalogScreenAction) -> Unit,
 ) {
     CatalogScreenBehavior(
         sideEffects = sideEffects,
+        navigateForward = navigateForward,
     )
 
     Column(
@@ -133,6 +139,8 @@ private fun ScreenContent(
 }
 
 @Preview
+@FontScalePreviews
+@DensityPreviews
 @Composable
 private fun Preview(
     @PreviewParameter(CategoryListStatePreviewParameterProvider::class)
@@ -154,6 +162,7 @@ private fun Preview(
             onCategoryListItemClicked = {},
             onCategoryListErrorRefreshClicked = {},
             sideEffects = remember { emptyFlow() },
+            navigateForward = {},
         )
     }
 }

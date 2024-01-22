@@ -23,7 +23,7 @@ data class ErrorStateRework(
 
         val GENERIC: ErrorStateRework
             get() = ErrorStateRework(
-                iconResId = R.drawable.ic_heart_broken_24,
+                iconResId = R.drawable.ic_heart_broken_outline_24,
                 title = Text.Resource(R.string.something_went_wrong),
                 body = Text.Resource(R.string.refresh_page_or_come_back_later),
                 isRefreshButtonVisible = true,

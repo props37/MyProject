@@ -47,10 +47,10 @@ import okhttp3.OkHttpClient
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.ui.common.component.ZarinaLinearProgressIndicator
-import ru.zarina.zarina.ui.common.component.ZarinaLogo
-import ru.zarina.zarina.ui.common.component.button.ZarinaButton
-import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.component.base.ZarinaLinearProgressIndicator
+import ru.zarina.zarina.ui.common.component.base.ZarinaLogo
+import ru.zarina.zarina.ui.common.component.base.button.ZarinaButton
+import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.util.SplashScreenLogoSize
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.OnboardingStep
 import ru.zarina.zarina.ui.theme.UiKitTheme

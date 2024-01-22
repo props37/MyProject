@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.rework.common.remote.api.dto.ClickActionDto
 import ru.zarina.zarina.data.rework.common.remote.api.dto.MediaTypeDto
+import ru.zarina.zarina.domain.rework.common.Media
 import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.content.HomeContent
 
@@ -70,10 +71,13 @@ data class HomeBannersDto(
                 checkNotNull(id) { "id is null" }
                 checkNotNull(mediaType) { "mediaType is null" }
                 checkNotNull(mediaUrl) { "mediaUrl is null" }
+                val media = Media(
+                    url = Url(mediaUrl),
+                    type = mediaType.toMediaType(),
+                )
                 return HomeContent.Banner(
                     id = HomeContent.Banner.Id(id),
-                    mediaType = mediaType.toMediaType(),
-                    mediaUrl = Url(mediaUrl),
+                    media = media,
                     title = title,
                     clickAction = clickAction?.toClickAction(),
                 )

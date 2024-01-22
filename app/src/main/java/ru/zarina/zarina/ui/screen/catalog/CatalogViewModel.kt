@@ -26,10 +26,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.plus
 import kotlinx.parcelize.Parcelize
-import ru.zarina.zarina.domain.rework.common.Categories
-import ru.zarina.zarina.domain.rework.common.Category
-import ru.zarina.zarina.domain.rework.common.withFlattenedChildren
+import ru.zarina.zarina.domain.rework.category.Categories
+import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.rework.category.withFlattenedChildren
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.util.library.coroutines.WhileAndroidUiSubscribed
@@ -42,6 +43,8 @@ class CatalogViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val interactor: CatalogInteractor,
 ) : ViewModel(), SideEffectSource<CatalogViewModel.SideEffect> by SideEffectSourceImpl() {
+
+    private val navigationThrottler = Throttler.getNavigationThrottler()
 
     val searchQuery: StateFlow<String> = savedStateHandle.getStateFlow(
         key = KEY_SEARCH_QUERY,
@@ -56,12 +59,14 @@ class CatalogViewModel @Inject constructor(
         initialValue = GenderTab.WOMEN,
     )
 
-    private val categoriesFetchRequests = MutableSharedFlow<Unit>(replay = 1).also { it.tryEmit(Unit) }
+    private val categoriesFetchRequests = MutableSharedFlow<Unit>(replay = 1)
+        .also { it.tryEmit(Unit) }
 
     private val isFetchingCategories = MutableStateFlow(false)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val categoriesResult: StateFlow<Result<Categories>?> = categoriesFetchRequests
+        .onEach { isFetchingCategories.value = true }
         .flatMapLatest {
             interactor.getCategoriesFlow()
         }
@@ -71,8 +76,6 @@ class CatalogViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(),
             initialValue = null,
         )
-
-    private val expandedCategories = MutableStateFlow<Set<Category>>(emptySet())
 
     val categoryListState: StateFlow<CategoryListState> = combine(
         isFetchingCategories,
@@ -105,6 +108,8 @@ class CatalogViewModel @Inject constructor(
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = CategoryListState.Loading,
     )
+
+    private val expandedCategories = MutableStateFlow<Set<Category>>(emptySet())
 
     val categoryListItemsState: StateFlow<CategoryListItemsState> = combine(
         categoriesResult,
@@ -155,14 +160,16 @@ class CatalogViewModel @Inject constructor(
     }
 
     fun onCategoryListErrorRefreshClicked() {
-        isFetchingCategories.value = true
         categoriesFetchRequests.tryEmit(Unit)
     }
 
     private fun onCategoryItemClicked(item: CategoryListItem.CategoryItem) {
         val category = item.category
         if (category.children.isNullOrEmpty()) {
-            // TODO: [High] Implement navigation
+            navigationThrottler.throttle {
+                val action = CatalogScreenAction.CategoryClicked(item.category)
+                emitSideEffect(SideEffect.NavigateForward(action))
+            }
         } else {
             expandedCategories.update { set ->
                 val ids = set.mapTo(mutableSetOf()) { it.id }
@@ -177,7 +184,10 @@ class CatalogViewModel @Inject constructor(
     }
 
     private fun onSeeWholeCategoryItemClicked(item: CategoryListItem.SeeWholeCategoryItem) {
-        // TODO: [High] Implement navigation
+        navigationThrottler.throttle {
+            val action = CatalogScreenAction.CategoryClicked(item.category)
+            emitSideEffect(SideEffect.NavigateForward(action))
+        }
     }
 
     private fun List<Category>.flatMapToCategoryItems(initialNestingLevel: Int): List<CategoryListItem> {
@@ -208,6 +218,7 @@ class CatalogViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class NavigateForward(val action: CatalogScreenAction) : SideEffect
         data object FreeSearchBarFocus : SideEffect
     }
 

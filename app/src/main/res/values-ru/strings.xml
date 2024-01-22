@@ -33,6 +33,16 @@
     <string name="expand">Развернуть</string>
     <string name="collapse">Свернуть</string>
     <string name="see_all">Смотреть всё</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="remove_from_favorites">Удалить из избранное</string>
+    <string name="add_to_cart">Добавить в корзину</string>
+    <string name="remove_from_cart">Удалить из корзины</string>
+    <string name="back">Назад</string>
+    <string name="search">Поиск</string>
+    <string name="filters">Фильтры</string>
+    <string name="price_in_rubles">%1$d ₽</string>
+    <string name="discount_percent">-%1$d%%</string>
+    <string name="plus_one">+1</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -71,7 +81,6 @@
     <string name="tomorrow">Завтра</string>
     <string name="day_after_tomorrow">Послезавтра</string>
     <string name="three_days_or_more">От двух дней</string>
-    <string name="back">Назад</string>
     <string name="out_of_stock">Нет в наличии</string>
     <string name="buy_complete_look">Купить образ</string>
     <string name="find_and_pickup">Найти и забрать в магазине</string>
@@ -141,7 +150,6 @@
     <string name="by_price_descending">По убыванию цены</string>
     <string name="by_popularity">По популярности</string>
     <string name="by_discount">По скидке</string>
-    <string name="filters">Фильтры</string>
     <string name="price">Цена</string>
     <string name="range">%1$s – %2$s</string>
     <string name="apply">Применить</string>
@@ -157,11 +165,8 @@
     <string name="shop_list">Список магазинов</string>
     <string name="catalogue">Каталог</string>
     <string name="main_page">Главная</string>
-    <string name="add_to_favorites">Добавить в избранное</string>
-    <string name="remove_from_favorites">Удалить из избранного</string>
     <string name="favorites_are_empty">В избранном пусто</string>
     <string name="save_interesting_products_to_favorites">Сохраняйте понравившиеся товары в Избранное</string>
-    <string name="search">Поиск</string>
     <string name="search_products">Искать товары</string>
     <string name="frequently_searched">Часто ищут</string>
     <string name="search_history">История поиска</string>

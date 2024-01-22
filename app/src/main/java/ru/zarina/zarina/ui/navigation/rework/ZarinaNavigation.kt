@@ -15,6 +15,7 @@ import ru.zarina.zarina.ui.navigation.rework.destination.defaultCityDialogScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.favoritesGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.homeGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.onboardingScreen
+import ru.zarina.zarina.ui.navigation.rework.destination.productsScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.profileGraph
 
 @Composable
@@ -40,6 +41,7 @@ fun ZarinaNavigation(
         onboardingScreen(navController)
         citySelectorBottomSheetScreen(navController)
         defaultCityDialogScreen(navController)
+        productsScreen(navController)
     }
 }
 

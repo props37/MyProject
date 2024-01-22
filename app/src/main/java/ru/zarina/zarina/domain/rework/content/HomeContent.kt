@@ -1,8 +1,7 @@
 package ru.zarina.zarina.domain.rework.content
 
 import ru.zarina.zarina.domain.rework.common.ClickAction
-import ru.zarina.zarina.domain.rework.common.MediaType
-import ru.zarina.zarina.domain.rework.common.Url
+import ru.zarina.zarina.domain.rework.common.Media
 
 data class HomeContent(
     val womenBanners: List<BannerContainer>,
@@ -25,8 +24,7 @@ data class HomeContent(
 
     data class Banner(
         val id: Id,
-        val mediaType: MediaType,
-        val mediaUrl: Url,
+        val media: Media,
         val title: String?,
         val clickAction: ClickAction?,
     ) {
