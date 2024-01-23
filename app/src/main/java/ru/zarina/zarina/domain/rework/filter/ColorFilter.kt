@@ -7,4 +7,4 @@ data class ColorFilter(
     override val name: String,
     override val isSelected: Boolean,
     val color: Color,
-) : ListFilter.Item(id, name, isSelected)
+) : ListFilterItem(id, name, isSelected)

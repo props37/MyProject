@@ -4,4 +4,4 @@ data class SizeFilter(
     override val id: Id,
     override val name: String,
     override val isSelected: Boolean,
-) : ListFilter.Item(id, name, isSelected)
+) : ListFilterItem(id, name, isSelected)
