@@ -195,7 +195,7 @@ object ProductsScreenComponents {
                     val itemModifier = Modifier.matchParentSize()
 
                     LazyVerticalGrid(
-                        columns = GridCells.Fixed(ProductGridCellInRowCount),
+                        columns = remember { GridCells.Fixed(ProductGridCellInRowCount) },
                         state = gridState,
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
