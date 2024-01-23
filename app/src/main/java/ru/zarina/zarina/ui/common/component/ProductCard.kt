@@ -106,8 +106,8 @@ fun ProductCard(
             modifier = Modifier.padding(start = 16.dp),
         ) {
             Text(
-                text = product.name,
-                style = UiKitTheme.typographyReworked.tertiary.light,
+                text = product.name.uppercase(),
+                style = UiKitTheme.typographyReworked.caption1.regular,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
