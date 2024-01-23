@@ -85,7 +85,7 @@ class ProductsViewModel @Inject constructor(
         .mapState(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
-        ) { it?.toSorting() ?: Sorting.NEW }
+        ) { it?.toSorting() ?: Sorting.getDefault() }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val productPagingDataFlow: Flow<PagingData<Product>> = combine(
