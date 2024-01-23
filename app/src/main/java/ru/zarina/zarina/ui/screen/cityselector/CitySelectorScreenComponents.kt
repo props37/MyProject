@@ -324,7 +324,7 @@ object CitySelectorScreenComponents {
     ) {
         Box(modifier = modifier) {
             Icon(
-                painter = painterResource(R.drawable.ic_check_24),
+                painter = painterResource(R.drawable.ic_checkmark_24),
                 contentDescription = stringResource(R.string.checked),
                 tint = UiKitTheme.colorsReworked.icon.regular.default,
                 modifier = Modifier.size(20.dp),
