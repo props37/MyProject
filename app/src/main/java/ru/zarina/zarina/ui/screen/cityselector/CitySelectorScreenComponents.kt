@@ -3,8 +3,6 @@ package ru.zarina.zarina.ui.screen.cityselector
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,11 +30,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -49,6 +44,7 @@ import ru.zarina.zarina.ui.common.component.base.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.base.button.CloseIconButton
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.component.base.icon.CheckmarkAnimatedIcon
 import ru.zarina.zarina.ui.common.component.base.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.base.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.base.textfield.ZarinaTextFieldDefaults
@@ -297,8 +293,9 @@ object CitySelectorScreenComponents {
                         }
                     }
 
-                    CityCheckmark(
+                    CheckmarkAnimatedIcon(
                         isVisible = isSelected,
+                        iconSize = 20.dp,
                         modifier = Modifier.padding(start = if (isSelected) 16.dp else 0.dp),
                     )
                 }
@@ -312,44 +309,6 @@ object CitySelectorScreenComponents {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-            )
-        }
-    }
-
-    // TODO: [Low] Write custom animation
-    @Composable
-    private fun CityCheckmark(
-        isVisible: Boolean,
-        modifier: Modifier = Modifier,
-    ) {
-        Box(modifier = modifier) {
-            Icon(
-                painter = painterResource(R.drawable.ic_checkmark_24),
-                contentDescription = stringResource(R.string.checked),
-                tint = UiKitTheme.colorsReworked.icon.regular.default,
-                modifier = Modifier.size(20.dp),
-            )
-
-            val maskWidthFraction = animateFloatAsState(
-                targetValue = if (isVisible) 0f else 1f,
-                animationSpec = tween(durationMillis = 200),
-                label = "CityCheckmark",
-            )
-            val maskColor = UiKitTheme.colorsReworked.background.general.regular.default
-
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .drawBehind {
-                        val width = size.width * maskWidthFraction.value
-                        val topLeft = Offset(size.width - width, 0f)
-                        val size = Size(width, size.height)
-                        drawRect(
-                            color = maskColor,
-                            topLeft = topLeft,
-                            size = size,
-                        )
-                    }
             )
         }
     }
