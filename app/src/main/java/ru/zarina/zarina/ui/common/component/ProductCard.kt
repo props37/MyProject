@@ -129,28 +129,41 @@ fun ProductCard(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(horizontal = 16.dp),
         ) {
+            val priceTextStyle = UiKitTheme.typographyReworked.caption1.regular
+            val discountColor = UiKitTheme.colorsReworked.text.general.accent.red
+            val originalPriceColor = if (product.price.hasDiscount) {
+                UiKitTheme.colorsReworked.text.general.regular.disabled
+            } else {
+                UiKitTheme.colorsReworked.text.general.regular.default
+            }
+            val originalPriceTextDecoration = if (product.price.hasDiscount) {
+                TextDecoration.LineThrough
+            } else {
+                TextDecoration.None
+            }
+
             Text(
-                text = stringResource(R.string.price_in_rubles, product.price.currentPrice),
-                style = UiKitTheme.typographyReworked.tertiary.regular,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                text = stringResource(R.string.price_in_rubles, product.price.originalPrice).uppercase(),
+                style = priceTextStyle,
+                color = originalPriceColor,
+                textDecoration = originalPriceTextDecoration,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             if (product.price.hasDiscount) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = stringResource(R.string.price_in_rubles, product.price.originalPrice),
-                    style = UiKitTheme.typographyReworked.tertiary.light,
-                    color = UiKitTheme.colorsReworked.text.general.regular.disabled,
-                    textDecoration = TextDecoration.LineThrough,
+                    text = stringResource(R.string.price_in_rubles, product.price.currentPrice).uppercase(),
+                    style = priceTextStyle,
+                    color = discountColor,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = stringResource(R.string.discount_percent, product.price.discountPercent),
-                    style = UiKitTheme.typographyReworked.caption2.bold,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    text = stringResource(R.string.discount_percent, product.price.discountPercent).uppercase(),
+                    style = UiKitTheme.typographyReworked.caption2.regular,
+                    color = discountColor,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
