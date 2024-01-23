@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
@@ -49,7 +50,9 @@ fun CatalogScreen(
     navigateForward: (CatalogScreenAction) -> Unit,
     viewModel: CatalogViewModel = hiltViewModel(),
 ) {
-    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
+    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle(
+        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+    )
     val genderTabs by viewModel.genderTabs.collectAsStateWithLifecycle()
     val currentGenderTab by viewModel.currentGenderTab.collectAsStateWithLifecycle()
     val categoryListState by viewModel.categoryListState.collectAsStateWithLifecycle()
