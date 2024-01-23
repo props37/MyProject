@@ -48,6 +48,6 @@ class GetProductPagingDataFlowUseCase @Inject constructor(
         private const val PAGE_SIZE = 20
         private const val PREFETCH_DISTANCE = PAGE_SIZE
         private const val INITIAL_LOAD_SIZE = PAGE_SIZE * 2
-        private const val MAX_SIZE = 500
+        private const val MAX_SIZE = 300
     }
 }
