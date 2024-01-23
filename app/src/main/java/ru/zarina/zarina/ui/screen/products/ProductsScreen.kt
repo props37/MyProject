@@ -50,6 +50,7 @@ fun ProductsScreen(
         category = category,
         productPagingDataFlow = viewModel.productPagingDataFlow,
         topBarActions = topBarActions,
+        onRefreshProducts = viewModel::onRefreshProducts,
         onProductsErrorRefreshClicked = viewModel::onProductsErrorRefreshClicked,
         sideEffects = viewModel.sideEffects,
         navigateBackward = navigateBackward,
@@ -61,6 +62,7 @@ private fun ScreenContent(
     category: Category?,
     productPagingDataFlow: Flow<PagingData<Product>>,
     topBarActions: TopBarActions,
+    onRefreshProducts: () -> Unit,
     onProductsErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<ProductsViewModel.SideEffect>,
     navigateBackward: () -> Unit,
@@ -90,6 +92,7 @@ private fun ScreenContent(
 
         Products(
             productPagingDataFlow = productPagingDataFlow,
+            onRefreshProducts = onRefreshProducts,
             onProductsErrorRefreshClicked = onProductsErrorRefreshClicked,
             modifier = Modifier.fillMaxSize(),
         )

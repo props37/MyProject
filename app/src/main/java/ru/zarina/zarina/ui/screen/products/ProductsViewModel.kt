@@ -113,6 +113,12 @@ class ProductsViewModel @Inject constructor(
         // TODO: [High] Implement
     }
 
+    fun onRefreshProducts() {
+        if (category.value == null) {
+            fetchCategory()
+        }
+    }
+
     fun onProductsErrorRefreshClicked() {
         if (category.value == null) {
             fetchCategory()

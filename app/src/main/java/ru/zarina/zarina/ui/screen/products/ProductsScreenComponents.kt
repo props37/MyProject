@@ -146,6 +146,7 @@ object ProductsScreenComponents {
     @Composable
     fun Products(
         productPagingDataFlow: Flow<PagingData<Product>>,
+        onRefreshProducts: () -> Unit,
         onProductsErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -171,7 +172,10 @@ object ProductsScreenComponents {
 
             val pullRefreshState = rememberPullRefreshState(
                 refreshing = isRefreshing,
-                onRefresh = { productPagingItems.refresh() },
+                onRefresh = {
+                    productPagingItems.refresh()
+                    onRefreshProducts()
+                },
             )
 
             PullRefreshIndicator(
