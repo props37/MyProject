@@ -157,8 +157,6 @@ fun ProductCard(
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
-
         Colors(
             colors = product.colors,
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -293,7 +291,7 @@ private fun Colors(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             val colorsFit = remember(maxWidth, colors.size) {
-                val colorsAvailableWidth = maxWidth - ColorsMoreWidth
+                val colorsAvailableWidth = maxWidth - ColorsMoreTextWidth
                 (colorsAvailableWidth / (ColorSize + ColorSpacedBy))
                     .toInt()
                     .coerceIn(0, colors.size)
@@ -311,13 +309,12 @@ private fun Colors(
                 }
             }
 
-            if (colorsLeft > 0) {
-                Text(
-                    text = "+$colorsLeft",
-                    style = UiKitTheme.typographyReworked.caption2.regular,
-                    color = UiKitTheme.colorsReworked.text.general.regular.muted,
-                )
-            }
+            val moreColorsText = if (colorsLeft > 0) "+$colorsLeft" else ""
+            Text(
+                text = moreColorsText,
+                style = UiKitTheme.typographyReworked.caption2.regular,
+                color = UiKitTheme.colorsReworked.text.general.regular.muted,
+            )
         }
     }
 }
@@ -380,4 +377,4 @@ private const val WhiteColorLuminanceThreshold = 0.95f
 
 private val ColorSize: Dp get() = 8.dp
 private val ColorSpacedBy: Dp get() = ColorSize
-private val ColorsMoreWidth = 16.dp
+private val ColorsMoreTextWidth = 16.dp
