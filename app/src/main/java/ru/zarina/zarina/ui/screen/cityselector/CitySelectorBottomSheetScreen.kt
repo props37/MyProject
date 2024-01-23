@@ -29,7 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.ui.common.component.base.ZarinaBottomSheet
+import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview

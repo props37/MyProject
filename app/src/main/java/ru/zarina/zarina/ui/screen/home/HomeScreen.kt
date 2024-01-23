@@ -29,8 +29,8 @@ import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.behavior.systembars.ForcedSystemBarsBehavior
-import ru.zarina.zarina.ui.common.component.base.screen.ZarinaErrorScreen
-import ru.zarina.zarina.ui.common.component.base.screen.ZarinaLoadingScreen
+import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
+import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview

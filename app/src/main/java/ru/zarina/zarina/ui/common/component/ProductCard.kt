@@ -46,11 +46,11 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductColor
 import ru.zarina.zarina.domain.rework.product.currentPrice
-import ru.zarina.zarina.ui.common.component.base.button.LikeIconButton
-import ru.zarina.zarina.ui.common.component.base.button.ZarinaIconButton
-import ru.zarina.zarina.ui.common.component.base.pager.HorizontalPagerIndicator
-import ru.zarina.zarina.ui.common.component.base.skeleton.Skeleton
-import ru.zarina.zarina.ui.common.component.base.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.button.LikeIconButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaIconButton
+import ru.zarina.zarina.ui.common.component.pager.HorizontalPagerIndicator
+import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
+import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
