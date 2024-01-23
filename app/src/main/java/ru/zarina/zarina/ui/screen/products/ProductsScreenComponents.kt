@@ -146,6 +146,7 @@ object ProductsScreenComponents {
     @Composable
     fun Products(
         productPagingDataFlow: Flow<PagingData<Product>>,
+        onProductsErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val gridState = rememberLazyGridState()
@@ -249,7 +250,10 @@ object ProductsScreenComponents {
 
                     ZarinaErrorScreen(
                         state = state,
-                        onRefreshClicked = { productPagingItems.retry() },
+                        onRefreshClicked = {
+                            productPagingItems.retry()
+                            onProductsErrorRefreshClicked()
+                        },
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(16.dp),

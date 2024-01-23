@@ -8,6 +8,7 @@ import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -49,11 +50,26 @@ class ProductsViewModel @Inject constructor(
             Category.Id(value)
         }
 
+    private val categoryFetchRequests = MutableSharedFlow<Unit>(replay = 1)
+        .also { it.tryEmit(Unit) }
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    val category: StateFlow<Category?> = categoryId
+    private val categoryResult: StateFlow<Result<Category>?> = combine(
+        categoryId,
+        categoryFetchRequests,
+    ) { id, _ -> id }
         .flatMapLatest { id ->
             interactor.getCategoryFlow(GetCategoryFlowUseCase.Params(id))
-                .map { result -> result.getOrNull() }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = null,
+        )
+
+    val category: StateFlow<Category?> = categoryResult
+        .map { result ->
+            result?.getOrNull()
         }
         .stateIn(
             scope = viewModelScope,
@@ -95,6 +111,16 @@ class ProductsViewModel @Inject constructor(
 
     fun onFiltersClicked() {
         // TODO: [High] Implement
+    }
+
+    fun onProductsErrorRefreshClicked() {
+        if (category.value == null) {
+            fetchCategory()
+        }
+    }
+
+    private fun fetchCategory() {
+        categoryFetchRequests.tryEmit(Unit)
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
