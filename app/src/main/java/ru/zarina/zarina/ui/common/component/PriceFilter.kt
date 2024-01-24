@@ -1,7 +1,5 @@
 package ru.zarina.zarina.ui.common.component
 
-import android.icu.text.DecimalFormat
-import android.icu.text.DecimalFormatSymbols
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -51,7 +49,6 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 import kotlin.math.min
-import kotlin.text.Typography.nbsp
 
 // TODO: [High] Add visual transformations to text
 // TODO: [Low] Adjust slider thumbs appearance
@@ -174,16 +171,7 @@ private fun TextField(
         },
         size = ZarinaTextFieldSize.Small,
         placeholder = {
-            val priceDecimalFormat = remember {
-                val decimalFormatSymbols = DecimalFormatSymbols()
-                decimalFormatSymbols.groupingSeparator = nbsp
-                DecimalFormat(PRICE_DECIMAL_FORMAT_PATTERN, decimalFormatSymbols)
-            }
-            val placeholderValueString = remember(placeholderValue) {
-                priceDecimalFormat.format(placeholderValue)
-            }
-
-            Text(text = placeholderValueString)
+            Text(text = placeholderValue.toString())
         },
         leadingContent = {
             Text(
@@ -313,5 +301,3 @@ private fun Preview() {
         }
     }
 }
-
-private const val PRICE_DECIMAL_FORMAT_PATTERN = "#,###"
