@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component
+package ru.zarina.zarina.ui.common.component.topbar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

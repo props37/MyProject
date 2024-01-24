@@ -39,7 +39,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.ui.common.component.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.button.CloseIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
@@ -48,6 +47,7 @@ import ru.zarina.zarina.ui.common.component.icon.CheckmarkAnimatedIcon
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
+import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.theme.UiKitTheme

@@ -9,9 +9,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.component.TopBarDefaults
-import ru.zarina.zarina.ui.common.component.ZarinaTopBar
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
+import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
+import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 object FiltersScreenComponents {

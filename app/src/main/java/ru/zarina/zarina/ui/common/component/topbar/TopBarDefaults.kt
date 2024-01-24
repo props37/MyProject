@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component
+package ru.zarina.zarina.ui.common.component.topbar
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.unit.Dp
