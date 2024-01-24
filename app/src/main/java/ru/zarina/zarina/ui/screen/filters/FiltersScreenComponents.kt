@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -19,15 +20,14 @@ object FiltersScreenComponents {
     // TODO: [High] Extract TopBarActions
     @Composable
     fun TopBar(
-        onBackClicked: () -> Unit,
         isResetButtonVisible: Boolean,
-        onResetClicked: () -> Unit,
+        actions: TopBarActions,
         modifier: Modifier = Modifier,
     ) {
         ZarinaTopBar(
             startContent = {
                 BackIconButton(
-                    onClick = onBackClicked,
+                    onClick = actions.onBackClicked,
                     iconSize = 20.dp,
                     modifier = Modifier.padding(start = 2.dp),
                 )
@@ -47,5 +47,27 @@ object FiltersScreenComponents {
             contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
             modifier = modifier,
         )
+    }
+
+    @Stable
+    class TopBarActions(
+        val onBackClicked: () -> Unit,
+        val onResetClicked: () -> Unit,
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as TopBarActions
+
+            if (onBackClicked != other.onBackClicked) return false
+            return onResetClicked == other.onResetClicked
+        }
+
+        override fun hashCode(): Int {
+            var result = onBackClicked.hashCode()
+            result = 31 * result + onResetClicked.hashCode()
+            return result
+        }
     }
 }

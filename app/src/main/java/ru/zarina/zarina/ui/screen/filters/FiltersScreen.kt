@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,22 +21,38 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenComponents.TopBar
+import ru.zarina.zarina.ui.screen.filters.FiltersScreenComponents.TopBarActions
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun FiltersScreen(
+    navigateBackward: (FiltersScreenResult) -> Unit,
     viewModel: FiltersViewModel = hiltViewModel(),
 ) {
+    val topBarActions = remember(viewModel) {
+        TopBarActions(
+            onBackClicked = viewModel::onBackClicked,
+            onResetClicked = { /* TODO */ },
+        )
+    }
+
     ScreenContent(
+        topBarActions = topBarActions,
         sideEffects = viewModel.sideEffects,
+        navigateBackward = navigateBackward,
     )
 }
 
 @Composable
 private fun ScreenContent(
+    topBarActions: TopBarActions,
     sideEffects: Flow<FiltersViewModel.SideEffect>,
+    navigateBackward: (FiltersScreenResult) -> Unit,
 ) {
-    FiltersScreenBehavior(sideEffects = sideEffects)
+    FiltersScreenBehavior(
+        sideEffects = sideEffects,
+        navigateBackward = navigateBackward,
+    )
 
     Column(
         modifier = Modifier
@@ -49,9 +66,8 @@ private fun ScreenContent(
             .bottomNavBarPadding(),
     ) {
         TopBar(
-            onBackClicked = { /*TODO*/ },
             isResetButtonVisible = false, // TODO: [High] Implement
-            onResetClicked = { /*TODO*/ },
+            actions = topBarActions,
         )
     }
 }

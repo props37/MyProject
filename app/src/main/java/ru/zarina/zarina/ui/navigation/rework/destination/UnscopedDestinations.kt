@@ -17,6 +17,7 @@ import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenResult
 import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreen
 import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreenResult
 import ru.zarina.zarina.ui.screen.filters.FiltersScreen
+import ru.zarina.zarina.ui.screen.filters.FiltersScreenResult
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenAction
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel
@@ -141,6 +142,17 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
 
 fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
     composableDestination(UnscopedDestinations.Filters) {
-        FiltersScreen()
+        FiltersScreen(
+            navigateBackward = { result ->
+                when (result) {
+                    FiltersScreenResult.ScreenClosed -> {
+                        navController.popBackStack(
+                            route = UnscopedDestinations.Filters.routeSchema,
+                            inclusive = true,
+                        )
+                    }
+                }
+            },
+        )
     }
 }
