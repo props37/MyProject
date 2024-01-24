@@ -2,6 +2,7 @@ package ru.zarina.zarina.data.rework.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.data.rework.common.remote.api.dto.FiltersDto
 import ru.zarina.zarina.data.rework.common.remote.api.dto.ProductDto
 import ru.zarina.zarina.domain.rework.common.Page
 import ru.zarina.zarina.domain.rework.product.FilteredProducts
@@ -12,6 +13,9 @@ data class FilteredProductsDto(
     @SerialName("items_count")
     val itemCount: Int? = null,
 
+    @SerialName("filters")
+    val filters: FiltersDto? = null,
+
     @SerialName("products")
     val products: List<ProductDto>? = null,
 
@@ -20,9 +24,10 @@ data class FilteredProductsDto(
 ) {
     fun toFilteredProductPage(): Page<FilteredProducts> {
         checkNotNull(products) { "products is null" }
+        checkNotNull(filters) { "filters is null" }
         val filteredProducts = FilteredProducts(
             products = products.map { it.toProduct() },
-            filters = Unit,
+            filters = filters.toFilters(),
         )
         return Page(
             data = filteredProducts,
