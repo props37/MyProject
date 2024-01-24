@@ -85,7 +85,7 @@ object CitySelectorScreenComponents {
                 iconSize = 20.dp,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .padding(end = 8.dp),
+                    .padding(end = 2.dp),
             )
         }
     }
