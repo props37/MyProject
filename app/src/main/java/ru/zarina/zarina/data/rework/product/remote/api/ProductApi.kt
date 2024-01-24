@@ -17,7 +17,7 @@ class ProductApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
     private val httpClient: HttpClient,
 ) {
-    suspend fun getFilteredProducts(
+    suspend fun getProducts(
         categoryId: Category.Id,
         page: Int,
         sorting: Sorting,

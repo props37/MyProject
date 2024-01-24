@@ -8,7 +8,7 @@ import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.domain.rework.product.Product
 
-class FilteredProductPagingSource(
+class ProductPagingSource(
     private val categoryId: Category.Id,
     private val sorting: Sorting,
     private val productRepository: ProductRepository,
@@ -17,11 +17,11 @@ class FilteredProductPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Product> {
         try {
             val page = params.key ?: 1
-            val filteredProductPage =
-                productRepository.getFilteredProductPageFlow(categoryId, page, sorting).first()
-            val products = filteredProductPage.data.products
+            val productPage =
+                productRepository.getProductPageFlow(categoryId, page, sorting).first()
+            val products = productPage.data
 
-            val paginationInfo = filteredProductPage.paginationInfo
+            val paginationInfo = productPage.paginationInfo
             val prevPage = paginationInfo.currentPage - 1
             val nextPage = paginationInfo.currentPage + 1
             val prevKey = prevPage.takeIf { it >= 1 }

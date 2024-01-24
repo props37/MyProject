@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.data.rework.product.ProductRepository
-import ru.zarina.zarina.data.rework.product.pagination.FilteredProductPagingSource
+import ru.zarina.zarina.data.rework.product.pagination.ProductPagingSource
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.domain.rework.product.Product
@@ -20,7 +20,7 @@ class GetProductPagingDataFlowUseCase @Inject constructor(
         return Pager(
             config = getPagingConfig(),
             pagingSourceFactory = {
-                FilteredProductPagingSource(
+                ProductPagingSource(
                     categoryId = params.categoryId,
                     sorting = params.sorting,
                     productRepository = productRepository,

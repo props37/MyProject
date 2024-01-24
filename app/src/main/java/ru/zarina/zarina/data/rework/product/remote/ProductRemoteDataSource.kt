@@ -6,18 +6,18 @@ import ru.zarina.zarina.data.rework.product.remote.api.ProductApi
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Page
 import ru.zarina.zarina.domain.rework.common.Sorting
-import ru.zarina.zarina.domain.rework.product.FilteredProducts
+import ru.zarina.zarina.domain.rework.product.Product
 import javax.inject.Inject
 
 class ProductRemoteDataSource @Inject constructor(
     private val api: ProductApi,
 ) {
-    fun getFilteredProductPageFlow(
+    fun getProductPageFlow(
         categoryId: Category.Id,
         page: Int,
         sorting: Sorting,
-    ): Flow<Page<FilteredProducts>> = flow {
-        val filteredProductPage = api.getFilteredProducts(categoryId, page, sorting).toFilteredProductPage()
-        emit(filteredProductPage)
+    ): Flow<Page<List<Product>>> = flow {
+        val productPage = api.getProducts(categoryId, page, sorting).toProductPage()
+        emit(productPage)
     }
 }
