@@ -33,7 +33,7 @@ jetpack-compose-compiler = "1.5.8"
 ktor = "2.3.6"
 
 hilt = "2.49"
-hilt-navigationCompose = "1.2.0-alpha01"
+hilt-navigationCompose = "1.2.0-beta01"
 
 koin-annotations = "1.2.2"
 koin-core = "3.4.2"
