@@ -79,11 +79,12 @@ object ProductsScreenComponents {
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .heightIn(min = TopBarDefaults.MinHeight)
-                .padding(TopBarDefaults.VerticalPadding),
+                .padding(vertical = TopBarDefaults.VerticalPadding),
         ) {
             BackIconButton(
                 onClick = actions.onBackClicked,
                 iconSize = TopBarIconSize,
+                modifier = Modifier.padding(start = 2.dp),
             )
 
             Spacer(modifier = Modifier.width(4.dp))
@@ -132,6 +133,7 @@ object ProductsScreenComponents {
             ZarinaIconButton(
                 onClick = actions.onFiltersClicked,
                 indication = rememberRipple(bounded = false, radius = TopBarIconSize),
+                modifier = Modifier.padding(end = 2.dp),
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_filters_24),
