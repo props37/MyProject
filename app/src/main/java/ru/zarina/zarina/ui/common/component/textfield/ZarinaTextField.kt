@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.common.component.textfield
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -377,11 +378,12 @@ object ZarinaTextFieldDefaults {
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
         iconSize: Dp = IconSizeLarge,
+        indication: Indication? = rememberRipple(bounded = false, radius = 8.dp),
     ) {
         CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
             IconButtonCustom(
                 onClick = onClick,
-                indication = rememberRipple(bounded = false, radius = 8.dp),
+                indication = indication,
                 modifier = modifier,
             ) {
                 Icon(
