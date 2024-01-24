@@ -26,6 +26,7 @@ import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase
 import ru.zarina.zarina.usecase.rework.product.GetProductPagingDataFlowUseCase
+import ru.zarina.zarina.util.library.coroutines.WhileAndroidUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
@@ -63,7 +64,7 @@ class ProductsViewModel @Inject constructor(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Eagerly,
+            started = SharingStarted.WhileSubscribed(),
             initialValue = null,
         )
 
@@ -73,7 +74,7 @@ class ProductsViewModel @Inject constructor(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Eagerly,
+            started = SharingStarted.WhileAndroidUiSubscribed,
             initialValue = null,
         )
 
