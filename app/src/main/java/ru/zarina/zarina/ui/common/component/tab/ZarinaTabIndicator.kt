@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component
+package ru.zarina.zarina.ui.common.component.tab
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

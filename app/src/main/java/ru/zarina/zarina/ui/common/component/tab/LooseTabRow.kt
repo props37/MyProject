@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component
+package ru.zarina.zarina.ui.common.component.tab
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.zarina.zarina.ui.common.component.LooseTabRowDefaults.looseTabIndicatorOffset
+import ru.zarina.zarina.ui.common.component.tab.LooseTabRowDefaults.looseTabIndicatorOffset
 
 @Composable
 fun LooseTabRow(

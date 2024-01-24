@@ -46,7 +46,6 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.component.ZarinaTabIndicator
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
@@ -54,6 +53,7 @@ import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
 import ru.zarina.zarina.ui.common.component.skeleton.SkeletonTextShape
 import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.tab.ZarinaTabIndicator
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
