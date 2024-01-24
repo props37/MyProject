@@ -11,8 +11,10 @@ import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
 @Composable
 fun ProductsScreenBehavior(
     sideEffects: Flow<SideEffect>,
+    navigateForward: (ProductsScreenAction) -> Unit,
     navigateBackward: () -> Unit,
 ) {
+    val updatedNavigateForward by rememberUpdatedState(navigateForward)
     val updatedNavigateBackward by rememberUpdatedState(navigateBackward)
 
     ForcedBottomNavBarBehavior(isVisible = true)
@@ -20,6 +22,7 @@ fun ProductsScreenBehavior(
     LaunchedEffect(sideEffects) {
         sideEffects.collect { sideEffect ->
             when (sideEffect) {
+                is SideEffect.NavigateForward -> updatedNavigateForward(sideEffect.action)
                 SideEffect.NavigateBackward -> updatedNavigateBackward()
             }
         }

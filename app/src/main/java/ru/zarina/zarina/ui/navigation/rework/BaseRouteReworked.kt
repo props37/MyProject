@@ -6,6 +6,7 @@ enum class BaseRouteReworked {
     CITY_SELECTOR,
     DEFAULT_CITY_DIALOG,
     PRODUCTS,
+    FILTERS,
 
     // Catalog graph
     CATALOG_GRAPH,

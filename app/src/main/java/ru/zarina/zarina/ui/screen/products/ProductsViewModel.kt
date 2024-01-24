@@ -111,7 +111,10 @@ class ProductsViewModel @Inject constructor(
     }
 
     fun onFiltersClicked() {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val action = ProductsScreenAction.FiltersClicked(categoryId.value)
+            emitSideEffect(SideEffect.NavigateForward(action))
+        }
     }
 
     fun onRefreshProducts() {
@@ -131,6 +134,7 @@ class ProductsViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class NavigateForward(val action: ProductsScreenAction) : SideEffect
         data object NavigateBackward : SideEffect
     }
 

@@ -16,10 +16,12 @@ import ru.zarina.zarina.ui.screen.cityselector.CitySelectorBottomSheetScreen
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenResult
 import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreen
 import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreenResult
+import ru.zarina.zarina.ui.screen.filters.FiltersScreen
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenAction
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel
 import ru.zarina.zarina.ui.screen.products.ProductsScreen
+import ru.zarina.zarina.ui.screen.products.ProductsScreenAction
 
 fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
     composableDestination(
@@ -118,6 +120,15 @@ fun NavGraphBuilder.defaultCityDialogScreen(navController: NavHostController) {
 fun NavGraphBuilder.productsScreen(navController: NavHostController) {
     composableDestination(UnscopedDestinations.Products) {
         ProductsScreen(
+            navigateForward = { action ->
+                when (action) {
+                    is ProductsScreenAction.FiltersClicked -> {
+                        val args = UnscopedDestinations.Filters.Args(action.categoryId.value)
+                        val route = UnscopedDestinations.Filters.createRoute(args)
+                        navController.navigate(route)
+                    }
+                }
+            },
             navigateBackward = {
                 navController.popBackStack(
                     route = UnscopedDestinations.Products.routeSchema,
@@ -125,5 +136,11 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                 )
             },
         )
+    }
+}
+
+fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
+    composableDestination(UnscopedDestinations.Filters) {
+        FiltersScreen()
     }
 }

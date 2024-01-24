@@ -13,6 +13,7 @@ import ru.zarina.zarina.ui.navigation.rework.destination.catalogGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.citySelectorBottomSheetScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.defaultCityDialogScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.favoritesGraph
+import ru.zarina.zarina.ui.navigation.rework.destination.filtersScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.homeGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.onboardingScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.productsScreen
@@ -42,6 +43,7 @@ fun ZarinaNavigation(
         citySelectorBottomSheetScreen(navController)
         defaultCityDialogScreen(navController)
         productsScreen(navController)
+        filtersScreen(navController)
     }
 }
 
