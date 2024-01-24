@@ -48,7 +48,7 @@ composeShimmer = "1.2.0"
 timber = "5.0.1"
 leakCanary = "2.12"
 
-googlePlayServices-location = "21.0.1"
+googlePlayServices-location = "21.1.0"
 googlePlayServices-maps = "18.2.0"
 googlePlayServices-maps-compose = "2.11.4"
 
