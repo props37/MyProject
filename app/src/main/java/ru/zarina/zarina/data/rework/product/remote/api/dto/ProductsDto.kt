@@ -9,7 +9,7 @@ import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.common.PaginationInfo as DomainPaginationInfo
 
 @Serializable
-data class FilteredProductsDto(
+data class ProductsDto(
     @SerialName("items_count")
     val itemCount: Int? = null,
 

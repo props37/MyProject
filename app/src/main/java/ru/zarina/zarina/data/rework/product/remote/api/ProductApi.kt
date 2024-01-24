@@ -6,7 +6,7 @@ import io.ktor.client.request.post
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.rework.common.remote.api.dto.SortingDto
-import ru.zarina.zarina.data.rework.product.remote.api.dto.FilteredProductsDto
+import ru.zarina.zarina.data.rework.product.remote.api.dto.ProductsDto
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
@@ -21,7 +21,7 @@ class ProductApi @Inject constructor(
         categoryId: Category.Id,
         page: Int,
         sorting: Sorting,
-    ): FilteredProductsDto {
+    ): ProductsDto {
         val body = GetFilteredProductsBody(categoryId.value, SortingDto.from(sorting), page)
         return httpClient.post("/api/v1/products") {
             setJsonBody(body)
