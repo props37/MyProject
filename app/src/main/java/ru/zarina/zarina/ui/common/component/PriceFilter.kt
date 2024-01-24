@@ -1,5 +1,7 @@
 package ru.zarina.zarina.ui.common.component
 
+import android.icu.text.DecimalFormat
+import android.icu.text.DecimalFormatSymbols
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -49,6 +51,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 import kotlin.math.min
+import kotlin.text.Typography.nbsp
 
 // TODO: [High] Add visual transformations to text
 // TODO: [Low] Adjust slider thumbs appearance
@@ -80,7 +83,7 @@ fun PriceFilter(
             TextField(
                 value = minPrice,
                 onValueChanged = { minPrice = it },
-                anchorValue = limits.first,
+                placeholderValue = limits.first,
                 leadingText = stringResource(R.string.from).lowercase(),
                 onClearClicked = {
                     val newMinPrice = null
@@ -103,7 +106,7 @@ fun PriceFilter(
             TextField(
                 value = maxPrice,
                 onValueChanged = { maxPrice = it },
-                anchorValue = limits.last,
+                placeholderValue = limits.last,
                 leadingText = stringResource(R.string.to).lowercase(),
                 onClearClicked = {
                     val newMaxPrice = null
@@ -157,7 +160,7 @@ fun PriceFilter(
 private fun TextField(
     value: Long?,
     onValueChanged: (Long?) -> Unit,
-    anchorValue: Long,
+    placeholderValue: Long,
     leadingText: String,
     onClearClicked: () -> Unit,
     modifier: Modifier = Modifier,
@@ -170,7 +173,18 @@ private fun TextField(
             onValueChanged(string.toLongOrNull())
         },
         size = ZarinaTextFieldSize.Small,
-        placeholder = { Text(text = anchorValue.toString()) },
+        placeholder = {
+            val priceDecimalFormat = remember {
+                val decimalFormatSymbols = DecimalFormatSymbols()
+                decimalFormatSymbols.groupingSeparator = nbsp
+                DecimalFormat(PRICE_DECIMAL_FORMAT_PATTERN, decimalFormatSymbols)
+            }
+            val placeholderValueString = remember(placeholderValue) {
+                priceDecimalFormat.format(placeholderValue)
+            }
+
+            Text(text = placeholderValueString)
+        },
         leadingContent = {
             Text(
                 text = leadingText,
@@ -283,7 +297,7 @@ private fun createSliderValue(
 private fun Preview() {
     ZarinaPreview {
         var filter by remember { mutableStateOf(PriceFilter.EMPTY) }
-        val limits = 799L..17999L
+        val limits = 99L..1799999L
 
         Box(
             modifier = Modifier
@@ -299,3 +313,5 @@ private fun Preview() {
         }
     }
 }
+
+private const val PRICE_DECIMAL_FORMAT_PATTERN = "#,###"
