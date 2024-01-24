@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.ExperimentalMaterialApi
@@ -267,9 +268,9 @@ object ProductsScreenComponents {
         }
     }
 
-    private fun getProductGridItemSpan(index: Int): GridItemSpan {
+    private fun LazyGridItemSpanScope.getProductGridItemSpan(index: Int): GridItemSpan {
         return if ((index + 1) % ProductGridFullscreenItemIndex == 0) {
-            GridItemSpan(ProductGridCellInRowCount)
+            GridItemSpan(maxCurrentLineSpan)
         } else {
             GridItemSpan(1)
         }
