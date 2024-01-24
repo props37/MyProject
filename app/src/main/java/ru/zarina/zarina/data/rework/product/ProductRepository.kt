@@ -5,6 +5,7 @@ import ru.zarina.zarina.data.rework.product.remote.ProductRemoteDataSource
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Page
 import ru.zarina.zarina.domain.rework.common.Sorting
+import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
 import ru.zarina.zarina.domain.rework.product.Product
 import javax.inject.Inject
 
@@ -17,5 +18,9 @@ class ProductRepository @Inject constructor(
         sorting: Sorting,
     ): Flow<Page<List<Product>>> {
         return remoteDataSource.getProductPageFlow(categoryId, page, sorting)
+    }
+
+    fun getCategoryProductInfoFlow(categoryId: Category.Id): Flow<CategoryProductInfo> {
+        return remoteDataSource.getCategoryProductInfoFlow(categoryId)
     }
 }

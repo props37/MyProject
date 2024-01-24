@@ -4,8 +4,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.rework.common.remote.api.dto.FiltersDto
 import ru.zarina.zarina.data.rework.common.remote.api.dto.ProductDto
+import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Page
 import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
 import ru.zarina.zarina.domain.rework.common.PaginationInfo as DomainPaginationInfo
 
 @Serializable
@@ -28,6 +30,16 @@ data class ProductsDto(
         return Page(
             data = products.map { it.toProduct() },
             paginationInfo = getPaginationInfo(),
+        )
+    }
+
+    fun toCategoryProductInfo(categoryId: Category.Id): CategoryProductInfo {
+        checkNotNull(filters) { "filters is null" }
+        return CategoryProductInfo(
+            categoryId = categoryId,
+            productCount = checkNotNull(itemCount) { "itemCount is null" },
+            availableFilters = filters.toFilters(),
+            appliedFilters = Unit,
         )
     }
 
