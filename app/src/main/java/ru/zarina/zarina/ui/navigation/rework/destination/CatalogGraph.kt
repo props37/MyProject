@@ -16,7 +16,7 @@ fun NavGraphBuilder.catalogGraph(navController: NavHostController) {
                 navigateForward = { action ->
                     when (action) {
                         is CatalogScreenAction.CategoryClicked -> {
-                            val args = UnscopedDestinations.Products.Args(action.category.id.value)
+                            val args = UnscopedDestinations.Products.Args(action.categoryId.value)
                             val route = UnscopedDestinations.Products.createRoute(args)
                             navController.navigate(route)
                         }

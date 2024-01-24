@@ -167,7 +167,7 @@ class CatalogViewModel @Inject constructor(
         val category = item.category
         if (category.children.isNullOrEmpty()) {
             navigationThrottler.throttle {
-                val action = CatalogScreenAction.CategoryClicked(item.category)
+                val action = CatalogScreenAction.CategoryClicked(item.category.id)
                 emitSideEffect(SideEffect.NavigateForward(action))
             }
         } else {
@@ -185,7 +185,7 @@ class CatalogViewModel @Inject constructor(
 
     private fun onSeeWholeCategoryItemClicked(item: CategoryListItem.SeeWholeCategoryItem) {
         navigationThrottler.throttle {
-            val action = CatalogScreenAction.CategoryClicked(item.category)
+            val action = CatalogScreenAction.CategoryClicked(item.category.id)
             emitSideEffect(SideEffect.NavigateForward(action))
         }
     }
