@@ -78,7 +78,7 @@ class OnboardingViewModel @AssistedInject constructor(
     )
 
     val onboardingSteps: StateFlow<ImmutableList<OnboardingStep>> = savedStateHandle
-        .getStateFlow<List<OnboardingStep>>(
+        .getStateFlow(
             key = KEY_ONBOARDING_STEPS,
             initialValue = createOnboardingSteps(),
         )
@@ -306,7 +306,7 @@ class OnboardingViewModel @AssistedInject constructor(
             .launchIn(viewModelScope)
     }
 
-    private fun createOnboardingSteps(): ImmutableList<OnboardingStep> {
+    private fun createOnboardingSteps(): List<OnboardingStep> {
         return buildList {
             OnboardingStep.entries.forEach { step ->
                 when (step) {
@@ -325,7 +325,7 @@ class OnboardingViewModel @AssistedInject constructor(
                     else -> add(step)
                 }
             }
-        }.toImmutableList()
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
