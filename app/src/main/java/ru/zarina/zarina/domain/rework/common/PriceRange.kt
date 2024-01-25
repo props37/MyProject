@@ -7,4 +7,9 @@ data class PriceRange(
     init {
         require(max >= min) { "\"max\" $max must be equal to or larger than \"min\" $min" }
     }
+
+    companion object {
+        val EMPTY: PriceRange
+            get() = PriceRange(min = 0L, max = Long.MAX_VALUE)
+    }
 }
