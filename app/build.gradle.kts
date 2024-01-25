@@ -58,8 +58,8 @@ android {
         ZarinaSigningVariant.values().forEach { variant ->
             maybeCreate(variant.name).apply {
                 val signingDir = File(rootDir, "/signing/${variant.name.lowercase()}")
-                val signingFile = File(signingDir, "signing.properties")
-                val properties = Properties().apply { load(FileInputStream(signingFile)) }
+                val signingPropertiesFile = File(signingDir, "signing.properties")
+                val properties = Properties().apply { load(FileInputStream(signingPropertiesFile)) }
                 storeFile = properties.getProperty("storeFile")?.let { File(project.rootDir, it) }
                 storePassword = properties.getProperty("storePassword")
                 keyAlias = properties.getProperty("keyAlias")
