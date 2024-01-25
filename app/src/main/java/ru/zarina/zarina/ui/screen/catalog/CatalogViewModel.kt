@@ -33,7 +33,7 @@ import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
-import ru.zarina.zarina.util.library.coroutines.WhileAndroidUiSubscribed
+import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.utils.clean.invoke
 import java.io.IOException
 import javax.inject.Inject
@@ -105,7 +105,7 @@ class CatalogViewModel @Inject constructor(
         }
     }.stateIn(
         scope = viewModelScope + Dispatchers.Default,
-        started = SharingStarted.WhileAndroidUiSubscribed,
+        started = SharingStarted.WhileUiSubscribed,
         initialValue = CategoryListState.Loading,
     )
 
@@ -132,7 +132,7 @@ class CatalogViewModel @Inject constructor(
         )
     }.stateIn(
         scope = viewModelScope + Dispatchers.Default,
-        started = SharingStarted.WhileAndroidUiSubscribed,
+        started = SharingStarted.WhileUiSubscribed,
         initialValue = CategoryListItemsState(persistentSetOf(), persistentSetOf()),
     )
 

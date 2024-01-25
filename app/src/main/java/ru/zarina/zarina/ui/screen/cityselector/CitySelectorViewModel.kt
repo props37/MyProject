@@ -25,7 +25,7 @@ import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.geography.GetCitiesFlowUseCase
-import ru.zarina.zarina.util.library.coroutines.WhileAndroidUiSubscribed
+import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import java.io.IOException
 import javax.inject.Inject
@@ -75,7 +75,7 @@ class CitySelectorViewModel @Inject constructor(
 
     val isCitySearchBarVisible: StateFlow<Boolean> = cityListState.mapState(
         scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
+        started = SharingStarted.WhileUiSubscribed,
     ) { it is CityListState.CityList }
 
     val isChangeCityButtonVisible: StateFlow<Boolean> = hasSelectedCityChanged.asStateFlow()
