@@ -112,7 +112,10 @@ class ProductsViewModel @Inject constructor(
 
     fun onFiltersClicked() {
         navigationThrottler.throttle {
-            val action = ProductsScreenAction.FiltersClicked(categoryId.value)
+            val action = ProductsScreenAction.FiltersClicked(
+                categoryId = categoryId.value,
+                appliedFilters = null, // TODO: [High] Pass applied filters
+            )
             emitSideEffect(SideEffect.NavigateForward(action))
         }
     }

@@ -124,7 +124,10 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
             navigateForward = { action ->
                 when (action) {
                     is ProductsScreenAction.FiltersClicked -> {
-                        val args = UnscopedDestinations.Filters.Args(action.categoryId.value)
+                        val args = UnscopedDestinations.Filters.Args(
+                            categoryId = action.categoryId,
+                            appliedFilters = action.appliedFilters,
+                        )
                         val route = UnscopedDestinations.Filters.createRoute(args)
                         navController.navigate(route)
                     }
