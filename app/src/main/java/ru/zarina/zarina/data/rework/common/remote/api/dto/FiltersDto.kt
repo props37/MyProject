@@ -27,21 +27,24 @@ data class FiltersDto(
 ) {
     fun toFilters(): Filters {
         checkNotNull(price) { "price is null" }
-        checkNotNull(materials) { "materials is null" }
-        checkNotNull(sizes) { "sizes is null" }
-        checkNotNull(colors) { "colors is null" }
-        val materials = ListFilter(
-            items = materials.map { it.toMaterialFilterItem() },
-            isSingleSelection = false,
-        )
-        val sizes = ListFilter(
-            items = sizes.map { it.toSizeFilterItem() },
-            isSingleSelection = false,
-        )
-        val colors = ListFilter(
-            items = colors.map { it.toColorFilterItem() },
-            isSingleSelection = false,
-        )
+        val materials = if (!materials.isNullOrEmpty()) {
+            ListFilter(
+                items = materials.map { it.toMaterialFilterItem() },
+                isSingleSelection = false,
+            )
+        } else null
+        val sizes = if (!sizes.isNullOrEmpty()) {
+            ListFilter(
+                items = sizes.map { it.toSizeFilterItem() },
+                isSingleSelection = false,
+            )
+        } else null
+        val colors = if (!colors.isNullOrEmpty()) {
+            ListFilter(
+                items = colors.map { it.toColorFilterItem() },
+                isSingleSelection = false,
+            )
+        } else null
         return Filters(
             sorting = null, // TODO: [High] Figure out what to do with sorting
             price = null, // TODO: [High] Figure out what to do with price
