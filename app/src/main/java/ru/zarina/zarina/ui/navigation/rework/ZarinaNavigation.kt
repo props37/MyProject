@@ -28,8 +28,8 @@ fun ZarinaNavigation(
     NavHost(
         navController = navController,
         startDestination = startDestination.routeSchema,
-        enterTransition = { fadeIn(tween(TransitionDurationMillis)) },
-        exitTransition = { fadeOut(tween(TransitionDurationMillis)) },
+        enterTransition = { fadeIn(tween(NavigationTransitionDurationMillis)) },
+        exitTransition = { fadeOut(tween(NavigationTransitionDurationMillis)) },
         modifier = modifier,
     ) {
         // Bottom nav bar graphs
@@ -47,4 +47,4 @@ fun ZarinaNavigation(
     }
 }
 
-private const val TransitionDurationMillis = 300
+const val NavigationTransitionDurationMillis = 300
