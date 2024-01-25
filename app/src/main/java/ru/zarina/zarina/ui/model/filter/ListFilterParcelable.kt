@@ -3,9 +3,13 @@ package ru.zarina.zarina.ui.model.filter
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.domain.rework.common.Color
 import ru.zarina.zarina.domain.rework.filter.ColorFilterItem
 import ru.zarina.zarina.domain.rework.filter.ListFilter
 import ru.zarina.zarina.domain.rework.filter.ListFilterItem
+import ru.zarina.zarina.domain.rework.filter.MaterialFilterItem
+import ru.zarina.zarina.domain.rework.filter.SizeFilterItem
+import ru.zarina.zarina.domain.rework.filter.SortFilterItem
 
 @Serializable
 @Parcelize
@@ -22,6 +26,34 @@ class ListFilterParcelable(
         val isSelected: Boolean,
         val color: String?,
     ) : Parcelable {
+        fun toSortFilterItem(): SortFilterItem = SortFilterItem(
+            id = ListFilterItem.Id(id),
+            name = name,
+            isSelected = isSelected,
+        )
+
+        fun toMaterialFilterItem(): MaterialFilterItem = MaterialFilterItem(
+            id = ListFilterItem.Id(id),
+            name = name,
+            isSelected = isSelected,
+        )
+
+        fun toSizeFilterItem(): SizeFilterItem = SizeFilterItem(
+            id = ListFilterItem.Id(id),
+            name = name,
+            isSelected = isSelected,
+        )
+
+        fun toColorFilterItem(): ColorFilterItem {
+            checkNotNull(color) { "color is null" }
+            return ColorFilterItem(
+                id = ListFilterItem.Id(id),
+                name = name,
+                isSelected = isSelected,
+                color = Color(color),
+            )
+        }
+
         companion object {
             fun from(item: ListFilterItem): Item = Item(
                 id = item.id.value,

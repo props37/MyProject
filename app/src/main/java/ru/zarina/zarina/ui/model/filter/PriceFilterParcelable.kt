@@ -11,6 +11,8 @@ data class PriceFilterParcelable(
     val min: Long?,
     val max: Long?,
 ) : Parcelable {
+    fun toPriceFilter(): PriceFilter = PriceFilter(min = min, max = max)
+
     companion object {
         fun from(priceFilter: PriceFilter): PriceFilterParcelable = PriceFilterParcelable(
             min = priceFilter.min,

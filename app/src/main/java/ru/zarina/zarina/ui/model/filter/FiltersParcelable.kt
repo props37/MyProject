@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.rework.filter.Filters
+import ru.zarina.zarina.domain.rework.filter.ListFilter
 
 @Serializable
 @Parcelize
@@ -14,6 +15,37 @@ data class FiltersParcelable(
     val sizes: ListFilterParcelable?,
     val colors: ListFilterParcelable?,
 ) : Parcelable {
+    fun toFilters(): Filters {
+        return Filters(
+            sorting = sorting?.let { sorting ->
+                ListFilter(
+                    items = sorting.items.map { it.toSortFilterItem() },
+                    isSingleSelection = sorting.isSingleSelection,
+                )
+            },
+            price = price?.toPriceFilter(),
+            priceLimits = null, // TODO: [High] Implement?
+            materials = materials?.let { materials ->
+                ListFilter(
+                    items = materials.items.map { it.toMaterialFilterItem() },
+                    isSingleSelection = materials.isSingleSelection,
+                )
+            },
+            sizes = sizes?.let { sizes ->
+                ListFilter(
+                    items = sizes.items.map { it.toSizeFilterItem() },
+                    isSingleSelection = sizes.isSingleSelection,
+                )
+            },
+            colors = colors?.let { colors ->
+                ListFilter(
+                    items = colors.items.map { it.toColorFilterItem() },
+                    isSingleSelection = colors.isSingleSelection,
+                )
+            },
+        )
+    }
+
     companion object {
         fun from(filters: Filters): FiltersParcelable {
             return FiltersParcelable(
