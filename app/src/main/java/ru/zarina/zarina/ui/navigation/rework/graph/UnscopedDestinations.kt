@@ -80,7 +80,7 @@ object UnscopedDestinations {
         override fun createRoute(args: Args): String {
             return RouteUtils.generateRoute(
                 routeBase = baseRoute,
-                args = arrayOf(args.categoryId),
+                args = arrayOf(args.categoryId.value),
             )
         }
 
@@ -89,7 +89,7 @@ object UnscopedDestinations {
                 navArgument(ARG_KEY_CATEGORY_ID) { type = NavType.LongType },
             )
 
-        data class Args(val categoryId: Long)
+        data class Args(val categoryId: Category.Id)
     }
 
     data object Filters : Destination<Filters.Args>() {
