@@ -40,7 +40,7 @@ koin-core = "3.4.2"
 koin-compose = "3.4.5"
 koin-test = "3.4.1"
 
-accompanist = "0.32.0"
+accompanist = "0.34.0"
 
 coil = "2.5.0"
 composeShimmer = "1.2.0"
