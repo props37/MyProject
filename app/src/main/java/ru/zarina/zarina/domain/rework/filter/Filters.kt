@@ -46,10 +46,10 @@ data class Filters(
 }
 
 fun Filters.coerceIn(available: Filters): Filters {
-    val price = available.price?.let { this.price?.coerceIn(it) }
-    val materials = available.materials?.let { this.materials?.coerceIn(it) }
-    val sizes = available.sizes?.let { this.sizes?.coerceIn(it) }
-    val colors = available.colors?.let { this.colors?.coerceIn(it) }
+    val price = available.price?.let { this.price?.coerceIn(it) ?: it }
+    val materials = available.materials?.let { this.materials?.coerceIn(it) ?: it }
+    val sizes = available.sizes?.let { this.sizes?.coerceIn(it) ?: it }
+    val colors = available.colors?.let { this.colors?.coerceIn(it) ?: it }
     return copy(
         price = price,
         materials = materials,
