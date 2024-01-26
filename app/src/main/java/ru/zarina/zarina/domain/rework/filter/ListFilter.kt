@@ -5,7 +5,9 @@ data class ListFilter<T : ListFilterItem>(
     val isSingleSelection: Boolean,
     override val type: Filter.Type,
 ) : Filter {
-    val selectedItems by lazy { items.filter { it.isSelected } }
+    override val isEmpty: Boolean by lazy { items.none { it.isSelected } }
+
+    val selectedItems: List<T> by lazy { items.filter { it.isSelected } }
 }
 
 sealed class ListFilterItem(

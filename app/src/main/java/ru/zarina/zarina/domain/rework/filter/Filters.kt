@@ -17,6 +17,13 @@ data class Filters(
         if (colors != null) yield(colors)
     }
 
+    val isEmpty: Boolean
+        get() = sorting?.isEmpty != false
+                && price?.isEmpty != false
+                && materials?.isEmpty != false
+                && sizes?.isEmpty != false
+                && colors?.isEmpty != false
+
     val size: Int by lazy {
         var size = 0
         if (sorting != null) size++

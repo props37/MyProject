@@ -17,6 +17,9 @@ data class PriceFilter(
 
     override val type = Filter.Type.PRICE
 
+    override val isEmpty: Boolean
+        get() = (min == null || min == limits.min) && (max == null || max == limits.max)
+
     companion object {
         val EMPTY: PriceFilter
             get() = PriceFilter(min = null, max = null, limits = PriceRange.EMPTY)
