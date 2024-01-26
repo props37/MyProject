@@ -20,7 +20,7 @@ class ProductPagingSource(
         try {
             val page = params.key ?: 1
             val productsWithFiltersPage =
-                productRepository.getProductsWithFiltersPageFlow(categoryId, page, sorting).first()
+                productRepository.getProductsWithFiltersPageFlow(categoryId, sorting, page).first()
             val products = productsWithFiltersPage.data.products
             onAvailableFiltersReceived(productsWithFiltersPage.data.filters)
 

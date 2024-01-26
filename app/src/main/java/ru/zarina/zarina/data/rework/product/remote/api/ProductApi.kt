@@ -19,8 +19,8 @@ class ProductApi @Inject constructor(
 ) {
     suspend fun getProducts(
         categoryId: Category.Id,
-        page: Int,
         sorting: Sorting,
+        page: Int,
     ): ProductsDto {
         val body = GetFilteredProductsBody(categoryId.value, SortingDto.from(sorting), page)
         return httpClient.post("/api/v1/products") {

@@ -15,19 +15,19 @@ class ProductRemoteDataSource @Inject constructor(
 ) {
     fun getProductsWithFiltersPageFlow(
         categoryId: Category.Id,
-        page: Int,
         sorting: Sorting,
+        page: Int,
     ): Flow<Page<ProductsWithFilters>> = flow {
         val productsWithFiltersPage =
-            api.getProducts(categoryId, page, sorting).toProductsWithFiltersPage()
+            api.getProducts(categoryId, sorting, page).toProductsWithFiltersPage()
         emit(productsWithFiltersPage)
     }
 
     fun getCategoryProductInfoFlow(categoryId: Category.Id): Flow<CategoryProductInfo> = flow {
         val categoryProductInfo = api.getProducts(
             categoryId = categoryId,
-            page = 1,
             sorting = Sorting.getDefault(),
+            page = 1,
         ).toCategoryProductInfo(categoryId)
         emit(categoryProductInfo)
     }

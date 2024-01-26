@@ -14,10 +14,10 @@ class ProductRepository @Inject constructor(
 ) {
     fun getProductsWithFiltersPageFlow(
         categoryId: Category.Id,
-        page: Int,
         sorting: Sorting,
+        page: Int,
     ): Flow<Page<ProductsWithFilters>> {
-        return remoteDataSource.getProductsWithFiltersPageFlow(categoryId, page, sorting)
+        return remoteDataSource.getProductsWithFiltersPageFlow(categoryId, sorting, page)
     }
 
     fun getCategoryProductInfoFlow(categoryId: Category.Id): Flow<CategoryProductInfo> {
