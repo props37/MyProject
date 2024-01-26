@@ -3,7 +3,6 @@ package ru.zarina.zarina.data.rework.common.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.rework.common.Color
-import ru.zarina.zarina.domain.rework.common.PriceRange
 import ru.zarina.zarina.domain.rework.filter.ColorFilterItem
 import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.Filters
@@ -16,7 +15,7 @@ import ru.zarina.zarina.domain.rework.filter.SizeFilterItem
 @Serializable
 data class FiltersDto(
     @SerialName("price")
-    val price: Price? = null,
+    val price: PriceFilterDto? = null,
 
     @SerialName("materials")
     val materials: List<BasicItem>? = null,
@@ -57,20 +56,6 @@ data class FiltersDto(
             materials = materials,
             sizes = sizes,
             colors = colors,
-        )
-    }
-
-    @Serializable
-    data class Price(
-        @SerialName("min")
-        val min: Long? = null,
-
-        @SerialName("max")
-        val max: Long? = null,
-    ) {
-        fun toPriceRange(): PriceRange = PriceRange(
-            min = checkNotNull(min) { "min is null" },
-            max = checkNotNull(max) { "max is null" },
         )
     }
 
