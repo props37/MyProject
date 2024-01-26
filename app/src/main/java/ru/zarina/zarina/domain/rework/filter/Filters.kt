@@ -8,7 +8,25 @@ data class Filters(
     val materials: ListFilter<MaterialFilterItem>?,
     val sizes: ListFilter<SizeFilterItem>?,
     val colors: ListFilter<ColorFilterItem>?,
-) {
+) : Iterable<Filter> {
+    override fun iterator(): Iterator<Filter> = iterator {
+        if (sorting != null) yield(sorting)
+        if (price != null) yield(price)
+        if (materials != null) yield(materials)
+        if (sizes != null) yield(sizes)
+        if (colors != null) yield(colors)
+    }
+
+    val size: Int by lazy {
+        var size = 0
+        if (sorting != null) size++
+        if (price != null) size++
+        if (materials != null) size++
+        if (sizes != null) size++
+        if (colors != null) size++
+        size
+    }
+
     companion object {
         val EMPTY: Filters
             get() = Filters(

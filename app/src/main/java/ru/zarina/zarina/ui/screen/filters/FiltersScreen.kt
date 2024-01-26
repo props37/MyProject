@@ -21,17 +21,18 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.filter.ListFilter
+import ru.zarina.zarina.domain.rework.filter.PriceFilter
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.component.PriceFilter
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
@@ -116,53 +117,50 @@ private fun ScreenContent(
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState()),
                     ) {
-                        if (state.filters.sorting != null) {
-                            SingleSelectionFilterItem(
-                                selected = remember(state.filters.sorting) {
-                                    state.filters.sorting.selectedItems.firstOrNull()
-                                },
-                                onClick = { /* TODO */ },
-                            )
-                        }
+                        state.filters.forEachIndexed { index, filter ->
+                            key(filter.type) {
+                                when (filter) {
+                                    is PriceFilter -> {
+                                        PriceFilter(
+                                            priceFilter = filter,
+                                            onPriceFilterChanged = { /* TODO */ },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 16.dp)
+                                                .padding(top = 16.dp, bottom = 8.dp),
+                                        )
+                                    }
 
-                        if (state.filters.price != null) {
-                            PriceFilter(
-                                priceFilter = state.filters.price,
-                                onPriceFilterChanged = { /* TODO */ },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                            )
-                        }
+                                    is ListFilter<*> -> {
+                                        if (filter.isSingleSelection) {
+                                            SingleSelectionFilterItem(
+                                                type = filter.type,
+                                                selected = remember(filter.selectedItems) {
+                                                    filter.selectedItems.firstOrNull()
+                                                },
+                                                onClick = { /*TODO*/ },
+                                            )
+                                        } else {
+                                            MultiSelectionFilterItem(
+                                                type = filter.type,
+                                                selectedCount = remember(filter.selectedItems) {
+                                                    filter.selectedItems.size
+                                                },
+                                                onClick = { /*TODO*/ },
+                                            )
+                                        }
+                                    }
+                                }
 
-                        if (state.filters.materials != null) {
-                            MultiSelectionFilterItem(
-                                title = stringResource(R.string.composition),
-                                selectedCount = remember(state.filters.materials) {
-                                    state.filters.materials.selectedItems.size
-                                },
-                                onClick = { /*TODO*/ },
-                            )
-                        }
-
-                        if (state.filters.sizes != null) {
-                            MultiSelectionFilterItem(
-                                title = stringResource(R.string.size),
-                                selectedCount = remember(state.filters.sizes) {
-                                    state.filters.sizes.selectedItems.size
-                                },
-                                onClick = { /*TODO*/ },
-                            )
-                        }
-
-                        if (state.filters.colors != null) {
-                            MultiSelectionFilterItem(
-                                title = stringResource(R.string.color),
-                                selectedCount = remember(state.filters.colors) {
-                                    state.filters.colors.selectedItems.size
-                                },
-                                onClick = { /*TODO*/ },
-                            )
+                                if (filter !is PriceFilter && index < state.filters.size - 1) {
+                                    Divider(
+                                        color = UiKitTheme.colorsReworked.background.skeleton,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 16.dp),
+                                    )
+                                }
+                            }
                         }
                     }
                 }

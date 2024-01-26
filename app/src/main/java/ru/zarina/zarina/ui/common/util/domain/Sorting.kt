@@ -5,7 +5,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.common.Sorting
 
 @Stable
-val Sorting.stringResId: Int
+val Sorting.nameResId: Int
     get() = when (this) {
         Sorting.NEW -> R.string.sorting_new
         Sorting.POPULAR -> R.string.sorting_popular

@@ -24,13 +24,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.ListFilterItem
 import ru.zarina.zarina.domain.rework.filter.SortFilterItem
 import ru.zarina.zarina.domain.rework.filter.sorting
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
-import ru.zarina.zarina.ui.common.util.domain.stringResId
+import ru.zarina.zarina.ui.common.util.domain.nameResId
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 object FiltersScreenComponents {
@@ -69,6 +70,7 @@ object FiltersScreenComponents {
 
     @Composable
     fun SingleSelectionFilterItem(
+        type: Filter.Type,
         selected: ListFilterItem?,
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
@@ -82,7 +84,7 @@ object FiltersScreenComponents {
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             Text(
-                text = stringResource(R.string.sorting),
+                text = stringResource(type.nameResId),
                 style = UiKitTheme.typographyReworked.secondary.light,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
             )
@@ -90,7 +92,7 @@ object FiltersScreenComponents {
             Spacer(modifier = Modifier.width(8.dp))
 
             val selectedText = when (selected) {
-                is SortFilterItem -> stringResource(selected.sorting.stringResId)
+                is SortFilterItem -> stringResource(selected.sorting.nameResId)
                 else -> ""
             }
             Text(
@@ -108,7 +110,7 @@ object FiltersScreenComponents {
 
     @Composable
     fun MultiSelectionFilterItem(
-        title: String,
+        type: Filter.Type,
         selectedCount: Int,
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
@@ -122,7 +124,7 @@ object FiltersScreenComponents {
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             Text(
-                text = title,
+                text = stringResource(type.nameResId),
                 style = UiKitTheme.typographyReworked.secondary.light,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
             )
