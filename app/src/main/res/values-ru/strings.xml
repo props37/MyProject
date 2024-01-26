@@ -56,6 +56,7 @@
     <string name="composition">Состав</string>
     <string name="size">Размер</string>
     <string name="color">Цвет</string>
+    <string name="show_products">Показать товары</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -66,6 +67,15 @@
 
     <string name="default_city_dialog_title">Мы определили твой город</string>
     <string name="default_city_dialog_body">Текущая геолокация: %1$s. Ты можешь изменить геолокацию в любой момент в настройках Профиля.</string>
+
+    <plurals name="show_products">
+        <item quantity="zero">Показать %1$d товаров</item>
+        <item quantity="one">Показать %1$d товар</item>
+        <item quantity="two">Показать %1$d товара</item>
+        <item quantity="few">Показать %1$d товара</item>
+        <item quantity="many">Показать %1$d товаров</item>
+        <item quantity="other">Показать %1$d товаров</item>
+    </plurals>
 
     <!-- TODO: [Low] Remove -->
     <string name="select_your_city">Выберите ваш город</string>

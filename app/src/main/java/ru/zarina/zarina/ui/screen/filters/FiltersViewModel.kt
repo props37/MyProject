@@ -110,6 +110,12 @@ class FiltersViewModel @Inject constructor(
         } ?: FilterListState.Loading,
     )
 
+    val productCount: StateFlow<Int?> = categoryProductInfoResult
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+        ) { it?.getOrNull()?.productCount }
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             emitSideEffect(SideEffect.NavigateBackward(FiltersScreenResult.ScreenClosed))

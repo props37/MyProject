@@ -1,40 +1,47 @@
 package ru.zarina.zarina.ui.screen.filters
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.filter.ListFilter
 import ru.zarina.zarina.domain.rework.filter.PriceFilter
-import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.component.PriceFilter
+import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
@@ -47,6 +54,7 @@ import ru.zarina.zarina.ui.screen.filters.FiltersScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenComponents.TopBarActions
 import ru.zarina.zarina.ui.screen.filters.FiltersViewModel.FilterListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.Crossfade
 
 @Composable
@@ -55,6 +63,7 @@ fun FiltersScreen(
     viewModel: FiltersViewModel = hiltViewModel(),
 ) {
     val filterListState by viewModel.filterListState.collectAsStateWithLifecycle()
+    val productCount by viewModel.productCount.collectAsStateWithLifecycle()
     val topBarActions = remember(viewModel) {
         TopBarActions(
             onBackClicked = viewModel::onBackClicked,
@@ -64,6 +73,7 @@ fun FiltersScreen(
 
     ScreenContent(
         filterListState = filterListState,
+        productCount = productCount,
         topBarActions = topBarActions,
         sideEffects = viewModel.sideEffects,
         navigateBackward = navigateBackward,
@@ -73,6 +83,7 @@ fun FiltersScreen(
 @Composable
 private fun ScreenContent(
     filterListState: FilterListState,
+    productCount: Int?,
     topBarActions: TopBarActions,
     sideEffects: Flow<FiltersViewModel.SideEffect>,
     navigateBackward: (FiltersScreenResult) -> Unit,
@@ -87,11 +98,9 @@ private fun ScreenContent(
             .fillMaxSize()
             .background(UiKitTheme.colorsReworked.background.general.regular.default)
             .windowInsetsPadding(
-                WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout)
-                    .only(WindowInsetsSides.Top),
-            )
-            .bottomNavBarPadding(),
+                WindowInsets.systemBars
+                    .union(WindowInsets.displayCutout),
+            ),
     ) {
         TopBar(
             isResetButtonVisible = false, // TODO: [High] Implement
@@ -112,54 +121,104 @@ private fun ScreenContent(
         ) { state ->
             when (state) {
                 is FilterListState.FilterList -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState()),
-                    ) {
-                        state.filters.forEachIndexed { index, filter ->
-                            key(filter.type) {
-                                when (filter) {
-                                    is PriceFilter -> {
-                                        PriceFilter(
-                                            priceFilter = filter,
-                                            onPriceFilterChanged = { /* TODO */ },
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(horizontal = 16.dp)
-                                                .padding(top = 16.dp, bottom = 8.dp),
-                                        )
-                                    }
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        val scrollState = rememberScrollState()
+                        val isDragged = scrollState.interactionSource.collectIsDraggedAsState()
+                        val keyboardController = LocalSoftwareKeyboardController.current
 
-                                    is ListFilter<*> -> {
-                                        if (filter.isSingleSelection) {
-                                            SingleSelectionFilterItem(
-                                                type = filter.type,
-                                                selected = remember(filter.selectedItems) {
-                                                    filter.selectedItems.firstOrNull()
-                                                },
-                                                onClick = { /*TODO*/ },
-                                            )
-                                        } else {
-                                            MultiSelectionFilterItem(
-                                                type = filter.type,
-                                                selectedCount = remember(filter.selectedItems) {
-                                                    filter.selectedItems.size
-                                                },
-                                                onClick = { /*TODO*/ },
+                        LaunchedEffect(scrollState, keyboardController) {
+                            snapshotFlow { isDragged.value }
+                                .collect { keyboardController?.hide() }
+                        }
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .verticalScroll(scrollState),
+                        ) {
+                            state.filters.forEachIndexed { index, filter ->
+                                key(filter.type) {
+                                    when (filter) {
+                                        is PriceFilter -> {
+                                            PriceFilter(
+                                                priceFilter = filter,
+                                                onPriceFilterChanged = { /* TODO */ },
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(
+                                                        start = 16.dp,
+                                                        top = 16.dp,
+                                                        end = 16.dp,
+                                                        bottom = 8.dp,
+                                                    ),
                                             )
                                         }
+
+                                        is ListFilter<*> -> {
+                                            if (filter.isSingleSelection) {
+                                                SingleSelectionFilterItem(
+                                                    type = filter.type,
+                                                    selected = remember(filter.selectedItems) {
+                                                        filter.selectedItems.firstOrNull()
+                                                    },
+                                                    onClick = { /*TODO*/ },
+                                                )
+                                            } else {
+                                                MultiSelectionFilterItem(
+                                                    type = filter.type,
+                                                    selectedCount = remember(filter.selectedItems) {
+                                                        filter.selectedItems.size
+                                                    },
+                                                    onClick = { /*TODO*/ },
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                    if (filter !is PriceFilter && index < state.filters.size - 1) {
+                                        Divider(
+                                            color = UiKitTheme.colorsReworked.background.skeleton,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 16.dp),
+                                        )
                                     }
                                 }
+                            }
+                        }
 
-                                if (filter !is PriceFilter && index < state.filters.size - 1) {
-                                    Divider(
-                                        color = UiKitTheme.colorsReworked.background.skeleton,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(horizontal = 16.dp),
+                        Divider(
+                            color = UiKitTheme.colorsReworked.background.skeleton,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+
+                        // TODO: [High] Extract
+                        ZarinaButton(
+                            onClick = { /*TODO*/ },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                        ) {
+                            AnimatedContent(
+                                targetState = productCount,
+                                transitionSpec = {
+                                    AnimatedContentDefaultTransitionSpec().using(sizeTransform = null)
+                                },
+                                contentAlignment = Alignment.Center,
+                                label = "Show Products button",
+                            ) { productCount ->
+                                val text = if (productCount != null && productCount > 0) {
+                                    pluralStringResource(
+                                        R.plurals.show_products,
+                                        productCount,
+                                        productCount,
                                     )
+                                } else {
+                                    stringResource(R.string.show_products)
                                 }
+
+                                Text(text = text.uppercase())
                             }
                         }
                     }
