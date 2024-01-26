@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -21,7 +22,6 @@ import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
-import ru.zarina.zarina.ui.model.common.SortingParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase
@@ -78,20 +78,12 @@ class ProductsViewModel @Inject constructor(
             initialValue = null,
         )
 
-    private val currentSorting: StateFlow<Sorting> = savedStateHandle
-        .getStateFlow<SortingParcelable?>(
-            key = KEY_CURRENT_SORTING,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) { it?.toSorting() ?: Sorting.getDefault() }
+    private val sorting = MutableStateFlow(Sorting.getDefault())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val productPagingDataFlow: Flow<PagingData<Product>> = combine(
         categoryId,
-        currentSorting,
+        sorting,
     ) { categoryId, sorting ->
         GetProductPagingDataFlowUseCase.Params(categoryId, sorting)
     }
@@ -139,10 +131,6 @@ class ProductsViewModel @Inject constructor(
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateForward(val action: ProductsScreenAction) : SideEffect
         data object NavigateBackward : SideEffect
-    }
-
-    companion object {
-        private const val KEY_CURRENT_SORTING = "current_sorting"
     }
 }
 
