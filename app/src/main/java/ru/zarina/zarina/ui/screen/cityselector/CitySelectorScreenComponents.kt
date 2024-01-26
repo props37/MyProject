@@ -351,16 +351,12 @@ object CitySelectorScreenComponents {
         }
     }
 
-    // TODO: [Medium] Rework. Use the state itself when possible (at least for Error states)
-    @Stable
-    private fun getCityListContentKey(state: CityListState): String {
+    private fun getCityListContentKey(state: CityListState): Any {
         return when (state) {
-            CityListState.Loading -> CityListContentKeyLoading
             is CityListState.CityList -> {
                 if (state.items.isNotEmpty()) CityListContentKeyCities else CityListContentKeyCityNotFound
             }
-
-            is CityListState.Error -> CityListContentKeyError
+            CityListState.Loading, is CityListState.Error -> state
         }
     }
 

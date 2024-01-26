@@ -482,9 +482,8 @@ object CatalogScreenComponents {
 
     private fun getCategoryListContentKey(state: CategoryListState): Any {
         return when (state) {
-            CategoryListState.Loading -> state
             is CategoryListState.Success -> CategoryListContentKeySuccess
-            is CategoryListState.Error -> state
+            CategoryListState.Loading, is CategoryListState.Error -> state
         }
     }
 
