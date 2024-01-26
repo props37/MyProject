@@ -7,5 +7,4 @@ data class CategoryProductInfo(
     val categoryId: Category.Id,
     val productCount: Int,
     val availableFilters: Filters,
-    val appliedFilters: Unit, // // TODO: [High] Implement? Is needed?
 )

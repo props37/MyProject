@@ -43,7 +43,6 @@ data class ProductsDto(
             categoryId = categoryId,
             productCount = checkNotNull(itemCount) { "itemCount is null" },
             availableFilters = filters.toFilters(),
-            appliedFilters = Unit,
         )
     }
 
