@@ -36,7 +36,6 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 
 object FiltersScreenComponents {
 
-    // TODO: [High] Extract TopBarActions
     @Composable
     fun TopBar(
         isResetButtonVisible: Boolean,
