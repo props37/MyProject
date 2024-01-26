@@ -17,9 +17,9 @@ data class Filters(
         if (colors != null) yield(colors)
     }
 
+    // Ignore sorting since it is not included in filters on backend
     val isEmpty: Boolean
-        get() = sorting?.isEmpty != false
-                && price?.isEmpty != false
+        get() = price?.isEmpty != false
                 && materials?.isEmpty != false
                 && sizes?.isEmpty != false
                 && colors?.isEmpty != false
