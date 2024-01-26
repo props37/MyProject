@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.google.common.primitives.Longs.max
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.common.PriceRange
 import ru.zarina.zarina.domain.rework.filter.PriceFilter
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
@@ -50,20 +51,22 @@ import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 import kotlin.math.min
 
+// TODO: [High] Change only one corresponding value when using slider thumbs
 // TODO: [High] Add visual transformations to text
 // TODO: [Low] Adjust slider thumbs appearance
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PriceFilter(
-    filter: PriceFilter,
-    limits: LongRange,
-    onFilterChanged: (PriceFilter) -> Unit, // TODO: [High] Refactor
+    priceFilter: PriceFilter,
+    onPriceFilterChanged: (PriceFilter) -> Unit, // TODO: [High] Refactor
     modifier: Modifier = Modifier,
 ) {
+    val limits = priceFilter.limits
+
     Column(modifier = modifier) {
-        var minPrice by remember(filter, limits) { mutableStateOf(filter.min) }
-        var maxPrice by remember(filter, limits) { mutableStateOf(filter.max) }
+        var minPrice by remember(priceFilter) { mutableStateOf(priceFilter.min) }
+        var maxPrice by remember(priceFilter) { mutableStateOf(priceFilter.max) }
 
         Text(
             text = stringResource(R.string.price_rubles),
@@ -80,22 +83,22 @@ fun PriceFilter(
             TextField(
                 value = minPrice,
                 onValueChanged = { minPrice = it },
-                placeholderValue = limits.first,
+                placeholderValue = limits.min,
                 leadingText = stringResource(R.string.from).lowercase(),
                 onClearClicked = {
                     val newMinPrice = null
-                    val newMaxPrice = coerceMaxPrice(maxPrice, newMinPrice, limits)
+                    val newMaxPrice = maxPrice?.coerceMaxPrice(newMinPrice, limits)
                     minPrice = newMinPrice
-                    maxPrice = newMinPrice
-//                    onFilterChanged(PriceFilter(newMinPrice, newMaxPrice))
+                    maxPrice = newMaxPrice
+                    onPriceFilterChanged(priceFilter.copy(min = newMinPrice, max = newMaxPrice))
                 },
                 modifier = Modifier
                     .weight(1f)
                     .onFocusChanged { state ->
                         if (!state.isFocused) {
-                            val newMinPrice = coerceMinPrice(minPrice, maxPrice, limits)
+                            val newMinPrice = minPrice?.coerceMinPrice(maxPrice, limits)
                             minPrice = newMinPrice
-//                            onFilterChanged(PriceFilter(newMinPrice, maxPrice))
+                            onPriceFilterChanged(priceFilter.copy(min = newMinPrice, max = maxPrice))
                         }
                     },
             )
@@ -103,28 +106,28 @@ fun PriceFilter(
             TextField(
                 value = maxPrice,
                 onValueChanged = { maxPrice = it },
-                placeholderValue = limits.last,
+                placeholderValue = limits.max,
                 leadingText = stringResource(R.string.to).lowercase(),
                 onClearClicked = {
                     val newMaxPrice = null
-                    val newMinPrice = coerceMinPrice(minPrice, newMaxPrice, limits)
+                    val newMinPrice = minPrice?.coerceMinPrice(newMaxPrice, limits)
                     minPrice = newMinPrice
-                    maxPrice = newMinPrice
-//                    onFilterChanged(PriceFilter(newMinPrice, newMaxPrice))
+                    maxPrice = newMaxPrice
+                    onPriceFilterChanged(priceFilter.copy(min = newMinPrice, max = newMaxPrice))
                 },
                 modifier = Modifier
                     .weight(1f)
                     .onFocusChanged { state ->
                         if (!state.isFocused) {
-                            val newMaxPrice = coerceMaxPrice(maxPrice, minPrice, limits)
+                            val newMaxPrice = maxPrice?.coerceMaxPrice(minPrice, limits)
                             maxPrice = newMaxPrice
-//                            onFilterChanged(PriceFilter(minPrice, newMaxPrice))
+                            onPriceFilterChanged(priceFilter.copy(min = minPrice, max = newMaxPrice))
                         }
                     },
             )
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // TODO: [High] Extract
         RangeSlider(
@@ -133,13 +136,13 @@ fun PriceFilter(
                 minPrice = it.start.toLong()
                 maxPrice = it.endInclusive.toLong()
             },
-            valueRange = limits.first.toFloat()..limits.last.toFloat(),
+            valueRange = limits.min.toFloat()..limits.max.toFloat(),
             onValueChangeFinished = {
-                val newMinPrice = coerceMinPrice(minPrice, maxPrice, limits)
-                val newMaxPrice = coerceMaxPrice(maxPrice, minPrice, limits)
+                val newMinPrice = minPrice?.coerceMinPrice(maxPrice, limits)
+                val newMaxPrice = maxPrice?.coerceMaxPrice(minPrice, limits)
                 minPrice = newMinPrice
-                maxPrice = newMinPrice
-//                onFilterChanged(PriceFilter(newMinPrice, newMaxPrice))
+                maxPrice = newMaxPrice
+                onPriceFilterChanged(priceFilter.copy(min = newMinPrice, max = newMaxPrice))
             },
             steps = 0,
             colors = SliderDefaults.colors(
@@ -252,29 +255,29 @@ private fun Track(
     }
 }
 
-private fun coerceMinPrice(minPrice: Long?, maxPrice: Long?, limits: LongRange): Long? {
-    val max = maxPrice?.let { minOf(it, limits.last) } ?: limits.last
-    return minPrice?.coerceIn(limits.first, max)
+private fun Long.coerceMinPrice(maxPrice: Long?, limits: PriceRange): Long {
+    val max = maxPrice?.let { minOf(it, limits.max) } ?: limits.max
+    return this.coerceIn(limits.min, max)
 }
 
-private fun coerceMaxPrice(maxPrice: Long?, minPrice: Long?, limits: LongRange): Long? {
-    val min = minPrice?.let { maxOf(it, limits.first) } ?: limits.first
-    return maxPrice?.coerceIn(min, limits.last)
+private fun Long.coerceMaxPrice(minPrice: Long?, limits: PriceRange): Long {
+    val min = minPrice?.let { maxOf(it, limits.min) } ?: limits.min
+    return this.coerceIn(min, limits.max)
 }
 
 private fun createSliderValue(
     minPrice: Long?,
     maxPrice: Long?,
-    limits: LongRange,
+    limits: PriceRange,
 ): ClosedFloatingPointRange<Float> {
     val minValue = minPrice?.coerceIn(
-        minimumValue = limits.first,
-        maximumValue = max(maxPrice ?: limits.last, limits.last),
-    ) ?: limits.first
+        minimumValue = limits.min,
+        maximumValue = max(maxPrice ?: limits.max, limits.max),
+    ) ?: limits.min
     val maxValue = maxPrice?.coerceIn(
-        minimumValue = min(minPrice ?: limits.first, limits.first),
-        maximumValue = limits.last,
-    ) ?: limits.last
+        minimumValue = min(minPrice ?: limits.min, limits.min),
+        maximumValue = limits.max,
+    ) ?: limits.max
     return minValue.toFloat()..maxValue.toFloat()
 }
 
@@ -284,8 +287,9 @@ private fun createSliderValue(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        var filter by remember { mutableStateOf(PriceFilter.EMPTY) }
-        val limits = 99L..1799999L
+        var filter by remember {
+            mutableStateOf(PriceFilter(min = null, max = null, limits = PriceRange(799, 17999)))
+        }
 
         Box(
             modifier = Modifier
@@ -293,9 +297,8 @@ private fun Preview() {
                 .padding(16.dp),
         ) {
             PriceFilter(
-                filter = filter,
-                limits = limits,
-                onFilterChanged = { filter = it },
+                priceFilter = filter,
+                onPriceFilterChanged = { filter = it },
                 modifier = Modifier.fillMaxWidth(),
             )
         }

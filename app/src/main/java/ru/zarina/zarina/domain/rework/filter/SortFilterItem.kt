@@ -16,8 +16,8 @@ data class SortFilterItem(
     }
 }
 
+val SortFilterItem.sorting: Sorting
+    get() = Sorting.valueOf(name)
+
 val ListFilter<SortFilterItem>.selected: Sorting?
-    get() {
-        val name = this.selectedItems.firstOrNull()?.name
-        return name?.let { Sorting.valueOf(it) }
-    }
+    get() = this.selectedItems.firstOrNull()?.sorting
