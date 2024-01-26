@@ -3,6 +3,7 @@ package ru.zarina.zarina.domain.rework.filter
 data class ListFilter<T : ListFilterItem>(
     val items: List<T>,
     val isSingleSelection: Boolean,
+    override val type: Filter.Type,
 ) : Filter {
     val selectedItems by lazy { items.filter { it.isSelected } }
 }

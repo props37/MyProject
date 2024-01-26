@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.rework.common.Color
 import ru.zarina.zarina.domain.rework.common.PriceRange
 import ru.zarina.zarina.domain.rework.filter.ColorFilterItem
+import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.filter.ListFilter
 import ru.zarina.zarina.domain.rework.filter.ListFilterItem
@@ -33,18 +34,21 @@ data class FiltersDto(
             ListFilter(
                 items = materials.map { it.toMaterialFilterItem() },
                 isSingleSelection = false,
+                type = Filter.Type.MATERIALS,
             )
         } else null
         val sizes = if (!sizes.isNullOrEmpty()) {
             ListFilter(
                 items = sizes.map { it.toSizeFilterItem() },
                 isSingleSelection = false,
+                type = Filter.Type.SIZES,
             )
         } else null
         val colors = if (!colors.isNullOrEmpty()) {
             ListFilter(
                 items = colors.map { it.toColorFilterItem() },
                 isSingleSelection = false,
+                type = Filter.Type.COLORS,
             )
         } else null
         return Filters(

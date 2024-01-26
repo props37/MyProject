@@ -40,7 +40,7 @@ data class Filters(
                     isSelected = it == selected,
                 )
             }
-            return ListFilter(items = items, isSingleSelection = true)
+            return ListFilter(items = items, isSingleSelection = true, type = Filter.Type.SORTING)
         }
     }
 }

@@ -1,4 +1,13 @@
 package ru.zarina.zarina.domain.rework.filter
 
-// TODO: [High] Is needed?
-sealed interface Filter
+sealed interface Filter {
+    val type: Type
+
+    enum class Type {
+        SORTING,
+        PRICE,
+        MATERIALS,
+        SIZES,
+        COLORS,
+    }
+}

@@ -16,6 +16,7 @@ import ru.zarina.zarina.domain.rework.filter.SortFilterItem
 class ListFilterParcelable(
     val items: List<Item>,
     val isSingleSelection: Boolean,
+    val type: FilterTypeParcelable,
 ) : Parcelable {
 
     @Serializable
@@ -69,6 +70,7 @@ class ListFilterParcelable(
             return ListFilterParcelable(
                 items = listFilter.items.map { Item.from(it) },
                 isSingleSelection = listFilter.isSingleSelection,
+                type = FilterTypeParcelable.from(listFilter.type),
             )
         }
     }
