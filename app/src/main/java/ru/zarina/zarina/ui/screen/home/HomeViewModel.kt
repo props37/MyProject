@@ -9,17 +9,23 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.parcelize.Parcelize
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.utils.clean.invoke
 import java.io.IOException
 import javax.inject.Inject
@@ -32,8 +38,6 @@ class HomeViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private var fetchContentJob: Job? = null
-
     val genderTabs: StateFlow<ImmutableList<GenderTab>> =
         MutableStateFlow(GenderTab.entries.toImmutableList()).asStateFlow()
 
@@ -43,12 +47,46 @@ class HomeViewModel @Inject constructor(
         initialValue = GenderTab.WOMEN,
     )
 
-    private val _contentState = MutableStateFlow<ContentState>(ContentState.Loading)
-    val contentState: StateFlow<ContentState> = _contentState.asStateFlow()
+    private val contentFetchRequests = MutableSharedFlow<Unit>(replay = 1)
+        .also { it.tryEmit(Unit) }
 
-    init {
-        fetchContent()
-    }
+    private val isFetchingContent = MutableStateFlow(false)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val contentResult: StateFlow<Result<HomeContent>?> = contentFetchRequests
+        .flatMapLatest { interactor.getHomeContentFlow() }
+        .onEach { isFetchingContent.value = false }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
+
+    val contentState: StateFlow<ContentState> = combine(
+        isFetchingContent,
+        contentResult,
+    ) { isFetchingContent, contentResult ->
+        if (isFetchingContent || contentResult == null) {
+            ContentState.Loading
+        } else {
+            contentResult.fold(
+                onSuccess = { content ->
+                    ContentState.Success(content)
+                },
+                onFailure = { throwable ->
+                    val errorState = when (throwable) {
+                        is IOException -> ErrorStateRework.NETWORK
+                        else -> ErrorStateRework.GENERIC
+                    }
+                    ContentState.Error(errorState)
+                },
+            )
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = ContentState.Loading,
+    )
 
     fun onGenderTabClicked(tab: GenderTab) {
         savedStateHandle[KEY_CURRENT_GENDER_TAB] = tab
@@ -62,30 +100,8 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onContentErrorRefreshClicked() {
-        _contentState.value = ContentState.Loading
-        fetchContent()
-    }
-
-    // TODO: [Medium] Migrate to Flow APIs to not collect Flows without considering UI lifecycle. See CatalogViewModel as example
-    private fun fetchContent() {
-        fetchContentJob?.cancel()
-        fetchContentJob = viewModelScope.launch {
-            interactor.getHomeContentFlow().collect { result ->
-                val contentState = result.fold(
-                    onSuccess = { content ->
-                        ContentState.Success(content)
-                    },
-                    onFailure = { throwable ->
-                        val errorState = when (throwable) {
-                            is IOException -> ErrorStateRework.NETWORK
-                            else -> ErrorStateRework.GENERIC
-                        }
-                        ContentState.Error(errorState)
-                    },
-                )
-                _contentState.value = contentState
-            }
-        }
+        contentFetchRequests.tryEmit(Unit)
+        isFetchingContent.value = true
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
