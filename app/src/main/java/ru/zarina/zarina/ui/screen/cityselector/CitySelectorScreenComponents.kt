@@ -197,7 +197,7 @@ object CitySelectorScreenComponents {
                                     contentType = { getCityListItemContentType(it) },
                                 ) { item ->
                                     when (item) {
-                                        is CityListItem.City -> {
+                                        is CityListItem.CityItem -> {
                                             City(
                                                 city = item.city,
                                                 onClick = onCityClicked,
@@ -207,7 +207,7 @@ object CitySelectorScreenComponents {
                                             )
                                         }
 
-                                        is CityListItem.CityFirstLetterHeader -> {
+                                        is CityListItem.CityFirstLetterHeaderItem -> {
                                             CityFirstLetterHeader(item.letter)
                                         }
                                     }
@@ -366,15 +366,15 @@ object CitySelectorScreenComponents {
 
     @Stable
     private fun getCityListItemKey(item: CityListItem): String = when (item) {
-        is CityListItem.City -> "$CityListItemKeyPrefixCity ${item.city.kladrId.value}"
-        is CityListItem.CityFirstLetterHeader -> {
+        is CityListItem.CityItem -> "$CityListItemKeyPrefixCity ${item.city.kladrId.value}"
+        is CityListItem.CityFirstLetterHeaderItem -> {
             "$CityListItemKeyPrefixCityFirstLetterHeader ${item.letter}"
         }
     }
 
     @Stable
     private fun getCityListItemContentType(item: CityListItem): String = when (item) {
-        is CityListItem.City -> {
+        is CityListItem.CityItem -> {
             if (!item.showFullName) {
                 CityListItemContentTypeCity
             } else {
@@ -382,7 +382,7 @@ object CitySelectorScreenComponents {
             }
         }
 
-        is CityListItem.CityFirstLetterHeader -> CityListItemContentTypeCityFirstLetterHeader
+        is CityListItem.CityFirstLetterHeaderItem -> CityListItemContentTypeCityFirstLetterHeader
     }
 
     private val ConfirmButtonBottomPadding = 20.dp

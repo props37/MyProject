@@ -36,10 +36,10 @@ class CityListStatePreviewParameterProvider : PreviewParameterProvider<CityListS
             kladrId = KladrId("2"),
         )
         return listOf(
-            CityListItem.City(saintPetersburg),
-            CityListItem.City(moscow),
-            CityListItem.CityFirstLetterHeader('А'),
-            CityListItem.City(anapa),
+            CityListItem.CityItem(saintPetersburg),
+            CityListItem.CityItem(moscow),
+            CityListItem.CityFirstLetterHeaderItem('А'),
+            CityListItem.CityItem(anapa),
         )
     }
 }
