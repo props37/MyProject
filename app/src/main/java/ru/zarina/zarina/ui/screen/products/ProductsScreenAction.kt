@@ -6,6 +6,6 @@ import ru.zarina.zarina.domain.rework.filter.Filters
 sealed class ProductsScreenAction {
     data class FiltersClicked(
         val categoryId: Category.Id,
-        val appliedFilters: Filters?,
+        val filters: Filters?,
     ) : ProductsScreenAction()
 }

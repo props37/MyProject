@@ -58,7 +58,7 @@ import kotlin.math.min
 fun PriceFilter(
     filter: PriceFilter,
     limits: LongRange,
-    onFilterChanged: (PriceFilter) -> Unit,
+    onFilterChanged: (PriceFilter) -> Unit, // TODO: [High] Refactor
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -87,7 +87,7 @@ fun PriceFilter(
                     val newMaxPrice = coerceMaxPrice(maxPrice, newMinPrice, limits)
                     minPrice = newMinPrice
                     maxPrice = newMinPrice
-                    onFilterChanged(PriceFilter(newMinPrice, newMaxPrice))
+//                    onFilterChanged(PriceFilter(newMinPrice, newMaxPrice))
                 },
                 modifier = Modifier
                     .weight(1f)
@@ -95,7 +95,7 @@ fun PriceFilter(
                         if (!state.isFocused) {
                             val newMinPrice = coerceMinPrice(minPrice, maxPrice, limits)
                             minPrice = newMinPrice
-                            onFilterChanged(PriceFilter(newMinPrice, maxPrice))
+//                            onFilterChanged(PriceFilter(newMinPrice, maxPrice))
                         }
                     },
             )
@@ -110,7 +110,7 @@ fun PriceFilter(
                     val newMinPrice = coerceMinPrice(minPrice, newMaxPrice, limits)
                     minPrice = newMinPrice
                     maxPrice = newMinPrice
-                    onFilterChanged(PriceFilter(newMinPrice, newMaxPrice))
+//                    onFilterChanged(PriceFilter(newMinPrice, newMaxPrice))
                 },
                 modifier = Modifier
                     .weight(1f)
@@ -118,7 +118,7 @@ fun PriceFilter(
                         if (!state.isFocused) {
                             val newMaxPrice = coerceMaxPrice(maxPrice, minPrice, limits)
                             maxPrice = newMaxPrice
-                            onFilterChanged(PriceFilter(minPrice, newMaxPrice))
+//                            onFilterChanged(PriceFilter(minPrice, newMaxPrice))
                         }
                     },
             )
@@ -139,7 +139,7 @@ fun PriceFilter(
                 val newMaxPrice = coerceMaxPrice(maxPrice, minPrice, limits)
                 minPrice = newMinPrice
                 maxPrice = newMinPrice
-                onFilterChanged(PriceFilter(newMinPrice, newMaxPrice))
+//                onFilterChanged(PriceFilter(newMinPrice, newMaxPrice))
             },
             steps = 0,
             colors = SliderDefaults.colors(

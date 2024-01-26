@@ -6,22 +6,25 @@ import kotlinx.coroutines.flow.first
 import ru.zarina.zarina.data.rework.product.ProductRepository
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
+import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.product.Product
 
 class ProductPagingSource(
     private val categoryId: Category.Id,
     private val sorting: Sorting,
     private val productRepository: ProductRepository,
+    private val onAvailableFiltersReceived: (Filters) -> Unit,
 ) : PagingSource<Int, Product>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Product> {
         try {
             val page = params.key ?: 1
-            val productPage =
-                productRepository.getProductPageFlow(categoryId, page, sorting).first()
-            val products = productPage.data
+            val productsWithFiltersPage =
+                productRepository.getProductsWithFiltersPageFlow(categoryId, page, sorting).first()
+            val products = productsWithFiltersPage.data.products
+            onAvailableFiltersReceived(productsWithFiltersPage.data.filters)
 
-            val paginationInfo = productPage.paginationInfo
+            val paginationInfo = productsWithFiltersPage.paginationInfo
             val prevPage = paginationInfo.currentPage - 1
             val nextPage = paginationInfo.currentPage + 1
             val prevKey = prevPage.takeIf { it >= 1 }

@@ -6,8 +6,8 @@ import ru.zarina.zarina.data.rework.common.remote.api.dto.FiltersDto
 import ru.zarina.zarina.data.rework.common.remote.api.dto.ProductDto
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Page
-import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
+import ru.zarina.zarina.domain.rework.product.ProductsWithFilters
 import ru.zarina.zarina.domain.rework.common.PaginationInfo as DomainPaginationInfo
 
 @Serializable
@@ -24,12 +24,16 @@ data class ProductsDto(
     @SerialName("pagination")
     val paginationInfo: PaginationInfo? = null,
 ) {
-    fun toProductPage(): Page<List<Product>> {
+    fun toProductsWithFiltersPage(): Page<ProductsWithFilters> {
         checkNotNull(products) { "products is null" }
         checkNotNull(filters) { "filters is null" }
+        val productsWithFilters = ProductsWithFilters(
+            products = products.map { it.toProduct() },
+            filters = filters.toFilters(),
+        )
         return Page(
-            data = products.map { it.toProduct() },
-            paginationInfo = getPaginationInfo(),
+            data = productsWithFilters,
+            getPaginationInfo(),
         )
     }
 

@@ -24,7 +24,6 @@ data class FiltersParcelable(
                 )
             },
             price = price?.toPriceFilter(),
-            priceLimits = null, // TODO: [High] Implement?
             materials = materials?.let { materials ->
                 ListFilter(
                     items = materials.items.map { it.toMaterialFilterItem() },

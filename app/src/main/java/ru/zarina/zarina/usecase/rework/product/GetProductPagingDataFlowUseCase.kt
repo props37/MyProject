@@ -8,8 +8,10 @@ import ru.zarina.zarina.data.rework.product.ProductRepository
 import ru.zarina.zarina.data.rework.product.pagination.ProductPagingSource
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
+import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.usecase.base.BasicUseCase
+import timber.log.Timber
 import javax.inject.Inject
 
 class GetProductPagingDataFlowUseCase @Inject constructor(
@@ -24,6 +26,10 @@ class GetProductPagingDataFlowUseCase @Inject constructor(
                     categoryId = params.categoryId,
                     sorting = params.sorting,
                     productRepository = productRepository,
+                    onAvailableFiltersReceived = {
+                        Timber.tag(TAG).v("Available filters received: $it")
+                        params.onAvailableFiltersReceived(it)
+                    },
                 )
             },
         ).flow
@@ -42,6 +48,7 @@ class GetProductPagingDataFlowUseCase @Inject constructor(
     data class Params(
         val categoryId: Category.Id,
         val sorting: Sorting,
+        val onAvailableFiltersReceived: (Filters) -> Unit,
     )
 
     companion object {
@@ -49,5 +56,7 @@ class GetProductPagingDataFlowUseCase @Inject constructor(
         private const val PREFETCH_DISTANCE = PAGE_SIZE
         private const val INITIAL_LOAD_SIZE = PAGE_SIZE * 2
         private const val MAX_SIZE = 300
+
+        private const val TAG = "GetProductPagingDataFlowUseCase"
     }
 }

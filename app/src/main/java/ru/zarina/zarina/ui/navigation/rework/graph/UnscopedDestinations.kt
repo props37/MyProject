@@ -94,7 +94,7 @@ object UnscopedDestinations {
 
     data object Filters : Destination<Filters.Args>() {
         const val ARG_KEY_CATEGORY_ID = "arg_category_id"
-        const val ARG_KEY_APPLIED_FILTERS = "arg_applied_filters"
+        const val ARG_KEY_FILTERS = "arg_filters"
 
         private val baseRoute: String
             get() = BaseRouteReworked.FILTERS.route
@@ -103,21 +103,21 @@ object UnscopedDestinations {
             get() = RouteUtils.generateRouteSchema(
                 routeBase = baseRoute,
                 argNames = arrayOf(ARG_KEY_CATEGORY_ID),
-                optionalArgNames = arrayOf(ARG_KEY_APPLIED_FILTERS),
+                optionalArgNames = arrayOf(ARG_KEY_FILTERS),
             )
 
         override fun createRoute(args: Args): String {
-            val appliedFiltersParcelable = args.appliedFilters?.let { FiltersParcelable.from(it) }
-            val appliedFiltersParcelableString = appliedFiltersParcelable?.let {
-                Uri.encode(Json.encodeToString(appliedFiltersParcelable))
+            val filtersParcelable = args.filters?.let { FiltersParcelable.from(it) }
+            val filtersParcelableString = filtersParcelable?.let {
+                Uri.encode(Json.encodeToString(filtersParcelable))
             }
             return RouteUtils.generateRoute(
                 routeBase = baseRoute,
                 args = arrayOf(args.categoryId.value),
                 optionalArgs = arrayOf(
                     OptionalNavArg(
-                        name = ARG_KEY_APPLIED_FILTERS,
-                        value = appliedFiltersParcelableString,
+                        name = ARG_KEY_FILTERS,
+                        value = filtersParcelableString,
                     )
                 ),
             )
@@ -126,7 +126,7 @@ object UnscopedDestinations {
         override val arguments: List<NamedNavArgument>
             get() = listOf(
                 navArgument(ARG_KEY_CATEGORY_ID) { type = NavType.LongType },
-                navArgument(ARG_KEY_APPLIED_FILTERS) {
+                navArgument(ARG_KEY_FILTERS) {
                     type = NavType.FiltersParcelableType
                     nullable = true
                 }
@@ -134,7 +134,7 @@ object UnscopedDestinations {
 
         data class Args(
             val categoryId: Category.Id,
-            val appliedFilters: DomainFilters?,
+            val filters: DomainFilters?,
         )
     }
 }

@@ -44,9 +44,9 @@ class FiltersViewModel @Inject constructor(
             Category.Id(value)
         }
 
-    private val appliedFilters: StateFlow<Filters?> = savedStateHandle
+    private val filters: StateFlow<Filters?> = savedStateHandle
         .getStateFlow<FiltersParcelable?>(
-            key = UnscopedDestinations.Filters.ARG_KEY_APPLIED_FILTERS,
+            key = UnscopedDestinations.Filters.ARG_KEY_FILTERS,
             initialValue = null,
         )
         .mapState(

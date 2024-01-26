@@ -126,7 +126,7 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                     is ProductsScreenAction.FiltersClicked -> {
                         val args = UnscopedDestinations.Filters.Args(
                             categoryId = action.categoryId,
-                            appliedFilters = action.appliedFilters,
+                            filters = action.filters,
                         )
                         val route = UnscopedDestinations.Filters.createRoute(args)
                         navController.navigate(route)

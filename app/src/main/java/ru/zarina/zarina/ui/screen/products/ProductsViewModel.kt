@@ -18,6 +18,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
+import ru.zarina.zarina.domain.rework.filter.Filters
+import ru.zarina.zarina.domain.rework.filter.coerceIn
+import ru.zarina.zarina.domain.rework.filter.selected
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
@@ -78,14 +81,25 @@ class ProductsViewModel @Inject constructor(
             initialValue = null,
         )
 
-    private val sorting = MutableStateFlow(Sorting.getDefault())
+    private val filters = MutableStateFlow(
+        Filters.create(
+            sorting = Filters.getDefaultSorting(Sorting.getDefault()),
+        )
+    )
+
+    private var availableFilters: Filters? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val productPagingDataFlow: Flow<PagingData<Product>> = combine(
         categoryId,
-        sorting,
-    ) { categoryId, sorting ->
-        GetProductPagingDataFlowUseCase.Params(categoryId, sorting)
+        filters,
+    ) { categoryId, filters ->
+        val sorting = filters.sorting?.selected ?: Sorting.getDefault()
+        GetProductPagingDataFlowUseCase.Params(
+            categoryId = categoryId,
+            sorting = sorting,
+            onAvailableFiltersReceived = { availableFilters = it },
+        )
     }
         .flatMapLatest { params ->
             interactor.getProductPagingDataFlow(params)
@@ -104,9 +118,11 @@ class ProductsViewModel @Inject constructor(
 
     fun onFiltersClicked() {
         navigationThrottler.throttle {
+            val availableFilters = availableFilters
+            val filters = availableFilters?.let { filters.value.coerceIn(it) } ?: filters.value
             val action = ProductsScreenAction.FiltersClicked(
                 categoryId = categoryId.value,
-                appliedFilters = null, // TODO: [High] Pass applied filters
+                filters = filters,
             )
             emitSideEffect(SideEffect.NavigateForward(action))
         }

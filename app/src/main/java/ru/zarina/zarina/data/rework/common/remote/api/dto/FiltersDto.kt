@@ -9,6 +9,7 @@ import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.filter.ListFilter
 import ru.zarina.zarina.domain.rework.filter.ListFilterItem
 import ru.zarina.zarina.domain.rework.filter.MaterialFilterItem
+import ru.zarina.zarina.domain.rework.filter.PriceFilter
 import ru.zarina.zarina.domain.rework.filter.SizeFilterItem
 
 @Serializable
@@ -27,6 +28,7 @@ data class FiltersDto(
 ) {
     fun toFilters(): Filters {
         checkNotNull(price) { "price is null" }
+        val price = PriceFilter(min = null, max = null, limits = price.toPriceRange())
         val materials = if (!materials.isNullOrEmpty()) {
             ListFilter(
                 items = materials.map { it.toMaterialFilterItem() },
@@ -46,9 +48,8 @@ data class FiltersDto(
             )
         } else null
         return Filters(
-            sorting = null, // TODO: [High] Figure out what to do with sorting
-            price = null, // TODO: [High] Figure out what to do with price
-            priceLimits = price.toPriceRange(),
+            sorting = Filters.getDefaultSorting(),
+            price = price,
             materials = materials,
             sizes = sizes,
             colors = colors,

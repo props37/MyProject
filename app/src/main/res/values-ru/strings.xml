@@ -47,6 +47,12 @@
     <string name="checkmark_unchecked">Не выбрано</string>
     <string name="from">От</string>
     <string name="to">До</string>
+    <string name="sorting">Сортировка</string>
+    <string name="sorting_new">По новизне</string>
+    <string name="sorting_popular">По популярности</string>
+    <string name="sorting_discount">По скидке</string>
+    <string name="sorting_price_low_to_high">По возрастанию цены</string>
+    <string name="sorting_price_high_to_low">По убыванию цены</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -148,7 +154,6 @@
     <string name="plural_products_other">%1$d товаров</string>
     <string name="products_not_found">Товаров не нашлось</string>
     <string name="try_changing_filter">Попробуйте изменить выбранные фильтры</string>
-    <string name="sorting">Сортировка</string>
     <string name="by_new">По новизне</string>
     <string name="by_price_ascending">По возрастанию цены</string>
     <string name="by_price_descending">По убыванию цены</string>
