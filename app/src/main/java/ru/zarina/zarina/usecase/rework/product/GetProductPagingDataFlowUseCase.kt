@@ -24,6 +24,7 @@ class GetProductPagingDataFlowUseCase @Inject constructor(
             pagingSourceFactory = {
                 ProductPagingSource(
                     categoryId = params.categoryId,
+                    filters = params.filters,
                     sorting = params.sorting,
                     productRepository = productRepository,
                     onAvailableFiltersReceived = {
@@ -47,6 +48,7 @@ class GetProductPagingDataFlowUseCase @Inject constructor(
 
     data class Params(
         val categoryId: Category.Id,
+        val filters: Filters?,
         val sorting: Sorting,
         val onAvailableFiltersReceived: (Filters) -> Unit,
     )

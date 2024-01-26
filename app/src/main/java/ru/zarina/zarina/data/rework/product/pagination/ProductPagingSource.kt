@@ -11,6 +11,7 @@ import ru.zarina.zarina.domain.rework.product.Product
 
 class ProductPagingSource(
     private val categoryId: Category.Id,
+    private val filters: Filters?,
     private val sorting: Sorting,
     private val productRepository: ProductRepository,
     private val onAvailableFiltersReceived: (Filters) -> Unit,
@@ -20,7 +21,8 @@ class ProductPagingSource(
         try {
             val page = params.key ?: 1
             val productsWithFiltersPage =
-                productRepository.getProductsWithFiltersPageFlow(categoryId, sorting, page).first()
+                productRepository.getProductsWithFiltersPageFlow(categoryId, filters, sorting, page)
+                    .first()
             val products = productsWithFiltersPage.data.products
             onAvailableFiltersReceived(productsWithFiltersPage.data.filters)
 

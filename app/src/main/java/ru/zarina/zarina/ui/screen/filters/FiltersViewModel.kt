@@ -68,10 +68,12 @@ class FiltersViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val categoryProductInfoResult: StateFlow<Result<CategoryProductInfo>?> = combine(
         categoryId,
+        filters,
         categoryProductInfoFetchRequests,
-    ) { categoryId, _ -> categoryId }
-        .flatMapLatest { categoryId ->
-            val params = GetCategoryProductInfoFlowUseCase.Params(categoryId)
+    ) { categoryId, filters, _ ->
+        GetCategoryProductInfoFlowUseCase.Params(categoryId, filters)
+    }
+        .flatMapLatest { params ->
             interactor.getCategoryProductInfoFlow(params)
         }
         .stateIn(

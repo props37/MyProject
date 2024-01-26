@@ -97,6 +97,7 @@ class ProductsViewModel @Inject constructor(
         val sorting = filters.sorting?.selected ?: Sorting.getDefault()
         GetProductPagingDataFlowUseCase.Params(
             categoryId = categoryId,
+            filters = filters,
             sorting = sorting,
             onAvailableFiltersReceived = { availableFilters = it },
         )

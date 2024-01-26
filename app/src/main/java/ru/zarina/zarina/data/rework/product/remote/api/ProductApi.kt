@@ -5,6 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.post
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.data.rework.common.remote.api.dto.PriceFilterDto
 import ru.zarina.zarina.data.rework.common.remote.api.dto.SortingDto
 import ru.zarina.zarina.data.rework.product.remote.api.dto.ProductsDto
 import ru.zarina.zarina.di.rework.Qualifiers
@@ -12,6 +13,7 @@ import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
+import ru.zarina.zarina.domain.rework.filter.Filters as DomainFilters
 
 class ProductApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
@@ -19,24 +21,72 @@ class ProductApi @Inject constructor(
 ) {
     suspend fun getProducts(
         categoryId: Category.Id,
+        filters: DomainFilters?,
         sorting: Sorting,
         page: Int,
     ): ProductsDto {
-        val body = GetFilteredProductsBody(categoryId.value, SortingDto.from(sorting), page)
+        val body = GetProductsBody(
+            categoryId = categoryId.value,
+            filters = filters?.let { FiltersBodyDto.from(it) },
+            sorting = SortingDto.from(sorting),
+            page = page,
+        )
         return httpClient.post("/api/v1/products") {
             setJsonBody(body)
         }.body()
     }
 
     @Serializable
-    private data class GetFilteredProductsBody(
+    private data class GetProductsBody(
         @SerialName("category_id")
         val categoryId: Long,
 
+        @SerialName("filters")
+        val filters: FiltersBodyDto?,
+
         @SerialName("sort")
-        val sort: SortingDto,
+        val sorting: SortingDto,
 
         @SerialName("page")
         val page: Int,
     )
+
+    @Serializable
+    data class FiltersBodyDto(
+        @SerialName("price")
+        val price: PriceFilterDto? = null,
+
+        @SerialName("materials")
+        val materials: List<String>? = null,
+
+        @SerialName("sizes")
+        val sizes: List<String>? = null,
+
+        @SerialName("colors")
+        val colors: List<String>? = null,
+    ) {
+        companion object {
+            fun from(filters: DomainFilters): FiltersBodyDto? {
+                return if (!filters.isEmpty) {
+                    val materials = filters.materials?.let { filter ->
+                        if (!filter.isEmpty) filter.selectedItems.map { it.id.value } else null
+                    }
+                    val sizes = filters.sizes?.let { filter ->
+                        if (!filter.isEmpty) filter.selectedItems.map { it.id.value } else null
+                    }
+                    val colors = filters.colors?.let { filter ->
+                        if (!filter.isEmpty) filter.selectedItems.map { it.id.value } else null
+                    }
+                    FiltersBodyDto(
+                        price = filters.price?.let { PriceFilterDto.from(it) },
+                        materials = materials,
+                        sizes = sizes,
+                        colors = colors,
+                    )
+                } else {
+                    null
+                }
+            }
+        }
+    }
 }
