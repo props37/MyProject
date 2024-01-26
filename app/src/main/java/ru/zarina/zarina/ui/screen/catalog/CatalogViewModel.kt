@@ -66,10 +66,7 @@ class CatalogViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val categoriesResult: StateFlow<Result<Categories>?> = categoriesFetchRequests
-        .onEach { isFetchingCategories.value = true }
-        .flatMapLatest {
-            interactor.getCategoriesFlow()
-        }
+        .flatMapLatest { interactor.getCategoriesFlow() }
         .onEach { isFetchingCategories.value = false }
         .stateIn(
             scope = viewModelScope,
@@ -161,6 +158,7 @@ class CatalogViewModel @Inject constructor(
 
     fun onCategoryListErrorRefreshClicked() {
         categoriesFetchRequests.tryEmit(Unit)
+        isFetchingCategories.value = true
     }
 
     private fun onCategoryItemClicked(item: CategoryListItem.CategoryItem) {
