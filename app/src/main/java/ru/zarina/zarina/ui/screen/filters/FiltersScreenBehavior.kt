@@ -15,7 +15,7 @@ fun FiltersScreenBehavior(
 ) {
     val updatedNavigateBackward by rememberUpdatedState(navigateBackward)
 
-    ForcedBottomNavBarBehavior(isVisible = true)
+    ForcedBottomNavBarBehavior(isVisible = false)
 
     LaunchedEffect(sideEffects) {
         sideEffects.collect { sideEffect ->
