@@ -61,9 +61,11 @@ class ProductsViewModel @Inject constructor(
     private val categoryResult: StateFlow<Result<Category>?> = combine(
         categoryId,
         categoryFetchRequests,
-    ) { id, _ -> id }
-        .flatMapLatest { id ->
-            interactor.getCategoryFlow(GetCategoryFlowUseCase.Params(id))
+    ) { id, _ ->
+        GetCategoryFlowUseCase.Params(id)
+    }
+        .flatMapLatest { params ->
+            interactor.getCategoryFlow(params)
         }
         .stateIn(
             scope = viewModelScope,
@@ -72,9 +74,7 @@ class ProductsViewModel @Inject constructor(
         )
 
     val category: StateFlow<Category?> = categoryResult
-        .map { result ->
-            result?.getOrNull()
-        }
+        .map { it?.getOrNull() }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileUiSubscribed,
