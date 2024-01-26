@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
@@ -343,12 +344,12 @@ object CatalogScreenComponents {
                 val color = item.category.color?.toComposeColor()
                     ?: UiKitTheme.colorsReworked.text.general.regular.default
 
-                // TODO: [High] Make multiline?
                 Text(
                     text = item.category.name.uppercase(),
                     style = UiKitTheme.typographyReworked.tertiary.light,
                     color = color,
                     maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
 
                 if (item.category.label != null) {
@@ -358,6 +359,7 @@ object CatalogScreenComponents {
                         style = UiKitTheme.typographyReworked.caption2.light,
                         color = color,
                         maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.align(Alignment.Top),
                     )
                 }
