@@ -24,7 +24,7 @@ data class Filters(
                 && sizes?.isEmpty != false
                 && colors?.isEmpty != false
 
-    val size: Int by lazy {
+    val availableFilterCount: Int by lazy {
         var size = 0
         if (sorting != null) size++
         if (price != null) size++

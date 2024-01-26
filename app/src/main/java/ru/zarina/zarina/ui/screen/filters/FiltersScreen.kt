@@ -176,7 +176,10 @@ private fun ScreenContent(
                                         }
                                     }
 
-                                    if (filter !is PriceFilter && index < state.filters.size - 1) {
+                                    if (
+                                        filter !is PriceFilter
+                                        && index < state.filters.availableFilterCount - 1
+                                    ) {
                                         Divider(
                                             color = UiKitTheme.colorsReworked.background.skeleton,
                                             modifier = Modifier
