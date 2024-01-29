@@ -20,6 +20,7 @@ import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
 import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.CityParcelableType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.FiltersParcelableType
+import ru.zarina.zarina.ui.navigation.rework.base.navtype.ListFilterParcelableType
 import ru.zarina.zarina.domain.rework.filter.Filters as DomainFilters
 import ru.zarina.zarina.domain.rework.filter.ListFilter as DomainListFilter
 
@@ -160,6 +161,11 @@ object UnscopedDestinations {
                 args = arrayOf(listFilterParcelableString),
             )
         }
+
+        override val arguments: List<NamedNavArgument>
+            get() = listOf(
+                navArgument(ARG_KEY_FILTER) { type = NavType.ListFilterParcelableType },
+            )
 
         data class Args(val filter: DomainListFilter<*>)
     }
