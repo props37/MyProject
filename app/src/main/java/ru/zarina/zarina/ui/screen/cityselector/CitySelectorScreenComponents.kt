@@ -295,7 +295,7 @@ object CitySelectorScreenComponents {
 
                     CheckmarkAnimatedIcon(
                         isVisible = isSelected,
-                        iconSize = 20.dp,
+                        iconSize = 16.dp,
                         modifier = Modifier.padding(start = if (isSelected) 16.dp else 0.dp),
                     )
                 }
