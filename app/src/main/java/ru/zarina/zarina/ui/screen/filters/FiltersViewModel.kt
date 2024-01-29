@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.update
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.Filters
+import ru.zarina.zarina.domain.rework.filter.ListFilter
 import ru.zarina.zarina.domain.rework.filter.combineWith
 import ru.zarina.zarina.domain.rework.filter.updateWith
 import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
@@ -133,7 +134,18 @@ class FiltersViewModel @Inject constructor(
         }
     }
 
+    fun onFilterClicked(filter: Filter) {
+        if (filter is ListFilter<*>) {
+            navigationThrottler.throttle {
+                val action = FiltersScreenAction.ListFilterClicked(filter)
+                emitSideEffect(SideEffect.NavigateForward(action))
+            }
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class NavigateForward(val action: FiltersScreenAction) : SideEffect
+
         data class NavigateBackward(val result: FiltersScreenResult) : SideEffect
     }
 

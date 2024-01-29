@@ -62,6 +62,7 @@ import ru.zarina.zarina.util.compose.Crossfade
 
 @Composable
 fun FiltersScreen(
+    navigateForward: (FiltersScreenAction) -> Unit,
     navigateBackward: (FiltersScreenResult) -> Unit,
     viewModel: FiltersViewModel = hiltViewModel(),
 ) {
@@ -77,9 +78,11 @@ fun FiltersScreen(
     ScreenContent(
         filterListState = filterListState,
         onFilterChanged = viewModel::onFilterChanged,
+        onFilterClicked = viewModel::onFilterClicked,
         productCount = productCount,
         topBarActions = topBarActions,
         sideEffects = viewModel.sideEffects,
+        navigateForward = navigateForward,
         navigateBackward = navigateBackward,
     )
 }
@@ -88,13 +91,16 @@ fun FiltersScreen(
 private fun ScreenContent(
     filterListState: FilterListState,
     onFilterChanged: (Filter) -> Unit,
+    onFilterClicked: (Filter) -> Unit,
     productCount: Int?,
     topBarActions: TopBarActions,
     sideEffects: Flow<FiltersViewModel.SideEffect>,
+    navigateForward: (FiltersScreenAction) -> Unit,
     navigateBackward: (FiltersScreenResult) -> Unit,
 ) {
     FiltersScreenBehavior(
         sideEffects = sideEffects,
+        navigateForward = navigateForward,
         navigateBackward = navigateBackward,
     )
 
@@ -167,7 +173,7 @@ private fun ScreenContent(
                                                     selected = remember(filter.selectedItems) {
                                                         filter.selectedItems.firstOrNull()
                                                     },
-                                                    onClick = { /*TODO*/ },
+                                                    onClick = { onFilterClicked(filter) },
                                                 )
                                             } else {
                                                 MultiSelectionFilterItem(
@@ -175,7 +181,7 @@ private fun ScreenContent(
                                                     selectedCount = remember(filter.selectedItems) {
                                                         filter.selectedItems.size
                                                     },
-                                                    onClick = { /*TODO*/ },
+                                                    onClick = { onFilterClicked(filter) },
                                                 )
                                             }
                                         }
@@ -185,8 +191,8 @@ private fun ScreenContent(
                                                 type = filter.type,
                                                 isChecked = filter.isEnabled,
                                                 onCheckedChanged = {
-                                                    val filter = filter.copy(isEnabled = it)
-                                                    onFilterChanged(filter)
+                                                    val updatedFilter = filter.copy(isEnabled = it)
+                                                    onFilterChanged(updatedFilter)
                                                 },
                                             )
                                         }

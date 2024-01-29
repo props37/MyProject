@@ -11,8 +11,10 @@ import ru.zarina.zarina.ui.screen.filters.FiltersViewModel.SideEffect
 @Composable
 fun FiltersScreenBehavior(
     sideEffects: Flow<SideEffect>,
+    navigateForward: (FiltersScreenAction) -> Unit,
     navigateBackward: (FiltersScreenResult) -> Unit,
 ) {
+    val updatedNavigateForward by rememberUpdatedState(navigateForward)
     val updatedNavigateBackward by rememberUpdatedState(navigateBackward)
 
     ForcedBottomNavBarBehavior(isVisible = false)
@@ -20,6 +22,7 @@ fun FiltersScreenBehavior(
     LaunchedEffect(sideEffects) {
         sideEffects.collect { sideEffect ->
             when (sideEffect) {
+                is SideEffect.NavigateForward -> updatedNavigateForward(sideEffect.action)
                 is SideEffect.NavigateBackward -> updatedNavigateBackward(sideEffect.result)
             }
         }

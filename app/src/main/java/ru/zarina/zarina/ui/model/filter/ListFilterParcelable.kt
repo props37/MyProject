@@ -19,6 +19,32 @@ class ListFilterParcelable(
     val type: FilterTypeParcelable,
 ) : Parcelable {
 
+    fun toListFilter(): ListFilter<*> {
+        val items = when (type) {
+            FilterTypeParcelable.SORTING -> items.map { it.toSortFilterItem() }
+            FilterTypeParcelable.MATERIALS -> items.map { it.toMaterialFilterItem() }
+            FilterTypeParcelable.SIZES -> items.map { it.toSizeFilterItem() }
+            FilterTypeParcelable.COLORS -> items.map { it.toColorFilterItem() }
+
+            FilterTypeParcelable.PRICE -> {
+                error("Could not map ${FilterTypeParcelable.PRICE} filter to ListFilter")
+            }
+
+            FilterTypeParcelable.DELIVERY_AVAILABILITY -> {
+                error("Could not map ${FilterTypeParcelable.DELIVERY_AVAILABILITY} filter to ListFilter")
+            }
+
+            FilterTypeParcelable.STORE_PICKUP_AVAILABILITY -> {
+                error("Could not map ${FilterTypeParcelable.STORE_PICKUP_AVAILABILITY} filter to ListFilter")
+            }
+        }
+        return ListFilter(
+            items = items,
+            isSingleSelection = isSingleSelection,
+            type = type.toFilterType(),
+        )
+    }
+
     @Serializable
     @Parcelize
     class Item(

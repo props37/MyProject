@@ -1,6 +1,9 @@
 package ru.zarina.zarina.ui.screen.filters.listfilter
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +26,7 @@ private fun ScreenContent(
 ) {
     ListFilterScreenBehavior(sideEffects = sideEffects)
 
-
+    Box(modifier = Modifier.fillMaxSize())
 }
 
 @Preview
