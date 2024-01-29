@@ -17,22 +17,23 @@ data class Filters(
         if (colors != null) yield(colors)
     }
 
-    // Ignore sorting since it is not included in filters on backend
+    // Ignore sorting
     val isEmpty: Boolean
         get() = price?.isEmpty != false
                 && materials?.isEmpty != false
                 && sizes?.isEmpty != false
                 && colors?.isEmpty != false
 
-    val availableFilterCount: Int by lazy {
-        var size = 0
-        if (sorting != null) size++
-        if (price != null) size++
-        if (materials != null) size++
-        if (sizes != null) size++
-        if (colors != null) size++
-        size
-    }
+    val availableFilterCount: Int
+        get() {
+            var size = 0
+            if (sorting != null) size++
+            if (price != null) size++
+            if (materials != null) size++
+            if (sizes != null) size++
+            if (colors != null) size++
+            return size
+        }
 
     companion object {
         val EMPTY: Filters
