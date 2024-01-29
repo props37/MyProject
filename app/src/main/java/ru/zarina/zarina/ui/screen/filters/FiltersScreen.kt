@@ -38,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.ListFilter
 import ru.zarina.zarina.domain.rework.filter.PriceFilter
 import ru.zarina.zarina.domain.rework.filter.ToggleFilter
@@ -75,6 +76,7 @@ fun FiltersScreen(
 
     ScreenContent(
         filterListState = filterListState,
+        onFilterChanged = viewModel::onFilterChanged,
         productCount = productCount,
         topBarActions = topBarActions,
         sideEffects = viewModel.sideEffects,
@@ -85,6 +87,7 @@ fun FiltersScreen(
 @Composable
 private fun ScreenContent(
     filterListState: FilterListState,
+    onFilterChanged: (Filter) -> Unit,
     productCount: Int?,
     topBarActions: TopBarActions,
     sideEffects: Flow<FiltersViewModel.SideEffect>,
@@ -145,7 +148,7 @@ private fun ScreenContent(
                                         is PriceFilter -> {
                                             PriceFilter(
                                                 priceFilter = filter,
-                                                onPriceFilterChanged = { /* TODO */ },
+                                                onPriceFilterChanged = { onFilterChanged(it) },
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .padding(
@@ -181,7 +184,10 @@ private fun ScreenContent(
                                             ToggleFilterItem(
                                                 type = filter.type,
                                                 isChecked = filter.isEnabled,
-                                                onCheckedChanged = { /*TODO*/ },
+                                                onCheckedChanged = {
+                                                    val filter = filter.copy(isEnabled = it)
+                                                    onFilterChanged(filter)
+                                                },
                                             )
                                         }
                                     }

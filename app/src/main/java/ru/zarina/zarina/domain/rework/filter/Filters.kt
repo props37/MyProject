@@ -89,3 +89,57 @@ fun Filters.combineWith(availableFilters: Filters): Filters {
         storePickupAvailability = storePickupAvailability,
     )
 }
+
+@Suppress("UNCHECKED_CAST")
+fun Filters.updateWith(filter: Filter): Filters {
+    return when (filter.type) {
+        Filter.Type.SORTING -> {
+            val castedFilter = checkNotNull(filter as? ListFilter<SortFilterItem>) {
+                "Could not cast ${Filter.Type.SORTING} $filter to ListFilter<SortFilterItem>"
+            }
+            this.copy(sorting = castedFilter)
+        }
+
+        Filter.Type.PRICE -> {
+            check(filter is PriceFilter) {
+                "Could not cast ${Filter.Type.PRICE} $filter to PriceFilter"
+            }
+            this.copy(price = filter)
+        }
+
+        Filter.Type.MATERIALS -> {
+            val castedFilter = checkNotNull(filter as? ListFilter<MaterialFilterItem>) {
+                "Could not cast ${Filter.Type.MATERIALS} $filter to ListFilter<MaterialFilterItem>"
+            }
+            this.copy(materials = castedFilter)
+        }
+
+        Filter.Type.SIZES -> {
+            val castedFilter = checkNotNull(filter as? ListFilter<SizeFilterItem>) {
+                "Could not cast ${Filter.Type.SIZES} $filter to ListFilter<SizeFilterItem>"
+            }
+            this.copy(sizes = castedFilter)
+        }
+
+        Filter.Type.COLORS -> {
+            val castedFilter = checkNotNull(filter as? ListFilter<ColorFilterItem>) {
+                "Could not cast ${Filter.Type.COLORS} $filter to ListFilter<ColorFilterItem>"
+            }
+            this.copy(colors = castedFilter)
+        }
+
+        Filter.Type.DELIVERY_AVAILABILITY -> {
+            check(filter is ToggleFilter) {
+                "Could not cast ${Filter.Type.DELIVERY_AVAILABILITY} $filter to ToggleFilter"
+            }
+            this.copy(deliveryAvailability = filter)
+        }
+
+        Filter.Type.STORE_PICKUP_AVAILABILITY -> {
+            check(filter is ToggleFilter) {
+                "Could not cast ${Filter.Type.STORE_PICKUP_AVAILABILITY} $filter to ToggleFilter"
+            }
+            this.copy(storePickupAvailability = filter)
+        }
+    }
+}

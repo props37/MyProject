@@ -13,9 +13,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.filter.combineWith
+import ru.zarina.zarina.domain.rework.filter.updateWith
 import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.Throttler
@@ -121,6 +124,12 @@ class FiltersViewModel @Inject constructor(
     fun onBackClicked() {
         navigationThrottler.throttle {
             emitSideEffect(SideEffect.NavigateBackward(FiltersScreenResult.ScreenClosed))
+        }
+    }
+
+    fun onFilterChanged(filter: Filter) {
+        filters.update { filters ->
+            filters?.updateWith(filter)
         }
     }
 
