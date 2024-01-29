@@ -8,6 +8,8 @@ data class Filters(
     val materials: ListFilter<MaterialFilterItem>?,
     val sizes: ListFilter<SizeFilterItem>?,
     val colors: ListFilter<ColorFilterItem>?,
+    val deliveryAvailability: ToggleFilter?,
+    val storePickupAvailability: ToggleFilter?,
 ) : Iterable<Filter> {
     override fun iterator(): Iterator<Filter> = iterator {
         if (sorting != null) yield(sorting)
@@ -15,6 +17,8 @@ data class Filters(
         if (materials != null) yield(materials)
         if (sizes != null) yield(sizes)
         if (colors != null) yield(colors)
+        if (deliveryAvailability != null) yield(deliveryAvailability)
+        if (storePickupAvailability != null) yield(storePickupAvailability)
     }
 
     // Ignore sorting
@@ -23,17 +27,8 @@ data class Filters(
                 && materials?.isEmpty != false
                 && sizes?.isEmpty != false
                 && colors?.isEmpty != false
-
-    val availableFilterCount: Int
-        get() {
-            var size = 0
-            if (sorting != null) size++
-            if (price != null) size++
-            if (materials != null) size++
-            if (sizes != null) size++
-            if (colors != null) size++
-            return size
-        }
+                && deliveryAvailability?.isEmpty != false
+                && storePickupAvailability?.isEmpty != false
 
     companion object {
         val EMPTY: Filters
@@ -43,6 +38,8 @@ data class Filters(
                 materials = null,
                 sizes = null,
                 colors = null,
+                deliveryAvailability = null,
+                storePickupAvailability = null,
             )
 
         fun create(
@@ -51,12 +48,16 @@ data class Filters(
             materials: ListFilter<MaterialFilterItem>? = null,
             sizes: ListFilter<SizeFilterItem>? = null,
             colors: ListFilter<ColorFilterItem>? = null,
+            availableForDelivery: ToggleFilter? = null,
+            availableForStorePickup: ToggleFilter? = null,
         ): Filters = Filters(
             sorting = sorting,
             price = price,
             materials = materials,
             sizes = sizes,
             colors = colors,
+            deliveryAvailability = availableForDelivery,
+            storePickupAvailability = availableForStorePickup,
         )
 
         fun getDefaultSorting(selected: Sorting? = null): ListFilter<SortFilterItem> {

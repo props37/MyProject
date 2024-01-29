@@ -12,7 +12,9 @@ enum class FilterTypeParcelable : Parcelable {
     PRICE,
     MATERIALS,
     SIZES,
-    COLORS;
+    COLORS,
+    DELIVERY_AVAILABILITY,
+    STORE_PICKUP_AVAILABILITY;
 
     fun toFilterType(): Filter.Type = when (this) {
         SORTING -> Filter.Type.SORTING
@@ -20,6 +22,8 @@ enum class FilterTypeParcelable : Parcelable {
         MATERIALS -> Filter.Type.MATERIALS
         SIZES -> Filter.Type.SIZES
         COLORS -> Filter.Type.COLORS
+        DELIVERY_AVAILABILITY -> Filter.Type.DELIVERY_AVAILABILITY
+        STORE_PICKUP_AVAILABILITY -> Filter.Type.STORE_PICKUP_AVAILABILITY
     }
 
     companion object {
@@ -29,6 +33,8 @@ enum class FilterTypeParcelable : Parcelable {
             Filter.Type.MATERIALS -> MATERIALS
             Filter.Type.SIZES -> SIZES
             Filter.Type.COLORS -> COLORS
+            Filter.Type.DELIVERY_AVAILABILITY -> DELIVERY_AVAILABILITY
+            Filter.Type.STORE_PICKUP_AVAILABILITY -> STORE_PICKUP_AVAILABILITY
         }
     }
 }

@@ -11,6 +11,7 @@ import ru.zarina.zarina.domain.rework.filter.ListFilterItem
 import ru.zarina.zarina.domain.rework.filter.MaterialFilterItem
 import ru.zarina.zarina.domain.rework.filter.PriceFilter
 import ru.zarina.zarina.domain.rework.filter.SizeFilterItem
+import ru.zarina.zarina.domain.rework.filter.ToggleFilter
 
 @Serializable
 data class FiltersDto(
@@ -25,6 +26,12 @@ data class FiltersDto(
 
     @SerialName("colors")
     val colors: List<ColorItem>? = null,
+
+    @SerialName("available_for_shipping")
+    val availableForDelivery: Boolean? = null,
+
+    @SerialName("available_for_store_pickup")
+    val availableForStorePickup: StorePickupAvailability? = null,
 ) {
     fun toFilters(): Filters {
         checkNotNull(price) { "price is null" }
@@ -50,12 +57,26 @@ data class FiltersDto(
                 type = Filter.Type.COLORS,
             )
         } else null
+        val deliveryAvailability = availableForDelivery?.let {
+            ToggleFilter(
+                isEnabled = availableForDelivery,
+                type = Filter.Type.DELIVERY_AVAILABILITY,
+            )
+        }
+        val storePickupAvailability = availableForStorePickup?.let {
+            ToggleFilter(
+                isEnabled = availableForStorePickup.isApplied ?: false,
+                type = Filter.Type.STORE_PICKUP_AVAILABILITY,
+            )
+        }
         return Filters(
             sorting = Filters.getDefaultSorting(),
             price = price,
             materials = materials,
             sizes = sizes,
             colors = colors,
+            deliveryAvailability = deliveryAvailability,
+            storePickupAvailability = storePickupAvailability,
         )
     }
 
@@ -114,4 +135,10 @@ data class FiltersDto(
             )
         }
     }
+
+    @Serializable
+    data class StorePickupAvailability(
+        @SerialName("is_applied")
+        val isApplied: Boolean? = null,
+    )
 }

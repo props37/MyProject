@@ -12,4 +12,6 @@ val Filter.Type.nameResId: Int
         Filter.Type.MATERIALS -> R.string.composition
         Filter.Type.SIZES -> R.string.size
         Filter.Type.COLORS -> R.string.color
+        Filter.Type.DELIVERY_AVAILABILITY -> R.string.available_for_delivery
+        Filter.Type.STORE_PICKUP_AVAILABILITY -> R.string.available_for_store_pickup
     }

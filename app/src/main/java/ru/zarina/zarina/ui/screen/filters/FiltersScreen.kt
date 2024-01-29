@@ -40,6 +40,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.filter.ListFilter
 import ru.zarina.zarina.domain.rework.filter.PriceFilter
+import ru.zarina.zarina.domain.rework.filter.ToggleFilter
 import ru.zarina.zarina.ui.common.component.PriceFilter
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
@@ -174,12 +175,16 @@ private fun ScreenContent(
                                                 )
                                             }
                                         }
+
+                                        is ToggleFilter -> {
+                                            // TODO: [High] Implement
+                                        }
                                     }
 
-                                    if (
-                                        filter !is PriceFilter
-                                        && index < state.filters.availableFilterCount - 1
-                                    ) {
+                                    val filterCount = remember(state.filters) {
+                                        state.filters.iterator().asSequence().count()
+                                    }
+                                    if (filter !is PriceFilter && index < filterCount - 1) {
                                         Divider(
                                             color = UiKitTheme.colorsReworked.background.skeleton,
                                             modifier = Modifier

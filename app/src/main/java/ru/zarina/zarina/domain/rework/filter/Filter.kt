@@ -10,5 +10,7 @@ sealed interface Filter {
         MATERIALS,
         SIZES,
         COLORS,
+        DELIVERY_AVAILABILITY,
+        STORE_PICKUP_AVAILABILITY,
     }
 }
