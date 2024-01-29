@@ -5,8 +5,11 @@ enum class BaseRouteReworked {
     ONBOARDING,
     CITY_SELECTOR,
     DEFAULT_CITY_DIALOG,
+
+    // TODO: [High] Extract to nested graph
     PRODUCTS,
     FILTERS,
+    LIST_FILTER,
 
     // Catalog graph
     CATALOG_GRAPH,

@@ -11,6 +11,7 @@ import kotlinx.serialization.json.Json
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
+import ru.zarina.zarina.ui.model.filter.ListFilterParcelable
 import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.OptionalNavArg
@@ -20,6 +21,7 @@ import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.CityParcelableType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.FiltersParcelableType
 import ru.zarina.zarina.domain.rework.filter.Filters as DomainFilters
+import ru.zarina.zarina.domain.rework.filter.ListFilter as DomainListFilter
 
 object UnscopedDestinations {
     data object Onboarding : SimpleDestination(BaseRouteReworked.ONBOARDING)
@@ -136,5 +138,29 @@ object UnscopedDestinations {
             val categoryId: Category.Id,
             val filters: DomainFilters?,
         )
+    }
+
+    data object ListFilter : Destination<ListFilter.Args>() {
+        const val ARG_KEY_FILTER = "arg_filter"
+
+        private val baseRoute: String
+            get() = BaseRouteReworked.LIST_FILTER.route
+
+        override val routeSchema: String
+            get() = RouteUtils.generateRouteSchema(
+                routeBase = baseRoute,
+                argNames = arrayOf(ARG_KEY_FILTER),
+            )
+
+        override fun createRoute(args: Args): String {
+            val listFilterParcelable = ListFilterParcelable.from(args.filter)
+            val listFilterParcelableString = Uri.encode(Json.encodeToString(listFilterParcelable))
+            return RouteUtils.generateRoute(
+                routeBase = baseRoute,
+                args = arrayOf(listFilterParcelableString),
+            )
+        }
+
+        data class Args(val filter: DomainListFilter<*>)
     }
 }
