@@ -52,7 +52,7 @@ class ProductApi @Inject constructor(
     )
 
     @Serializable
-    data class FiltersBodyDto(
+    private data class FiltersBodyDto(
         @SerialName("price")
         val price: PriceFilterDto? = null,
 
@@ -64,7 +64,19 @@ class ProductApi @Inject constructor(
 
         @SerialName("colors")
         val colors: List<String>? = null,
+
+        @SerialName("available_for_shipping")
+        val availableForDelivery: Boolean? = null,
+
+        @SerialName("available_for_store_pickup")
+        val availableForStorePickup: StorePickupAvailability? = null,
     ) {
+        @Serializable
+        data class StorePickupAvailability(
+            @SerialName("applied")
+            val isApplied: Boolean,
+        )
+
         companion object {
             fun from(filters: DomainFilters): FiltersBodyDto? {
                 return if (!filters.isEmpty) {
@@ -77,11 +89,19 @@ class ProductApi @Inject constructor(
                     val colors = filters.colors?.let { filter ->
                         if (!filter.isEmpty) filter.selectedItems.map { it.id.value } else null
                     }
+                    val availableForDelivery = filters.deliveryAvailability?.let { filter ->
+                        if (filter.isEnabled) true else null
+                    }
+                    val availableForStorePickup = filters.storePickupAvailability?.let { filter ->
+                        if (filter.isEnabled) StorePickupAvailability(isApplied = true) else null
+                    }
                     FiltersBodyDto(
                         price = filters.price?.let { PriceFilterDto.from(it) },
                         materials = materials,
                         sizes = sizes,
                         colors = colors,
+                        availableForDelivery = availableForDelivery,
+                        availableForStorePickup = availableForStorePickup,
                     )
                 } else {
                     null
