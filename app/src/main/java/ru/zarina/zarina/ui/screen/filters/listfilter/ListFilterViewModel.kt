@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.ListFilter
 import ru.zarina.zarina.domain.rework.filter.ListFilterItem
 import ru.zarina.zarina.domain.rework.filter.copy
@@ -17,6 +18,7 @@ import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.filter.ListFilterParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterViewModel.SideEffect
+import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
@@ -39,7 +41,14 @@ class ListFilterViewModel @Inject constructor(
         }
 
     private val _filter = MutableStateFlow(initialFilter.value)
-    val filter = _filter.asStateFlow()
+    val filter: StateFlow<ListFilter<ListFilterItem>> = _filter.asStateFlow()
+
+    val isResetButtonVisible: StateFlow<Boolean> = filter.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { filter ->
+        filter.type != Filter.Type.SORTING && filter.selectedItems.isNotEmpty()
+    }
 
     fun onBackClicked() {
         // TODO: [High] Implement

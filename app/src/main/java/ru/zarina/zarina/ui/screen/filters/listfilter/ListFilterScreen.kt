@@ -56,6 +56,7 @@ fun ListFilterScreen(
     viewModel: ListFilterViewModel = hiltViewModel(),
 ) {
     val filter by viewModel.filter.collectAsStateWithLifecycle()
+    val isResetButtonVisible by viewModel.isResetButtonVisible.collectAsStateWithLifecycle()
 
     val topBarActions = remember(viewModel) {
         TopBarActions(
@@ -66,6 +67,7 @@ fun ListFilterScreen(
 
     ScreenContent(
         filter = filter,
+        isResetButtonVisible = isResetButtonVisible,
         topBarActions = topBarActions,
         onItemClicked = viewModel::onItemClicked,
         sideEffects = viewModel.sideEffects,
@@ -75,6 +77,7 @@ fun ListFilterScreen(
 @Composable
 private fun ScreenContent(
     filter: ListFilter<ListFilterItem>,
+    isResetButtonVisible: Boolean,
     topBarActions: TopBarActions,
     onItemClicked: (ListFilterItem) -> Unit,
     sideEffects: Flow<ListFilterViewModel.SideEffect>,
@@ -92,7 +95,7 @@ private fun ScreenContent(
     ) {
         TopBar(
             title = stringResource(filter.type.nameResId),
-            isResetButtonVisible = false, // TODO: [High] Implement
+            isResetButtonVisible = isResetButtonVisible,
             actions = topBarActions,
         )
 
