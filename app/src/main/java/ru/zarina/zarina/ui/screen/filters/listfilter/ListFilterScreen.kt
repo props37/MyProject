@@ -37,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.domain.rework.filter.ColorFilterItem
 import ru.zarina.zarina.domain.rework.filter.ListFilter
+import ru.zarina.zarina.domain.rework.filter.ListFilterItem
 import ru.zarina.zarina.domain.rework.filter.SortFilterItem
 import ru.zarina.zarina.domain.rework.filter.sorting
 import ru.zarina.zarina.ui.common.component.ColorIcon
@@ -66,14 +67,16 @@ fun ListFilterScreen(
     ScreenContent(
         filter = filter,
         topBarActions = topBarActions,
+        onItemClicked = viewModel::onItemClicked,
         sideEffects = viewModel.sideEffects,
     )
 }
 
 @Composable
 private fun ScreenContent(
-    filter: ListFilter<*>,
+    filter: ListFilter<ListFilterItem>,
     topBarActions: TopBarActions,
+    onItemClicked: (ListFilterItem) -> Unit,
     sideEffects: Flow<ListFilterViewModel.SideEffect>,
 ) {
     ListFilterScreenBehavior(sideEffects = sideEffects)
@@ -109,7 +112,7 @@ private fun ScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(min = 56.dp)
-                        .clickable { } // TODO: [High] Implement
+                        .clickable { onItemClicked(item) }
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                 ) {
                     if (item is ColorFilterItem) {

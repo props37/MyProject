@@ -19,7 +19,7 @@ class ListFilterParcelable(
     val type: FilterTypeParcelable,
 ) : Parcelable {
 
-    fun toListFilter(): ListFilter<*> {
+    fun toListFilter(): ListFilter<ListFilterItem> {
         val items = when (type) {
             FilterTypeParcelable.SORTING -> items.map { it.toSortFilterItem() }
             FilterTypeParcelable.MATERIALS -> items.map { it.toMaterialFilterItem() }
