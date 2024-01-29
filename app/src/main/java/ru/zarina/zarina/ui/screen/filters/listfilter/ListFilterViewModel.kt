@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import ru.zarina.zarina.domain.rework.filter.ListFilter
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
@@ -34,7 +35,16 @@ class ListFilterViewModel @Inject constructor(
             it.toListFilter()
         }
 
-    private val filter = MutableStateFlow(initialFilter)
+    private val _filter = MutableStateFlow(initialFilter.value)
+    val filter = _filter.asStateFlow()
+
+    fun onBackClicked() {
+        // TODO: [High] Implement
+    }
+
+    fun onResetClicked() {
+        // TODO: [High] Implement
+    }
 
     sealed interface SideEffect : SideEffectSource.SideEffect
 }
