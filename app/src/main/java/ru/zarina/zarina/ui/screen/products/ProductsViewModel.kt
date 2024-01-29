@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.domain.rework.filter.Filters
-import ru.zarina.zarina.domain.rework.filter.coerceIn
+import ru.zarina.zarina.domain.rework.filter.combineWith
 import ru.zarina.zarina.domain.rework.filter.selected
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.common.base.Throttler
@@ -120,10 +120,11 @@ class ProductsViewModel @Inject constructor(
     fun onFiltersClicked() {
         navigationThrottler.throttle {
             val availableFilters = availableFilters
-            val filters = availableFilters?.let { filters.value.coerceIn(it) } ?: filters.value
+            val combinedFilters =
+                availableFilters?.let { filters.value.combineWith(it) } ?: filters.value
             val action = ProductsScreenAction.FiltersClicked(
                 categoryId = categoryId.value,
-                filters = filters,
+                filters = combinedFilters,
             )
             emitSideEffect(SideEffect.NavigateForward(action))
         }

@@ -19,13 +19,13 @@ sealed class ListFilterItem(
     value class Id(val value: String)
 }
 
-fun <T : ListFilterItem> ListFilter<T>.coerceIn(available: ListFilter<T>): ListFilter<T> {
+fun <T : ListFilterItem> ListFilter<T>.combineWith(availableFilter: ListFilter<T>): ListFilter<T> {
     val items = this.items.filter { item ->
-        val isAvailable = available.items.find { it.id == item.id } != null
+        val isAvailable = availableFilter.items.find { it.id == item.id } != null
         isAvailable
     }
     return this.copy(
         items = items,
-        isSingleSelection = available.isSingleSelection,
+        isSingleSelection = availableFilter.isSingleSelection,
     )
 }

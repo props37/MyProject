@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.filter.Filters
-import ru.zarina.zarina.domain.rework.filter.coerceIn
+import ru.zarina.zarina.domain.rework.filter.combineWith
 import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.Throttler
@@ -88,8 +88,8 @@ class FiltersViewModel @Inject constructor(
     ) { filters, categoryProductInfoResult ->
         if (filters != null) {
             val availableFilters = categoryProductInfoResult?.getOrNull()?.availableFilters
-            val resultFilters = availableFilters?.let { filters.coerceIn(it) } ?: filters
-            FilterListState.FilterList(resultFilters)
+            val combinedFilters = availableFilters?.let { filters.combineWith(it) } ?: filters
+            FilterListState.FilterList(combinedFilters)
         } else {
             categoryProductInfoResult?.fold(
                 onSuccess = { info ->
