@@ -18,8 +18,10 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -28,6 +30,7 @@ import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.ListFilterItem
 import ru.zarina.zarina.domain.rework.filter.SortFilterItem
 import ru.zarina.zarina.domain.rework.filter.sorting
+import ru.zarina.zarina.ui.common.component.ZarinaSwitch
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
@@ -78,14 +81,14 @@ object FiltersScreenComponents {
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .fillMaxWidth()
-                .heightIn(min = ItemMinHeight)
+                .heightIn(min = FilterItemMinHeight)
                 .clickable(onClick = onClick)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             Text(
                 text = stringResource(type.nameResId),
-                style = UiKitTheme.typographyReworked.secondary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                style = FilterTitleTextStyle,
+                color = FilterTitleColor,
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -118,14 +121,14 @@ object FiltersScreenComponents {
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .fillMaxWidth()
-                .heightIn(min = ItemMinHeight)
+                .heightIn(min = FilterItemMinHeight)
                 .clickable(onClick = onClick)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             Text(
                 text = stringResource(type.nameResId),
-                style = UiKitTheme.typographyReworked.secondary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                style = FilterTitleTextStyle,
+                color = FilterTitleColor,
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -150,6 +153,36 @@ object FiltersScreenComponents {
             Spacer(modifier = Modifier.width(16.dp))
 
             FilterItemEndArrowIcon()
+        }
+    }
+
+    @Composable
+    fun ToggleFilterItem(
+        type: Filter.Type,
+        isChecked: Boolean,
+        onCheckedChanged: (Boolean) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .fillMaxWidth()
+                .heightIn(min = FilterItemMinHeight)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+        ) {
+            Text(
+                text = stringResource(type.nameResId),
+                style = FilterTitleTextStyle,
+                color = FilterTitleColor,
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(16.dp))
+
+            ZarinaSwitch(
+                isChecked = isChecked,
+                onCheckedChanged = onCheckedChanged,
+            )
         }
     }
 
@@ -188,5 +221,13 @@ object FiltersScreenComponents {
         }
     }
 
-    private val ItemMinHeight: Dp get() = 56.dp
+    private val FilterItemMinHeight: Dp get() = 56.dp
+
+    private val FilterTitleTextStyle: TextStyle
+        @Composable
+        get() = UiKitTheme.typographyReworked.secondary.light
+
+    private val FilterTitleColor: Color
+        @Composable
+        get() = UiKitTheme.colorsReworked.text.general.regular.default
 }

@@ -51,6 +51,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenComponents.MultiSelectionFilterItem
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenComponents.SingleSelectionFilterItem
+import ru.zarina.zarina.ui.screen.filters.FiltersScreenComponents.ToggleFilterItem
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenComponents.TopBarActions
 import ru.zarina.zarina.ui.screen.filters.FiltersViewModel.FilterListState
@@ -177,7 +178,11 @@ private fun ScreenContent(
                                         }
 
                                         is ToggleFilter -> {
-                                            // TODO: [High] Implement
+                                            ToggleFilterItem(
+                                                type = filter.type,
+                                                isChecked = filter.isEnabled,
+                                                onCheckedChanged = { /*TODO*/ },
+                                            )
                                         }
                                     }
 

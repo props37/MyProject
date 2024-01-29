@@ -77,10 +77,14 @@ fun Filters.coerceIn(available: Filters): Filters {
     val materials = available.materials?.let { this.materials?.coerceIn(it) ?: it }
     val sizes = available.sizes?.let { this.sizes?.coerceIn(it) ?: it }
     val colors = available.colors?.let { this.colors?.coerceIn(it) ?: it }
-    return copy(
+    val deliveryAvailability = this.deliveryAvailability ?: available.deliveryAvailability
+    val storePickupAvailability = this.storePickupAvailability ?: available.storePickupAvailability
+    return this.copy(
         price = price,
         materials = materials,
         sizes = sizes,
         colors = colors,
+        deliveryAvailability = deliveryAvailability,
+        storePickupAvailability = storePickupAvailability,
     )
 }
