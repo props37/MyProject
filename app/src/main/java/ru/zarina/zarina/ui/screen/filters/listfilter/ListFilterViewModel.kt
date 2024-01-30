@@ -61,7 +61,14 @@ class ListFilterViewModel @Inject constructor(
     }
 
     fun onResetClicked() {
-        // TODO: [High] Implement
+        if (filter.value.type != Filter.Type.SORTING) {
+            _filter.update { filter ->
+                val items = filter.items.map {
+                    if (it.isSelected) it.copy(isSelected = false) else it
+                }
+                filter.copy(items = items)
+            }
+        }
     }
 
     fun onItemClicked(item: ListFilterItem) {
