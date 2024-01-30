@@ -77,10 +77,11 @@ fun FiltersScreen(
 
     ScreenContent(
         filterListState = filterListState,
+        topBarActions = topBarActions,
         onFilterChanged = viewModel::onFilterChanged,
         onFilterClicked = viewModel::onFilterClicked,
         productCount = productCount,
-        topBarActions = topBarActions,
+        onShowProductsClicked = viewModel::onShowProductsClicked,
         sideEffects = viewModel.sideEffects,
         navigateForward = navigateForward,
         navigateBackward = navigateBackward,
@@ -90,10 +91,11 @@ fun FiltersScreen(
 @Composable
 private fun ScreenContent(
     filterListState: FilterListState,
+    topBarActions: TopBarActions,
     onFilterChanged: (Filter) -> Unit,
     onFilterClicked: (Filter) -> Unit,
     productCount: Int?,
-    topBarActions: TopBarActions,
+    onShowProductsClicked: () -> Unit,
     sideEffects: Flow<FiltersViewModel.SideEffect>,
     navigateForward: (FiltersScreenAction) -> Unit,
     navigateBackward: (FiltersScreenResult) -> Unit,
@@ -220,7 +222,7 @@ private fun ScreenContent(
 
                         // TODO: [High] Extract
                         ZarinaButton(
-                            onClick = { /*TODO*/ },
+                            onClick = onShowProductsClicked,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp),

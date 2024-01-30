@@ -155,6 +155,18 @@ class FiltersViewModel @AssistedInject constructor(
         }
     }
 
+    fun onShowProductsClicked() {
+        navigationThrottler.throttle {
+            val filters = filters.value
+            val result = if (filters != null) {
+                FiltersScreenResult.FiltersChanged(filters)
+            } else {
+                FiltersScreenResult.ScreenClosed
+            }
+            emitSideEffect(SideEffect.NavigateBackward(result))
+        }
+    }
+
     private fun handleListFilterResult(backStackEntrySavedStateHandle: SavedStateHandle) {
         backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.ListFilter.Result?>(
             key = UnscopedDestinations.ListFilter.RESULT_KEY,
