@@ -76,7 +76,6 @@ class ListFilterViewModel @Inject constructor(
     }
 
     fun onItemClicked(item: ListFilterItem) {
-        // TODO: [High] Navigate back right away if it is SORTING filter
         _filter.update { filter ->
             val items = filter.items.map {
                 when {
@@ -87,7 +86,13 @@ class ListFilterViewModel @Inject constructor(
             }
             filter.copy(items = items)
         }
-        _isApplyButtonVisible.value = true
+
+        if (filter.value.type != Filter.Type.SORTING) {
+            _isApplyButtonVisible.value = true
+        } else {
+            val result = ListFilterScreenResult.FilterChanged(filter.value)
+            emitSideEffect(SideEffect.NavigateBackward(result))
+        }
     }
 
     fun onApplyClicked() {
