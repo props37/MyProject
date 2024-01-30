@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +17,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
@@ -31,10 +36,12 @@ import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase
 import ru.zarina.zarina.usecase.rework.product.GetProductPagingDataFlowUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
-import javax.inject.Inject
+import timber.log.Timber
 
-@HiltViewModel
-class ProductsViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = ProductsViewModel.Factory::class)
+class ProductsViewModel @AssistedInject constructor(
+    @Assisted
+    backStackEntrySavedStateHandle: SavedStateHandle,
     private val savedStateHandle: SavedStateHandle,
     private val interactor: ProductsInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
@@ -107,6 +114,10 @@ class ProductsViewModel @Inject constructor(
         }
         .cachedIn(viewModelScope)
 
+    init {
+        handleFiltersResult(backStackEntrySavedStateHandle)
+    }
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             emitSideEffect(SideEffect.NavigateBackward)
@@ -146,9 +157,29 @@ class ProductsViewModel @Inject constructor(
         categoryFetchRequests.tryEmit(Unit)
     }
 
+    private fun handleFiltersResult(backStackEntrySavedStateHandle: SavedStateHandle) {
+        backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.Filters.Result?>(
+            key = UnscopedDestinations.Filters.RESULT_KEY,
+            initialValue = null,
+        )
+            .onEach { result ->
+                if (result != null) {
+                    Timber.v("Filters screen result: $result")
+                    val filters = result.filters.toFilters()
+                    this.filters.value = filters
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateForward(val action: ProductsScreenAction) : SideEffect
         data object NavigateBackward : SideEffect
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(backStackEntrySavedStateHandle: SavedStateHandle): ProductsViewModel
     }
 }
 
