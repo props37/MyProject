@@ -53,6 +53,9 @@ class ListFilterViewModel @Inject constructor(
         filter.type != Filter.Type.SORTING && filter.selectedItems.isNotEmpty()
     }
 
+    private val _isApplyButtonVisible = MutableStateFlow(false)
+    val isApplyButtonVisible: StateFlow<Boolean> = _isApplyButtonVisible.asStateFlow()
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val result = ListFilterScreenResult.ScreenClosed
@@ -68,6 +71,7 @@ class ListFilterViewModel @Inject constructor(
                 }
                 filter.copy(items = items)
             }
+            _isApplyButtonVisible.value = true
         }
     }
 
@@ -83,6 +87,11 @@ class ListFilterViewModel @Inject constructor(
             }
             filter.copy(items = items)
         }
+        _isApplyButtonVisible.value = true
+    }
+
+    fun onApplyClicked() {
+        // TODO: [High] Implement
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

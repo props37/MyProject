@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.screen.filters.listfilter
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -116,6 +117,36 @@ object ListFilterScreenComponents {
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                     )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun ApplyButton(
+        onClick: () -> Unit,
+        isVisible: Boolean,
+        modifier: Modifier = Modifier,
+    ) {
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = AnimatedContentDefaultEnterTransition,
+            exit = AnimatedContentDefaultExitTransition,
+            modifier = modifier,
+        ) {
+            Column {
+                Divider(
+                    color = UiKitTheme.colorsReworked.background.skeleton,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                ZarinaButton(
+                    onClick = onClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                ) {
+                    Text(text = stringResource(R.string.apply).uppercase())
                 }
             }
         }

@@ -2,11 +2,14 @@ package ru.zarina.zarina.ui.screen.filters.listfilter
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBars
@@ -27,6 +30,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.common.util.domain.nameResId
+import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterScreenComponents.ApplyButton
 import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterScreenComponents.FilterItems
 import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterScreenComponents.TopBarActions
@@ -39,6 +43,7 @@ fun ListFilterScreen(
 ) {
     val filter by viewModel.filter.collectAsStateWithLifecycle()
     val isResetButtonVisible by viewModel.isResetButtonVisible.collectAsStateWithLifecycle()
+    val isApplyButtonVisible by viewModel.isApplyButtonVisible.collectAsStateWithLifecycle()
 
     val topBarActions = remember(viewModel) {
         TopBarActions(
@@ -50,8 +55,10 @@ fun ListFilterScreen(
     ScreenContent(
         filter = filter,
         isResetButtonVisible = isResetButtonVisible,
+        isApplyButtonVisible = isApplyButtonVisible,
         topBarActions = topBarActions,
         onItemClicked = viewModel::onItemClicked,
+        onApplyClicked = viewModel::onApplyClicked,
         sideEffects = viewModel.sideEffects,
         navigateBackward = navigateBackward,
     )
@@ -61,8 +68,10 @@ fun ListFilterScreen(
 private fun ScreenContent(
     filter: ListFilter<ListFilterItem>,
     isResetButtonVisible: Boolean,
+    isApplyButtonVisible: Boolean,
     topBarActions: TopBarActions,
     onItemClicked: (ListFilterItem) -> Unit,
+    onApplyClicked: () -> Unit,
     sideEffects: Flow<ListFilterViewModel.SideEffect>,
     navigateBackward: (ListFilterScreenResult) -> Unit,
 ) {
@@ -86,12 +95,27 @@ private fun ScreenContent(
             actions = topBarActions,
         )
 
-        val contentPadding =
+        val contentPadding = if (!isApplyButtonVisible) {
             WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom).asPaddingValues()
+        } else {
+            PaddingValues()
+        }
         FilterItems(
             items = filter.items,
             onItemClicked = onItemClicked,
             contentPadding = contentPadding,
+            modifier = Modifier.weight(1f),
+        )
+        
+        ApplyButton(
+            onClick = onApplyClicked,
+            isVisible = isApplyButtonVisible,
+            modifier = Modifier
+                .fillMaxWidth()
+                .windowInsetsPadding(
+                    WindowInsets.navigationBars
+                        .union(WindowInsets.displayCutout)
+                ),
         )
     }
 }
