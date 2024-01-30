@@ -4,6 +4,9 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -32,10 +35,11 @@ import ru.zarina.zarina.usecase.rework.product.GetCategoryProductInfoFlowUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import java.io.IOException
-import javax.inject.Inject
 
-@HiltViewModel
-class FiltersViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = FiltersViewModel.Factory::class)
+class FiltersViewModel @AssistedInject constructor(
+    @Assisted
+    backStackEntrySavedStateHandle: SavedStateHandle,
     private val savedStateHandle: SavedStateHandle,
     private val interactor: FiltersInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
@@ -157,5 +161,10 @@ class FiltersViewModel @Inject constructor(
         data class FilterList(val filters: Filters) : FilterListState()
 
         data class Error(val errorState: ErrorStateRework) : FilterListState()
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(backStackEntrySavedStateHandle: SavedStateHandle): FiltersViewModel
     }
 }

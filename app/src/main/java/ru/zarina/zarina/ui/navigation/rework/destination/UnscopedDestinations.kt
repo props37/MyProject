@@ -20,6 +20,7 @@ import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreenResul
 import ru.zarina.zarina.ui.screen.filters.FiltersScreen
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenAction
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenResult
+import ru.zarina.zarina.ui.screen.filters.FiltersViewModel
 import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterScreen
 import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterScreenResult
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
@@ -150,6 +151,9 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
 fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
     composableDestination(UnscopedDestinations.Filters) {
         FiltersScreen(
+            viewModel = hiltViewModel { factory: FiltersViewModel.Factory ->
+                factory.create(it.savedStateHandle)
+            },
             navigateForward = { action ->
                 when (action) {
                     is FiltersScreenAction.ListFilterClicked -> {
