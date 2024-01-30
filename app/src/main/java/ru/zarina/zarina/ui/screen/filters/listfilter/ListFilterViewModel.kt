@@ -72,6 +72,7 @@ class ListFilterViewModel @Inject constructor(
     }
 
     fun onItemClicked(item: ListFilterItem) {
+        // TODO: [High] Navigate back right away if it is SORTING filter
         _filter.update { filter ->
             val items = filter.items.map {
                 when {
