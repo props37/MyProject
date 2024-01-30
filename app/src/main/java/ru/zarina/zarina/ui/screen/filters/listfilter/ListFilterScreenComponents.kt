@@ -1,22 +1,40 @@
 package ru.zarina.zarina.ui.screen.filters.listfilter
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.filter.ColorFilterItem
+import ru.zarina.zarina.domain.rework.filter.ListFilterItem
+import ru.zarina.zarina.domain.rework.filter.SortFilterItem
+import ru.zarina.zarina.domain.rework.filter.sorting
+import ru.zarina.zarina.ui.common.component.ColorIcon
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.component.icon.CheckmarkAnimatedIcon
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
+import ru.zarina.zarina.ui.common.util.domain.nameResId
+import ru.zarina.zarina.ui.common.util.domain.toComposeColor
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
@@ -69,6 +87,85 @@ object ListFilterScreenComponents {
             contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
             modifier = modifier,
         )
+    }
+
+    @Composable
+    fun FilterItems(
+        items: List<ListFilterItem>,
+        onItemClicked: (ListFilterItem) -> Unit,
+        modifier: Modifier = Modifier,
+        contentPadding: PaddingValues = PaddingValues(),
+    ) {
+        LazyColumn(
+            contentPadding = contentPadding,
+            modifier = modifier,
+        ) {
+            itemsIndexed(
+                items = items,
+                key = { _, item -> item.id.value },
+            ) { index, item ->
+                FilterItem(
+                    item = item,
+                    onItemClicked = onItemClicked,
+                )
+
+                if (index < items.size - 1) {
+                    Divider(
+                        color = UiKitTheme.colorsReworked.background.skeleton,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun FilterItem(
+        item: ListFilterItem,
+        onItemClicked: (ListFilterItem) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .fillMaxWidth()
+                .heightIn(min = 56.dp)
+                .clickable { onItemClicked(item) }
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+        ) {
+            if (item is ColorFilterItem) {
+                ColorIcon(
+                    color = item.color.toComposeColor(),
+                    size = 16.dp,
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+            }
+
+            val name = if (item is SortFilterItem) {
+                stringResource(item.sorting.nameResId)
+            } else {
+                item.name
+            }
+
+            Text(
+                text = name,
+                style = UiKitTheme.typographyReworked.secondary.light,
+                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(16.dp))
+
+            CheckmarkAnimatedIcon(
+                isVisible = item.isSelected,
+                iconSize = 16.dp,
+                modifier = Modifier.padding(start = if (item.isSelected) 16.dp else 0.dp),
+            )
+        }
     }
 
     @Stable
