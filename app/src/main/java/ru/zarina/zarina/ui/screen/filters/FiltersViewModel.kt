@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import ru.zarina.zarina.domain.rework.category.Category
@@ -34,6 +36,7 @@ import ru.zarina.zarina.ui.screen.filters.FiltersViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.product.GetCategoryProductInfoFlowUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
+import timber.log.Timber
 import java.io.IOException
 
 @HiltViewModel(assistedFactory = FiltersViewModel.Factory::class)
@@ -121,6 +124,10 @@ class FiltersViewModel @AssistedInject constructor(
         } ?: FilterListState.Loading,
     )
 
+    init {
+        handleListFilterResult(backStackEntrySavedStateHandle)
+    }
+
     val productCount: StateFlow<Int?> = categoryProductInfoResult
         .mapState(
             scope = viewModelScope,
@@ -146,6 +153,23 @@ class FiltersViewModel @AssistedInject constructor(
                 emitSideEffect(SideEffect.NavigateForward(action))
             }
         }
+    }
+
+    private fun handleListFilterResult(backStackEntrySavedStateHandle: SavedStateHandle) {
+        backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.ListFilter.Result?>(
+            key = UnscopedDestinations.ListFilter.RESULT_KEY,
+            initialValue = null,
+        )
+            .onEach { result ->
+                if (result != null) {
+                    Timber.v("ListFilter screen result: $result")
+                    val filter = result.filter.toListFilter()
+                    filters.update { filters ->
+                        filters?.updateWith(filter)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
