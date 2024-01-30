@@ -328,7 +328,6 @@ object ProductsScreenComponents {
             }
         }
 
-        // TODO: [High] Update animations
         AnimatedVisibility(
             visible = isVisible,
             enter = AnimatedContentDefaultEnterTransition,
