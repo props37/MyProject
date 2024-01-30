@@ -233,7 +233,7 @@ private fun ScreenContent(
                                 contentAlignment = Alignment.Center,
                                 label = "Show Products button",
                             ) { productCount ->
-                                val text = if (productCount != null && productCount > 0) {
+                                val text = if (productCount != null) {
                                     pluralStringResource(
                                         R.plurals.show_products,
                                         productCount,
