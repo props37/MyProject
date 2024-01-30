@@ -144,6 +144,8 @@ object UnscopedDestinations {
     data object ListFilter : Destination<ListFilter.Args>() {
         const val ARG_KEY_FILTER = "arg_filter"
 
+        const val RESULT_KEY = "list_filter_result"
+
         private val baseRoute: String
             get() = BaseRouteReworked.LIST_FILTER.route
 
@@ -168,5 +170,8 @@ object UnscopedDestinations {
             )
 
         data class Args(val filter: DomainListFilter<*>)
+
+        @Parcelize
+        data class Result(val filter: ListFilterParcelable) : Parcelable
     }
 }

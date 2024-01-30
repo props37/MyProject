@@ -6,6 +6,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.zarina.zarina.ui.model.filter.ListFilterParcelable
 import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
 import ru.zarina.zarina.ui.navigation.base.composableDestination
@@ -178,6 +179,17 @@ fun NavGraphBuilder.listFilterScreen(navController: NavHostController) {
             navigateBackward = { result ->
                 when (result) {
                     ListFilterScreenResult.ScreenClosed -> {
+                        navController.popBackStack(
+                            route = UnscopedDestinations.ListFilter.routeSchema,
+                            inclusive = true,
+                        )
+                    }
+
+                    is ListFilterScreenResult.FilterChanged -> {
+                        val filterParcelable = ListFilterParcelable.from(result.filter)
+                        val result = UnscopedDestinations.ListFilter.Result(filterParcelable)
+                        navController.previousBackStackEntry?.savedStateHandle
+                            ?.set(UnscopedDestinations.ListFilter.RESULT_KEY, result)
                         navController.popBackStack(
                             route = UnscopedDestinations.ListFilter.routeSchema,
                             inclusive = true,

@@ -91,7 +91,10 @@ class ListFilterViewModel @Inject constructor(
     }
 
     fun onApplyClicked() {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val result = ListFilterScreenResult.FilterChanged(filter.value)
+            emitSideEffect(SideEffect.NavigateBackward(result))
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
