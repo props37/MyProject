@@ -53,6 +53,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun ListFilterScreen(
+    navigateBackward: (ListFilterScreenResult) -> Unit,
     viewModel: ListFilterViewModel = hiltViewModel(),
 ) {
     val filter by viewModel.filter.collectAsStateWithLifecycle()
@@ -71,6 +72,7 @@ fun ListFilterScreen(
         topBarActions = topBarActions,
         onItemClicked = viewModel::onItemClicked,
         sideEffects = viewModel.sideEffects,
+        navigateBackward = navigateBackward,
     )
 }
 
@@ -81,8 +83,12 @@ private fun ScreenContent(
     topBarActions: TopBarActions,
     onItemClicked: (ListFilterItem) -> Unit,
     sideEffects: Flow<ListFilterViewModel.SideEffect>,
+    navigateBackward: (ListFilterScreenResult) -> Unit,
 ) {
-    ListFilterScreenBehavior(sideEffects = sideEffects)
+    ListFilterScreenBehavior(
+        sideEffects = sideEffects,
+        navigateBackward = navigateBackward,
+    )
 
     Column(
         modifier = Modifier

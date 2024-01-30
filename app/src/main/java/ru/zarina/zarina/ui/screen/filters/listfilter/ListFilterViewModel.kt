@@ -13,6 +13,7 @@ import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.ListFilter
 import ru.zarina.zarina.domain.rework.filter.ListFilterItem
 import ru.zarina.zarina.domain.rework.filter.copy
+import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.filter.ListFilterParcelable
@@ -27,6 +28,8 @@ class ListFilterViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
+    private val navigationThrottler = Throttler.getNavigationThrottler()
+
     private val initialFilter: StateFlow<ListFilter<ListFilterItem>> = savedStateHandle
         .getStateFlow<ListFilterParcelable?>(
             key = UnscopedDestinations.ListFilter.ARG_KEY_FILTER,
@@ -35,9 +38,9 @@ class ListFilterViewModel @Inject constructor(
         .mapState(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "Filter is null" }
-            it.toListFilter()
+        ) { parcelable ->
+            checkNotNull(parcelable) { "Filter is null" }
+            parcelable.toListFilter()
         }
 
     private val _filter = MutableStateFlow(initialFilter.value)
@@ -51,7 +54,10 @@ class ListFilterViewModel @Inject constructor(
     }
 
     fun onBackClicked() {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val result = ListFilterScreenResult.ScreenClosed
+            emitSideEffect(SideEffect.NavigateBackward(result))
+        }
     }
 
     fun onResetClicked() {
@@ -71,5 +77,7 @@ class ListFilterViewModel @Inject constructor(
         }
     }
 
-    sealed interface SideEffect : SideEffectSource.SideEffect
+    sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class NavigateBackward(val result: ListFilterScreenResult) : SideEffect
+    }
 }
