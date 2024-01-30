@@ -61,10 +61,10 @@ fun ZarinaButton(
     useProvidedRippleTheme: Boolean = false,
     content: @Composable RowScope.() -> Unit,
 ) {
-    val minHeight = when (size) {
-        ZarinaButtonSize.Large -> ZarinaButtonDefaults.HeightLarge
-        ZarinaButtonSize.Medium -> ZarinaButtonDefaults.HeightMedium
-        ZarinaButtonSize.Small -> ZarinaButtonDefaults.HeightSmall
+    val minSize = when (size) {
+        ZarinaButtonSize.Large -> ZarinaButtonDefaults.SizeLarge
+        ZarinaButtonSize.Medium -> ZarinaButtonDefaults.SizeMedium
+        ZarinaButtonSize.Small -> ZarinaButtonDefaults.SizeSmall
     }
 
     val backgroundColor = animateColorAsState(
@@ -109,7 +109,7 @@ fun ZarinaButton(
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
-                .defaultMinSize(minHeight = minHeight)
+                .defaultMinSize(minHeight = minSize, minWidth = minSize)
                 .clip(shape)
                 .drawBehind { drawRect(backgroundColor.value) }
                 .border(width = 1.dp, color = borderColor.value, shape = shape)
@@ -156,9 +156,9 @@ enum class ZarinaButtonSize { Large, Medium, Small }
 object ZarinaButtonDefaults {
     val Shape = RoundedCornerShape(2.dp)
 
-    val HeightLarge: Dp get() = 56.dp
-    val HeightMedium: Dp get() = 48.dp
-    val HeightSmall: Dp get() = 40.dp
+    val SizeLarge: Dp get() = 56.dp
+    val SizeMedium: Dp get() = 48.dp
+    val SizeSmall: Dp get() = 40.dp
 
     val ContentPaddingLarge: PaddingValues
         get() = PaddingValues(horizontal = 16.dp, vertical = 8.dp)

@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.screen.products
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
@@ -19,8 +20,10 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -31,13 +34,16 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -51,12 +57,16 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.component.ProductCard
 import ru.zarina.zarina.ui.common.component.ProductCardPlaceholder
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.button.ZarinaIconButton
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
@@ -64,7 +74,11 @@ import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.util.library.paging.retryAppendPrependErrors
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 import ru.zarina.zarina.util.compose.Crossfade
+import ru.zarina.zarina.util.compose.animateFastScrollToItem
+import ru.zarina.zarina.util.compose.collectIsScrollingBackwardAsState
 import java.io.IOException
 
 object ProductsScreenComponents {
@@ -198,54 +212,23 @@ object ProductsScreenComponents {
                 modifier = Modifier.matchParentSize(),
             ) { loadState ->
                 if (loadState !is LoadState.Error) {
-                    val placeholderShimmer = rememberSkeletonShimmer()
-                    val itemModifier = Modifier.matchParentSize()
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        ProductGrid(
+                            productPagingItems = productPagingItems,
+                            gridState = gridState,
+                            loadState = loadState,
+                            modifier = Modifier
+                                .matchParentSize()
+                                .pullRefresh(pullRefreshState),
+                        )
 
-                    LazyVerticalGrid(
-                        columns = remember { GridCells.Fixed(ProductGridCellInRowCount) },
-                        state = gridState,
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        modifier = Modifier.pullRefresh(pullRefreshState),
-                    ) {
-                        if (loadState is LoadState.NotLoading) {
-                            items(
-                                count = productPagingItems.itemCount,
-                                span = { index -> getProductGridItemSpan(index) },
-                                key = productPagingItems.itemKey { it.id.value },
-                                contentType = { index ->
-                                    getProductGridItemContentType(index, productPagingItems)
-                                },
-                            ) { index ->
-                                val product = productPagingItems[index]
-                                if (product != null) {
-                                    ProductCard(
-                                        product = product,
-                                        onClick = { /*TODO*/ },
-                                        onAddToFavoritesClicked = { /*TODO*/ },
-                                        onAddToCartClicked = { /*TODO*/ },
-                                        shimmer = placeholderShimmer,
-                                        modifier = itemModifier,
-                                    )
-                                } else {
-                                    ProductCardPlaceholder(
-                                        shimmer = placeholderShimmer,
-                                        modifier = itemModifier,
-                                    )
-                                }
-                            }
-                        } else {
-                            items(
-                                count = ProductGridPlaceholderCount,
-                                span = { index -> getProductGridItemSpan(index) },
-                                contentType = { ProductGridContentTypeProductCardPlaceholder },
-                            ) {
-                                ProductCardPlaceholder(
-                                    shimmer = placeholderShimmer,
-                                    modifier = itemModifier,
-                                )
-                            }
-                        }
+                        ScrollToTopButton(
+                            gridState = gridState,
+                            modifier = Modifier
+                                .zIndex(1f)
+                                .align(Alignment.BottomEnd)
+                                .padding(end = 16.dp, bottom = 32.dp),
+                        )
                     }
                 } else {
                     val state = remember(loadState.error) {
@@ -266,6 +249,112 @@ object ProductsScreenComponents {
                             .padding(16.dp),
                     )
                 }
+            }
+        }
+    }
+
+    @Composable
+    private fun ProductGrid(
+        productPagingItems: LazyPagingItems<Product>,
+        gridState: LazyGridState,
+        loadState: LoadState,
+        modifier: Modifier = Modifier,
+    ) {
+        val arrangement = remember { Arrangement.spacedBy(4.dp) }
+        val placeholderShimmer = rememberSkeletonShimmer()
+        val itemModifier = Modifier.fillMaxWidth()
+
+        LazyVerticalGrid(
+            columns = remember { GridCells.Fixed(ProductGridCellInRowCount) },
+            state = gridState,
+            verticalArrangement = arrangement,
+            horizontalArrangement = arrangement,
+            modifier = modifier,
+        ) {
+            if (loadState is LoadState.NotLoading) {
+                items(
+                    count = productPagingItems.itemCount,
+                    span = { index -> getProductGridItemSpan(index) },
+                    key = productPagingItems.itemKey { it.id.value },
+                    contentType = { index ->
+                        getProductGridItemContentType(index, productPagingItems)
+                    },
+                ) { index ->
+                    val product = productPagingItems[index]
+                    if (product != null) {
+                        ProductCard(
+                            product = product,
+                            onClick = { /*TODO*/ },
+                            onAddToFavoritesClicked = { /*TODO*/ },
+                            onAddToCartClicked = { /*TODO*/ },
+                            shimmer = placeholderShimmer,
+                            modifier = itemModifier,
+                        )
+                    } else {
+                        ProductCardPlaceholder(
+                            shimmer = placeholderShimmer,
+                            modifier = itemModifier,
+                        )
+                    }
+                }
+            } else {
+                items(
+                    count = ProductGridPlaceholderCount,
+                    span = { index -> getProductGridItemSpan(index) },
+                    contentType = { ProductGridContentTypeProductCardPlaceholder },
+                ) {
+                    ProductCardPlaceholder(
+                        shimmer = placeholderShimmer,
+                        modifier = itemModifier,
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun ScrollToTopButton(
+        gridState: LazyGridState,
+        modifier: Modifier = Modifier,
+    ) {
+        val coroutineScope = rememberCoroutineScope()
+
+        val isScrollingBackwardState = gridState.collectIsScrollingBackwardAsState()
+        val isVisible by remember(gridState, isScrollingBackwardState) {
+            derivedStateOf {
+                val isScrollingBackward = isScrollingBackwardState.value
+                val isFarEnough = gridState.firstVisibleItemIndex >= ScrollToTopButtonItemThreshold
+                isScrollingBackward && isFarEnough
+            }
+        }
+
+        // TODO: [High] Update animations
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = AnimatedContentDefaultEnterTransition,
+            exit = AnimatedContentDefaultExitTransition,
+            modifier = modifier,
+        ) {
+            ZarinaButton(
+                onClick = {
+                    coroutineScope.launch {
+                        gridState.animateFastScrollToItem(
+                            item = 0,
+                            distanceThreshold = ScrollToTopButtonItemThreshold,
+                        )
+                    }
+                },
+                size = ZarinaButtonSize.Medium,
+                shape = CircleShape,
+                contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_arrow_left_24),
+                    contentDescription = stringResource(R.string.scroll_to_top),
+                    modifier = Modifier
+                        .size(16.dp)
+                        .rotate(degrees = 90f),
+                )
             }
         }
     }
@@ -325,4 +414,6 @@ object ProductsScreenComponents {
     private const val ProductGridContentTypeProductCard = "ProductGridContentTypeProduct"
     private const val ProductGridContentTypeProductCardPlaceholder =
         "ProductGridContentTypeProductCardPlaceholder"
+
+    private const val ScrollToTopButtonItemThreshold = 20
 }

@@ -177,7 +177,7 @@ object CitySelectorScreenComponents {
                         if (listState.items.isNotEmpty()) {
                             val baseContentPadding = remember(isChangeCityButtonVisible) {
                                 val bottom = if (isChangeCityButtonVisible) {
-                                    val buttonHeight = ZarinaButtonDefaults.HeightLarge
+                                    val buttonHeight = ZarinaButtonDefaults.SizeLarge
                                     buttonHeight + ConfirmButtonBottomPadding + 8.dp
                                 } else {
                                     0.dp
