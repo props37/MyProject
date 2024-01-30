@@ -80,7 +80,7 @@ class FiltersViewModel @AssistedInject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val categoryProductInfoResult: StateFlow<Result<CategoryProductInfo>?> = combine(
         categoryId,
-        filters,
+        filters, // // TODO: [High] Add debounce?
         categoryProductInfoFetchRequests,
     ) { categoryId, filters, _ ->
         GetCategoryProductInfoFlowUseCase.Params(categoryId, filters)
