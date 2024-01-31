@@ -134,8 +134,10 @@ fun PriceFilter(
         RangeSlider(
             value = createSliderValue(minPrice, maxPrice, limits),
             onValueChange = {
-                minPrice = it.start.toLong()
-                maxPrice = it.endInclusive.toLong()
+                val startLong = it.start.toLong()
+                val endLong = it.endInclusive.toLong()
+                minPrice = if (startLong != limits.min) startLong else null
+                maxPrice = if (endLong != limits.max) endLong else null
             },
             valueRange = limits.min.toFloat()..limits.max.toFloat(),
             onValueChangeFinished = {
