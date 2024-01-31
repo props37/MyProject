@@ -21,25 +21,25 @@ data class Filters(
         if (storePickupAvailability != null) yield(storePickupAvailability)
     }
 
-    val appliedFilterCount: Int
-        get() {
-            var result = 0
-            if (price?.isEmpty == false) result++
-            if (materials?.selectedItems != null) result += materials.selectedItems.size
-            if (sizes?.selectedItems != null) result += sizes.selectedItems.size
-            if (colors?.selectedItems != null) result += colors.selectedItems.size
-            if (deliveryAvailability?.isEmpty == false) result++
-            if (storePickupAvailability?.isEmpty == false) result++
-            return result
-        }
+    val appliedFilterCount: Int by lazy {
+        var result = 0
+        if (price?.isEmpty == false) result++
+        if (materials?.selectedItems != null) result += materials.selectedItems.size
+        if (sizes?.selectedItems != null) result += sizes.selectedItems.size
+        if (colors?.selectedItems != null) result += colors.selectedItems.size
+        if (deliveryAvailability?.isEmpty == false) result++
+        if (storePickupAvailability?.isEmpty == false) result++
+        result
+    }
 
-    val isEmptyIgnoringSorting: Boolean
-        get() = price?.isEmpty != false
+    val isEmptyIgnoringSorting: Boolean by lazy {
+        price?.isEmpty != false
                 && materials?.isEmpty != false
                 && sizes?.isEmpty != false
                 && colors?.isEmpty != false
                 && deliveryAvailability?.isEmpty != false
                 && storePickupAvailability?.isEmpty != false
+    }
 
     companion object {
         val EMPTY: Filters
