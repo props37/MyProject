@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.ListFilter
 import ru.zarina.zarina.domain.rework.filter.ListFilterItem
@@ -43,8 +42,17 @@ class ListFilterViewModel @Inject constructor(
             parcelable.toListFilter()
         }
 
-    private val _filter = MutableStateFlow(initialFilter.value)
-    val filter: StateFlow<ListFilter<ListFilterItem>> = _filter.asStateFlow()
+    val filter: StateFlow<ListFilter<ListFilterItem>> = savedStateHandle
+        .getStateFlow<ListFilterParcelable?>(
+            key = KEY_FILTER,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { parcelable ->
+            parcelable?.toListFilter() ?: initialFilter.value
+        }
 
     val isResetButtonVisible: StateFlow<Boolean> = filter.mapState(
         scope = viewModelScope,
@@ -65,27 +73,28 @@ class ListFilterViewModel @Inject constructor(
 
     fun onResetClicked() {
         if (filter.value.type != Filter.Type.SORTING) {
-            _filter.update { filter ->
-                val items = filter.items.map {
-                    if (it.isSelected) it.copy(isSelected = false) else it
-                }
-                filter.copy(items = items)
+            val currentFilter = filter.value
+            val newItems = currentFilter.items.map {
+                if (it.isSelected) it.copy(isSelected = false) else it
             }
+            val newFilter = currentFilter.copy(items = newItems)
+            savedStateHandle[KEY_FILTER] = ListFilterParcelable.from(newFilter)
+
             _isApplyButtonVisible.value = true
         }
     }
 
     fun onItemClicked(item: ListFilterItem) {
-        _filter.update { filter ->
-            val items = filter.items.map {
-                when {
-                    it.id == item.id -> it.copy(isSelected = !item.isSelected)
-                    filter.isSingleSelection -> it.copy(isSelected = false)
-                    else -> it
-                }
+        val currentFilter = filter.value
+        val newItems = currentFilter.items.map {
+            when {
+                it.id == item.id -> it.copy(isSelected = !item.isSelected)
+                currentFilter.isSingleSelection -> it.copy(isSelected = false)
+                else -> it
             }
-            filter.copy(items = items)
         }
+        val newFilter = currentFilter.copy(items = newItems)
+        savedStateHandle[KEY_FILTER] = ListFilterParcelable.from(newFilter)
 
         if (filter.value.type != Filter.Type.SORTING) {
             _isApplyButtonVisible.value = true
@@ -104,5 +113,9 @@ class ListFilterViewModel @Inject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateBackward(val result: ListFilterScreenResult) : SideEffect
+    }
+
+    companion object {
+        private const val KEY_FILTER = "filter"
     }
 }
