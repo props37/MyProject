@@ -56,7 +56,6 @@ import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
-import timber.log.Timber
 import kotlin.math.min
 
 // TODO: [High] Add visual transformations to text
@@ -65,25 +64,24 @@ import kotlin.math.min
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun PriceFilter(
-    priceFilter: PriceFilter,
-    onPriceFilterChanged: (PriceFilter) -> Unit, // TODO: [High] Refactor
+    filter: PriceFilter,
+    onFilterChanged: (PriceFilter) -> Unit,
     modifier: Modifier = Modifier,
     sliderAdditionalHorizontalPadding: Dp = 0.dp,
 ) {
-    var minPrice by remember(priceFilter) { mutableStateOf(priceFilter.min) }
-    var maxPrice by remember(priceFilter) { mutableStateOf(priceFilter.max) }
+    var minPrice by remember(filter) { mutableStateOf(filter.min) }
+    var maxPrice by remember(filter) { mutableStateOf(filter.max) }
 
-    val limits = priceFilter.limits
+    val limits = filter.limits
 
     val isMinTextFieldFocused = remember { mutableStateOf(false) }
     val isMaxTextFieldFocused = remember { mutableStateOf(false) }
 
     val isImeVisibleState = rememberUpdatedState(WindowInsets.isImeVisible)
-    LaunchedEffect(onPriceFilterChanged) {
+    LaunchedEffect(onFilterChanged) {
         snapshotFlow { isImeVisibleState.value }
             .distinctUntilChanged()
             .collect { isImeVisible ->
-                Timber.d("<3 $isImeVisible")
                 val isAnyTextFieldFocused =
                     isMinTextFieldFocused.value || isMaxTextFieldFocused.value
                 if (!isImeVisible && isAnyTextFieldFocused) {
@@ -91,7 +89,7 @@ fun PriceFilter(
                     val newMaxPrice = maxPrice?.coerceMaxPrice(minPrice, limits)
                     minPrice = newMinPrice
                     maxPrice = newMaxPrice
-                    onPriceFilterChanged(priceFilter.copy(min = newMinPrice, max = newMaxPrice))
+                    onFilterChanged(filter.copy(min = newMinPrice, max = newMaxPrice))
                 }
             }
     }
@@ -119,7 +117,7 @@ fun PriceFilter(
                     val newMaxPrice = maxPrice?.coerceMaxPrice(newMinPrice, limits)
                     minPrice = newMinPrice
                     maxPrice = newMaxPrice
-                    onPriceFilterChanged(priceFilter.copy(min = newMinPrice, max = newMaxPrice))
+                    onFilterChanged(filter.copy(min = newMinPrice, max = newMaxPrice))
                 },
                 modifier = Modifier
                     .weight(1f)
@@ -128,12 +126,7 @@ fun PriceFilter(
                         if (!state.isFocused) {
                             val newMinPrice = minPrice?.coerceMinPrice(maxPrice, limits)
                             minPrice = newMinPrice
-                            onPriceFilterChanged(
-                                priceFilter.copy(
-                                    min = newMinPrice,
-                                    max = maxPrice
-                                )
-                            )
+                            onFilterChanged(filter.copy(min = newMinPrice, max = maxPrice))
                         }
                     },
             )
@@ -148,7 +141,7 @@ fun PriceFilter(
                     val newMinPrice = minPrice?.coerceMinPrice(newMaxPrice, limits)
                     minPrice = newMinPrice
                     maxPrice = newMaxPrice
-                    onPriceFilterChanged(priceFilter.copy(min = newMinPrice, max = newMaxPrice))
+                    onFilterChanged(filter.copy(min = newMinPrice, max = newMaxPrice))
                 },
                 modifier = Modifier
                     .weight(1f)
@@ -157,12 +150,7 @@ fun PriceFilter(
                         if (!state.isFocused) {
                             val newMaxPrice = maxPrice?.coerceMaxPrice(minPrice, limits)
                             maxPrice = newMaxPrice
-                            onPriceFilterChanged(
-                                priceFilter.copy(
-                                    min = minPrice,
-                                    max = newMaxPrice
-                                )
-                            )
+                            onFilterChanged(filter.copy(min = minPrice, max = newMaxPrice))
                         }
                     },
             )
@@ -185,7 +173,7 @@ fun PriceFilter(
                 val newMaxPrice = maxPrice?.coerceMaxPrice(minPrice, limits)
                 minPrice = newMinPrice
                 maxPrice = newMaxPrice
-                onPriceFilterChanged(priceFilter.copy(min = newMinPrice, max = newMaxPrice))
+                onFilterChanged(filter.copy(min = newMinPrice, max = newMaxPrice))
             },
             steps = 0,
             colors = SliderDefaults.colors(
@@ -301,12 +289,12 @@ private fun Track(
 }
 
 private fun Long.coerceMinPrice(maxPrice: Long?, limits: PriceRange): Long {
-    val max = maxPrice?.let { minOf(it, limits.max) } ?: limits.max
+    val max = maxPrice?.let { minOf(it.coerceAtLeast(limits.min), limits.max) } ?: limits.max
     return this.coerceIn(limits.min, max)
 }
 
 private fun Long.coerceMaxPrice(minPrice: Long?, limits: PriceRange): Long {
-    val min = minPrice?.let { maxOf(it, limits.min) } ?: limits.min
+    val min = minPrice?.let { maxOf(it.coerceAtMost(limits.max), limits.min) } ?: limits.min
     return this.coerceIn(min, limits.max)
 }
 
@@ -342,8 +330,8 @@ private fun Preview() {
                 .padding(16.dp),
         ) {
             PriceFilter(
-                priceFilter = filter,
-                onPriceFilterChanged = { filter = it },
+                filter = filter,
+                onFilterChanged = { filter = it },
                 modifier = Modifier.fillMaxWidth(),
             )
         }

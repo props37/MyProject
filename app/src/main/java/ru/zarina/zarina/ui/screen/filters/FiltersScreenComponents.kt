@@ -209,8 +209,8 @@ object FiltersScreenComponents {
                                         .coerceAtLeast(0.dp)
 
                                 PriceFilter(
-                                    priceFilter = filter,
-                                    onPriceFilterChanged = { onFilterChanged(it) },
+                                    filter = filter,
+                                    onFilterChanged = { onFilterChanged(it) },
                                     sliderAdditionalHorizontalPadding = sliderHorizontalPadding,
                                     modifier = Modifier
                                         .fillMaxWidth()
