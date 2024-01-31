@@ -79,7 +79,7 @@ class ProductApi @Inject constructor(
 
         companion object {
             fun from(filters: DomainFilters): FiltersBodyDto? {
-                return if (!filters.isEmpty) {
+                return if (!filters.isEmptyIgnoringSorting) {
                     val materials = filters.materials?.let { filter ->
                         if (!filter.isEmpty) filter.selectedItems.map { it.id.value } else null
                     }

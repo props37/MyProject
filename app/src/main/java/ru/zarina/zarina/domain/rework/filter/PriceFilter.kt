@@ -35,3 +35,7 @@ fun PriceFilter.coerceInAvailable(available: PriceFilter): PriceFilter {
         )
     } else this
 }
+
+fun PriceFilter.reset(): PriceFilter {
+    return this.copy(min = null, max = null)
+}

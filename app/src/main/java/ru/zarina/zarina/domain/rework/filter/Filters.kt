@@ -21,8 +21,7 @@ data class Filters(
         if (storePickupAvailability != null) yield(storePickupAvailability)
     }
 
-    // Ignore sorting
-    val isEmpty: Boolean
+    val isEmptyIgnoringSorting: Boolean
         get() = price?.isEmpty != false
                 && materials?.isEmpty != false
                 && sizes?.isEmpty != false
@@ -141,4 +140,21 @@ fun Filters.updateWith(filter: Filter): Filters {
             this.copy(storePickupAvailability = filter)
         }
     }
+}
+
+fun Filters.reset(): Filters {
+    return this.copy(
+        price = this.price?.copy(min = null, max = null),
+        materials = this.materials?.copy(
+            items = this.materials.items.map { it.copy(isSelected = false) },
+        ),
+        sizes = this.sizes?.copy(
+            items = this.sizes.items.map { it.copy(isSelected = false) },
+        ),
+        colors = this.colors?.copy(
+            items = this.colors.items.map { it.copy(isSelected = false) },
+        ),
+        deliveryAvailability = this.deliveryAvailability?.copy(isEnabled = false),
+        storePickupAvailability = this.storePickupAvailability?.copy(isEnabled = false),
+    )
 }

@@ -22,6 +22,7 @@ import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.filter.ListFilter
 import ru.zarina.zarina.domain.rework.filter.coerceInAvailable
+import ru.zarina.zarina.domain.rework.filter.reset
 import ru.zarina.zarina.domain.rework.filter.updateWith
 import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
@@ -135,7 +136,7 @@ class FiltersViewModel @AssistedInject constructor(
     val isResetButtonVisible: StateFlow<Boolean> = filters.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
-    ) { it?.isEmpty != true }
+    ) { it?.isEmptyIgnoringSorting != true }
 
     init {
         handleListFilterResult(backStackEntrySavedStateHandle)
@@ -154,7 +155,13 @@ class FiltersViewModel @AssistedInject constructor(
     }
 
     fun onResetClicked() {
-        // TODO: [High] Implement
+        val filters = filters.value
+        if (filters != null) {
+            val newFilters = filters.reset()
+            savedStateHandle[KEY_FILTERS] = FiltersParcelable.from(newFilters)
+        } else {
+            Timber.w("Could not reset filters since it is null")
+        }
     }
 
     fun onFilterChanged(filter: Filter) {
