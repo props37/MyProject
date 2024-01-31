@@ -61,6 +61,7 @@ fun PriceFilter(
     priceFilter: PriceFilter,
     onPriceFilterChanged: (PriceFilter) -> Unit, // TODO: [High] Refactor
     modifier: Modifier = Modifier,
+    sliderAdditionalHorizontalPadding: Dp = 0.dp,
 ) {
     val limits = priceFilter.limits
 
@@ -151,7 +152,9 @@ fun PriceFilter(
                 inactiveTrackColor = UiKitTheme.colorsReworked.background.skeleton,
             ),
             track = { Track(sliderPositions = it) },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = sliderAdditionalHorizontalPadding),
         )
     }
 }

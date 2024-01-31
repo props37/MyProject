@@ -6,6 +6,7 @@ import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.systemGestures
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -28,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -154,15 +157,23 @@ private fun ScreenContent(
                                 key(filter.type) {
                                     when (filter) {
                                         is PriceFilter -> {
+                                            val horizontalPadding = 16.dp
+                                            val systemGestureHorizontalPadding = WindowInsets.systemGestures
+                                                .asPaddingValues()
+                                                .calculateLeftPadding(LocalLayoutDirection.current)
+                                            val sliderHorizontalPadding =
+                                                (systemGestureHorizontalPadding - horizontalPadding).coerceAtLeast(0.dp)
+
                                             PriceFilter(
                                                 priceFilter = filter,
                                                 onPriceFilterChanged = { onFilterChanged(it) },
+                                                sliderAdditionalHorizontalPadding = sliderHorizontalPadding,
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .padding(
-                                                        start = 16.dp,
+                                                        start = horizontalPadding,
                                                         top = 16.dp,
-                                                        end = 16.dp,
+                                                        end = horizontalPadding,
                                                         bottom = 8.dp,
                                                     ),
                                             )
