@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -42,8 +43,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -79,6 +82,7 @@ import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 import ru.zarina.zarina.util.compose.Crossfade
 import ru.zarina.zarina.util.compose.animateFastScrollToItem
 import ru.zarina.zarina.util.compose.collectIsScrollingBackwardAsState
+import ru.zarina.zarina.util.compose.unscalable
 import java.io.IOException
 
 object ProductsScreenComponents {
@@ -86,6 +90,7 @@ object ProductsScreenComponents {
     @Composable
     fun TopBar(
         title: String?,
+        appliedFilterCount: Int,
         actions: TopBarActions,
         modifier: Modifier = Modifier,
     ) {
@@ -144,16 +149,23 @@ object ProductsScreenComponents {
                 )
             }
 
-            ZarinaIconButton(
-                onClick = actions.onFiltersClicked,
-                indication = rememberRipple(bounded = false, radius = TopBarIconSize),
-                modifier = Modifier.padding(end = 2.dp),
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_filters_24),
-                    contentDescription = stringResource(R.string.filters),
-                    tint = UiKitTheme.colorsReworked.icon.regular.default,
-                    modifier = Modifier.size(TopBarIconSize),
+            Box {
+                ZarinaIconButton(
+                    onClick = actions.onFiltersClicked,
+                    indication = rememberRipple(bounded = false, radius = TopBarIconSize),
+                    modifier = Modifier.padding(end = 2.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_filters_24),
+                        contentDescription = stringResource(R.string.filters),
+                        tint = UiKitTheme.colorsReworked.icon.regular.default,
+                        modifier = Modifier.size(TopBarIconSize),
+                    )
+                }
+
+                AppliedFilterCounter(
+                    appliedFilterCount = appliedFilterCount,
+                    modifier = Modifier.align(AppliedFilterCounterAlignment),
                 )
             }
         }
@@ -358,6 +370,26 @@ object ProductsScreenComponents {
         }
     }
 
+    @Composable
+    private fun AppliedFilterCounter(
+        appliedFilterCount: Int,
+        modifier: Modifier = Modifier,
+    ) {
+        if (appliedFilterCount > 0) {
+            Text(
+                text = appliedFilterCount.toString(),
+                style = UiKitTheme.typographyReworked.caption2.bold.unscalable(LocalDensity.current),
+                color = UiKitTheme.colorsReworked.text.general.inversed.default,
+                modifier = modifier
+                    .background(
+                        color = UiKitTheme.colorsReworked.background.general.inversed.default,
+                        shape = CircleShape,
+                    )
+                    .padding(start = 6.dp, top = 1.dp, end = 6.dp),
+            )
+        }
+    }
+
     private fun LazyGridItemSpanScope.getProductGridItemSpan(index: Int): GridItemSpan {
         return if ((index + 1) % ProductGridFullscreenItemIndex == 0) {
             GridItemSpan(maxCurrentLineSpan)
@@ -416,4 +448,7 @@ object ProductsScreenComponents {
 
     private const val ScrollToTopButtonVisibilityItemThreshold = 20
     private const val FastScrollToTopDistanceThreshold = 5
+
+    private val AppliedFilterCounterAlignment: Alignment
+        get() = BiasAlignment(0.5f, -0.5f)
 }

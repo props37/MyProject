@@ -395,8 +395,7 @@ object FiltersScreenComponents {
                             color = UiKitTheme.colorsReworked.background.general.inversed.default,
                             shape = CircleShape,
                         )
-                        .padding(horizontal = 8.dp)
-                        .padding(top = 1.dp),
+                        .padding(start = 8.dp, top = 1.dp, end = 8.dp),
                 )
             }
 

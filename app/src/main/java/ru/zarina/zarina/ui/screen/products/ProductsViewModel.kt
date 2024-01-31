@@ -114,6 +114,11 @@ class ProductsViewModel @AssistedInject constructor(
         }
         .cachedIn(viewModelScope)
 
+    val appliedFilterCount: StateFlow<Int> = filters.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { it.appliedFilterCount }
+
     init {
         handleFiltersResult(backStackEntrySavedStateHandle)
     }

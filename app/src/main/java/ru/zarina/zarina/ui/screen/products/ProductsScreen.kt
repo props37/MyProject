@@ -36,6 +36,7 @@ fun ProductsScreen(
     viewModel: ProductsViewModel = hiltViewModel(),
 ) {
     val category by viewModel.category.collectAsStateWithLifecycle()
+    val appliedFilterCount by viewModel.appliedFilterCount.collectAsStateWithLifecycle()
 
     val topBarActions = remember(viewModel) {
         TopBarActions(
@@ -48,6 +49,7 @@ fun ProductsScreen(
     ScreenContent(
         category = category,
         productPagingDataFlow = viewModel.productPagingDataFlow,
+        appliedFilterCount = appliedFilterCount,
         topBarActions = topBarActions,
         onRefreshProducts = viewModel::onRefreshProducts,
         onProductsErrorRefreshClicked = viewModel::onProductsErrorRefreshClicked,
@@ -61,6 +63,7 @@ fun ProductsScreen(
 private fun ScreenContent(
     category: Category?,
     productPagingDataFlow: Flow<PagingData<Product>>,
+    appliedFilterCount: Int,
     topBarActions: TopBarActions,
     onRefreshProducts: () -> Unit,
     onProductsErrorRefreshClicked: () -> Unit,
@@ -87,6 +90,7 @@ private fun ScreenContent(
     ) {
         TopBar(
             title = category?.name,
+            appliedFilterCount = appliedFilterCount,
             actions = topBarActions,
             modifier = Modifier.fillMaxWidth(),
         )
