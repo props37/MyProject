@@ -6,10 +6,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
@@ -19,10 +22,13 @@ import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.SliderPositions
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -37,6 +43,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.google.common.primitives.Longs.max
+import kotlinx.coroutines.flow.distinctUntilChanged
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.common.PriceRange
 import ru.zarina.zarina.domain.rework.filter.PriceFilter
@@ -49,13 +56,13 @@ import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
+import timber.log.Timber
 import kotlin.math.min
 
-// TODO: [High] Change only one corresponding value when using slider thumbs
 // TODO: [High] Add visual transformations to text
 // TODO: [Low] Adjust slider thumbs appearance
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun PriceFilter(
     priceFilter: PriceFilter,
@@ -63,12 +70,33 @@ fun PriceFilter(
     modifier: Modifier = Modifier,
     sliderAdditionalHorizontalPadding: Dp = 0.dp,
 ) {
+    var minPrice by remember(priceFilter) { mutableStateOf(priceFilter.min) }
+    var maxPrice by remember(priceFilter) { mutableStateOf(priceFilter.max) }
+
     val limits = priceFilter.limits
 
-    Column(modifier = modifier) {
-        var minPrice by remember(priceFilter) { mutableStateOf(priceFilter.min) }
-        var maxPrice by remember(priceFilter) { mutableStateOf(priceFilter.max) }
+    val isMinTextFieldFocused = remember { mutableStateOf(false) }
+    val isMaxTextFieldFocused = remember { mutableStateOf(false) }
 
+    val isImeVisibleState = rememberUpdatedState(WindowInsets.isImeVisible)
+    LaunchedEffect(onPriceFilterChanged) {
+        snapshotFlow { isImeVisibleState.value }
+            .distinctUntilChanged()
+            .collect { isImeVisible ->
+                Timber.d("<3 $isImeVisible")
+                val isAnyTextFieldFocused =
+                    isMinTextFieldFocused.value || isMaxTextFieldFocused.value
+                if (!isImeVisible && isAnyTextFieldFocused) {
+                    val newMinPrice = minPrice?.coerceMinPrice(maxPrice, limits)
+                    val newMaxPrice = maxPrice?.coerceMaxPrice(minPrice, limits)
+                    minPrice = newMinPrice
+                    maxPrice = newMaxPrice
+                    onPriceFilterChanged(priceFilter.copy(min = newMinPrice, max = newMaxPrice))
+                }
+            }
+    }
+
+    Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.price_rubles),
             style = UiKitTheme.typographyReworked.secondary.light,
@@ -96,10 +124,16 @@ fun PriceFilter(
                 modifier = Modifier
                     .weight(1f)
                     .onFocusChanged { state ->
+                        isMinTextFieldFocused.value = state.isFocused
                         if (!state.isFocused) {
                             val newMinPrice = minPrice?.coerceMinPrice(maxPrice, limits)
                             minPrice = newMinPrice
-                            onPriceFilterChanged(priceFilter.copy(min = newMinPrice, max = maxPrice))
+                            onPriceFilterChanged(
+                                priceFilter.copy(
+                                    min = newMinPrice,
+                                    max = maxPrice
+                                )
+                            )
                         }
                     },
             )
@@ -119,10 +153,16 @@ fun PriceFilter(
                 modifier = Modifier
                     .weight(1f)
                     .onFocusChanged { state ->
+                        isMaxTextFieldFocused.value = state.isFocused
                         if (!state.isFocused) {
                             val newMaxPrice = maxPrice?.coerceMaxPrice(minPrice, limits)
                             maxPrice = newMaxPrice
-                            onPriceFilterChanged(priceFilter.copy(min = minPrice, max = newMaxPrice))
+                            onPriceFilterChanged(
+                                priceFilter.copy(
+                                    min = minPrice,
+                                    max = newMaxPrice
+                                )
+                            )
                         }
                     },
             )
