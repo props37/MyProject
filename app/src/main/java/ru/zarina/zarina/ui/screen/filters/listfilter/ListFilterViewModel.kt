@@ -4,10 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.ListFilter
 import ru.zarina.zarina.domain.rework.filter.ListFilterItem
@@ -61,8 +59,10 @@ class ListFilterViewModel @Inject constructor(
         filter.type != Filter.Type.SORTING && filter.selectedItems.isNotEmpty()
     }
 
-    private val _isApplyButtonVisible = MutableStateFlow(false)
-    val isApplyButtonVisible: StateFlow<Boolean> = _isApplyButtonVisible.asStateFlow()
+    val isApplyButtonVisible: StateFlow<Boolean> = savedStateHandle.getStateFlow(
+        key = KEY_IS_APPLY_BUTTON_VISIBLE,
+        initialValue = false,
+    )
 
     fun onBackClicked() {
         navigationThrottler.throttle {
@@ -80,7 +80,7 @@ class ListFilterViewModel @Inject constructor(
             val newFilter = currentFilter.copy(items = newItems)
             savedStateHandle[KEY_FILTER] = ListFilterParcelable.from(newFilter)
 
-            _isApplyButtonVisible.value = true
+            savedStateHandle[KEY_IS_APPLY_BUTTON_VISIBLE] = true
         }
     }
 
@@ -97,7 +97,7 @@ class ListFilterViewModel @Inject constructor(
         savedStateHandle[KEY_FILTER] = ListFilterParcelable.from(newFilter)
 
         if (filter.value.type != Filter.Type.SORTING) {
-            _isApplyButtonVisible.value = true
+            savedStateHandle[KEY_IS_APPLY_BUTTON_VISIBLE] = true
         } else {
             val result = ListFilterScreenResult.FilterChanged(filter.value)
             emitSideEffect(SideEffect.NavigateBackward(result))
@@ -117,5 +117,6 @@ class ListFilterViewModel @Inject constructor(
 
     companion object {
         private const val KEY_FILTER = "filter"
+        private const val KEY_IS_APPLY_BUTTON_VISIBLE = "is_apply_button_visible"
     }
 }
