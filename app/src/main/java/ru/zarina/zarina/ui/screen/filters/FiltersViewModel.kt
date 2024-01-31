@@ -10,7 +10,6 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.Filters
@@ -72,7 +70,17 @@ class FiltersViewModel @AssistedInject constructor(
             started = SharingStarted.Eagerly,
         ) { it?.toFilters() }
 
-    private val filters = MutableStateFlow(initialFilters.value)
+    private val filters: StateFlow<Filters?> = savedStateHandle
+        .getStateFlow<FiltersParcelable?>(
+            key = KEY_FILTERS,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { parcelable ->
+            parcelable?.toFilters() ?: initialFilters.value
+        }
 
     private val categoryProductInfoFetchRequests = MutableSharedFlow<Unit>(replay = 1)
         .also { it.tryEmit(Unit) }
@@ -141,9 +149,8 @@ class FiltersViewModel @AssistedInject constructor(
     }
 
     fun onFilterChanged(filter: Filter) {
-        filters.update { filters ->
-            filters?.updateWith(filter)
-        }
+        val newFilters = filters.value?.updateWith(filter)
+        savedStateHandle[KEY_FILTERS] = newFilters?.let { FiltersParcelable.from(it) }
     }
 
     fun onFilterClicked(filter: Filter) {
@@ -176,9 +183,8 @@ class FiltersViewModel @AssistedInject constructor(
                 if (result != null) {
                     Timber.v("ListFilter screen result: $result")
                     val filter = result.filter.toListFilter()
-                    filters.update { filters ->
-                        filters?.updateWith(filter)
-                    }
+                    val newFilters = filters.value?.updateWith(filter)
+                    savedStateHandle[KEY_FILTERS] = newFilters?.let { FiltersParcelable.from(it) }
                 }
             }
             .launchIn(viewModelScope)
@@ -202,5 +208,9 @@ class FiltersViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(backStackEntrySavedStateHandle: SavedStateHandle): FiltersViewModel
+    }
+
+    companion object {
+        private const val KEY_FILTERS = "filters"
     }
 }
