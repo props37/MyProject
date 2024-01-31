@@ -59,7 +59,13 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.fold
+import kotlinx.coroutines.flow.reduce
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.product.Product
@@ -83,6 +89,7 @@ import ru.zarina.zarina.util.compose.Crossfade
 import ru.zarina.zarina.util.compose.animateFastScrollToItem
 import ru.zarina.zarina.util.compose.collectIsScrollingBackwardAsState
 import ru.zarina.zarina.util.compose.unscalable
+import timber.log.Timber
 import java.io.IOException
 
 object ProductsScreenComponents {
@@ -184,6 +191,17 @@ object ProductsScreenComponents {
 
         LaunchedEffect(gridState, productPagingItems) {
             productPagingItems.retryAppendPrependErrors(gridState)
+        }
+
+        // Scroll to top when Refresh loading completes
+        LaunchedEffect(gridState, productPagingItems) {
+            var prevLoadState: LoadState? = null
+            snapshotFlow { productPagingItems.loadState.refresh }.collect { loadState ->
+                if (loadState is LoadState.NotLoading && prevLoadState is LoadState.Loading) {
+                    gridState.scrollToItem(0)
+                }
+                prevLoadState = loadState
+            }
         }
 
         Box(modifier = modifier) {
