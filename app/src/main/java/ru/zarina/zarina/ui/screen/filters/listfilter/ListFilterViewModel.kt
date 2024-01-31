@@ -88,7 +88,11 @@ class ListFilterViewModel @Inject constructor(
         val currentFilter = filter.value
         val newItems = currentFilter.items.map {
             when {
-                it.id == item.id -> it.copy(isSelected = !item.isSelected)
+                it.id == item.id -> {
+                    val isSelected =
+                        if (filter.value.type != Filter.Type.SORTING) !item.isSelected else true
+                    it.copy(isSelected = isSelected)
+                }
                 currentFilter.isSingleSelection -> it.copy(isSelected = false)
                 else -> it
             }
