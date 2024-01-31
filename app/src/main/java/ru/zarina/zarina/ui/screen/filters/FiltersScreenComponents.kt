@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.screen.filters
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
@@ -58,6 +59,8 @@ import ru.zarina.zarina.ui.common.component.PriceFilter
 import ru.zarina.zarina.ui.common.component.ZarinaSwitch
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
@@ -66,6 +69,8 @@ import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.common.util.domain.nameResId
 import ru.zarina.zarina.ui.screen.filters.FiltersViewModel.FilterListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.Crossfade
 
@@ -95,7 +100,23 @@ object FiltersScreenComponents {
                 )
             },
             endContent = {
-                // TODO: [High] Implement
+                AnimatedVisibility(
+                    visible = isResetButtonVisible,
+                    enter = AnimatedContentDefaultEnterTransition,
+                    exit = AnimatedContentDefaultExitTransition,
+                ) {
+                    ZarinaButton(
+                        onClick = actions.onResetClicked,
+                        size = ZarinaButtonSize.Small,
+                        colors = ZarinaButtonDefaults.backlessColors(),
+                        modifier = Modifier.padding(end = 8.dp),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.reset).uppercase(),
+                            style = UiKitTheme.typographyReworked.caption1.regular,
+                        )
+                    }
+                }
             },
             contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
             modifier = modifier,

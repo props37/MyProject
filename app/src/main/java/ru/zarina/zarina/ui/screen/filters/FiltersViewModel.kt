@@ -132,6 +132,11 @@ class FiltersViewModel @AssistedInject constructor(
         } ?: FilterListState.Loading,
     )
 
+    val isResetButtonVisible: StateFlow<Boolean> = filters.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { it?.isEmpty != true }
+
     init {
         handleListFilterResult(backStackEntrySavedStateHandle)
     }
@@ -146,6 +151,10 @@ class FiltersViewModel @AssistedInject constructor(
         navigationThrottler.throttle {
             emitSideEffect(SideEffect.NavigateBackward(FiltersScreenResult.ScreenClosed))
         }
+    }
+
+    fun onResetClicked() {
+        // TODO: [High] Implement
     }
 
     fun onFilterChanged(filter: Filter) {
