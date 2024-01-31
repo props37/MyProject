@@ -62,6 +62,7 @@
     <string name="reset">Сбросить</string>
     <string name="apply">Применить</string>
     <string name="scroll_to_top">Вернуться наверх</string>
+    <string name="products_not_found">Товары не найдены</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -168,7 +169,6 @@
     <string name="plural_products_few">%1$d товара</string>
     <string name="plural_products_many">%1$d товаров</string>
     <string name="plural_products_other">%1$d товаров</string>
-    <string name="products_not_found">Товаров не нашлось</string>
     <string name="try_changing_filter">Попробуйте изменить выбранные фильтры</string>
     <string name="by_new">По новизне</string>
     <string name="by_price_ascending">По возрастанию цены</string>

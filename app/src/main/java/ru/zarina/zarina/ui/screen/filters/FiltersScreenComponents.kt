@@ -445,6 +445,7 @@ object FiltersScreenComponents {
     ) {
         ZarinaButton(
             onClick = onClick,
+            isEnabled = productCount == null || productCount > 0,
             modifier = modifier,
         ) {
             AnimatedContent(
@@ -455,15 +456,17 @@ object FiltersScreenComponents {
                 contentAlignment = Alignment.Center,
                 label = "ShowProductsButton",
             ) { productCount ->
-                val text = if (productCount != null) {
-                    pluralStringResource(
-                        R.plurals.show_products,
-                        productCount,
-                        productCount,
-                    )
-                } else {
-                    // TODO: [High] Rework
-                    stringResource(R.string.show_products)
+                val text = when {
+                    productCount == null -> stringResource(R.string.show_products)
+                    productCount > 0 -> {
+                        pluralStringResource(
+                            R.plurals.show_products,
+                            productCount,
+                            productCount,
+                        )
+                    }
+
+                    else -> stringResource(R.string.products_not_found)
                 }
 
                 Text(text = text.uppercase())
