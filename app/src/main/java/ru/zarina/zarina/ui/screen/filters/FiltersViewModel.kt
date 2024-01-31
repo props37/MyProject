@@ -21,7 +21,7 @@ import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.filter.ListFilter
-import ru.zarina.zarina.domain.rework.filter.combineWith
+import ru.zarina.zarina.domain.rework.filter.coerceInAvailable
 import ru.zarina.zarina.domain.rework.filter.updateWith
 import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
@@ -108,7 +108,7 @@ class FiltersViewModel @AssistedInject constructor(
     ) { filters, categoryProductInfoResult ->
         if (filters != null) {
             val availableFilters = categoryProductInfoResult?.getOrNull()?.availableFilters
-            val combinedFilters = availableFilters?.let { filters.combineWith(it) } ?: filters
+            val combinedFilters = availableFilters?.let { filters.coerceInAvailable(it) } ?: filters
             FilterListState.FilterList(combinedFilters)
         } else {
             categoryProductInfoResult?.fold(

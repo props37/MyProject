@@ -26,12 +26,12 @@ data class PriceFilter(
     }
 }
 
-fun PriceFilter.combineWith(availableFilter: PriceFilter): PriceFilter {
-    return if (this.limits != availableFilter.limits) {
+fun PriceFilter.coerceInAvailable(available: PriceFilter): PriceFilter {
+    return if (this.limits != available.limits) {
         this.copy(
-            min = this.min?.coerceIn(availableFilter.limits.min, availableFilter.limits.max),
-            max = this.max?.coerceIn(availableFilter.limits.min, availableFilter.limits.max),
-            limits = availableFilter.limits,
+            min = this.min?.coerceIn(available.limits.min, available.limits.max),
+            max = this.max?.coerceIn(available.limits.min, available.limits.max),
+            limits = available.limits,
         )
     } else this
 }

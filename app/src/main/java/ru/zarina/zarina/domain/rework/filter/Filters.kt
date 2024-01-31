@@ -72,14 +72,13 @@ data class Filters(
     }
 }
 
-fun Filters.combineWith(availableFilters: Filters): Filters {
-    val price = availableFilters.price?.let { this.price?.combineWith(it) ?: it }
-    val materials = availableFilters.materials?.let { this.materials?.combineWith(it) ?: it }
-    val sizes = availableFilters.sizes?.let { this.sizes?.combineWith(it) ?: it }
-    val colors = availableFilters.colors?.let { this.colors?.combineWith(it) ?: it }
-    val deliveryAvailability = this.deliveryAvailability ?: availableFilters.deliveryAvailability
-    val storePickupAvailability =
-        this.storePickupAvailability ?: availableFilters.storePickupAvailability
+fun Filters.coerceInAvailable(available: Filters): Filters {
+    val price = available.price?.let { this.price?.coerceInAvailable(it) ?: it }
+    val materials = available.materials?.let { this.materials?.coerceInAvailable(it) ?: it }
+    val sizes = available.sizes?.let { this.sizes?.coerceInAvailable(it) ?: it }
+    val colors = available.colors?.let { this.colors?.coerceInAvailable(it) ?: it }
+    val deliveryAvailability = this.deliveryAvailability ?: available.deliveryAvailability
+    val storePickupAvailability = this.storePickupAvailability ?: available.storePickupAvailability
     return this.copy(
         price = price,
         materials = materials,

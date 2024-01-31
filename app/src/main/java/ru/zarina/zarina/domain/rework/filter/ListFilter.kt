@@ -19,16 +19,7 @@ sealed class ListFilterItem(
     value class Id(val value: String)
 }
 
-fun ListFilterItem.copy(isSelected: Boolean): ListFilterItem {
-    return when (this) {
-        is ColorFilterItem -> this.copy(isSelected = isSelected)
-        is MaterialFilterItem -> this.copy(isSelected = isSelected)
-        is SizeFilterItem -> this.copy(isSelected = isSelected)
-        is SortFilterItem -> this.copy(isSelected = isSelected)
-    }
-}
-
-fun <T : ListFilterItem> ListFilter<T>.combineWith(availableFilter: ListFilter<T>): ListFilter<T> {
+fun <T : ListFilterItem> ListFilter<T>.coerceInAvailable(availableFilter: ListFilter<T>): ListFilter<T> {
     val items = this.items.filter { item ->
         val isAvailable = availableFilter.items.find { it.id == item.id } != null
         isAvailable
@@ -37,4 +28,13 @@ fun <T : ListFilterItem> ListFilter<T>.combineWith(availableFilter: ListFilter<T
         items = items,
         isSingleSelection = availableFilter.isSingleSelection,
     )
+}
+
+fun ListFilterItem.copy(isSelected: Boolean): ListFilterItem {
+    return when (this) {
+        is ColorFilterItem -> this.copy(isSelected = isSelected)
+        is MaterialFilterItem -> this.copy(isSelected = isSelected)
+        is SizeFilterItem -> this.copy(isSelected = isSelected)
+        is SortFilterItem -> this.copy(isSelected = isSelected)
+    }
 }
