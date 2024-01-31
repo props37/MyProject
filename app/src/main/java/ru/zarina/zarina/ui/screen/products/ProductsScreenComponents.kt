@@ -323,7 +323,7 @@ object ProductsScreenComponents {
         val isVisible by remember(gridState, isScrollingBackwardState) {
             derivedStateOf {
                 val isScrollingBackward = isScrollingBackwardState.value
-                val isFarEnough = gridState.firstVisibleItemIndex >= ScrollToTopButtonItemThreshold
+                val isFarEnough = gridState.firstVisibleItemIndex >= ScrollToTopButtonVisibilityItemThreshold
                 isScrollingBackward && isFarEnough
             }
         }
@@ -339,7 +339,7 @@ object ProductsScreenComponents {
                     coroutineScope.launch {
                         gridState.animateFastScrollToItem(
                             item = 0,
-                            distanceThreshold = ScrollToTopButtonItemThreshold,
+                            distanceThreshold = FastScrollToTopDistanceThreshold,
                         )
                     }
                 },
@@ -414,5 +414,6 @@ object ProductsScreenComponents {
     private const val ProductGridContentTypeProductCardPlaceholder =
         "ProductGridContentTypeProductCardPlaceholder"
 
-    private const val ScrollToTopButtonItemThreshold = 20
+    private const val ScrollToTopButtonVisibilityItemThreshold = 20
+    private const val FastScrollToTopDistanceThreshold = 5
 }
