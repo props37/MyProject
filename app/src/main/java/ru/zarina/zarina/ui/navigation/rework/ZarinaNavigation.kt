@@ -15,10 +15,10 @@ import ru.zarina.zarina.ui.navigation.rework.destination.defaultCityDialogScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.favoritesGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.homeGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.onboardingScreen
-import ru.zarina.zarina.ui.navigation.rework.destination.productsScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.profileGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.filtersScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.listFilterScreen
+import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.productsScreen
 
 @Composable
 fun ZarinaNavigation(

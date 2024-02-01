@@ -17,6 +17,18 @@ import ru.zarina.zarina.ui.screen.filters.FiltersViewModel
 fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
     composableDestination(
         destination = UnscopedDestinations.Filters,
+        enterTransition = {
+            when (initialState.destination.route) {
+                UnscopedDestinations.Products.routeSchema -> {
+                    slideIntoContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                        animationSpec = tween(NavigationTransitionDurationMillis),
+                    )
+                }
+
+                else -> null
+            }
+        },
         exitTransition = {
             when (targetState.destination.route) {
                 UnscopedDestinations.ListFilter.routeSchema -> {
@@ -40,7 +52,19 @@ fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
 
                 else -> null
             }
-        }
+        },
+        popExitTransition = {
+            when (targetState.destination.route) {
+                UnscopedDestinations.Products.routeSchema -> {
+                    slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.End,
+                        animationSpec = tween(NavigationTransitionDurationMillis),
+                    )
+                }
+
+                else -> null
+            }
+        },
     ) {
         FiltersScreen(
             viewModel = hiltViewModel { factory: FiltersViewModel.Factory ->
