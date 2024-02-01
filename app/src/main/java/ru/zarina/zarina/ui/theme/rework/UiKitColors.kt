@@ -12,6 +12,7 @@ data class UiKitColorsReworked(
     data class Background(
         val general: General = General(),
         val button: Button = Button(),
+        val tag: Tag = Tag(),
         val skeleton: Color = Colors.Gallery,
     ) {
         data class General(
@@ -53,12 +54,18 @@ data class UiKitColorsReworked(
         ) {
             data class Generic(val default: Color, val active: Color, val disabled: Color)
         }
+
+        data class Tag(
+            val default: Color = Colors.WildSand,
+            val active: Color = Colors.MineShaftDark,
+        )
     }
 
     data class Text(
         val general: General = General(),
         val button: Button = Button(),
         val label: Label = Label(),
+        val tag: Tag = Tag(),
     ) {
         data class General(
             val regular: Generic = Generic(
@@ -117,6 +124,11 @@ data class UiKitColorsReworked(
             val success: Color = Colors.FunGreen,
             val warning: Color = Colors.Flamenco,
             val danger: Color = Colors.Scarlet,
+        )
+
+        data class Tag(
+            val default: Color = Colors.MineShaftDark,
+            val active: Color = Colors.White,
         )
     }
 
