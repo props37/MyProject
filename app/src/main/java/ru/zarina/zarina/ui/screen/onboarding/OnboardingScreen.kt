@@ -117,7 +117,7 @@ private fun ScreenContent(
                             .union(WindowInsets.displayCutout)
                             .only(WindowInsetsSides.HorizontalAndBottom),
                     )
-                    .padding(top = 24.dp, bottom = 20.dp),
+                    .padding(top = 24.dp, bottom = 16.dp),
             ) {
                 ProgressIndicator(
                     onboardingSteps = onboardingSteps,

@@ -163,7 +163,9 @@ object FiltersScreenComponents {
                     ZarinaErrorScreen(
                         state = state.errorState,
                         onRefreshClicked = onFilterListErrorRefreshClicked,
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
                     )
                 }
             }

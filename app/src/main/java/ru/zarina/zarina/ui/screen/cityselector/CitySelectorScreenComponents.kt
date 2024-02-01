@@ -178,7 +178,7 @@ object CitySelectorScreenComponents {
                             val baseContentPadding = remember(isChangeCityButtonVisible) {
                                 val bottom = if (isChangeCityButtonVisible) {
                                     val buttonHeight = ZarinaButtonDefaults.SizeLarge
-                                    buttonHeight + ConfirmButtonBottomPadding + 8.dp
+                                    buttonHeight + ChangeCityButtonBottomPadding + 8.dp
                                 } else {
                                     0.dp
                                 }
@@ -231,7 +231,7 @@ object CitySelectorScreenComponents {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(horizontal = 16.dp)
-                                .padding(bottom = 20.dp)
+                                .padding(bottom = 16.dp)
                                 .windowInsetsPadding(WindowInsets.navigationBarsOrIme),
                         )
                     }
@@ -250,7 +250,7 @@ object CitySelectorScreenComponents {
                         .fillMaxWidth()
                         .windowInsetsPadding(WindowInsets.navigationBarsOrIme)
                         .padding(horizontal = 16.dp)
-                        .padding(bottom = 20.dp),
+                        .padding(bottom = ChangeCityButtonBottomPadding),
                 ) {
                     Text(text = stringResource(R.string.change).uppercase())
                 }
@@ -381,12 +381,10 @@ object CitySelectorScreenComponents {
         is CityListItem.CityFirstLetterHeaderItem -> CityListItemContentTypeCityFirstLetterHeader
     }
 
-    private val ConfirmButtonBottomPadding = 20.dp
+    private val ChangeCityButtonBottomPadding = 16.dp
 
-    private const val CityListContentKeyLoading = "CityListContentKeyLoading"
     private const val CityListContentKeyCities = "CityListContentKeyCities"
     private const val CityListContentKeyCityNotFound = "CityListContentKeyCityNotFound"
-    private const val CityListContentKeyError = "CityListContentKeyError"
 
     private const val CityListItemKeyPrefixCity = "CityListItemKeyPrefixCity"
     private const val CityListItemKeyPrefixCityFirstLetterHeader =
