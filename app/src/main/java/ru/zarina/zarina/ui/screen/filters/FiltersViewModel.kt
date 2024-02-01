@@ -89,7 +89,7 @@ class FiltersViewModel @AssistedInject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val categoryProductInfoResult: StateFlow<Result<CategoryProductInfo>?> = combine(
         categoryId,
-        filters, // // TODO: [High] Add debounce?
+        filters,
         categoryProductInfoFetchRequests,
     ) { categoryId, filters, _ ->
         GetCategoryProductInfoFlowUseCase.Params(categoryId, filters)
@@ -188,6 +188,10 @@ class FiltersViewModel @AssistedInject constructor(
             }
             emitSideEffect(SideEffect.NavigateBackward(result))
         }
+    }
+
+    fun onFilterListErrorRefreshClicked() {
+        categoryProductInfoFetchRequests.tryEmit(Unit)
     }
 
     private fun handleListFilterResult(backStackEntrySavedStateHandle: SavedStateHandle) {

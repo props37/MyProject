@@ -50,6 +50,7 @@ fun FiltersScreen(
         onFilterClicked = viewModel::onFilterClicked,
         productCount = productCount,
         onShowProductsClicked = viewModel::onShowProductsClicked,
+        onFilterListErrorRefreshClicked = viewModel::onFilterListErrorRefreshClicked,
         sideEffects = viewModel.sideEffects,
         navigateForward = navigateForward,
         navigateBackward = navigateBackward,
@@ -65,6 +66,7 @@ private fun ScreenContent(
     onFilterClicked: (Filter) -> Unit,
     productCount: Int?,
     onShowProductsClicked: () -> Unit,
+    onFilterListErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<FiltersViewModel.SideEffect>,
     navigateForward: (FiltersScreenAction) -> Unit,
     navigateBackward: (FiltersScreenResult) -> Unit,
@@ -95,6 +97,7 @@ private fun ScreenContent(
             onFilterClicked = onFilterClicked,
             onShowProductsClicked = onShowProductsClicked,
             productCount = productCount,
+            onFilterListErrorRefreshClicked = onFilterListErrorRefreshClicked,
             modifier = Modifier.fillMaxSize(),
         )
     }

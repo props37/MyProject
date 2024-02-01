@@ -130,6 +130,7 @@ object FiltersScreenComponents {
         onFilterClicked: (Filter) -> Unit,
         onShowProductsClicked: () -> Unit,
         productCount: Int?,
+        onFilterListErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Crossfade(
@@ -161,7 +162,7 @@ object FiltersScreenComponents {
                 is FilterListState.Error -> {
                     ZarinaErrorScreen(
                         state = state.errorState,
-                        onRefreshClicked = { /*TODO*/ },
+                        onRefreshClicked = onFilterListErrorRefreshClicked,
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
