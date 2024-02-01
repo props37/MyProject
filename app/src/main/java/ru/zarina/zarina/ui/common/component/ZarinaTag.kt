@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
@@ -31,6 +32,9 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.Shimmer
+import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
+import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.rippletheme.DarkRippleTheme
 import ru.zarina.zarina.ui.common.rippletheme.LightRippleTheme
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -97,6 +101,21 @@ fun ZarinaTag(
             content = content,
         )
     }
+}
+
+@Composable
+fun ZarinaTagSkeleton(
+    modifier: Modifier = Modifier,
+    shimmer: Shimmer = rememberSkeletonShimmer(),
+) {
+    Skeleton(
+        shimmer = shimmer,
+        shape = ZarinaTagDefaults.Shape,
+        modifier = modifier.size(
+            width = ZarinaTagDefaults.MinSize * 2,
+            height = ZarinaTagDefaults.MinSize,
+        )
+    )
 }
 
 object ZarinaTagDefaults {
