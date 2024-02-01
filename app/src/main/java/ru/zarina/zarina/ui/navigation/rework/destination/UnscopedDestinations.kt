@@ -6,25 +6,16 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import ru.zarina.zarina.ui.model.filter.FiltersParcelable
-import ru.zarina.zarina.ui.model.filter.ListFilterParcelable
 import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.dialogDestination
-import ru.zarina.zarina.ui.navigation.rework.NavigationTransitionDurationMillis
 import ru.zarina.zarina.ui.navigation.rework.graph.HomeGraph
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorBottomSheetScreen
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenResult
 import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreen
 import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreenResult
-import ru.zarina.zarina.ui.screen.filters.FiltersScreen
-import ru.zarina.zarina.ui.screen.filters.FiltersScreenAction
-import ru.zarina.zarina.ui.screen.filters.FiltersScreenResult
-import ru.zarina.zarina.ui.screen.filters.FiltersViewModel
-import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterScreen
-import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterScreenResult
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenAction
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel
@@ -149,126 +140,6 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                     route = UnscopedDestinations.Products.routeSchema,
                     inclusive = true,
                 )
-            },
-        )
-    }
-}
-
-fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
-    composableDestination(
-        destination = UnscopedDestinations.Filters,
-        exitTransition = {
-            when (targetState.destination.route) {
-                UnscopedDestinations.ListFilter.routeSchema -> {
-                    slideOutOfContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Start,
-                        animationSpec = tween(NavigationTransitionDurationMillis),
-                    )
-                }
-
-                else -> null
-            }
-        },
-        popEnterTransition = {
-            when (initialState.destination.route) {
-                UnscopedDestinations.ListFilter.routeSchema -> {
-                    slideIntoContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.End,
-                        animationSpec = tween(NavigationTransitionDurationMillis),
-                    )
-                }
-
-                else -> null
-            }
-        }
-    ) {
-        FiltersScreen(
-            viewModel = hiltViewModel { factory: FiltersViewModel.Factory ->
-                factory.create(it.savedStateHandle)
-            },
-            navigateForward = { action ->
-                when (action) {
-                    is FiltersScreenAction.ListFilterClicked -> {
-                        val args = UnscopedDestinations.ListFilter.Args(action.filter)
-                        val route = UnscopedDestinations.ListFilter.createRoute(args)
-                        navController.navigate(route)
-                    }
-                }
-            },
-            navigateBackward = { result ->
-                when (result) {
-                    FiltersScreenResult.ScreenClosed -> {
-                        navController.popBackStack(
-                            route = UnscopedDestinations.Filters.routeSchema,
-                            inclusive = true,
-                        )
-                    }
-
-                    is FiltersScreenResult.FiltersChanged -> {
-                        val filtersParcelable = FiltersParcelable.from(result.filters)
-                        val result = UnscopedDestinations.Filters.Result(filtersParcelable)
-                        navController.previousBackStackEntry?.savedStateHandle
-                            ?.set(UnscopedDestinations.Filters.RESULT_KEY, result)
-                        navController.popBackStack(
-                            route = UnscopedDestinations.Filters.routeSchema,
-                            inclusive = true,
-                        )
-                    }
-                }
-            },
-        )
-    }
-}
-
-fun NavGraphBuilder.listFilterScreen(navController: NavHostController) {
-    composableDestination(
-        destination = UnscopedDestinations.ListFilter,
-        enterTransition = {
-            when (initialState.destination.route) {
-                UnscopedDestinations.Filters.routeSchema -> {
-                    slideIntoContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Start,
-                        animationSpec = tween(NavigationTransitionDurationMillis),
-                    )
-                }
-
-                else -> null
-            }
-        },
-        popExitTransition = {
-            when (targetState.destination.route) {
-                UnscopedDestinations.Filters.routeSchema -> {
-                    slideOutOfContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.End,
-                        animationSpec = tween(NavigationTransitionDurationMillis),
-                    )
-                }
-
-                else -> null
-            }
-        }
-    ) {
-        ListFilterScreen(
-            navigateBackward = { result ->
-                when (result) {
-                    ListFilterScreenResult.ScreenClosed -> {
-                        navController.popBackStack(
-                            route = UnscopedDestinations.ListFilter.routeSchema,
-                            inclusive = true,
-                        )
-                    }
-
-                    is ListFilterScreenResult.FilterChanged -> {
-                        val filterParcelable = ListFilterParcelable.from(result.filter)
-                        val result = UnscopedDestinations.ListFilter.Result(filterParcelable)
-                        navController.previousBackStackEntry?.savedStateHandle
-                            ?.set(UnscopedDestinations.ListFilter.RESULT_KEY, result)
-                        navController.popBackStack(
-                            route = UnscopedDestinations.ListFilter.routeSchema,
-                            inclusive = true,
-                        )
-                    }
-                }
             },
         )
     }
