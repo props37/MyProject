@@ -6,12 +6,15 @@ import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
 import ru.zarina.zarina.ui.navigation.rework.graph.CatalogGraph
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.util.BottomNavBarItemSecondaryStartDestinationBackHandler
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreen
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenAction
 
 fun NavGraphBuilder.catalogGraph(navController: NavHostController) {
     navigationGraph(CatalogGraph) {
         composableDestination(CatalogGraph.Catalog) {
+            BottomNavBarItemSecondaryStartDestinationBackHandler(navController)
+
             CatalogScreen(
                 navigateForward = { action ->
                     when (action) {
