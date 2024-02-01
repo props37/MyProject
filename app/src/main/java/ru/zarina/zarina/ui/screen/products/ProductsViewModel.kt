@@ -1,5 +1,7 @@
 package ru.zarina.zarina.ui.screen.products
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +11,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -42,7 +46,7 @@ import timber.log.Timber
 class ProductsViewModel @AssistedInject constructor(
     @Assisted
     backStackEntrySavedStateHandle: SavedStateHandle,
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val interactor: ProductsInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
@@ -87,6 +91,29 @@ class ProductsViewModel @AssistedInject constructor(
             started = SharingStarted.WhileUiSubscribed,
             initialValue = null,
         )
+
+    val tagListState: StateFlow<TagListState?> = categoryResult.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { result ->
+        if (result != null) {
+            result.fold(
+                onSuccess = { category ->
+                    if (!category.children.isNullOrEmpty()) {
+                        val tags = category.children.toImmutableList()
+                        TagListState.TagList(tags)
+                    } else {
+                        null
+                    }
+                },
+                onFailure = { TagListState.Loading },
+            )
+        } else {
+            TagListState.Loading
+        }
+    }
+
+    // TODO: [High] Add selectedTagId
 
     private val filters = MutableStateFlow(
         Filters.create(
@@ -146,6 +173,10 @@ class ProductsViewModel @AssistedInject constructor(
         }
     }
 
+    fun onTagClicked(tag: Category) {
+        // TODO: [High] Implement
+    }
+
     fun onRefreshProducts() {
         if (category.value == null) {
             fetchCategory()
@@ -179,7 +210,16 @@ class ProductsViewModel @AssistedInject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateForward(val action: ProductsScreenAction) : SideEffect
+
         data object NavigateBackward : SideEffect
+    }
+
+    @Stable
+    sealed class TagListState {
+        data object Loading : TagListState()
+
+        @Immutable
+        data class TagList(val tags: ImmutableList<Category>) : TagListState()
     }
 
     @AssistedFactory

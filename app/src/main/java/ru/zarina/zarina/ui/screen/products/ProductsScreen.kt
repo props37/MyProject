@@ -25,8 +25,10 @@ import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.Products
+import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.Tags
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBarActions
+import ru.zarina.zarina.ui.screen.products.ProductsViewModel.TagListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
@@ -36,6 +38,7 @@ fun ProductsScreen(
     viewModel: ProductsViewModel = hiltViewModel(),
 ) {
     val category by viewModel.category.collectAsStateWithLifecycle()
+    val tagListState by viewModel.tagListState.collectAsStateWithLifecycle()
     val appliedFilterCount by viewModel.appliedFilterCount.collectAsStateWithLifecycle()
 
     val topBarActions = remember(viewModel) {
@@ -48,9 +51,11 @@ fun ProductsScreen(
 
     ScreenContent(
         category = category,
+        tagListState = tagListState,
         productPagingDataFlow = viewModel.productPagingDataFlow,
         appliedFilterCount = appliedFilterCount,
         topBarActions = topBarActions,
+        onTagClicked = viewModel::onTagClicked,
         onRefreshProducts = viewModel::onRefreshProducts,
         onProductsErrorRefreshClicked = viewModel::onProductsErrorRefreshClicked,
         sideEffects = viewModel.sideEffects,
@@ -62,9 +67,11 @@ fun ProductsScreen(
 @Composable
 private fun ScreenContent(
     category: Category?,
+    tagListState: TagListState?,
     productPagingDataFlow: Flow<PagingData<Product>>,
     appliedFilterCount: Int,
     topBarActions: TopBarActions,
+    onTagClicked: (Category) -> Unit,
     onRefreshProducts: () -> Unit,
     onProductsErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<ProductsViewModel.SideEffect>,
@@ -93,6 +100,11 @@ private fun ScreenContent(
             appliedFilterCount = appliedFilterCount,
             actions = topBarActions,
             modifier = Modifier.fillMaxWidth(),
+        )
+
+        Tags(
+            state = tagListState,
+            onTagClicked = onTagClicked,
         )
 
         Products(

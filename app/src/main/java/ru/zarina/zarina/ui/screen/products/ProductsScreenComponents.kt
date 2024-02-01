@@ -2,12 +2,14 @@ package ru.zarina.zarina.ui.screen.products
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,12 +20,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -59,19 +63,16 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.fold
-import kotlinx.coroutines.flow.reduce
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.component.ProductCard
 import ru.zarina.zarina.ui.common.component.ProductCardPlaceholder
+import ru.zarina.zarina.ui.common.component.ZarinaTag
+import ru.zarina.zarina.ui.common.component.ZarinaTagSkeleton
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
@@ -82,9 +83,11 @@ import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.util.library.paging.retryAppendPrependErrors
+import ru.zarina.zarina.ui.screen.products.ProductsViewModel.TagListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.Crossfade
 import ru.zarina.zarina.util.compose.animateFastScrollToItem
 import ru.zarina.zarina.util.compose.collectIsScrollingBackwardAsState
@@ -178,6 +181,71 @@ object ProductsScreenComponents {
         }
     }
 
+    @Composable
+    fun Tags(
+        state: TagListState?,
+        onTagClicked: (Category) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        AnimatedContent(
+            targetState = state,
+            transitionSpec = {
+                if (initialState != null && targetState != null) {
+                    fadeIn() togetherWith fadeOut()
+                } else {
+                    AnimatedContentDefaultTransitionSpec()
+                }.using(SizeTransform(clip = false))
+            },
+            contentAlignment = Alignment.Center,
+            contentKey = {
+                when (it) {
+                    is TagListState.TagList -> TagListContentKeyTagList
+                    TagListState.Loading -> it
+                    null -> it
+                }
+            },
+            label = "Tags",
+            modifier = modifier,
+        ) { state ->
+            val horizontalArrangement = Arrangement.spacedBy(8.dp)
+            val contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 8.dp)
+
+            when (state) {
+                is TagListState.TagList -> {
+                    LazyRow(
+                        horizontalArrangement = horizontalArrangement,
+                        contentPadding = contentPadding,
+                    ) {
+                        items(
+                            items = state.tags,
+                            key = { it.id.value },
+                        ) { tag ->
+                            ZarinaTag(
+                                onClick = { onTagClicked(tag) },
+                            ) {
+                                Text(text = tag.name)
+                            }
+                        }
+                    }
+                }
+
+                TagListState.Loading -> {
+                    val skeletonShimmer = rememberSkeletonShimmer()
+                    LazyRow(
+                        horizontalArrangement = horizontalArrangement,
+                        contentPadding = contentPadding,
+                    ) {
+                        items(count = 10) {
+                            ZarinaTagSkeleton(shimmer = skeletonShimmer)
+                        }
+                    }
+                }
+
+                null -> Unit
+            }
+        }
+    }
+
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun Products(
@@ -203,6 +271,8 @@ object ProductsScreenComponents {
                 prevLoadState = loadState
             }
         }
+
+        PagingErrorPrinter(productPagingItems = productPagingItems)
 
         Box(modifier = modifier) {
             var canPullRefreshIndicatorBeShown by remember(productPagingItems) {
@@ -408,6 +478,23 @@ object ProductsScreenComponents {
         }
     }
 
+    @Composable
+    private fun PagingErrorPrinter(productPagingItems: LazyPagingItems<Product>) {
+        LaunchedEffect(productPagingItems) {
+            snapshotFlow { productPagingItems.loadState }
+                .collect { loadStates ->
+                    val refresh = loadStates.refresh
+                    if (refresh is LoadState.Error) Timber.e(refresh.error)
+
+                    val append = loadStates.append
+                    if (append is LoadState.Error) Timber.e(append.error)
+
+                    val prepend = loadStates.prepend
+                    if (prepend is LoadState.Error) Timber.e(prepend.error)
+                }
+        }
+    }
+
     private fun LazyGridItemSpanScope.getProductGridItemSpan(index: Int): GridItemSpan {
         return if ((index + 1) % ProductGridFullscreenItemIndex == 0) {
             GridItemSpan(maxCurrentLineSpan)
@@ -454,6 +541,8 @@ object ProductsScreenComponents {
     }
 
     private val TopBarIconSize: Dp get() = 20.dp
+
+    private const val TagListContentKeyTagList = "TagListContentKeyTagList"
 
     private const val ProductGridCellInRowCount = 2
     private const val ProductGridFullscreenItemIndex = 5
