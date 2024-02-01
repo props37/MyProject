@@ -12,6 +12,7 @@ import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.dialogDestination
+import ru.zarina.zarina.ui.navigation.rework.NavigationTransitionDurationMillis
 import ru.zarina.zarina.ui.navigation.rework.graph.HomeGraph
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorBottomSheetScreen
@@ -154,7 +155,33 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
 }
 
 fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
-    composableDestination(UnscopedDestinations.Filters) {
+    composableDestination(
+        destination = UnscopedDestinations.Filters,
+        exitTransition = {
+            when (targetState.destination.route) {
+                UnscopedDestinations.ListFilter.routeSchema -> {
+                    slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                        animationSpec = tween(NavigationTransitionDurationMillis),
+                    )
+                }
+
+                else -> null
+            }
+        },
+        popEnterTransition = {
+            when (initialState.destination.route) {
+                UnscopedDestinations.ListFilter.routeSchema -> {
+                    slideIntoContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.End,
+                        animationSpec = tween(NavigationTransitionDurationMillis),
+                    )
+                }
+
+                else -> null
+            }
+        }
+    ) {
         FiltersScreen(
             viewModel = hiltViewModel { factory: FiltersViewModel.Factory ->
                 factory.create(it.savedStateHandle)
@@ -194,7 +221,33 @@ fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
 }
 
 fun NavGraphBuilder.listFilterScreen(navController: NavHostController) {
-    composableDestination(UnscopedDestinations.ListFilter) {
+    composableDestination(
+        destination = UnscopedDestinations.ListFilter,
+        enterTransition = {
+            when (initialState.destination.route) {
+                UnscopedDestinations.Filters.routeSchema -> {
+                    slideIntoContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                        animationSpec = tween(NavigationTransitionDurationMillis),
+                    )
+                }
+
+                else -> null
+            }
+        },
+        popExitTransition = {
+            when (targetState.destination.route) {
+                UnscopedDestinations.Filters.routeSchema -> {
+                    slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.End,
+                        animationSpec = tween(NavigationTransitionDurationMillis),
+                    )
+                }
+
+                else -> null
+            }
+        }
+    ) {
         ListFilterScreen(
             navigateBackward = { result ->
                 when (result) {
