@@ -38,21 +38,27 @@ data class FiltersDto(
         val price = price?.let { PriceFilter(min = null, max = null, limits = it.toPriceRange()) }
         val materials = if (!materials.isNullOrEmpty()) {
             ListFilter(
-                items = materials.mapNotNull { it.toMaterialFilterItem() },
+                items = materials
+                    .mapNotNull { it.toMaterialFilterItem() }
+                    .distinctBy { it.id }, // TODO: [High] Remove when ID is fixed on backend
                 isSingleSelection = false,
                 type = Filter.Type.MATERIALS,
             )
         } else null
         val sizes = if (!sizes.isNullOrEmpty()) {
             ListFilter(
-                items = sizes.mapNotNull { it.toSizeFilterItem() },
+                items = sizes
+                    .mapNotNull { it.toSizeFilterItem() }
+                    .distinctBy { it.id }, // TODO: [High] Remove when ID is fixed on backend
                 isSingleSelection = false,
                 type = Filter.Type.SIZES,
             )
         } else null
         val colors = if (!colors.isNullOrEmpty()) {
             ListFilter(
-                items = colors.mapNotNull { it.toColorFilterItem() },
+                items = colors
+                    .mapNotNull { it.toColorFilterItem() }
+                    .distinctBy { it.id }, // TODO: [High] Remove when ID is fixed on backend
                 isSingleSelection = false,
                 type = Filter.Type.COLORS,
             )
