@@ -34,6 +34,7 @@ import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase
@@ -115,8 +116,20 @@ class ProductsViewModel @AssistedInject constructor(
 
     // TODO: [High] Add selectedTagId
 
+    private val initialFilters: StateFlow<Filters?> = savedStateHandle
+        .getStateFlow<FiltersParcelable?>(
+            key = UnscopedDestinations.Products.ARG_KEY_FILTERS,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { parcelable ->
+            parcelable?.toFilters()
+        }
+
     private val filters = MutableStateFlow(
-        Filters.create(
+        initialFilters.value ?: Filters.create(
             sorting = Filters.getDefaultSorting(Sorting.getDefault()),
         )
     )

@@ -70,6 +70,7 @@ object UnscopedDestinations {
 
     data object Products : Destination<Products.Args>() {
         const val ARG_KEY_CATEGORY_ID = "arg_category_id"
+        const val ARG_KEY_FILTERS = "arg_filters"
 
         private val baseRoute: String
             get() = BaseRouteReworked.PRODUCTS.route
@@ -78,21 +79,39 @@ object UnscopedDestinations {
             get() = RouteUtils.generateRouteSchema(
                 routeBase = baseRoute,
                 argNames = arrayOf(ARG_KEY_CATEGORY_ID),
+                optionalArgNames = arrayOf(ARG_KEY_FILTERS),
             )
 
         override fun createRoute(args: Args): String {
+            val filtersParcelable = args.filters?.let { FiltersParcelable.from(it) }
+            val filtersParcelableString = filtersParcelable?.let {
+                Uri.encode(Json.encodeToString(filtersParcelable))
+            }
             return RouteUtils.generateRoute(
                 routeBase = baseRoute,
                 args = arrayOf(args.categoryId.value),
+                optionalArgs = arrayOf(
+                    OptionalNavArg(
+                        name = Filters.ARG_KEY_FILTERS,
+                        value = filtersParcelableString,
+                    )
+                ),
             )
         }
 
         override val arguments: List<NamedNavArgument>
             get() = listOf(
                 navArgument(ARG_KEY_CATEGORY_ID) { type = NavType.LongType },
+                navArgument(ARG_KEY_FILTERS) {
+                    type = NavType.FiltersParcelableType
+                    nullable = true
+                }
             )
 
-        data class Args(val categoryId: Category.Id)
+        data class Args(
+            val categoryId: Category.Id,
+            val filters: DomainFilters? = null,
+        )
     }
 
     data object Filters : Destination<Filters.Args>() {
