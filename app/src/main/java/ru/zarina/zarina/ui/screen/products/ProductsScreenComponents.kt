@@ -44,7 +44,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
@@ -63,7 +62,6 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.category.Category
@@ -277,28 +275,34 @@ object ProductsScreenComponents {
         PagingErrorPrinter(productPagingItems = productPagingItems)
 
         Box(modifier = modifier) {
-            var canPullRefreshIndicatorBeShown by remember(productPagingItems) {
-                mutableStateOf(false)
-            }
+            val isPullRefreshTriggered = remember { mutableStateOf(false) }
             LaunchedEffect(productPagingItems) {
-                snapshotFlow { productPagingItems.loadState.refresh }
-                    .firstOrNull { it is LoadState.NotLoading }
-                    .also { canPullRefreshIndicatorBeShown = true }
+                snapshotFlow { productPagingItems.loadState.refresh }.collect {
+                    if (it !is LoadState.Loading) {
+                        isPullRefreshTriggered.value = false
+                    }
+                }
             }
 
-            val isRefreshing = canPullRefreshIndicatorBeShown
-                    && productPagingItems.loadState.refresh is LoadState.Loading
+            val areProductsRefreshing = remember(productPagingItems) {
+                derivedStateOf { productPagingItems.loadState.refresh is LoadState.Loading }
+            }
+
+            val isPullRefreshing by remember {
+                derivedStateOf { isPullRefreshTriggered.value && areProductsRefreshing.value }
+            }
 
             val pullRefreshState = rememberPullRefreshState(
-                refreshing = isRefreshing,
+                refreshing = isPullRefreshing,
                 onRefresh = {
+                    isPullRefreshTriggered.value = true
                     productPagingItems.refresh()
                     onRefreshProducts()
                 },
             )
 
             PullRefreshIndicator(
-                refreshing = isRefreshing,
+                refreshing = isPullRefreshing,
                 state = pullRefreshState,
                 backgroundColor = UiKitTheme.colorsReworked.background.general.regular.default,
                 contentColor = UiKitTheme.colorsReworked.icon.regular.default,
