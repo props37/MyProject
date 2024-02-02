@@ -12,6 +12,7 @@ import ru.zarina.zarina.domain.rework.filter.MaterialFilterItem
 import ru.zarina.zarina.domain.rework.filter.PriceFilter
 import ru.zarina.zarina.domain.rework.filter.SizeFilterItem
 import ru.zarina.zarina.domain.rework.filter.ToggleFilter
+import timber.log.Timber
 
 @Serializable
 data class FiltersDto(
@@ -34,25 +35,24 @@ data class FiltersDto(
     val availableForStorePickup: StorePickupAvailability? = null,
 ) {
     fun toFilters(): Filters {
-        checkNotNull(price) { "price is null" }
-        val price = PriceFilter(min = null, max = null, limits = price.toPriceRange())
+        val price = price?.let { PriceFilter(min = null, max = null, limits = it.toPriceRange()) }
         val materials = if (!materials.isNullOrEmpty()) {
             ListFilter(
-                items = materials.map { it.toMaterialFilterItem() },
+                items = materials.mapNotNull { it.toMaterialFilterItem() },
                 isSingleSelection = false,
                 type = Filter.Type.MATERIALS,
             )
         } else null
         val sizes = if (!sizes.isNullOrEmpty()) {
             ListFilter(
-                items = sizes.map { it.toSizeFilterItem() },
+                items = sizes.mapNotNull { it.toSizeFilterItem() },
                 isSingleSelection = false,
                 type = Filter.Type.SIZES,
             )
         } else null
         val colors = if (!colors.isNullOrEmpty()) {
             ListFilter(
-                items = colors.map { it.toColorFilterItem() },
+                items = colors.mapNotNull { it.toColorFilterItem() },
                 isSingleSelection = false,
                 type = Filter.Type.COLORS,
             )
@@ -91,22 +91,30 @@ data class FiltersDto(
         @SerialName("is_applied")
         val isApplied: Boolean? = null,
     ) {
-        fun toMaterialFilterItem(): MaterialFilterItem {
-            checkNotNull(id) { "id is null" }
-            return MaterialFilterItem(
-                id = checkNotNull(ListFilterItem.Id(id)),
-                name = checkNotNull(name) { "name is null" },
-                isSelected = checkNotNull(isApplied) { "isApplied is null" },
-            )
+        fun toMaterialFilterItem(): MaterialFilterItem? {
+            return if (id != null && name != null && isApplied != null) {
+                MaterialFilterItem(
+                    id = ListFilterItem.Id(id),
+                    name = name,
+                    isSelected = isApplied,
+                )
+            } else {
+                Timber.e("Drop MaterialFilterItem because its ID, name or isApplied is null")
+                null
+            }
         }
 
-        fun toSizeFilterItem(): SizeFilterItem {
-            checkNotNull(id) { "id is null" }
-            return SizeFilterItem(
-                id = checkNotNull(ListFilterItem.Id(id)),
-                name = checkNotNull(name) { "name is null" },
-                isSelected = checkNotNull(isApplied) { "isApplied is null" },
-            )
+        fun toSizeFilterItem(): SizeFilterItem? {
+            return if (id != null && name != null && isApplied != null) {
+                SizeFilterItem(
+                    id = ListFilterItem.Id(id),
+                    name = name,
+                    isSelected = isApplied,
+                )
+            } else {
+                Timber.e("Drop SizeFilterItem because its ID, name or isApplied is null")
+                null
+            }
         }
     }
 
@@ -124,15 +132,18 @@ data class FiltersDto(
         @SerialName("is_applied")
         val isApplied: Boolean? = null,
     ) {
-        fun toColorFilterItem(): ColorFilterItem {
-            checkNotNull(id) { "id is null" }
-            checkNotNull(code) { "code is null" }
-            return ColorFilterItem(
-                id = ListFilterItem.Id(id),
-                name = checkNotNull(name) { "name is null" },
-                isSelected = checkNotNull(isApplied) { "isApplied is null" },
-                color = Color(code),
-            )
+        fun toColorFilterItem(): ColorFilterItem? {
+            return if (id != null && name != null && code != null && isApplied != null) {
+                ColorFilterItem(
+                    id = ListFilterItem.Id(id),
+                    name = name,
+                    isSelected = isApplied,
+                    color = Color(code),
+                )
+            } else {
+                Timber.e("Drop ColorFilterItem because its ID, name, color code or isApplied is null")
+                null
+            }
         }
     }
 

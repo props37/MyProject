@@ -25,9 +25,9 @@ data class ProductDto(
     fun toProduct(): Product {
         checkNotNull(id) { "id is null" }
         checkNotNull(price) { "price is null" }
-        val colors = colors?.map { it.toProductColor() } ?: emptyList()
+        val colors = colors?.mapNotNull { it.toProductColor() } ?: emptyList()
         val media = media
-            ?.map { it.toMedia() }
+            ?.mapNotNull { it.toMedia() }
             // Filter out videos until a good decision is found on how to display multiple videos
             // simultaneously in product list
             ?.filter { it.type == MediaType.IMAGE }
