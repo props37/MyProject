@@ -313,7 +313,6 @@ object ProductsScreenComponents {
 
             Crossfade(
                 targetState = productPagingItems.loadState.refresh,
-                contentKey = { it !is LoadState.Error },
                 label = "Products content",
                 modifier = Modifier.matchParentSize(),
             ) { loadState ->
