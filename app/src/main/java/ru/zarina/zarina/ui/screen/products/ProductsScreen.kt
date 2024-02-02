@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screen.products
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -49,6 +50,8 @@ fun ProductsScreen(
             onFiltersClicked = viewModel::onFiltersClicked,
         )
     }
+
+    BackHandler(onBack = viewModel::onSystemBackClicked)
 
     ScreenContent(
         category = category,

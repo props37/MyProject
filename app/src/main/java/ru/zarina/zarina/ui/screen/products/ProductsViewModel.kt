@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.domain.rework.filter.Filters
@@ -211,6 +210,14 @@ class ProductsViewModel @AssistedInject constructor(
     fun onProductsErrorRefreshClicked() {
         if (category.value == null) {
             fetchCategory()
+        }
+    }
+
+    fun onSystemBackClicked() {
+        if (selectedTagId.value != null) {
+            _selectedTagId.value = null
+        } else {
+            onBackClicked()
         }
     }
 
