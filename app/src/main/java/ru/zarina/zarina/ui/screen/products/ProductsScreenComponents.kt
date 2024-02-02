@@ -184,6 +184,7 @@ object ProductsScreenComponents {
     @Composable
     fun Tags(
         state: TagListState?,
+        selectedTagId: Category.Id?,
         onTagClicked: (Category) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -222,6 +223,7 @@ object ProductsScreenComponents {
                         ) { tag ->
                             ZarinaTag(
                                 onClick = { onTagClicked(tag) },
+                                isSelected = tag.id == selectedTagId,
                             ) {
                                 Text(text = tag.name)
                             }

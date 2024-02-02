@@ -39,6 +39,7 @@ fun ProductsScreen(
 ) {
     val category by viewModel.category.collectAsStateWithLifecycle()
     val tagListState by viewModel.tagListState.collectAsStateWithLifecycle()
+    val selectedTagId by viewModel.selectedTagId.collectAsStateWithLifecycle()
     val appliedFilterCount by viewModel.appliedFilterCount.collectAsStateWithLifecycle()
 
     val topBarActions = remember(viewModel) {
@@ -52,6 +53,7 @@ fun ProductsScreen(
     ScreenContent(
         category = category,
         tagListState = tagListState,
+        selectedTagId = selectedTagId,
         productPagingDataFlow = viewModel.productPagingDataFlow,
         appliedFilterCount = appliedFilterCount,
         topBarActions = topBarActions,
@@ -68,6 +70,7 @@ fun ProductsScreen(
 private fun ScreenContent(
     category: Category?,
     tagListState: TagListState?,
+    selectedTagId: Category.Id?,
     productPagingDataFlow: Flow<PagingData<Product>>,
     appliedFilterCount: Int,
     topBarActions: TopBarActions,
@@ -104,6 +107,7 @@ private fun ScreenContent(
 
         Tags(
             state = tagListState,
+            selectedTagId = selectedTagId,
             onTagClicked = onTagClicked,
         )
 

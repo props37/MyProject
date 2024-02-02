@@ -19,12 +19,14 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.domain.rework.filter.Filters
@@ -114,7 +116,8 @@ class ProductsViewModel @AssistedInject constructor(
         }
     }
 
-    // TODO: [High] Add selectedTagId
+    private val _selectedTagId = MutableStateFlow<Category.Id?>(null)
+    val selectedTagId = _selectedTagId.asStateFlow()
 
     private val initialFilters: StateFlow<Filters?> = savedStateHandle
         .getStateFlow<FiltersParcelable?>(
@@ -139,11 +142,12 @@ class ProductsViewModel @AssistedInject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val productPagingDataFlow: Flow<PagingData<Product>> = combine(
         categoryId,
+        selectedTagId,
         filters,
-    ) { categoryId, filters ->
+    ) { categoryId, selectedTagId, filters ->
         val sorting = filters.sorting?.selected ?: Sorting.getDefault()
         GetProductPagingDataFlowUseCase.Params(
-            categoryId = categoryId,
+            categoryId = selectedTagId ?: categoryId,
             filters = filters,
             sorting = sorting,
             onAvailableFiltersReceived = { availableFilters = it },
@@ -187,12 +191,13 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     fun onTagClicked(tag: Category) {
-        navigationThrottler.throttle {
-            if (tag.children.isNullOrEmpty()) {
-                // TODO: [High] Implement
-            } else {
+        if (tag.children.isNullOrEmpty()) {
+            _selectedTagId.value = if (selectedTagId.value != tag.id) tag.id else null
+        } else {
+            navigationThrottler.throttle {
                 val action = ProductsScreenAction.TagClicked(tag = tag, filters = filters.value)
                 emitSideEffect(SideEffect.NavigateForward(action))
+                _selectedTagId.value = null
             }
         }
     }
