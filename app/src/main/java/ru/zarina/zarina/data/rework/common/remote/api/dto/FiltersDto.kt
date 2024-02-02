@@ -70,10 +70,12 @@ data class FiltersDto(
             )
         }
         val storePickupAvailability = availableForStorePickup?.let {
-            ToggleFilter(
-                isEnabled = availableForStorePickup.isApplied ?: false,
-                type = Filter.Type.STORE_PICKUP_AVAILABILITY,
-            )
+            if (it.available != false) {
+                ToggleFilter(
+                    isEnabled = availableForStorePickup.isApplied ?: false,
+                    type = Filter.Type.STORE_PICKUP_AVAILABILITY,
+                )
+            } else null
         }
         return Filters(
             sorting = Filters.getDefaultSorting(),
@@ -96,8 +98,12 @@ data class FiltersDto(
 
         @SerialName("is_applied")
         val isApplied: Boolean? = null,
+
+        @SerialName("available")
+        val available: Boolean? = null,
     ) {
         fun toMaterialFilterItem(): MaterialFilterItem? {
+            if (available == false) return null
             return if (id != null && name != null && isApplied != null) {
                 MaterialFilterItem(
                     id = ListFilterItem.Id(id),
@@ -111,6 +117,7 @@ data class FiltersDto(
         }
 
         fun toSizeFilterItem(): SizeFilterItem? {
+            if (available == false) return null
             return if (id != null && name != null && isApplied != null) {
                 SizeFilterItem(
                     id = ListFilterItem.Id(id),
@@ -137,8 +144,12 @@ data class FiltersDto(
 
         @SerialName("is_applied")
         val isApplied: Boolean? = null,
+
+        @SerialName("available")
+        val available: Boolean? = null,
     ) {
         fun toColorFilterItem(): ColorFilterItem? {
+            if (available == false) return null
             return if (id != null && name != null && code != null && isApplied != null) {
                 ColorFilterItem(
                     id = ListFilterItem.Id(id),
@@ -157,5 +168,8 @@ data class FiltersDto(
     data class StorePickupAvailability(
         @SerialName("is_applied")
         val isApplied: Boolean? = null,
+
+        @SerialName("available")
+        val available: Boolean? = null,
     )
 }
