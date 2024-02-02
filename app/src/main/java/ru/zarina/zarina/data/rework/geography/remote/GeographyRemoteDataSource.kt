@@ -11,11 +11,12 @@ class GeographyRemoteDataSource @Inject constructor(
     private val api: GeographyApi,
 ) {
     suspend fun getCity(location: Location): City {
-        return api.getCity(location).toCity()
+        val city = api.getCity(location).toCity()
+        return checkNotNull(city) { "City is null" }
     }
 
     fun getCitiesFlow(nameQuery: String?): Flow<List<City>> = flow {
-        val cities = api.getCities(nameQuery).map { it.toCity() }
+        val cities = api.getCities(nameQuery).mapNotNull { it.toCity() }
         emit(cities)
     }
 
