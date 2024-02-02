@@ -9,6 +9,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -52,6 +53,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -316,43 +318,70 @@ object ProductsScreenComponents {
                 label = "Products content",
                 modifier = Modifier.matchParentSize(),
             ) { loadState ->
-                if (loadState !is LoadState.Error) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        ProductGrid(
-                            productPagingItems = productPagingItems,
-                            gridState = gridState,
-                            loadState = loadState,
-                            modifier = Modifier
-                                .matchParentSize()
-                                .pullRefresh(pullRefreshState),
-                        )
+                when (loadState) {
+                    is LoadState.NotLoading -> {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            ProductGrid(
+                                productPagingItems = productPagingItems,
+                                gridState = gridState,
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .pullRefresh(pullRefreshState),
+                            )
 
-                        ScrollToTopButton(
-                            gridState = gridState,
-                            modifier = Modifier
-                                .zIndex(1f)
-                                .align(Alignment.BottomEnd)
-                                .padding(end = 16.dp, bottom = 32.dp),
-                        )
-                    }
-                } else {
-                    val state = remember(loadState.error) {
-                        when (loadState.error) {
-                            is IOException -> ErrorStateRework.NETWORK
-                            else -> ErrorStateRework.GENERIC
+                            ScrollToTopButton(
+                                gridState = gridState,
+                                modifier = Modifier
+                                    .zIndex(1f)
+                                    .align(Alignment.BottomEnd)
+                                    .padding(end = 16.dp, bottom = 32.dp),
+                            )
                         }
                     }
 
-                    ZarinaErrorScreen(
-                        state = state,
-                        onRefreshClicked = {
-                            productPagingItems.retry()
-                            onProductsErrorRefreshClicked()
-                        },
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                    )
+                    LoadState.Loading -> {
+                        val placeholderShimmer = rememberSkeletonShimmer()
+                        val itemModifier = Modifier.fillMaxWidth()
+
+                        LazyVerticalGrid(
+                            columns = remember { GridCells.Fixed(ProductGridCellInRowCount) },
+                            state = gridState,
+                            verticalArrangement = ProductGridArrangement,
+                            horizontalArrangement = ProductGridArrangement,
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            items(
+                                count = ProductGridPlaceholderCount,
+                                span = { index -> getProductGridItemSpan(index) },
+                                contentType = { ProductGridContentTypeProductCardPlaceholder },
+                            ) {
+                                ProductCardPlaceholder(
+                                    shimmer = placeholderShimmer,
+                                    modifier = itemModifier,
+                                )
+                            }
+                        }
+                    }
+
+                    is LoadState.Error -> {
+                        val state = remember(loadState.error) {
+                            when (loadState.error) {
+                                is IOException -> ErrorStateRework.NETWORK
+                                else -> ErrorStateRework.GENERIC
+                            }
+                        }
+
+                        ZarinaErrorScreen(
+                            state = state,
+                            onRefreshClicked = {
+                                productPagingItems.retry()
+                                onProductsErrorRefreshClicked()
+                            },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                        )
+                    }
                 }
             }
         }
@@ -362,21 +391,19 @@ object ProductsScreenComponents {
     private fun ProductGrid(
         productPagingItems: LazyPagingItems<Product>,
         gridState: LazyGridState,
-        loadState: LoadState,
         modifier: Modifier = Modifier,
     ) {
-        val arrangement = remember { Arrangement.spacedBy(4.dp) }
         val placeholderShimmer = rememberSkeletonShimmer()
         val itemModifier = Modifier.fillMaxWidth()
 
-        LazyVerticalGrid(
-            columns = remember { GridCells.Fixed(ProductGridCellInRowCount) },
-            state = gridState,
-            verticalArrangement = arrangement,
-            horizontalArrangement = arrangement,
-            modifier = modifier,
-        ) {
-            if (loadState is LoadState.NotLoading) {
+        if (productPagingItems.itemCount > 0) {
+            LazyVerticalGrid(
+                columns = remember { GridCells.Fixed(ProductGridCellInRowCount) },
+                state = gridState,
+                verticalArrangement = ProductGridArrangement,
+                horizontalArrangement = ProductGridArrangement,
+                modifier = modifier,
+            ) {
                 items(
                     count = productPagingItems.itemCount,
                     span = { index -> getProductGridItemSpan(index) },
@@ -402,18 +429,45 @@ object ProductsScreenComponents {
                         )
                     }
                 }
-            } else {
-                items(
-                    count = ProductGridPlaceholderCount,
-                    span = { index -> getProductGridItemSpan(index) },
-                    contentType = { ProductGridContentTypeProductCardPlaceholder },
-                ) {
-                    ProductCardPlaceholder(
-                        shimmer = placeholderShimmer,
-                        modifier = itemModifier,
-                    )
-                }
             }
+        } else {
+            ProductsNotFound(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+            )
+        }
+    }
+
+    @Composable
+    private fun ProductsNotFound(
+        modifier: Modifier = Modifier,
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier,
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_search_24),
+                contentDescription = null,
+                tint = UiKitTheme.colorsReworked.icon.regular.disabled,
+                modifier = Modifier.size(64.dp),
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(R.string.could_not_find_products),
+                style = UiKitTheme.typographyReworked.primary.bold,
+                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.try_select_another_category),
+                style = UiKitTheme.typographyReworked.secondary.light,
+                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                textAlign = TextAlign.Center,
+            )
         }
     }
 
@@ -536,6 +590,9 @@ object ProductsScreenComponents {
     private const val ProductGridFullscreenItemIndex = 5
 
     private const val ProductGridPlaceholderCount = 20
+
+    private val ProductGridArrangement: Arrangement.HorizontalOrVertical
+        get() = Arrangement.spacedBy(4.dp)
 
     private const val ProductGridContentTypeProductCard = "ProductGridContentTypeProduct"
     private const val ProductGridContentTypeProductCardPlaceholder =
