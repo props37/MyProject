@@ -239,7 +239,7 @@ object CatalogScreenComponents {
                         GenderTab.MEN -> state.menItems
                     }
 
-                    CategoryListImpl(
+                    CategoryItems(
                         items = items,
                         itemsState = itemsState,
                         onItemClicked = onItemClicked,
@@ -265,7 +265,7 @@ object CatalogScreenComponents {
     }
 
     @Composable
-    private fun CategoryListImpl(
+    private fun CategoryItems(
         items: ImmutableList<CategoryListItem>,
         itemsState: CategoryListItemsState,
         onItemClicked: (CategoryListItem) -> Unit,
