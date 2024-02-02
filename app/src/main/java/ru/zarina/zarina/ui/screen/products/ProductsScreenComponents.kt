@@ -90,7 +90,7 @@ import ru.zarina.zarina.util.compose.Crossfade
 import ru.zarina.zarina.util.compose.animateFastScrollToItem
 import ru.zarina.zarina.util.compose.collectIsScrollingBackwardAsState
 import ru.zarina.zarina.util.compose.unscalable
-import timber.log.Timber
+import ru.zarina.zarina.util.library.paging3.PagingErrorTimberLogger
 import java.io.IOException
 
 object ProductsScreenComponents {
@@ -272,7 +272,7 @@ object ProductsScreenComponents {
             }
         }
 
-        PagingErrorPrinter(productPagingItems = productPagingItems)
+        PagingErrorTimberLogger(pagingItems = productPagingItems)
 
         Box(modifier = modifier) {
             val isPullRefreshTriggered = remember { mutableStateOf(false) }
@@ -481,23 +481,6 @@ object ProductsScreenComponents {
                     )
                     .padding(start = 6.dp, top = 1.dp, end = 6.dp),
             )
-        }
-    }
-
-    @Composable
-    private fun PagingErrorPrinter(productPagingItems: LazyPagingItems<Product>) {
-        LaunchedEffect(productPagingItems) {
-            snapshotFlow { productPagingItems.loadState }
-                .collect { loadStates ->
-                    val refresh = loadStates.refresh
-                    if (refresh is LoadState.Error) Timber.e(refresh.error)
-
-                    val append = loadStates.append
-                    if (append is LoadState.Error) Timber.e(append.error)
-
-                    val prepend = loadStates.prepend
-                    if (prepend is LoadState.Error) Timber.e(prepend.error)
-                }
         }
     }
 
