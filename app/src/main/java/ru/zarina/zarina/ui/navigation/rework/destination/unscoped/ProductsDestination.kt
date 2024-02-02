@@ -54,6 +54,15 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                         val route = UnscopedDestinations.Filters.createRoute(args)
                         navController.navigate(route)
                     }
+
+                    is ProductsScreenAction.TagClicked -> {
+                        val args = UnscopedDestinations.Products.Args(
+                            categoryId = action.tag.id,
+                            filters = action.filters,
+                        )
+                        val route = UnscopedDestinations.Products.createRoute(args)
+                        navController.navigate(route)
+                    }
                 }
             },
             navigateBackward = {

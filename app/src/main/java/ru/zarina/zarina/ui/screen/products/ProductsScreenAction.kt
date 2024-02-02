@@ -8,4 +8,9 @@ sealed class ProductsScreenAction {
         val categoryId: Category.Id,
         val filters: Filters?,
     ) : ProductsScreenAction()
+
+    data class TagClicked(
+        val tag: Category,
+        val filters: Filters?,
+    ) : ProductsScreenAction()
 }

@@ -187,7 +187,14 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     fun onTagClicked(tag: Category) {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            if (tag.children.isNullOrEmpty()) {
+                // TODO: [High] Implement
+            } else {
+                val action = ProductsScreenAction.TagClicked(tag = tag, filters = filters.value)
+                emitSideEffect(SideEffect.NavigateForward(action))
+            }
+        }
     }
 
     fun onRefreshProducts() {
@@ -240,4 +247,3 @@ class ProductsViewModel @AssistedInject constructor(
         fun create(backStackEntrySavedStateHandle: SavedStateHandle): ProductsViewModel
     }
 }
-
