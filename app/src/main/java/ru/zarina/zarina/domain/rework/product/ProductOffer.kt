@@ -5,7 +5,7 @@ data class ProductOffer(
     val size: String,
     val sizeRu: String,
     val isAvailable: Boolean,
-    val height: String,
+    val height: String?,
     val onlineCount: Int,
     val retailCount: Int,
 ) {
