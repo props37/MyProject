@@ -28,7 +28,7 @@ data class ProductsDto(
         checkNotNull(products) { "products is null" }
         checkNotNull(filters) { "filters is null" }
         val productsWithFilters = ProductsWithFilters(
-            products = products.map { it.toProduct() },
+            products = products.mapNotNull { it.toProduct() },
             filters = filters.toFilters(),
         )
         return Page(
