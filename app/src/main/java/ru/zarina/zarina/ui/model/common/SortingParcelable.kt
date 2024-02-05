@@ -21,7 +21,7 @@ enum class SortingParcelable : Parcelable {
     }
 
     companion object {
-        fun fromSorting(sorting: Sorting): SortingParcelable = when (sorting) {
+        fun from(sorting: Sorting): SortingParcelable = when (sorting) {
             Sorting.NEW -> NEW
             Sorting.POPULAR -> POPULAR
             Sorting.DISCOUNT -> DISCOUNT
