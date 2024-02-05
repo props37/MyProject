@@ -27,6 +27,7 @@ import ru.zarina.zarina.ui.common.media.exoplayer.rememberExoPlayerCacheHolder
 import ru.zarina.zarina.ui.common.rememberToastController
 import ru.zarina.zarina.ui.navigation.rework.ZarinaNavigation
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
+import ru.zarina.zarina.ui.theme.rework.Colors
 import ru.zarina.zarina.util.library.accompanist.rememberBottomSheetNavigator
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
@@ -71,7 +72,7 @@ fun ZarinaApp(
             sheetElevation = 0.dp,
             sheetBackgroundColor = Color.Unspecified,
             sheetContentColor = Color.Unspecified,
-            scrimColor = Color.Unspecified,
+            scrimColor = Colors.MineShaftDark.copy(alpha = 0.4f),
         ) {
             Box(modifier = modifier) {
                 ZarinaNavigation(
