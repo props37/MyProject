@@ -5,6 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.post
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import ru.zarina.zarina.data.rework.common.remote.api.dto.PriceFilterDto
 import ru.zarina.zarina.data.rework.common.remote.api.dto.SortingDto
 import ru.zarina.zarina.data.rework.product.remote.api.dto.ProductsDto
@@ -36,6 +37,22 @@ class ProductApi @Inject constructor(
         }.body()
     }
 
+    suspend fun getCategoryProductInfo(
+        categoryId: Category.Id,
+        filters: DomainFilters?,
+    ): ProductsDto {
+        val body = GetProductsBody(
+            categoryId = categoryId.value,
+            filters = filters?.let { FiltersBodyDto.from(it) },
+            sorting = SortingDto.from(Sorting.getDefault()),
+            page = 1,
+            returnProducts = false,
+        )
+        return httpClient.post("/api/v1/products") {
+            setJsonBody(body)
+        }.body()
+    }
+
     @Serializable
     private data class GetProductsBody(
         @SerialName("category_id")
@@ -49,7 +66,16 @@ class ProductApi @Inject constructor(
 
         @SerialName("page")
         val page: Int,
-    )
+
+        @Transient
+        val returnProducts: Boolean = true,
+    ) {
+        @SerialName("count")
+        val itemCount: Boolean? = if (!returnProducts) true else null
+
+        @SerialName("filterRanges")
+        val filterRanges: Boolean? = if (!returnProducts) true else null
+    }
 
     @Serializable
     private data class FiltersBodyDto(

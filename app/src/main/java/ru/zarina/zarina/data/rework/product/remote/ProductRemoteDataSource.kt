@@ -33,11 +33,9 @@ class ProductRemoteDataSource @Inject constructor(
         categoryId: Category.Id,
         filters: Filters?,
     ): Flow<CategoryProductInfo> = flow {
-        val categoryProductInfo = api.getProducts(
+        val categoryProductInfo = api.getCategoryProductInfo(
             categoryId = categoryId,
             filters = filters,
-            sorting = Sorting.getDefault(),
-            page = 1,
         ).toCategoryProductInfo(categoryId)
         emit(categoryProductInfo)
     }
