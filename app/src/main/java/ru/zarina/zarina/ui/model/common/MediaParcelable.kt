@@ -2,9 +2,11 @@ package ru.zarina.zarina.ui.model.common
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.rework.common.Media
 import ru.zarina.zarina.domain.rework.common.Url
 
+@Serializable
 @Parcelize
 data class MediaParcelable(
     val url: String,

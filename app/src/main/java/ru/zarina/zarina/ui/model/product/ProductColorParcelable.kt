@@ -2,10 +2,12 @@ package ru.zarina.zarina.ui.model.product
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.rework.common.Color
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductColor
 
+@Serializable
 @Parcelize
 data class ProductColorParcelable(
     val id: String,

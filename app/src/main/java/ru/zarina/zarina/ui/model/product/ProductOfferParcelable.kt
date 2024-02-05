@@ -2,8 +2,10 @@ package ru.zarina.zarina.ui.model.product
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.rework.product.ProductOffer
 
+@Serializable
 @Parcelize
 data class ProductOfferParcelable(
     val id: String,
