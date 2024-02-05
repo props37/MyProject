@@ -172,6 +172,14 @@ class ProductsViewModel @AssistedInject constructor(
         }
     }
 
+    fun onSystemBackClicked() {
+        if (selectedTagId.value != null) {
+            _selectedTagId.value = null
+        } else {
+            onBackClicked()
+        }
+    }
+
     fun onSearchClicked() {
         // TODO: [High] Implement
     }
@@ -201,6 +209,22 @@ class ProductsViewModel @AssistedInject constructor(
         }
     }
 
+    fun onProductClicked(product: Product) {
+        // TODO: [High] Implement
+    }
+
+    fun onAddProductToFavoritesClicked(product: Product) {
+        // TODO: [High] Implement
+    }
+
+    fun onAddProductToCartClicked(product: Product) {
+        // TODO: [High] Implement
+    }
+
+    fun onSubscribeToProductClicked(product: Product) {
+        // TODO: [High] Implement
+    }
+
     fun onRefreshProducts() {
         if (category.value == null) {
             fetchCategory()
@@ -210,14 +234,6 @@ class ProductsViewModel @AssistedInject constructor(
     fun onProductsErrorRefreshClicked() {
         if (category.value == null) {
             fetchCategory()
-        }
-    }
-
-    fun onSystemBackClicked() {
-        if (selectedTagId.value != null) {
-            _selectedTagId.value = null
-        } else {
-            onBackClicked()
         }
     }
 
