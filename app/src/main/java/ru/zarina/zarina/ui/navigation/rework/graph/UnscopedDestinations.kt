@@ -42,7 +42,7 @@ object UnscopedDestinations {
             )
 
         override fun createRoute(args: Args): String {
-            val cityParcelable = args.city?.let { CityParcelable.fromCity(it) }
+            val cityParcelable = args.city?.let { CityParcelable.from(it) }
             val cityParcelableString = cityParcelable?.let {
                 Uri.encode(Json.encodeToString(cityParcelable))
             }

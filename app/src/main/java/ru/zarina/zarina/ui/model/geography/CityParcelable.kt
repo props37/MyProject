@@ -22,7 +22,7 @@ data class CityParcelable(
     )
 
     companion object {
-        fun fromCity(city: City): CityParcelable = CityParcelable(
+        fun from(city: City): CityParcelable = CityParcelable(
             name = city.name,
             fullName = city.fullName,
             region = city.region,

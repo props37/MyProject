@@ -197,7 +197,7 @@ class OnboardingViewModel @AssistedInject constructor(
                             .firstOrNull() ?: emptyMap()
                     if (havePermissionsRequiredRequestRationale.any { it.value == true }) {
                         // User has denied the permission permanently
-                        savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.fromCity(City.DEFAULT)
+                        savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.from(City.DEFAULT)
                         showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
                     }
                 }
@@ -243,14 +243,14 @@ class OnboardingViewModel @AssistedInject constructor(
 
     private suspend fun detectCity() {
         fun onFailure() {
-            savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.fromCity(City.DEFAULT)
+            savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.from(City.DEFAULT)
             showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
         }
 
         operationTracker.track(Operation.DETECT_CITY) {
             interactor.getCurrentCityFlow().firstOrNull()
                 ?.onSuccess { city ->
-                    savedStateHandle[KEY_CURRENT_CITY] = city?.let { CityParcelable.fromCity(it) }
+                    savedStateHandle[KEY_CURRENT_CITY] = city?.let { CityParcelable.from(it) }
                     showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
                 }
                 ?.onFailure { onFailure() }
