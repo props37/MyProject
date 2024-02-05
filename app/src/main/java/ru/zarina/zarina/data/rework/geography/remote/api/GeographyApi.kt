@@ -40,7 +40,7 @@ class GeographyApi @Inject constructor(
     }
     
     @Serializable
-    data class UpdateUserCityBody(
+    private data class UpdateUserCityBody(
         @SerialName("kladr_id")
         val kladrId: String,
     )

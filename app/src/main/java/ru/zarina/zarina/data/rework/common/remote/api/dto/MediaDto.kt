@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.rework.common.Media
 import ru.zarina.zarina.domain.rework.common.Url
+import timber.log.Timber
 
 @Serializable
 data class MediaDto(
@@ -13,12 +14,16 @@ data class MediaDto(
     @SerialName("type")
     val type: MediaTypeDto? = null,
 ) {
-    fun toMedia(): Media {
-        checkNotNull(url) { "url is null" }
-        checkNotNull(type) { "type is null" }
-        return Media(
-            url = Url(url),
-            type = type.toMediaType(),
-        )
+    fun toMedia(): Media? {
+        val type = type?.toMediaType()
+        return if (url != null && type != null) {
+            Media(
+                url = Url(url),
+                type = type,
+            )
+        } else {
+            Timber.e("Drop Media because its url or type is null")
+            null
+        }
     }
 }

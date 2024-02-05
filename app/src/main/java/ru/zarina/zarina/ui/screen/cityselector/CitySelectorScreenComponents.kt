@@ -3,8 +3,6 @@ package ru.zarina.zarina.ui.screen.cityselector
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,11 +30,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -44,14 +39,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.ui.common.component.base.TopBarDefaults
-import ru.zarina.zarina.ui.common.component.base.ZarinaCircularLoader
-import ru.zarina.zarina.ui.common.component.base.button.CloseIconButton
-import ru.zarina.zarina.ui.common.component.base.button.ZarinaButton
-import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonDefaults
-import ru.zarina.zarina.ui.common.component.base.screen.ZarinaErrorScreen
-import ru.zarina.zarina.ui.common.component.base.textfield.ZarinaTextField
-import ru.zarina.zarina.ui.common.component.base.textfield.ZarinaTextFieldDefaults
+import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
+import ru.zarina.zarina.ui.common.component.button.CloseIconButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.component.icon.CheckmarkAnimatedIcon
+import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
+import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
+import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
+import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -89,7 +85,7 @@ object CitySelectorScreenComponents {
                 iconSize = 20.dp,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .padding(end = 8.dp),
+                    .padding(end = 2.dp),
             )
         }
     }
@@ -181,8 +177,8 @@ object CitySelectorScreenComponents {
                         if (listState.items.isNotEmpty()) {
                             val baseContentPadding = remember(isChangeCityButtonVisible) {
                                 val bottom = if (isChangeCityButtonVisible) {
-                                    val buttonHeight = ZarinaButtonDefaults.HeightLarge
-                                    buttonHeight + ConfirmButtonBottomPadding + 8.dp
+                                    val buttonHeight = ZarinaButtonDefaults.SizeLarge
+                                    buttonHeight + ChangeCityButtonBottomPadding + 8.dp
                                 } else {
                                     0.dp
                                 }
@@ -201,7 +197,7 @@ object CitySelectorScreenComponents {
                                     contentType = { getCityListItemContentType(it) },
                                 ) { item ->
                                     when (item) {
-                                        is CityListItem.City -> {
+                                        is CityListItem.CityItem -> {
                                             City(
                                                 city = item.city,
                                                 onClick = onCityClicked,
@@ -211,7 +207,7 @@ object CitySelectorScreenComponents {
                                             )
                                         }
 
-                                        is CityListItem.CityFirstLetterHeader -> {
+                                        is CityListItem.CityFirstLetterHeaderItem -> {
                                             CityFirstLetterHeader(item.letter)
                                         }
                                     }
@@ -235,7 +231,7 @@ object CitySelectorScreenComponents {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(horizontal = 16.dp)
-                                .padding(bottom = 20.dp)
+                                .padding(bottom = 16.dp)
                                 .windowInsetsPadding(WindowInsets.navigationBarsOrIme),
                         )
                     }
@@ -254,7 +250,7 @@ object CitySelectorScreenComponents {
                         .fillMaxWidth()
                         .windowInsetsPadding(WindowInsets.navigationBarsOrIme)
                         .padding(horizontal = 16.dp)
-                        .padding(bottom = 20.dp),
+                        .padding(bottom = ChangeCityButtonBottomPadding),
                 ) {
                     Text(text = stringResource(R.string.change).uppercase())
                 }
@@ -297,8 +293,9 @@ object CitySelectorScreenComponents {
                         }
                     }
 
-                    CityCheckmark(
+                    CheckmarkAnimatedIcon(
                         isVisible = isSelected,
+                        iconSize = 16.dp,
                         modifier = Modifier.padding(start = if (isSelected) 16.dp else 0.dp),
                     )
                 }
@@ -312,44 +309,6 @@ object CitySelectorScreenComponents {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-            )
-        }
-    }
-
-    // TODO: [Low] Write custom animation
-    @Composable
-    private fun CityCheckmark(
-        isVisible: Boolean,
-        modifier: Modifier = Modifier,
-    ) {
-        Box(modifier = modifier) {
-            Icon(
-                painter = painterResource(R.drawable.ic_check_24),
-                contentDescription = stringResource(R.string.checked),
-                tint = UiKitTheme.colorsReworked.icon.regular.default,
-                modifier = Modifier.size(20.dp),
-            )
-
-            val maskWidthFraction = animateFloatAsState(
-                targetValue = if (isVisible) 0f else 1f,
-                animationSpec = tween(durationMillis = 200),
-                label = "CityCheckmark",
-            )
-            val maskColor = UiKitTheme.colorsReworked.background.general.regular.default
-
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .drawBehind {
-                        val width = size.width * maskWidthFraction.value
-                        val topLeft = Offset(size.width - width, 0f)
-                        val size = Size(width, size.height)
-                        drawRect(
-                            color = maskColor,
-                            topLeft = topLeft,
-                            size = size,
-                        )
-                    }
             )
         }
     }
@@ -392,30 +351,26 @@ object CitySelectorScreenComponents {
         }
     }
 
-    // TODO: [Medium] Rework. Use the state itself when possible (at least for Error states)
-    @Stable
-    private fun getCityListContentKey(state: CityListState): String {
+    private fun getCityListContentKey(state: CityListState): Any {
         return when (state) {
-            CityListState.Loading -> CityListContentKeyLoading
             is CityListState.CityList -> {
                 if (state.items.isNotEmpty()) CityListContentKeyCities else CityListContentKeyCityNotFound
             }
-
-            is CityListState.Error -> CityListContentKeyError
+            CityListState.Loading, is CityListState.Error -> state
         }
     }
 
     @Stable
     private fun getCityListItemKey(item: CityListItem): String = when (item) {
-        is CityListItem.City -> "$CityListItemKeyPrefixCity ${item.city.kladrId.value}"
-        is CityListItem.CityFirstLetterHeader -> {
+        is CityListItem.CityItem -> "$CityListItemKeyPrefixCity ${item.city.kladrId.value}"
+        is CityListItem.CityFirstLetterHeaderItem -> {
             "$CityListItemKeyPrefixCityFirstLetterHeader ${item.letter}"
         }
     }
 
     @Stable
     private fun getCityListItemContentType(item: CityListItem): String = when (item) {
-        is CityListItem.City -> {
+        is CityListItem.CityItem -> {
             if (!item.showFullName) {
                 CityListItemContentTypeCity
             } else {
@@ -423,15 +378,13 @@ object CitySelectorScreenComponents {
             }
         }
 
-        is CityListItem.CityFirstLetterHeader -> CityListItemContentTypeCityFirstLetterHeader
+        is CityListItem.CityFirstLetterHeaderItem -> CityListItemContentTypeCityFirstLetterHeader
     }
 
-    private val ConfirmButtonBottomPadding = 20.dp
+    private val ChangeCityButtonBottomPadding = 16.dp
 
-    private const val CityListContentKeyLoading = "CityListContentKeyLoading"
     private const val CityListContentKeyCities = "CityListContentKeyCities"
     private const val CityListContentKeyCityNotFound = "CityListContentKeyCityNotFound"
-    private const val CityListContentKeyError = "CityListContentKeyError"
 
     private const val CityListItemKeyPrefixCity = "CityListItemKeyPrefixCity"
     private const val CityListItemKeyPrefixCityFirstLetterHeader =

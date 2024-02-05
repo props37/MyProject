@@ -4,8 +4,8 @@
     <string name="continue_">Продолжить</string>
     <string name="detect_city">Определить город</string>
     <string name="skip">Пропустить</string>
-    <string name="yes_correct">Да, верно</string>
-    <string name="no_change">Нет, изменить</string>
+    <string name="yes_correct">Да, верно</string>
+    <string name="no_change">Нет, изменить</string>
     <string name="configure_later">Настроить позже</string>
     <string name="step">Шаг</string>
     <string name="catalog">Каталог</string>
@@ -15,14 +15,14 @@
     <string name="cart">Корзина</string>
     <string name="city">Город</string>
     <string name="close">Закрыть</string>
-    <string name="search_cities">Поиск по городам</string>
-    <string name="city_not_found">Город не найден</string>
+    <string name="search_cities">Поиск по городам</string>
+    <string name="city_not_found">Город не найден</string>
     <string name="try_to_change_city_name">Попробуйте изменить название города</string>
     <string name="change">Изменить</string>
     <string name="cancel">Отменить</string>
     <string name="clear">Очистить</string>
     <string name="refresh">Обновить</string>
-    <string name="internet_connection_error">Проблемы с интернетом</string>
+    <string name="internet_connection_error">Проблемы с интернетом</string>
     <string name="check_internet_connection_and_refresh_page">Проверь соединение с интернетом или отключи VPN. Затем обнови страницу</string>
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="refresh_page_or_come_back_later">Обнови страницу или зайди позже</string>
@@ -42,8 +42,30 @@
     <string name="search">Поиск</string>
     <string name="filters">Фильтры</string>
     <string name="price_in_rubles">%1$d ₽</string>
+    <string name="price_rubles">Цена, ₽</string>
     <string name="discount_percent">-%1$d%%</string>
-    <string name="plus_one">+1</string>
+    <string name="checkmark_checked">Выбрано</string>
+    <string name="checkmark_unchecked">Не выбрано</string>
+    <string name="from">От</string>
+    <string name="to">До</string>
+    <string name="sorting">Сортировка</string>
+    <string name="sorting_new">По новизне</string>
+    <string name="sorting_popular">По популярности</string>
+    <string name="sorting_discount">По скидке</string>
+    <string name="sorting_price_low_to_high">По возрастанию цены</string>
+    <string name="sorting_price_high_to_low">По убыванию цены</string>
+    <string name="composition">Состав</string>
+    <string name="size">Размер</string>
+    <string name="color">Цвет</string>
+    <string name="available_for_delivery">Доступные для доставки</string>
+    <string name="available_for_store_pickup">Доступные в магазине</string>
+    <string name="show_products">Показать товары</string>
+    <string name="reset">Сбросить</string>
+    <string name="apply">Применить</string>
+    <string name="scroll_to_top">Вернуться наверх</string>
+    <string name="products_not_found">Товары не найдены</string>
+    <string name="could_not_find_products">Не нашли товаров</string>
+    <string name="try_select_another_category">Попробуй выбрать другую категорию</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -54,6 +76,15 @@
 
     <string name="default_city_dialog_title">Мы определили твой город</string>
     <string name="default_city_dialog_body">Текущая геолокация: %1$s. Ты можешь изменить геолокацию в любой момент в настройках Профиля.</string>
+
+    <plurals name="show_products">
+        <item quantity="zero">Показать %1$d товаров</item>
+        <item quantity="one">Показать %1$d товар</item>
+        <item quantity="two">Показать %1$d товара</item>
+        <item quantity="few">Показать %1$d товара</item>
+        <item quantity="many">Показать %1$d товаров</item>
+        <item quantity="other">Показать %1$d товаров</item>
+    </plurals>
 
     <!-- TODO: [Low] Remove -->
     <string name="select_your_city">Выберите ваш город</string>
@@ -87,8 +118,6 @@
     <string name="find_and_pickup">Найти и забрать в магазине</string>
     <string name="product_not_on_sale">Этот товар больше не продаётся</string>
     <string name="dont_fret_catalog">Не расстраивайтесь! В нашем каталоге обязательно найдется альтернатива</string>
-    <string name="color">Цвет</string>
-    <string name="size">Размер</string>
     <string name="unknown">Неизвестен</string>
     <string name="dropdown">Выпадающее меню</string>
     <string name="select_size">Выбрать размер</string>
@@ -143,9 +172,7 @@
     <string name="plural_products_few">%1$d товара</string>
     <string name="plural_products_many">%1$d товаров</string>
     <string name="plural_products_other">%1$d товаров</string>
-    <string name="products_not_found">Товаров не нашлось</string>
     <string name="try_changing_filter">Попробуйте изменить выбранные фильтры</string>
-    <string name="sorting">Сортировка</string>
     <string name="by_new">По новизне</string>
     <string name="by_price_ascending">По возрастанию цены</string>
     <string name="by_price_descending">По убыванию цены</string>
@@ -153,12 +180,9 @@
     <string name="by_discount">По скидке</string>
     <string name="price">Цена</string>
     <string name="range">%1$s – %2$s</string>
-    <string name="apply">Применить</string>
-    <string name="reset">Сбросить</string>
     <string name="selected">Выбран</string>
     <string name="attributes">Признаки</string>
     <string name="materials">Состав</string>
-    <string name="available_for_delivery">Доступные для доставки</string>
     <string name="available_for_pickup_at_store">Доступные для самовывоза из магазина</string>
     <string name="categories">Категории</string>
     <string name="select_store">Выбрать магазин</string>

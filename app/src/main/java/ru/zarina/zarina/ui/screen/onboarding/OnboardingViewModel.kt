@@ -43,7 +43,7 @@ import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.device.SetIsOnboardingCompletedUseCase
 import ru.zarina.zarina.usecase.rework.geography.UpdateUserCityUseCase
-import ru.zarina.zarina.util.library.coroutines.WhileAndroidUiSubscribed
+import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import ru.zarina.zarina.utils.clean.invoke
 import timber.log.Timber
@@ -73,12 +73,12 @@ class OnboardingViewModel @AssistedInject constructor(
         emit(url)
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
+        started = SharingStarted.WhileUiSubscribed,
         initialValue = null,
     )
 
     val onboardingSteps: StateFlow<ImmutableList<OnboardingStep>> = savedStateHandle
-        .getStateFlow<List<OnboardingStep>>(
+        .getStateFlow(
             key = KEY_ONBOARDING_STEPS,
             initialValue = createOnboardingSteps(),
         )
@@ -110,7 +110,7 @@ class OnboardingViewModel @AssistedInject constructor(
                 && onboardingCompletionTrigger == OnboardingCompletionTrigger.CITY_DETECTION_SKIPPED
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
+        started = SharingStarted.WhileUiSubscribed,
         initialValue = false,
     )
 
@@ -118,7 +118,7 @@ class OnboardingViewModel @AssistedInject constructor(
         .isOperationOngoing(Operation.DETECT_CITY)
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileAndroidUiSubscribed,
+            started = SharingStarted.WhileUiSubscribed,
             initialValue = false,
         )
 
@@ -130,7 +130,7 @@ class OnboardingViewModel @AssistedInject constructor(
                 onboardingCompletionTrigger == OnboardingCompletionTrigger.CITY_CONFIRMED
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
+        started = SharingStarted.WhileUiSubscribed,
         initialValue = false,
     )
 
@@ -306,7 +306,7 @@ class OnboardingViewModel @AssistedInject constructor(
             .launchIn(viewModelScope)
     }
 
-    private fun createOnboardingSteps(): ImmutableList<OnboardingStep> {
+    private fun createOnboardingSteps(): List<OnboardingStep> {
         return buildList {
             OnboardingStep.entries.forEach { step ->
                 when (step) {
@@ -325,7 +325,7 @@ class OnboardingViewModel @AssistedInject constructor(
                     else -> add(step)
                 }
             }
-        }.toImmutableList()
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

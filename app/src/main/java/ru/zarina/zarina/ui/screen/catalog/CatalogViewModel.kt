@@ -33,7 +33,7 @@ import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
-import ru.zarina.zarina.util.library.coroutines.WhileAndroidUiSubscribed
+import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.utils.clean.invoke
 import java.io.IOException
 import javax.inject.Inject
@@ -66,10 +66,7 @@ class CatalogViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val categoriesResult: StateFlow<Result<Categories>?> = categoriesFetchRequests
-        .onEach { isFetchingCategories.value = true }
-        .flatMapLatest {
-            interactor.getCategoriesFlow()
-        }
+        .flatMapLatest { interactor.getCategoriesFlow() }
         .onEach { isFetchingCategories.value = false }
         .stateIn(
             scope = viewModelScope,
@@ -105,7 +102,7 @@ class CatalogViewModel @Inject constructor(
         }
     }.stateIn(
         scope = viewModelScope + Dispatchers.Default,
-        started = SharingStarted.WhileAndroidUiSubscribed,
+        started = SharingStarted.WhileUiSubscribed,
         initialValue = CategoryListState.Loading,
     )
 
@@ -132,7 +129,7 @@ class CatalogViewModel @Inject constructor(
         )
     }.stateIn(
         scope = viewModelScope + Dispatchers.Default,
-        started = SharingStarted.WhileAndroidUiSubscribed,
+        started = SharingStarted.WhileUiSubscribed,
         initialValue = CategoryListItemsState(persistentSetOf(), persistentSetOf()),
     )
 
@@ -161,13 +158,14 @@ class CatalogViewModel @Inject constructor(
 
     fun onCategoryListErrorRefreshClicked() {
         categoriesFetchRequests.tryEmit(Unit)
+        isFetchingCategories.value = true
     }
 
     private fun onCategoryItemClicked(item: CategoryListItem.CategoryItem) {
         val category = item.category
         if (category.children.isNullOrEmpty()) {
             navigationThrottler.throttle {
-                val action = CatalogScreenAction.CategoryClicked(item.category)
+                val action = CatalogScreenAction.CategoryClicked(item.category.id)
                 emitSideEffect(SideEffect.NavigateForward(action))
             }
         } else {
@@ -185,7 +183,7 @@ class CatalogViewModel @Inject constructor(
 
     private fun onSeeWholeCategoryItemClicked(item: CategoryListItem.SeeWholeCategoryItem) {
         navigationThrottler.throttle {
-            val action = CatalogScreenAction.CategoryClicked(item.category)
+            val action = CatalogScreenAction.CategoryClicked(item.category.id)
             emitSideEffect(SideEffect.NavigateForward(action))
         }
     }

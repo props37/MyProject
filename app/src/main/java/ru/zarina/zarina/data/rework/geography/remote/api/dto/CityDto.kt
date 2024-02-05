@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.domain.rework.geography.KladrId
+import timber.log.Timber
 
 @Serializable
 data class CityDto(
@@ -19,13 +20,17 @@ data class CityDto(
     @SerialName("kladr_id")
     val kladrId: String? = null,
 ) {
-    fun toCity(): City {
-        checkNotNull(kladrId) { "kladrId is null" }
-        return City(
-            name = checkNotNull(name) { "name is null" },
-            fullName = checkNotNull(fullName) { "fullName is null" },
-            region = checkNotNull(region) { "region is null" },
-            kladrId = KladrId(kladrId),
-        )
+    fun toCity(): City? {
+        return if (name != null && fullName != null && region != null && kladrId != null) {
+            return City(
+                name = name,
+                fullName = fullName,
+                region = region,
+                kladrId = KladrId(kladrId),
+            )
+        } else {
+            Timber.e("Drop City because its name, fullName, region or kladrId is null")
+            null
+        }
     }
 }

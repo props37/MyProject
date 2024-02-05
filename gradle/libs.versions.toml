@@ -1,6 +1,6 @@
 [versions]
 # Plugins
-androidGradlePlugin = "8.2.1"
+androidGradlePlugin = "8.2.2"
 googlePlayServices-plugin = "4.4.0"
 firebase-crashlyticsPlugin = "2.9.9"
 androidGitVersion = "0.4.14"
@@ -19,28 +19,28 @@ jetpack-navigation = "2.7.6"
 jetpack-datastore = "1.0.0"
 jetpack-room = "2.6.1"
 jetpack-splashScreen = "1.0.1"
-jetpack-media3 = "1.2.0"
+jetpack-media3 = "1.2.1"
 jetpack-paging = "3.2.1"
 jetpack-security-cripto = "1.0.0"
 jetpack-junit = "1.1.5"
 jetpack-uiAutomator = "2.2.0"
 jetpack-espresso = "3.5.1"
-jetpack-benchmark = "1.2.2"
+jetpack-benchmark = "1.2.3"
 
-jetpack-compose-bom = "2023.10.01"
+jetpack-compose-bom = "2024.01.00"
 jetpack-compose-compiler = "1.5.8"
 
 ktor = "2.3.6"
 
 hilt = "2.49"
-hilt-navigationCompose = "1.2.0-alpha01"
+hilt-navigationCompose = "1.2.0-beta01"
 
 koin-annotations = "1.2.2"
 koin-core = "3.4.2"
 koin-compose = "3.4.5"
 koin-test = "3.4.1"
 
-accompanist = "0.32.0"
+accompanist = "0.34.0"
 
 coil = "2.5.0"
 composeShimmer = "1.2.0"
@@ -48,11 +48,11 @@ composeShimmer = "1.2.0"
 timber = "5.0.1"
 leakCanary = "2.12"
 
-googlePlayServices-location = "21.0.1"
+googlePlayServices-location = "21.1.0"
 googlePlayServices-maps = "18.2.0"
 googlePlayServices-maps-compose = "2.11.4"
 
-firebase-bom = "32.7.0"
+firebase-bom = "32.7.1"
 
 firebase-performance = "1.4.2"
 mindbox = "2.5.0"

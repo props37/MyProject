@@ -14,11 +14,9 @@ data class CategoriesDto(
     val men: List<CategoryDto>? = null,
 ) {
     fun toCategories(): Categories {
-        checkNotNull(women) { "women is null" }
-        checkNotNull(men) { "men is null" }
         return Categories(
-            women = women.map { it.toCategory() },
-            men = men.map { it.toCategory() },
+            women = women?.mapNotNull { it.toCategory() } ?: emptyList(),
+            men = men?.mapNotNull { it.toCategory() } ?: emptyList(),
         )
     }
 }

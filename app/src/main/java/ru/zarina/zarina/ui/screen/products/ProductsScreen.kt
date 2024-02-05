@@ -1,15 +1,14 @@
 package ru.zarina.zarina.ui.screen.products
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -27,16 +26,22 @@ import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.Products
+import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.Tags
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBarActions
+import ru.zarina.zarina.ui.screen.products.ProductsViewModel.TagListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun ProductsScreen(
+    navigateForward: (ProductsScreenAction) -> Unit,
     navigateBackward: () -> Unit,
     viewModel: ProductsViewModel = hiltViewModel(),
 ) {
     val category by viewModel.category.collectAsStateWithLifecycle()
+    val tagListState by viewModel.tagListState.collectAsStateWithLifecycle()
+    val selectedTagId by viewModel.selectedTagId.collectAsStateWithLifecycle()
+    val appliedFilterCount by viewModel.appliedFilterCount.collectAsStateWithLifecycle()
 
     val topBarActions = remember(viewModel) {
         TopBarActions(
@@ -46,11 +51,20 @@ fun ProductsScreen(
         )
     }
 
+    BackHandler(onBack = viewModel::onSystemBackClicked)
+
     ScreenContent(
         category = category,
+        tagListState = tagListState,
+        selectedTagId = selectedTagId,
         productPagingDataFlow = viewModel.productPagingDataFlow,
+        appliedFilterCount = appliedFilterCount,
         topBarActions = topBarActions,
+        onTagClicked = viewModel::onTagClicked,
+        onRefreshProducts = viewModel::onRefreshProducts,
+        onProductsErrorRefreshClicked = viewModel::onProductsErrorRefreshClicked,
         sideEffects = viewModel.sideEffects,
+        navigateForward = navigateForward,
         navigateBackward = navigateBackward,
     )
 }
@@ -58,13 +72,21 @@ fun ProductsScreen(
 @Composable
 private fun ScreenContent(
     category: Category?,
+    tagListState: TagListState?,
+    selectedTagId: Category.Id?,
     productPagingDataFlow: Flow<PagingData<Product>>,
+    appliedFilterCount: Int,
     topBarActions: TopBarActions,
+    onTagClicked: (Category) -> Unit,
+    onRefreshProducts: () -> Unit,
+    onProductsErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<ProductsViewModel.SideEffect>,
+    navigateForward: (ProductsScreenAction) -> Unit,
     navigateBackward: () -> Unit,
 ) {
     ProductsScreenBehavior(
         sideEffects = sideEffects,
+        navigateForward = navigateForward,
         navigateBackward = navigateBackward,
     )
 
@@ -74,20 +96,28 @@ private fun ScreenContent(
             .background(UiKitTheme.colorsReworked.background.general.regular.default)
             .windowInsetsPadding(
                 WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout)
-                    .only(WindowInsetsSides.Top),
+                    .union(WindowInsets.displayCutout),
             )
             .imePadding()
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
         TopBar(
             title = category?.name,
+            appliedFilterCount = appliedFilterCount,
             actions = topBarActions,
             modifier = Modifier.fillMaxWidth(),
         )
 
+        Tags(
+            state = tagListState,
+            selectedTagId = selectedTagId,
+            onTagClicked = onTagClicked,
+        )
+
         Products(
             productPagingDataFlow = productPagingDataFlow,
+            onRefreshProducts = onRefreshProducts,
+            onProductsErrorRefreshClicked = onProductsErrorRefreshClicked,
             modifier = Modifier.fillMaxSize(),
         )
     }

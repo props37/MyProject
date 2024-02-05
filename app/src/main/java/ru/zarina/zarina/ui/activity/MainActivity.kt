@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.BuildConfig
 import ru.zarina.zarina.ui.activity.lifecycleobserver.ActivityLifecycleObserverManager
 import ru.zarina.zarina.ui.app.ZarinaApp
 import ru.zarina.zarina.ui.common.behavior.base.DefaultBehaviorController
@@ -22,6 +23,8 @@ import ru.zarina.zarina.ui.common.behavior.systembars.SystemBarsBehaviorControll
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.util.library.activity.DefaultDarkScrim
 import ru.zarina.zarina.util.library.activity.DefaultLightScrim
+import ru.zarina.zarina.util.platform.getSizeInBytes
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -52,6 +55,14 @@ class MainActivity : ComponentActivity() {
                     ZarinaApp()
                 }
             }
+        }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        if (BuildConfig.IS_LOGGING_ENABLED) {
+            val savedInstanceStateSize = savedInstanceState.getSizeInBytes()
+            Timber.d("onRestoreInstanceState. Size: $savedInstanceStateSize bytes")
         }
     }
 

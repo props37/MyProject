@@ -25,10 +25,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.ui.common.component.base.ZarinaBottomSheet
+import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -44,7 +45,9 @@ fun CitySelectorBottomSheetScreen(
     navigateBackward: (CitySelectorScreenResult) -> Unit,
     viewModel: CitySelectorViewModel = hiltViewModel(),
 ) {
-    val cityNameQuery by viewModel.cityNameQuery.collectAsStateWithLifecycle()
+    val cityNameQuery by viewModel.cityNameQuery.collectAsStateWithLifecycle(
+        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+    )
     val cityListState by viewModel.cityListState.collectAsStateWithLifecycle()
     val isCitySearchBarVisible by viewModel.isCitySearchBarVisible.collectAsStateWithLifecycle()
     val selectedCity by viewModel.selectedCity.collectAsStateWithLifecycle()

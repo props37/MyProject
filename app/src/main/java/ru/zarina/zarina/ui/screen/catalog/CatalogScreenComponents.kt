@@ -40,23 +40,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.component.base.TopBarDefaults
-import ru.zarina.zarina.ui.common.component.base.ZarinaTabIndicator
-import ru.zarina.zarina.ui.common.component.base.button.ZarinaButton
-import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonDefaults
-import ru.zarina.zarina.ui.common.component.base.button.ZarinaButtonSize
-import ru.zarina.zarina.ui.common.component.base.screen.ZarinaErrorScreen
-import ru.zarina.zarina.ui.common.component.base.skeleton.Skeleton
-import ru.zarina.zarina.ui.common.component.base.skeleton.SkeletonTextShape
-import ru.zarina.zarina.ui.common.component.base.skeleton.rememberSkeletonShimmer
-import ru.zarina.zarina.ui.common.component.base.textfield.ZarinaTextField
-import ru.zarina.zarina.ui.common.component.base.textfield.ZarinaTextFieldDefaults
+import ru.zarina.zarina.ui.common.component.button.ZarinaButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
+import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
+import ru.zarina.zarina.ui.common.component.skeleton.SkeletonTextShape
+import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.tab.ZarinaTabIndicator
+import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
+import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
+import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.util.domain.toComposeColor
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListItem
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListItemsState
@@ -238,7 +239,7 @@ object CatalogScreenComponents {
                         GenderTab.MEN -> state.menItems
                     }
 
-                    CategoryListImpl(
+                    CategoryItems(
                         items = items,
                         itemsState = itemsState,
                         onItemClicked = onItemClicked,
@@ -264,7 +265,7 @@ object CatalogScreenComponents {
     }
 
     @Composable
-    private fun CategoryListImpl(
+    private fun CategoryItems(
         items: ImmutableList<CategoryListItem>,
         itemsState: CategoryListItemsState,
         onItemClicked: (CategoryListItem) -> Unit,
@@ -343,12 +344,12 @@ object CatalogScreenComponents {
                 val color = item.category.color?.toComposeColor()
                     ?: UiKitTheme.colorsReworked.text.general.regular.default
 
-                // TODO: [High] Make multiline?
                 Text(
                     text = item.category.name.uppercase(),
                     style = UiKitTheme.typographyReworked.tertiary.light,
                     color = color,
                     maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
 
                 if (item.category.label != null) {
@@ -358,6 +359,7 @@ object CatalogScreenComponents {
                         style = UiKitTheme.typographyReworked.caption2.light,
                         color = color,
                         maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.align(Alignment.Top),
                     )
                 }
@@ -482,9 +484,8 @@ object CatalogScreenComponents {
 
     private fun getCategoryListContentKey(state: CategoryListState): Any {
         return when (state) {
-            CategoryListState.Loading -> state
             is CategoryListState.Success -> CategoryListContentKeySuccess
-            is CategoryListState.Error -> state
+            CategoryListState.Loading, is CategoryListState.Error -> state
         }
     }
 

@@ -31,9 +31,6 @@ private val CirceLight: Font
 
 private val CirceFamily = FontFamily(CirceBold, CirceRegular, CirceLight)
 
-// TODO: [Medium] Remove after updating to Compose 1.6.0
-private val PlatformStyle = PlatformTextStyle(includeFontPadding = false)
-
 data class UiKitTypographyReworked(
     val heading1: Heading1 = Heading1(),
     val heading2: Heading2 = Heading2(),
@@ -53,14 +50,12 @@ data class UiKitTypographyReworked(
             lineHeight = 41.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W700,
-            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 34.sp,
             lineHeight = 41.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W400,
-            platformStyle = PlatformStyle,
         ),
     )
 
@@ -70,14 +65,12 @@ data class UiKitTypographyReworked(
             lineHeight = 34.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W700,
-            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 28.sp,
             lineHeight = 34.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W400,
-            platformStyle = PlatformStyle,
         ),
     )
 
@@ -87,14 +80,12 @@ data class UiKitTypographyReworked(
             lineHeight = 28.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W700,
-            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 24.sp,
             lineHeight = 28.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W400,
-            platformStyle = PlatformStyle,
         ),
     )
 
@@ -104,14 +95,12 @@ data class UiKitTypographyReworked(
             lineHeight = 24.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W700,
-            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 20.sp,
             lineHeight = 24.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W400,
-            platformStyle = PlatformStyle,
         ),
     )
 
@@ -121,21 +110,18 @@ data class UiKitTypographyReworked(
             lineHeight = 22.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W700,
-            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 17.sp,
             lineHeight = 22.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W400,
-            platformStyle = PlatformStyle,
         ),
         val light: TextStyle = TextStyle(
             fontSize = 17.sp,
             lineHeight = 22.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W350,
-            platformStyle = PlatformStyle,
         ),
     )
 
@@ -145,21 +131,18 @@ data class UiKitTypographyReworked(
             lineHeight = 20.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W700,
-            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 15.sp,
             lineHeight = 20.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W400,
-            platformStyle = PlatformStyle,
         ),
         val light: TextStyle = TextStyle(
             fontSize = 15.sp,
             lineHeight = 20.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W350,
-            platformStyle = PlatformStyle,
         ),
         val strikethrough: TextStyle = TextStyle(
             fontSize = 15.sp,
@@ -167,7 +150,6 @@ data class UiKitTypographyReworked(
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W350,
             textDecoration = TextDecoration.LineThrough,
-            platformStyle = PlatformStyle,
         ),
     )
 
@@ -177,21 +159,18 @@ data class UiKitTypographyReworked(
             lineHeight = 18.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W700,
-            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 13.sp,
             lineHeight = 18.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W400,
-            platformStyle = PlatformStyle,
         ),
         val light: TextStyle = TextStyle(
             fontSize = 13.sp,
             lineHeight = 18.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W350,
-            platformStyle = PlatformStyle,
         ),
     )
 
@@ -201,21 +180,18 @@ data class UiKitTypographyReworked(
             lineHeight = 16.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W700,
-            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 12.sp,
             lineHeight = 16.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W400,
-            platformStyle = PlatformStyle,
         ),
         val light: TextStyle = TextStyle(
             fontSize = 12.sp,
             lineHeight = 16.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W350,
-            platformStyle = PlatformStyle,
         ),
         val strikethrough: TextStyle = TextStyle(
             fontSize = 12.sp,
@@ -223,7 +199,6 @@ data class UiKitTypographyReworked(
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W400,
             textDecoration = TextDecoration.LineThrough,
-            platformStyle = PlatformStyle,
         ),
     )
 
@@ -233,21 +208,18 @@ data class UiKitTypographyReworked(
             lineHeight = 15.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W700,
-            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 11.sp,
             lineHeight = 15.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W400,
-            platformStyle = PlatformStyle,
         ),
         val light: TextStyle = TextStyle(
             fontSize = 11.sp,
             lineHeight = 15.sp,
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W350,
-            platformStyle = PlatformStyle,
         ),
     )
 
@@ -258,7 +230,6 @@ data class UiKitTypographyReworked(
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W700,
             letterSpacing = 0.12.sp,
-            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 10.sp,
@@ -266,7 +237,6 @@ data class UiKitTypographyReworked(
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W400,
             letterSpacing = 0.12.sp,
-            platformStyle = PlatformStyle,
         ),
         val light: TextStyle = TextStyle(
             fontSize = 10.sp,
@@ -274,7 +244,6 @@ data class UiKitTypographyReworked(
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W350,
             letterSpacing = 0.12.sp,
-            platformStyle = PlatformStyle,
         ),
     )
 
@@ -285,7 +254,6 @@ data class UiKitTypographyReworked(
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W700,
             letterSpacing = 0.16.sp,
-            platformStyle = PlatformStyle,
         ),
         val regular: TextStyle = TextStyle(
             fontSize = 9.sp,
@@ -293,7 +261,6 @@ data class UiKitTypographyReworked(
             fontFamily = CirceFamily,
             fontWeight = FontWeight.W400,
             letterSpacing = 0.16.sp,
-            platformStyle = PlatformStyle,
         ),
     )
 }

@@ -3,7 +3,6 @@ package ru.zarina.zarina.ui.common.component
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
@@ -29,10 +27,8 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
@@ -46,11 +42,11 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductColor
 import ru.zarina.zarina.domain.rework.product.currentPrice
-import ru.zarina.zarina.ui.common.component.base.button.LikeIconButton
-import ru.zarina.zarina.ui.common.component.base.button.ZarinaIconButton
-import ru.zarina.zarina.ui.common.component.base.pager.HorizontalPagerIndicator
-import ru.zarina.zarina.ui.common.component.base.skeleton.Skeleton
-import ru.zarina.zarina.ui.common.component.base.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.button.LikeIconButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaIconButton
+import ru.zarina.zarina.ui.common.component.pager.HorizontalPagerIndicator
+import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
+import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -317,7 +313,7 @@ private fun Colors(
                 val color = colors.getOrNull(i)
                 if (color != null) {
                     key(color.id.value) {
-                        Color(color = color.color.toComposeColor())
+                        ColorIcon(color = color.color.toComposeColor())
                     }
                 }
             }
@@ -330,31 +326,6 @@ private fun Colors(
             )
         }
     }
-}
-
-@Composable
-private fun Color(
-    color: Color,
-    modifier: Modifier = Modifier,
-) {
-    val shape = CircleShape
-    val borderModifier = if (color.luminance() >= WhiteColorLuminanceThreshold) {
-        Modifier.border(
-            width = 0.5.dp,
-            color = UiKitTheme.colorsReworked.border.general.disabled,
-            shape = shape,
-        )
-    } else {
-        Modifier
-    }
-
-    Box(
-        modifier = modifier
-            .size(ColorSize)
-            .clip(shape)
-            .background(color)
-            .then(borderModifier),
-    )
 }
 
 @Preview
@@ -385,8 +356,6 @@ private fun ProductCardPreview() {
 }
 
 private const val MediaAspectRatio = 0.68f
-
-private const val WhiteColorLuminanceThreshold = 0.95f
 
 private val ColorSize: Dp get() = 8.dp
 private val ColorSpacedBy: Dp get() = ColorSize

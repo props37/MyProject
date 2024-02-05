@@ -25,13 +25,12 @@ import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.geography.GetCitiesFlowUseCase
-import ru.zarina.zarina.util.library.coroutines.WhileAndroidUiSubscribed
+import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import java.io.IOException
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
-import ru.zarina.zarina.domain.rework.geography.City as DomainCity
 
 @HiltViewModel
 class CitySelectorViewModel @Inject constructor(
@@ -75,7 +74,7 @@ class CitySelectorViewModel @Inject constructor(
 
     val isCitySearchBarVisible: StateFlow<Boolean> = cityListState.mapState(
         scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
+        started = SharingStarted.WhileUiSubscribed,
     ) { it is CityListState.CityList }
 
     val isChangeCityButtonVisible: StateFlow<Boolean> = hasSelectedCityChanged.asStateFlow()
@@ -159,7 +158,7 @@ class CitySelectorViewModel @Inject constructor(
                 val (mainCities, otherCities) = cities.partition { city ->
                     city.kladrId in MAIN_CITIES_KLADR_IDS
                 }
-                val mainCityItems = mainCities.map { CityListItem.City(it) }
+                val mainCityItems = mainCities.map { CityListItem.CityItem(it) }
                 addAll(mainCityItems)
 
                 // Show other cities grouped by the first letter
@@ -168,14 +167,14 @@ class CitySelectorViewModel @Inject constructor(
                 }
                 otherCitiesGrouped.forEach { (firstLetter, cities) ->
                     if (firstLetter != null) {
-                        add(CityListItem.CityFirstLetterHeader(firstLetter))
+                        add(CityListItem.CityFirstLetterHeaderItem(firstLetter))
                     }
-                    val cityItems = cities.map { CityListItem.City(it) }
+                    val cityItems = cities.map { CityListItem.CityItem(it) }
                     addAll(cityItems)
                 }
             }
         } else {
-            cities.map { CityListItem.City(it, showFullName = true) }
+            cities.map { CityListItem.CityItem(it, showFullName = true) }
         }.toImmutableList()
         return CityListState.CityList(listItems)
     }
@@ -199,16 +198,14 @@ class CitySelectorViewModel @Inject constructor(
 
     @Stable
     sealed class CityListItem {
-        // TODO: [Low] Rename to CityItem
         @Immutable
-        data class City(
-            val city: DomainCity,
+        data class CityItem(
+            val city: City,
             val showFullName: Boolean = false,
         ) : CityListItem()
 
-        // TODO: [Low] Rename to CityFirstLetterHeaderItem
         @Immutable
-        data class CityFirstLetterHeader(val letter: Char) : CityListItem()
+        data class CityFirstLetterHeaderItem(val letter: Char) : CityListItem()
     }
 
     companion object {

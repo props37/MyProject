@@ -1,36 +1,54 @@
 package ru.zarina.zarina.ui.screen.products
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
+import ru.zarina.zarina.domain.rework.filter.Filters
+import ru.zarina.zarina.domain.rework.filter.coerceInAvailable
+import ru.zarina.zarina.domain.rework.filter.selected
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
-import ru.zarina.zarina.ui.model.common.SortingParcelable
+import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase
 import ru.zarina.zarina.usecase.rework.product.GetProductPagingDataFlowUseCase
+import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
-import javax.inject.Inject
+import timber.log.Timber
 
-@HiltViewModel
-class ProductsViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = ProductsViewModel.Factory::class)
+class ProductsViewModel @AssistedInject constructor(
+    @Assisted
+    backStackEntrySavedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val interactor: ProductsInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
@@ -49,39 +67,104 @@ class ProductsViewModel @Inject constructor(
             Category.Id(value)
         }
 
+    private val categoryFetchRequests = MutableSharedFlow<Unit>(replay = 1)
+        .also { it.tryEmit(Unit) }
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    val category: StateFlow<Category?> = categoryId
-        .flatMapLatest { id ->
-            interactor.getCategoryFlow(GetCategoryFlowUseCase.Params(id))
-                .map { result -> result.getOrNull() }
+    private val categoryResult: StateFlow<Result<Category>?> = combine(
+        categoryId,
+        categoryFetchRequests,
+    ) { id, _ ->
+        GetCategoryFlowUseCase.Params(id)
+    }
+        .flatMapLatest { params ->
+            interactor.getCategoryFlow(params)
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Eagerly,
+            started = SharingStarted.WhileSubscribed(),
             initialValue = null,
         )
 
-    private val currentSorting: StateFlow<Sorting> = savedStateHandle
-        .getStateFlow<SortingParcelable?>(
-            key = KEY_CURRENT_SORTING,
+    val category: StateFlow<Category?> = categoryResult
+        .map { it?.getOrNull() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = null,
+        )
+
+    val tagListState: StateFlow<TagListState?> = categoryResult.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { result ->
+        if (result != null) {
+            result.fold(
+                onSuccess = { category ->
+                    if (!category.children.isNullOrEmpty()) {
+                        val tags = category.children.toImmutableList()
+                        TagListState.TagList(tags)
+                    } else {
+                        null
+                    }
+                },
+                onFailure = { TagListState.Loading },
+            )
+        } else {
+            TagListState.Loading
+        }
+    }
+
+    private val _selectedTagId = MutableStateFlow<Category.Id?>(null)
+    val selectedTagId = _selectedTagId.asStateFlow()
+
+    private val initialFilters: StateFlow<Filters?> = savedStateHandle
+        .getStateFlow<FiltersParcelable?>(
+            key = UnscopedDestinations.Products.ARG_KEY_FILTERS,
             initialValue = null,
         )
         .mapState(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
-        ) { it?.toSorting() ?: Sorting.NEW }
+        ) { parcelable ->
+            parcelable?.toFilters()
+        }
+
+    private val filters = MutableStateFlow(
+        initialFilters.value ?: Filters.create(
+            sorting = Filters.getDefaultSorting(Sorting.getDefault()),
+        )
+    )
+
+    private var availableFilters: Filters? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val productPagingDataFlow: Flow<PagingData<Product>> = combine(
         categoryId,
-        currentSorting,
-    ) { categoryId, sorting ->
-        GetProductPagingDataFlowUseCase.Params(categoryId, sorting)
+        selectedTagId,
+        filters,
+    ) { categoryId, selectedTagId, filters ->
+        val sorting = filters.sorting?.selected ?: Sorting.getDefault()
+        GetProductPagingDataFlowUseCase.Params(
+            categoryId = selectedTagId ?: categoryId,
+            filters = filters,
+            sorting = sorting,
+            onAvailableFiltersReceived = { availableFilters = it },
+        )
     }
         .flatMapLatest { params ->
             interactor.getProductPagingDataFlow(params)
         }
         .cachedIn(viewModelScope)
+
+    val appliedFilterCount: StateFlow<Int> = filters.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { it.appliedFilterCount }
+
+    init {
+        handleFiltersResult(backStackEntrySavedStateHandle)
+    }
 
     fun onBackClicked() {
         navigationThrottler.throttle {
@@ -94,15 +177,85 @@ class ProductsViewModel @Inject constructor(
     }
 
     fun onFiltersClicked() {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val availableFilters = availableFilters
+            val combinedFilters =
+                availableFilters?.let { filters.value.coerceInAvailable(it) } ?: filters.value
+            val action = ProductsScreenAction.FiltersClicked(
+                categoryId = categoryId.value,
+                filters = combinedFilters,
+            )
+            emitSideEffect(SideEffect.NavigateForward(action))
+        }
+    }
+
+    fun onTagClicked(tag: Category) {
+        if (tag.children.isNullOrEmpty()) {
+            _selectedTagId.value = if (selectedTagId.value != tag.id) tag.id else null
+        } else {
+            navigationThrottler.throttle {
+                val action = ProductsScreenAction.TagClicked(tag = tag, filters = filters.value)
+                emitSideEffect(SideEffect.NavigateForward(action))
+                _selectedTagId.value = null
+            }
+        }
+    }
+
+    fun onRefreshProducts() {
+        if (category.value == null) {
+            fetchCategory()
+        }
+    }
+
+    fun onProductsErrorRefreshClicked() {
+        if (category.value == null) {
+            fetchCategory()
+        }
+    }
+
+    fun onSystemBackClicked() {
+        if (selectedTagId.value != null) {
+            _selectedTagId.value = null
+        } else {
+            onBackClicked()
+        }
+    }
+
+    private fun fetchCategory() {
+        categoryFetchRequests.tryEmit(Unit)
+    }
+
+    private fun handleFiltersResult(backStackEntrySavedStateHandle: SavedStateHandle) {
+        backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.Filters.Result?>(
+            key = UnscopedDestinations.Filters.RESULT_KEY,
+            initialValue = null,
+        )
+            .onEach { result ->
+                if (result != null) {
+                    Timber.v("Filters screen result: $result")
+                    val filters = result.filters.toFilters()
+                    this.filters.value = filters
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class NavigateForward(val action: ProductsScreenAction) : SideEffect
+
         data object NavigateBackward : SideEffect
     }
 
-    companion object {
-        private const val KEY_CURRENT_SORTING = "current_sorting"
+    @Stable
+    sealed class TagListState {
+        data object Loading : TagListState()
+
+        @Immutable
+        data class TagList(val tags: ImmutableList<Category>) : TagListState()
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(backStackEntrySavedStateHandle: SavedStateHandle): ProductsViewModel
     }
 }
-

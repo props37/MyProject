@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.rework.common.Color
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductColor
+import timber.log.Timber
 
 @Serializable
 data class ProductColorDto(
@@ -20,15 +21,17 @@ data class ProductColorDto(
     @SerialName("product_id")
     val productId: String? = null,
 ) {
-    fun toProductColor(): ProductColor {
-        checkNotNull(id) { "id is null" }
-        checkNotNull(code) { "code is null" }
-        checkNotNull(productId) { "productId is null" }
-        return ProductColor(
-            id = ProductColor.Id(id),
-            name = checkNotNull(name) { "name is null" },
-            color = Color(code),
-            productId = Product.Id(productId),
-        )
+    fun toProductColor(): ProductColor? {
+        return if (id != null && name != null && code != null && productId != null) {
+            ProductColor(
+                id = ProductColor.Id(id),
+                name = name,
+                color = Color(code),
+                productId = Product.Id(productId),
+            )
+        } else {
+            Timber.e("Drop ProductColor because its ID, name, color code or product ID is null")
+            null
+        }
     }
 }

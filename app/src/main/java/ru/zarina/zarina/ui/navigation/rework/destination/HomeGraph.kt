@@ -20,7 +20,7 @@ fun NavGraphBuilder.homeGraph(navController: NavHostController) {
                             when (action.banner.clickAction) {
                                 is ClickAction.Products -> {
                                     val categoryId = action.banner.clickAction.categoryId
-                                    val args = UnscopedDestinations.Products.Args(categoryId.value)
+                                    val args = UnscopedDestinations.Products.Args(categoryId)
                                     val route = UnscopedDestinations.Products.createRoute(args)
                                     navController.navigate(route)
                                 }
