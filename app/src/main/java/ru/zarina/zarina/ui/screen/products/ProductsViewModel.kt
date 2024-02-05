@@ -218,11 +218,17 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     fun onAddProductToCartClicked(product: Product) {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val action = ProductsScreenAction.AddProductToCartClicked(product)
+            emitSideEffect(SideEffect.NavigateForward(action))
+        }
     }
 
     fun onSubscribeToProductClicked(product: Product) {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val action = ProductsScreenAction.AddProductToCartClicked(product)
+            emitSideEffect(SideEffect.NavigateForward(action))
+        }
     }
 
     fun onRefreshProducts() {

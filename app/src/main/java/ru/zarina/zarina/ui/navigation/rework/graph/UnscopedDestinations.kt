@@ -10,9 +10,11 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.model.filter.ListFilterParcelable
 import ru.zarina.zarina.ui.model.geography.CityParcelable
+import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.OptionalNavArg
 import ru.zarina.zarina.ui.navigation.base.RouteUtils
@@ -21,6 +23,7 @@ import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.CityParcelableType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.FiltersParcelableType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.ListFilterParcelableType
+import ru.zarina.zarina.ui.navigation.rework.base.navtype.ProductParcelableType
 import ru.zarina.zarina.domain.rework.filter.Filters as DomainFilters
 import ru.zarina.zarina.domain.rework.filter.ListFilter as DomainListFilter
 
@@ -199,5 +202,32 @@ object UnscopedDestinations {
         data class Result(val filter: ListFilterParcelable) : Parcelable
     }
 
-    data object SizeTable : SimpleDestination(BaseRouteReworked.SIZE_TABLE)
+    data object SizeTable : Destination<SizeTable.Args>() {
+        const val ARG_KEY_PRODUCT = "arg_product"
+
+        private val baseRoute: String
+            get() = BaseRouteReworked.SIZE_TABLE.route
+
+        override val routeSchema: String
+            get() = RouteUtils.generateRouteSchema(
+                routeBase = baseRoute,
+                argNames = arrayOf(ARG_KEY_PRODUCT),
+            )
+
+        override fun createRoute(args: Args): String {
+            val productParcelable = ProductParcelable.from(args.product)
+            val productParcelableString = Uri.encode(Json.encodeToString(productParcelable))
+            return RouteUtils.generateRoute(
+                routeBase = baseRoute,
+                args = arrayOf(productParcelableString),
+            )
+        }
+
+        override val arguments: List<NamedNavArgument>
+            get() = listOf(
+                navArgument(ARG_KEY_PRODUCT) { type = NavType.ProductParcelableType }
+            )
+
+        data class Args(val product: Product)
+    }
 }
