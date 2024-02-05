@@ -62,6 +62,7 @@ fun ProductCard(
     onClick: () -> Unit,
     onAddToFavoritesClicked: () -> Unit,
     onAddToCartClicked: () -> Unit,
+    onSubscribeClicked: () -> Unit,
     modifier: Modifier = Modifier,
     shimmer: Shimmer? = rememberSkeletonShimmer(),
 ) {
@@ -82,8 +83,8 @@ fun ProductCard(
             LikeIconButton(
                 isLiked = product.isInFavorites,
                 onClick = onAddToFavoritesClicked,
-                iconSize = 16.dp,
-                indication = rememberRipple(bounded = false, radius = 16.dp),
+                iconSize = IconSize,
+                indication = rememberRipple(bounded = false, radius = IconSize),
                 modifier = Modifier.align(Alignment.TopEnd),
             )
             HorizontalPagerIndicator(
@@ -111,13 +112,22 @@ fun ProductCard(
             )
             Spacer(modifier = Modifier.width(8.dp))
             CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-                AddToCartIconButton(
-                    isAdded = product.isInCart,
-                    onClick = onAddToCartClicked,
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .size(28.dp),
-                )
+                val buttonModifier = Modifier
+                    .padding(end = 10.dp)
+                    .size(28.dp)
+
+                if (product.isAvailable) {
+                    AddToCartIconButton(
+                        isAdded = product.isInCart,
+                        onClick = onAddToCartClicked,
+                        modifier = buttonModifier,
+                    )
+                } else {
+                    SubscribeIconButton(
+                        onClick = onSubscribeClicked,
+                        modifier = buttonModifier,
+                    )
+                }
             }
         }
 
@@ -262,11 +272,10 @@ private fun AddToCartIconButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val iconSize = 16.dp
     ZarinaIconButton(
         onClick = onClick,
         isLoading = isLoading,
-        indication = rememberRipple(bounded = false, radius = iconSize),
+        indication = rememberRipple(bounded = false, radius = IconSize),
         modifier = modifier,
     ) {
         Crossfade(
@@ -282,9 +291,30 @@ private fun AddToCartIconButton(
                 painter = painterResource(iconResId),
                 contentDescription = stringResource(contentDescriptionResId),
                 tint = UiKitTheme.colorsReworked.icon.regular.default,
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(IconSize),
             )
         }
+    }
+}
+
+@Composable
+private fun SubscribeIconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
+) {
+    ZarinaIconButton(
+        onClick = onClick,
+        isLoading = isLoading,
+        indication = rememberRipple(bounded = false, radius = IconSize),
+        modifier = modifier,
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_bell_24),
+            contentDescription = stringResource(R.string.subscribe_to_product),
+            tint = UiKitTheme.colorsReworked.icon.regular.default,
+            modifier = Modifier.size(IconSize),
+        )
     }
 }
 
@@ -342,6 +372,7 @@ private fun ProductCardPreview(
             onClick = {},
             onAddToFavoritesClicked = {},
             onAddToCartClicked = {},
+            onSubscribeClicked = {},
             modifier = Modifier.background(Color.White),
         )
     }
@@ -356,6 +387,8 @@ private fun ProductCardPreview() {
 }
 
 private const val MediaAspectRatio = 0.68f
+
+private val IconSize: Dp get() = 16.dp
 
 private val ColorSize: Dp get() = 8.dp
 private val ColorSpacedBy: Dp get() = ColorSize

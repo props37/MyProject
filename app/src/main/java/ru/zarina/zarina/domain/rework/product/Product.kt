@@ -12,6 +12,8 @@ data class Product(
     val isInFavorites: Boolean,
     val isInCart: Boolean,
 ) {
+    val isAvailable: Boolean by lazy { offers.any { it.isAvailable } }
+
     @JvmInline
     value class Id(val value: String)
 }

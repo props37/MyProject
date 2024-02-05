@@ -424,6 +424,7 @@ object ProductsScreenComponents {
                                 productCardActions.onAddToFavoritesClicked(product)
                             },
                             onAddToCartClicked = { productCardActions.onAddToCartClicked(product) },
+                            onSubscribeClicked = { productCardActions.onSubscribeClicked(product) },
                             shimmer = placeholderShimmer,
                             modifier = itemModifier,
                         )
