@@ -6,6 +6,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentSet
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel
 
 class CategoryListStatePreviewParameterProvider :
@@ -22,12 +23,8 @@ class CategoryListStatePreviewParameterProvider :
         )
 
     private fun getCategoryListItems(): List<CatalogViewModel.CategoryListItem> {
-        val baseCategory = Category(
+        val baseCategory = FakeDataGenerator.getCategory(
             id = Category.Id(0),
-            name = "Категория",
-            label = null,
-            color = null,
-            children = null,
         )
         return listOf(
             CatalogViewModel.CategoryListItem.CategoryItem(

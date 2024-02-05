@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.common.tooling
 
+import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Color
 import ru.zarina.zarina.domain.rework.common.Media
 import ru.zarina.zarina.domain.rework.common.MediaType
@@ -12,12 +13,29 @@ import java.util.UUID
 import kotlin.random.Random
 
 object FakeDataGenerator {
+    fun getCategories(
+        count: Int = 10,
+        generator: (Int) -> Category,
+    ): List<Category> = List(count) { generator(it) }
+
+    fun getCategory(
+        id: Category.Id = Category.Id(Random.nextLong()),
+        name: String = "Одежда",
+        label: String? = "Акция",
+        color: Color? = null,
+        children: List<Category>? = List(5) { getCategory(children = null) },
+    ): Category = Category(
+        id = id,
+        name = name,
+        label = label,
+        color = color,
+        children = children,
+    )
+
     fun getProducts(
         count: Int = 10,
         generator: (Int) -> Product = { getProduct() },
-    ): List<Product> = List(count) {
-        generator(it)
-    }
+    ): List<Product> = List(count) { generator(it) }
 
     fun getProduct(
         id: Product.Id = Product.Id(getRandomString()),
@@ -42,9 +60,7 @@ object FakeDataGenerator {
     fun getMediaList(
         count: Int = 10,
         generator: (Int) -> Media = { getMedia() },
-    ): List<Media> = List(count) {
-        generator(it)
-    }
+    ): List<Media> = List(count) { generator(it) }
 
     fun getMedia(
         url: Url = Url(getRandomString()),
@@ -57,9 +73,7 @@ object FakeDataGenerator {
     fun getProductOffers(
         count: Int = 5,
         generator: (Int) -> ProductOffer = { getProductOffer() },
-    ): List<ProductOffer> = List(count) {
-        generator(it)
-    }
+    ): List<ProductOffer> = List(count) { generator(it) }
 
     fun getProductOffer(
         id: ProductOffer.Id = ProductOffer.Id(getRandomString()),
@@ -82,9 +96,7 @@ object FakeDataGenerator {
     fun getProductColors(
         count: Int = 5,
         generator: (Int) -> ProductColor = { getProductColor() },
-    ): List<ProductColor> = List(count) {
-        generator(it)
-    }
+    ): List<ProductColor> = List(count) { generator(it) }
 
     fun getProductColor(
         id: ProductColor.Id = ProductColor.Id(getRandomString()),
