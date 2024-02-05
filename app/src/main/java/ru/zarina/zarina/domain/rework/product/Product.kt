@@ -6,6 +6,7 @@ data class Product(
     val id: Id,
     val name: String,
     val price: Price,
+    val offers: List<ProductOffer>,
     val colors: List<ProductColor>,
     val media: List<Media>,
     val isInFavorites: Boolean,

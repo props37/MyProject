@@ -16,6 +16,9 @@ data class ProductDto(
     @SerialName("price")
     val price: PriceDto? = null,
 
+    @SerialName("offers")
+    val offers: List<ProductOfferDto>? = null,
+
     @SerialName("colors")
     val colors: List<ProductColorDto>? = null,
 
@@ -25,6 +28,7 @@ data class ProductDto(
     fun toProduct(): Product {
         checkNotNull(id) { "id is null" }
         checkNotNull(price) { "price is null" }
+        val offers = offers?.mapNotNull { it.toProductOffer() } ?: emptyList()
         val colors = colors?.mapNotNull { it.toProductColor() } ?: emptyList()
         val media = media
             ?.mapNotNull { it.toMedia() }
@@ -36,6 +40,7 @@ data class ProductDto(
             id = Product.Id(id),
             name = checkNotNull(name) { "name is null" },
             price = price.toPrice(),
+            offers = offers,
             colors = colors,
             media = media,
             // States that are not present in the DTO

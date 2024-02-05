@@ -7,6 +7,7 @@ import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.product.Price
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductColor
+import ru.zarina.zarina.domain.rework.product.ProductOffer
 import java.util.UUID
 import kotlin.random.Random
 
@@ -22,6 +23,7 @@ object FakeDataGenerator {
         id: Product.Id = Product.Id(getRandomString()),
         name: String = getProductNames().random(),
         price: Price = getPrice(),
+        offers: List<ProductOffer> = getProductOffers(),
         colors: List<ProductColor> = getProductColors(),
         media: List<Media> = getMediaList(),
         isInFavorites: Boolean = Random.nextBoolean(),
@@ -30,6 +32,7 @@ object FakeDataGenerator {
         id = id,
         name = name,
         price = price,
+        offers = offers,
         colors = colors,
         media = media,
         isInFavorites = isInFavorites,
@@ -49,6 +52,31 @@ object FakeDataGenerator {
     ): Media = Media(
         url = url,
         type = type,
+    )
+
+    fun getProductOffers(
+        count: Int = 5,
+        generator: (Int) -> ProductOffer = { getProductOffer() },
+    ): List<ProductOffer> = List(count) {
+        generator(it)
+    }
+
+    fun getProductOffer(
+        id: ProductOffer.Id = ProductOffer.Id(getRandomString()),
+        size: String = "M",
+        sizeRu: String = "48",
+        isAvailable: Boolean = Random.nextBoolean(),
+        height: String = "170",
+        onlineCount: Int = if (isAvailable) Random.nextInt(1, 50) else 0,
+        retailCount: Int = if (isAvailable) Random.nextInt(1, 50) else 0,
+    ): ProductOffer = ProductOffer(
+        id = id,
+        size = size,
+        sizeRu = sizeRu,
+        isAvailable = isAvailable,
+        height = height,
+        onlineCount = onlineCount,
+        retailCount = retailCount,
     )
 
     fun getProductColors(
@@ -94,5 +122,6 @@ object FakeDataGenerator {
         "Куртка из эко-кожи",
     )
 
-    private fun getRandomString(): String = UUID.randomUUID().toString()
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun getRandomString(): String = UUID.randomUUID().toString()
 }
