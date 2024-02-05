@@ -198,4 +198,6 @@ object UnscopedDestinations {
         @Parcelize
         data class Result(val filter: ListFilterParcelable) : Parcelable
     }
+
+    data object SizeTable : SimpleDestination(BaseRouteReworked.SIZE_TABLE)
 }
