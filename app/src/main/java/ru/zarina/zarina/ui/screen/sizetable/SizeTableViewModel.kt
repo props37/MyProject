@@ -1,12 +1,16 @@
 package ru.zarina.zarina.ui.screen.sizetable
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.rework.product.ProductOffer
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
@@ -37,6 +41,22 @@ class SizeTableViewModel @Inject constructor(
             parcelable.toProduct()
         }
 
+    val sizes: StateFlow<ImmutableList<Size>> = product.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+    ) { product ->
+        val items = mutableListOf<Size>()
+        product.offers
+            .groupBy {
+                if (it.sizeRu != null) "${it.size} ${it.sizeRu}" else it.size
+            }
+            .forEach { (size, offers) ->
+                val item = Size(size = size, offers = offers.toImmutableList())
+                items.add(item)
+            }
+        items.toImmutableList()
+    }
+
     fun onCloseClicked() {
         navigationThrottler.throttle {
             val result = SizeTableScreenResult.ScreenClosed
@@ -46,5 +66,21 @@ class SizeTableViewModel @Inject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateBackward(val result: SizeTableScreenResult) : SideEffect
+    }
+
+    @Immutable
+    data class Size(
+        val size: String,
+        val offers: ImmutableList<ProductOffer>,
+    ) {
+        val id: String get() = size
+
+        val isAvailable: Boolean = offers.any { it.isAvailable }
+
+        val availableHeights: ImmutableList<String> = offers
+            .filter { it.isAvailable }
+            .mapNotNull { it.height }
+            .sorted()
+            .toImmutableList()
     }
 }

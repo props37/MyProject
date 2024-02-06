@@ -68,6 +68,8 @@
     <string name="subscribe_to_product">Подписаться на товар</string>
     <string name="size_table">Таблица размеров</string>
     <string name="choose_size">Выбери размер</string>
+    <string name="available_heights_cm">Доступно %1$s см</string>
+    <string name="subscribe">Подписаться</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -154,7 +156,6 @@
     <string name="reservation_is_successful">Резерв в магазине оформлен</string>
     <string name="reservation_confirmation_will_be_sent_to_email_template">На почту %1$s придет письмо, с подтверждением резерва. Ожидайте смс о готовности заказа</string>
     <string name="continue_shopping">Продолжить покупки</string>
-    <string name="subscribe">Подписаться</string>
     <string name="subscription_to_product">Подписка на товар</string>
     <string name="leave_your_contacts">Оставьте контактные данные и мы сообщим, когда товар появится в продаже</string>
     <string name="acknowledgement_subscription_template">Подтверждаю согласие с %1$s, %2$s, а также даю согласие %3$s</string>
