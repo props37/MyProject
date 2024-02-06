@@ -1,6 +1,5 @@
 package ru.zarina.zarina.ui.screen.sizetable
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,22 +16,31 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.sizetable.SizeTableScreenComponents.SizeTableLabel
+import ru.zarina.zarina.ui.screen.sizetable.SizeTableScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.sizetable.SizeTableViewModel.SideEffect
 
 @Composable
 fun SizeTableBottomSheetScreen(
+    navigateBackward: (SizeTableScreenResult) -> Unit,
     viewModel: SizeTableViewModel = hiltViewModel(),
 ) {
     ScreenContent(
+        onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
+        navigateBackward = navigateBackward,
     )
 }
 
 @Composable
 private fun ScreenContent(
+    onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
+    navigateBackward: (SizeTableScreenResult) -> Unit,
 ) {
-    SizeTableScreenBehavior(sideEffects = sideEffects)
+    SizeTableScreenBehavior(
+        sideEffects = sideEffects,
+        navigateBackward = navigateBackward,
+    )
 
     // TODO: [High] Handle insets
     // TODO: [High] Handle status bar inset?
@@ -41,7 +49,10 @@ private fun ScreenContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         ZarinaBottomSheet(modifier = Modifier.fillMaxWidth()) {
-            Box(modifier = Modifier.height(200.dp))
+            TopBar(
+                onCloseClicked = onCloseClicked,
+                modifier = Modifier.fillMaxWidth(),
+            )
         }
     }
 }

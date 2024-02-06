@@ -47,7 +47,7 @@ fun ZarinaNavigation(
         productsScreen(navController)
         filtersScreen(navController)
         listFilterScreen(navController)
-        sizeTableBottomSheetScreen()
+        sizeTableBottomSheetScreen(navController)
     }
 }
 

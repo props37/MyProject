@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.product.ProductParcelable
@@ -21,6 +22,8 @@ class SizeTableViewModel @Inject constructor(
     private val interactor: SizeTableInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
+    private val navigationThrottler = Throttler.getNavigationThrottler()
+
     private val product: StateFlow<Product> = savedStateHandle
         .getStateFlow<ProductParcelable?>(
             key = UnscopedDestinations.SizeTable.ARG_KEY_PRODUCT,
@@ -34,5 +37,14 @@ class SizeTableViewModel @Inject constructor(
             parcelable.toProduct()
         }
 
-    sealed interface SideEffect : SideEffectSource.SideEffect
+    fun onCloseClicked() {
+        navigationThrottler.throttle {
+            val result = SizeTableScreenResult.ScreenClosed
+            emitSideEffect(SideEffect.NavigateBackward(result))
+        }
+    }
+
+    sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class NavigateBackward(val result: SizeTableScreenResult) : SideEffect
+    }
 }
