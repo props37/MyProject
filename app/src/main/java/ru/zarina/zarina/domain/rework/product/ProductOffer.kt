@@ -3,7 +3,7 @@ package ru.zarina.zarina.domain.rework.product
 data class ProductOffer(
     val id: Id,
     val size: String,
-    val sizeRu: String,
+    val sizeRu: String?,
     val isAvailable: Boolean,
     val height: String?,
     val onlineCount: Int,

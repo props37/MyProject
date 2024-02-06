@@ -32,7 +32,6 @@ data class ProductOfferDto(
         return if (
             id != null
             && size != null
-            && sizeRu != null
             && isAvailable != null
             && onlineCount != null
             && retailCount != null
@@ -47,7 +46,7 @@ data class ProductOfferDto(
                 retailCount = retailCount,
             )
         } else {
-            Timber.e("Drop ProductOffer because its ID, size, sizeRu, isAvailable, onlineCount or retailCount is null")
+            Timber.e("Drop ProductOffer because its ID, size, isAvailable, onlineCount or retailCount is null")
             null
         }
     }

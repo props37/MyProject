@@ -10,7 +10,7 @@ import ru.zarina.zarina.domain.rework.product.ProductOffer
 data class ProductOfferParcelable(
     val id: String,
     val size: String,
-    val sizeRu: String,
+    val sizeRu: String?,
     val isAvailable: Boolean,
     val height: String?,
     val onlineCount: Int,
