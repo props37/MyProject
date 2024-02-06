@@ -14,7 +14,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.plus
@@ -59,13 +60,13 @@ class CatalogViewModel @Inject constructor(
         initialValue = GenderTab.WOMEN,
     )
 
-    private val categoriesFetchRequests = MutableSharedFlow<Unit>(replay = 1)
-        .also { it.tryEmit(Unit) }
+    private val categoriesFetchRequests = Channel<Unit>(Channel.CONFLATED)
 
     private val isFetchingCategories = MutableStateFlow(false)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val categoriesResult: StateFlow<Result<Categories>?> = categoriesFetchRequests
+        .receiveAsFlow()
         .flatMapLatest { interactor.getCategoriesFlow() }
         .onEach { isFetchingCategories.value = false }
         .stateIn(
@@ -133,6 +134,10 @@ class CatalogViewModel @Inject constructor(
         initialValue = CategoryListItemsState(persistentSetOf(), persistentSetOf()),
     )
 
+    init {
+        categoriesFetchRequests.trySend(Unit)
+    }
+
     fun onSearchQueryChanged(query: String) {
         savedStateHandle[KEY_SEARCH_QUERY] = query
     }
@@ -157,7 +162,7 @@ class CatalogViewModel @Inject constructor(
     }
 
     fun onCategoryListErrorRefreshClicked() {
-        categoriesFetchRequests.tryEmit(Unit)
+        categoriesFetchRequests.trySend(Unit)
         isFetchingCategories.value = true
     }
 

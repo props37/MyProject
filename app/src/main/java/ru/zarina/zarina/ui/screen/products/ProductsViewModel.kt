@@ -14,8 +14,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
@@ -67,13 +68,12 @@ class ProductsViewModel @AssistedInject constructor(
             Category.Id(value)
         }
 
-    private val categoryFetchRequests = MutableSharedFlow<Unit>(replay = 1)
-        .also { it.tryEmit(Unit) }
+    private val categoryFetchRequests = Channel<Unit>(Channel.CONFLATED)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val categoryResult: StateFlow<Result<Category>?> = combine(
         categoryId,
-        categoryFetchRequests,
+        categoryFetchRequests.receiveAsFlow(),
     ) { id, _ ->
         GetCategoryFlowUseCase.Params(id)
     }
@@ -163,6 +163,8 @@ class ProductsViewModel @AssistedInject constructor(
     ) { it.appliedFilterCount }
 
     init {
+        categoryFetchRequests.trySend(Unit)
+
         handleFiltersResult(backStackEntrySavedStateHandle)
     }
 
@@ -244,7 +246,7 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     private fun fetchCategory() {
-        categoryFetchRequests.tryEmit(Unit)
+        categoryFetchRequests.trySend(Unit)
     }
 
     private fun handleFiltersResult(backStackEntrySavedStateHandle: SavedStateHandle) {

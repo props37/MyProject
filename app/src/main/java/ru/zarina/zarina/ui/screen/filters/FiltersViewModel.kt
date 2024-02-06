@@ -9,13 +9,14 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.filter.Filter
@@ -83,14 +84,13 @@ class FiltersViewModel @AssistedInject constructor(
             parcelable?.toFilters() ?: initialFilters.value
         }
 
-    private val categoryProductInfoFetchRequests = MutableSharedFlow<Unit>(replay = 1)
-        .also { it.tryEmit(Unit) }
+    private val categoryProductInfoFetchRequests = Channel<Unit>(Channel.CONFLATED)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val categoryProductInfoResult: StateFlow<Result<CategoryProductInfo>?> = combine(
         categoryId,
         filters,
-        categoryProductInfoFetchRequests,
+        categoryProductInfoFetchRequests.receiveAsFlow(),
     ) { categoryId, filters, _ ->
         GetCategoryProductInfoFlowUseCase.Params(categoryId, filters)
     }
@@ -139,6 +139,8 @@ class FiltersViewModel @AssistedInject constructor(
     ) { it?.isEmptyIgnoringSorting != true }
 
     init {
+        categoryProductInfoFetchRequests.trySend(Unit)
+
         handleListFilterResult(backStackEntrySavedStateHandle)
     }
 
@@ -191,7 +193,7 @@ class FiltersViewModel @AssistedInject constructor(
     }
 
     fun onFilterListErrorRefreshClicked() {
-        categoryProductInfoFetchRequests.tryEmit(Unit)
+        categoryProductInfoFetchRequests.trySend(Unit)
     }
 
     private fun handleListFilterResult(backStackEntrySavedStateHandle: SavedStateHandle) {
