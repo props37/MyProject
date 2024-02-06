@@ -29,6 +29,7 @@ import ru.zarina.zarina.ui.screen.sizetable.SizeTableScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.sizetable.SizeTableViewModel.SideEffect
 import ru.zarina.zarina.ui.screen.sizetable.SizeTableViewModel.Size
 
+// TODO: [High] Rename?
 @Composable
 fun SizeTableBottomSheetScreen(
     navigateBackward: (SizeTableScreenResult) -> Unit,
