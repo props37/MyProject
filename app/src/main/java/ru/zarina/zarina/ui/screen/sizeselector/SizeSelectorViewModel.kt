@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screen.sizetable
+package ru.zarina.zarina.ui.screen.sizeselector
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
@@ -16,7 +16,7 @@ import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
-import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorViewModel.SideEffect
+import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorViewModel.SideEffect
 import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 

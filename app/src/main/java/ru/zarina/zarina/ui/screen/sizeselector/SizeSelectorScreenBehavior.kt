@@ -1,11 +1,11 @@
-package ru.zarina.zarina.ui.screen.sizetable
+package ru.zarina.zarina.ui.screen.sizeselector
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorViewModel.SideEffect
+import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorViewModel.SideEffect
 
 @Composable
 fun SizeSelectorScreenBehavior(

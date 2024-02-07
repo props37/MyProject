@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screen.sizetable
+package ru.zarina.zarina.ui.screen.sizeselector
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,11 +23,11 @@ import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorScreenComponents.SizeTableLabel
-import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorScreenComponents.Sizes
-import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorScreenComponents.TopBar
-import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorViewModel.SideEffect
-import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorViewModel.Size
+import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorScreenComponents.SizeTableLabel
+import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorScreenComponents.Sizes
+import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorScreenComponents.TopBar
+import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorViewModel.SideEffect
+import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorViewModel.Size
 
 @Composable
 fun SizeSelectorBottomSheetScreen(

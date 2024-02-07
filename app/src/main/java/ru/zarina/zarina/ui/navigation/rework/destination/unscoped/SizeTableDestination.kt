@@ -4,8 +4,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
-import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorBottomSheetScreen
-import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorScreenResult
+import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorBottomSheetScreen
+import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorScreenResult
 
 fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostController) {
     bottomSheetDestination(UnscopedDestinations.SizeSelector) {

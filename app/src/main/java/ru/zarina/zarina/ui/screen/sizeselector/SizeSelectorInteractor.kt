@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screen.sizetable
+package ru.zarina.zarina.ui.screen.sizeselector
 
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.screen.sizetable
+package ru.zarina.zarina.ui.screen.sizeselector
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -38,7 +38,7 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
-import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorViewModel.Size
+import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorViewModel.Size
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.utils.kotlin.capitalize
 
