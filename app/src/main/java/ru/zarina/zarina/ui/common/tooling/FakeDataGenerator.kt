@@ -81,6 +81,7 @@ object FakeDataGenerator {
         sizeRu: String = "48",
         isAvailable: Boolean = Random.nextBoolean(),
         height: String = "170",
+        barcode: String = getRandomString(),
         onlineCount: Int = if (isAvailable) Random.nextInt(1, 50) else 0,
         retailCount: Int = if (isAvailable) Random.nextInt(1, 50) else 0,
     ): ProductOffer = ProductOffer(
@@ -89,6 +90,7 @@ object FakeDataGenerator {
         sizeRu = sizeRu,
         isAvailable = isAvailable,
         height = height,
+        barcode = barcode,
         onlineCount = onlineCount,
         retailCount = retailCount,
     )

@@ -13,6 +13,7 @@ data class ProductOfferParcelable(
     val sizeRu: String?,
     val isAvailable: Boolean,
     val height: String?,
+    val barcode: String,
     val onlineCount: Int,
     val retailCount: Int,
 ) : Parcelable {
@@ -22,6 +23,7 @@ data class ProductOfferParcelable(
         sizeRu = sizeRu,
         isAvailable = isAvailable,
         height = height,
+        barcode = barcode,
         onlineCount = onlineCount,
         retailCount = retailCount,
     )
@@ -33,6 +35,7 @@ data class ProductOfferParcelable(
             sizeRu = productOffer.sizeRu,
             isAvailable = productOffer.isAvailable,
             height = productOffer.height,
+            barcode = productOffer.barcode,
             onlineCount = productOffer.onlineCount,
             retailCount = productOffer.retailCount,
         )

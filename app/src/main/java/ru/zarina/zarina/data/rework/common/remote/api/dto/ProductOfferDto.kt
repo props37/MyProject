@@ -22,6 +22,9 @@ data class ProductOfferDto(
     @SerialName("growth")
     val height: String? = null,
 
+    @SerialName("barcode")
+    val barcode: String? = null,
+
     @SerialName("online_quantity")
     val onlineCount: Int? = null,
 
@@ -33,6 +36,7 @@ data class ProductOfferDto(
             id != null
             && size != null
             && isAvailable != null
+            && barcode != null
             && onlineCount != null
             && retailCount != null
         ) {
@@ -42,11 +46,12 @@ data class ProductOfferDto(
                 sizeRu = sizeRu,
                 isAvailable = isAvailable,
                 height = height,
+                barcode = barcode,
                 onlineCount = onlineCount,
                 retailCount = retailCount,
             )
         } else {
-            Timber.e("Drop ProductOffer because its ID, size, isAvailable, onlineCount or retailCount is null")
+            Timber.e("Drop ProductOffer because its ID, size, isAvailable, barcode, onlineCount or retailCount is null")
             null
         }
     }
