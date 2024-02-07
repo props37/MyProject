@@ -141,7 +141,7 @@ object SizeSelectorScreenComponents {
                         onClick = { onSizeClicked(size) },
                     )
 
-                    if (index < sizes.size - 1) {
+                    if (index < sizes.lastIndex) {
                         Divider(
                             color = UiKitTheme.colorsReworked.background.skeleton,
                             modifier = Modifier
@@ -191,7 +191,7 @@ object SizeSelectorScreenComponents {
                         size.availableHeights.reduce { acc, height -> "$acc, $height" }
                     }
                     Text(
-                        text = stringResource(R.string.available_heights_cm, heightsText),
+                        text = stringResource(R.string.available_height_cm, heightsText),
                         style = UiKitTheme.typographyReworked.secondary.light,
                         color = UiKitTheme.colorsReworked.text.general.regular.muted,
                     )
@@ -211,7 +211,7 @@ object SizeSelectorScreenComponents {
     }
 
     @Composable
-    private fun NavigationBarSpacer(
+    fun NavigationBarSpacer(
         modifier: Modifier = Modifier,
     ) {
         Spacer(

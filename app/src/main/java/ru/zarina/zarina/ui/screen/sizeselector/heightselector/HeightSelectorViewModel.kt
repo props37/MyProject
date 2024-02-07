@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import ru.zarina.zarina.domain.rework.product.ProductOffer
@@ -23,7 +25,7 @@ class HeightSelectorViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val offers: StateFlow<List<ProductOffer>> = savedStateHandle
+    val offers: StateFlow<ImmutableList<ProductOffer>> = savedStateHandle
         .getStateFlow<Array<ProductOfferParcelable>?>(
             key = UnscopedDestinations.HeightSelector.ARG_KEY_OFFERS,
             initialValue = null,
@@ -33,7 +35,9 @@ class HeightSelectorViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
         ) { parcelables ->
             checkNotNull(parcelables) { "offers is null" }
-            parcelables.map { it.toProductOffer() }
+            parcelables
+                .map { it.toProductOffer() }
+                .toImmutableList()
         }
 
     fun onBackClicked() {
@@ -50,8 +54,11 @@ class HeightSelectorViewModel @Inject constructor(
         }
     }
 
+    fun onOfferClicked(offer: ProductOffer) {
+        // TODO: [High] Implement
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateBackward(val result: HeightSelectorScreenResult) : SideEffect
     }
 }
-

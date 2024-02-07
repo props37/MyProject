@@ -1,18 +1,33 @@
 package ru.zarina.zarina.ui.screen.sizeselector.heightselector
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.product.ProductOffer
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.button.CloseIconButton
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
+import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorScreenComponents.NavigationBarSpacer
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 object HeightSelectorScreenComponents {
@@ -48,6 +63,75 @@ object HeightSelectorScreenComponents {
             contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
             modifier = modifier,
         )
+    }
+
+    @Composable
+    fun Offers(
+        offers: ImmutableList<ProductOffer>,
+        onOfferClicked: (ProductOffer) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+            offers.forEachIndexed { index, offer ->
+                key(offer.id.value) {
+                    Offer(
+                        offer = offer,
+                        onClick = { onOfferClicked(offer) },
+                    )
+
+                    if (index < offers.lastIndex) {
+                        Divider(
+                            color = UiKitTheme.colorsReworked.background.skeleton,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
+                }
+            }
+
+            NavigationBarSpacer()
+        }
+    }
+
+    @Composable
+    private fun Offer(
+        offer: ProductOffer,
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .fillMaxWidth()
+                .heightIn(min = 56.dp)
+                .clickable(onClick = onClick)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+        ) {
+            Text(
+                // TODO: [High] Is okay?
+                text = if (offer.height != null) {
+                    stringResource(R.string.height_cm, offer.height)
+                } else "",
+                style = UiKitTheme.typographyReworked.secondary.light,
+                color = if (offer.isAvailable) {
+                    UiKitTheme.colorsReworked.text.general.regular.default
+                } else {
+                    UiKitTheme.colorsReworked.text.general.regular.disabled
+                },
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(8.dp))
+
+            if (!offer.isAvailable) {
+                Text(
+                    text = stringResource(R.string.subscribe).uppercase(),
+                    style = UiKitTheme.typographyReworked.caption1.regular,
+                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                )
+            }
+        }
     }
 
     private val TopBarIconSize: Dp get() = 20.dp

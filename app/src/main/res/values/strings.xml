@@ -69,9 +69,10 @@
     <string name="subscribe_to_product">Подписаться на товар</string>
     <string name="size_table">Таблица размеров</string>
     <string name="choose_size">Выбери размер</string>
-    <string name="available_heights_cm">Доступно %1$s см</string>
+    <string name="available_height_cm">Доступно %1$s см</string>
     <string name="subscribe">Подписаться</string>
     <string name="choose_height">Выбери рост</string>
+    <string name="height_cm">%1$s см</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
