@@ -2,6 +2,7 @@ package ru.zarina.zarina.data.rework.common.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.domain.rework.common.MediaType
 import ru.zarina.zarina.domain.rework.product.Product
 import timber.log.Timber
 
@@ -28,7 +29,11 @@ data class ProductDto(
     fun toProduct(): Product? {
         val offers = offers?.mapNotNull { it.toProductOffer() }
         val colors = colors?.mapNotNull { it.toProductColor() }
-        val media = media?.mapNotNull { it.toMedia() }
+        val media = media
+            ?.mapNotNull { it.toMedia() }
+            // Filter out videos until a good decision is found on how to display multiple videos
+            // simultaneously in product list
+            ?.filter { it.type == MediaType.IMAGE }
         return if (
             id != null
             && name != null
