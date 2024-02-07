@@ -9,7 +9,7 @@ import ru.zarina.zarina.util.platform.BundleCompat
 val NavType.Companion.ListFilterParcelableType: ListFilterParcelableNavType
     get() = ListFilterParcelableNavType()
 
-class ListFilterParcelableNavType : NavType<ListFilterParcelable>(isNullableAllowed = true) {
+class ListFilterParcelableNavType : NavType<ListFilterParcelable?>(isNullableAllowed = true) {
     override fun get(bundle: Bundle, key: String): ListFilterParcelable? {
         return BundleCompat.getParcelable(bundle, key)
     }
@@ -18,7 +18,7 @@ class ListFilterParcelableNavType : NavType<ListFilterParcelable>(isNullableAllo
         return Json.decodeFromString(value)
     }
 
-    override fun put(bundle: Bundle, key: String, value: ListFilterParcelable) {
+    override fun put(bundle: Bundle, key: String, value: ListFilterParcelable?) {
         bundle.putParcelable(key, value)
     }
 }

@@ -9,7 +9,7 @@ import ru.zarina.zarina.util.platform.BundleCompat
 val NavType.Companion.ProductParcelableType: ProductParcelableNavType
     get() = ProductParcelableNavType()
 
-class ProductParcelableNavType : NavType<ProductParcelable>(isNullableAllowed = true) {
+class ProductParcelableNavType : NavType<ProductParcelable?>(isNullableAllowed = true) {
     override fun get(bundle: Bundle, key: String): ProductParcelable? {
         return BundleCompat.getParcelable(bundle, key)
     }
@@ -18,7 +18,7 @@ class ProductParcelableNavType : NavType<ProductParcelable>(isNullableAllowed = 
         return Json.decodeFromString(value)
     }
 
-    override fun put(bundle: Bundle, key: String, value: ProductParcelable) {
+    override fun put(bundle: Bundle, key: String, value: ProductParcelable?) {
         bundle.putParcelable(key, value)
     }
 }
