@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import ru.zarina.zarina.domain.rework.product.ProductOffer
+import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
@@ -19,6 +20,8 @@ import javax.inject.Inject
 class HeightSelectorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val offers: StateFlow<List<ProductOffer>> = savedStateHandle
         .getStateFlow<Array<ProductOfferParcelable>?>(
@@ -33,6 +36,22 @@ class HeightSelectorViewModel @Inject constructor(
             parcelables.map { it.toProductOffer() }
         }
 
-    sealed interface SideEffect : SideEffectSource.SideEffect
+    fun onBackClicked() {
+        navigationThrottler.throttle {
+            val result = HeightSelectorScreenResult.ScreenClosed
+            emitSideEffect(SideEffect.NavigateBackward(result))
+        }
+    }
+
+    fun onCloseClicked() {
+        navigationThrottler.throttle {
+            val result = HeightSelectorScreenResult.SizeSelectorFlowClosed
+            emitSideEffect(SideEffect.NavigateBackward(result))
+        }
+    }
+
+    sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class NavigateBackward(val result: HeightSelectorScreenResult) : SideEffect
+    }
 }
 
