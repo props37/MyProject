@@ -23,7 +23,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SizeSelectorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val interactor: SizeSelectorInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
