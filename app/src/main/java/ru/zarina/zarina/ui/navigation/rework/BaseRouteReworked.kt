@@ -12,6 +12,7 @@ enum class BaseRouteReworked {
     LIST_FILTER,
 
     SIZE_SELECTOR,
+    HEIGHT_SELECTOR,
 
     // Catalog graph
     CATALOG_GRAPH,

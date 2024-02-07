@@ -96,12 +96,16 @@ object SizeSelectorScreenComponents {
     @Composable
     fun Sizes(
         sizes: ImmutableList<Size>,
+        onSizeClicked: (Size) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier.verticalScroll(rememberScrollState())) {
             sizes.forEachIndexed { index, size ->
                 key(size.id) {
-                    Size(size)
+                    Size(
+                        size = size,
+                        onClick = { onSizeClicked(size) },
+                    )
 
                     if (index < sizes.size - 1) {
                         Divider(
@@ -130,6 +134,7 @@ object SizeSelectorScreenComponents {
     @Composable
     private fun Size(
         size: Size,
+        onClick: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Row(
@@ -137,7 +142,7 @@ object SizeSelectorScreenComponents {
             modifier = modifier
                 .fillMaxWidth()
                 .heightIn(min = 56.dp)
-                .clickable { /* TODO */ }
+                .clickable(onClick = onClick)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             val sizeColor = if (size.isAvailable) {

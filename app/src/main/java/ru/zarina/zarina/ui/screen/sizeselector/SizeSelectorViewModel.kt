@@ -64,7 +64,16 @@ class SizeSelectorViewModel @Inject constructor(
         }
     }
 
+    fun onSizeClicked(size: Size) {
+        navigationThrottler.throttle {
+            val action = SizeSelectorScreenAction.SizeClicked(size.offers)
+            emitSideEffect(SideEffect.NavigateForward(action))
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class NavigateForward(val action: SizeSelectorScreenAction) : SideEffect
+
         data class NavigateBackward(val result: SizeSelectorScreenResult) : SideEffect
     }
 
