@@ -108,7 +108,9 @@ fun ProductCard(
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(top = 2.dp), // Circe font padding
             )
             Spacer(modifier = Modifier.width(8.dp))
             CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
