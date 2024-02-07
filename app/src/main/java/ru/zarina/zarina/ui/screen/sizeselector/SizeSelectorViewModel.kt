@@ -64,6 +64,7 @@ class SizeSelectorViewModel @Inject constructor(
     }
 
     fun onSizeClicked(size: Size) {
+        // TODO: [High] Add product to cart if it is available
         navigationThrottler.throttle {
             val action = SizeSelectorScreenAction.SizeClicked(size.offers)
             emitSideEffect(SideEffect.NavigateForward(action))
