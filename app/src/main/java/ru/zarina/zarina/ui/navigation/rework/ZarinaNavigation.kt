@@ -19,7 +19,7 @@ import ru.zarina.zarina.ui.navigation.rework.destination.profileGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.filtersScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.listFilterScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.productsScreen
-import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.sizeTableBottomSheetScreen
+import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.sizeSelectorBottomSheetScreen
 
 @Composable
 fun ZarinaNavigation(
@@ -47,7 +47,7 @@ fun ZarinaNavigation(
         productsScreen(navController)
         filtersScreen(navController)
         listFilterScreen(navController)
-        sizeTableBottomSheetScreen(navController)
+        sizeSelectorBottomSheetScreen(navController)
     }
 }
 

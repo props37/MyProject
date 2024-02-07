@@ -65,14 +65,14 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                     }
 
                     is ProductsScreenAction.AddProductToCartClicked -> {
-                        val args = UnscopedDestinations.SizeTable.Args(action.product)
-                        val route = UnscopedDestinations.SizeTable.createRoute(args)
+                        val args = UnscopedDestinations.SizeSelector.Args(action.product)
+                        val route = UnscopedDestinations.SizeSelector.createRoute(args)
                         navController.navigate(route)
                     }
 
                     is ProductsScreenAction.SubscribeToProductClicked -> {
-                        val args = UnscopedDestinations.SizeTable.Args(action.product)
-                        val route = UnscopedDestinations.SizeTable.createRoute(args)
+                        val args = UnscopedDestinations.SizeSelector.Args(action.product)
+                        val route = UnscopedDestinations.SizeSelector.createRoute(args)
                         navController.navigate(route)
                     }
                 }

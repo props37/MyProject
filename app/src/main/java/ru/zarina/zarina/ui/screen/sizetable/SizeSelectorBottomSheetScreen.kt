@@ -23,17 +23,16 @@ import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.zarina.zarina.ui.screen.sizetable.SizeTableScreenComponents.SizeTableLabel
-import ru.zarina.zarina.ui.screen.sizetable.SizeTableScreenComponents.Sizes
-import ru.zarina.zarina.ui.screen.sizetable.SizeTableScreenComponents.TopBar
-import ru.zarina.zarina.ui.screen.sizetable.SizeTableViewModel.SideEffect
-import ru.zarina.zarina.ui.screen.sizetable.SizeTableViewModel.Size
+import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorScreenComponents.SizeTableLabel
+import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorScreenComponents.Sizes
+import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorScreenComponents.TopBar
+import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorViewModel.SideEffect
+import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorViewModel.Size
 
-// TODO: [High] Rename?
 @Composable
-fun SizeTableBottomSheetScreen(
-    navigateBackward: (SizeTableScreenResult) -> Unit,
-    viewModel: SizeTableViewModel = hiltViewModel(),
+fun SizeSelectorBottomSheetScreen(
+    navigateBackward: (SizeSelectorScreenResult) -> Unit,
+    viewModel: SizeSelectorViewModel = hiltViewModel(),
 ) {
     val sizes by viewModel.sizes.collectAsStateWithLifecycle()
 
@@ -50,9 +49,9 @@ private fun ScreenContent(
     sizes: ImmutableList<Size>,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigateBackward: (SizeTableScreenResult) -> Unit,
+    navigateBackward: (SizeSelectorScreenResult) -> Unit,
 ) {
-    SizeTableScreenBehavior(
+    SizeSelectorScreenBehavior(
         sideEffects = sideEffects,
         navigateBackward = navigateBackward,
     )

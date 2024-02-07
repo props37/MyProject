@@ -202,11 +202,11 @@ object UnscopedDestinations {
         data class Result(val filter: ListFilterParcelable) : Parcelable
     }
 
-    data object SizeTable : Destination<SizeTable.Args>() {
+    data object SizeSelector : Destination<SizeSelector.Args>() {
         const val ARG_KEY_PRODUCT = "arg_product"
 
         private val baseRoute: String
-            get() = BaseRouteReworked.SIZE_TABLE.route
+            get() = BaseRouteReworked.SIZE_SELECTOR.route
 
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(

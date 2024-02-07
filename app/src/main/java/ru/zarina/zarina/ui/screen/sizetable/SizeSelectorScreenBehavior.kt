@@ -5,12 +5,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.ui.screen.sizetable.SizeTableViewModel.SideEffect
+import ru.zarina.zarina.ui.screen.sizetable.SizeSelectorViewModel.SideEffect
 
 @Composable
-fun SizeTableScreenBehavior(
+fun SizeSelectorScreenBehavior(
     sideEffects: Flow<SideEffect>,
-    navigateBackward: (SizeTableScreenResult) -> Unit,
+    navigateBackward: (SizeSelectorScreenResult) -> Unit,
 ) {
     val updatedNavigateBackward by rememberUpdatedState(navigateBackward)
 
