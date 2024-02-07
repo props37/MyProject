@@ -152,16 +152,7 @@ object SizeSelectorScreenComponents {
                 }
             }
 
-            Spacer(
-                modifier = Modifier
-                    .height(
-                        WindowInsets.navigationBars
-                            .union(WindowInsets.displayCutout)
-                            .only(WindowInsetsSides.Bottom)
-                            .asPaddingValues()
-                            .calculateBottomPadding()
-                    )
-            )
+            NavigationBarSpacer()
         }
     }
 
@@ -217,5 +208,21 @@ object SizeSelectorScreenComponents {
                 }
             }
         }
+    }
+
+    @Composable
+    private fun NavigationBarSpacer(
+        modifier: Modifier = Modifier,
+    ) {
+        Spacer(
+            modifier = modifier
+                .height(
+                    WindowInsets.navigationBars
+                        .union(WindowInsets.displayCutout)
+                        .only(WindowInsetsSides.Bottom)
+                        .asPaddingValues()
+                        .calculateBottomPadding()
+                )
+        )
     }
 }
