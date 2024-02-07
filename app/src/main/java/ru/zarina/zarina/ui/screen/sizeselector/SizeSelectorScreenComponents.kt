@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.screen.sizeselector
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,8 +16,10 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
@@ -32,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
+import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
 import ru.zarina.zarina.ui.common.component.button.CloseIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
@@ -43,6 +47,36 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.utils.kotlin.capitalize
 
 object SizeSelectorScreenComponents {
+
+    @Composable
+    fun SizeSelectorScaffold(
+        onClickOutside: () -> Unit,
+        modifier: Modifier = Modifier,
+        windowInsets: WindowInsets = WindowInsets.statusBars.union(WindowInsets.displayCutout),
+        content: @Composable () -> Unit,
+    ) {
+        Column(
+            modifier = modifier
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onClickOutside,
+                )
+                .windowInsetsPadding(windowInsets),
+        ) {
+            SizeTableLabel(modifier = Modifier.padding(start = 16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ZarinaBottomSheet(
+                modifier = Modifier.clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = {},
+                ),
+                content = content,
+            )
+        }
+    }
 
     @Composable
     fun SizeTableLabel(modifier: Modifier = Modifier) {
