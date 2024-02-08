@@ -235,6 +235,7 @@ object UnscopedDestinations {
     }
 
     data object HeightSelector : Destination<HeightSelector.Args>() {
+        const val ARG_KEY_PRODUCT = "arg_product"
         const val ARG_KEY_OFFERS = "arg_offers"
 
         private val baseRoute: String
@@ -243,23 +244,26 @@ object UnscopedDestinations {
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(
                 routeBase = baseRoute,
-                argNames = arrayOf(ARG_KEY_OFFERS),
+                argNames = arrayOf(ARG_KEY_PRODUCT, ARG_KEY_OFFERS),
             )
 
         override fun createRoute(args: Args): String {
+            val productParcelable = ProductParcelable.from(args.product)
+            val productParcelableString = Uri.encode(Json.encodeToString(productParcelable))
             val offersParcelable = args.offers.map { ProductOfferParcelable.from(it) }
             val offersParcelableString = Uri.encode(Json.encodeToString(offersParcelable))
             return RouteUtils.generateRoute(
                 routeBase = baseRoute,
-                args = arrayOf(offersParcelableString),
+                args = arrayOf(productParcelableString, offersParcelableString),
             )
         }
 
         override val arguments: List<NamedNavArgument>
             get() = listOf(
-                navArgument(ARG_KEY_OFFERS) { type = NavType.ProductOfferParcelableArrayType }
+                navArgument(ARG_KEY_PRODUCT) { type = NavType.ProductParcelableType },
+                navArgument(ARG_KEY_OFFERS) { type = NavType.ProductOfferParcelableArrayType },
             )
 
-        data class Args(val offers: List<ProductOffer>)
+        data class Args(val product: Product, val offers: List<ProductOffer>)
     }
 }

@@ -8,11 +8,13 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
+import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.sizeselector.heightselector.HeightSelectorViewModel.SideEffect
 import ru.zarina.zarina.util.library.coroutines.mapState
@@ -24,6 +26,19 @@ class HeightSelectorViewModel @Inject constructor(
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    val product: StateFlow<Product> = savedStateHandle
+        .getStateFlow<ProductParcelable?>(
+            key = UnscopedDestinations.HeightSelector.ARG_KEY_PRODUCT,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { parcelable ->
+            checkNotNull(parcelable) { "product is null" }
+            parcelable.toProduct()
+        }
 
     val offers: StateFlow<ImmutableList<ProductOffer>> = savedStateHandle
         .getStateFlow<Array<ProductOfferParcelable>?>(

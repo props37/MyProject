@@ -15,7 +15,10 @@ fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostControll
                 when (action) {
                     is SizeSelectorScreenAction.SizeClicked -> {
                         val route = if (action.offers.size > 1) {
-                            val args = UnscopedDestinations.HeightSelector.Args(action.offers)
+                            val args = UnscopedDestinations.HeightSelector.Args(
+                                product = action.product,
+                                offers = action.offers,
+                            )
                             UnscopedDestinations.HeightSelector.createRoute(args)
                         } else {
                             // TODO: [High] Navigate to subscription screen
