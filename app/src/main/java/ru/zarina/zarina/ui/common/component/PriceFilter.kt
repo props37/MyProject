@@ -73,11 +73,13 @@ fun PriceFilter(
     var minPrice by remember(filter) { mutableStateOf(filter.min) }
     var maxPrice by remember(filter) { mutableStateOf(filter.max) }
 
-    val limits = filter.limits
+    val limits by rememberUpdatedState(filter.limits)
 
     val isMinTextFieldFocused = remember { mutableStateOf(false) }
     val isMaxTextFieldFocused = remember { mutableStateOf(false) }
 
+    val updatedMinPrice by rememberUpdatedState(minPrice)
+    val updatedMaxPrice by rememberUpdatedState(maxPrice)
     val isImeVisibleState = rememberUpdatedState(WindowInsets.isImeVisible)
     LaunchedEffect(onFilterChanged) {
         snapshotFlow { isImeVisibleState.value }
@@ -86,8 +88,8 @@ fun PriceFilter(
                 val isAnyTextFieldFocused =
                     isMinTextFieldFocused.value || isMaxTextFieldFocused.value
                 if (!isImeVisible && isAnyTextFieldFocused) {
-                    val newMinPrice = minPrice?.coerceMinPrice(maxPrice, limits)
-                    val newMaxPrice = maxPrice?.coerceMaxPrice(minPrice, limits)
+                    val newMinPrice = updatedMinPrice?.coerceMinPrice(updatedMaxPrice, limits)
+                    val newMaxPrice = updatedMaxPrice?.coerceMaxPrice(newMinPrice, limits)
                     minPrice = newMinPrice
                     maxPrice = newMaxPrice
                     onFilterChanged(filter.copy(min = newMinPrice, max = newMaxPrice))
