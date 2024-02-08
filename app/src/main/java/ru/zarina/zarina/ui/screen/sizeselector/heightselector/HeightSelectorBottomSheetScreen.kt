@@ -21,6 +21,7 @@ import ru.zarina.zarina.ui.screen.sizeselector.heightselector.HeightSelectorView
 
 @Composable
 fun HeightSelectorBottomSheetScreenScreen(
+    navigateForward: (HeightSelectorScreenAction) -> Unit,
     navigateBackward: (HeightSelectorScreenResult) -> Unit,
     viewModel: HeightSelectorViewModel = hiltViewModel(),
 ) {
@@ -32,6 +33,7 @@ fun HeightSelectorBottomSheetScreenScreen(
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
+        navigateForward = navigateForward,
         navigateBackward = navigateBackward,
     )
 }
@@ -43,10 +45,12 @@ private fun ScreenContent(
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
+    navigateForward: (HeightSelectorScreenAction) -> Unit,
     navigateBackward: (HeightSelectorScreenResult) -> Unit,
 ) {
     HeightSelectorScreenBehavior(
         sideEffects = sideEffects,
+        navigateForward = navigateForward,
         navigateBackward = navigateBackward,
     )
 

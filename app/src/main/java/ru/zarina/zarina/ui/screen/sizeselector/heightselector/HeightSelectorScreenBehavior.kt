@@ -10,13 +10,16 @@ import ru.zarina.zarina.ui.screen.sizeselector.heightselector.HeightSelectorView
 @Composable
 fun HeightSelectorScreenBehavior(
     sideEffects: Flow<SideEffect>,
+    navigateForward: (HeightSelectorScreenAction) -> Unit,
     navigateBackward: (HeightSelectorScreenResult) -> Unit,
 ) {
+    val updatedNavigateForward by rememberUpdatedState(navigateForward)
     val updatedNavigateBackward by rememberUpdatedState(navigateBackward)
 
     LaunchedEffect(sideEffects) {
         sideEffects.collect { sideEffect ->
             when (sideEffect) {
+                is SideEffect.NavigateForward -> updatedNavigateForward(sideEffect.action)
                 is SideEffect.NavigateBackward -> updatedNavigateBackward(sideEffect.result)
             }
         }

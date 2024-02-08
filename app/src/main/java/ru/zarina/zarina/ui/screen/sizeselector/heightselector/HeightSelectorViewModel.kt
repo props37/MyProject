@@ -70,10 +70,14 @@ class HeightSelectorViewModel @Inject constructor(
     }
 
     fun onOfferClicked(offer: ProductOffer) {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val action = HeightSelectorScreenAction.OfferClicked(product.value, offer)
+            emitSideEffect(SideEffect.NavigateForward(action))
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class NavigateForward(val action: HeightSelectorScreenAction) : SideEffect
         data class NavigateBackward(val result: HeightSelectorScreenResult) : SideEffect
     }
 }
