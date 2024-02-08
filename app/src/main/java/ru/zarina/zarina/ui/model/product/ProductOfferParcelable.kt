@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.model.product
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.domain.rework.common.Barcode
 import ru.zarina.zarina.domain.rework.product.ProductOffer
 
 @Serializable
@@ -23,7 +24,7 @@ data class ProductOfferParcelable(
         sizeRu = sizeRu,
         isAvailable = isAvailable,
         height = height,
-        barcode = barcode,
+        barcode = Barcode(barcode),
         onlineCount = onlineCount,
         retailCount = retailCount,
     )
@@ -35,7 +36,7 @@ data class ProductOfferParcelable(
             sizeRu = productOffer.sizeRu,
             isAvailable = productOffer.isAvailable,
             height = productOffer.height,
-            barcode = productOffer.barcode,
+            barcode = productOffer.barcode.value,
             onlineCount = productOffer.onlineCount,
             retailCount = productOffer.retailCount,
         )

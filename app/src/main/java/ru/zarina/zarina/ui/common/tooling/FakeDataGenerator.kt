@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.common.tooling
 
 import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.rework.common.Barcode
 import ru.zarina.zarina.domain.rework.common.Color
 import ru.zarina.zarina.domain.rework.common.Media
 import ru.zarina.zarina.domain.rework.common.MediaType
@@ -81,7 +82,7 @@ object FakeDataGenerator {
         sizeRu: String = "48",
         isAvailable: Boolean = Random.nextBoolean(),
         height: String = "170",
-        barcode: String = getRandomString(),
+        barcode: Barcode = Barcode(getRandomString()),
         onlineCount: Int = if (isAvailable) Random.nextInt(1, 50) else 0,
         retailCount: Int = if (isAvailable) Random.nextInt(1, 50) else 0,
     ): ProductOffer = ProductOffer(

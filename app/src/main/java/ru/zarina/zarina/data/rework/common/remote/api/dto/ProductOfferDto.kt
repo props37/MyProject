@@ -2,6 +2,7 @@ package ru.zarina.zarina.data.rework.common.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.domain.rework.common.Barcode
 import ru.zarina.zarina.domain.rework.product.ProductOffer
 import timber.log.Timber
 
@@ -46,7 +47,7 @@ data class ProductOfferDto(
                 sizeRu = sizeRu,
                 isAvailable = isAvailable,
                 height = height,
-                barcode = barcode,
+                barcode = Barcode(barcode),
                 onlineCount = onlineCount,
                 retailCount = retailCount,
             )
