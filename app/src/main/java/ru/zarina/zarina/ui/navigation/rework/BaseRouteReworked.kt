@@ -11,8 +11,11 @@ enum class BaseRouteReworked {
     FILTERS,
     LIST_FILTER,
 
+    // TODO: [High] Extract to nested graph
     SIZE_SELECTOR,
     HEIGHT_SELECTOR,
+
+    PRODUCT_SUBSCRIPTION,
 
     // Catalog graph
     CATALOG_GRAPH,

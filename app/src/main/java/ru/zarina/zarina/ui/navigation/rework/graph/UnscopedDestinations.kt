@@ -26,6 +26,7 @@ import ru.zarina.zarina.ui.navigation.rework.base.navtype.CityParcelableType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.FiltersParcelableType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.ListFilterParcelableType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.ProductOfferParcelableArrayType
+import ru.zarina.zarina.ui.navigation.rework.base.navtype.ProductOfferParcelableType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.ProductParcelableType
 import ru.zarina.zarina.domain.rework.filter.Filters as DomainFilters
 import ru.zarina.zarina.domain.rework.filter.ListFilter as DomainListFilter
@@ -265,5 +266,38 @@ object UnscopedDestinations {
             )
 
         data class Args(val product: Product, val offers: List<ProductOffer>)
+    }
+
+    data object ProductSubscription : Destination<ProductSubscription.Args>() {
+        const val ARG_KEY_PRODUCT = "arg_product"
+        const val ARG_KEY_OFFER = "arg_offer"
+
+        private val baseRoute: String
+            get() = BaseRouteReworked.PRODUCT_SUBSCRIPTION.route
+
+        override val routeSchema: String
+            get() = RouteUtils.generateRouteSchema(
+                routeBase = baseRoute,
+                argNames = arrayOf(ARG_KEY_PRODUCT, ARG_KEY_OFFER),
+            )
+
+        override fun createRoute(args: Args): String {
+            val productParcelable = ProductParcelable.from(args.product)
+            val productParcelableString = Uri.encode(Json.encodeToString(productParcelable))
+            val offerParcelable = ProductOfferParcelable.from(args.offer)
+            val offerParcelableString = Uri.encode(Json.encodeToString(offerParcelable))
+            return RouteUtils.generateRoute(
+                routeBase = baseRoute,
+                args = arrayOf(productParcelableString, offerParcelableString),
+            )
+        }
+
+        override val arguments: List<NamedNavArgument>
+            get() = listOf(
+                navArgument(ARG_KEY_PRODUCT) { type = NavType.ProductParcelableType },
+                navArgument(ARG_KEY_OFFER) { type = NavType.ProductOfferParcelableType },
+            )
+
+        data class Args(val product: Product, val offer: ProductOffer)
     }
 }
