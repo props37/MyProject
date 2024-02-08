@@ -15,17 +15,21 @@ fun NavGraphBuilder.heightSelectorBottomSheetScreen(navController: NavHostContro
             navigateForward = { action ->
                 when (action) {
                     is HeightSelectorScreenAction.OfferClicked -> {
-                        val args = UnscopedDestinations.ProductSubscription.Args(
-                            product = action.product,
-                            offer = action.offer,
-                        )
-                        val route = UnscopedDestinations.ProductSubscription.createRoute(args)
-                        val navOptions = navOptions {
-                            popUpTo(UnscopedDestinations.HeightSelector.routeSchema) {
-                                inclusive = true
+                        if (action.offer.isAvailable) {
+                            // TODO: [High] Implement
+                        } else {
+                            val args = UnscopedDestinations.ProductSubscription.Args(
+                                product = action.product,
+                                offer = action.offer,
+                            )
+                            val route = UnscopedDestinations.ProductSubscription.createRoute(args)
+                            val navOptions = navOptions {
+                                popUpTo(UnscopedDestinations.HeightSelector.routeSchema) {
+                                    inclusive = true
+                                }
                             }
+                            navController.navigate(route, navOptions)
                         }
-                        navController.navigate(route, navOptions)
                     }
                 }
             },

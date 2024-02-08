@@ -16,19 +16,25 @@ fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostControll
             navigateForward = { action ->
                 when (action) {
                     is SizeSelectorScreenAction.SizeClicked -> {
-                        if (action.offers.size > 1) {
-                            val args = UnscopedDestinations.HeightSelector.Args(
-                                product = action.product,
-                                offers = action.offers,
-                            )
-                            val route = UnscopedDestinations.HeightSelector.createRoute(args)
-                            navController.navigate(route)
-                        } else {
-                            val offer = action.offers.firstOrNull()
-                            if (offer != null) {
+                        val firstOffer = action.offers.firstOrNull()
+                        when {
+                            action.offers.size > 1 -> {
+                                val args = UnscopedDestinations.HeightSelector.Args(
+                                    product = action.product,
+                                    offers = action.offers,
+                                )
+                                val route = UnscopedDestinations.HeightSelector.createRoute(args)
+                                navController.navigate(route)
+                            }
+
+                            firstOffer != null && firstOffer.isAvailable -> {
+                                // TODO: [High] Implement
+                            }
+
+                            firstOffer != null && !firstOffer.isAvailable -> {
                                 val args = UnscopedDestinations.ProductSubscription.Args(
                                     product = action.product,
-                                    offer = offer,
+                                    offer = firstOffer,
                                 )
                                 val route = UnscopedDestinations.ProductSubscription.createRoute(args)
                                 val navOptions = navOptions {
@@ -37,8 +43,10 @@ fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostControll
                                     }
                                 }
                                 navController.navigate(route, navOptions)
-                            } else {
-                                Timber.e("Could not navigate to ProductSubscription because offer is null")
+                            }
+
+                            firstOffer == null -> {
+                                Timber.e("Could not perform navigation because offer is null")
                             }
                         }
                     }
