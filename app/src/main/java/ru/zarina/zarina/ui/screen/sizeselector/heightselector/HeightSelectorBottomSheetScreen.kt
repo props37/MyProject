@@ -51,7 +51,7 @@ private fun ScreenContent(
     )
 
     SizeSelectorScaffold(
-        onClickOutside = onCloseClicked,
+        onClickOutside = onBackClicked,
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             TopBar(
