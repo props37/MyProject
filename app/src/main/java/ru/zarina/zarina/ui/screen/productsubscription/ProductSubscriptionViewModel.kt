@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
+import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
@@ -22,6 +23,8 @@ class ProductSubscriptionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val interactor: ProductSubscriptionInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val navigationThrottler = Throttler.getNavigationThrottler()
 
     val product: StateFlow<Product> = savedStateHandle
         .getStateFlow<ProductParcelable?>(
@@ -49,5 +52,14 @@ class ProductSubscriptionViewModel @Inject constructor(
             parcelable.toProductOffer()
         }
 
-    sealed interface SideEffect : SideEffectSource.SideEffect
+    fun onBackClicked() {
+        navigationThrottler.throttle {
+            val result = ProductSubscriptionScreenResult.ScreenClosed
+            emitSideEffect(SideEffect.NavigateBackward(result))
+        }
+    }
+
+    sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class NavigateBackward(val result: ProductSubscriptionScreenResult) : SideEffect
+    }
 }
