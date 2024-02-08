@@ -19,8 +19,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.RangeSlider
+import androidx.compose.material3.RangeSliderState
 import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.SliderPositions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -182,7 +182,7 @@ fun PriceFilter(
                 activeTrackColor = UiKitTheme.colorsReworked.background.general.inversed.default,
                 inactiveTrackColor = UiKitTheme.colorsReworked.background.skeleton,
             ),
-            track = { Track(sliderPositions = it) },
+            track = { Track(state = it) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = sliderAdditionalHorizontalPadding),
@@ -242,9 +242,10 @@ private fun TextField(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Track(
-    sliderPositions: SliderPositions,
+    state: RangeSliderState,
     modifier: Modifier = Modifier,
     activeTrackColor: Color = UiKitTheme.colorsReworked.background.general.inversed.default,
     inactiveTrackColor: Color = UiKitTheme.colorsReworked.background.skeleton,
@@ -269,22 +270,31 @@ private fun Track(
             cap = StrokeCap.Square,
         )
 
-        val sliderValueEnd = Offset(
-            x = sliderStart.x +
-                    (sliderEnd.x - sliderStart.x) * sliderPositions.activeRange.endInclusive,
+        val coercedActiveRangeStartAsFraction = calculateFraction(
+            state.valueRange.start,
+            state.valueRange.endInclusive,
+            state.activeRangeStart,
+        )
+        val coercedActiveRangeEndAsFraction = calculateFraction(
+            state.valueRange.start,
+            state.valueRange.endInclusive,
+            state.activeRangeEnd,
+        )
+
+        val sliderValueStart = Offset(
+            x = sliderStart.x + (sliderEnd.x - sliderStart.x) * coercedActiveRangeStartAsFraction,
             y = center.y
         )
-        val sliderValueStart = Offset(
-            x = sliderStart.x +
-                    (sliderEnd.x - sliderStart.x) * sliderPositions.activeRange.start,
+        val sliderValueEnd = Offset(
+            x = sliderStart.x + (sliderEnd.x - sliderStart.x) * coercedActiveRangeEndAsFraction,
             y = center.y
         )
         drawLine(
-            activeTrackColor,
-            sliderValueStart,
-            sliderValueEnd,
-            trackStrokeWidth,
-            StrokeCap.Square,
+            color = activeTrackColor,
+            start = sliderValueStart,
+            end = sliderValueEnd,
+            strokeWidth = trackStrokeWidth,
+            cap = StrokeCap.Square,
         )
     }
 }
@@ -314,6 +324,9 @@ private fun createSliderValue(
     ) ?: limits.max
     return minValue.toFloat()..maxValue.toFloat()
 }
+
+private fun calculateFraction(a: Float, b: Float, pos: Float): Float =
+    (if (b - a == 0f) 0f else (pos - a) / (b - a)).coerceIn(0f, 1f)
 
 @Preview
 @FontScalePreviews
