@@ -52,6 +52,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.common.tooling.preview.parameterprovider.ProductPreviewParameterProvider
 import ru.zarina.zarina.ui.common.util.domain.toComposeColor
+import ru.zarina.zarina.ui.common.util.rememberFormattedPrice
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.rememberEndlessPagerState
 
@@ -150,8 +151,12 @@ fun ProductCard(
                 TextDecoration.None
             }
 
+            val originalPrice = stringResource(
+                id = R.string.price_in_rubles_string,
+                rememberFormattedPrice(product.price.originalPrice),
+            )
             Text(
-                text = stringResource(R.string.price_in_rubles, product.price.originalPrice).uppercase(),
+                text = originalPrice.uppercase(),
                 style = priceTextStyle,
                 color = originalPriceColor,
                 textDecoration = originalPriceTextDecoration,
@@ -160,8 +165,12 @@ fun ProductCard(
             )
             if (product.price.hasDiscount) {
                 Spacer(modifier = Modifier.width(8.dp))
+                val currentPrice = stringResource(
+                    id = R.string.price_in_rubles_string,
+                    rememberFormattedPrice(product.price.currentPrice),
+                )
                 Text(
-                    text = stringResource(R.string.price_in_rubles, product.price.currentPrice).uppercase(),
+                    text = currentPrice.uppercase(),
                     style = priceTextStyle,
                     color = discountColor,
                     maxLines = 1,

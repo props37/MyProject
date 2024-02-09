@@ -40,7 +40,8 @@
     <string name="back">Назад</string>
     <string name="search">Поиск</string>
     <string name="filters">Фильтры</string>
-    <string name="price_in_rubles">%1$d ₽</string>
+    <string name="price_in_rubles_decimal">%1$d ₽</string>
+    <string name="price_in_rubles_string">%1$s ₽</string>
     <string name="price_rubles">Цена, ₽</string>
     <string name="discount_percent">-%1$d%%</string>
     <string name="checkmark_checked">Выбрано</string>
