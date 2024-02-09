@@ -52,6 +52,16 @@ class ProductSubscriptionViewModel @Inject constructor(
             parcelable.toProductOffer()
         }
 
+    val contactInfoName: StateFlow<String> = savedStateHandle.getStateFlow(
+        key = KEY_CONTACT_INFO_NAME,
+        initialValue = "",
+    )
+
+    val contactInfoEmail: StateFlow<String> = savedStateHandle.getStateFlow(
+        key = KEY_CONTACT_INFO_EMAIL,
+        initialValue = "",
+    )
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val result = ProductSubscriptionScreenResult.ScreenClosed
@@ -61,5 +71,10 @@ class ProductSubscriptionViewModel @Inject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateBackward(val result: ProductSubscriptionScreenResult) : SideEffect
+    }
+
+    companion object {
+        private const val KEY_CONTACT_INFO_NAME = "contact_info_name"
+        private const val KEY_CONTACT_INFO_EMAIL = "contact_info_email"
     }
 }
