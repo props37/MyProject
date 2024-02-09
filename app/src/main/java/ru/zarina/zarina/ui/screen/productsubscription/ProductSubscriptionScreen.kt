@@ -58,6 +58,7 @@ fun ProductSubscriptionScreen(
     val productOffer by viewModel.productOffer.collectAsStateWithLifecycle()
     val name by viewModel.name.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
+    val arePoliciesAccepted by viewModel.arePoliciesAccepted.collectAsStateWithLifecycle()
 
     ScreenContent(
         product = product,
@@ -66,6 +67,8 @@ fun ProductSubscriptionScreen(
         onNameChanged = viewModel::onNameChanged,
         email = email,
         onEmailChanged = viewModel::onEmailChanged,
+        arePoliciesAccepted = arePoliciesAccepted,
+        onPoliciesAcceptedChanged = viewModel::onPoliciesAcceptedChanged,
         onBackClicked = viewModel::onBackClicked,
         onUrlClicked = viewModel::onUrlClicked,
         sideEffects = viewModel.sideEffects,
@@ -81,6 +84,8 @@ private fun ScreenContent(
     onNameChanged: (String) -> Unit,
     email: String,
     onEmailChanged: (String) -> Unit,
+    arePoliciesAccepted: Boolean,
+    onPoliciesAcceptedChanged: (Boolean) -> Unit,
     onBackClicked: () -> Unit,
     onUrlClicked: (Url) -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -188,6 +193,8 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.height(28.dp))
 
             Policies(
+                areAccepted = arePoliciesAccepted,
+                onAcceptedChanged = onPoliciesAcceptedChanged,
                 onUrlClicked = onUrlClicked,
                 modifier = Modifier
                     .fillMaxWidth()

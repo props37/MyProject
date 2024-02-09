@@ -63,6 +63,11 @@ class ProductSubscriptionViewModel @Inject constructor(
         initialValue = "",
     )
 
+    val arePoliciesAccepted: StateFlow<Boolean> = savedStateHandle.getStateFlow(
+        key = KEY_ARE_POLICIES_ACCEPTED,
+        initialValue = false,
+    )
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val result = ProductSubscriptionScreenResult.ScreenClosed
@@ -84,6 +89,10 @@ class ProductSubscriptionViewModel @Inject constructor(
         }
     }
 
+    fun onPoliciesAcceptedChanged(areAccepted: Boolean) {
+        savedStateHandle[KEY_ARE_POLICIES_ACCEPTED] = areAccepted
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateBackward(val result: ProductSubscriptionScreenResult) : SideEffect
 
@@ -93,5 +102,6 @@ class ProductSubscriptionViewModel @Inject constructor(
     companion object {
         private const val KEY_NAME = "name"
         private const val KEY_EMAIL = "email"
+        private const val KEY_ARE_POLICIES_ACCEPTED = "are_policies_accepted"
     }
 }

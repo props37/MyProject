@@ -33,6 +33,7 @@ import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
 import ru.zarina.zarina.domain.rework.product.currentPrice
+import ru.zarina.zarina.ui.common.component.ZarinaCheckbox
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
@@ -121,9 +122,29 @@ object ProductSubscriptionScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalTextApi::class)
     @Composable
     fun Policies(
+        areAccepted: Boolean,
+        onAcceptedChanged: (Boolean) -> Unit,
+        onUrlClicked: (Url) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Row(modifier = modifier) {
+            PoliciesText(
+                onUrlClicked = onUrlClicked,
+                modifier = Modifier.weight(1f),
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            ZarinaCheckbox(
+                isChecked = areAccepted,
+                onCheckedChanged = onAcceptedChanged,
+            )
+        }
+    }
+
+    @OptIn(ExperimentalTextApi::class)
+    @Composable
+    fun PoliciesText(
         onUrlClicked: (Url) -> Unit,
         modifier: Modifier = Modifier,
     ) {
