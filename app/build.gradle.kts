@@ -164,6 +164,7 @@ dependencies {
     implementation(libs.jetpack.media3.ui)
     implementation(libs.jetpack.paging.compose)
     implementation(libs.jetpack.security.cripto)
+    implementation(libs.jetpack.browser)
 
     implementation(platform(libs.jetpack.compose.bom))
     implementation(libs.jetpack.compose.ui)

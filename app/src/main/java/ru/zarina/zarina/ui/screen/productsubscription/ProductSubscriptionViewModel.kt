@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
 import ru.zarina.zarina.ui.common.base.Throttler
@@ -77,8 +78,16 @@ class ProductSubscriptionViewModel @Inject constructor(
         savedStateHandle[KEY_EMAIL] = email
     }
 
+    fun onUrlClicked(url: Url) {
+        navigationThrottler.throttle {
+            emitSideEffect(SideEffect.OpenUrl(url))
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateBackward(val result: ProductSubscriptionScreenResult) : SideEffect
+
+        data class OpenUrl(val url: Url) : SideEffect
     }
 
     companion object {

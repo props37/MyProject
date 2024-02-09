@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
@@ -38,6 +41,7 @@ import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldSize
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionScreenComponents.Policies
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionScreenComponents.ProductCard
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionViewModel.SideEffect
@@ -63,6 +67,7 @@ fun ProductSubscriptionScreen(
         email = email,
         onEmailChanged = viewModel::onEmailChanged,
         onBackClicked = viewModel::onBackClicked,
+        onUrlClicked = viewModel::onUrlClicked,
         sideEffects = viewModel.sideEffects,
         navigateBackward = navigateBackward,
     )
@@ -77,6 +82,7 @@ private fun ScreenContent(
     email: String,
     onEmailChanged: (String) -> Unit,
     onBackClicked: () -> Unit,
+    onUrlClicked: (Url) -> Unit,
     sideEffects: Flow<SideEffect>,
     navigateBackward: (ProductSubscriptionScreenResult) -> Unit,
 ) {
@@ -100,7 +106,7 @@ private fun ScreenContent(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        Column {
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(12.dp))
             ProductCard(
                 product = product,
@@ -175,6 +181,14 @@ private fun ScreenContent(
                         imeAction = ImeAction.Done,
                     )
                 },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
+            Spacer(modifier = Modifier.height(28.dp))
+
+            Policies(
+                onUrlClicked = onUrlClicked,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),

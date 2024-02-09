@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,10 +21,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.UrlAnnotation
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.common.MediaType
+import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
 import ru.zarina.zarina.domain.rework.product.currentPrice
@@ -33,6 +39,8 @@ import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.common.util.rememberFormattedPrice
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.addStyles
+import ru.zarina.zarina.util.compose.addUrlAnnotations
 import ru.zarina.zarina.util.library.shimmer.shimmerSwitchable
 import ru.zarina.zarina.utils.kotlin.capitalize
 
@@ -111,6 +119,77 @@ object ProductSubscriptionScreenComponents {
                 modifier = Modifier.align(Alignment.BottomEnd),
             )
         }
+    }
+
+    @OptIn(ExperimentalTextApi::class)
+    @Composable
+    fun Policies(
+        onUrlClicked: (Url) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        val baseTextStyle = UiKitTheme.typographyReworked.footnote.light.copy(
+            color = UiKitTheme.colorsReworked.text.general.regular.default,
+        )
+        val boldTextStyle = UiKitTheme.typographyReworked.footnote.bold.copy(
+            color = UiKitTheme.colorsReworked.text.general.regular.default,
+        )
+
+        val baseText = stringResource(R.string.product_subscription_policies)
+        val privacyPolicyText = stringResource(R.string.product_subscription_policies_privacy)
+        val onlineStorePolicyText =
+            stringResource(R.string.product_subscription_policies_online_store)
+        val personalDataPolicyText =
+            stringResource(R.string.product_subscription_policies_personal_data)
+
+        val privacyPolicyUrl = stringResource(R.string.product_subscription_policies_privacy_url)
+        val onlineStorePolicyUrl =
+            stringResource(R.string.product_subscription_policies_online_store_url)
+        val personalDataPolicyUrl =
+            stringResource(R.string.product_subscription_policies_personal_data_url)
+
+        val text = remember(
+            baseTextStyle,
+            boldTextStyle,
+            baseText,
+            privacyPolicyText,
+            onlineStorePolicyText,
+            personalDataPolicyText,
+            privacyPolicyUrl,
+            onlineStorePolicyUrl,
+            personalDataPolicyUrl,
+        ) {
+            val clickableTextStyle = boldTextStyle.toSpanStyle()
+            val substringToStyles = mapOf(
+                privacyPolicyText to listOf(clickableTextStyle),
+                onlineStorePolicyText to listOf(clickableTextStyle),
+                personalDataPolicyText to listOf(clickableTextStyle),
+            )
+            val substringToUrlAnnotations = mapOf(
+                privacyPolicyText to listOf(UrlAnnotation(privacyPolicyUrl)),
+                onlineStorePolicyText to listOf(UrlAnnotation(onlineStorePolicyUrl)),
+                personalDataPolicyText to listOf(UrlAnnotation(personalDataPolicyUrl)),
+            )
+
+            buildAnnotatedString {
+                withStyle(baseTextStyle.toSpanStyle()) {
+                    append(baseText)
+                }
+                addStyles(substringToStyles)
+                addUrlAnnotations(substringToUrlAnnotations)
+            }
+        }
+
+        ClickableText(
+            text = text,
+            onClick = { offset ->
+                val annotation = text.getUrlAnnotations(offset, offset).firstOrNull()
+                if (annotation != null) {
+                    val url = Url(annotation.item.url)
+                    onUrlClicked(url)
+                }
+            },
+            modifier = modifier,
+        )
     }
 
     // TODO: [High] Refactor to a single annotated string?
