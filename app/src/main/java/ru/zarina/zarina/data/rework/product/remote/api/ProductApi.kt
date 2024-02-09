@@ -9,8 +9,10 @@ import kotlinx.serialization.Transient
 import ru.zarina.zarina.data.rework.common.remote.api.dto.PriceFilterDto
 import ru.zarina.zarina.data.rework.common.remote.api.dto.SortingDto
 import ru.zarina.zarina.data.rework.product.remote.api.dto.ProductsDto
+import ru.zarina.zarina.data.rework.product.remote.api.dto.SubscribeToProductBodyDto
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.rework.common.Barcode
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
@@ -53,6 +55,21 @@ class ProductApi @Inject constructor(
         }.body()
     }
 
+    suspend fun subscribeToProduct(
+        barcode: Barcode,
+        name: String,
+        email: String,
+    ) {
+        val body = SubscribeToProductBodyDto(
+            barcodes = listOf(barcode.value),
+            email = email,
+            name = name,
+        )
+        httpClient.post("/api/subscriptions/subscribe/") {
+            setJsonBody(body)
+        }
+    }
+
     @Serializable
     private data class GetProductsBody(
         @SerialName("category_id")
@@ -70,9 +87,11 @@ class ProductApi @Inject constructor(
         @Transient
         val returnProducts: Boolean = true,
     ) {
+        @Suppress("unused")
         @SerialName("count")
         val itemCount: Boolean? = if (!returnProducts) true else null
 
+        @Suppress("unused")
         @SerialName("filterRanges")
         val filterRanges: Boolean? = if (!returnProducts) true else null
     }
