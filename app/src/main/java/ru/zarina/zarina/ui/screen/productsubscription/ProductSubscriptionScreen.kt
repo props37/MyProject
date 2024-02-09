@@ -43,14 +43,14 @@ fun ProductSubscriptionScreen(
 ) {
     val product by viewModel.product.collectAsStateWithLifecycle()
     val productOffer by viewModel.productOffer.collectAsStateWithLifecycle()
-    val contactInfoName by viewModel.contactInfoName.collectAsStateWithLifecycle()
-    val contactInfoEmail by viewModel.contactInfoEmail.collectAsStateWithLifecycle()
+    val name by viewModel.name.collectAsStateWithLifecycle()
+    val email by viewModel.email.collectAsStateWithLifecycle()
 
     ScreenContent(
         product = product,
         productOffer = productOffer,
-        contactInfoName = contactInfoName,
-        contactInfoEmail = contactInfoEmail,
+        name = name,
+        email = email,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navigateBackward = navigateBackward,
@@ -61,8 +61,8 @@ fun ProductSubscriptionScreen(
 private fun ScreenContent(
     product: Product,
     productOffer: ProductOffer,
-    contactInfoName: String,
-    contactInfoEmail: String,
+    name: String,
+    email: String,
     onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigateBackward: (ProductSubscriptionScreenResult) -> Unit,
@@ -104,7 +104,7 @@ private fun ScreenContent(
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
             ZarinaTextField(
-                value = contactInfoName,
+                value = name,
                 onValueChanged = { /* TODO */ },
                 label = { Text(text = stringResource(R.string.how_should_i_contact_you)) },
                 placeholder = { Text(text = stringResource(R.string.first_name)) },
@@ -115,7 +115,7 @@ private fun ScreenContent(
             )
             Spacer(modifier = Modifier.height(20.dp))
             ZarinaTextField(
-                value = contactInfoEmail,
+                value = email,
                 onValueChanged = { /* TODO */ },
                 label = { Text(text = stringResource(R.string.email)) },
                 placeholder = { Text(text = stringResource(R.string.email_address)) },

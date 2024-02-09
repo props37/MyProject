@@ -52,13 +52,13 @@ class ProductSubscriptionViewModel @Inject constructor(
             parcelable.toProductOffer()
         }
 
-    val contactInfoName: StateFlow<String> = savedStateHandle.getStateFlow(
-        key = KEY_CONTACT_INFO_NAME,
+    val name: StateFlow<String> = savedStateHandle.getStateFlow(
+        key = KEY_NAME,
         initialValue = "",
     )
 
-    val contactInfoEmail: StateFlow<String> = savedStateHandle.getStateFlow(
-        key = KEY_CONTACT_INFO_EMAIL,
+    val email: StateFlow<String> = savedStateHandle.getStateFlow(
+        key = KEY_EMAIL,
         initialValue = "",
     )
 
@@ -74,7 +74,7 @@ class ProductSubscriptionViewModel @Inject constructor(
     }
 
     companion object {
-        private const val KEY_CONTACT_INFO_NAME = "contact_info_name"
-        private const val KEY_CONTACT_INFO_EMAIL = "contact_info_email"
+        private const val KEY_NAME = "name"
+        private const val KEY_EMAIL = "email"
     }
 }
