@@ -93,6 +93,10 @@ class ProductSubscriptionViewModel @Inject constructor(
         savedStateHandle[KEY_ARE_POLICIES_ACCEPTED] = areAccepted
     }
 
+    fun onSubscribeClicked() {
+        // TODO: [High] Implement
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateBackward(val result: ProductSubscriptionScreenResult) : SideEffect
 

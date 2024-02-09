@@ -35,6 +35,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
+import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldSize
@@ -61,6 +62,7 @@ fun ProductSubscriptionScreen(
     val arePoliciesAccepted by viewModel.arePoliciesAccepted.collectAsStateWithLifecycle()
 
     ScreenContent(
+        onBackClicked = viewModel::onBackClicked,
         product = product,
         productOffer = productOffer,
         name = name,
@@ -68,9 +70,9 @@ fun ProductSubscriptionScreen(
         email = email,
         onEmailChanged = viewModel::onEmailChanged,
         arePoliciesAccepted = arePoliciesAccepted,
-        onPoliciesAcceptedChanged = viewModel::onPoliciesAcceptedChanged,
-        onBackClicked = viewModel::onBackClicked,
         onUrlClicked = viewModel::onUrlClicked,
+        onPoliciesAcceptedChanged = viewModel::onPoliciesAcceptedChanged,
+        onSubscribeClicked = viewModel::onSubscribeClicked,
         sideEffects = viewModel.sideEffects,
         navigateBackward = navigateBackward,
     )
@@ -78,6 +80,7 @@ fun ProductSubscriptionScreen(
 
 @Composable
 private fun ScreenContent(
+    onBackClicked: () -> Unit,
     product: Product,
     productOffer: ProductOffer,
     name: String,
@@ -85,9 +88,9 @@ private fun ScreenContent(
     email: String,
     onEmailChanged: (String) -> Unit,
     arePoliciesAccepted: Boolean,
-    onPoliciesAcceptedChanged: (Boolean) -> Unit,
-    onBackClicked: () -> Unit,
     onUrlClicked: (Url) -> Unit,
+    onPoliciesAcceptedChanged: (Boolean) -> Unit,
+    onSubscribeClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigateBackward: (ProductSubscriptionScreenResult) -> Unit,
 ) {
@@ -200,6 +203,17 @@ private fun ScreenContent(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
             )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            ZarinaButton(
+                onClick = onSubscribeClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            ) {
+                Text(text = stringResource(R.string.subscribe).uppercase())
+            }
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
