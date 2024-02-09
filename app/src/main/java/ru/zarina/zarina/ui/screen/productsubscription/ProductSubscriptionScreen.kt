@@ -103,6 +103,7 @@ private fun ScreenContent(
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
+            Spacer(modifier = Modifier.height(20.dp))
             ZarinaTextField(
                 value = name,
                 onValueChanged = { /* TODO */ },
