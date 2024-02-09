@@ -3,11 +3,9 @@ package ru.zarina.zarina.data.rework.product.remote.api
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.post
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
-import ru.zarina.zarina.data.rework.common.remote.api.dto.PriceFilterDto
 import ru.zarina.zarina.data.rework.common.remote.api.dto.SortingDto
+import ru.zarina.zarina.data.rework.product.remote.api.dto.FiltersBodyDto
+import ru.zarina.zarina.data.rework.product.remote.api.dto.GetProductsBodyDto
 import ru.zarina.zarina.data.rework.product.remote.api.dto.ProductsDto
 import ru.zarina.zarina.data.rework.product.remote.api.dto.SubscribeToProductBodyDto
 import ru.zarina.zarina.di.rework.Qualifiers
@@ -28,7 +26,7 @@ class ProductApi @Inject constructor(
         sorting: Sorting,
         page: Int,
     ): ProductsDto {
-        val body = GetProductsBody(
+        val body = GetProductsBodyDto(
             categoryId = categoryId.value,
             filters = filters?.let { FiltersBodyDto.from(it) },
             sorting = SortingDto.from(sorting),
@@ -43,7 +41,7 @@ class ProductApi @Inject constructor(
         categoryId: Category.Id,
         filters: DomainFilters?,
     ): ProductsDto {
-        val body = GetProductsBody(
+        val body = GetProductsBodyDto(
             categoryId = categoryId.value,
             filters = filters?.let { FiltersBodyDto.from(it) },
             sorting = SortingDto.from(Sorting.getDefault()),
@@ -67,91 +65,6 @@ class ProductApi @Inject constructor(
         )
         httpClient.post("/api/subscriptions/subscribe/") {
             setJsonBody(body)
-        }
-    }
-
-    @Serializable
-    private data class GetProductsBody(
-        @SerialName("category_id")
-        val categoryId: Long,
-
-        @SerialName("filters")
-        val filters: FiltersBodyDto?,
-
-        @SerialName("sort")
-        val sorting: SortingDto,
-
-        @SerialName("page")
-        val page: Int,
-
-        @Transient
-        val returnProducts: Boolean = true,
-    ) {
-        @Suppress("unused")
-        @SerialName("count")
-        val itemCount: Boolean? = if (!returnProducts) true else null
-
-        @Suppress("unused")
-        @SerialName("filterRanges")
-        val filterRanges: Boolean? = if (!returnProducts) true else null
-    }
-
-    @Serializable
-    private data class FiltersBodyDto(
-        @SerialName("price")
-        val price: PriceFilterDto? = null,
-
-        @SerialName("materials")
-        val materials: List<String>? = null,
-
-        @SerialName("sizes")
-        val sizes: List<String>? = null,
-
-        @SerialName("colors")
-        val colors: List<String>? = null,
-
-        @SerialName("available_for_shipping")
-        val availableForDelivery: Boolean? = null,
-
-        @SerialName("available_for_store_pickup")
-        val availableForStorePickup: StorePickupAvailability? = null,
-    ) {
-        @Serializable
-        data class StorePickupAvailability(
-            @SerialName("applied")
-            val isApplied: Boolean,
-        )
-
-        companion object {
-            fun from(filters: DomainFilters): FiltersBodyDto? {
-                return if (!filters.isEmptyIgnoringSorting) {
-                    val materials = filters.materials?.let { filter ->
-                        if (!filter.isEmpty) filter.selectedItems.map { it.id.value } else null
-                    }
-                    val sizes = filters.sizes?.let { filter ->
-                        if (!filter.isEmpty) filter.selectedItems.map { it.id.value } else null
-                    }
-                    val colors = filters.colors?.let { filter ->
-                        if (!filter.isEmpty) filter.selectedItems.map { it.id.value } else null
-                    }
-                    val availableForDelivery = filters.deliveryAvailability?.let { filter ->
-                        if (filter.isEnabled) true else null
-                    }
-                    val availableForStorePickup = filters.storePickupAvailability?.let { filter ->
-                        if (filter.isEnabled) StorePickupAvailability(isApplied = true) else null
-                    }
-                    FiltersBodyDto(
-                        price = filters.price?.let { PriceFilterDto.from(it) },
-                        materials = materials,
-                        sizes = sizes,
-                        colors = colors,
-                        availableForDelivery = availableForDelivery,
-                        availableForStorePickup = availableForStorePickup,
-                    )
-                } else {
-                    null
-                }
-            }
         }
     }
 }
