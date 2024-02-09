@@ -53,11 +53,7 @@ class ProductApi @Inject constructor(
         }.body()
     }
 
-    suspend fun subscribeToProduct(
-        barcode: Barcode,
-        firstName: String,
-        email: String,
-    ) {
+    suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: String) {
         val body = SubscribeToProductBodyDto(
             barcodes = listOf(barcode.value),
             email = email,
