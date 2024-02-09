@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductSubscriptionViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val interactor: ProductSubscriptionInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
@@ -67,6 +67,14 @@ class ProductSubscriptionViewModel @Inject constructor(
             val result = ProductSubscriptionScreenResult.ScreenClosed
             emitSideEffect(SideEffect.NavigateBackward(result))
         }
+    }
+
+    fun onNameChanged(name: String) {
+        savedStateHandle[KEY_NAME] = name
+    }
+
+    fun onEmailChanged(email: String) {
+        savedStateHandle[KEY_EMAIL] = email
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

@@ -63,7 +63,7 @@ object ProductSubscriptionScreenComponents {
         )
     }
 
-    // TODO: [Low] Extract?
+    // TODO: [Low] Extract and rename?
     @Composable
     fun ProductCard(
         product: Product,

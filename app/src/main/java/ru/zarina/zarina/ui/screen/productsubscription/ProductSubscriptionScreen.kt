@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screen.productsubscription
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,11 +14,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,6 +33,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
+import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldSize
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -35,6 +42,8 @@ import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionScreenC
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionViewModel.SideEffect
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 
 @Composable
 fun ProductSubscriptionScreen(
@@ -50,7 +59,9 @@ fun ProductSubscriptionScreen(
         product = product,
         productOffer = productOffer,
         name = name,
+        onNameChanged = viewModel::onNameChanged,
         email = email,
+        onEmailChanged = viewModel::onEmailChanged,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navigateBackward = navigateBackward,
@@ -62,7 +73,9 @@ private fun ScreenContent(
     product: Product,
     productOffer: ProductOffer,
     name: String,
+    onNameChanged: (String) -> Unit,
     email: String,
+    onEmailChanged: (String) -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigateBackward: (ProductSubscriptionScreenResult) -> Unit,
@@ -97,6 +110,7 @@ private fun ScreenContent(
                     .padding(horizontal = 16.dp),
             )
             Spacer(modifier = Modifier.height(36.dp))
+
             Text(
                 text = stringResource(R.string.product_subscription_description),
                 style = UiKitTheme.typographyReworked.secondary.light,
@@ -104,23 +118,63 @@ private fun ScreenContent(
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
             Spacer(modifier = Modifier.height(20.dp))
+
             ZarinaTextField(
                 value = name,
-                onValueChanged = { /* TODO */ },
+                onValueChanged = onNameChanged,
+                size = ZarinaTextFieldSize.Small,
                 label = { Text(text = stringResource(R.string.how_should_i_contact_you)) },
                 placeholder = { Text(text = stringResource(R.string.first_name)) },
-                size = ZarinaTextFieldSize.Small,
+                innerTrailingContent = {
+                    AnimatedVisibility(
+                        visible = name.isNotBlank(),
+                        enter = remember { AnimatedContentDefaultEnterTransition },
+                        exit = remember { AnimatedContentDefaultExitTransition },
+                    ) {
+                        ZarinaTextFieldDefaults.ClearButton(
+                            onClick = { onNameChanged("") },
+                            iconSize = 16.dp,
+                        )
+                    }
+                },
+                singleLine = true,
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Words,
+                        imeAction = ImeAction.Next,
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
             )
             Spacer(modifier = Modifier.height(20.dp))
+
             ZarinaTextField(
                 value = email,
-                onValueChanged = { /* TODO */ },
+                onValueChanged = onEmailChanged,
+                size = ZarinaTextFieldSize.Small,
                 label = { Text(text = stringResource(R.string.email)) },
                 placeholder = { Text(text = stringResource(R.string.email_address)) },
-                size = ZarinaTextFieldSize.Small,
+                innerTrailingContent = {
+                    AnimatedVisibility(
+                        visible = email.isNotBlank(),
+                        enter = remember { AnimatedContentDefaultEnterTransition },
+                        exit = remember { AnimatedContentDefaultExitTransition },
+                    ) {
+                        ZarinaTextFieldDefaults.ClearButton(
+                            onClick = { onEmailChanged("") },
+                            iconSize = 16.dp,
+                        )
+                    }
+                },
+                singleLine = true,
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Done,
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
