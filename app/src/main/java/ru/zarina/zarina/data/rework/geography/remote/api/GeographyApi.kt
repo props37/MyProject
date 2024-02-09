@@ -6,9 +6,8 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.put
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.rework.geography.remote.api.dto.CityDto
+import ru.zarina.zarina.data.rework.geography.remote.api.dto.UpdateUserCityBodyDto
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.domain.rework.location.Location
@@ -33,15 +32,9 @@ class GeographyApi @Inject constructor(
     }
 
     suspend fun updateUserCity(city: City) {
-        val body = UpdateUserCityBody(city.kladrId.value)
+        val body = UpdateUserCityBodyDto(city.kladrId.value)
         httpClient.put("/api/location/city") {
             setJsonBody(body)
         }
     }
-    
-    @Serializable
-    private data class UpdateUserCityBody(
-        @SerialName("kladr_id")
-        val kladrId: String,
-    )
 }
