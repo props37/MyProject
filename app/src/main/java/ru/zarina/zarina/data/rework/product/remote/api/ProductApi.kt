@@ -55,13 +55,13 @@ class ProductApi @Inject constructor(
 
     suspend fun subscribeToProduct(
         barcode: Barcode,
-        name: String,
+        firstName: String,
         email: String,
     ) {
         val body = SubscribeToProductBodyDto(
             barcodes = listOf(barcode.value),
             email = email,
-            name = name,
+            firstName = firstName,
         )
         httpClient.post("/api/subscriptions/subscribe/") {
             setJsonBody(body)

@@ -12,5 +12,5 @@ data class SubscribeToProductBodyDto(
     val email: String,
 
     @SerialName("first_name")
-    val name: String,
+    val firstName: String,
 )
