@@ -107,7 +107,7 @@ private fun ScreenContent(
                 value = contactInfoName,
                 onValueChanged = { /* TODO */ },
                 label = { Text(text = stringResource(R.string.how_should_i_contact_you)) },
-                placeholder = { Text(text = stringResource(R.string.first_and_last_name)) },
+                placeholder = { Text(text = stringResource(R.string.first_name)) },
                 size = ZarinaTextFieldSize.Small,
                 modifier = Modifier
                     .fillMaxWidth()
