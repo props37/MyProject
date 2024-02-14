@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
 import com.valentinilk.shimmer.Shimmer
@@ -71,10 +72,11 @@ fun MediaHorizontalPager(
                 visible = !isMediaDisplayed,
                 enter = placeholderEnterTransition,
                 exit = placeholderExitTransition,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.matchParentSize(),
             ) {
                 Skeleton(
                     shimmer = shimmer,
+                    shape = RectangleShape,
                     modifier = Modifier
                         .fillMaxSize()
                         .background(UiKitTheme.colorsReworked.background.general.regular.default),
