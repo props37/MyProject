@@ -4,22 +4,43 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.data.rework.product.ProductRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.common.Barcode
+import ru.zarina.zarina.domain.rework.common.exception.ValidationException
 import ru.zarina.zarina.usecase.base.UseCase
+import ru.zarina.zarina.usecase.rework.user.ValidateEmailUseCase
+import ru.zarina.zarina.usecase.rework.user.ValidateFirstNameUseCase
 import javax.inject.Inject
 
 class SubscribeToProductUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val productRepository: ProductRepository,
+    private val validateFirstNameUseCase: ValidateFirstNameUseCase,
+    private val validateEmailUseCase: ValidateEmailUseCase,
 ) : UseCase<SubscribeToProductUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
-        TODO("Not yet implemented")
+        val barcode = params.barcode
+        val email = params.email
+
+        val firstName = params.name.split(" ").firstOrNull().orEmpty()
+
+        val firstNameValidationException =
+            validateFirstNameUseCase(ValidateFirstNameUseCase.Params(firstName)).exceptionOrNull()
+        val emailValidationException =
+            validateEmailUseCase(ValidateEmailUseCase.Params(email)).exceptionOrNull()
+
+        val validationExceptions =
+            listOfNotNull(firstNameValidationException, emailValidationException)
+        if (validationExceptions.isNotEmpty()) {
+            throw ValidationException(exceptions = validationExceptions)
+        }
+
+        productRepository.subscribeToProduct(barcode, firstName, email)
     }
 
     data class Params(
         val barcode: Barcode,
-        val firstName: String,
+        val name: String,
         val email: String,
     )
 }
