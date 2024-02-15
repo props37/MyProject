@@ -60,6 +60,8 @@ fun ProductSubscriptionScreen(
     val name by viewModel.name.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
     val arePoliciesAccepted by viewModel.arePoliciesAccepted.collectAsStateWithLifecycle()
+    val isSubscribeButtonEnabled by viewModel.isSubscribeButtonEnabled.collectAsStateWithLifecycle()
+    val isSubscribeButtonLoading by viewModel.isSubscribeButtonLoading.collectAsStateWithLifecycle()
 
     ScreenContent(
         onBackClicked = viewModel::onBackClicked,
@@ -70,6 +72,8 @@ fun ProductSubscriptionScreen(
         email = email,
         onEmailChanged = viewModel::onEmailChanged,
         arePoliciesAccepted = arePoliciesAccepted,
+        isSubscribeButtonEnabled = isSubscribeButtonEnabled,
+        isSubscribeButtonLoading = isSubscribeButtonLoading,
         onUrlClicked = viewModel::onUrlClicked,
         onPoliciesAcceptedChanged = viewModel::onPoliciesAcceptedChanged,
         onSubscribeClicked = viewModel::onSubscribeClicked,
@@ -88,6 +92,8 @@ private fun ScreenContent(
     email: String,
     onEmailChanged: (String) -> Unit,
     arePoliciesAccepted: Boolean,
+    isSubscribeButtonEnabled: Boolean,
+    isSubscribeButtonLoading: Boolean,
     onUrlClicked: (Url) -> Unit,
     onPoliciesAcceptedChanged: (Boolean) -> Unit,
     onSubscribeClicked: () -> Unit,
@@ -207,6 +213,8 @@ private fun ScreenContent(
 
             ZarinaButton(
                 onClick = onSubscribeClicked,
+                isEnabled = isSubscribeButtonEnabled,
+                isLoading = isSubscribeButtonLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),

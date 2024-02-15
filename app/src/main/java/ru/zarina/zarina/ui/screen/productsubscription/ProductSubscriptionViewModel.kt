@@ -4,18 +4,25 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
 import ru.zarina.zarina.ui.common.base.Throttler
+import ru.zarina.zarina.ui.common.base.operation.OperationKey
+import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionViewModel.SideEffect
+import ru.zarina.zarina.usecase.rework.product.SubscribeToProductUseCase
+import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
@@ -26,6 +33,10 @@ class ProductSubscriptionViewModel @Inject constructor(
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val operationTracker = OperationTracker()
+
+    private var subscribeToProductJob: Job? = null
 
     val product: StateFlow<Product> = savedStateHandle
         .getStateFlow<ProductParcelable?>(
@@ -68,6 +79,16 @@ class ProductSubscriptionViewModel @Inject constructor(
         initialValue = false,
     )
 
+    val isSubscribeButtonEnabled: StateFlow<Boolean> = arePoliciesAccepted
+
+    val isSubscribeButtonLoading: StateFlow<Boolean> = operationTracker
+        .isOperationOngoing(Operation.SUBSCRIBE_TO_PRODUCT)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = false,
+        )
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val result = ProductSubscriptionScreenResult.ScreenClosed
@@ -94,7 +115,17 @@ class ProductSubscriptionViewModel @Inject constructor(
     }
 
     fun onSubscribeClicked() {
-        // TODO: [High] Implement
+        if (subscribeToProductJob?.isActive == true) return
+        subscribeToProductJob = viewModelScope.launch {
+            operationTracker.track(Operation.SUBSCRIBE_TO_PRODUCT) {
+                val params = SubscribeToProductUseCase.Params(
+                    barcode = productOffer.value.barcode,
+                    name = name.value,
+                    email = email.value,
+                )
+                interactor.subscribeToProduct(params)
+            }
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -102,6 +133,8 @@ class ProductSubscriptionViewModel @Inject constructor(
 
         data class OpenUrl(val url: Url) : SideEffect
     }
+
+    private enum class Operation : OperationKey { SUBSCRIBE_TO_PRODUCT }
 
     companion object {
         private const val KEY_NAME = "name"
