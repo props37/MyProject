@@ -10,7 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.parcelize.Parcelize
 import ru.zarina.zarina.domain.rework.content.HomeContent
@@ -47,13 +48,13 @@ class HomeViewModel @Inject constructor(
         initialValue = GenderTab.WOMEN,
     )
 
-    private val contentFetchRequests = MutableSharedFlow<Unit>(replay = 1)
-        .also { it.tryEmit(Unit) }
+    private val contentFetchRequests = Channel<Unit>(Channel.CONFLATED)
 
     private val isFetchingContent = MutableStateFlow(false)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val contentResult: StateFlow<Result<HomeContent>?> = contentFetchRequests
+        .receiveAsFlow()
         .flatMapLatest { interactor.getHomeContentFlow() }
         .onEach { isFetchingContent.value = false }
         .stateIn(
@@ -88,6 +89,10 @@ class HomeViewModel @Inject constructor(
         initialValue = ContentState.Loading,
     )
 
+    init {
+        contentFetchRequests.trySend(Unit)
+    }
+
     fun onGenderTabClicked(tab: GenderTab) {
         savedStateHandle[KEY_CURRENT_GENDER_TAB] = tab
     }
@@ -100,7 +105,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onContentErrorRefreshClicked() {
-        contentFetchRequests.tryEmit(Unit)
+        contentFetchRequests.trySend(Unit)
         isFetchingContent.value = true
     }
 

@@ -55,7 +55,7 @@ class CitySelectorViewModel @Inject constructor(
     val selectedCity: StateFlow<City?> = savedStateHandle
         .getStateFlow(
             key = KEY_SELECTED_CITY,
-            initialValue = initialCity.value?.let { CityParcelable.fromCity(it) },
+            initialValue = initialCity.value?.let { CityParcelable.from(it) },
         )
         .mapState(
             scope = viewModelScope,
@@ -104,7 +104,7 @@ class CitySelectorViewModel @Inject constructor(
     }
 
     fun onCityClicked(city: City) {
-        val cityParcelable = CityParcelable.fromCity(city)
+        val cityParcelable = CityParcelable.from(city)
         savedStateHandle[KEY_SELECTED_CITY] = cityParcelable
         if (city.kladrId != initialCity.value?.kladrId) {
             hasSelectedCityChanged.value = true

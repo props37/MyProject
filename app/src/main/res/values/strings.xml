@@ -41,7 +41,8 @@
     <string name="back">Назад</string>
     <string name="search">Поиск</string>
     <string name="filters">Фильтры</string>
-    <string name="price_in_rubles">%1$d ₽</string>
+    <string name="price_in_rubles_decimal">%1$d ₽</string>
+    <string name="price_in_rubles_string">%1$s ₽</string>
     <string name="price_rubles">Цена, ₽</string>
     <string name="discount_percent">-%1$d%%</string>
     <string name="checkmark_checked">Выбрано</string>
@@ -66,6 +67,21 @@
     <string name="products_not_found">Товары не найдены</string>
     <string name="could_not_find_products">Не нашли товаров</string>
     <string name="try_select_another_category">Попробуй выбрать другую категорию</string>
+    <string name="subscribe_to_product">Подписаться на товар</string>
+    <string name="size_table">Таблица размеров</string>
+    <string name="choose_size">Выбери размер</string>
+    <string name="available_height_cm">Доступно %1$s см</string>
+    <string name="subscribe">Подписаться</string>
+    <string name="choose_height">Выбери рост</string>
+    <string name="height_cm">%1$s см</string>
+    <string name="product_subscription">Подписка на товар</string>
+    <string name="email">Электронная почта</string>
+    <string name="email_address">Адрес электронной почты</string>
+    <string name="how_should_i_contact_you">Как к тебе обращаться?</string>
+    <string name="first_and_last_name">Имя и фамилия</string>
+    <string name="first_name">Имя</string>
+    <string name="incorrect_data">Некорректные данные</string>
+    <string name="product_subscription_completed">Подписка на товар оформлена</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -76,6 +92,15 @@
 
     <string name="default_city_dialog_title">Мы определили твой город</string>
     <string name="default_city_dialog_body">Текущая геолокация: %1$s. Ты можешь изменить геолокацию в любой момент в настройках Профиля.</string>
+    
+    <string name="product_subscription_description">Оставь контактные данные, и мы сообщим, когда товар появится в продаже</string>
+    <string name="product_subscription_policies">Я ознакомлен(а) с политикой конфиденциальности и правилами работы интернет-магазина. Также подтверждаю согласие на обработку персональных данных</string>
+    <string name="product_subscription_policies_privacy">политикой конфиденциальности</string>
+    <string name="product_subscription_policies_online_store">правилами работы интернет-магазина</string>
+    <string name="product_subscription_policies_personal_data">обработку персональных данных</string>
+    <string name="product_subscription_policies_privacy_url" translatable="false">https://google.com</string>
+    <string name="product_subscription_policies_online_store_url" translatable="false">https://google.com</string>
+    <string name="product_subscription_policies_personal_data_url" translatable="false">https://google.com</string>
 
     <plurals name="show_products">
         <item quantity="zero">Показать %1$d товаров</item>
@@ -135,7 +160,6 @@
     <string name="surname">Фамилия</string>
     <string name="name">Имя</string>
     <string name="phone">Телефон</string>
-    <string name="email">E-mail</string>
     <string name="order_information">Информация о заказе</string>
     <string name="shop">Магазин</string>
     <string name="reservation_period">Срок резерва</string>
@@ -152,7 +176,6 @@
     <string name="reservation_is_successful">Резерв в магазине оформлен</string>
     <string name="reservation_confirmation_will_be_sent_to_email_template">На почту %1$s придет письмо, с подтверждением резерва. Ожидайте смс о готовности заказа</string>
     <string name="continue_shopping">Продолжить покупки</string>
-    <string name="subscribe">Подписаться</string>
     <string name="subscription_to_product">Подписка на товар</string>
     <string name="leave_your_contacts">Оставьте контактные данные и мы сообщим, когда товар появится в продаже</string>
     <string name="acknowledgement_subscription_template">Подтверждаю согласие с %1$s, %2$s, а также даю согласие %3$s</string>

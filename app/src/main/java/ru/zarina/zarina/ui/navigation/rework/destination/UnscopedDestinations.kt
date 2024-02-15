@@ -76,7 +76,7 @@ fun NavGraphBuilder.citySelectorBottomSheetScreen(navController: NavHostControll
                     }
 
                     is CitySelectorScreenResult.CitySelected -> {
-                        val cityParcelable = CityParcelable.fromCity(result.city)
+                        val cityParcelable = CityParcelable.from(result.city)
                         val result = UnscopedDestinations.CitySelector.Result(cityParcelable)
                         navController.previousBackStackEntry?.savedStateHandle
                             ?.set(UnscopedDestinations.CitySelector.RESULT_KEY, result)

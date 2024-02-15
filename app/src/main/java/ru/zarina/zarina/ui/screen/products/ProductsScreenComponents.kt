@@ -252,6 +252,7 @@ object ProductsScreenComponents {
     @Composable
     fun Products(
         productPagingDataFlow: Flow<PagingData<Product>>,
+        productCardActions: ProductCardActions,
         onRefreshProducts: () -> Unit,
         onProductsErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
@@ -324,6 +325,7 @@ object ProductsScreenComponents {
                             ProductGrid(
                                 productPagingItems = productPagingItems,
                                 gridState = gridState,
+                                productCardActions = productCardActions,
                                 modifier = Modifier
                                     .matchParentSize()
                                     .pullRefresh(pullRefreshState),
@@ -391,6 +393,7 @@ object ProductsScreenComponents {
     private fun ProductGrid(
         productPagingItems: LazyPagingItems<Product>,
         gridState: LazyGridState,
+        productCardActions: ProductCardActions,
         modifier: Modifier = Modifier,
     ) {
         val placeholderShimmer = rememberSkeletonShimmer()
@@ -416,9 +419,12 @@ object ProductsScreenComponents {
                     if (product != null) {
                         ProductCard(
                             product = product,
-                            onClick = { /*TODO*/ },
-                            onAddToFavoritesClicked = { /*TODO*/ },
-                            onAddToCartClicked = { /*TODO*/ },
+                            onClick = { productCardActions.onProductClicked(product) },
+                            onAddToFavoritesClicked = {
+                                productCardActions.onAddToFavoritesClicked(product)
+                            },
+                            onAddToCartClicked = { productCardActions.onAddToCartClicked(product) },
+                            onSubscribeClicked = { productCardActions.onSubscribeClicked(product) },
                             shimmer = placeholderShimmer,
                             modifier = itemModifier,
                         )
@@ -578,6 +584,34 @@ object ProductsScreenComponents {
             var result = onBackClicked.hashCode()
             result = 31 * result + onSearchClicked.hashCode()
             result = 31 * result + onFiltersClicked.hashCode()
+            return result
+        }
+    }
+
+    @Stable
+    class ProductCardActions(
+        val onProductClicked: (Product) -> Unit,
+        val onAddToFavoritesClicked: (Product) -> Unit,
+        val onAddToCartClicked: (Product) -> Unit,
+        val onSubscribeClicked: (Product) -> Unit,
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as ProductCardActions
+
+            if (onProductClicked != other.onProductClicked) return false
+            if (onAddToFavoritesClicked != other.onAddToFavoritesClicked) return false
+            if (onAddToCartClicked != other.onAddToCartClicked) return false
+            return onSubscribeClicked == other.onSubscribeClicked
+        }
+
+        override fun hashCode(): Int {
+            var result = onProductClicked.hashCode()
+            result = 31 * result + onAddToFavoritesClicked.hashCode()
+            result = 31 * result + onAddToCartClicked.hashCode()
+            result = 31 * result + onSubscribeClicked.hashCode()
             return result
         }
     }

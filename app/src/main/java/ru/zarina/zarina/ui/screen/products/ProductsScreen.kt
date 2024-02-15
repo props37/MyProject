@@ -25,6 +25,7 @@ import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.ProductCardActions
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.Products
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.Tags
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBar
@@ -39,9 +40,9 @@ fun ProductsScreen(
     viewModel: ProductsViewModel = hiltViewModel(),
 ) {
     val category by viewModel.category.collectAsStateWithLifecycle()
+    val appliedFilterCount by viewModel.appliedFilterCount.collectAsStateWithLifecycle()
     val tagListState by viewModel.tagListState.collectAsStateWithLifecycle()
     val selectedTagId by viewModel.selectedTagId.collectAsStateWithLifecycle()
-    val appliedFilterCount by viewModel.appliedFilterCount.collectAsStateWithLifecycle()
 
     val topBarActions = remember(viewModel) {
         TopBarActions(
@@ -51,16 +52,26 @@ fun ProductsScreen(
         )
     }
 
+    val productCardActions = remember(viewModel) {
+        ProductCardActions(
+            onProductClicked = viewModel::onProductClicked,
+            onAddToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
+            onAddToCartClicked = viewModel::onAddProductToCartClicked,
+            onSubscribeClicked = viewModel::onSubscribeToProductClicked,
+        )
+    }
+
     BackHandler(onBack = viewModel::onSystemBackClicked)
 
     ScreenContent(
         category = category,
-        tagListState = tagListState,
-        selectedTagId = selectedTagId,
-        productPagingDataFlow = viewModel.productPagingDataFlow,
         appliedFilterCount = appliedFilterCount,
         topBarActions = topBarActions,
+        tagListState = tagListState,
+        selectedTagId = selectedTagId,
         onTagClicked = viewModel::onTagClicked,
+        productPagingDataFlow = viewModel.productPagingDataFlow,
+        productCardActions = productCardActions,
         onRefreshProducts = viewModel::onRefreshProducts,
         onProductsErrorRefreshClicked = viewModel::onProductsErrorRefreshClicked,
         sideEffects = viewModel.sideEffects,
@@ -72,12 +83,13 @@ fun ProductsScreen(
 @Composable
 private fun ScreenContent(
     category: Category?,
-    tagListState: TagListState?,
-    selectedTagId: Category.Id?,
-    productPagingDataFlow: Flow<PagingData<Product>>,
     appliedFilterCount: Int,
     topBarActions: TopBarActions,
+    tagListState: TagListState?,
+    selectedTagId: Category.Id?,
     onTagClicked: (Category) -> Unit,
+    productPagingDataFlow: Flow<PagingData<Product>>,
+    productCardActions: ProductCardActions,
     onRefreshProducts: () -> Unit,
     onProductsErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<ProductsViewModel.SideEffect>,
@@ -116,6 +128,7 @@ private fun ScreenContent(
 
         Products(
             productPagingDataFlow = productPagingDataFlow,
+            productCardActions = productCardActions,
             onRefreshProducts = onRefreshProducts,
             onProductsErrorRefreshClicked = onProductsErrorRefreshClicked,
             modifier = Modifier.fillMaxSize(),

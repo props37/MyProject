@@ -440,8 +440,5 @@ object HomeScreenComponents {
     private const val GridBannersItemCount = 4
     private const val GridBannersRowItemCount = GridBannersItemCount / 2
 
-    private const val TabBarMaxYOffset = 0
-    private const val TabBarAlphaProgressFactor = 2
-
     private const val TopBarScrimAlpha = 0.24f
 }

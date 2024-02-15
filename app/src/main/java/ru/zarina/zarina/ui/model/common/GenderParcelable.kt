@@ -15,7 +15,7 @@ enum class GenderParcelable : Parcelable {
     }
 
     companion object {
-        fun fromGender(gender: Gender): GenderParcelable = when (gender) {
+        fun from(gender: Gender): GenderParcelable = when (gender) {
             Gender.FEMALE -> FEMALE
             Gender.MALE -> MALE
         }

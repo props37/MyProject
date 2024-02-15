@@ -52,6 +52,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.common.tooling.preview.parameterprovider.ProductPreviewParameterProvider
 import ru.zarina.zarina.ui.common.util.domain.toComposeColor
+import ru.zarina.zarina.ui.common.util.rememberFormattedPrice
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.rememberEndlessPagerState
 
@@ -62,6 +63,7 @@ fun ProductCard(
     onClick: () -> Unit,
     onAddToFavoritesClicked: () -> Unit,
     onAddToCartClicked: () -> Unit,
+    onSubscribeClicked: () -> Unit,
     modifier: Modifier = Modifier,
     shimmer: Shimmer? = rememberSkeletonShimmer(),
 ) {
@@ -82,8 +84,8 @@ fun ProductCard(
             LikeIconButton(
                 isLiked = product.isInFavorites,
                 onClick = onAddToFavoritesClicked,
-                iconSize = 16.dp,
-                indication = rememberRipple(bounded = false, radius = 16.dp),
+                iconSize = IconSize,
+                indication = rememberRipple(bounded = false, radius = IconSize),
                 modifier = Modifier.align(Alignment.TopEnd),
             )
             HorizontalPagerIndicator(
@@ -107,17 +109,28 @@ fun ProductCard(
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(top = 2.dp), // Circe font padding
             )
             Spacer(modifier = Modifier.width(8.dp))
             CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-                AddToCartIconButton(
-                    isAdded = product.isInCart,
-                    onClick = onAddToCartClicked,
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .size(28.dp),
-                )
+                val buttonModifier = Modifier
+                    .padding(end = 10.dp)
+                    .size(28.dp)
+
+                if (product.isAvailable) {
+                    AddToCartIconButton(
+                        isAdded = product.isInCart,
+                        onClick = onAddToCartClicked,
+                        modifier = buttonModifier,
+                    )
+                } else {
+                    SubscribeIconButton(
+                        onClick = onSubscribeClicked,
+                        modifier = buttonModifier,
+                    )
+                }
             }
         }
 
@@ -138,8 +151,12 @@ fun ProductCard(
                 TextDecoration.None
             }
 
+            val originalPrice = stringResource(
+                id = R.string.price_in_rubles_string,
+                rememberFormattedPrice(product.price.originalPrice),
+            )
             Text(
-                text = stringResource(R.string.price_in_rubles, product.price.originalPrice).uppercase(),
+                text = originalPrice.uppercase(),
                 style = priceTextStyle,
                 color = originalPriceColor,
                 textDecoration = originalPriceTextDecoration,
@@ -148,8 +165,12 @@ fun ProductCard(
             )
             if (product.price.hasDiscount) {
                 Spacer(modifier = Modifier.width(8.dp))
+                val currentPrice = stringResource(
+                    id = R.string.price_in_rubles_string,
+                    rememberFormattedPrice(product.price.currentPrice),
+                )
                 Text(
-                    text = stringResource(R.string.price_in_rubles, product.price.currentPrice).uppercase(),
+                    text = currentPrice.uppercase(),
                     style = priceTextStyle,
                     color = discountColor,
                     maxLines = 1,
@@ -262,11 +283,10 @@ private fun AddToCartIconButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val iconSize = 16.dp
     ZarinaIconButton(
         onClick = onClick,
         isLoading = isLoading,
-        indication = rememberRipple(bounded = false, radius = iconSize),
+        indication = rememberRipple(bounded = false, radius = IconSize),
         modifier = modifier,
     ) {
         Crossfade(
@@ -282,9 +302,30 @@ private fun AddToCartIconButton(
                 painter = painterResource(iconResId),
                 contentDescription = stringResource(contentDescriptionResId),
                 tint = UiKitTheme.colorsReworked.icon.regular.default,
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(IconSize),
             )
         }
+    }
+}
+
+@Composable
+private fun SubscribeIconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
+) {
+    ZarinaIconButton(
+        onClick = onClick,
+        isLoading = isLoading,
+        indication = rememberRipple(bounded = false, radius = IconSize),
+        modifier = modifier,
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_bell_24),
+            contentDescription = stringResource(R.string.subscribe_to_product),
+            tint = UiKitTheme.colorsReworked.icon.regular.default,
+            modifier = Modifier.size(IconSize),
+        )
     }
 }
 
@@ -342,6 +383,7 @@ private fun ProductCardPreview(
             onClick = {},
             onAddToFavoritesClicked = {},
             onAddToCartClicked = {},
+            onSubscribeClicked = {},
             modifier = Modifier.background(Color.White),
         )
     }
@@ -356,6 +398,8 @@ private fun ProductCardPreview() {
 }
 
 private const val MediaAspectRatio = 0.68f
+
+private val IconSize: Dp get() = 16.dp
 
 private val ColorSize: Dp get() = 8.dp
 private val ColorSpacedBy: Dp get() = ColorSize

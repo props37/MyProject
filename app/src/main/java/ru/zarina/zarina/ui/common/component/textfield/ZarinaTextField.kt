@@ -2,6 +2,8 @@ package ru.zarina.zarina.ui.common.component.textfield
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Indication
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +26,7 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,9 +54,10 @@ import ru.zarina.zarina.ui.common.component.button.IconButtonCustom
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 
+// TODO: [High] Apply error color to description
 // TODO: [Low] Migrate to BasicTextField2
 
 @Composable
@@ -62,6 +66,7 @@ fun ZarinaTextField(
     onValueChanged: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
+    isError: Boolean = false,
     readOnly: Boolean = false,
     size: ZarinaTextFieldSize = ZarinaTextFieldSize.Large,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
@@ -104,6 +109,7 @@ fun ZarinaTextField(
             DecorationBox(
                 value = textFieldValue.text,
                 isEnabled = isEnabled,
+                isError = isError,
                 focusState = focusState,
                 textStyle = textStyle,
                 size = size,
@@ -126,6 +132,7 @@ fun ZarinaTextField(
     onValueChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
+    isError: Boolean = false,
     readOnly: Boolean = false,
     size: ZarinaTextFieldSize = ZarinaTextFieldSize.Large,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
@@ -168,6 +175,7 @@ fun ZarinaTextField(
             DecorationBox(
                 value = value,
                 isEnabled = isEnabled,
+                isError = isError,
                 focusState = focusState,
                 textStyle = textStyle,
                 size = size,
@@ -188,6 +196,7 @@ fun ZarinaTextField(
 private fun DecorationBox(
     value: String,
     isEnabled: Boolean,
+    isError: Boolean,
     focusState: FocusState?,
     textStyle: TextStyle,
     size: ZarinaTextFieldSize,
@@ -223,6 +232,7 @@ private fun DecorationBox(
                 targetValue = colors.getIndicationLineColor(
                     isEnabled = isEnabled,
                     isActive = focusState?.isFocused == true,
+                    isError = isError,
                 ),
                 label = "Indication line color",
             )
@@ -331,6 +341,7 @@ data class ZarinaTextFieldColors(
     val descriptionColor: Color,
     val indicationLineColor: Color,
     val activeIndicationLineColor: Color,
+    val errorIndicationLineColor: Color,
     val disabledTextColor: Color,
     val disabledPlaceholderColor: Color,
     val disabledLabelColor: Color,
@@ -339,6 +350,7 @@ data class ZarinaTextFieldColors(
     val disabledOuterTrailingContentColor: Color,
     val disabledDescriptionColor: Color,
     val disabledIndicationLineColor: Color,
+    val disabledErrorIndicationLineColor: Color,
 ) {
     fun getTextColor(isEnabled: Boolean): Color = if (isEnabled) textColor else disabledTextColor
 
@@ -359,7 +371,13 @@ data class ZarinaTextFieldColors(
     fun getDescriptionColor(isEnabled: Boolean): Color =
         if (isEnabled) descriptionColor else disabledDescriptionColor
 
-    fun getIndicationLineColor(isEnabled: Boolean, isActive: Boolean): Color = when {
+    fun getIndicationLineColor(
+        isEnabled: Boolean,
+        isActive: Boolean,
+        isError: Boolean,
+    ): Color = when {
+        isError && isEnabled -> errorIndicationLineColor
+        isError -> disabledErrorIndicationLineColor
         isActive -> activeIndicationLineColor
         isEnabled -> indicationLineColor
         else -> disabledIndicationLineColor
@@ -425,6 +443,7 @@ object ZarinaTextFieldDefaults {
         descriptionColor: Color = UiKitTheme.colorsReworked.text.general.regular.muted,
         indicationLineColor: Color = UiKitTheme.colorsReworked.border.general.default,
         activeIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.active,
+        errorIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.error,
         disabledTextColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
         disabledPlaceholderColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
         disabledLabelColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
@@ -433,6 +452,7 @@ object ZarinaTextFieldDefaults {
         disabledOuterTrailingContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.disabled, // TODO: [Low] Change to button-cell-disabled
         disabledDescriptionColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
         disabledIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.disabled,
+        disabledErrorIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.errorDisabled,
     ): ZarinaTextFieldColors = ZarinaTextFieldColors(
         textColor = textColor,
         placeholderColor = placeholderColor,
@@ -443,6 +463,7 @@ object ZarinaTextFieldDefaults {
         descriptionColor = descriptionColor,
         indicationLineColor = indicationLineColor,
         activeIndicationLineColor = activeIndicationLineColor,
+        errorIndicationLineColor = errorIndicationLineColor,
         disabledTextColor = disabledTextColor,
         disabledPlaceholderColor = disabledPlaceholderColor,
         disabledLabelColor = disabledLabelColor,
@@ -451,6 +472,7 @@ object ZarinaTextFieldDefaults {
         disabledOuterTrailingContentColor = disabledOuterTrailingContentColor,
         disabledDescriptionColor = disabledDescriptionColor,
         disabledIndicationLineColor = disabledIndicationLineColor,
+        disabledErrorIndicationLineColor = disabledErrorIndicationLineColor,
     )
 
     @Composable
@@ -493,9 +515,15 @@ object ZarinaTextFieldDefaults {
 @Preview
 @Composable
 fun Preview() {
-    ZarinaTheme {
-        Column {
+    ZarinaPreview {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .background(Color.White),
+        ) {
             var text by remember { mutableStateOf("") }
+            val isError by remember { derivedStateOf { text.contains("error") } }
+            val isEnabled by remember { derivedStateOf { !text.contains("dis") } }
 
             val zarinaTextField = @Composable { size: ZarinaTextFieldSize ->
                 val iconSize = when (size) {
@@ -505,6 +533,8 @@ fun Preview() {
                 ZarinaTextField(
                     value = text,
                     onValueChanged = { text = it },
+                    isEnabled = isEnabled,
+                    isError = isError,
                     size = size,
                     label = {
                         Text(text = "Label")
@@ -523,7 +553,9 @@ fun Preview() {
                         Icon(
                             painter = painterResource(R.drawable.ic_close_24),
                             contentDescription = null,
-                            modifier = Modifier.size(iconSize),
+                            modifier = Modifier
+                                .size(iconSize)
+                                .clickable { text = "" },
                         )
                     },
                     outerTrailingContent = {

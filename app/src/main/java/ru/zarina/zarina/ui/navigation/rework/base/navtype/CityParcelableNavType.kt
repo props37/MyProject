@@ -9,7 +9,7 @@ import ru.zarina.zarina.util.platform.BundleCompat
 val NavType.Companion.CityParcelableType: CityParcelableNavType
     get() = CityParcelableNavType()
 
-class CityParcelableNavType : NavType<CityParcelable>(isNullableAllowed = true) {
+class CityParcelableNavType : NavType<CityParcelable?>(isNullableAllowed = true) {
     override fun get(bundle: Bundle, key: String): CityParcelable? {
         return BundleCompat.getParcelable(bundle, key)
     }
@@ -18,7 +18,7 @@ class CityParcelableNavType : NavType<CityParcelable>(isNullableAllowed = true) 
         return Json.decodeFromString(value)
     }
 
-    override fun put(bundle: Bundle, key: String, value: CityParcelable) {
+    override fun put(bundle: Bundle, key: String, value: CityParcelable?) {
         bundle.putParcelable(key, value)
     }
 }

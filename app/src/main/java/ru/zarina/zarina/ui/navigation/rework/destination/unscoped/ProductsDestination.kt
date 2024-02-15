@@ -63,6 +63,18 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                         val route = UnscopedDestinations.Products.createRoute(args)
                         navController.navigate(route)
                     }
+
+                    is ProductsScreenAction.AddProductToCartClicked -> {
+                        val args = UnscopedDestinations.SizeSelector.Args(action.product)
+                        val route = UnscopedDestinations.SizeSelector.createRoute(args)
+                        navController.navigate(route)
+                    }
+
+                    is ProductsScreenAction.SubscribeToProductClicked -> {
+                        val args = UnscopedDestinations.SizeSelector.Args(action.product)
+                        val route = UnscopedDestinations.SizeSelector.createRoute(args)
+                        navController.navigate(route)
+                    }
                 }
             },
             navigateBackward = {
