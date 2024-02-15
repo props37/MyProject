@@ -25,4 +25,4 @@ private fun Int.roundToProductOf(other: Int): Int {
     }
 }
 
-private const val PAGE_COUNT = 100_000
+private const val PAGE_COUNT = 10_000
