@@ -16,8 +16,8 @@ import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.common.exception.ValidationException
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
-import ru.zarina.zarina.domain.rework.user.exception.EmailException
-import ru.zarina.zarina.domain.rework.user.exception.FirstNameException
+import ru.zarina.zarina.domain.rework.user.exception.InvalidEmailException
+import ru.zarina.zarina.domain.rework.user.exception.InvalidFirstNameException
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
@@ -151,10 +151,11 @@ class ProductSubscriptionViewModel @Inject constructor(
                             val message = Text.Resource(R.string.incorrect_data)
                             emitSideEffect(SideEffect.ShowToast(message))
 
-                            if (e.exceptions?.any { it is FirstNameException } == true) {
+                            val exceptions = listOf(e) + e.suppressedExceptions
+                            if (exceptions.any { it is InvalidFirstNameException }) {
                                 _isFirstNameInvalid.value = true
                             }
-                            if (e.exceptions?.any { it is EmailException } == true) {
+                            if (exceptions.any { it is InvalidEmailException }) {
                                 _isEmailInvalid.value = true
                             }
                         } else {

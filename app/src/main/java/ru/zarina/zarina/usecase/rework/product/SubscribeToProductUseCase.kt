@@ -20,20 +20,20 @@ class SubscribeToProductUseCase @Inject constructor(
 
     override suspend fun execute(params: Params) {
         val barcode = params.barcode
-        val email = params.email
+        val email = params.email.trim()
 
-        val firstName = params.name.split(" ").firstOrNull().orEmpty()
+        val firstName = params.name.split(' ').firstOrNull()?.trim().orEmpty()
 
         val firstNameValidationException =
             validateFirstNameUseCase(ValidateFirstNameUseCase.Params(firstName)).exceptionOrNull()
         val emailValidationException =
             validateEmailUseCase(ValidateEmailUseCase.Params(email)).exceptionOrNull()
 
-        val validationExceptions =
-            listOfNotNull(firstNameValidationException, emailValidationException)
-        if (validationExceptions.isNotEmpty()) {
-            throw ValidationException(exceptions = validationExceptions)
-        }
+        val validationException = ValidationException.from(
+            firstNameValidationException,
+            emailValidationException,
+        )
+        if (validationException != null) throw validationException
 
         productRepository.subscribeToProduct(barcode, firstName, email)
     }

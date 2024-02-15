@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.post
 import ru.zarina.zarina.data.rework.common.remote.api.dto.SortingDto
+import ru.zarina.zarina.data.rework.common.remote.api.exception.apiExceptionConverter
 import ru.zarina.zarina.data.rework.product.remote.api.dto.FiltersBodyDto
 import ru.zarina.zarina.data.rework.product.remote.api.dto.GetProductsBodyDto
 import ru.zarina.zarina.data.rework.product.remote.api.dto.ProductsDto
@@ -59,8 +60,10 @@ class ProductApi @Inject constructor(
             email = email,
             firstName = firstName,
         )
-        httpClient.post("/api/subscriptions/subscribe/") {
-            setJsonBody(body)
+        apiExceptionConverter {
+            httpClient.post("/api/subscriptions/subscribe/") {
+                setJsonBody(body)
+            }
         }
     }
 }
