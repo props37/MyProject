@@ -5,13 +5,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.common.Url
+import ru.zarina.zarina.domain.rework.common.exception.ValidationException
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
+import ru.zarina.zarina.domain.rework.user.exception.EmailException
+import ru.zarina.zarina.domain.rework.user.exception.FirstNameException
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
@@ -64,8 +71,8 @@ class ProductSubscriptionViewModel @Inject constructor(
             parcelable.toProductOffer()
         }
 
-    val name: StateFlow<String> = savedStateHandle.getStateFlow(
-        key = KEY_NAME,
+    val firstName: StateFlow<String> = savedStateHandle.getStateFlow(
+        key = KEY_FIRST_NAME,
         initialValue = "",
     )
 
@@ -89,6 +96,12 @@ class ProductSubscriptionViewModel @Inject constructor(
             initialValue = false,
         )
 
+    private val _isFirstNameInvalid = MutableStateFlow(false)
+    val isFirstNameInvalid: StateFlow<Boolean> = _isFirstNameInvalid.asStateFlow()
+
+    private val _isEmailInvalid = MutableStateFlow(false)
+    val isEmailInvalid: StateFlow<Boolean> = _isEmailInvalid.asStateFlow()
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val result = ProductSubscriptionScreenResult.ScreenClosed
@@ -96,12 +109,14 @@ class ProductSubscriptionViewModel @Inject constructor(
         }
     }
 
-    fun onNameChanged(name: String) {
-        savedStateHandle[KEY_NAME] = name
+    fun onFirstNameChanged(name: String) {
+        savedStateHandle[KEY_FIRST_NAME] = name
+        _isFirstNameInvalid.value = false
     }
 
     fun onEmailChanged(email: String) {
         savedStateHandle[KEY_EMAIL] = email
+        _isEmailInvalid.value = false
     }
 
     fun onUrlClicked(url: Url) {
@@ -120,10 +135,29 @@ class ProductSubscriptionViewModel @Inject constructor(
             operationTracker.track(Operation.SUBSCRIBE_TO_PRODUCT) {
                 val params = SubscribeToProductUseCase.Params(
                     barcode = productOffer.value.barcode,
-                    name = name.value,
+                    name = firstName.value,
                     email = email.value,
                 )
                 interactor.subscribeToProduct(params)
+                    .onSuccess {
+                        // TODO: [High] Implement
+                    }
+                    .onFailure { e ->
+                        if (e is ValidationException) {
+                            val message = Text.Resource(R.string.incorrect_data)
+                            emitSideEffect(SideEffect.ShowToast(message))
+
+                            if (e.exceptions?.any { it is FirstNameException } == true) {
+                                _isFirstNameInvalid.value = true
+                            }
+                            if (e.exceptions?.any { it is EmailException } == true) {
+                                _isEmailInvalid.value = true
+                            }
+                        } else {
+                            val message = Text.Resource(R.string.something_went_wrong)
+                            emitSideEffect(SideEffect.ShowToast(message))
+                        }
+                    }
             }
         }
     }
@@ -132,12 +166,14 @@ class ProductSubscriptionViewModel @Inject constructor(
         data class NavigateBackward(val result: ProductSubscriptionScreenResult) : SideEffect
 
         data class OpenUrl(val url: Url) : SideEffect
+
+        data class ShowToast(val message: Text) : SideEffect
     }
 
     private enum class Operation : OperationKey { SUBSCRIBE_TO_PRODUCT }
 
     companion object {
-        private const val KEY_NAME = "name"
+        private const val KEY_FIRST_NAME = "first_name"
         private const val KEY_EMAIL = "email"
         private const val KEY_ARE_POLICIES_ACCEPTED = "are_policies_accepted"
     }

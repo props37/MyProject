@@ -2,8 +2,8 @@ package ru.zarina.zarina.usecase.rework.user
 
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.di.rework.Qualifiers
-import ru.zarina.zarina.domain.rework.user.EmptyFirstNameException
-import ru.zarina.zarina.domain.rework.user.InvalidFirstNameException
+import ru.zarina.zarina.domain.rework.user.exception.EmptyFirstNameException
+import ru.zarina.zarina.domain.rework.user.exception.InvalidFirstNameException
 import ru.zarina.zarina.usecase.base.UseCase
 import javax.inject.Inject
 

@@ -57,8 +57,10 @@ fun ProductSubscriptionScreen(
 ) {
     val product by viewModel.product.collectAsStateWithLifecycle()
     val productOffer by viewModel.productOffer.collectAsStateWithLifecycle()
-    val name by viewModel.name.collectAsStateWithLifecycle()
+    val firstName by viewModel.firstName.collectAsStateWithLifecycle()
+    val isFirstNameInvalid by viewModel.isFirstNameInvalid.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
+    val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
     val arePoliciesAccepted by viewModel.arePoliciesAccepted.collectAsStateWithLifecycle()
     val isSubscribeButtonEnabled by viewModel.isSubscribeButtonEnabled.collectAsStateWithLifecycle()
     val isSubscribeButtonLoading by viewModel.isSubscribeButtonLoading.collectAsStateWithLifecycle()
@@ -67,10 +69,12 @@ fun ProductSubscriptionScreen(
         onBackClicked = viewModel::onBackClicked,
         product = product,
         productOffer = productOffer,
-        name = name,
-        onNameChanged = viewModel::onNameChanged,
+        firstName = firstName,
+        onFirstNameChanged = viewModel::onFirstNameChanged,
+        isFirstNameInvalid = isFirstNameInvalid,
         email = email,
         onEmailChanged = viewModel::onEmailChanged,
+        isEmailInvalid = isEmailInvalid,
         arePoliciesAccepted = arePoliciesAccepted,
         isSubscribeButtonEnabled = isSubscribeButtonEnabled,
         isSubscribeButtonLoading = isSubscribeButtonLoading,
@@ -87,10 +91,12 @@ private fun ScreenContent(
     onBackClicked: () -> Unit,
     product: Product,
     productOffer: ProductOffer,
-    name: String,
-    onNameChanged: (String) -> Unit,
+    firstName: String,
+    onFirstNameChanged: (String) -> Unit,
+    isFirstNameInvalid: Boolean,
     email: String,
     onEmailChanged: (String) -> Unit,
+    isEmailInvalid: Boolean,
     arePoliciesAccepted: Boolean,
     isSubscribeButtonEnabled: Boolean,
     isSubscribeButtonLoading: Boolean,
@@ -140,19 +146,20 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.height(20.dp))
 
             ZarinaTextField(
-                value = name,
-                onValueChanged = onNameChanged,
+                value = firstName,
+                onValueChanged = onFirstNameChanged,
+                isError = isFirstNameInvalid,
                 size = ZarinaTextFieldSize.Small,
                 label = { Text(text = stringResource(R.string.how_should_i_contact_you)) },
                 placeholder = { Text(text = stringResource(R.string.first_name)) },
                 innerTrailingContent = {
                     AnimatedVisibility(
-                        visible = name.isNotBlank(),
+                        visible = firstName.isNotBlank(),
                         enter = remember { AnimatedContentDefaultEnterTransition },
                         exit = remember { AnimatedContentDefaultExitTransition },
                     ) {
                         ZarinaTextFieldDefaults.ClearButton(
-                            onClick = { onNameChanged("") },
+                            onClick = { onFirstNameChanged("") },
                             iconSize = 16.dp,
                         )
                     }
@@ -173,6 +180,7 @@ private fun ScreenContent(
             ZarinaTextField(
                 value = email,
                 onValueChanged = onEmailChanged,
+                isError = isEmailInvalid,
                 size = ZarinaTextFieldSize.Small,
                 label = { Text(text = stringResource(R.string.email)) },
                 placeholder = { Text(text = stringResource(R.string.email_address)) },
