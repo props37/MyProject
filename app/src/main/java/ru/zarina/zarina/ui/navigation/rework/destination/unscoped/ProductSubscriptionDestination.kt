@@ -12,7 +12,8 @@ fun NavGraphBuilder.productSubscriptionScreen(navController: NavHostController) 
         ProductSubscriptionScreen(
             navigateBackward = { result ->
                 when (result) {
-                    ProductSubscriptionScreenResult.ScreenClosed -> {
+                    ProductSubscriptionScreenResult.ScreenClosed,
+                    ProductSubscriptionScreenResult.SubscriptionCompleted -> {
                         navController.popBackStack(
                             route = UnscopedDestinations.ProductSubscription.routeSchema,
                             inclusive = true,

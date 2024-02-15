@@ -140,7 +140,11 @@ class ProductSubscriptionViewModel @Inject constructor(
                 )
                 interactor.subscribeToProduct(params)
                     .onSuccess {
-                        // TODO: [High] Implement
+                        val message = Text.Resource(R.string.product_subscription_completed)
+                        emitSideEffect(SideEffect.ShowToast(message))
+
+                        val result = ProductSubscriptionScreenResult.SubscriptionCompleted
+                        emitSideEffect(SideEffect.NavigateBackward(result))
                     }
                     .onFailure { e ->
                         if (e is ValidationException) {
