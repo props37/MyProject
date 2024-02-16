@@ -20,6 +20,9 @@ data class CategoryDto(
     @SerialName("color")
     val color: String? = null,
 
+    @SerialName("is_expandable")
+    val isExpandable: Boolean? = null,
+
     @SerialName("childs")
     val children: List<CategoryDto>? = null,
 ) {
@@ -30,6 +33,7 @@ data class CategoryDto(
                 name = name,
                 label = label,
                 color = color?.let { Color(it) },
+                isExpandable = isExpandable ?: false,
                 children = children?.mapNotNull { it.toCategory() },
             )
         } else {

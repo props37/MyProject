@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.ui.common.LocalToastController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
 
@@ -14,6 +15,7 @@ fun ProductsScreenBehavior(
     navigateForward: (ProductsScreenAction) -> Unit,
     navigateBackward: () -> Unit,
 ) {
+    val updatedToastController by rememberUpdatedState(LocalToastController.current)
     val updatedNavigateForward by rememberUpdatedState(navigateForward)
     val updatedNavigateBackward by rememberUpdatedState(navigateBackward)
 
@@ -24,6 +26,7 @@ fun ProductsScreenBehavior(
             when (sideEffect) {
                 is SideEffect.NavigateForward -> updatedNavigateForward(sideEffect.action)
                 SideEffect.NavigateBackward -> updatedNavigateBackward()
+                is SideEffect.ShowToast -> updatedToastController.show(sideEffect.message)
             }
         }
     }

@@ -24,12 +24,14 @@ object FakeDataGenerator {
         name: String = "Одежда",
         label: String? = "Акция",
         color: Color? = null,
+        isExpandable: Boolean = true,
         children: List<Category>? = List(5) { getCategory(children = null) },
     ): Category = Category(
         id = id,
         name = name,
         label = label,
         color = color,
+        isExpandable = isExpandable,
         children = children,
     )
 

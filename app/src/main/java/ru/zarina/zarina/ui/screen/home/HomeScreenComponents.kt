@@ -7,7 +7,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,10 +17,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -154,7 +151,7 @@ object HomeScreenComponents {
                 GenderTab.MEN -> content.menBanners
             }
 
-            BannerList(
+            BannerPager(
                 banners = banners,
                 onBannerClicked = onBannerClicked,
                 modifier = Modifier.fillMaxSize(),
@@ -164,44 +161,37 @@ object HomeScreenComponents {
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    private fun BannerList(
+    private fun BannerPager(
         banners: List<HomeContent.BannerContainer>,
         onBannerClicked: (HomeContent.Banner) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val listState = rememberLazyListState()
-        val flingBehavior = rememberSnapFlingBehavior(listState)
+        val pagerState = rememberPagerState { banners.size }
 
-        val visibleBannersIndicesState = remember {
+        val visibleBannersPagesState = remember {
             derivedStateOf {
-                listState.layoutInfo.visibleItemsInfo.map { it.index }
+                pagerState.layoutInfo.visiblePagesInfo.map { it.index }
             }
         }
 
-        LazyColumn(
-            state = listState,
-            flingBehavior = flingBehavior,
+        VerticalPager(
+            state = pagerState,
+            key = { page -> banners[page].id.value },
             modifier = modifier,
-        ) {
-            itemsIndexed(
-                items = banners,
-                key = { _, bannerContainer -> bannerContainer.id.value },
-                contentType = { _, bannerContainer ->
-                    createBannerListContentType(bannerContainer)
-                },
-            ) { index, bannerContainer ->
-                val updatedIndex by rememberUpdatedState(index)
-                val isOnScreen by remember {
-                    derivedStateOf { updatedIndex in visibleBannersIndicesState.value }
-                }
-
-                Banner(
-                    bannerContainer = bannerContainer,
-                    onBannerClicked = onBannerClicked,
-                    isOnScreen = isOnScreen,
-                    modifier = Modifier.fillParentMaxSize(),
-                )
+        ) { page ->
+            val updatedPage by rememberUpdatedState(page)
+            val isOnScreen by remember {
+                derivedStateOf { updatedPage in visibleBannersPagesState.value }
             }
+
+            val bannerContainer = banners[page]
+
+            Banner(
+                bannerContainer = bannerContainer,
+                onBannerClicked = onBannerClicked,
+                isOnScreen = isOnScreen,
+                modifier = Modifier.fillMaxSize(),
+            )
         }
     }
 
@@ -412,28 +402,6 @@ object HomeScreenComponents {
             Brush.verticalGradient(colors)
         }
     }
-
-    private fun createBannerListContentType(bannerContainer: HomeContent.BannerContainer): String {
-        return when (bannerContainer) {
-            is HomeContent.BannerContainer.SingleBanner -> {
-                when (bannerContainer.banner.media.type) {
-                    MediaType.IMAGE -> BannerListContentTypeFullscreenImage
-                    MediaType.VIDEO -> BannerListContentTypeFullscreenVideo
-                }
-            }
-
-            is HomeContent.BannerContainer.MultipleBanners -> {
-                when (bannerContainer.arrangement) {
-                    HomeContent.BannerContainer.MultipleBanners.Arrangement.GRID ->
-                        BannerListContentTypeGrid
-                }
-            }
-        }
-    }
-
-    private const val BannerListContentTypeFullscreenImage = "BannerListContentTypeFullscreenImage"
-    private const val BannerListContentTypeFullscreenVideo = "BannerListContentTypeFullscreenVideo"
-    private const val BannerListContentTypeGrid = "BannerListContentTypeGrid"
 
     private const val BannerLoaderAnimationDuration = 250
 

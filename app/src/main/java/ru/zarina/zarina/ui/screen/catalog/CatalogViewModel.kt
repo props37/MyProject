@@ -168,7 +168,7 @@ class CatalogViewModel @Inject constructor(
 
     private fun onCategoryItemClicked(item: CategoryListItem.CategoryItem) {
         val category = item.category
-        if (category.children.isNullOrEmpty()) {
+        if (!category.isExpandable || category.children.isNullOrEmpty()) {
             navigationThrottler.throttle {
                 val action = CatalogScreenAction.CategoryClicked(item.category.id)
                 emitSideEffect(SideEffect.NavigateForward(action))
@@ -205,11 +205,11 @@ class CatalogViewModel @Inject constructor(
             val item = CategoryListItem.fromCategory(category, initialNestingLevel)
             add(item)
 
-            val childItemsNestingLevel = initialNestingLevel + 1
-            val childItems = category.children?.flatMap { category ->
-                category.flatMapToCategoryItems(childItemsNestingLevel)
-            }
-            if (childItems != null) {
+            if (category.isExpandable && !category.children.isNullOrEmpty()) {
+                val childItemsNestingLevel = initialNestingLevel + 1
+                val childItems = category.children.flatMap { category ->
+                    category.flatMapToCategoryItems(childItemsNestingLevel)
+                }
                 val seeWholeCategoryItem = CategoryListItem.SeeWholeCategoryItem(
                     category = category,
                     nestingLevel = childItemsNestingLevel,
@@ -310,7 +310,7 @@ class CatalogViewModel @Inject constructor(
                 return CategoryItem(
                     category = category,
                     nestingLevel = nestingLevel,
-                    isExpandable = !category.children.isNullOrEmpty(),
+                    isExpandable = category.isExpandable && !category.children.isNullOrEmpty(),
                 )
             }
         }

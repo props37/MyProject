@@ -27,22 +27,29 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.filter.coerceInAvailable
 import ru.zarina.zarina.domain.rework.filter.selected
 import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.ui.common.paging.mapFavorites
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase
+import ru.zarina.zarina.usecase.rework.favorite.AddProductToFavoritesUseCase
+import ru.zarina.zarina.usecase.rework.favorite.RemoveProductFromFavoritesUseCase
 import ru.zarina.zarina.usecase.rework.product.GetProductPagingDataFlowUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
+import ru.zarina.zarina.utils.clean.invoke
 import timber.log.Timber
 
 @HiltViewModel(assistedFactory = ProductsViewModel.Factory::class)
@@ -156,6 +163,8 @@ class ProductsViewModel @AssistedInject constructor(
             interactor.getProductPagingDataFlow(params)
         }
         .cachedIn(viewModelScope)
+        .mapFavorites(interactor.getFavoriteProductIdsFlow())
+        .cachedIn(viewModelScope)
 
     val appliedFilterCount: StateFlow<Int> = filters.mapState(
         scope = viewModelScope,
@@ -216,7 +225,24 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     fun onAddProductToFavoritesClicked(product: Product) {
-        // TODO: [High] Implement
+        viewModelScope.launch {
+            val result = if (product.isInFavorites) {
+                val params = RemoveProductFromFavoritesUseCase.Params(product.id)
+                interactor.removeProductFromFavorites(params)
+            } else {
+                val params = AddProductToFavoritesUseCase.Params(product.id)
+                interactor.addProductToFavorites(params)
+            }
+            result.onFailure {
+                val messageResId = if (product.isInFavorites) {
+                    R.string.removing_product_from_favorites_toast_error
+                } else {
+                    R.string.adding_product_to_favorites_toast_error
+                }
+                val message = Text.Resource(messageResId)
+                emitSideEffect(SideEffect.ShowToast(message))
+            }
+        }
     }
 
     fun onAddProductToCartClicked(product: Product) {
@@ -268,6 +294,8 @@ class ProductsViewModel @AssistedInject constructor(
         data class NavigateForward(val action: ProductsScreenAction) : SideEffect
 
         data object NavigateBackward : SideEffect
+
+        data class ShowToast(val message: Text) : SideEffect
     }
 
     @Stable

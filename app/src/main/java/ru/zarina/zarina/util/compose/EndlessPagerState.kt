@@ -8,10 +8,9 @@ import androidx.compose.runtime.Composable
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun rememberEndlessPagerState(itemCount: Int): PagerState {
-    val pageCount = PAGE_COUNT
     return rememberPagerState(
-        initialPage = (pageCount / 2).roundToProductOf(itemCount),
-        pageCount = { pageCount },
+        initialPage = (PAGE_COUNT / 2).roundToProductOf(itemCount),
+        pageCount = { PAGE_COUNT },
     )
 }
 
