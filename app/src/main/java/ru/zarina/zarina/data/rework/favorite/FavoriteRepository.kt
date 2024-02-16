@@ -1,24 +1,28 @@
 package ru.zarina.zarina.data.rework.favorite
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.StateFlow
+import ru.zarina.zarina.data.rework.favorite.local.FavoriteLocalDataSource
+import ru.zarina.zarina.data.rework.favorite.remote.FavoriteRemoteDataSource
 import ru.zarina.zarina.domain.rework.product.Product
 import javax.inject.Inject
 
-class FavoriteRepository @Inject constructor() {
-    // TODO: [Low] Move to LDS
-    private val favoriteProductIds = MutableStateFlow<Set<Product.Id>>(emptySet())
+class FavoriteRepository @Inject constructor(
+    private val localDataSource: FavoriteLocalDataSource,
+    private val remoteDataSource: FavoriteRemoteDataSource,
+) {
+    val favoriteProductIds: StateFlow<Set<Product.Id>?> = localDataSource.favoriteProductIds
 
-    fun getFavoriteProductIds(): Flow<Set<Product.Id>> {
-        return favoriteProductIds
+    suspend fun addProductToFavorites(productId: Product.Id) {
+        remoteDataSource.addProductToFavorites(productId)
+        localDataSource.addProductToFavorites(productId)
     }
 
-    fun addToFavorite(product: Product) {
-        favoriteProductIds.update { it + product.id }
+    suspend fun removeProductFromFavorites(productId: Product.Id) {
+        remoteDataSource.removeProductFromFavorites(productId)
+        localDataSource.removeProductFromFavorites(productId)
     }
 
-    fun removeFromFavorite(product: Product) {
-        favoriteProductIds.update { it - product.id }
+    fun clear() {
+        localDataSource.clear()
     }
 }
