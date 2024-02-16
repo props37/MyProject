@@ -10,22 +10,31 @@ import javax.inject.Singleton
 
 @Singleton
 class FavoriteDataHolder @Inject constructor() {
-    private val _favoriteProductIds = MutableStateFlow<Set<Product.Id>?>(null)
-    val favoriteProductIds: StateFlow<Set<Product.Id>?> = _favoriteProductIds.asStateFlow()
+    private val _favoriteProductIds = MutableStateFlow<Set<Product.Id>>(emptySet())
+    val favoriteProductIds: StateFlow<Set<Product.Id>> = _favoriteProductIds.asStateFlow()
+
+    private val _areFavoriteProductIdsFetched = MutableStateFlow(false)
+    val areFavoriteProductIdsFetched: StateFlow<Boolean> =
+        _areFavoriteProductIdsFetched.asStateFlow()
 
     fun setFavoriteProductIds(ids: Set<Product.Id>) {
         _favoriteProductIds.value = ids
     }
 
+    fun setAreFavoriteProductIdsFetched(fetched: Boolean) {
+        _areFavoriteProductIdsFetched.value = fetched
+    }
+
     fun addProductToFavorites(productId: Product.Id) {
-        _favoriteProductIds.update { it?.plus(productId) ?: setOf(productId) }
+        _favoriteProductIds.update { it + productId }
     }
 
     fun removeProductFromFavorites(productId: Product.Id) {
-        _favoriteProductIds.update { it?.minus(productId) }
+        _favoriteProductIds.update { it - productId }
     }
 
     fun clear() {
         _favoriteProductIds.value = emptySet()
+        _areFavoriteProductIdsFetched.value = false
     }
 }
