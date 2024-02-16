@@ -7,6 +7,7 @@ data class Category(
     val name: String,
     val label: String?,
     val color: Color?,
+    val isExpandable: Boolean,
     val children: List<Category>?,
 ) {
     @JvmInline
