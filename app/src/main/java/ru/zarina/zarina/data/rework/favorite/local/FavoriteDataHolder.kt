@@ -13,6 +13,10 @@ class FavoriteDataHolder @Inject constructor() {
     private val _favoriteProductIds = MutableStateFlow<Set<Product.Id>?>(null)
     val favoriteProductIds: StateFlow<Set<Product.Id>?> = _favoriteProductIds.asStateFlow()
 
+    fun setFavoriteProductIds(ids: Set<Product.Id>) {
+        _favoriteProductIds.value = ids
+    }
+
     fun addProductToFavorites(productId: Product.Id) {
         _favoriteProductIds.update { it?.plus(productId) ?: setOf(productId) }
     }

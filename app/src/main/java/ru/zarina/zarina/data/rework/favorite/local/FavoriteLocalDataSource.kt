@@ -9,6 +9,10 @@ class FavoriteLocalDataSource @Inject constructor(
 ) {
     val favoriteProductIds: StateFlow<Set<Product.Id>?> = dataHolder.favoriteProductIds
 
+    fun setFavoriteProductIds(ids: Set<Product.Id>) {
+        dataHolder.setFavoriteProductIds(ids)
+    }
+
     fun addProductToFavorites(productId: Product.Id) {
         dataHolder.addProductToFavorites(productId)
     }
