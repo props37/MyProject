@@ -71,9 +71,19 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                     }
 
                     is ProductsScreenAction.SubscribeToProductClicked -> {
-                        val args = UnscopedDestinations.SizeSelector.Args(action.product)
-                        val route = UnscopedDestinations.SizeSelector.createRoute(args)
-                        navController.navigate(route)
+                        if (action.product.offers.size > 1) {
+                            val args = UnscopedDestinations.SizeSelector.Args(action.product)
+                            val route = UnscopedDestinations.SizeSelector.createRoute(args)
+                            navController.navigate(route)
+                        } else {
+                            val offer = action.product.offers.firstOrNull() ?: return@ProductsScreen
+                            val args = UnscopedDestinations.ProductSubscription.Args(
+                                product = action.product,
+                                offer = offer,
+                            )
+                            val route = UnscopedDestinations.ProductSubscription.createRoute(args)
+                            navController.navigate(route)
+                        }
                     }
                 }
             },
