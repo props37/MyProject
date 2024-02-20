@@ -15,20 +15,19 @@ import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 @Composable
 fun CitySelectorScreenBehavior(
     sideEffects: Flow<SideEffect>,
-    navigateBackward: (CitySelectorScreenResult) -> Unit,
+    navigate: (CitySelectorScreenAction) -> Unit,
 ) {
     val updatedFocusManager by rememberUpdatedState(LocalFocusManager.current)
-
-    val updatedNavigateBackward by rememberUpdatedState(navigateBackward)
+    val updatedNavigate by rememberUpdatedState(navigate)
 
     LifecycleStartEffect(sideEffects) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
-                        is SideEffect.NavigateBackward -> {
+                        is SideEffect.Navigate -> {
                             updatedFocusManager.clearFocus(force = true)
-                            updatedNavigateBackward(sideEffect.result)
+                            updatedNavigate(sideEffect.action)
                         }
 
                         SideEffect.FreeCitySearchBarFocus -> {

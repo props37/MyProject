@@ -13,7 +13,7 @@ import ru.zarina.zarina.ui.navigation.base.dialogDestination
 import ru.zarina.zarina.ui.navigation.rework.graph.HomeGraph
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorBottomSheetScreen
-import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenResult
+import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenAction
 import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreen
 import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreenResult
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
@@ -66,16 +66,16 @@ fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
 fun NavGraphBuilder.citySelectorBottomSheetScreen(navController: NavHostController) {
     bottomSheetDestination(UnscopedDestinations.CitySelector) {
         CitySelectorBottomSheetScreen(
-            navigateBackward = { result ->
+            navigate = { result ->
                 when (result) {
-                    CitySelectorScreenResult.ScreenClosed -> {
+                    CitySelectorScreenAction.ScreenClosed -> {
                         navController.popBackStack(
                             route = UnscopedDestinations.CitySelector.routeSchema,
                             inclusive = true,
                         )
                     }
 
-                    is CitySelectorScreenResult.CitySelected -> {
+                    is CitySelectorScreenAction.CitySelected -> {
                         val cityParcelable = CityParcelable.from(result.city)
                         val result = UnscopedDestinations.CitySelector.Result(cityParcelable)
                         navController.previousBackStackEntry?.savedStateHandle

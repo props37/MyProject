@@ -85,8 +85,8 @@ class CitySelectorViewModel @Inject constructor(
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
-            val result = CitySelectorScreenResult.ScreenClosed
-            emitSideEffect(SideEffect.NavigateBackward(result))
+            val action = CitySelectorScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -114,8 +114,8 @@ class CitySelectorViewModel @Inject constructor(
     fun onChangeCityClicked() {
         val city = selectedCity.value ?: return
         navigationThrottler.throttle {
-            val result = CitySelectorScreenResult.CitySelected(city)
-            emitSideEffect(SideEffect.NavigateBackward(result))
+            val action = CitySelectorScreenAction.CitySelected(city)
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -180,7 +180,7 @@ class CitySelectorViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class NavigateBackward(val result: CitySelectorScreenResult) : SideEffect
+        data class Navigate(val action: CitySelectorScreenAction) : SideEffect
 
         data object FreeCitySearchBarFocus : SideEffect
     }

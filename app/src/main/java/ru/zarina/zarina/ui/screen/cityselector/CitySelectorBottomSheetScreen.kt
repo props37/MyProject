@@ -42,7 +42,7 @@ import ru.zarina.zarina.ui.screen.cityselector.tooling.preview.CityListStatePrev
 
 @Composable
 fun CitySelectorBottomSheetScreen(
-    navigateBackward: (CitySelectorScreenResult) -> Unit,
+    navigate: (CitySelectorScreenAction) -> Unit,
     viewModel: CitySelectorViewModel = hiltViewModel(),
 ) {
     val cityNameQuery by viewModel.cityNameQuery.collectAsStateWithLifecycle(
@@ -67,7 +67,7 @@ fun CitySelectorBottomSheetScreen(
         onErrorRefreshClicked = viewModel::onErrorRefreshClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
-        navigateBackward = navigateBackward,
+        navigate = navigate,
     )
 }
 
@@ -86,11 +86,11 @@ private fun ScreenContent(
     onErrorRefreshClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigateBackward: (CitySelectorScreenResult) -> Unit,
+    navigate: (CitySelectorScreenAction) -> Unit,
 ) {
     CitySelectorScreenBehavior(
         sideEffects = sideEffects,
-        navigateBackward = navigateBackward,
+        navigate = navigate,
     )
 
     ZarinaBottomSheet(
@@ -154,7 +154,7 @@ private fun Preview(
             onErrorRefreshClicked = {},
             onCloseClicked = {},
             sideEffects = remember { emptyFlow() },
-            navigateBackward = {},
+            navigate = {},
         )
     }
 }
