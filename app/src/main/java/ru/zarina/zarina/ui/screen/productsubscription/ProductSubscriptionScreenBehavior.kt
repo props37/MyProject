@@ -15,18 +15,18 @@ import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionViewMod
 @Composable
 fun ProductSubscriptionScreenBehavior(
     sideEffects: Flow<SideEffect>,
-    navigateBackward: (ProductSubscriptionScreenResult) -> Unit,
+    navigate: (ProductSubscriptionScreenAction) -> Unit,
 ) {
     val updatedContext by rememberUpdatedState(LocalContext.current)
     val updatedToastController by rememberUpdatedState(LocalToastController.current)
-    val updatedNavigateBackward by rememberUpdatedState(navigateBackward)
+    val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = false)
 
     LaunchedEffect(sideEffects) {
         sideEffects.collect { sideEffect ->
             when (sideEffect) {
-                is SideEffect.NavigateBackward -> updatedNavigateBackward(sideEffect.result)
+                is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
                 is SideEffect.OpenUrl -> {
                     val intent = CustomTabsIntent.Builder()
                         .setShowTitle(true)

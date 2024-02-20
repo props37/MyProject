@@ -104,8 +104,8 @@ class ProductSubscriptionViewModel @Inject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            val result = ProductSubscriptionScreenResult.ScreenClosed
-            emitSideEffect(SideEffect.NavigateBackward(result))
+            val result = ProductSubscriptionScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(result))
         }
     }
 
@@ -143,8 +143,8 @@ class ProductSubscriptionViewModel @Inject constructor(
                         val message = Text.Resource(R.string.product_subscription_completed)
                         emitSideEffect(SideEffect.ShowToast(message))
 
-                        val result = ProductSubscriptionScreenResult.SubscriptionCompleted
-                        emitSideEffect(SideEffect.NavigateBackward(result))
+                        val action = ProductSubscriptionScreenAction.SubscriptionCompleted
+                        emitSideEffect(SideEffect.Navigate(action))
                     }
                     .onFailure { e ->
                         if (e is ValidationException) {
@@ -168,7 +168,7 @@ class ProductSubscriptionViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class NavigateBackward(val result: ProductSubscriptionScreenResult) : SideEffect
+        data class Navigate(val action: ProductSubscriptionScreenAction) : SideEffect
 
         data class OpenUrl(val url: Url) : SideEffect
 

@@ -52,7 +52,7 @@ import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 
 @Composable
 fun ProductSubscriptionScreen(
-    navigateBackward: (ProductSubscriptionScreenResult) -> Unit,
+    navigate: (ProductSubscriptionScreenAction) -> Unit,
     viewModel: ProductSubscriptionViewModel = hiltViewModel(),
 ) {
     val product by viewModel.product.collectAsStateWithLifecycle()
@@ -82,7 +82,7 @@ fun ProductSubscriptionScreen(
         onPoliciesAcceptedChanged = viewModel::onPoliciesAcceptedChanged,
         onSubscribeClicked = viewModel::onSubscribeClicked,
         sideEffects = viewModel.sideEffects,
-        navigateBackward = navigateBackward,
+        navigate = navigate,
     )
 }
 
@@ -104,11 +104,11 @@ private fun ScreenContent(
     onPoliciesAcceptedChanged: (Boolean) -> Unit,
     onSubscribeClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigateBackward: (ProductSubscriptionScreenResult) -> Unit,
+    navigate: (ProductSubscriptionScreenAction) -> Unit,
 ) {
     ProductSubscriptionScreenBehavior(
         sideEffects = sideEffects,
-        navigateBackward = navigateBackward,
+        navigate = navigate,
     )
 
     Column(
