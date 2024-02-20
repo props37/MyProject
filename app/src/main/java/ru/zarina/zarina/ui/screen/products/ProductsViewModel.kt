@@ -254,7 +254,7 @@ class ProductsViewModel @AssistedInject constructor(
 
     fun onSubscribeToProductClicked(product: Product) {
         navigationThrottler.throttle {
-            val action = ProductsScreenAction.AddProductToCartClicked(product)
+            val action = ProductsScreenAction.SubscribeToProductClicked(product)
             emitSideEffect(SideEffect.NavigateForward(action))
         }
     }
