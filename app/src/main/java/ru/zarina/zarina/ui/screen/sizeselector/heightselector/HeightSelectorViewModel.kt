@@ -57,27 +57,26 @@ class HeightSelectorViewModel @Inject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            val result = HeightSelectorScreenResult.ScreenClosed
-            emitSideEffect(SideEffect.NavigateBackward(result))
+            val action = HeightSelectorScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
-            val result = HeightSelectorScreenResult.SizeSelectorFlowClosed
-            emitSideEffect(SideEffect.NavigateBackward(result))
+            val action = HeightSelectorScreenAction.SizeSelectorFlowClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
     fun onOfferClicked(offer: ProductOffer) {
         navigationThrottler.throttle {
             val action = HeightSelectorScreenAction.OfferClicked(product.value, offer)
-            emitSideEffect(SideEffect.NavigateForward(action))
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class NavigateForward(val action: HeightSelectorScreenAction) : SideEffect
-        data class NavigateBackward(val result: HeightSelectorScreenResult) : SideEffect
+        data class Navigate(val action: HeightSelectorScreenAction) : SideEffect
     }
 }

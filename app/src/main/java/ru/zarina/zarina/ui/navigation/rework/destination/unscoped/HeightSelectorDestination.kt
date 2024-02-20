@@ -7,13 +7,26 @@ import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.sizeselector.heightselector.HeightSelectorBottomSheetScreenScreen
 import ru.zarina.zarina.ui.screen.sizeselector.heightselector.HeightSelectorScreenAction
-import ru.zarina.zarina.ui.screen.sizeselector.heightselector.HeightSelectorScreenResult
 
 fun NavGraphBuilder.heightSelectorBottomSheetScreen(navController: NavHostController) {
     bottomSheetDestination(UnscopedDestinations.HeightSelector) {
         HeightSelectorBottomSheetScreenScreen(
-            navigateForward = { action ->
+            navigate = { action ->
                 when (action) {
+                    HeightSelectorScreenAction.ScreenClosed -> {
+                        navController.popBackStack(
+                            route = UnscopedDestinations.HeightSelector.routeSchema,
+                            inclusive = true,
+                        )
+                    }
+
+                    HeightSelectorScreenAction.SizeSelectorFlowClosed -> {
+                        navController.popBackStack(
+                            route = UnscopedDestinations.SizeSelector.routeSchema,
+                            inclusive = true,
+                        )
+                    }
+
                     is HeightSelectorScreenAction.OfferClicked -> {
                         if (action.offer.isAvailable) {
                             // TODO: [High] Implement
@@ -30,23 +43,6 @@ fun NavGraphBuilder.heightSelectorBottomSheetScreen(navController: NavHostContro
                             }
                             navController.navigate(route, navOptions)
                         }
-                    }
-                }
-            },
-            navigateBackward = { result ->
-                when (result) {
-                    HeightSelectorScreenResult.ScreenClosed -> {
-                        navController.popBackStack(
-                            route = UnscopedDestinations.HeightSelector.routeSchema,
-                            inclusive = true,
-                        )
-                    }
-
-                    HeightSelectorScreenResult.SizeSelectorFlowClosed -> {
-                        navController.popBackStack(
-                            route = UnscopedDestinations.SizeSelector.routeSchema,
-                            inclusive = true,
-                        )
                     }
                 }
             },
