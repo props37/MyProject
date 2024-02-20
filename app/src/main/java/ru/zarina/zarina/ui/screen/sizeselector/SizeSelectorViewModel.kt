@@ -58,8 +58,8 @@ class SizeSelectorViewModel @Inject constructor(
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
-            val result = SizeSelectorScreenResult.ScreenClosed
-            emitSideEffect(SideEffect.NavigateBackward(result))
+            val action = SizeSelectorScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -67,14 +67,12 @@ class SizeSelectorViewModel @Inject constructor(
         // TODO: [High] Add product to cart if it is available
         navigationThrottler.throttle {
             val action = SizeSelectorScreenAction.SizeClicked(product.value, size.offers)
-            emitSideEffect(SideEffect.NavigateForward(action))
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class NavigateForward(val action: SizeSelectorScreenAction) : SideEffect
-
-        data class NavigateBackward(val result: SizeSelectorScreenResult) : SideEffect
+        data class Navigate(val action: SizeSelectorScreenAction) : SideEffect
     }
 
     @Immutable

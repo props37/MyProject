@@ -4,6 +4,8 @@ import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
 
 sealed class SizeSelectorScreenAction {
+    data object ScreenClosed : SizeSelectorScreenAction()
+
     data class SizeClicked(
         val product: Product,
         val offers: List<ProductOffer>,

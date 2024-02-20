@@ -21,8 +21,7 @@ import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorViewModel.Size
 
 @Composable
 fun SizeSelectorBottomSheetScreen(
-    navigateForward: (SizeSelectorScreenAction) -> Unit,
-    navigateBackward: (SizeSelectorScreenResult) -> Unit,
+    navigate: (SizeSelectorScreenAction) -> Unit,
     viewModel: SizeSelectorViewModel = hiltViewModel(),
 ) {
     val sizes by viewModel.sizes.collectAsStateWithLifecycle()
@@ -32,8 +31,7 @@ fun SizeSelectorBottomSheetScreen(
         onSizeClicked = viewModel::onSizeClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
-        navigateForward = navigateForward,
-        navigateBackward = navigateBackward,
+        navigate = navigate,
     )
 }
 
@@ -43,13 +41,11 @@ private fun ScreenContent(
     onSizeClicked: (Size) -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigateForward: (SizeSelectorScreenAction) -> Unit,
-    navigateBackward: (SizeSelectorScreenResult) -> Unit,
+    navigate: (SizeSelectorScreenAction) -> Unit,
 ) {
     SizeSelectorScreenBehavior(
         sideEffects = sideEffects,
-        navigateForward = navigateForward,
-        navigateBackward = navigateBackward,
+        navigate = navigate,
     )
 
     SizeSelectorScaffold(

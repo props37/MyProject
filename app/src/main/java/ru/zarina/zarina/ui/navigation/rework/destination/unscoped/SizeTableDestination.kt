@@ -7,14 +7,20 @@ import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorBottomSheetScreen
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorScreenAction
-import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorScreenResult
 import timber.log.Timber
 
 fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostController) {
     bottomSheetDestination(UnscopedDestinations.SizeSelector) {
         SizeSelectorBottomSheetScreen(
-            navigateForward = { action ->
+            navigate = { action ->
                 when (action) {
+                    SizeSelectorScreenAction.ScreenClosed -> {
+                        navController.popBackStack(
+                            route = UnscopedDestinations.SizeSelector.routeSchema,
+                            inclusive = true,
+                        )
+                    }
+
                     is SizeSelectorScreenAction.SizeClicked -> {
                         val firstOffer = action.offers.firstOrNull()
                         when {
@@ -49,16 +55,6 @@ fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostControll
                                 Timber.e("Could not perform navigation because offer is null")
                             }
                         }
-                    }
-                }
-            },
-            navigateBackward = { result ->
-                when (result) {
-                    SizeSelectorScreenResult.ScreenClosed -> {
-                        navController.popBackStack(
-                            route = UnscopedDestinations.SizeSelector.routeSchema,
-                            inclusive = true,
-                        )
                     }
                 }
             },

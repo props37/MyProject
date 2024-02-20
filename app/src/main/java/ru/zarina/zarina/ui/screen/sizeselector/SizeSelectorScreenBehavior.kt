@@ -14,19 +14,16 @@ import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorViewModel.SideEffect
 @Composable
 fun SizeSelectorScreenBehavior(
     sideEffects: Flow<SideEffect>,
-    navigateForward: (SizeSelectorScreenAction) -> Unit,
-    navigateBackward: (SizeSelectorScreenResult) -> Unit,
+    navigate: (SizeSelectorScreenAction) -> Unit,
 ) {
-    val updatedNavigateForward by rememberUpdatedState(navigateForward)
-    val updatedNavigateBackward by rememberUpdatedState(navigateBackward)
+    val updatedNavigate by rememberUpdatedState(navigate)
 
     LifecycleStartEffect(sideEffects) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
-                        is SideEffect.NavigateForward -> updatedNavigateForward(sideEffect.action)
-                        is SideEffect.NavigateBackward -> updatedNavigateBackward(sideEffect.result)
+                        is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
                     }
                 }
             }
