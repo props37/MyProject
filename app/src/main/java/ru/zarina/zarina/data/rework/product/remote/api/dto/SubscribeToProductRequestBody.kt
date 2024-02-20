@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SubscribeToProductBodyDto(
+data class SubscribeToProductRequestBody(
     @SerialName("barcodes")
     val barcodes: List<String>,
 

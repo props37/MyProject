@@ -5,9 +5,8 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.rework.authorization.remote.api.dto.AuthorizationTokensDto
+import ru.zarina.zarina.data.rework.authorization.remote.api.dto.RefreshAuthorizationTokensRequestBody
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
 import ru.zarina.zarina.util.library.ktor.setJsonBody
@@ -22,7 +21,7 @@ class AuthorizationApi @Inject constructor(
     }
 
     suspend fun refreshAuthorizationTokens(tokens: AuthorizationTokens): AuthorizationTokensDto {
-        val body = RefreshAuthorizationTokensBody(tokens.refreshToken.value)
+        val body = RefreshAuthorizationTokensRequestBody(tokens.refreshToken.value)
         return httpClient.get("/api/auth/jwt") {
             setJsonBody(body)
             markAsRefreshTokenRequest()
@@ -32,10 +31,4 @@ class AuthorizationApi @Inject constructor(
     private fun HttpRequestBuilder.markAsRefreshTokenRequest() {
         attributes.put(Auth.AuthCircuitBreaker, Unit)
     }
-
-    @Serializable
-    private data class RefreshAuthorizationTokensBody(
-        @SerialName("refresh_token")
-        val refreshToken: String,
-    )
 }

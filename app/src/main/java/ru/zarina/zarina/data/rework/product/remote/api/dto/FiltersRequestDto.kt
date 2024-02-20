@@ -6,7 +6,7 @@ import ru.zarina.zarina.data.rework.common.remote.api.dto.PriceFilterDto
 import ru.zarina.zarina.domain.rework.filter.Filters
 
 @Serializable
-data class FiltersBodyDto(
+data class FiltersRequestDto(
     @SerialName("price")
     val price: PriceFilterDto? = null,
 
@@ -32,7 +32,7 @@ data class FiltersBodyDto(
     )
 
     companion object {
-        fun from(filters: Filters): FiltersBodyDto? {
+        fun from(filters: Filters): FiltersRequestDto? {
             return if (!filters.isEmptyIgnoringSorting) {
                 val materials = filters.materials?.let { filter ->
                     if (!filter.isEmpty) filter.selectedItems.map { it.id.value } else null
@@ -49,7 +49,7 @@ data class FiltersBodyDto(
                 val availableForStorePickup = filters.storePickupAvailability?.let { filter ->
                     if (filter.isEnabled) StorePickupAvailability(isApplied = true) else null
                 }
-                FiltersBodyDto(
+                FiltersRequestDto(
                     price = filters.price?.let { PriceFilterDto.from(it) },
                     materials = materials,
                     sizes = sizes,

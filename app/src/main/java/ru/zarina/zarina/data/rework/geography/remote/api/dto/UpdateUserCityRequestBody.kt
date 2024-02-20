@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UpdateUserCityBodyDto(
+data class UpdateUserCityRequestBody(
     @SerialName("kladr_id")
     val kladrId: String,
 )

@@ -6,12 +6,12 @@ import kotlinx.serialization.Transient
 import ru.zarina.zarina.data.rework.common.remote.api.dto.SortingDto
 
 @Serializable
-data class GetProductsBodyDto(
+data class GetProductsRequestBody(
     @SerialName("category_id")
     val categoryId: Long,
 
     @SerialName("filters")
-    val filters: FiltersBodyDto?,
+    val filters: FiltersRequestDto?,
 
     @SerialName("sort")
     val sorting: SortingDto,
