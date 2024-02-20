@@ -16,7 +16,8 @@ class AddProductToCartUseCase @Inject constructor(
     override suspend fun execute(params: Params) {
         val barcode = params.barcode
         val count = params.count
-        cartRepository.addProductToCart(barcode, count)
+        val result = cartRepository.addProductToCart(barcode, count)
+        cartRepository.setCartProductCount(result.cartProductCount)
     }
 
     data class Params(val barcode: Barcode, val count: Int)
