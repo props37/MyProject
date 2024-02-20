@@ -16,7 +16,7 @@ fun NavGraphBuilder.catalogGraph(navController: NavHostController) {
             BottomNavBarItemSecondaryStartDestinationBackHandler(navController)
 
             CatalogScreen(
-                navigateForward = { action ->
+                navigate = { action ->
                     when (action) {
                         is CatalogScreenAction.CategoryClicked -> {
                             val args = UnscopedDestinations.Products.Args(action.categoryId)

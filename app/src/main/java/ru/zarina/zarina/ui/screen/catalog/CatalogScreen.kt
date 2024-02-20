@@ -45,7 +45,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun CatalogScreen(
-    navigateForward: (CatalogScreenAction) -> Unit,
+    navigate: (CatalogScreenAction) -> Unit,
     viewModel: CatalogViewModel = hiltViewModel(),
 ) {
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle(
@@ -69,7 +69,7 @@ fun CatalogScreen(
         onCategoryListItemClicked = viewModel::onCategoryListItemClicked,
         onCategoryListErrorRefreshClicked = viewModel::onCategoryListErrorRefreshClicked,
         sideEffects = viewModel.sideEffects,
-        navigateForward = navigateForward,
+        navigate = navigate,
     )
 }
 
@@ -87,11 +87,11 @@ private fun ScreenContent(
     onCategoryListItemClicked: (CategoryListItem) -> Unit,
     onCategoryListErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigateForward: (CatalogScreenAction) -> Unit,
+    navigate: (CatalogScreenAction) -> Unit,
 ) {
     CatalogScreenBehavior(
         sideEffects = sideEffects,
-        navigateForward = navigateForward,
+        navigate = navigate,
     )
 
     Column(
@@ -162,7 +162,7 @@ private fun Preview(
             onCategoryListItemClicked = {},
             onCategoryListErrorRefreshClicked = {},
             sideEffects = remember { emptyFlow() },
-            navigateForward = {},
+            navigate = {},
         )
     }
 }
