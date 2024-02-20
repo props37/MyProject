@@ -14,16 +14,16 @@ import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogViewModel.S
 @Composable
 fun DefaultCityDialogScreenBehavior(
     sideEffects: Flow<SideEffect>,
-    navigateBackward: (DefaultCityDialogScreenResult) -> Unit,
+    navigate: (DefaultCityDialogScreenAction) -> Unit,
 ) {
-    val updatedNavigateBackward by rememberUpdatedState(navigateBackward)
+    val updatedNavigate by rememberUpdatedState(navigate)
 
     LifecycleStartEffect(sideEffects) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
-                        is SideEffect.NavigateBackward -> updatedNavigateBackward(sideEffect.result)
+                        is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
                     }
                 }
             }

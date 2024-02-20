@@ -15,7 +15,7 @@ import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorBottomSheetScreen
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenAction
 import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreen
-import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreenResult
+import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreenAction
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenAction
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel
@@ -100,9 +100,9 @@ fun NavGraphBuilder.defaultCityDialogScreen(navController: NavHostController) {
         ),
     ) {
         DefaultCityDialogScreen(
-            navigateBackward = { result ->
-                when (result) {
-                    DefaultCityDialogScreenResult.ScreenClosed -> {
+            navigate = { action ->
+                when (action) {
+                    DefaultCityDialogScreenAction.ScreenClosed -> {
                         navController.popBackStack(
                             route = UnscopedDestinations.DefaultCityDialog.routeSchema,
                             inclusive = true,
