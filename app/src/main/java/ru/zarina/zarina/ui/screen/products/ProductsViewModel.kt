@@ -43,6 +43,7 @@ import ru.zarina.zarina.ui.common.paging.mapFavorites
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
+import ru.zarina.zarina.usecase.rework.cart.AddProductToCartUseCase
 import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase
 import ru.zarina.zarina.usecase.rework.favorite.AddProductToFavoritesUseCase
 import ru.zarina.zarina.usecase.rework.favorite.RemoveProductFromFavoritesUseCase
@@ -246,9 +247,20 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     fun onAddProductToCartClicked(product: Product) {
-        navigationThrottler.throttle {
-            val action = ProductsScreenAction.AddProductToCartClicked(product)
-            emitSideEffect(SideEffect.NavigateForward(action))
+        if (product.offers.size > 1) {
+            navigationThrottler.throttle {
+                val action = ProductsScreenAction.AddProductToCartClicked(product)
+                emitSideEffect(SideEffect.NavigateForward(action))
+            }
+        } else {
+            viewModelScope.launch {
+                val offer = product.offers.firstOrNull() ?: return@launch
+                val params = AddProductToCartUseCase.Params(
+                    barcode = offer.barcode,
+                    count = 1,
+                )
+                interactor.addProductToCart(params)
+            }
         }
     }
 
