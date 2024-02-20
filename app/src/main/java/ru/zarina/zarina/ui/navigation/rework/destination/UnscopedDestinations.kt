@@ -66,8 +66,8 @@ fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
 fun NavGraphBuilder.citySelectorBottomSheetScreen(navController: NavHostController) {
     bottomSheetDestination(UnscopedDestinations.CitySelector) {
         CitySelectorBottomSheetScreen(
-            navigate = { result ->
-                when (result) {
+            navigate = { action ->
+                when (action) {
                     CitySelectorScreenAction.ScreenClosed -> {
                         navController.popBackStack(
                             route = UnscopedDestinations.CitySelector.routeSchema,
@@ -76,7 +76,7 @@ fun NavGraphBuilder.citySelectorBottomSheetScreen(navController: NavHostControll
                     }
 
                     is CitySelectorScreenAction.CitySelected -> {
-                        val cityParcelable = CityParcelable.from(result.city)
+                        val cityParcelable = CityParcelable.from(action.city)
                         val result = UnscopedDestinations.CitySelector.Result(cityParcelable)
                         navController.previousBackStackEntry?.savedStateHandle
                             ?.set(UnscopedDestinations.CitySelector.RESULT_KEY, result)
