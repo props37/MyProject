@@ -209,6 +209,8 @@ object UnscopedDestinations {
     data object SizeSelector : Destination<SizeSelector.Args>() {
         const val ARG_KEY_PRODUCT = "arg_product"
 
+        const val RESULT_KEY = "result_size_selector"
+
         private val baseRoute: String
             get() = BaseRouteReworked.SIZE_SELECTOR.route
 
@@ -233,6 +235,13 @@ object UnscopedDestinations {
             )
 
         data class Args(val product: Product)
+
+        @Parcelize
+        data class Result(
+            val id: String,
+            val product: ProductParcelable,
+            val offer: ProductOfferParcelable,
+        ) : Parcelable
     }
 
     data object HeightSelector : Destination<HeightSelector.Args>() {

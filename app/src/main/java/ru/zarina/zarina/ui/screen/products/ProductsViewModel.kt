@@ -35,6 +35,7 @@ import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.filter.coerceInAvailable
 import ru.zarina.zarina.domain.rework.filter.selected
 import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.rework.product.ProductOffer
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
@@ -57,7 +58,7 @@ import timber.log.Timber
 class ProductsViewModel @AssistedInject constructor(
     @Assisted
     backStackEntrySavedStateHandle: SavedStateHandle,
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val interactor: ProductsInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
@@ -176,6 +177,7 @@ class ProductsViewModel @AssistedInject constructor(
         categoryFetchRequests.trySend(Unit)
 
         handleFiltersResult(backStackEntrySavedStateHandle)
+        handleSizeSelectorResult(backStackEntrySavedStateHandle)
     }
 
     fun onBackClicked() {
@@ -253,18 +255,11 @@ class ProductsViewModel @AssistedInject constructor(
                 emitSideEffect(SideEffect.NavigateForward(action))
             }
         } else {
-            viewModelScope.launch {
-                val offer = product.offers.firstOrNull() ?: return@launch
-                val params = AddProductToCartUseCase.Params(
-                    barcode = offer.barcode,
-                    count = 1,
-                )
-                interactor.addProductToCart(params)
-                    .onFailure {
-                        val message = Text.Resource(R.string.adding_product_to_cart_error_toast)
-                        emitSideEffect(SideEffect.ShowToast(message))
-                    }
+            val offer = product.offers.firstOrNull() ?: run {
+                Timber.e("Could not add product $product to cart because it has no offers")
+                return
             }
+            addProductToCart(offer)
         }
     }
 
@@ -291,6 +286,20 @@ class ProductsViewModel @AssistedInject constructor(
         categoryFetchRequests.trySend(Unit)
     }
 
+    private fun addProductToCart(offer: ProductOffer) {
+        viewModelScope.launch {
+            val params = AddProductToCartUseCase.Params(
+                barcode = offer.barcode,
+                count = 1,
+            )
+            interactor.addProductToCart(params)
+                .onFailure {
+                    val message = Text.Resource(R.string.adding_product_to_cart_error_toast)
+                    emitSideEffect(SideEffect.ShowToast(message))
+                }
+        }
+    }
+
     private fun handleFiltersResult(backStackEntrySavedStateHandle: SavedStateHandle) {
         backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.Filters.Result?>(
             key = UnscopedDestinations.Filters.RESULT_KEY,
@@ -301,6 +310,23 @@ class ProductsViewModel @AssistedInject constructor(
                     Timber.v("Filters screen result: $result")
                     val filters = result.filters.toFilters()
                     this.filters.value = filters
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun handleSizeSelectorResult(backStackEntrySavedStateHandle: SavedStateHandle) {
+        backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.SizeSelector.Result?>(
+            key = UnscopedDestinations.SizeSelector.RESULT_KEY,
+            initialValue = null,
+        )
+            .onEach { result ->
+                val previousSizeSelectorResult: String? =
+                    savedStateHandle[KEY_PREV_SIZE_SELECTOR_RESULT]
+                if (result != null && result.id != previousSizeSelectorResult) {
+                    Timber.v("SizeSelector screen result: $result")
+                    addProductToCart(result.offer.toProductOffer())
+                    savedStateHandle[KEY_PREV_SIZE_SELECTOR_RESULT] = result.id
                 }
             }
             .launchIn(viewModelScope)
@@ -325,5 +351,9 @@ class ProductsViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(backStackEntrySavedStateHandle: SavedStateHandle): ProductsViewModel
+    }
+
+    companion object {
+        private const val KEY_PREV_SIZE_SELECTOR_RESULT = "prev_size_selector_result"
     }
 }

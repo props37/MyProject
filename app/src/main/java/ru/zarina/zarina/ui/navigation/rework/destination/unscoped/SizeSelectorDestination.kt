@@ -3,11 +3,14 @@ package ru.zarina.zarina.ui.navigation.rework.destination.unscoped
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navOptions
+import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
+import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorBottomSheetScreen
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorScreenAction
 import timber.log.Timber
+import java.util.UUID
 
 fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostController) {
     bottomSheetDestination(UnscopedDestinations.SizeSelector) {
@@ -34,7 +37,19 @@ fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostControll
                             }
 
                             firstOffer != null && firstOffer.isAvailable -> {
-                                // TODO: [High] Implement
+                                navController.popBackStack(
+                                    route = UnscopedDestinations.SizeSelector.routeSchema,
+                                    inclusive = true,
+                                )
+                                val productParcelable = ProductParcelable.from(action.product)
+                                val offerParcelable = ProductOfferParcelable.from(firstOffer)
+                                val result = UnscopedDestinations.SizeSelector.Result(
+                                    id = UUID.randomUUID().toString(),
+                                    product = productParcelable,
+                                    offer = offerParcelable,
+                                )
+                                navController.currentBackStackEntry?.savedStateHandle
+                                    ?.set(UnscopedDestinations.SizeSelector.RESULT_KEY, result)
                             }
 
                             firstOffer != null && !firstOffer.isAvailable -> {
