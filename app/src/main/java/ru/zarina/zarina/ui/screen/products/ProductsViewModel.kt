@@ -260,6 +260,10 @@ class ProductsViewModel @AssistedInject constructor(
                     count = 1,
                 )
                 interactor.addProductToCart(params)
+                    .onFailure {
+                        val message = Text.Resource(R.string.adding_product_to_cart_error_toast)
+                        emitSideEffect(SideEffect.ShowToast(message))
+                    }
             }
         }
     }
