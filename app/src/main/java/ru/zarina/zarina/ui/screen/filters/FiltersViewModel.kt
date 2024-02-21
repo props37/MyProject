@@ -31,7 +31,7 @@ import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
-import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.filters.FiltersViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.product.GetCategoryProductInfoFlowUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed

@@ -1,19 +1,12 @@
 package ru.zarina.zarina.ui.navigation.rework.destination
 
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
-import ru.zarina.zarina.ui.navigation.base.composableDestination
-import ru.zarina.zarina.ui.navigation.base.navigationGraph
-import ru.zarina.zarina.ui.navigation.rework.graph.ProfileGraph
-import ru.zarina.zarina.ui.navigation.rework.util.BottomNavBarItemSecondaryStartDestinationBackHandler
-import ru.zarina.zarina.ui.screen.profile.ProfileScreen
+import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
+import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleGraph
+import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
 
-fun NavGraphBuilder.profileGraph(navController: NavHostController) {
-    navigationGraph(ProfileGraph) {
-        composableDestination(ProfileGraph.Profile) {
-            BottomNavBarItemSecondaryStartDestinationBackHandler(navController)
-
-            ProfileScreen()
-        }
-    }
+data object ProfileGraph : SimpleGraph(
+    baseRoute = BaseRouteReworked.PROFILE_GRAPH,
+    startDestination = Profile,
+) {
+    data object Profile : SimpleDestination(BaseRouteReworked.PROFILE)
 }

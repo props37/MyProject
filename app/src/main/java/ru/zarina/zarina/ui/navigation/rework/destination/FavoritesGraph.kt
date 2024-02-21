@@ -1,19 +1,12 @@
 package ru.zarina.zarina.ui.navigation.rework.destination
 
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
-import ru.zarina.zarina.ui.navigation.base.composableDestination
-import ru.zarina.zarina.ui.navigation.base.navigationGraph
-import ru.zarina.zarina.ui.navigation.rework.graph.FavoritesGraph
-import ru.zarina.zarina.ui.navigation.rework.util.BottomNavBarItemSecondaryStartDestinationBackHandler
-import ru.zarina.zarina.ui.screen.favorites.FavoritesScreen
+import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
+import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleGraph
+import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
 
-fun NavGraphBuilder.favoritesGraph(navController: NavHostController) {
-    navigationGraph(FavoritesGraph) {
-        composableDestination(FavoritesGraph.Favorites) {
-            BottomNavBarItemSecondaryStartDestinationBackHandler(navController)
-
-            FavoritesScreen()
-        }
-    }
+data object FavoritesGraph : SimpleGraph(
+    baseRoute = BaseRouteReworked.FAVORITES_GRAPH,
+    startDestination = Favorites,
+) {
+    data object Favorites : SimpleDestination(BaseRouteReworked.FAVORITES)
 }

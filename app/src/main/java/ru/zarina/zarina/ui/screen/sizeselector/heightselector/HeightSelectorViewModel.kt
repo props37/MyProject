@@ -15,7 +15,7 @@ import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
-import ru.zarina.zarina.ui.navigation.rework.graph.SizeSelectorGraph
+import ru.zarina.zarina.ui.navigation.rework.destination.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.sizeselector.heightselector.HeightSelectorViewModel.SideEffect
 import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject

@@ -1,19 +1,12 @@
 package ru.zarina.zarina.ui.navigation.rework.destination
 
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
-import ru.zarina.zarina.ui.navigation.base.composableDestination
-import ru.zarina.zarina.ui.navigation.base.navigationGraph
-import ru.zarina.zarina.ui.navigation.rework.graph.CartGraph
-import ru.zarina.zarina.ui.navigation.rework.util.BottomNavBarItemSecondaryStartDestinationBackHandler
-import ru.zarina.zarina.ui.screen.cart.CartScreen
+import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
+import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleGraph
+import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
 
-fun NavGraphBuilder.cartGraph(navController: NavHostController) {
-    navigationGraph(CartGraph) {
-        composableDestination(CartGraph.Cart) {
-            BottomNavBarItemSecondaryStartDestinationBackHandler(navController)
-
-            CartScreen()
-        }
-    }
+data object CartGraph : SimpleGraph(
+    baseRoute = BaseRouteReworked.CART_GRAPH,
+    startDestination = Cart,
+) {
+    data object Cart : SimpleDestination(BaseRouteReworked.CART)
 }

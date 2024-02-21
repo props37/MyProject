@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.navigation.rework.destination.unscoped
+package ru.zarina.zarina.ui.navigation.rework.screen.unscoped
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
@@ -7,8 +7,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.rework.NavigationTransitionDurationMillis
-import ru.zarina.zarina.ui.navigation.rework.graph.SizeSelectorGraph
-import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.SizeSelectorGraph
+import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.products.ProductsScreen
 import ru.zarina.zarina.ui.screen.products.ProductsScreenAction
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel

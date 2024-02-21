@@ -10,19 +10,19 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import ru.zarina.zarina.ui.navigation.base.Destination
-import ru.zarina.zarina.ui.navigation.rework.destination.cartGraph
-import ru.zarina.zarina.ui.navigation.rework.destination.catalogGraph
-import ru.zarina.zarina.ui.navigation.rework.destination.citySelectorBottomSheetScreen
-import ru.zarina.zarina.ui.navigation.rework.destination.defaultCityDialogScreen
-import ru.zarina.zarina.ui.navigation.rework.destination.favoritesGraph
-import ru.zarina.zarina.ui.navigation.rework.destination.homeGraph
-import ru.zarina.zarina.ui.navigation.rework.destination.onboardingScreen
-import ru.zarina.zarina.ui.navigation.rework.destination.profileGraph
-import ru.zarina.zarina.ui.navigation.rework.destination.sizeSelectorGraph
-import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.filtersScreen
-import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.listFilterScreen
-import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.productSubscriptionScreen
-import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.productsScreen
+import ru.zarina.zarina.ui.navigation.rework.screen.cartGraph
+import ru.zarina.zarina.ui.navigation.rework.screen.catalogGraph
+import ru.zarina.zarina.ui.navigation.rework.screen.citySelectorBottomSheetScreen
+import ru.zarina.zarina.ui.navigation.rework.screen.defaultCityDialogScreen
+import ru.zarina.zarina.ui.navigation.rework.screen.favoritesGraph
+import ru.zarina.zarina.ui.navigation.rework.screen.homeGraph
+import ru.zarina.zarina.ui.navigation.rework.screen.onboardingScreen
+import ru.zarina.zarina.ui.navigation.rework.screen.profileGraph
+import ru.zarina.zarina.ui.navigation.rework.screen.sizeSelectorGraph
+import ru.zarina.zarina.ui.navigation.rework.screen.unscoped.filtersScreen
+import ru.zarina.zarina.ui.navigation.rework.screen.unscoped.listFilterScreen
+import ru.zarina.zarina.ui.navigation.rework.screen.unscoped.productSubscriptionScreen
+import ru.zarina.zarina.ui.navigation.rework.screen.unscoped.productsScreen
 
 @Composable
 fun ZarinaNavigation(

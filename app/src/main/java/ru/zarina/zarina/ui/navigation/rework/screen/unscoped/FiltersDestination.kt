@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.navigation.rework.destination.unscoped
+package ru.zarina.zarina.ui.navigation.rework.screen.unscoped
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.rework.NavigationTransitionDurationMillis
-import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.filters.FiltersScreen
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenAction
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenResult
