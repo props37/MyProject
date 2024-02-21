@@ -17,6 +17,7 @@ class FavoriteRepository @Inject constructor(
     val areFavoriteProductIdsFetched: StateFlow<Boolean> =
         localDataSource.areFavoriteProductIdsFetched
 
+    // TODO: [High] Migrate to separate method
     suspend fun fetchFavoriteProductIds(): Set<Product.Id> {
         val favoriteProductIds = remoteDataSource.getFavoriteProductIds().first()
         localDataSource.setFavoriteProductIds(favoriteProductIds)
