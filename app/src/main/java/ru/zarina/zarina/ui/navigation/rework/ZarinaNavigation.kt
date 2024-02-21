@@ -18,12 +18,11 @@ import ru.zarina.zarina.ui.navigation.rework.destination.favoritesGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.homeGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.onboardingScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.profileGraph
+import ru.zarina.zarina.ui.navigation.rework.destination.sizeSelectorGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.filtersScreen
-import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.heightSelectorBottomSheetScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.listFilterScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.productSubscriptionScreen
 import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.productsScreen
-import ru.zarina.zarina.ui.navigation.rework.destination.unscoped.sizeSelectorBottomSheetScreen
 
 @Composable
 fun ZarinaNavigation(
@@ -47,14 +46,14 @@ fun ZarinaNavigation(
         profileGraph(updatedNavController)
         cartGraph(updatedNavController)
 
+        sizeSelectorGraph(updatedNavController)
+
         onboardingScreen(updatedNavController)
         citySelectorBottomSheetScreen(updatedNavController)
         defaultCityDialogScreen(updatedNavController)
         productsScreen(updatedNavController)
         filtersScreen(updatedNavController)
         listFilterScreen(updatedNavController)
-        sizeSelectorBottomSheetScreen(updatedNavController)
-        heightSelectorBottomSheetScreen(updatedNavController)
         productSubscriptionScreen(updatedNavController)
     }
 }

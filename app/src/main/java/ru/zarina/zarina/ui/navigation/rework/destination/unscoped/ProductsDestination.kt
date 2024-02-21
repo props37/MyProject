@@ -7,6 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.rework.NavigationTransitionDurationMillis
+import ru.zarina.zarina.ui.navigation.rework.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.products.ProductsScreen
 import ru.zarina.zarina.ui.screen.products.ProductsScreenAction
@@ -65,15 +66,15 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                     }
 
                     is ProductsScreenAction.AddProductToCartClicked -> {
-                        val args = UnscopedDestinations.SizeSelector.Args(action.product)
-                        val route = UnscopedDestinations.SizeSelector.createRoute(args)
+                        val args = SizeSelectorGraph.SizeSelector.Args(action.product)
+                        val route = SizeSelectorGraph.SizeSelector.createRoute(args)
                         navController.navigate(route)
                     }
 
                     is ProductsScreenAction.SubscribeToProductClicked -> {
                         if (action.product.offers.size > 1) {
-                            val args = UnscopedDestinations.SizeSelector.Args(action.product)
-                            val route = UnscopedDestinations.SizeSelector.createRoute(args)
+                            val args = SizeSelectorGraph.SizeSelector.Args(action.product)
+                            val route = SizeSelectorGraph.SizeSelector.createRoute(args)
                             navController.navigate(route)
                         } else {
                             val offer = action.product.offers.firstOrNull() ?: return@ProductsScreen

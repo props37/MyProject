@@ -42,6 +42,7 @@ import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.common.paging.mapFavorites
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
+import ru.zarina.zarina.ui.navigation.rework.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.cart.AddProductToCartUseCase
@@ -316,8 +317,8 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     private fun handleSizeSelectorResult(backStackEntrySavedStateHandle: SavedStateHandle) {
-        backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.SizeSelector.Result?>(
-            key = UnscopedDestinations.SizeSelector.RESULT_KEY,
+        backStackEntrySavedStateHandle.getStateFlow<SizeSelectorGraph.SizeSelector.Result?>(
+            key = SizeSelectorGraph.SizeSelector.RESULT_KEY,
             initialValue = null,
         )
             .onEach { result ->
