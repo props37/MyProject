@@ -89,14 +89,14 @@ fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
                     }
 
                     is FiltersScreenResult.FiltersChanged -> {
-                        val filtersParcelable = FiltersParcelable.from(result.filters)
-                        val result = UnscopedDestinations.Filters.Result(filtersParcelable)
-                        navController.previousBackStackEntry?.savedStateHandle
-                            ?.set(UnscopedDestinations.Filters.RESULT_KEY, result)
                         navController.popBackStack(
                             route = UnscopedDestinations.Filters.routeSchema,
                             inclusive = true,
                         )
+                        val filtersParcelable = FiltersParcelable.from(result.filters)
+                        val result = UnscopedDestinations.Filters.Result(filtersParcelable)
+                        navController.currentBackStackEntry?.savedStateHandle
+                            ?.set(UnscopedDestinations.Filters.RESULT_KEY, result)
                     }
                 }
             },

@@ -50,14 +50,14 @@ fun NavGraphBuilder.listFilterScreen(navController: NavHostController) {
                     }
 
                     is ListFilterScreenResult.FilterChanged -> {
-                        val filterParcelable = ListFilterParcelable.from(result.filter)
-                        val result = UnscopedDestinations.ListFilter.Result(filterParcelable)
-                        navController.previousBackStackEntry?.savedStateHandle
-                            ?.set(UnscopedDestinations.ListFilter.RESULT_KEY, result)
                         navController.popBackStack(
                             route = UnscopedDestinations.ListFilter.routeSchema,
                             inclusive = true,
                         )
+                        val filterParcelable = ListFilterParcelable.from(result.filter)
+                        val result = UnscopedDestinations.ListFilter.Result(filterParcelable)
+                        navController.currentBackStackEntry?.savedStateHandle
+                            ?.set(UnscopedDestinations.ListFilter.RESULT_KEY, result)
                     }
                 }
             },
