@@ -42,8 +42,8 @@ import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.common.paging.mapFavorites
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
-import ru.zarina.zarina.ui.navigation.rework.destination.SizeSelectorGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.cart.AddProductToCartUseCase
 import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase

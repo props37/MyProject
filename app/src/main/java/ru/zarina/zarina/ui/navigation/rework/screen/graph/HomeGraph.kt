@@ -5,8 +5,8 @@ import androidx.navigation.NavHostController
 import ru.zarina.zarina.domain.rework.common.ClickAction
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
-import ru.zarina.zarina.ui.navigation.rework.destination.HomeGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.graph.HomeGraph
 import ru.zarina.zarina.ui.screen.home.HomeScreen
 import ru.zarina.zarina.ui.screen.home.HomeScreenAction
 

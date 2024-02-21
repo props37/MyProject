@@ -6,8 +6,8 @@ import androidx.navigation.navOptions
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
-import ru.zarina.zarina.ui.navigation.rework.destination.SizeSelectorGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorBottomSheetScreen
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorScreenAction
 import timber.log.Timber

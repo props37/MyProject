@@ -10,8 +10,8 @@ import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.dialogDestination
-import ru.zarina.zarina.ui.navigation.rework.destination.HomeGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.graph.HomeGraph
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorBottomSheetScreen
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenAction
 import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreen

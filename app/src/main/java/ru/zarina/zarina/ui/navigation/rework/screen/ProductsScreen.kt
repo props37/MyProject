@@ -7,8 +7,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.rework.NavigationTransitionDurationMillis
-import ru.zarina.zarina.ui.navigation.rework.destination.SizeSelectorGraph
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.products.ProductsScreen
 import ru.zarina.zarina.ui.screen.products.ProductsScreenAction
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel
