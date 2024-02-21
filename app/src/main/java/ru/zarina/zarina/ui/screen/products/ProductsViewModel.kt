@@ -30,12 +30,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.rework.common.Barcode
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.filter.coerceInAvailable
 import ru.zarina.zarina.domain.rework.filter.selected
 import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.domain.rework.product.ProductOffer
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
@@ -260,7 +260,7 @@ class ProductsViewModel @AssistedInject constructor(
                 Timber.e("Could not add product $product to cart because it has no offers")
                 return
             }
-            addProductToCart(offer)
+            addProductToCart(product.id, offer.barcode)
         }
     }
 
@@ -287,10 +287,11 @@ class ProductsViewModel @AssistedInject constructor(
         categoryFetchRequests.trySend(Unit)
     }
 
-    private fun addProductToCart(offer: ProductOffer) {
+    private fun addProductToCart(productId: Product.Id, barcode: Barcode) {
         viewModelScope.launch {
             val params = AddProductToCartUseCase.Params(
-                barcode = offer.barcode,
+                productId = productId,
+                barcode = barcode,
                 count = 1,
             )
             interactor.addProductToCart(params)
@@ -326,7 +327,10 @@ class ProductsViewModel @AssistedInject constructor(
                     savedStateHandle[KEY_PREV_SIZE_SELECTOR_RESULT]
                 if (result != null && result.id != previousSizeSelectorResult) {
                     Timber.v("SizeSelector screen result: $result")
-                    addProductToCart(result.offer.toProductOffer())
+                    addProductToCart(
+                        productId = result.product.toProduct().id,
+                        barcode = result.offer.toProductOffer().barcode,
+                    )
                     savedStateHandle[KEY_PREV_SIZE_SELECTOR_RESULT] = result.id
                 }
             }

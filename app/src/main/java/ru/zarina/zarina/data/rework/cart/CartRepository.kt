@@ -26,8 +26,14 @@ class CartRepository @Inject constructor(
         return cartProductIds
     }
 
-    suspend fun addProductToCart(barcode: Barcode, count: Int): ProductAdditionToCartResult {
-        return remoteDataSource.addProductToCart(barcode, count)
+    suspend fun addProductToCart(
+        productId: Product.Id,
+        barcode: Barcode,
+        count: Int,
+    ): ProductAdditionToCartResult {
+        val result = remoteDataSource.addProductToCart(barcode, count)
+        localDataSource.addProductToCart(productId)
+        return result
     }
 
     fun setCartProductCount(count: Int) {

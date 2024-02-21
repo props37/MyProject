@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.data.rework.cart.CartRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.common.Barcode
+import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.usecase.base.UseCase
 import javax.inject.Inject
 
@@ -14,11 +15,12 @@ class AddProductToCartUseCase @Inject constructor(
 ) : UseCase<AddProductToCartUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
+        val productId = params.productId
         val barcode = params.barcode
         val count = params.count
-        val result = cartRepository.addProductToCart(barcode, count)
+        val result = cartRepository.addProductToCart(productId, barcode, count)
         cartRepository.setCartProductCount(result.cartProductCount)
     }
 
-    data class Params(val barcode: Barcode, val count: Int)
+    data class Params(val productId: Product.Id, val barcode: Barcode, val count: Int)
 }
