@@ -31,11 +31,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -218,7 +218,10 @@ private fun RowScope.Item(
             label = "ZarinaBottomNavBar item color",
         )
 
-        Box {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.widthIn(min = 40.dp),
+        ) {
             Icon(
                 painter = painterResource(iconResId),
                 contentDescription = title,
@@ -228,7 +231,7 @@ private fun RowScope.Item(
 
             ItemCounter(
                 count = counterValue,
-                modifier = Modifier.offset(x = 12.dp, y = (-2).dp),
+                modifier = Modifier.align(Alignment.TopEnd),
             )
         }
 
