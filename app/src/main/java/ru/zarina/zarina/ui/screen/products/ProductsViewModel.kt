@@ -317,8 +317,8 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     private fun handleSizeSelectorResult(backStackEntrySavedStateHandle: SavedStateHandle) {
-        backStackEntrySavedStateHandle.getStateFlow<SizeSelectorGraph.SizeSelector.Result?>(
-            key = SizeSelectorGraph.SizeSelector.RESULT_KEY,
+        backStackEntrySavedStateHandle.getStateFlow<SizeSelectorGraph.Result?>(
+            key = SizeSelectorGraph.RESULT_KEY,
             initialValue = null,
         )
             .onEach { result ->

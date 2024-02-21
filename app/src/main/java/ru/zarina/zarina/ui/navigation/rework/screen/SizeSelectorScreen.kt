@@ -44,13 +44,13 @@ fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostControll
                                 )
                                 val productParcelable = ProductParcelable.from(action.product)
                                 val offerParcelable = ProductOfferParcelable.from(firstOffer)
-                                val result = SizeSelectorGraph.SizeSelector.Result(
+                                val result = SizeSelectorGraph.Result(
                                     id = UUID.randomUUID().toString(),
                                     product = productParcelable,
                                     offer = offerParcelable,
                                 )
                                 navController.currentBackStackEntry?.savedStateHandle
-                                    ?.set(SizeSelectorGraph.SizeSelector.RESULT_KEY, result)
+                                    ?.set(SizeSelectorGraph.RESULT_KEY, result)
                             }
 
                             firstOffer != null && !firstOffer.isAvailable -> {

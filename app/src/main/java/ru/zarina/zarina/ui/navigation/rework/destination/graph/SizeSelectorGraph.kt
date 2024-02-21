@@ -20,6 +20,8 @@ import ru.zarina.zarina.ui.navigation.rework.base.navtype.ProductOfferParcelable
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.ProductParcelableType
 
 data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
+    const val RESULT_KEY = "result_size_selector"
+
     private val routeBase: String
         get() = BaseRouteReworked.SIZE_SELECTOR_GRAPH.route
 
@@ -40,11 +42,16 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
 
     override val startDestination: Destination<*> get() = SizeSelector
 
+    @Parcelize
+    data class Result(
+        val id: String,
+        val product: ProductParcelable,
+        val offer: ProductOfferParcelable,
+    ) : Parcelable
+
 
     data object SizeSelector : Destination<SizeSelector.Args>() {
         const val ARG_KEY_PRODUCT = "arg_product"
-
-        const val RESULT_KEY = "result_size_selector"
 
         private val baseRoute: String
             get() = BaseRouteReworked.SIZE_SELECTOR.route
@@ -70,13 +77,6 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
             )
 
         data class Args(val product: Product)
-
-        @Parcelize
-        data class Result(
-            val id: String,
-            val product: ProductParcelable,
-            val offer: ProductOfferParcelable,
-        ) : Parcelable
     }
 
     data object HeightSelector : Destination<HeightSelector.Args>() {
