@@ -1,19 +1,19 @@
-package ru.zarina.zarina.ui.navigation.rework.screen
+package ru.zarina.zarina.ui.navigation.rework.screen.graph
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
-import ru.zarina.zarina.ui.navigation.rework.destination.FavoritesGraph
+import ru.zarina.zarina.ui.navigation.rework.destination.CartGraph
 import ru.zarina.zarina.ui.navigation.rework.util.BottomNavBarItemSecondaryStartDestinationBackHandler
-import ru.zarina.zarina.ui.screen.favorites.FavoritesScreen
+import ru.zarina.zarina.ui.screen.cart.CartScreen
 
-fun NavGraphBuilder.favoritesGraph(navController: NavHostController) {
-    navigationGraph(FavoritesGraph) {
-        composableDestination(FavoritesGraph.Favorites) {
+fun NavGraphBuilder.cartGraph(navController: NavHostController) {
+    navigationGraph(CartGraph) {
+        composableDestination(CartGraph.Cart) {
             BottomNavBarItemSecondaryStartDestinationBackHandler(navController)
 
-            FavoritesScreen()
+            CartScreen()
         }
     }
 }

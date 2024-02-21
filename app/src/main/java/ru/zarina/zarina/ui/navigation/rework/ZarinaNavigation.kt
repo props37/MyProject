@@ -10,19 +10,19 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import ru.zarina.zarina.ui.navigation.base.Destination
-import ru.zarina.zarina.ui.navigation.rework.screen.cartGraph
-import ru.zarina.zarina.ui.navigation.rework.screen.catalogGraph
 import ru.zarina.zarina.ui.navigation.rework.screen.citySelectorBottomSheetScreen
 import ru.zarina.zarina.ui.navigation.rework.screen.defaultCityDialogScreen
-import ru.zarina.zarina.ui.navigation.rework.screen.favoritesGraph
-import ru.zarina.zarina.ui.navigation.rework.screen.homeGraph
+import ru.zarina.zarina.ui.navigation.rework.screen.filtersScreen
+import ru.zarina.zarina.ui.navigation.rework.screen.graph.cartGraph
+import ru.zarina.zarina.ui.navigation.rework.screen.graph.catalogGraph
+import ru.zarina.zarina.ui.navigation.rework.screen.graph.favoritesGraph
+import ru.zarina.zarina.ui.navigation.rework.screen.graph.homeGraph
+import ru.zarina.zarina.ui.navigation.rework.screen.graph.profileGraph
+import ru.zarina.zarina.ui.navigation.rework.screen.graph.sizeSelectorGraph
+import ru.zarina.zarina.ui.navigation.rework.screen.listFilterScreen
 import ru.zarina.zarina.ui.navigation.rework.screen.onboardingScreen
-import ru.zarina.zarina.ui.navigation.rework.screen.profileGraph
-import ru.zarina.zarina.ui.navigation.rework.screen.sizeSelectorGraph
-import ru.zarina.zarina.ui.navigation.rework.screen.unscoped.filtersScreen
-import ru.zarina.zarina.ui.navigation.rework.screen.unscoped.listFilterScreen
-import ru.zarina.zarina.ui.navigation.rework.screen.unscoped.productSubscriptionScreen
-import ru.zarina.zarina.ui.navigation.rework.screen.unscoped.productsScreen
+import ru.zarina.zarina.ui.navigation.rework.screen.productSubscriptionScreen
+import ru.zarina.zarina.ui.navigation.rework.screen.productsScreen
 
 @Composable
 fun ZarinaNavigation(

@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.navigation.rework.screen.unscoped
+package ru.zarina.zarina.ui.navigation.rework.screen
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController

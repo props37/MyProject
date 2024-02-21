@@ -20,6 +20,8 @@ import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenAction
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel
 
+// TODO: [Low] Extract to separate files
+
 fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
     composableDestination(
         destination = UnscopedDestinations.Onboarding,
