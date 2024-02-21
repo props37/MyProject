@@ -81,8 +81,8 @@
     <string name="first_name">Имя</string>
     <string name="incorrect_data">Некорректные данные</string>
     <string name="product_subscription_completed">Подписка на товар оформлена</string>
-    <string name="adding_product_to_favorites_toast_error">Не удалось добавить товар в избранное</string>
-    <string name="removing_product_from_favorites_toast_error">Не удалось удалить товар из избранного</string>
+    <string name="adding_product_to_favorites_error_toast">Не удалось добавить товар в избранное</string>
+    <string name="removing_product_from_favorites_error_toast">Не удалось удалить товар из избранного</string>
     <string name="adding_product_to_cart_error_toast">Не удалось добавить товар в корзину</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>

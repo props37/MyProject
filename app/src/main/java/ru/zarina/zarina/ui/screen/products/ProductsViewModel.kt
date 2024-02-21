@@ -236,9 +236,9 @@ class ProductsViewModel @AssistedInject constructor(
             }
             result.onFailure {
                 val messageResId = if (product.isInFavorites) {
-                    R.string.removing_product_from_favorites_toast_error
+                    R.string.removing_product_from_favorites_error_toast
                 } else {
-                    R.string.adding_product_to_favorites_toast_error
+                    R.string.adding_product_to_favorites_error_toast
                 }
                 val message = Text.Resource(messageResId)
                 emitSideEffect(SideEffect.ShowToast(message))
