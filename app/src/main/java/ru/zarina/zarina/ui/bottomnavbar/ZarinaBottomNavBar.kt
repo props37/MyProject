@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.bottomnavbar
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -15,8 +16,10 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -28,6 +31,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,6 +39,7 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
@@ -50,6 +55,7 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -66,14 +72,17 @@ import ru.zarina.zarina.ui.common.behavior.bottomnavbar.BottomNavBarBehavior
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
+import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.HorizontalAndBottom
+import ru.zarina.zarina.util.compose.unscalable
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ZarinaBottomNavBar(
     navController: NavHostController,
+    cartProductCount: Int,
     modifier: Modifier = Modifier,
     windowInsets: WindowInsets = DefaultWindowInsets,
 ) {
@@ -166,6 +175,7 @@ fun ZarinaBottomNavBar(
                     iconResId = item.iconResId,
                     isSelected = isItemSelected(item, backStack),
                     onClick = { navController.navigateToBottomNavBarItem(item) },
+                    counterValue = if (item is BottomNavBarItem.Cart) cartProductCount else null,
                 )
             }
         }
@@ -180,6 +190,7 @@ private fun RowScope.Item(
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    counterValue: Int? = null,
     isEnabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
@@ -207,12 +218,19 @@ private fun RowScope.Item(
             label = "ZarinaBottomNavBar item color",
         )
 
-        Icon(
-            painter = painterResource(iconResId),
-            contentDescription = title,
-            tint = color,
-            modifier = Modifier.size(20.dp),
-        )
+        Box {
+            Icon(
+                painter = painterResource(iconResId),
+                contentDescription = title,
+                tint = color,
+                modifier = Modifier.size(20.dp),
+            )
+
+            ItemCounter(
+                count = counterValue,
+                modifier = Modifier.offset(x = 12.dp, y = (-2).dp),
+            )
+        }
 
         Spacer(modifier = Modifier.height(6.dp))
 
@@ -223,6 +241,36 @@ private fun RowScope.Item(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
+    }
+}
+
+@Composable
+private fun ItemCounter(
+    count: Int?,
+    modifier: Modifier = Modifier,
+) {
+    AnimatedContent(
+        targetState = count,
+        transitionSpec = {
+            AnimatedContentDefaultTransitionSpec().using(sizeTransform = null)
+        },
+        contentKey = { it != null },
+        label = "ItemCounter",
+        modifier = modifier,
+    ) { count ->
+        if (count != null && count != 0) {
+            Text(
+                text = count.toString(),
+                style = UiKitTheme.typographyReworked.caption2.bold.unscalable(LocalDensity.current),
+                color = UiKitTheme.colorsReworked.text.general.inversed.default,
+                modifier = Modifier
+                    .background(
+                        color = UiKitTheme.colorsReworked.background.general.inversed.default,
+                        shape = CircleShape,
+                    )
+                    .padding(start = 6.dp, top = 1.dp, end = 6.dp),
+            )
+        }
     }
 }
 
@@ -263,9 +311,10 @@ private val BottomNavBarContentAnimationSpec: SpringSpec<IntOffset>
 @DensityPreviews
 @Composable
 private fun Preview() {
-    ZarinaTheme {
+    ZarinaPreview {
         ZarinaBottomNavBar(
             navController = rememberNavController(),
+            cartProductCount = 5,
             modifier = Modifier.fillMaxWidth(),
         )
     }

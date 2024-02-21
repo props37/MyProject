@@ -4,6 +4,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -29,6 +31,8 @@ fun ZarinaNavigation(
     startDestination: Destination<Unit>,
     modifier: Modifier = Modifier,
 ) {
+    val updatedNavController by rememberUpdatedState(navController)
+
     NavHost(
         navController = navController,
         startDestination = startDestination.routeSchema,
@@ -37,21 +41,21 @@ fun ZarinaNavigation(
         modifier = modifier,
     ) {
         // Bottom nav bar graphs
-        catalogGraph(navController)
-        favoritesGraph(navController)
-        homeGraph(navController)
-        profileGraph(navController)
-        cartGraph(navController)
+        catalogGraph(updatedNavController)
+        favoritesGraph(updatedNavController)
+        homeGraph(updatedNavController)
+        profileGraph(updatedNavController)
+        cartGraph(updatedNavController)
 
-        onboardingScreen(navController)
-        citySelectorBottomSheetScreen(navController)
-        defaultCityDialogScreen(navController)
-        productsScreen(navController)
-        filtersScreen(navController)
-        listFilterScreen(navController)
-        sizeSelectorBottomSheetScreen(navController)
-        heightSelectorBottomSheetScreen(navController)
-        productSubscriptionScreen(navController)
+        onboardingScreen(updatedNavController)
+        citySelectorBottomSheetScreen(updatedNavController)
+        defaultCityDialogScreen(updatedNavController)
+        productsScreen(updatedNavController)
+        filtersScreen(updatedNavController)
+        listFilterScreen(updatedNavController)
+        sizeSelectorBottomSheetScreen(updatedNavController)
+        heightSelectorBottomSheetScreen(updatedNavController)
+        productSubscriptionScreen(updatedNavController)
     }
 }
 
