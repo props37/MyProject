@@ -40,7 +40,7 @@ import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
-import ru.zarina.zarina.ui.common.paging.mapFavorites
+import ru.zarina.zarina.ui.common.paging.mapProducts
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
@@ -166,7 +166,10 @@ class ProductsViewModel @AssistedInject constructor(
             interactor.getProductPagingDataFlow(params)
         }
         .cachedIn(viewModelScope)
-        .mapFavorites(interactor.getFavoriteProductIdsFlow())
+        .mapProducts(
+            favoriteProductIdsResultFlow =  interactor.getFavoriteProductIdsFlow(),
+            cartProductIdsResultFlow = interactor.getCartProductIdsFlow(),
+        )
         .cachedIn(viewModelScope)
 
     val appliedFilterCount: StateFlow<Int> = filters.mapState(

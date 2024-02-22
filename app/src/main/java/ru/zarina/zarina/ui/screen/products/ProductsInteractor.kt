@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.screen.products
 
 import ru.zarina.zarina.usecase.rework.cart.AddProductToCartUseCase
+import ru.zarina.zarina.usecase.rework.cart.GetCartProductIdsFlowUseCase
 import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase
 import ru.zarina.zarina.usecase.rework.favorite.AddProductToFavoritesUseCase
 import ru.zarina.zarina.usecase.rework.favorite.GetFavoriteProductIdsFlowUseCase
@@ -14,5 +15,6 @@ class ProductsInteractor @Inject constructor(
     val getFavoriteProductIdsFlow: GetFavoriteProductIdsFlowUseCase,
     val addProductToFavorites: AddProductToFavoritesUseCase,
     val removeProductFromFavorites: RemoveProductFromFavoritesUseCase,
+    val getCartProductIdsFlow: GetCartProductIdsFlowUseCase,
     val addProductToCart: AddProductToCartUseCase,
 )
