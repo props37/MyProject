@@ -16,10 +16,10 @@ import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.SideEffect
 @Composable
 fun CatalogScreenBehavior(
     sideEffects: Flow<SideEffect>,
-    navigateForward: (CatalogScreenAction) -> Unit,
+    navigate: (CatalogScreenAction) -> Unit,
 ) {
     val updatedFocusManager by rememberUpdatedState(LocalFocusManager.current)
-    val updatedNavigateForward by rememberUpdatedState(navigateForward)
+    val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = true)
 
@@ -28,7 +28,7 @@ fun CatalogScreenBehavior(
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
-                        is SideEffect.NavigateForward -> updatedNavigateForward(sideEffect.action)
+                        is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
                         SideEffect.FreeSearchBarFocus -> updatedFocusManager.clearFocus(force = true)
                     }
                 }

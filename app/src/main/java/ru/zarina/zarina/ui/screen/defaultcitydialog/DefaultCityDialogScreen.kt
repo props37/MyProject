@@ -28,7 +28,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun DefaultCityDialogScreen(
-    navigateBackward: (DefaultCityDialogScreenResult) -> Unit,
+    navigate: (DefaultCityDialogScreenAction) -> Unit,
     viewModel: DefaultCityDialogViewModel = hiltViewModel(),
 ) {
     val defaultCity by viewModel.defaultCity.collectAsStateWithLifecycle()
@@ -37,7 +37,7 @@ fun DefaultCityDialogScreen(
         defaultCity = defaultCity,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
-        navigateBackward = navigateBackward,
+        navigate = navigate,
     )
 }
 
@@ -46,11 +46,11 @@ private fun ScreenContent(
     defaultCity: City,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigateBackward: (DefaultCityDialogScreenResult) -> Unit,
+    navigate: (DefaultCityDialogScreenAction) -> Unit,
 ) {
     DefaultCityDialogScreenBehavior(
         sideEffects = sideEffects,
-        navigateBackward = navigateBackward,
+        navigate = navigate,
     )
 
     ZarinaDialogContainer {
@@ -89,7 +89,7 @@ private fun Preview() {
             defaultCity = City.DEFAULT,
             onCloseClicked = {},
             sideEffects = remember { emptyFlow() },
-            navigateBackward = {},
+            navigate = {},
         )
     }
 }

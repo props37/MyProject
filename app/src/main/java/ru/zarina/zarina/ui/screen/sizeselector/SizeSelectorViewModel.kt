@@ -15,7 +15,7 @@ import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.product.ProductParcelable
-import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorViewModel.SideEffect
 import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
@@ -29,7 +29,7 @@ class SizeSelectorViewModel @Inject constructor(
 
     private val product: StateFlow<Product> = savedStateHandle
         .getStateFlow<ProductParcelable?>(
-            key = UnscopedDestinations.SizeSelector.ARG_KEY_PRODUCT,
+            key = SizeSelectorGraph.SizeSelector.ARG_KEY_PRODUCT,
             initialValue = null,
         )
         .mapState(
@@ -58,8 +58,8 @@ class SizeSelectorViewModel @Inject constructor(
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
-            val result = SizeSelectorScreenResult.ScreenClosed
-            emitSideEffect(SideEffect.NavigateBackward(result))
+            val action = SizeSelectorScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -67,14 +67,12 @@ class SizeSelectorViewModel @Inject constructor(
         // TODO: [High] Add product to cart if it is available
         navigationThrottler.throttle {
             val action = SizeSelectorScreenAction.SizeClicked(product.value, size.offers)
-            emitSideEffect(SideEffect.NavigateForward(action))
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class NavigateForward(val action: SizeSelectorScreenAction) : SideEffect
-
-        data class NavigateBackward(val result: SizeSelectorScreenResult) : SideEffect
+        data class Navigate(val action: SizeSelectorScreenAction) : SideEffect
     }
 
     @Immutable

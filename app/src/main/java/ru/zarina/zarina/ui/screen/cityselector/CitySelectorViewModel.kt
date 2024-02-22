@@ -22,7 +22,7 @@ import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.geography.CityParcelable
-import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.geography.GetCitiesFlowUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
@@ -85,8 +85,8 @@ class CitySelectorViewModel @Inject constructor(
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
-            val result = CitySelectorScreenResult.ScreenClosed
-            emitSideEffect(SideEffect.NavigateBackward(result))
+            val action = CitySelectorScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -114,8 +114,8 @@ class CitySelectorViewModel @Inject constructor(
     fun onChangeCityClicked() {
         val city = selectedCity.value ?: return
         navigationThrottler.throttle {
-            val result = CitySelectorScreenResult.CitySelected(city)
-            emitSideEffect(SideEffect.NavigateBackward(result))
+            val action = CitySelectorScreenAction.CitySelected(city)
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -180,7 +180,7 @@ class CitySelectorViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class NavigateBackward(val result: CitySelectorScreenResult) : SideEffect
+        data class Navigate(val action: CitySelectorScreenAction) : SideEffect
 
         data object FreeCitySearchBarFocus : SideEffect
     }

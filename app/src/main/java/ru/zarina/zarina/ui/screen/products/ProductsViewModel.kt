@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.rework.common.Barcode
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.filter.coerceInAvailable
@@ -39,10 +40,12 @@ import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
-import ru.zarina.zarina.ui.common.paging.mapFavorites
+import ru.zarina.zarina.ui.common.paging.mapProducts
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
-import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
+import ru.zarina.zarina.usecase.rework.cart.AddProductToCartUseCase
 import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase
 import ru.zarina.zarina.usecase.rework.favorite.AddProductToFavoritesUseCase
 import ru.zarina.zarina.usecase.rework.favorite.RemoveProductFromFavoritesUseCase
@@ -56,7 +59,7 @@ import timber.log.Timber
 class ProductsViewModel @AssistedInject constructor(
     @Assisted
     backStackEntrySavedStateHandle: SavedStateHandle,
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val interactor: ProductsInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
@@ -163,7 +166,10 @@ class ProductsViewModel @AssistedInject constructor(
             interactor.getProductPagingDataFlow(params)
         }
         .cachedIn(viewModelScope)
-        .mapFavorites(interactor.getFavoriteProductIdsFlow())
+        .mapProducts(
+            favoriteProductIdsResultFlow =  interactor.getFavoriteProductIdsFlow(),
+            cartProductIdsResultFlow = interactor.getCartProductIdsFlow(),
+        )
         .cachedIn(viewModelScope)
 
     val appliedFilterCount: StateFlow<Int> = filters.mapState(
@@ -175,6 +181,7 @@ class ProductsViewModel @AssistedInject constructor(
         categoryFetchRequests.trySend(Unit)
 
         handleFiltersResult(backStackEntrySavedStateHandle)
+        handleSizeSelectorResult(backStackEntrySavedStateHandle)
     }
 
     fun onBackClicked() {
@@ -235,9 +242,9 @@ class ProductsViewModel @AssistedInject constructor(
             }
             result.onFailure {
                 val messageResId = if (product.isInFavorites) {
-                    R.string.removing_product_from_favorites_toast_error
+                    R.string.removing_product_from_favorites_error_toast
                 } else {
-                    R.string.adding_product_to_favorites_toast_error
+                    R.string.adding_product_to_favorites_error_toast
                 }
                 val message = Text.Resource(messageResId)
                 emitSideEffect(SideEffect.ShowToast(message))
@@ -246,15 +253,23 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     fun onAddProductToCartClicked(product: Product) {
-        navigationThrottler.throttle {
-            val action = ProductsScreenAction.AddProductToCartClicked(product)
-            emitSideEffect(SideEffect.NavigateForward(action))
+        if (product.offers.size > 1) {
+            navigationThrottler.throttle {
+                val action = ProductsScreenAction.AddProductToCartClicked(product)
+                emitSideEffect(SideEffect.NavigateForward(action))
+            }
+        } else {
+            val offer = product.offers.firstOrNull() ?: run {
+                Timber.e("Could not add product $product to cart because it has no offers")
+                return
+            }
+            addProductToCart(product.id, offer.barcode)
         }
     }
 
     fun onSubscribeToProductClicked(product: Product) {
         navigationThrottler.throttle {
-            val action = ProductsScreenAction.AddProductToCartClicked(product)
+            val action = ProductsScreenAction.SubscribeToProductClicked(product)
             emitSideEffect(SideEffect.NavigateForward(action))
         }
     }
@@ -275,6 +290,21 @@ class ProductsViewModel @AssistedInject constructor(
         categoryFetchRequests.trySend(Unit)
     }
 
+    private fun addProductToCart(productId: Product.Id, barcode: Barcode) {
+        viewModelScope.launch {
+            val params = AddProductToCartUseCase.Params(
+                productId = productId,
+                barcode = barcode,
+                count = 1,
+            )
+            interactor.addProductToCart(params)
+                .onFailure {
+                    val message = Text.Resource(R.string.adding_product_to_cart_error_toast)
+                    emitSideEffect(SideEffect.ShowToast(message))
+                }
+        }
+    }
+
     private fun handleFiltersResult(backStackEntrySavedStateHandle: SavedStateHandle) {
         backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.Filters.Result?>(
             key = UnscopedDestinations.Filters.RESULT_KEY,
@@ -285,6 +315,26 @@ class ProductsViewModel @AssistedInject constructor(
                     Timber.v("Filters screen result: $result")
                     val filters = result.filters.toFilters()
                     this.filters.value = filters
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun handleSizeSelectorResult(backStackEntrySavedStateHandle: SavedStateHandle) {
+        backStackEntrySavedStateHandle.getStateFlow<SizeSelectorGraph.Result?>(
+            key = SizeSelectorGraph.RESULT_KEY,
+            initialValue = null,
+        )
+            .onEach { result ->
+                val previousSizeSelectorResult: String? =
+                    savedStateHandle[KEY_PREV_SIZE_SELECTOR_RESULT]
+                if (result != null && result.id != previousSizeSelectorResult) {
+                    Timber.v("SizeSelector screen result: $result")
+                    addProductToCart(
+                        productId = result.product.toProduct().id,
+                        barcode = result.offer.toProductOffer().barcode,
+                    )
+                    savedStateHandle[KEY_PREV_SIZE_SELECTOR_RESULT] = result.id
                 }
             }
             .launchIn(viewModelScope)
@@ -309,5 +359,9 @@ class ProductsViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(backStackEntrySavedStateHandle: SavedStateHandle): ProductsViewModel
+    }
+
+    companion object {
+        private const val KEY_PREV_SIZE_SELECTOR_RESULT = "prev_size_selector_result"
     }
 }

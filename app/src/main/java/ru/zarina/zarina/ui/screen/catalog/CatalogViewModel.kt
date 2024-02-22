@@ -171,7 +171,7 @@ class CatalogViewModel @Inject constructor(
         if (!category.isExpandable || category.children.isNullOrEmpty()) {
             navigationThrottler.throttle {
                 val action = CatalogScreenAction.CategoryClicked(item.category.id)
-                emitSideEffect(SideEffect.NavigateForward(action))
+                emitSideEffect(SideEffect.Navigate(action))
             }
         } else {
             expandedCategories.update { set ->
@@ -189,7 +189,7 @@ class CatalogViewModel @Inject constructor(
     private fun onSeeWholeCategoryItemClicked(item: CategoryListItem.SeeWholeCategoryItem) {
         navigationThrottler.throttle {
             val action = CatalogScreenAction.CategoryClicked(item.category.id)
-            emitSideEffect(SideEffect.NavigateForward(action))
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -221,7 +221,7 @@ class CatalogViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class NavigateForward(val action: CatalogScreenAction) : SideEffect
+        data class Navigate(val action: CatalogScreenAction) : SideEffect
         data object FreeSearchBarFocus : SideEffect
     }
 

@@ -21,12 +21,12 @@ class DefaultCityDialogViewModel @Inject constructor() : ViewModel(),
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
-            val result = DefaultCityDialogScreenResult.ScreenClosed
-            emitSideEffect(SideEffect.NavigateBackward(result))
+            val action = DefaultCityDialogScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class NavigateBackward(val result: DefaultCityDialogScreenResult) : SideEffect
+        data class Navigate(val action: DefaultCityDialogScreenAction) : SideEffect
     }
 }

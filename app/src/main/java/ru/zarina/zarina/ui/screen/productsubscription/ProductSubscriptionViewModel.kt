@@ -26,7 +26,7 @@ import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
-import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.product.SubscribeToProductUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
@@ -104,8 +104,8 @@ class ProductSubscriptionViewModel @Inject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            val result = ProductSubscriptionScreenResult.ScreenClosed
-            emitSideEffect(SideEffect.NavigateBackward(result))
+            val result = ProductSubscriptionScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(result))
         }
     }
 
@@ -143,8 +143,8 @@ class ProductSubscriptionViewModel @Inject constructor(
                         val message = Text.Resource(R.string.product_subscription_completed)
                         emitSideEffect(SideEffect.ShowToast(message))
 
-                        val result = ProductSubscriptionScreenResult.SubscriptionCompleted
-                        emitSideEffect(SideEffect.NavigateBackward(result))
+                        val action = ProductSubscriptionScreenAction.SubscriptionCompleted
+                        emitSideEffect(SideEffect.Navigate(action))
                     }
                     .onFailure { e ->
                         if (e is ValidationException) {
@@ -168,7 +168,7 @@ class ProductSubscriptionViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class NavigateBackward(val result: ProductSubscriptionScreenResult) : SideEffect
+        data class Navigate(val action: ProductSubscriptionScreenAction) : SideEffect
 
         data class OpenUrl(val url: Url) : SideEffect
 

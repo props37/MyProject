@@ -15,7 +15,7 @@ import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
-import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.sizeselector.heightselector.HeightSelectorViewModel.SideEffect
 import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
@@ -29,7 +29,7 @@ class HeightSelectorViewModel @Inject constructor(
 
     val product: StateFlow<Product> = savedStateHandle
         .getStateFlow<ProductParcelable?>(
-            key = UnscopedDestinations.HeightSelector.ARG_KEY_PRODUCT,
+            key = SizeSelectorGraph.HeightSelector.ARG_KEY_PRODUCT,
             initialValue = null,
         )
         .mapState(
@@ -42,7 +42,7 @@ class HeightSelectorViewModel @Inject constructor(
 
     val offers: StateFlow<ImmutableList<ProductOffer>> = savedStateHandle
         .getStateFlow<Array<ProductOfferParcelable>?>(
-            key = UnscopedDestinations.HeightSelector.ARG_KEY_OFFERS,
+            key = SizeSelectorGraph.HeightSelector.ARG_KEY_OFFERS,
             initialValue = null,
         )
         .mapState(
@@ -57,27 +57,26 @@ class HeightSelectorViewModel @Inject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            val result = HeightSelectorScreenResult.ScreenClosed
-            emitSideEffect(SideEffect.NavigateBackward(result))
+            val action = HeightSelectorScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
-            val result = HeightSelectorScreenResult.SizeSelectorFlowClosed
-            emitSideEffect(SideEffect.NavigateBackward(result))
+            val action = HeightSelectorScreenAction.SizeSelectorFlowClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
     fun onOfferClicked(offer: ProductOffer) {
         navigationThrottler.throttle {
             val action = HeightSelectorScreenAction.OfferClicked(product.value, offer)
-            emitSideEffect(SideEffect.NavigateForward(action))
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class NavigateForward(val action: HeightSelectorScreenAction) : SideEffect
-        data class NavigateBackward(val result: HeightSelectorScreenResult) : SideEffect
+        data class Navigate(val action: HeightSelectorScreenAction) : SideEffect
     }
 }

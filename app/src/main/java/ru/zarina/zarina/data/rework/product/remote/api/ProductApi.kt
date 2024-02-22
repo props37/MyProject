@@ -5,10 +5,10 @@ import io.ktor.client.call.body
 import io.ktor.client.request.post
 import ru.zarina.zarina.data.rework.common.remote.api.dto.SortingDto
 import ru.zarina.zarina.data.rework.common.remote.api.exception.apiExceptionConverter
-import ru.zarina.zarina.data.rework.product.remote.api.dto.FiltersBodyDto
-import ru.zarina.zarina.data.rework.product.remote.api.dto.GetProductsBodyDto
+import ru.zarina.zarina.data.rework.product.remote.api.dto.FiltersRequestDto
+import ru.zarina.zarina.data.rework.product.remote.api.dto.GetProductsRequestBody
 import ru.zarina.zarina.data.rework.product.remote.api.dto.ProductsDto
-import ru.zarina.zarina.data.rework.product.remote.api.dto.SubscribeToProductBodyDto
+import ru.zarina.zarina.data.rework.product.remote.api.dto.SubscribeToProductRequestBody
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Barcode
@@ -27,9 +27,9 @@ class ProductApi @Inject constructor(
         sorting: Sorting,
         page: Int,
     ): ProductsDto {
-        val body = GetProductsBodyDto(
+        val body = GetProductsRequestBody(
             categoryId = categoryId.value,
-            filters = filters?.let { FiltersBodyDto.from(it) },
+            filters = filters?.let { FiltersRequestDto.from(it) },
             sorting = SortingDto.from(sorting),
             page = page,
         )
@@ -42,9 +42,9 @@ class ProductApi @Inject constructor(
         categoryId: Category.Id,
         filters: DomainFilters?,
     ): ProductsDto {
-        val body = GetProductsBodyDto(
+        val body = GetProductsRequestBody(
             categoryId = categoryId.value,
-            filters = filters?.let { FiltersBodyDto.from(it) },
+            filters = filters?.let { FiltersRequestDto.from(it) },
             sorting = SortingDto.from(Sorting.getDefault()),
             page = 1,
             returnProducts = false,
@@ -55,7 +55,7 @@ class ProductApi @Inject constructor(
     }
 
     suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: String) {
-        val body = SubscribeToProductBodyDto(
+        val body = SubscribeToProductRequestBody(
             barcodes = listOf(barcode.value),
             email = email,
             firstName = firstName,

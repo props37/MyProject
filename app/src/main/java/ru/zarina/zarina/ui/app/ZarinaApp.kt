@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
@@ -26,7 +28,7 @@ import ru.zarina.zarina.ui.common.media.exoplayer.LocalExoPlayerCacheHolder
 import ru.zarina.zarina.ui.common.media.exoplayer.rememberExoPlayerCacheHolder
 import ru.zarina.zarina.ui.common.rememberToastController
 import ru.zarina.zarina.ui.navigation.rework.ZarinaNavigation
-import ru.zarina.zarina.ui.navigation.rework.graph.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.theme.rework.Colors
 import ru.zarina.zarina.util.library.accompanist.rememberBottomSheetNavigator
 
@@ -81,8 +83,10 @@ fun ZarinaApp(
                     modifier = Modifier.fillMaxSize(),
                 )
 
+                val cartProductCount by viewModel.cartProductCount.collectAsStateWithLifecycle()
                 ZarinaBottomNavBar(
                     navController = navController,
+                    cartProductCount = cartProductCount,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth(),
