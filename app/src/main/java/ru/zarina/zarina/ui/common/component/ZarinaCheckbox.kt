@@ -31,7 +31,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
-// TODO: [High] Write custom checkbox
+// TODO: [Low] Write custom checkbox
 @Composable
 fun ZarinaCheckbox(
     isChecked: Boolean,
