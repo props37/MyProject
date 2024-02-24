@@ -43,7 +43,7 @@ koin-test = "3.4.1"
 
 accompanist = "0.34.0"
 
-coil = "2.5.0"
+coil = "2.6.0"
 composeShimmer = "1.2.0"
 
 timber = "5.0.1"
