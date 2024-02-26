@@ -85,6 +85,8 @@
     <string name="removing_product_from_favorites_error_toast">Не удалось удалить товар из избранного</string>
     <string name="adding_product_to_cart_error_toast">Не удалось добавить товар в корзину</string>
     <string name="go_to_catalog">В каталог</string>
+    <string name="price_in_rubles_for_one_decimal">%1$d₽ / шт</string>
+    <string name="price_in_rubles_for_one_string">%1$s₽ / шт</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
