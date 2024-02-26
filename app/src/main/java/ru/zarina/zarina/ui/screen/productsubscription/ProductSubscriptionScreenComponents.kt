@@ -42,7 +42,7 @@ import ru.zarina.zarina.ui.common.util.rememberFormattedPrice
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.addStyles
 import ru.zarina.zarina.util.compose.addUrlAnnotations
-import ru.zarina.zarina.util.library.shimmer.shimmerSwitchable
+import ru.zarina.zarina.util.library.shimmer.shimmerToggleable
 import ru.zarina.zarina.utils.kotlin.capitalize
 
 object ProductSubscriptionScreenComponents {
@@ -90,7 +90,7 @@ object ProductSubscriptionScreenComponents {
                     modifier = Modifier
                         .height(128.dp)
                         .aspectRatio(ProductCardImageAspectRatio)
-                        .shimmerSwitchable(rememberSkeletonShimmer(), isImageShimmerEnabled)
+                        .shimmerToggleable(rememberSkeletonShimmer(), isImageShimmerEnabled)
                         .background(UiKitTheme.colorsReworked.background.skeleton),
                 )
 
