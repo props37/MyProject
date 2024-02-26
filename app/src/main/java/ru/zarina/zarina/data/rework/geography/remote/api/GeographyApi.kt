@@ -5,13 +5,9 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
-import io.ktor.client.request.put
 import ru.zarina.zarina.data.rework.geography.remote.api.dto.CityDto
-import ru.zarina.zarina.data.rework.geography.remote.api.dto.UpdateUserCityRequestBody
 import ru.zarina.zarina.di.rework.Qualifiers
-import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.domain.rework.location.Location
-import ru.zarina.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
 
 class GeographyApi @Inject constructor(
@@ -29,12 +25,5 @@ class GeographyApi @Inject constructor(
         return httpClient.get("/api/location/city/list") {
             parameter("name", nameQuery)
         }.body()
-    }
-
-    suspend fun updateUserCity(city: City) {
-        val body = UpdateUserCityRequestBody(city.kladrId.value)
-        httpClient.put("/api/location/city") {
-            setJsonBody(body)
-        }
     }
 }

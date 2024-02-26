@@ -19,8 +19,4 @@ class GeographyRemoteDataSource @Inject constructor(
         val cities = api.getCities(nameQuery).mapNotNull { it.toCity() }
         emit(cities)
     }
-
-    suspend fun updateUserCity(city: City) {
-        api.updateUserCity(city)
-    }
 }
