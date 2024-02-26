@@ -84,6 +84,7 @@
     <string name="adding_product_to_favorites_error_toast">Не удалось добавить товар в избранное</string>
     <string name="removing_product_from_favorites_error_toast">Не удалось удалить товар из избранного</string>
     <string name="adding_product_to_cart_error_toast">Не удалось добавить товар в корзину</string>
+    <string name="go_to_catalog">В каталог</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -100,6 +101,9 @@
     <string name="product_subscription_policies_privacy">политикой конфиденциальности</string>
     <string name="product_subscription_policies_online_store">правилами работы интернет-магазина</string>
     <string name="product_subscription_policies_personal_data">обработку персональных данных</string>
+
+    <string name="cart_screen_empty_cart_placeholder_title">Корзина пока что пуста</string>
+    <string name="cart_screen_empty_cart_placeholder_description">В каталоге ты найдёшь много товаров</string>
 
     <plurals name="show_products">
         <item quantity="zero">Показать %1$d товаров</item>
