@@ -8,16 +8,16 @@ import ru.zarina.zarina.usecase.base.UseCase
 import timber.log.Timber
 import javax.inject.Inject
 
-class UpdateUserCityUseCase @Inject constructor(
+class SetUserCityUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val userRepository: UserRepository,
-) : UseCase<UpdateUserCityUseCase.Params, Unit>(dispatcher) {
+) : UseCase<SetUserCityUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
         val city = params.city
-        Timber.v("Update user city: $city")
-        userRepository.updateUserCity(city)
+        Timber.v("Set user city: $city")
+        userRepository.setUserCity(city)
     }
 
     data class Params(val city: City)

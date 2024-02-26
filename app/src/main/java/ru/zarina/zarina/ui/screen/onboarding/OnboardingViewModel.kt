@@ -42,7 +42,7 @@ import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.device.SetIsOnboardingCompletedUseCase
-import ru.zarina.zarina.usecase.rework.user.UpdateUserCityUseCase
+import ru.zarina.zarina.usecase.rework.user.SetUserCityUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import ru.zarina.zarina.utils.clean.invoke
@@ -285,8 +285,8 @@ class OnboardingViewModel @AssistedInject constructor(
                 SetIsOnboardingCompletedUseCase.Params(isCompleted = true)
             interactor.setIsOnboardingCompleted(setIsOnboardingCompletedParams)
 
-            val updateUserCityParams = UpdateUserCityUseCase.Params(userCity ?: City.DEFAULT)
-            val result = interactor.updateUserCity(updateUserCityParams)
+            val setUserCityParams = SetUserCityUseCase.Params(userCity ?: City.DEFAULT)
+            val result = interactor.setUserCity(setUserCityParams)
             coroutineContext.ensureActive()
             result
         }

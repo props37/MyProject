@@ -7,7 +7,7 @@ import javax.inject.Inject
 class UserRemoteDataSource @Inject constructor(
     private val api: UserApi,
 ) {
-    suspend fun updateUserCity(city: City) {
-        api.updateUserCity(city)
+    suspend fun setUserCity(city: City) {
+        api.setUserCity(city)
     }
 }

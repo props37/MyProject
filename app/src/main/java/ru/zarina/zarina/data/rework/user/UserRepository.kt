@@ -9,7 +9,7 @@ class UserRepository @Inject constructor(
     private val localDataSource: UserLocalDataSource,
     private val remoteDataSource: UserRemoteDataSource,
 ) {
-    suspend fun updateUserCity(city: City) {
-        remoteDataSource.updateUserCity(city)
+    suspend fun setUserCity(city: City) {
+        remoteDataSource.setUserCity(city)
     }
 }
