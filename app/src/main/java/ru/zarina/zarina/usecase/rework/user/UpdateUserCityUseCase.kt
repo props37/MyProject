@@ -1,4 +1,4 @@
-package ru.zarina.zarina.usecase.rework.geography
+package ru.zarina.zarina.usecase.rework.user
 
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.data.rework.user.UserRepository

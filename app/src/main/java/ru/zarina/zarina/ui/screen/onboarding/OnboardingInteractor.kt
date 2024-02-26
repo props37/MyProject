@@ -4,7 +4,7 @@ import ru.zarina.zarina.data.rework.permissionmanager.PermissionManager
 import ru.zarina.zarina.usecase.rework.content.GetOnboardingBannerUrlUseCase
 import ru.zarina.zarina.usecase.rework.device.SetIsOnboardingCompletedUseCase
 import ru.zarina.zarina.usecase.rework.geography.GetCurrentCityFlowUseCase
-import ru.zarina.zarina.usecase.rework.geography.UpdateUserCityUseCase
+import ru.zarina.zarina.usecase.rework.user.UpdateUserCityUseCase
 import javax.inject.Inject
 
 class OnboardingInteractor @Inject constructor(
