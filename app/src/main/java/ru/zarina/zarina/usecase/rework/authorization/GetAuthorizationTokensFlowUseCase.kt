@@ -1,19 +1,20 @@
 package ru.zarina.zarina.usecase.rework.authorization
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.data.rework.authorization.AuthorizationRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
-import ru.zarina.zarina.usecase.base.UseCase
+import ru.zarina.zarina.usecase.base.FlowUseCase
 import javax.inject.Inject
 
-class GetAuthorizationTokensUseCase @Inject constructor(
+class GetAuthorizationTokensFlowUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val authorizationRepository: AuthorizationRepository,
-) : UseCase<Unit, AuthorizationTokens?>(dispatcher) {
+) : FlowUseCase<Unit, AuthorizationTokens?>(dispatcher) {
 
-    override suspend fun execute(params: Unit): AuthorizationTokens? {
-        return authorizationRepository.getAuthorizationTokens()
+    override fun execute(params: Unit): Flow<AuthorizationTokens?> {
+        return authorizationRepository.getAuthorizationTokensFlow()
     }
 }

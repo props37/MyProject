@@ -1,5 +1,6 @@
 package ru.zarina.zarina.data.rework.authorization
 
+import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.data.rework.authorization.local.AuthorizationLocalDataSource
 import ru.zarina.zarina.data.rework.authorization.remote.AuthorizationRemoteDataSource
 import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
@@ -9,8 +10,8 @@ class AuthorizationRepository @Inject constructor(
     private val localDataSource: AuthorizationLocalDataSource,
     private val remoteDataSource: AuthorizationRemoteDataSource,
 ) {
-    suspend fun getAuthorizationTokens(): AuthorizationTokens? {
-        return localDataSource.getAuthorizationTokens()
+    fun getAuthorizationTokensFlow(): Flow<AuthorizationTokens?> {
+        return localDataSource.getAuthorizationTokensFlow()
     }
 
     suspend fun setAuthorizationTokens(tokens: AuthorizationTokens?) {

@@ -16,13 +16,14 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
 import ru.zarina.zarina.BuildConfig
 import ru.zarina.zarina.data.rework.common.remote.headerprovider.ZarinaApiHeaderProvider
 import ru.zarina.zarina.data.rework.common.remote.ktor.plugin.ZarinaAuth
 import ru.zarina.zarina.data.rework.common.remote.ktor.plugin.bearer
 import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
-import ru.zarina.zarina.usecase.rework.authorization.GetAuthorizationTokensUseCase
+import ru.zarina.zarina.usecase.rework.authorization.GetAuthorizationTokensFlowUseCase
 import ru.zarina.zarina.usecase.rework.authorization.RefreshAuthorizationTokensUseCase
 import ru.zarina.zarina.utils.clean.invoke
 import timber.log.Timber
@@ -38,7 +39,7 @@ class NetworkModule {
     fun provideAuthorizedZarinaHttpClient(
         json: Json,
         zarinaApiHeaderProvider: ZarinaApiHeaderProvider,
-        getAuthorizationTokens: GetAuthorizationTokensUseCase,
+        getAuthorizationTokensFlow: GetAuthorizationTokensFlowUseCase,
         refreshAuthorizationTokens: RefreshAuthorizationTokensUseCase,
     ): HttpClient = HttpClient(OkHttp) {
         baseConfig(json)
@@ -46,12 +47,14 @@ class NetworkModule {
         install(ZarinaAuth) {
             bearer {
                 loadTokens {
-                    getAuthorizationTokens().getOrNull()?.toBearerTokens()
+                    val tokens = getAuthorizationTokensFlow().firstOrNull()?.getOrNull()
+                    tokens?.toBearerTokens()
                 }
 
                 refreshTokens {
                     refreshAuthorizationTokens()
-                    getAuthorizationTokens().getOrNull()?.toBearerTokens()
+                    val tokens = getAuthorizationTokensFlow().firstOrNull()?.getOrNull()
+                    tokens?.toBearerTokens()
                 }
             }
         }
