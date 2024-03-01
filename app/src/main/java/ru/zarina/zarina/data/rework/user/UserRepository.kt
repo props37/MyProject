@@ -11,5 +11,10 @@ class UserRepository @Inject constructor(
 ) {
     suspend fun setUserCity(city: City) {
         remoteDataSource.setUserCity(city)
+        localDataSource.setUserCity(city)
+    }
+
+    suspend fun clear() {
+        localDataSource.clear()
     }
 }

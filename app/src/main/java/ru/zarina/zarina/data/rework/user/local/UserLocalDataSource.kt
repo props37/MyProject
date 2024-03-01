@@ -1,5 +1,21 @@
 package ru.zarina.zarina.data.rework.user.local
 
+import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.domain.rework.geography.City
 import javax.inject.Inject
 
-class UserLocalDataSource @Inject constructor()
+class UserLocalDataSource @Inject constructor(
+    private val userCityDataHolder: UserCityDataHolder,
+) {
+    fun getUserCity(): Flow<City?> {
+        return userCityDataHolder.getUserCity()
+    }
+
+    suspend fun setUserCity(city: City?) {
+        userCityDataHolder.setUserCity(city)
+    }
+
+    suspend fun clear() {
+        userCityDataHolder.clear()
+    }
+}
