@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -48,6 +47,7 @@ import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
+import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -65,29 +65,26 @@ object CitySelectorScreenComponents {
         onCloseClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .heightIn(min = TopBarDefaults.MinHeight)
-                .padding(vertical = TopBarDefaults.VerticalPadding),
-        ) {
-            Text(
-                text = stringResource(R.string.city),
-                style = UiKitTheme.typographyReworked.primary.bold,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.align(Alignment.Center),
-            )
-
-            CloseIconButton(
-                onClick = onCloseClicked,
-                iconSize = 20.dp,
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 2.dp),
-            )
-        }
+        ZarinaTopBar(
+            centerContent = {
+                Text(
+                    text = stringResource(R.string.city),
+                    style = UiKitTheme.typographyReworked.primary.bold,
+                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            },
+            endContent = {
+                CloseIconButton(
+                    onClick = onCloseClicked,
+                    iconSize = 20.dp,
+                    modifier = Modifier.padding(end = 2.dp),
+                )
+            },
+            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
+            modifier = modifier,
+        )
     }
 
     @Composable
