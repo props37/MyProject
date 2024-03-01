@@ -1,5 +1,6 @@
 package ru.zarina.zarina.data.rework.user
 
+import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.data.rework.user.local.UserLocalDataSource
 import ru.zarina.zarina.data.rework.user.remote.UserRemoteDataSource
 import ru.zarina.zarina.domain.rework.geography.City
@@ -9,6 +10,10 @@ class UserRepository @Inject constructor(
     private val localDataSource: UserLocalDataSource,
     private val remoteDataSource: UserRemoteDataSource,
 ) {
+    fun getUserCityFlow(): Flow<City?> {
+        return localDataSource.getUserCityFlow()
+    }
+
     suspend fun setUserCity(city: City) {
         remoteDataSource.setUserCity(city)
         localDataSource.setUserCity(city)

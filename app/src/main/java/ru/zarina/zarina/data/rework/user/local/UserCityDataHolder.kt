@@ -11,7 +11,7 @@ import javax.inject.Inject
 class UserCityDataHolder @Inject constructor(
     private val dataStore: DataStore<CityEntity?>,
 ) {
-    fun getUserCity(): Flow<City?> {
+    fun getUserCityFlow(): Flow<City?> {
         return dataStore.data.map { it?.toCity() }
     }
 

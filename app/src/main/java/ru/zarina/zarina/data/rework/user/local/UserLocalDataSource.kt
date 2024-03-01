@@ -7,8 +7,8 @@ import javax.inject.Inject
 class UserLocalDataSource @Inject constructor(
     private val userCityDataHolder: UserCityDataHolder,
 ) {
-    fun getUserCity(): Flow<City?> {
-        return userCityDataHolder.getUserCity()
+    fun getUserCityFlow(): Flow<City?> {
+        return userCityDataHolder.getUserCityFlow()
     }
 
     suspend fun setUserCity(city: City?) {
