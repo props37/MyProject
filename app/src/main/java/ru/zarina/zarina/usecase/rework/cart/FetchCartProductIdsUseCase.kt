@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.data.rework.cart.CartRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.usecase.base.UseCase
+import timber.log.Timber
 import javax.inject.Inject
 
 class FetchCartProductIdsUseCase @Inject constructor(
@@ -13,6 +14,7 @@ class FetchCartProductIdsUseCase @Inject constructor(
 ) : UseCase<Unit, Unit>(dispatcher) {
 
     override suspend fun execute(params: Unit) {
+        Timber.v("Fetch cart product IDs")
         cartRepository.fetchCartProductIds()
     }
 }

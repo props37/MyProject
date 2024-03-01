@@ -5,6 +5,7 @@ import ru.zarina.zarina.data.rework.favorite.FavoriteRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.usecase.base.UseCase
+import timber.log.Timber
 import javax.inject.Inject
 
 class FetchFavoriteProductIdsUseCase @Inject constructor(
@@ -14,6 +15,7 @@ class FetchFavoriteProductIdsUseCase @Inject constructor(
 ) : UseCase<Unit, Set<Product.Id>>(dispatcher) {
 
     override suspend fun execute(params: Unit): Set<Product.Id> {
+        Timber.v("Fetch favorite product IDs")
         return favoriteRepository.fetchFavoriteProductIds()
     }
 }
