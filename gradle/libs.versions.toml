@@ -24,7 +24,7 @@ jetpack-paging = "3.2.1"
 jetpack-security-cripto = "1.0.0"
 jetpack-browser = "1.7.0"
 jetpack-junit = "1.1.5"
-jetpack-uiAutomator = "2.2.0"
+jetpack-uiAutomator = "2.3.0"
 jetpack-espresso = "3.5.1"
 jetpack-benchmark = "1.2.3"
 
