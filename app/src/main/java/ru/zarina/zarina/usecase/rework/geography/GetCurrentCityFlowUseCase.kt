@@ -20,7 +20,6 @@ class GetCurrentCityFlowUseCase @Inject constructor(
 
     override fun execute(params: Unit): Flow<City?> {
         return locationRepository.getCurrentLocationFlow().map { location ->
-            Timber.v("Current location: $location")
             if (location != null) {
                 val city = geographyRepository.getCity(location)
                 Timber.v("The city is detected: $city")

@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import ru.zarina.zarina.domain.rework.product.Product
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,22 +25,27 @@ class CartDataHolder @Inject constructor() {
     val cartProductCount: StateFlow<Int> = _cartProductCount.asStateFlow()
 
     fun setCartProductIds(ids: Set<Product.Id>) {
+        Timber.v("Set cart product IDs: $ids")
         _cartProductIds.value = ids
     }
 
     fun setAreCartProductIdsFetched(fetched: Boolean) {
+        Timber.v("Set cart product IDs fetched: $fetched")
         _areCartProductIdsFetched.value = fetched
     }
 
     fun addProductToCart(productId: Product.Id) {
+        Timber.v("Add product $productId to cart")
         _cartProductIds.update { it + productId }
     }
 
     fun setCartProductCount(count: Int) {
+        Timber.v("Set cart product count: $count")
         _cartProductCount.value = count
     }
 
     fun clear() {
+        Timber.v("Clear cart data")
         _cartProductIds.value = emptySet()
         _areCartProductIdsFetched.value = false
         _cartProductCount.value = 0

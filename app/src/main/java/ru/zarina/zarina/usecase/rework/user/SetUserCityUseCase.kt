@@ -5,7 +5,6 @@ import ru.zarina.zarina.data.rework.user.UserRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.usecase.base.UseCase
-import timber.log.Timber
 import javax.inject.Inject
 
 class SetUserCityUseCase @Inject constructor(
@@ -16,7 +15,6 @@ class SetUserCityUseCase @Inject constructor(
 
     override suspend fun execute(params: Params) {
         val city = params.city
-        Timber.v("Set user city: $city")
         userRepository.setUserCity(city)
     }
 

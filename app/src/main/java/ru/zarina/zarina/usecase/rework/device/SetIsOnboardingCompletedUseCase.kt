@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.data.rework.device.DeviceRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.usecase.base.UseCase
-import timber.log.Timber
 import javax.inject.Inject
 
 class SetIsOnboardingCompletedUseCase @Inject constructor(
@@ -15,7 +14,6 @@ class SetIsOnboardingCompletedUseCase @Inject constructor(
 
     override suspend fun execute(params: Params) {
         val isCompleted = params.isCompleted
-        Timber.v("Set is onboarding completed: $isCompleted")
         deviceRepository.setIsOnboardingCompleted(isCompleted)
     }
 

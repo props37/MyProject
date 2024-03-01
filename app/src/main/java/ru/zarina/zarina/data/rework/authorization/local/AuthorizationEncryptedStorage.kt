@@ -7,6 +7,7 @@ import kotlinx.coroutines.withContext
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
 import ru.zarina.zarina.domain.rework.common.Token
+import timber.log.Timber
 import javax.inject.Inject
 
 class AuthorizationEncryptedStorage @Inject constructor(
@@ -18,7 +19,9 @@ class AuthorizationEncryptedStorage @Inject constructor(
             val accessToken = encryptedSharedPreferences.getString(KEY_ACCESS_TOKEN, null)
             val refreshToken = encryptedSharedPreferences.getString(KEY_REFRESH_TOKEN, null)
             if (accessToken != null && refreshToken != null) {
-                AuthorizationTokens(Token(accessToken), Token(refreshToken))
+                AuthorizationTokens(Token(accessToken), Token(refreshToken)).also {
+                    Timber.v("Authorization tokens: $it")
+                }
             } else {
                 null
             }
@@ -26,6 +29,7 @@ class AuthorizationEncryptedStorage @Inject constructor(
     }
 
     suspend fun setAuthorizationTokens(tokens: AuthorizationTokens?) {
+        Timber.v("Set authorization tokens: $tokens")
         withContext(Dispatchers.IO) {
             encryptedSharedPreferences.edit(commit = true) {
                 putString(KEY_ACCESS_TOKEN, tokens?.accessToken?.value)
@@ -35,6 +39,7 @@ class AuthorizationEncryptedStorage @Inject constructor(
     }
 
     suspend fun clear() {
+        Timber.v("Clear authorization tokens")
         setAuthorizationTokens(null)
     }
 

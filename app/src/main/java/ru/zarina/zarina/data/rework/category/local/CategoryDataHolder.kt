@@ -27,7 +27,7 @@ class CategoryDataHolder @Inject constructor() {
     }
 
     fun setCategories(categories: Categories) {
+        Timber.v("Set categories: $categories")
         this.categories.value = categories
-        Timber.v("Categories cached")
     }
 }

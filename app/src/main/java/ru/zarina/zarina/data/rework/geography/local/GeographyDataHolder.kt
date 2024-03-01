@@ -14,6 +14,7 @@ class GeographyDataHolder @Inject constructor() {
     private val citiesToNameQuery = MutableStateFlow(mapOf<String?, List<City>>())
 
     fun setCities(nameQuery: String?, cities: List<City>) {
+        Timber.v("Set cities for name query $nameQuery: $cities")
         citiesToNameQuery.update { it + (nameQuery to cities) }
         ensureCitiesToNameQueryCacheSize()
     }
