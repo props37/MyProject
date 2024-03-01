@@ -53,7 +53,7 @@ googlePlayServices-location = "21.1.0"
 googlePlayServices-maps = "18.2.0"
 googlePlayServices-maps-compose = "4.3.3"
 
-firebase-bom = "32.7.2"
+firebase-bom = "32.7.3"
 
 firebase-performance = "1.4.2"
 mindbox = "2.8.4"
