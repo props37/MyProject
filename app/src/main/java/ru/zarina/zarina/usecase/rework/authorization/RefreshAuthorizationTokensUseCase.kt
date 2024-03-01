@@ -4,6 +4,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.data.rework.authorization.AuthorizationRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.usecase.base.UseCase
+import ru.zarina.zarina.usecase.rework.cart.FetchCartProductIdsUseCase
+import ru.zarina.zarina.usecase.rework.favorite.FetchFavoriteProductIdsUseCase
 import ru.zarina.zarina.utils.clean.invoke
 import timber.log.Timber
 import javax.inject.Inject
@@ -14,6 +16,8 @@ class RefreshAuthorizationTokensUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val authorizationRepository: AuthorizationRepository,
+    private val fetchCartProductIdsUseCase: FetchCartProductIdsUseCase,
+    private val fetchFavoriteProductIdsUseCase: FetchFavoriteProductIdsUseCase,
     private val fetchUnauthorizedUserAuthorizationTokensUseCase: FetchUnauthorizedUserAuthorizationTokensUseCase,
 ) : UseCase<Unit, Unit>(dispatcher) {
 
@@ -23,6 +27,8 @@ class RefreshAuthorizationTokensUseCase @Inject constructor(
             val newTokens = authorizationRepository.refreshAuthorizationTokens(currentTokens)
             authorizationRepository.setAuthorizationTokens(newTokens)
             Timber.v("Authorization tokens refreshed")
+            fetchCartProductIdsUseCase()
+            fetchFavoriteProductIdsUseCase()
         } else {
             fetchUnauthorizedUserAuthorizationTokensUseCase()
         }
