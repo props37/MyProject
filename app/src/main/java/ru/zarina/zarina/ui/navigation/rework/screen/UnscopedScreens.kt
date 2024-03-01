@@ -7,12 +7,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.zarina.zarina.ui.model.geography.CityParcelable
-import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.dialogDestination
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.rework.destination.graph.HomeGraph
-import ru.zarina.zarina.ui.screen.cityselector.CitySelectorBottomSheetScreen
+import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreen
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenAction
 import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreen
 import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreenAction
@@ -66,8 +65,8 @@ fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
 }
 
 fun NavGraphBuilder.citySelectorBottomSheetScreen(navController: NavHostController) {
-    bottomSheetDestination(UnscopedDestinations.CitySelector) {
-        CitySelectorBottomSheetScreen(
+    composableDestination(UnscopedDestinations.CitySelector) {
+        CitySelectorScreen(
             navigate = { action ->
                 when (action) {
                     CitySelectorScreenAction.ScreenClosed -> {

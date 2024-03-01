@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 
 @Composable
@@ -19,6 +20,8 @@ fun CitySelectorScreenBehavior(
 ) {
     val updatedFocusManager by rememberUpdatedState(LocalFocusManager.current)
     val updatedNavigate by rememberUpdatedState(navigate)
+
+    ForcedBottomNavBarBehavior(isVisible = false)
 
     LifecycleStartEffect(sideEffects) {
         lifecycleScope.launch {

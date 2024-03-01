@@ -83,7 +83,7 @@ class CitySelectorViewModel @Inject constructor(
         fetchCities(cityNameQuery = null)
     }
 
-    fun onCloseClicked() {
+    fun onBackClicked() {
         navigationThrottler.throttle {
             val action = CitySelectorScreenAction.ScreenClosed
             emitSideEffect(SideEffect.Navigate(action))

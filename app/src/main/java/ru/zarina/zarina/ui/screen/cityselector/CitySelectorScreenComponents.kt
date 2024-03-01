@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
-import ru.zarina.zarina.ui.common.component.button.CloseIconButton
+import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.icon.CheckmarkAnimatedIcon
@@ -62,24 +62,24 @@ object CitySelectorScreenComponents {
 
     @Composable
     fun TopBar(
-        onCloseClicked: () -> Unit,
+        onBackClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         ZarinaTopBar(
+            startContent = {
+                BackIconButton(
+                    onClick = onBackClicked,
+                    iconSize = 20.dp,
+                    modifier = Modifier.padding(start = 2.dp),
+                )
+            },
             centerContent = {
                 Text(
-                    text = stringResource(R.string.city),
-                    style = UiKitTheme.typographyReworked.primary.bold,
+                    text = stringResource(R.string.city_change),
+                    style = UiKitTheme.typographyReworked.primary.regular,
                     color = UiKitTheme.colorsReworked.text.general.regular.default,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                )
-            },
-            endContent = {
-                CloseIconButton(
-                    onClick = onCloseClicked,
-                    iconSize = 20.dp,
-                    modifier = Modifier.padding(end = 2.dp),
                 )
             },
             contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),

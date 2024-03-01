@@ -4,18 +4,15 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -29,7 +26,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -39,9 +35,10 @@ import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenComponents.TopB
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 import ru.zarina.zarina.ui.screen.cityselector.tooling.preview.CityListStatePreviewParameterProvider
+import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
-fun CitySelectorBottomSheetScreen(
+fun CitySelectorScreen(
     navigate: (CitySelectorScreenAction) -> Unit,
     viewModel: CitySelectorViewModel = hiltViewModel(),
 ) {
@@ -65,7 +62,7 @@ fun CitySelectorBottomSheetScreen(
         isChangeCityButtonVisible = isChangeCityButtonVisible,
         onChangeCityClicked = viewModel::onChangeCityClicked,
         onErrorRefreshClicked = viewModel::onErrorRefreshClicked,
-        onCloseClicked = viewModel::onCloseClicked,
+        onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -84,7 +81,7 @@ private fun ScreenContent(
     isChangeCityButtonVisible: Boolean,
     onChangeCityClicked: () -> Unit,
     onErrorRefreshClicked: () -> Unit,
-    onCloseClicked: () -> Unit,
+    onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CitySelectorScreenAction) -> Unit,
 ) {
@@ -93,41 +90,41 @@ private fun ScreenContent(
         navigate = navigate,
     )
 
-    ZarinaBottomSheet(
-        windowInsets = WindowInsets.statusBars
-            .union(WindowInsets.displayCutout)
-            .only(WindowInsetsSides.Top),
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme.colorsReworked.background.general.regular.default)
+            .statusBarsPadding()
+            .displayCutoutPadding(),
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            TopBar(onCloseClicked = onCloseClicked)
+        TopBar(onBackClicked = onBackClicked)
 
-            AnimatedVisibility(
-                visible = isCitySearchBarVisible,
-                enter = remember { fadeIn(tween()) },
-                exit = remember { fadeOut(tween()) },
-            ) {
-                CitySearchBar(
-                    cityNameQuery = cityNameQuery,
-                    onCityNameQueryChanged = onCityNameQueryChanged,
-                    onClearClicked = onCitySearchBarClearClicked,
-                    onCancelClicked = onCitySearchBarCancelClicked,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                )
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            CityList(
-                listState = cityListState,
-                selectedCity = selectedCity,
-                onCityClicked = onCityClicked,
-                isChangeCityButtonVisible = isChangeCityButtonVisible,
-                onChangeCityClicked = onChangeCityClicked,
-                onErrorRefreshClicked = onErrorRefreshClicked,
+        AnimatedVisibility(
+            visible = isCitySearchBarVisible,
+            enter = remember { fadeIn(tween()) },
+            exit = remember { fadeOut(tween()) },
+        ) {
+            CitySearchBar(
+                cityNameQuery = cityNameQuery,
+                onCityNameQueryChanged = onCityNameQueryChanged,
+                onClearClicked = onCitySearchBarClearClicked,
+                onCancelClicked = onCitySearchBarCancelClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
             )
         }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        CityList(
+            listState = cityListState,
+            selectedCity = selectedCity,
+            onCityClicked = onCityClicked,
+            isChangeCityButtonVisible = isChangeCityButtonVisible,
+            onChangeCityClicked = onChangeCityClicked,
+            onErrorRefreshClicked = onErrorRefreshClicked,
+        )
     }
 }
 
@@ -152,7 +149,7 @@ private fun Preview(
             isChangeCityButtonVisible = false,
             onChangeCityClicked = {},
             onErrorRefreshClicked = {},
-            onCloseClicked = {},
+            onBackClicked = {},
             sideEffects = remember { emptyFlow() },
             navigate = {},
         )
