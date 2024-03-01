@@ -287,6 +287,7 @@ class OnboardingViewModel @AssistedInject constructor(
 
             val setUserCityParams = SetUserCityUseCase.Params(userCity ?: City.DEFAULT)
             val result = interactor.setUserCity(setUserCityParams)
+            result.onFailure { interactor.setDefaultUserCity() }
             coroutineContext.ensureActive()
             result
         }

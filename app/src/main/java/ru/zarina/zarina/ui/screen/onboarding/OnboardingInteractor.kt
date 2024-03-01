@@ -4,6 +4,7 @@ import ru.zarina.zarina.data.rework.permissionmanager.PermissionManager
 import ru.zarina.zarina.usecase.rework.content.GetOnboardingBannerUrlUseCase
 import ru.zarina.zarina.usecase.rework.device.SetIsOnboardingCompletedUseCase
 import ru.zarina.zarina.usecase.rework.geography.GetCurrentCityFlowUseCase
+import ru.zarina.zarina.usecase.rework.user.SetDefaultUserCityUseCase
 import ru.zarina.zarina.usecase.rework.user.SetUserCityUseCase
 import javax.inject.Inject
 
@@ -13,4 +14,5 @@ class OnboardingInteractor @Inject constructor(
     val getCurrentCityFlow: GetCurrentCityFlowUseCase,
     val setIsOnboardingCompleted: SetIsOnboardingCompletedUseCase,
     val setUserCity: SetUserCityUseCase,
+    val setDefaultUserCity: SetDefaultUserCityUseCase,
 )

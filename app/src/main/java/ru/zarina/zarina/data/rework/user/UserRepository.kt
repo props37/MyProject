@@ -14,6 +14,10 @@ class UserRepository @Inject constructor(
         localDataSource.setUserCity(city)
     }
 
+    suspend fun setLocalUserCity(city: City) {
+        localDataSource.setUserCity(city)
+    }
+
     suspend fun clear() {
         localDataSource.clear()
     }
