@@ -1,7 +1,11 @@
 package ru.zarina.zarina.ui.screen.cart
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -14,10 +18,11 @@ import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.SideEffect
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.utils.clean.invoke
-import javax.inject.Inject
 
-@HiltViewModel
-class CartViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = CartViewModel.Factory::class)
+class CartViewModel @AssistedInject constructor(
+    @Assisted
+    backStackEntrySavedStateHandle: SavedStateHandle,
     private val interactor: CartInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
@@ -49,6 +54,11 @@ class CartViewModel @Inject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CartScreenAction) : SideEffect
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(backStackEntrySavedStateHandle: SavedStateHandle): CartViewModel
     }
 }
 

@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.navigation.rework.screen
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.zarina.zarina.R
@@ -16,6 +17,7 @@ import ru.zarina.zarina.ui.navigation.rework.destination.graph.CatalogGraph
 import ru.zarina.zarina.ui.navigation.rework.util.BottomNavBarItemSecondaryStartDestinationBackHandler
 import ru.zarina.zarina.ui.screen.cart.CartScreen
 import ru.zarina.zarina.ui.screen.cart.CartScreenAction
+import ru.zarina.zarina.ui.screen.cart.CartViewModel
 import ru.zarina.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.cartScreen(navController: NavHostController) {
@@ -49,6 +51,9 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
         BottomNavBarItemSecondaryStartDestinationBackHandler(navController)
 
         CartScreen(
+            viewModel = hiltViewModel { factory: CartViewModel.Factory ->
+                factory.create(it.savedStateHandle)
+            },
             navigate = { action ->
                 when (action) {
                     CartScreenAction.GoToCatalogClicked -> {
