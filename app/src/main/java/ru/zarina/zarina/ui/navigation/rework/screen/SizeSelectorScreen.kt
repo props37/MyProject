@@ -10,6 +10,7 @@ import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorBottomSheetScreen
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorScreenAction
+import ru.zarina.zarina.util.library.navigation.navigate
 import timber.log.Timber
 import java.util.UUID
 
@@ -33,8 +34,10 @@ fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostControll
                                     product = action.product,
                                     offers = action.offers,
                                 )
-                                val route = SizeSelectorGraph.HeightSelector.createRoute(args)
-                                navController.navigate(route)
+                                navController.navigate(
+                                    route = SizeSelectorGraph.HeightSelector.routeSchema,
+                                    args = SizeSelectorGraph.HeightSelector.createArgsBundle(args),
+                                )
                             }
 
                             firstOffer != null && firstOffer.isAvailable -> {
@@ -58,13 +61,16 @@ fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostControll
                                     product = action.product,
                                     offer = firstOffer,
                                 )
-                                val route = UnscopedDestinations.ProductSubscription.createRoute(args)
                                 val navOptions = navOptions {
                                     popUpTo(SizeSelectorGraph.routeSchema) {
                                         inclusive = true
                                     }
                                 }
-                                navController.navigate(route, navOptions)
+                                navController.navigate(
+                                    route = UnscopedDestinations.ProductSubscription.routeSchema,
+                                    args = UnscopedDestinations.ProductSubscription.createArgsBundle(args),
+                                    navOptions = navOptions,
+                                )
                             }
 
                             firstOffer == null -> {

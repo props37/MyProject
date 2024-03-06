@@ -9,6 +9,7 @@ import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.rework.destination.graph.HomeGraph
 import ru.zarina.zarina.ui.screen.home.HomeScreen
 import ru.zarina.zarina.ui.screen.home.HomeScreenAction
+import ru.zarina.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.homeGraph(navController: NavHostController) {
     navigationGraph(HomeGraph) {
@@ -21,8 +22,10 @@ fun NavGraphBuilder.homeGraph(navController: NavHostController) {
                                 is ClickAction.Products -> {
                                     val categoryId = action.banner.clickAction.categoryId
                                     val args = UnscopedDestinations.Products.Args(categoryId)
-                                    val route = UnscopedDestinations.Products.createRoute(args)
-                                    navController.navigate(route)
+                                    navController.navigate(
+                                        route = UnscopedDestinations.Products.routeSchema,
+                                        args = UnscopedDestinations.Products.createArgsBundle(args),
+                                    )
                                 }
 
                                 null -> Unit

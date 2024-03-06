@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.navigation.rework.destination.graph
 
 import android.net.Uri
+import android.os.Bundle
 import android.os.Parcelable
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
@@ -42,6 +43,10 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
 
     override val startDestination: Destination<*> get() = SizeSelector
 
+    override fun createArgsBundle(args: SizeSelector.Args): Bundle {
+        return SizeSelector.createArgsBundle(args)
+    }
+
     @Parcelize
     data class Result(
         val id: String,
@@ -76,6 +81,11 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
                 navArgument(ARG_KEY_PRODUCT) { type = NavType.ProductParcelableType }
             )
 
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            val productParcelable = ProductParcelable.from(args.product)
+            putParcelable(ARG_KEY_PRODUCT, productParcelable)
+        }
+
         data class Args(val product: Product)
     }
 
@@ -108,6 +118,13 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
                 navArgument(ARG_KEY_PRODUCT) { type = NavType.ProductParcelableType },
                 navArgument(ARG_KEY_OFFERS) { type = NavType.ProductOfferParcelableArrayType },
             )
+
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            val productParcelable = ProductParcelable.from(args.product)
+            putParcelable(ARG_KEY_PRODUCT, productParcelable)
+            val offerParcelables = args.offers.map { ProductOfferParcelable.from(it) }
+            putParcelableArray(ARG_KEY_OFFERS, offerParcelables.toTypedArray())
+        }
 
         data class Args(val product: Product, val offers: List<ProductOffer>)
     }

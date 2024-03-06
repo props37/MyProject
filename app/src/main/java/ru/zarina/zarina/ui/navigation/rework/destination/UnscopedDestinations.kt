@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.navigation.rework.destination
 
 import android.net.Uri
+import android.os.Bundle
 import android.os.Parcelable
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
@@ -66,6 +67,11 @@ object UnscopedDestinations {
                 },
             )
 
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            val cityParcelable = args.city?.let { CityParcelable.from(it) }
+            putParcelable(ARG_KEY_CITY, cityParcelable)
+        }
+
         data class Args(val city: City? = null)
 
         @Parcelize
@@ -113,6 +119,12 @@ object UnscopedDestinations {
                     nullable = true
                 }
             )
+
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            putLong(ARG_KEY_CATEGORY_ID, args.categoryId.value)
+            val filtersParcelable = args.filters?.let { FiltersParcelable.from(it) }
+            putParcelable(ARG_KEY_FILTERS, filtersParcelable)
+        }
 
         data class Args(
             val categoryId: Category.Id,
@@ -162,6 +174,12 @@ object UnscopedDestinations {
                 }
             )
 
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            putLong(ARG_KEY_CATEGORY_ID, args.categoryId.value)
+            val filtersParcelable = args.filters?.let { FiltersParcelable.from(it) }
+            putParcelable(ARG_KEY_FILTERS, filtersParcelable)
+        }
+
         data class Args(
             val categoryId: Category.Id,
             val filters: DomainFilters?,
@@ -199,6 +217,11 @@ object UnscopedDestinations {
                 navArgument(ARG_KEY_FILTER) { type = NavType.ListFilterParcelableType },
             )
 
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            val listFilterParcelable = ListFilterParcelable.from(args.filter)
+            putParcelable(ARG_KEY_FILTER, listFilterParcelable)
+        }
+
         data class Args(val filter: DomainListFilter<*>)
 
         @Parcelize
@@ -234,6 +257,13 @@ object UnscopedDestinations {
                 navArgument(ARG_KEY_PRODUCT) { type = NavType.ProductParcelableType },
                 navArgument(ARG_KEY_OFFER) { type = NavType.ProductOfferParcelableType },
             )
+
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            val productParcelable = ProductParcelable.from(args.product)
+            putParcelable(ARG_KEY_PRODUCT, productParcelable)
+            val offerParcelable = ProductOfferParcelable.from(args.offer)
+            putParcelable(ARG_KEY_OFFER, offerParcelable)
+        }
 
         data class Args(val product: Product, val offer: ProductOffer)
     }

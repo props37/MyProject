@@ -10,6 +10,7 @@ import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.sizeselector.heightselector.HeightSelectorBottomSheetScreenScreen
 import ru.zarina.zarina.ui.screen.sizeselector.heightselector.HeightSelectorScreenAction
+import ru.zarina.zarina.util.library.navigation.navigate
 import java.util.UUID
 
 fun NavGraphBuilder.heightSelectorBottomSheetScreen(navController: NavHostController) {
@@ -51,13 +52,16 @@ fun NavGraphBuilder.heightSelectorBottomSheetScreen(navController: NavHostContro
                                 product = action.product,
                                 offer = action.offer,
                             )
-                            val route = UnscopedDestinations.ProductSubscription.createRoute(args)
                             val navOptions = navOptions {
                                 popUpTo(SizeSelectorGraph.routeSchema) {
                                     inclusive = true
                                 }
                             }
-                            navController.navigate(route, navOptions)
+                            navController.navigate(
+                                route = UnscopedDestinations.ProductSubscription.routeSchema,
+                                args = UnscopedDestinations.ProductSubscription.createArgsBundle(args),
+                                navOptions = navOptions,
+                            )
                         }
                     }
                 }

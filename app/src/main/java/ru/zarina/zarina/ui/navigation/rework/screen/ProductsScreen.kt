@@ -12,6 +12,7 @@ import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.products.ProductsScreen
 import ru.zarina.zarina.ui.screen.products.ProductsScreenAction
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel
+import ru.zarina.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.productsScreen(navController: NavHostController) {
     composableDestination(
@@ -52,8 +53,10 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                             categoryId = action.categoryId,
                             filters = action.filters,
                         )
-                        val route = UnscopedDestinations.Filters.createRoute(args)
-                        navController.navigate(route)
+                        navController.navigate(
+                            route = UnscopedDestinations.Filters.routeSchema,
+                            args = UnscopedDestinations.Filters.createArgsBundle(args),
+                        )
                     }
 
                     is ProductsScreenAction.TagClicked -> {
@@ -61,29 +64,37 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                             categoryId = action.tag.id,
                             filters = action.filters,
                         )
-                        val route = UnscopedDestinations.Products.createRoute(args)
-                        navController.navigate(route)
+                        navController.navigate(
+                            route = UnscopedDestinations.Products.routeSchema,
+                            args = UnscopedDestinations.Products.createArgsBundle(args),
+                        )
                     }
 
                     is ProductsScreenAction.AddProductToCartClicked -> {
                         val args = SizeSelectorGraph.SizeSelector.Args(action.product)
-                        val route = SizeSelectorGraph.SizeSelector.createRoute(args)
-                        navController.navigate(route)
+                        navController.navigate(
+                            route = SizeSelectorGraph.routeSchema,
+                            args = SizeSelectorGraph.createArgsBundle(args),
+                        )
                     }
 
                     is ProductsScreenAction.SubscribeToProductClicked -> {
                         if (action.product.offers.size > 1) {
                             val args = SizeSelectorGraph.SizeSelector.Args(action.product)
-                            val route = SizeSelectorGraph.SizeSelector.createRoute(args)
-                            navController.navigate(route)
+                            navController.navigate(
+                                route = SizeSelectorGraph.routeSchema,
+                                args = SizeSelectorGraph.createArgsBundle(args),
+                            )
                         } else {
                             val offer = action.product.offers.firstOrNull() ?: return@ProductsScreen
                             val args = UnscopedDestinations.ProductSubscription.Args(
                                 product = action.product,
                                 offer = offer,
                             )
-                            val route = UnscopedDestinations.ProductSubscription.createRoute(args)
-                            navController.navigate(route)
+                            navController.navigate(
+                                route = UnscopedDestinations.ProductSubscription.routeSchema,
+                                args = UnscopedDestinations.ProductSubscription.createArgsBundle(args),
+                            )
                         }
                     }
                 }

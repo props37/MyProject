@@ -9,6 +9,7 @@ import ru.zarina.zarina.ui.navigation.rework.destination.graph.CatalogGraph
 import ru.zarina.zarina.ui.navigation.rework.util.BottomNavBarItemSecondaryStartDestinationBackHandler
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreen
 import ru.zarina.zarina.ui.screen.catalog.CatalogScreenAction
+import ru.zarina.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.catalogGraph(navController: NavHostController) {
     navigationGraph(CatalogGraph) {
@@ -20,8 +21,10 @@ fun NavGraphBuilder.catalogGraph(navController: NavHostController) {
                     when (action) {
                         is CatalogScreenAction.CategoryClicked -> {
                             val args = UnscopedDestinations.Products.Args(action.categoryId)
-                            val route = UnscopedDestinations.Products.createRoute(args)
-                            navController.navigate(route)
+                            navController.navigate(
+                                route = UnscopedDestinations.Products.routeSchema,
+                                args = UnscopedDestinations.Products.createArgsBundle(args),
+                            )
                         }
                     }
                 },

@@ -18,6 +18,7 @@ import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreenActio
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenAction
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel
+import ru.zarina.zarina.util.library.navigation.navigate
 
 // TODO: [Low] Extract to separate files
 
@@ -55,8 +56,10 @@ fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
 
                     is OnboardingScreenAction.SelectCityClicked -> {
                         val args = UnscopedDestinations.CitySelector.Args(action.currentCity)
-                        val route = UnscopedDestinations.CitySelector.createRoute(args)
-                        navController.navigate(route)
+                        navController.navigate(
+                            route = UnscopedDestinations.CitySelector.routeSchema,
+                            args = UnscopedDestinations.CitySelector.createArgsBundle(args),
+                        )
                     }
                 }
             },

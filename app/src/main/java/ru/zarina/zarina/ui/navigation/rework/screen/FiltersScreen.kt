@@ -13,6 +13,7 @@ import ru.zarina.zarina.ui.screen.filters.FiltersScreen
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenAction
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenResult
 import ru.zarina.zarina.ui.screen.filters.FiltersViewModel
+import ru.zarina.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
     composableDestination(
@@ -74,8 +75,10 @@ fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
                 when (action) {
                     is FiltersScreenAction.ListFilterClicked -> {
                         val args = UnscopedDestinations.ListFilter.Args(action.filter)
-                        val route = UnscopedDestinations.ListFilter.createRoute(args)
-                        navController.navigate(route)
+                        navController.navigate(
+                            route = UnscopedDestinations.ListFilter.routeSchema,
+                            args = UnscopedDestinations.ListFilter.createArgsBundle(args),
+                        )
                     }
                 }
             },
