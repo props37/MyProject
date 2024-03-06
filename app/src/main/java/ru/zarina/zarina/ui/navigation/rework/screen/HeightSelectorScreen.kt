@@ -11,7 +11,6 @@ import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.sizeselector.heightselector.HeightSelectorBottomSheetScreenScreen
 import ru.zarina.zarina.ui.screen.sizeselector.heightselector.HeightSelectorScreenAction
 import ru.zarina.zarina.util.library.navigation.navigate
-import java.util.UUID
 
 fun NavGraphBuilder.heightSelectorBottomSheetScreen(navController: NavHostController) {
     bottomSheetDestination(SizeSelectorGraph.HeightSelector) {
@@ -41,7 +40,6 @@ fun NavGraphBuilder.heightSelectorBottomSheetScreen(navController: NavHostContro
                             val productParcelable = ProductParcelable.from(action.product)
                             val offerParcelable = ProductOfferParcelable.from(action.offer)
                             val result = SizeSelectorGraph.Result(
-                                id = UUID.randomUUID().toString(),
                                 product = productParcelable,
                                 offer = offerParcelable,
                             )

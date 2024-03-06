@@ -22,9 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -41,6 +39,7 @@ import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.common.paging.mapProducts
+import ru.zarina.zarina.ui.common.util.ScreenResultHandler
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
@@ -62,6 +61,11 @@ class ProductsViewModel @AssistedInject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val interactor: ProductsInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val screenResultHandler = ScreenResultHandler(
+        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
+        savedStateHandle = savedStateHandle,
+    )
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -140,11 +144,20 @@ class ProductsViewModel @AssistedInject constructor(
             parcelable?.toFilters()
         }
 
-    private val filters = MutableStateFlow(
-        initialFilters.value ?: Filters.create(
-            sorting = Filters.getDefaultSorting(Sorting.getDefault()),
+    private val filters: StateFlow<Filters> = savedStateHandle
+        .getStateFlow<FiltersParcelable?>(
+            key = KEY_FILTERS,
+            initialValue = null,
         )
-    )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) {
+            val fallbackFilters = initialFilters.value ?: Filters.create(
+                sorting = Filters.getDefaultSorting(Sorting.getDefault()),
+            )
+            it?.toFilters() ?: fallbackFilters
+        }
 
     private var availableFilters: Filters? = null
 
@@ -180,8 +193,8 @@ class ProductsViewModel @AssistedInject constructor(
     init {
         categoryFetchRequests.trySend(Unit)
 
-        handleFiltersResult(backStackEntrySavedStateHandle)
-        handleSizeSelectorResult(backStackEntrySavedStateHandle)
+        handleFiltersResult()
+        handleSizeSelectorResult()
     }
 
     fun onBackClicked() {
@@ -305,39 +318,29 @@ class ProductsViewModel @AssistedInject constructor(
         }
     }
 
-    private fun handleFiltersResult(backStackEntrySavedStateHandle: SavedStateHandle) {
-        backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.Filters.Result?>(
-            key = UnscopedDestinations.Filters.RESULT_KEY,
-            initialValue = null,
-        )
-            .onEach { result ->
-                if (result != null) {
-                    Timber.v("Filters screen result: $result")
-                    val filters = result.filters.toFilters()
-                    this.filters.value = filters
-                }
+    private fun handleFiltersResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<UnscopedDestinations.Filters.Result>(
+                key = UnscopedDestinations.Filters.RESULT_KEY,
+            ) { result ->
+                val filters = result.filters.toFilters()
+                val filtersParcelable = FiltersParcelable.from(filters)
+                savedStateHandle[KEY_FILTERS] = filtersParcelable
             }
-            .launchIn(viewModelScope)
+        }
     }
 
-    private fun handleSizeSelectorResult(backStackEntrySavedStateHandle: SavedStateHandle) {
-        backStackEntrySavedStateHandle.getStateFlow<SizeSelectorGraph.Result?>(
-            key = SizeSelectorGraph.RESULT_KEY,
-            initialValue = null,
-        )
-            .onEach { result ->
-                val previousSizeSelectorResult: String? =
-                    savedStateHandle[KEY_PREV_SIZE_SELECTOR_RESULT]
-                if (result != null && result.id != previousSizeSelectorResult) {
-                    Timber.v("SizeSelector screen result: $result")
-                    addProductToCart(
-                        productId = result.product.toProduct().id,
-                        barcode = result.offer.toProductOffer().barcode,
-                    )
-                    savedStateHandle[KEY_PREV_SIZE_SELECTOR_RESULT] = result.id
-                }
+    private fun handleSizeSelectorResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<SizeSelectorGraph.Result>(
+                key = SizeSelectorGraph.RESULT_KEY,
+            ) { result ->
+                addProductToCart(
+                    productId = result.product.toProduct().id,
+                    barcode = result.offer.toProductOffer().barcode,
+                )
             }
-            .launchIn(viewModelScope)
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -362,6 +365,6 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     companion object {
-        private const val KEY_PREV_SIZE_SELECTOR_RESULT = "prev_size_selector_result"
+        private const val KEY_FILTERS = "filters"
     }
 }

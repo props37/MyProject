@@ -21,8 +21,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -38,6 +36,7 @@ import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.ui.common.util.ScreenResultHandler
 import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
@@ -56,6 +55,11 @@ class OnboardingViewModel @AssistedInject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val interactor: OnboardingInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val screenResultHandler = ScreenResultHandler(
+        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
+        savedStateHandle = savedStateHandle,
+    )
 
     private val operationTracker = OperationTracker()
 
@@ -135,7 +139,7 @@ class OnboardingViewModel @AssistedInject constructor(
     )
 
     init {
-        handleCitySelectorResult(backStackEntrySavedStateHandle)
+        handleCitySelectorResult()
     }
 
     fun onRequestNotificationsPermissionClicked() {
@@ -293,18 +297,14 @@ class OnboardingViewModel @AssistedInject constructor(
         }
     }
 
-    private fun handleCitySelectorResult(backStackEntrySavedStateHandle: SavedStateHandle) {
-        backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.CitySelector.Result?>(
-            key = UnscopedDestinations.CitySelector.RESULT_KEY,
-            initialValue = null,
-        )
-            .onEach { result ->
-                if (result != null) {
-                    Timber.v("CitySelector screen result: $result")
-                    savedStateHandle[KEY_CURRENT_CITY] = result.city
-                }
+    private fun handleCitySelectorResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<UnscopedDestinations.CitySelector.Result>(
+                key = UnscopedDestinations.CitySelector.RESULT_KEY,
+            ) { result ->
+                savedStateHandle[KEY_CURRENT_CITY] = result.city
             }
-            .launchIn(viewModelScope)
+        }
     }
 
     private fun createOnboardingSteps(): List<OnboardingStep> {

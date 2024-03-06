@@ -209,7 +209,10 @@ object UnscopedDestinations {
         )
 
         @Parcelize
-        data class Result(val filters: FiltersParcelable) : Parcelable
+        data class Result(
+            val filters: FiltersParcelable,
+            override val id: String = UUID.randomUUID().toString(),
+        ) : ScreenResult, Parcelable
     }
 
     data object ListFilter : Destination<ListFilter.Args>() {
@@ -248,7 +251,10 @@ object UnscopedDestinations {
         data class Args(val filter: DomainListFilter<*>)
 
         @Parcelize
-        data class Result(val filter: ListFilterParcelable) : Parcelable
+        data class Result(
+            val filter: ListFilterParcelable,
+            override val id: String = UUID.randomUUID().toString(),
+        ) : ScreenResult, Parcelable
     }
 
     data object ProductSubscription : Destination<ProductSubscription.Args>() {

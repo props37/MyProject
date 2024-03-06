@@ -14,10 +14,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.filter.Filter
 import ru.zarina.zarina.domain.rework.filter.Filters
@@ -30,6 +29,7 @@ import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.ui.common.util.ScreenResultHandler
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.filters.FiltersViewModel.SideEffect
@@ -46,6 +46,11 @@ class FiltersViewModel @AssistedInject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val interactor: FiltersInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val screenResultHandler = ScreenResultHandler(
+        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
+        savedStateHandle = savedStateHandle,
+    )
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -141,7 +146,7 @@ class FiltersViewModel @AssistedInject constructor(
     init {
         categoryProductInfoFetchRequests.trySend(Unit)
 
-        handleListFilterResult(backStackEntrySavedStateHandle)
+        handleListFilterResult()
     }
 
     val productCount: StateFlow<Int?> = categoryProductInfoResult
@@ -196,20 +201,16 @@ class FiltersViewModel @AssistedInject constructor(
         categoryProductInfoFetchRequests.trySend(Unit)
     }
 
-    private fun handleListFilterResult(backStackEntrySavedStateHandle: SavedStateHandle) {
-        backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.ListFilter.Result?>(
-            key = UnscopedDestinations.ListFilter.RESULT_KEY,
-            initialValue = null,
-        )
-            .onEach { result ->
-                if (result != null) {
-                    Timber.v("ListFilter screen result: $result")
-                    val filter = result.filter.toListFilter()
-                    val newFilters = filters.value?.updateWith(filter)
-                    savedStateHandle[KEY_FILTERS] = newFilters?.let { FiltersParcelable.from(it) }
-                }
+    private fun handleListFilterResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<UnscopedDestinations.ListFilter.Result>(
+                key = UnscopedDestinations.ListFilter.RESULT_KEY,
+            ) { result ->
+                val filter = result.filter.toListFilter()
+                val newFilters = filters.value?.updateWith(filter)
+                savedStateHandle[KEY_FILTERS] = newFilters?.let { FiltersParcelable.from(it) }
             }
-            .launchIn(viewModelScope)
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

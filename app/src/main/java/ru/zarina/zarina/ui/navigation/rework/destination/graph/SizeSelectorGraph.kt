@@ -16,9 +16,11 @@ import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Graph
 import ru.zarina.zarina.ui.navigation.base.RouteUtils
+import ru.zarina.zarina.ui.navigation.base.ScreenResult
 import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.ProductOfferParcelableArrayType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.ProductParcelableType
+import java.util.UUID
 
 data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
     const val RESULT_KEY = "result_size_selector"
@@ -49,10 +51,10 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
 
     @Parcelize
     data class Result(
-        val id: String,
         val product: ProductParcelable,
         val offer: ProductOfferParcelable,
-    ) : Parcelable
+        override val id: String = UUID.randomUUID().toString(),
+    ) : ScreenResult, Parcelable
 
 
     data object SizeSelector : Destination<SizeSelector.Args>() {

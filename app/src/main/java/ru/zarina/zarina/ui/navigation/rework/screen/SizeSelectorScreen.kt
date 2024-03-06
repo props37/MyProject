@@ -48,7 +48,6 @@ fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostControll
                                 val productParcelable = ProductParcelable.from(action.product)
                                 val offerParcelable = ProductOfferParcelable.from(firstOffer)
                                 val result = SizeSelectorGraph.Result(
-                                    id = UUID.randomUUID().toString(),
                                     product = productParcelable,
                                     offer = offerParcelable,
                                 )
