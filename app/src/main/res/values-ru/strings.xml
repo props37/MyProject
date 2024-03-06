@@ -89,6 +89,7 @@
     <string name="price_in_rubles_for_one_string">%1$s₽ / шт</string>
     <string name="change_city">Изменить город</string>
     <string name="city_change">Изменение города</string>
+    <string name="city_changing_error_toast">Не удалось изменить город</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>

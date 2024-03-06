@@ -22,6 +22,7 @@ import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.OptionalNavArg
 import ru.zarina.zarina.ui.navigation.base.RouteUtils
+import ru.zarina.zarina.ui.navigation.base.ScreenResult
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
 import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.CityParcelableType
@@ -30,6 +31,7 @@ import ru.zarina.zarina.ui.navigation.rework.base.navtype.ListFilterParcelableTy
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.ProductOfferParcelableType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.ProductParcelableType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.TextType
+import java.util.UUID
 import ru.zarina.zarina.domain.rework.filter.Filters as DomainFilters
 import ru.zarina.zarina.domain.rework.filter.ListFilter as DomainListFilter
 
@@ -93,7 +95,10 @@ object UnscopedDestinations {
         )
 
         @Parcelize
-        data class Result(val city: CityParcelable) : Parcelable
+        data class Result(
+            val city: CityParcelable,
+            override val id: String = UUID.randomUUID().toString(),
+        ) : ScreenResult, Parcelable
     }
 
     data object DefaultCityDialog : SimpleDestination(BaseRouteReworked.DEFAULT_CITY_DIALOG)
