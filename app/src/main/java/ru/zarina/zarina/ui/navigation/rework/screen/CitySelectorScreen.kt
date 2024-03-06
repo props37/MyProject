@@ -17,6 +17,13 @@ fun NavGraphBuilder.citySelectorBottomSheetScreen(navController: NavHostControll
         destination = UnscopedDestinations.CitySelector,
         enterTransition = {
             when (initialState.destination.route) {
+                UnscopedDestinations.Onboarding.routeSchema -> {
+                    slideIntoContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Up,
+                        animationSpec = tween(NavigationTransitionDurationMillis),
+                    )
+                }
+
                 CartGraph.Cart.routeSchema -> {
                     slideIntoContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Start,
@@ -29,6 +36,13 @@ fun NavGraphBuilder.citySelectorBottomSheetScreen(navController: NavHostControll
         },
         popExitTransition = {
             when (targetState.destination.route) {
+                UnscopedDestinations.Onboarding.routeSchema -> {
+                    slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Down,
+                        animationSpec = tween(NavigationTransitionDurationMillis),
+                    )
+                }
+
                 CartGraph.Cart.routeSchema -> {
                     slideOutOfContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.End,

@@ -1,23 +1,19 @@
 package ru.zarina.zarina.ui.navigation.rework.screen
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.zarina.zarina.ui.navigation.base.composableDestination
-import ru.zarina.zarina.ui.navigation.base.dialogDestination
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.rework.destination.graph.HomeGraph
-import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreen
-import ru.zarina.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreenAction
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenAction
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel
 import ru.zarina.zarina.util.library.navigation.navigate
-
-// TODO: [Low] Extract to separate files
 
 fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
     composableDestination(
@@ -31,9 +27,19 @@ fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
                     )
                 }
 
+                UnscopedDestinations.CitySelector.routeSchema -> {
+                    ExitTransition.KeepUntilTransitionsFinished
+                }
+
                 else -> null
             }
         },
+        popEnterTransition = {
+            when (initialState.destination.route) {
+                UnscopedDestinations.CitySelector.routeSchema -> EnterTransition.None
+                else -> null
+            }
+        }
     ) {
         OnboardingScreen(
             viewModel = hiltViewModel { factory : OnboardingViewModel.Factory ->
@@ -60,29 +66,6 @@ fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
                     }
                 }
             },
-        )
-    }
-}
-
-fun NavGraphBuilder.defaultCityDialogScreen(navController: NavHostController) {
-    dialogDestination(
-        destination = UnscopedDestinations.DefaultCityDialog,
-        dialogProperties = DialogProperties(
-            dismissOnClickOutside = false,
-            usePlatformDefaultWidth = false,
-        ),
-    ) {
-        DefaultCityDialogScreen(
-            navigate = { action ->
-                when (action) {
-                    DefaultCityDialogScreenAction.ScreenClosed -> {
-                        navController.popBackStack(
-                            route = UnscopedDestinations.DefaultCityDialog.routeSchema,
-                            inclusive = true,
-                        )
-                    }
-                }
-            }
         )
     }
 }
