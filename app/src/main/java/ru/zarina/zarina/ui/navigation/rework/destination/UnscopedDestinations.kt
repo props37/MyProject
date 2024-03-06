@@ -13,6 +13,7 @@ import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.model.filter.ListFilterParcelable
 import ru.zarina.zarina.ui.model.geography.CityParcelable
@@ -28,6 +29,7 @@ import ru.zarina.zarina.ui.navigation.rework.base.navtype.FiltersParcelableType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.ListFilterParcelableType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.ProductOfferParcelableType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.ProductParcelableType
+import ru.zarina.zarina.ui.navigation.rework.base.navtype.TextType
 import ru.zarina.zarina.domain.rework.filter.Filters as DomainFilters
 import ru.zarina.zarina.domain.rework.filter.ListFilter as DomainListFilter
 
@@ -36,6 +38,7 @@ object UnscopedDestinations {
 
     data object CitySelector : Destination<CitySelector.Args>() {
         const val ARG_KEY_CITY = "arg_city"
+        const val ARG_KEY_TITLE = "arg_title"
 
         const val RESULT_KEY = "city_selector_result"
 
@@ -45,7 +48,7 @@ object UnscopedDestinations {
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(
                 routeBase = routeBase,
-                optionalArgNames = arrayOf(ARG_KEY_CITY),
+                optionalArgNames = arrayOf(ARG_KEY_CITY, ARG_KEY_TITLE),
             )
 
         override fun createRoute(args: Args): String {
@@ -53,9 +56,16 @@ object UnscopedDestinations {
             val cityParcelableString = cityParcelable?.let {
                 Uri.encode(Json.encodeToString(cityParcelable))
             }
+            val titleString = args.title?.let {
+                Uri.encode(Json.encodeToString(it))
+            }
+            val optionalArgs = arrayOf(
+                OptionalNavArg(ARG_KEY_CITY, cityParcelableString),
+                OptionalNavArg(ARG_KEY_TITLE, titleString),
+            )
             return RouteUtils.generateRoute(
                 routeBase = routeBase,
-                optionalArgs = arrayOf(OptionalNavArg(ARG_KEY_CITY, cityParcelableString)),
+                optionalArgs = optionalArgs,
             )
         }
 
@@ -65,14 +75,22 @@ object UnscopedDestinations {
                     type = NavType.CityParcelableType
                     nullable = true
                 },
+                navArgument(ARG_KEY_TITLE) {
+                    type = NavType.TextType
+                    nullable = true
+                },
             )
 
         override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
             val cityParcelable = args.city?.let { CityParcelable.from(it) }
             putParcelable(ARG_KEY_CITY, cityParcelable)
+            putParcelable(ARG_KEY_TITLE, args.title)
         }
 
-        data class Args(val city: City? = null)
+        data class Args(
+            val city: City? = null,
+            val title: Text? = null,
+        )
 
         @Parcelize
         data class Result(val city: CityParcelable) : Parcelable

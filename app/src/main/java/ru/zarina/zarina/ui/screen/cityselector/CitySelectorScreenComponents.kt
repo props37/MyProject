@@ -38,6 +38,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
@@ -62,6 +64,7 @@ object CitySelectorScreenComponents {
 
     @Composable
     fun TopBar(
+        title: Text,
         onBackClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -75,7 +78,7 @@ object CitySelectorScreenComponents {
             },
             centerContent = {
                 Text(
-                    text = stringResource(R.string.city_change),
+                    text = textString(title),
                     style = UiKitTheme.typographyReworked.primary.regular,
                     color = UiKitTheme.colorsReworked.text.general.regular.default,
                     maxLines = 1,

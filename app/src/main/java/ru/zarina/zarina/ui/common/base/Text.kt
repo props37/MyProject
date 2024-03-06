@@ -1,12 +1,17 @@
 package ru.zarina.zarina.ui.common.base
 
 import android.content.Context
+import android.os.Parcelable
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 
 /**
  * Returns String value of the given [Text].
@@ -23,7 +28,7 @@ fun textString(text: Text): String {
  * Abstraction that allows to present a text in different forms.
  */
 @Stable
-sealed interface Text {
+sealed interface Text : Parcelable {
     /**
      * Returns a [String] value of the text.
      */
@@ -32,6 +37,8 @@ sealed interface Text {
     /**
      * Represents an empty text with a value of empty [String].
      */
+    @Parcelize
+    @Serializable
     data object Empty : Text {
         override fun getString(context: Context): kotlin.String = ""
     }
@@ -42,10 +49,12 @@ sealed interface Text {
      * @property resourceId id of the resource string.
      * @property args parameters for the parametrized string.
      */
+    @Parcelize
+    @Serializable
     class Resource(
         @StringRes
         val resourceId: Int,
-        private vararg val args: Any = emptyArray(),
+        private vararg val args: @RawValue @Contextual Any = emptyArray(),
     ) : Text {
         override fun getString(context: Context): kotlin.String {
             @Suppress("SpreadOperator")
@@ -76,11 +85,13 @@ sealed interface Text {
      * @property count the number used to get the correct string for the plural rules.
      * @property args parameters for the parametrized string.
      */
+    @Parcelize
+    @Serializable
     class PluralsResource(
         @PluralsRes
         val resourceId: Int,
         private val count: Int,
-        private vararg val args: Any = emptyArray(),
+        private vararg val args: @RawValue @Contextual Any = emptyArray(),
     ) : Text {
         override fun getString(context: Context): kotlin.String {
             @Suppress("SpreadOperator")
@@ -109,6 +120,8 @@ sealed interface Text {
     /**
      * Represents the plain [String] text.
      */
+    @Parcelize
+    @Serializable
     data class String(private val text: kotlin.String) : Text {
         override fun getString(context: Context): kotlin.String = text
     }

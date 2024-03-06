@@ -25,7 +25,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -42,6 +44,7 @@ fun CitySelectorScreen(
     navigate: (CitySelectorScreenAction) -> Unit,
     viewModel: CitySelectorViewModel = hiltViewModel(),
 ) {
+    val title by viewModel.title.collectAsStateWithLifecycle()
     val cityNameQuery by viewModel.cityNameQuery.collectAsStateWithLifecycle(
         context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
     )
@@ -51,6 +54,7 @@ fun CitySelectorScreen(
     val isChangeCityButtonVisible by viewModel.isChangeCityButtonVisible.collectAsStateWithLifecycle()
 
     ScreenContent(
+        title = title,
         cityNameQuery = cityNameQuery,
         onCityNameQueryChanged = viewModel::onCityNameQueryChanged,
         onCitySearchBarClearClicked = viewModel::onCitySearchBarClearClicked,
@@ -70,6 +74,7 @@ fun CitySelectorScreen(
 
 @Composable
 private fun ScreenContent(
+    title: Text,
     cityNameQuery: String,
     onCityNameQueryChanged: (String) -> Unit,
     onCitySearchBarClearClicked: () -> Unit,
@@ -97,7 +102,10 @@ private fun ScreenContent(
             .statusBarsPadding()
             .displayCutoutPadding(),
     ) {
-        TopBar(onBackClicked = onBackClicked)
+        TopBar(
+            title = title,
+            onBackClicked = onBackClicked,
+        )
 
         AnimatedVisibility(
             visible = isCitySearchBarVisible,
@@ -138,6 +146,7 @@ private fun Preview(
 ) {
     ZarinaPreview {
         ScreenContent(
+            title = remember { Text.Resource(R.string.city) },
             cityNameQuery = "",
             onCityNameQueryChanged = {},
             onCitySearchBarClearClicked = {},

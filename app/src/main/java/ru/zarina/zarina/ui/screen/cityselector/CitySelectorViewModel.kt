@@ -15,9 +15,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.domain.rework.geography.KladrId
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
@@ -41,6 +43,16 @@ class CitySelectorViewModel @Inject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private var fetchCitiesJob: Job? = null
+
+    val title: StateFlow<Text> = savedStateHandle
+        .getStateFlow<Text?>(
+            key = UnscopedDestinations.CitySelector.ARG_KEY_TITLE,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { it ?: TITLE_DEFAULT_VALUE }
 
     private val initialCity: StateFlow<City?> = savedStateHandle
         .getStateFlow<CityParcelable?>(
@@ -211,6 +223,9 @@ class CitySelectorViewModel @Inject constructor(
     companion object {
         private const val KEY_SELECTED_CITY = "selected_city"
         private const val KEY_CITY_NAME_QUERY = "city_name_query"
+
+        private val TITLE_DEFAULT_VALUE: Text
+            get() = Text.Resource(R.string.city)
 
         private val SEARCH_CITIES_BY_NAME_DELAY = 200.milliseconds
 
