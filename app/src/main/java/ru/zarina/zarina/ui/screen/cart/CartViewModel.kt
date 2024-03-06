@@ -35,7 +35,8 @@ class CartViewModel @Inject constructor(
 
     fun onCityClicked() {
         navigationThrottler.throttle {
-
+            val action = CartScreenAction.CityClicked(city.value)
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
