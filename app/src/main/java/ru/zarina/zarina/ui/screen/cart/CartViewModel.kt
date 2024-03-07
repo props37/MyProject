@@ -86,12 +86,16 @@ class CartViewModel @AssistedInject constructor(
             screenResultHandler.handle<UnscopedDestinations.CitySelector.Result>(
                 key = UnscopedDestinations.CitySelector.RESULT_KEY,
             ) { result ->
-                val params = SetUserCityUseCase.Params(result.city.toCity())
-                interactor.setUserCity(params)
-                    .onFailure {
-                        val message = Text.Resource(R.string.city_changing_error_toast)
-                        emitSideEffect(SideEffect.ShowToast(message))
-                    }
+                val newCity = result.city.toCity()
+                val currentCity = city.value
+                if (newCity.kladrId != currentCity?.kladrId) {
+                    val params = SetUserCityUseCase.Params(newCity)
+                    interactor.setUserCity(params)
+                        .onFailure {
+                            val message = Text.Resource(R.string.city_changing_error_toast)
+                            emitSideEffect(SideEffect.ShowToast(message))
+                        }
+                }
             }
         }
     }
