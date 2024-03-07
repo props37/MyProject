@@ -130,7 +130,7 @@ fun ZarinaButton(
                 contentAlignment = Alignment.Center,
                 label = "ZarinaButton content",
             ) { isLoading ->
-                Row {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     if (!isLoading) {
                         content()
                     } else {
