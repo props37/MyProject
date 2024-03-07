@@ -33,12 +33,13 @@ fun CartScreen(
     viewModel: CartViewModel = hiltViewModel(),
 ) {
     val city by viewModel.city.collectAsStateWithLifecycle()
+    val isClearCartButtonVisible by viewModel.isClearCartButtonVisible.collectAsStateWithLifecycle()
 
     ScreenContent(
         city = city,
         onCityClicked = viewModel::onCityClicked,
         onGoToCatalogClicked = viewModel::onGoToCatalogClicked,
-        isClearCartButtonVisible = true, // TODO: [High] Implement
+        isClearCartButtonVisible = isClearCartButtonVisible,
         onClearCartClicked = viewModel::onClearCartClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,

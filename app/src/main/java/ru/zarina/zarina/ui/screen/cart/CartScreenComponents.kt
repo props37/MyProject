@@ -62,8 +62,9 @@ object CartScreenComponents {
                 ) {
                     ZarinaButton(
                         onClick = onClearClicked,
-                        size = ZarinaButtonSize.Medium,
+                        size = ZarinaButtonSize.Small,
                         colors = ZarinaButtonDefaults.backlessColors(),
+                        textStyle = UiKitTheme.typographyReworked.caption1.regular,
                     ) {
                         Text(text = stringResource(R.string.clear).uppercase())
                     }

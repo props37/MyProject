@@ -50,6 +50,17 @@ class CartViewModel @AssistedInject constructor(
             initialValue = null,
         )
 
+    val isClearCartButtonVisible: StateFlow<Boolean> = interactor.getCartProductCountFlow()
+        .map { result ->
+            val count = result.getOrNull()
+            count != null && count > 0
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = false,
+        )
+
     init {
         handleCitySelectorResult()
     }
