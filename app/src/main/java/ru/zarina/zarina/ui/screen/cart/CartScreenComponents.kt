@@ -1,6 +1,8 @@
 package ru.zarina.zarina.ui.screen.cart
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,28 +16,37 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
+import androidx.compose.material.TabRow
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
+import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.cart.DeliveryType
 import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.ui.common.component.Counter
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.tab.ZarinaTabIndicator
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
+import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.Crossfade
 
 object CartScreenComponents {
@@ -82,7 +93,6 @@ object CartScreenComponents {
     ) {
         Crossfade(
             targetState = city,
-            contentKey = { it != null },
             modifier = modifier
                 .clickable(
                     enabled = city != null,
@@ -127,6 +137,39 @@ object CartScreenComponents {
                         modifier = Modifier.size(16.dp),
                     )
                 }
+            }
+        }
+    }
+
+    @Composable
+    fun DeliveryTypePicker(
+        types: ImmutableList<DeliveryType>,
+        currentType: DeliveryType,
+        onTypeClicked: (DeliveryType) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        val selectedTabIndex = remember(types, currentType) {
+            types.indexOf(currentType)
+        }
+
+        TabRow(
+            selectedTabIndex = selectedTabIndex,
+            backgroundColor = Color.Unspecified,
+            indicator = { tabPositions ->
+                ZarinaTabIndicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
+                )
+            },
+            divider = {},
+            modifier = modifier,
+        ) {
+            types.forEach { type ->
+                DeliveryTypeButton(
+                    type = type,
+                    onClick = { onTypeClicked(type) },
+                    isSelected = type == currentType,
+                    productCount = 0, // TODO: [High] Implement
+                )
             }
         }
     }
@@ -178,6 +221,56 @@ object CartScreenComponents {
                 Text(text = stringResource(R.string.go_to_catalog).uppercase())
             }
             Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+
+    @Composable
+    private fun DeliveryTypeButton(
+        type: DeliveryType,
+        onClick: () -> Unit,
+        isSelected: Boolean,
+        productCount: Int,
+        modifier: Modifier = Modifier,
+    ) {
+        ZarinaButton(
+            onClick = onClick,
+            size = ZarinaButtonSize.Medium,
+            colors = ZarinaButtonDefaults.backlessColors(),
+            contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
+            modifier = modifier,
+        ) {
+            val textResId = when (type) {
+                DeliveryType.DELIVERY -> R.string.delivery
+                DeliveryType.PICK_UP_FROM_SHOP -> R.string.from_shop
+            }
+
+            val style = if (isSelected) {
+                UiKitTheme.typographyReworked.secondary.regular
+            } else {
+                UiKitTheme.typographyReworked.secondary.light
+            }
+
+            Text(
+                text = stringResource(textResId),
+                style = style,
+                color = UiKitTheme.colorsReworked.text.general.regular.default,
+            )
+
+            AnimatedContent(
+                targetState = productCount,
+                transitionSpec = {
+                    AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                },
+                contentAlignment = Alignment.Center,
+                label = "DeliveryTypeButton product count",
+            ) { count ->
+                if (count > 0) {
+                    Counter(
+                        value = count.toString(),
+                        modifier = Modifier.padding(start = 8.dp),
+                    )
+                }
+            }
         }
     }
 }

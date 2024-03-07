@@ -16,7 +16,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,7 +38,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
@@ -70,6 +68,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.BottomNavBarBehavior
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
+import ru.zarina.zarina.ui.common.component.Counter
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -257,21 +256,14 @@ private fun ItemCounter(
         transitionSpec = {
             AnimatedContentDefaultTransitionSpec().using(sizeTransform = null)
         },
-        contentKey = { it != null },
+        contentAlignment = Alignment.TopEnd,
         label = "ItemCounter",
         modifier = modifier,
     ) { count ->
         if (count != null && count != 0) {
-            Text(
-                text = count.toString(),
-                style = UiKitTheme.typographyReworked.caption2.bold.unscalable(LocalDensity.current),
-                color = UiKitTheme.colorsReworked.text.general.inversed.default,
-                modifier = Modifier
-                    .background(
-                        color = UiKitTheme.colorsReworked.background.general.inversed.default,
-                        shape = CircleShape,
-                    )
-                    .padding(start = 6.dp, top = 1.dp, end = 6.dp),
+            Counter(
+                value = count.toString(),
+                textStyle = UiKitTheme.typographyReworked.caption2.bold.unscalable(LocalDensity.current),
             )
         }
     }

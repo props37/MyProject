@@ -2,7 +2,6 @@ package ru.zarina.zarina.ui.screen.filters
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Box
@@ -21,7 +20,6 @@ import androidx.compose.foundation.layout.safeGestures
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -55,6 +53,7 @@ import ru.zarina.zarina.domain.rework.filter.PriceFilter
 import ru.zarina.zarina.domain.rework.filter.SortFilterItem
 import ru.zarina.zarina.domain.rework.filter.ToggleFilter
 import ru.zarina.zarina.domain.rework.filter.sorting
+import ru.zarina.zarina.ui.common.component.Counter
 import ru.zarina.zarina.ui.common.component.PriceFilter
 import ru.zarina.zarina.ui.common.component.ZarinaSwitch
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
@@ -389,16 +388,10 @@ object FiltersScreenComponents {
             Spacer(modifier = Modifier.width(8.dp))
 
             if (selectedCount > 0) {
-                Text(
-                    text = selectedCount.toString(),
-                    style = UiKitTheme.typographyReworked.footnote.bold,
-                    color = UiKitTheme.colorsReworked.text.general.inversed.default,
-                    modifier = Modifier
-                        .background(
-                            color = UiKitTheme.colorsReworked.background.general.inversed.default,
-                            shape = CircleShape,
-                        )
-                        .padding(start = 8.dp, top = 1.dp, end = 8.dp),
+                Counter(
+                    value = selectedCount.toString(),
+                    textStyle = UiKitTheme.typographyReworked.footnote.bold,
+                    contentPadding = PaddingValues(start = 8.dp, top = 1.dp, end = 8.dp),
                 )
             }
 

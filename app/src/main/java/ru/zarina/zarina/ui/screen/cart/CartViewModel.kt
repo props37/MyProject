@@ -7,12 +7,17 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.rework.cart.DeliveryType
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
@@ -61,6 +66,12 @@ class CartViewModel @AssistedInject constructor(
             initialValue = false,
         )
 
+    val deliveryTypes: StateFlow<ImmutableList<DeliveryType>> =
+        MutableStateFlow(DeliveryType.entries.toImmutableList()).asStateFlow()
+
+    private val _currentDeliveryType = MutableStateFlow(DeliveryType.DELIVERY)
+    val currentDeliveryType: StateFlow<DeliveryType> = _currentDeliveryType.asStateFlow()
+
     init {
         handleCitySelectorResult()
     }
@@ -83,6 +94,10 @@ class CartViewModel @AssistedInject constructor(
             val action = CartScreenAction.CityClicked(city.value)
             emitSideEffect(SideEffect.Navigate(action))
         }
+    }
+
+    fun onDeliveryTypeClicked(type: DeliveryType) {
+        _currentDeliveryType.value = type
     }
 
     fun onGoToCatalogClicked() {
