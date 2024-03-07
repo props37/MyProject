@@ -37,7 +37,9 @@ fun CartScreen(
     ScreenContent(
         city = city,
         onCityClicked = viewModel::onCityClicked,
-        onGoToCartClicked = viewModel::onGoToCatalogClicked,
+        onGoToCatalogClicked = viewModel::onGoToCatalogClicked,
+        isClearCartButtonVisible = true, // TODO: [High] Implement
+        onClearCartClicked = viewModel::onClearCartClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -47,7 +49,9 @@ fun CartScreen(
 private fun ScreenContent(
     city: City?,
     onCityClicked: () -> Unit,
-    onGoToCartClicked: () -> Unit,
+    onGoToCatalogClicked: () -> Unit,
+    isClearCartButtonVisible: Boolean,
+    onClearCartClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CartScreenAction) -> Unit,
 ) {
@@ -68,8 +72,8 @@ private fun ScreenContent(
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
         TopBar(
-            isClearButtonVisible = false, // TODO: [High] Implement
-            onClearClicked = { /*TODO*/ },
+            isClearButtonVisible = isClearCartButtonVisible,
+            onClearClicked = onClearCartClicked,
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -80,7 +84,7 @@ private fun ScreenContent(
         )
 
         EmptyCartPlaceholder(
-            onGoToCatalogClicked = onGoToCartClicked,
+            onGoToCatalogClicked = onGoToCatalogClicked,
             modifier = Modifier.fillMaxSize(),
         )
     }

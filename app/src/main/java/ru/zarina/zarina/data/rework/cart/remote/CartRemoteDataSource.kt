@@ -18,4 +18,8 @@ class CartRemoteDataSource @Inject constructor(
     suspend fun addProductToCart(barcode: Barcode, count: Int): ProductAdditionToCartResult {
         return api.addProductToCard(barcode, count).toProductAdditionToCartResult()
     }
+
+    suspend fun clearCart() {
+        api.clearCart()
+    }
 }

@@ -54,6 +54,19 @@ class CartViewModel @AssistedInject constructor(
         handleCitySelectorResult()
     }
 
+    fun onClearCartClicked() {
+        viewModelScope.launch {
+            interactor.clearCart()
+                .onSuccess {
+                    // TODO: [High] Refresh cart products
+                }
+                .onFailure {
+                    val message = Text.Resource(R.string.cart_clearing_error_toast)
+                    emitSideEffect(SideEffect.ShowToast(message))
+                }
+        }
+    }
+
     fun onCityClicked() {
         navigationThrottler.throttle {
             val action = CartScreenAction.CityClicked(city.value)

@@ -65,7 +65,7 @@ object CartScreenComponents {
                         size = ZarinaButtonSize.Medium,
                         colors = ZarinaButtonDefaults.backlessColors(),
                     ) {
-                        Text(text = stringResource(R.string.clear))
+                        Text(text = stringResource(R.string.clear).uppercase())
                     }
                 }
             },
