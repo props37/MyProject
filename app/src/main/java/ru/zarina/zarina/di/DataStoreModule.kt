@@ -6,14 +6,13 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Named
 import org.koin.core.annotation.Singleton
-import ru.zarina.zarina.data.user.local.entity.CityDataEntity
+import ru.zarina.zarina.data.old.user.local.entity.CityDataEntity
 import ru.zarina.zarina.utils.datastore.Serializer
 
 @Module

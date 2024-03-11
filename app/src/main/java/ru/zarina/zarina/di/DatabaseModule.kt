@@ -6,8 +6,8 @@ import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Singleton
-import ru.zarina.zarina.data.base.database.TypeConverter
-import ru.zarina.zarina.data.base.database.ZarinaDatabase
+import ru.zarina.zarina.data.old.database.TypeConverter
+import ru.zarina.zarina.data.old.database.ZarinaDatabase
 
 
 @Module

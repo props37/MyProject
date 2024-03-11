@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
-import ru.zarina.zarina.data.search.ISearchRepository
+import ru.zarina.zarina.data.old.search.ISearchRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.base.usecase.FlowUseCase
 

@@ -3,7 +3,7 @@ package ru.zarina.zarina.usecase.content
 import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
-import ru.zarina.zarina.data.content.IContentRepository
+import ru.zarina.zarina.data.old.content.IContentRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Banner
 import ru.zarina.zarina.base.usecase.UseCase

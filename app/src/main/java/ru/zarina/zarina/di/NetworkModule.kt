@@ -20,10 +20,10 @@ import org.koin.core.annotation.Module
 import org.koin.core.annotation.Named
 import org.koin.core.annotation.Singleton
 import ru.zarina.zarina.BuildConfig
-import ru.zarina.zarina.data.MindboxHeaderProvider
-import ru.zarina.zarina.data.UserAgentHeaderProvider
-import ru.zarina.zarina.data.ktor.plugins.auth.ZarinaAuth
-import ru.zarina.zarina.data.ktor.plugins.auth.bearer
+import ru.zarina.zarina.data.old.MindboxHeaderProvider
+import ru.zarina.zarina.data.old.UserAgentHeaderProvider
+import ru.zarina.zarina.data.old.auth.ZarinaAuth
+import ru.zarina.zarina.data.old.auth.bearer
 import ru.zarina.zarina.domain.AuthorizationToken
 import ru.zarina.zarina.usecase.authorization.ClearDeviceAuthorizationTokenUseCase
 import ru.zarina.zarina.usecase.authorization.GetAuthorizationTokenUseCase

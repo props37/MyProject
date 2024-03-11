@@ -1,7 +1,7 @@
 package ru.zarina.zarina.ui.screens.catalog.products
 
 import org.koin.core.annotation.Factory
-import ru.zarina.zarina.data.category.ICategoryRepository
+import ru.zarina.zarina.data.old.category.ICategoryRepository
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.usecase.catalog.GetProductsPageUseCase

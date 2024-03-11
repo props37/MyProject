@@ -3,8 +3,8 @@ package ru.zarina.zarina.usecase.location
 import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
-import ru.zarina.zarina.data.geography.IGeographyRepository
-import ru.zarina.zarina.data.location.IGeoLocationRepository
+import ru.zarina.zarina.data.old.geography.IGeographyRepository
+import ru.zarina.zarina.data.old.location.IGeoLocationRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.exception.ServiceUnavailableException

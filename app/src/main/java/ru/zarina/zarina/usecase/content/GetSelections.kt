@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onEach
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
-import ru.zarina.zarina.data.content.IContentRepository
-import ru.zarina.zarina.data.favorites.IFavoritesRepository
+import ru.zarina.zarina.data.old.content.IContentRepository
+import ru.zarina.zarina.data.old.favorites.IFavoritesRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Selection
 import ru.zarina.zarina.base.usecase.FlowUseCase

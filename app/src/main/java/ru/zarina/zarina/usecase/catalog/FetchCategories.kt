@@ -3,7 +3,7 @@ package ru.zarina.zarina.usecase.catalog
 import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
-import ru.zarina.zarina.data.category.ICategoryRepository
+import ru.zarina.zarina.data.old.category.ICategoryRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Category
 import ru.zarina.zarina.base.usecase.UseCase

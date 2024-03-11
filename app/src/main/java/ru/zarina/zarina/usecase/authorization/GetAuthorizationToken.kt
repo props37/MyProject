@@ -3,7 +3,7 @@ package ru.zarina.zarina.usecase.authorization
 import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
-import ru.zarina.zarina.data.device.IDeviceRepository
+import ru.zarina.zarina.data.old.device.IDeviceRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.AuthorizationToken
 import ru.zarina.zarina.base.usecase.UseCase

@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.base.usecase.UseCase
-import ru.zarina.zarina.data.shop.IShopRepository
+import ru.zarina.zarina.data.old.shop.IShopRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
