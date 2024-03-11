@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import kotlinx.coroutines.flow.first
 import ru.zarina.zarina.data.product.ProductRepository
 import ru.zarina.zarina.domain.category.Category
-import ru.zarina.zarina.domain.rework.common.Sorting
+import ru.zarina.zarina.domain.common.Sorting
 import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.product.Product
 

@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.rework.common.exception
+package ru.zarina.zarina.domain.common.exception
 
 open class ValidationException(message: String = "Validation failed") : Exception(message) {
     companion object {

@@ -11,8 +11,8 @@ import ru.zarina.zarina.data.remote.api.dto.SortingDto
 import ru.zarina.zarina.data.remote.api.exception.apiExceptionConverter
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.category.Category
-import ru.zarina.zarina.domain.rework.common.Barcode
-import ru.zarina.zarina.domain.rework.common.Sorting
+import ru.zarina.zarina.domain.common.Barcode
+import ru.zarina.zarina.domain.common.Sorting
 import ru.zarina.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
 import ru.zarina.zarina.domain.rework.filter.Filters as DomainFilters

@@ -16,7 +16,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
-import ru.zarina.zarina.domain.rework.common.Url
+import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.ui.common.media.exoplayer.LocalExoPlayerCacheHolder
 import ru.zarina.zarina.ui.common.media.exoplayer.rememberExoPlayer
 import timber.log.Timber

@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.base.usecase.UseCase
 import ru.zarina.zarina.data.cart.CartRepository
 import ru.zarina.zarina.di.Qualifiers
-import ru.zarina.zarina.domain.rework.common.Barcode
+import ru.zarina.zarina.domain.common.Barcode
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.util.base.usecase.invoke
 import timber.log.Timber

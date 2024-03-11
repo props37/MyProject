@@ -2,7 +2,7 @@ package ru.zarina.zarina.data.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.rework.common.Color
+import ru.zarina.zarina.domain.common.Color
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductColor
 import timber.log.Timber

@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.rework.common
+package ru.zarina.zarina.domain.common
 
 data class Page<T>(
     val data: T,

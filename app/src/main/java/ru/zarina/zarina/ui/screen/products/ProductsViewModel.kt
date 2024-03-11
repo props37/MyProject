@@ -28,8 +28,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.category.Category
-import ru.zarina.zarina.domain.rework.common.Barcode
-import ru.zarina.zarina.domain.rework.common.Sorting
+import ru.zarina.zarina.domain.common.Barcode
+import ru.zarina.zarina.domain.common.Sorting
 import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.filter.coerceInAvailable
 import ru.zarina.zarina.domain.rework.filter.selected

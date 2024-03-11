@@ -9,7 +9,7 @@ import ru.zarina.zarina.data.cart.remote.api.dto.AddProductToCartRequestBody
 import ru.zarina.zarina.data.cart.remote.api.dto.CartProductCountDto
 import ru.zarina.zarina.data.cart.remote.api.dto.CartProductIdsDto
 import ru.zarina.zarina.di.Qualifiers
-import ru.zarina.zarina.domain.rework.common.Barcode
+import ru.zarina.zarina.domain.common.Barcode
 import ru.zarina.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
 

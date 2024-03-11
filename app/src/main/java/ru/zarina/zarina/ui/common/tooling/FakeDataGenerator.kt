@@ -1,11 +1,11 @@
 package ru.zarina.zarina.ui.common.tooling
 
 import ru.zarina.zarina.domain.category.Category
-import ru.zarina.zarina.domain.rework.common.Barcode
-import ru.zarina.zarina.domain.rework.common.Color
-import ru.zarina.zarina.domain.rework.common.Media
-import ru.zarina.zarina.domain.rework.common.MediaType
-import ru.zarina.zarina.domain.rework.common.Url
+import ru.zarina.zarina.domain.common.Barcode
+import ru.zarina.zarina.domain.common.Color
+import ru.zarina.zarina.domain.common.Media
+import ru.zarina.zarina.domain.common.MediaType
+import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.rework.product.Price
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductColor

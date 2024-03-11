@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.flow
 import ru.zarina.zarina.data.cart.remote.api.CartApi
 import ru.zarina.zarina.domain.cart.CartProductIds
 import ru.zarina.zarina.domain.cart.ProductAdditionToCartResult
-import ru.zarina.zarina.domain.rework.common.Barcode
+import ru.zarina.zarina.domain.common.Barcode
 import javax.inject.Inject
 
 class CartRemoteDataSource @Inject constructor(

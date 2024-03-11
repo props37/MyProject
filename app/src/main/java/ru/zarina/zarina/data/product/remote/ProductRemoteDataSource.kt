@@ -4,9 +4,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.zarina.zarina.data.product.remote.api.ProductApi
 import ru.zarina.zarina.domain.category.Category
-import ru.zarina.zarina.domain.rework.common.Barcode
-import ru.zarina.zarina.domain.rework.common.Page
-import ru.zarina.zarina.domain.rework.common.Sorting
+import ru.zarina.zarina.domain.common.Barcode
+import ru.zarina.zarina.domain.common.Page
+import ru.zarina.zarina.domain.common.Sorting
 import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
 import ru.zarina.zarina.domain.rework.product.ProductsWithFilters

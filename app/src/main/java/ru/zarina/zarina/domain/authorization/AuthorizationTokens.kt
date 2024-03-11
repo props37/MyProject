@@ -1,6 +1,6 @@
 package ru.zarina.zarina.domain.authorization
 
-import ru.zarina.zarina.domain.rework.common.Token
+import ru.zarina.zarina.domain.common.Token
 
 data class AuthorizationTokens(
     val accessToken: Token,

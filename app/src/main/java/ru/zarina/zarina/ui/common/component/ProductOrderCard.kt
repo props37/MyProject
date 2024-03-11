@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.common.Url
+import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.rework.product.Price
 import ru.zarina.zarina.domain.rework.product.ProductColor
 import ru.zarina.zarina.domain.rework.product.currentPrice

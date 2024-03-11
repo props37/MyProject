@@ -1,6 +1,6 @@
 package ru.zarina.zarina.domain.rework.product
 
-import ru.zarina.zarina.domain.rework.common.Media
+import ru.zarina.zarina.domain.common.Media
 
 data class Product(
     val id: Id,

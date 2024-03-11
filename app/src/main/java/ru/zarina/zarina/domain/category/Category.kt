@@ -1,6 +1,6 @@
 package ru.zarina.zarina.domain.category
 
-import ru.zarina.zarina.domain.rework.common.Color
+import ru.zarina.zarina.domain.common.Color
 
 data class Category(
     val id: Id,

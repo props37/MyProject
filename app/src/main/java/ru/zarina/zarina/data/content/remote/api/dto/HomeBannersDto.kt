@@ -4,8 +4,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.remote.api.dto.ClickActionDto
 import ru.zarina.zarina.data.remote.api.dto.MediaTypeDto
-import ru.zarina.zarina.domain.rework.common.Media
-import ru.zarina.zarina.domain.rework.common.Url
+import ru.zarina.zarina.domain.common.Media
+import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import timber.log.Timber
 

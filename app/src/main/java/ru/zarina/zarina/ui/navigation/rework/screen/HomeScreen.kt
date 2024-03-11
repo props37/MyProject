@@ -2,7 +2,7 @@ package ru.zarina.zarina.ui.navigation.rework.screen
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import ru.zarina.zarina.domain.rework.common.ClickAction
+import ru.zarina.zarina.domain.common.ClickAction
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.rework.destination.graph.HomeGraph

@@ -1,6 +1,6 @@
 package ru.zarina.zarina.domain.rework.user.exception
 
-import ru.zarina.zarina.domain.rework.common.exception.ValidationException
+import ru.zarina.zarina.domain.common.exception.ValidationException
 
 open class InvalidEmailException(message: String = "Invalid email address") :
     ValidationException(message)

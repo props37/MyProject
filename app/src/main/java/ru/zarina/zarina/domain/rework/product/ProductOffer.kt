@@ -1,6 +1,6 @@
 package ru.zarina.zarina.domain.rework.product
 
-import ru.zarina.zarina.domain.rework.common.Barcode
+import ru.zarina.zarina.domain.common.Barcode
 
 data class ProductOffer(
     val id: Id,

@@ -42,7 +42,7 @@ import androidx.media3.common.util.UnstableApi
 import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.common.MediaType
+import ru.zarina.zarina.domain.common.MediaType
 import ru.zarina.zarina.domain.rework.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarHeightAsState
 import ru.zarina.zarina.ui.common.component.ZarinaLogo

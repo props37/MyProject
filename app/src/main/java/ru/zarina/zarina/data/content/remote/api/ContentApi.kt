@@ -6,7 +6,7 @@ import io.ktor.client.request.get
 import ru.zarina.zarina.BuildConfig
 import ru.zarina.zarina.data.content.remote.api.dto.HomeBannersDto
 import ru.zarina.zarina.di.Qualifiers
-import ru.zarina.zarina.domain.rework.common.Url
+import ru.zarina.zarina.domain.common.Url
 import javax.inject.Inject
 
 class ContentApi @Inject constructor(

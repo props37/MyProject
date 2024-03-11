@@ -45,7 +45,7 @@ import coil.size.Size
 import kotlinx.collections.immutable.ImmutableList
 import okhttp3.OkHttpClient
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.common.Url
+import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaLinearProgressIndicator
 import ru.zarina.zarina.ui.common.component.ZarinaLogo

@@ -2,8 +2,8 @@ package ru.zarina.zarina.data.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.rework.common.Media
-import ru.zarina.zarina.domain.rework.common.Url
+import ru.zarina.zarina.domain.common.Media
+import ru.zarina.zarina.domain.common.Url
 import timber.log.Timber
 
 @Serializable

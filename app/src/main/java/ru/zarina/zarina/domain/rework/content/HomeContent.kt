@@ -1,7 +1,7 @@
 package ru.zarina.zarina.domain.rework.content
 
-import ru.zarina.zarina.domain.rework.common.ClickAction
-import ru.zarina.zarina.domain.rework.common.Media
+import ru.zarina.zarina.domain.common.ClickAction
+import ru.zarina.zarina.domain.common.Media
 
 data class HomeContent(
     val womenBanners: List<BannerContainer>,

@@ -2,7 +2,7 @@ package ru.zarina.zarina.ui.model.common
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import ru.zarina.zarina.domain.rework.common.Gender
+import ru.zarina.zarina.domain.common.Gender
 
 @Parcelize
 enum class GenderParcelable : Parcelable {

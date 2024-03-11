@@ -1,6 +1,6 @@
 package ru.zarina.zarina.ui.model.common
 
-import ru.zarina.zarina.domain.rework.common.MediaType
+import ru.zarina.zarina.domain.common.MediaType
 
 enum class MediaTypeParcelable {
     IMAGE,

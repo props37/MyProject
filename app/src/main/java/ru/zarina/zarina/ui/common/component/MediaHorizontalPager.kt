@@ -22,8 +22,8 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
 import com.valentinilk.shimmer.Shimmer
-import ru.zarina.zarina.domain.rework.common.Media
-import ru.zarina.zarina.domain.rework.common.MediaType
+import ru.zarina.zarina.domain.common.Media
+import ru.zarina.zarina.domain.common.MediaType
 import ru.zarina.zarina.ui.common.component.media.VideoPlayer
 import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer

@@ -4,8 +4,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.base.usecase.UseCase
 import ru.zarina.zarina.data.product.ProductRepository
 import ru.zarina.zarina.di.Qualifiers
-import ru.zarina.zarina.domain.rework.common.Barcode
-import ru.zarina.zarina.domain.rework.common.exception.ValidationException
+import ru.zarina.zarina.domain.common.Barcode
+import ru.zarina.zarina.domain.common.exception.ValidationException
 import ru.zarina.zarina.usecase.user.ValidateEmailUseCase
 import ru.zarina.zarina.usecase.user.ValidateFirstNameUseCase
 import javax.inject.Inject

@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.common.exception.MissingPermissionException
 import ru.zarina.zarina.domain.old.City
 import ru.zarina.zarina.domain.old.Url
 import ru.zarina.zarina.domain.old.exception.ServiceUnavailableException
-import ru.zarina.zarina.domain.rework.common.exception.MissingPermissionException
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.MessageQueue
 import ru.zarina.zarina.ui.common.base.SideEffectQueue

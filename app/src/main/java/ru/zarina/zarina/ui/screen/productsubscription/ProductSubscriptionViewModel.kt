@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.common.Url
-import ru.zarina.zarina.domain.rework.common.exception.ValidationException
+import ru.zarina.zarina.domain.common.Url
+import ru.zarina.zarina.domain.common.exception.ValidationException
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
 import ru.zarina.zarina.domain.rework.user.exception.InvalidEmailException

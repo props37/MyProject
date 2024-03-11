@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.rework.common
+package ru.zarina.zarina.domain.common
 
 import ru.zarina.zarina.domain.category.Category
 

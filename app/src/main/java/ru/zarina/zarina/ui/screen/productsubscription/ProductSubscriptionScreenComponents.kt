@@ -17,7 +17,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.common.Url
+import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.ui.common.component.ZarinaCheckbox
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
