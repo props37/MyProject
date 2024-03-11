@@ -1,7 +1,7 @@
 package ru.zarina.zarina.data.authorization.remote
 
 import ru.zarina.zarina.data.authorization.remote.api.AuthorizationApi
-import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
+import ru.zarina.zarina.domain.authorization.AuthorizationTokens
 import javax.inject.Inject
 
 class AuthorizationRemoteDataSource @Inject constructor(

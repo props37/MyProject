@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.withContext
 import ru.zarina.zarina.di.Qualifiers
-import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
+import ru.zarina.zarina.domain.authorization.AuthorizationTokens
 import ru.zarina.zarina.domain.rework.common.Token
 import timber.log.Timber
 import javax.inject.Inject

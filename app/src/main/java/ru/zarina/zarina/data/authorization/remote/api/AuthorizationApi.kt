@@ -8,7 +8,7 @@ import io.ktor.client.request.get
 import ru.zarina.zarina.data.authorization.remote.api.dto.AuthorizationTokensDto
 import ru.zarina.zarina.data.authorization.remote.api.dto.RefreshAuthorizationTokensRequestBody
 import ru.zarina.zarina.di.Qualifiers
-import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
+import ru.zarina.zarina.domain.authorization.AuthorizationTokens
 import ru.zarina.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
 
