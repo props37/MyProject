@@ -25,6 +25,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import ru.zarina.zarina.R
+import ru.zarina.zarina.base.operationtracker.OperationKey
+import ru.zarina.zarina.base.operationtracker.OperationTracker
 import ru.zarina.zarina.data.permissionmanager.isDenied
 import ru.zarina.zarina.data.permissionmanager.isGranted
 import ru.zarina.zarina.data.permissionmanager.shouldShowRequestRationale
@@ -32,8 +34,6 @@ import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
-import ru.zarina.zarina.ui.common.base.operation.OperationKey
-import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.common.util.ScreenResultHandler

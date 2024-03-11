@@ -21,6 +21,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.R
+import ru.zarina.zarina.base.operationtracker.OperationKey
+import ru.zarina.zarina.base.operationtracker.OperationTracker
 import ru.zarina.zarina.domain.old.City
 import ru.zarina.zarina.domain.old.Offer
 import ru.zarina.zarina.domain.old.Product
@@ -34,8 +36,6 @@ import ru.zarina.zarina.ui.common.base.FocusState
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.base.operation.OperationKey
-import ru.zarina.zarina.ui.common.base.operation.OperationTracker
 import ru.zarina.zarina.ui.navigation.old.destinations.Pickup
 import ru.zarina.zarina.utils.coroutine.mapState
 import ru.zarina.zarina.utils.isNetworkException

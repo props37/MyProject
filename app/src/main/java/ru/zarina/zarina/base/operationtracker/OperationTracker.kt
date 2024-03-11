@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.base.operation
+package ru.zarina.zarina.base.operationtracker
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
