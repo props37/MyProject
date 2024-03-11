@@ -4,8 +4,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.di.old.Qualifiers
-import ru.zarina.zarina.domain.exception.validation.EmptyException
-import ru.zarina.zarina.domain.exception.validation.FormatException
+import ru.zarina.zarina.domain.old.exception.validation.EmptyException
+import ru.zarina.zarina.domain.old.exception.validation.FormatException
 import ru.zarina.zarina.base.usecase.UseCase
 
 @Factory

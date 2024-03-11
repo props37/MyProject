@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.exception.validation
+package ru.zarina.zarina.domain.old.exception.validation
 
 open class ValidationException(message: String) : IllegalArgumentException(message)
 

@@ -21,7 +21,7 @@ import ru.zarina.zarina.data.old.product.remote.api.dto.ProductPageRequestBody
 import ru.zarina.zarina.data.old.product.remote.api.dto.ProductPageResponseDto
 import ru.zarina.zarina.data.old.product.remote.api.dto.ProductSortDto
 import ru.zarina.zarina.di.old.Qualifiers
-import ru.zarina.zarina.domain.exception.NotFoundException
+import ru.zarina.zarina.domain.old.exception.NotFoundException
 
 @Factory
 class KtorZarinaProductApi(

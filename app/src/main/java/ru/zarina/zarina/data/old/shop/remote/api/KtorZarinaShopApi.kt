@@ -15,7 +15,7 @@ import ru.zarina.zarina.data.old.shop.remote.api.dto.ReserveRequestBody
 import ru.zarina.zarina.data.old.shop.remote.api.dto.ShopCountryDto
 import ru.zarina.zarina.data.old.shop.remote.api.dto.StockDto
 import ru.zarina.zarina.di.old.Qualifiers
-import ru.zarina.zarina.domain.exception.NotFoundException
+import ru.zarina.zarina.domain.old.exception.NotFoundException
 
 @Factory
 class KtorZarinaShopApi(

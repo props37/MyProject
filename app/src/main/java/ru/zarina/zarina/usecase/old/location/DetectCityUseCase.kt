@@ -7,7 +7,7 @@ import ru.zarina.zarina.data.old.geography.IGeographyRepository
 import ru.zarina.zarina.data.old.location.IGeoLocationRepository
 import ru.zarina.zarina.di.old.Qualifiers
 import ru.zarina.zarina.domain.old.City
-import ru.zarina.zarina.domain.exception.ServiceUnavailableException
+import ru.zarina.zarina.domain.old.exception.ServiceUnavailableException
 import ru.zarina.zarina.base.usecase.UseCase
 import timber.log.Timber
 

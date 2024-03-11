@@ -25,11 +25,11 @@ import ru.zarina.zarina.domain.old.City
 import ru.zarina.zarina.domain.old.Offer
 import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.domain.old.Stock
-import ru.zarina.zarina.domain.exception.NotFoundException
-import ru.zarina.zarina.domain.exception.validation.EmptyException
-import ru.zarina.zarina.domain.exception.validation.FormatException
-import ru.zarina.zarina.domain.exception.validation.IllegalContentsException
-import ru.zarina.zarina.domain.exception.validation.TooLongException
+import ru.zarina.zarina.domain.old.exception.NotFoundException
+import ru.zarina.zarina.domain.old.exception.validation.EmptyException
+import ru.zarina.zarina.domain.old.exception.validation.FormatException
+import ru.zarina.zarina.domain.old.exception.validation.IllegalContentsException
+import ru.zarina.zarina.domain.old.exception.validation.TooLongException
 import ru.zarina.zarina.ui.common.base.FocusState
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
