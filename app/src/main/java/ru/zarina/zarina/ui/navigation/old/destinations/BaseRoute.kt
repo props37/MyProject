@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.navigation.destinations
+package ru.zarina.zarina.ui.navigation.old.destinations
 
 enum class BaseRoute {
     GRAPH_PICKUP,

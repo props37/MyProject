@@ -2,7 +2,7 @@ package ru.zarina.zarina.ui.navigation.base.parameterless
 
 import androidx.navigation.NamedNavArgument
 import ru.zarina.zarina.ui.navigation.base.Destination
-import ru.zarina.zarina.ui.navigation.destinations.BaseRoute
+import ru.zarina.zarina.ui.navigation.old.destinations.BaseRoute
 import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
 
 /**

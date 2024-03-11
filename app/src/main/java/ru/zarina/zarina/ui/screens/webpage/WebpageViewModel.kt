@@ -10,7 +10,7 @@ import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.domain.old.AuthorizationToken
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
-import ru.zarina.zarina.ui.navigation.destinations.Destinations
+import ru.zarina.zarina.ui.navigation.old.destinations.Destinations
 import ru.zarina.zarina.utils.coroutine.mapState
 
 @KoinViewModel

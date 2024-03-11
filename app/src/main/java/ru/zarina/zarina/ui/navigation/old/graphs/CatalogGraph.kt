@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.navigation.graphs
+package ru.zarina.zarina.ui.navigation.old.graphs
 
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
@@ -7,9 +7,9 @@ import ru.zarina.zarina.domain.old.Filtration
 import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
-import ru.zarina.zarina.ui.navigation.destinations.Catalog
-import ru.zarina.zarina.ui.navigation.destinations.Destinations
-import ru.zarina.zarina.ui.navigation.destinations.Search
+import ru.zarina.zarina.ui.navigation.old.destinations.Catalog
+import ru.zarina.zarina.ui.navigation.old.destinations.Destinations
+import ru.zarina.zarina.ui.navigation.old.destinations.Search
 import ru.zarina.zarina.ui.screens.catalog.categories.CategoriesScreen
 import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 import ru.zarina.zarina.ui.screens.catalog.filters.FiltersScreen

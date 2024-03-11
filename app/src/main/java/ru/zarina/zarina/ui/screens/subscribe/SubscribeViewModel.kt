@@ -25,7 +25,7 @@ import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.operation.OperationKey
 import ru.zarina.zarina.ui.common.base.operation.OperationTracker
-import ru.zarina.zarina.ui.navigation.destinations.Subscribe
+import ru.zarina.zarina.ui.navigation.old.destinations.Subscribe
 import ru.zarina.zarina.utils.coroutine.mapState
 
 @KoinViewModel

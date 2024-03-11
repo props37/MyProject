@@ -38,7 +38,7 @@ import ru.zarina.zarina.domain.old.ProductSort
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.paging.PageHolder
-import ru.zarina.zarina.ui.navigation.destinations.Catalog
+import ru.zarina.zarina.ui.navigation.old.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.products.ProductsViewModel
 import ru.zarina.zarina.ui.screens.search.paging.SearchPagingSource
 import ru.zarina.zarina.ui.screens.search.paging.SearchRemoteMediator

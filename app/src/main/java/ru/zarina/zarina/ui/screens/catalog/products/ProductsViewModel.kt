@@ -39,7 +39,7 @@ import ru.zarina.zarina.ui.common.base.PluralResources
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.paging.PageHolder
-import ru.zarina.zarina.ui.navigation.destinations.Catalog
+import ru.zarina.zarina.ui.navigation.old.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPagingSource
 import ru.zarina.zarina.ui.screens.catalog.products.paging.ProductsRemoteMediator
 import ru.zarina.zarina.utils.coroutine.mapState

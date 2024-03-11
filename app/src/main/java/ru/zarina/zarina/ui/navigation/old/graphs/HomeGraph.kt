@@ -1,14 +1,14 @@
-package ru.zarina.zarina.ui.navigation.graphs
+package ru.zarina.zarina.ui.navigation.old.graphs
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
-import ru.zarina.zarina.ui.navigation.destinations.Catalog
-import ru.zarina.zarina.ui.navigation.destinations.Destinations
-import ru.zarina.zarina.ui.navigation.destinations.Home
-import ru.zarina.zarina.ui.navigation.destinations.Search
+import ru.zarina.zarina.ui.navigation.old.destinations.Catalog
+import ru.zarina.zarina.ui.navigation.old.destinations.Destinations
+import ru.zarina.zarina.ui.navigation.old.destinations.Home
+import ru.zarina.zarina.ui.navigation.old.destinations.Search
 import ru.zarina.zarina.ui.screens.home.HomeScreen
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets

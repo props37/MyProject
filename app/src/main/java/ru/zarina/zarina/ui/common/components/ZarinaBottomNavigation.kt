@@ -49,7 +49,8 @@ import ru.zarina.zarina.ui.common.behavior.navigationbar.LocalNavigationBarContr
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarBehavior
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Graph
-import ru.zarina.zarina.ui.navigation.destinations.Catalog
+import ru.zarina.zarina.ui.navigation.old.destinations.Catalog
+import ru.zarina.zarina.ui.navigation.old.destinations.Favorites
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.utils.compose.topLineShape
 
@@ -193,25 +194,25 @@ sealed class BottomNavigationTab(
     object Favourites : BottomNavigationTab(
         icon = R.drawable.ic_heart_36,
         title = R.string.favorites,
-        destination = ru.zarina.zarina.ui.navigation.destinations.Favorites,
+        destination = Favorites,
     )
 
     object Home : BottomNavigationTab(
         icon = R.drawable.ic_home_36,
         title = R.string.main_page,
-        destination = ru.zarina.zarina.ui.navigation.destinations.Home,
+        destination = ru.zarina.zarina.ui.navigation.old.destinations.Home,
     )
 
     object Profile : BottomNavigationTab(
         icon = R.drawable.ic_person_36,
         title = R.string.profile,
-        destination = ru.zarina.zarina.ui.navigation.destinations.Profile,
+        destination = ru.zarina.zarina.ui.navigation.old.destinations.Profile,
     )
 
     object Cart : BottomNavigationTab(
         icon = R.drawable.ic_shopping_bag_36,
         title = R.string.cart,
-        destination = ru.zarina.zarina.ui.navigation.destinations.Cart,
+        destination = ru.zarina.zarina.ui.navigation.old.destinations.Cart,
     )
 
 

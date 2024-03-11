@@ -1,11 +1,11 @@
-package ru.zarina.zarina.ui.navigation.graphs
+package ru.zarina.zarina.ui.navigation.old.graphs
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
-import ru.zarina.zarina.ui.navigation.destinations.Destinations
-import ru.zarina.zarina.ui.navigation.destinations.Subscribe
+import ru.zarina.zarina.ui.navigation.old.destinations.Destinations
+import ru.zarina.zarina.ui.navigation.old.destinations.Subscribe
 import ru.zarina.zarina.ui.screens.subscribe.SubscribeScreen
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets

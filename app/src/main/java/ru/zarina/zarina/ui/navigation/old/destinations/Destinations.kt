@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.navigation.destinations
+package ru.zarina.zarina.ui.navigation.old.destinations
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
