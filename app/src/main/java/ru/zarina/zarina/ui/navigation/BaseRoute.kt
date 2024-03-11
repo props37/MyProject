@@ -1,6 +1,6 @@
 package ru.zarina.zarina.ui.navigation
 
-enum class BaseRouteReworked {
+enum class BaseRoute {
     // Unscoped destinations
     ONBOARDING,
     CITY_SELECTOR,

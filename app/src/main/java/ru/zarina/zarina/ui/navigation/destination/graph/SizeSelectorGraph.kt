@@ -13,7 +13,7 @@ import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.domain.product.ProductOffer
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
-import ru.zarina.zarina.ui.navigation.BaseRouteReworked
+import ru.zarina.zarina.ui.navigation.BaseRoute
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Graph
 import ru.zarina.zarina.ui.navigation.base.RouteUtils
@@ -26,7 +26,7 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
     const val RESULT_KEY = "result_size_selector"
 
     private val routeBase: String
-        get() = BaseRouteReworked.SIZE_SELECTOR_GRAPH.route
+        get() = BaseRoute.SIZE_SELECTOR_GRAPH.route
 
     override val routeSchema: String
         get() = RouteUtils.generateRouteSchema(
@@ -61,7 +61,7 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
         const val ARG_KEY_PRODUCT = "arg_product"
 
         private val baseRoute: String
-            get() = BaseRouteReworked.SIZE_SELECTOR.route
+            get() = BaseRoute.SIZE_SELECTOR.route
 
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(
@@ -96,7 +96,7 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
         const val ARG_KEY_OFFERS = "arg_offers"
 
         private val baseRoute: String
-            get() = BaseRouteReworked.HEIGHT_SELECTOR.route
+            get() = BaseRoute.HEIGHT_SELECTOR.route
 
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(

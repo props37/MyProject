@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 class BaseRouteTest {
     @Test
     fun baseRoutes_haveUniqueHashCodes() {
-        val routes = BaseRouteReworked.entries
+        val routes = BaseRoute.entries
         val hashCodes = routes
             .map { it.route.hashCode() }
             .toSet()

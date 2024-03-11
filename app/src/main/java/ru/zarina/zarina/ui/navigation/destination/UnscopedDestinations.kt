@@ -19,7 +19,7 @@ import ru.zarina.zarina.ui.model.filter.ListFilterParcelable
 import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
-import ru.zarina.zarina.ui.navigation.BaseRouteReworked
+import ru.zarina.zarina.ui.navigation.BaseRoute
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.OptionalNavArg
 import ru.zarina.zarina.ui.navigation.base.RouteUtils
@@ -36,7 +36,7 @@ import ru.zarina.zarina.domain.filter.Filters as DomainFilters
 import ru.zarina.zarina.domain.filter.ListFilter as DomainListFilter
 
 object UnscopedDestinations {
-    data object Onboarding : SimpleDestination(BaseRouteReworked.ONBOARDING)
+    data object Onboarding : SimpleDestination(BaseRoute.ONBOARDING)
 
     data object CitySelector : Destination<CitySelector.Args>() {
         const val ARG_KEY_CITY = "arg_city"
@@ -45,7 +45,7 @@ object UnscopedDestinations {
         const val RESULT_KEY = "city_selector_result"
 
         private val routeBase: String
-            get() = BaseRouteReworked.CITY_SELECTOR.route
+            get() = BaseRoute.CITY_SELECTOR.route
 
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(
@@ -101,14 +101,14 @@ object UnscopedDestinations {
         ) : ScreenResult, Parcelable
     }
 
-    data object DefaultCityDialog : SimpleDestination(BaseRouteReworked.DEFAULT_CITY_DIALOG)
+    data object DefaultCityDialog : SimpleDestination(BaseRoute.DEFAULT_CITY_DIALOG)
 
     data object Products : Destination<Products.Args>() {
         const val ARG_KEY_CATEGORY_ID = "arg_category_id"
         const val ARG_KEY_FILTERS = "arg_filters"
 
         private val baseRoute: String
-            get() = BaseRouteReworked.PRODUCTS.route
+            get() = BaseRoute.PRODUCTS.route
 
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(
@@ -162,7 +162,7 @@ object UnscopedDestinations {
         const val RESULT_KEY = "result_filters"
 
         private val baseRoute: String
-            get() = BaseRouteReworked.FILTERS.route
+            get() = BaseRoute.FILTERS.route
 
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(
@@ -221,7 +221,7 @@ object UnscopedDestinations {
         const val RESULT_KEY = "list_filter_result"
 
         private val baseRoute: String
-            get() = BaseRouteReworked.LIST_FILTER.route
+            get() = BaseRoute.LIST_FILTER.route
 
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(
@@ -262,7 +262,7 @@ object UnscopedDestinations {
         const val ARG_KEY_OFFER = "arg_offer"
 
         private val baseRoute: String
-            get() = BaseRouteReworked.PRODUCT_SUBSCRIPTION.route
+            get() = BaseRoute.PRODUCT_SUBSCRIPTION.route
 
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(

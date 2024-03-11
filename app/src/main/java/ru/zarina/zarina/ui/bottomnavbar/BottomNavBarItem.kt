@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import androidx.navigation.NavHostController
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.navigation.BaseRouteReworked
+import ru.zarina.zarina.ui.navigation.BaseRoute
 import ru.zarina.zarina.ui.navigation.destination.graph.HomeGraph
 
 @Stable
@@ -14,36 +14,36 @@ sealed class BottomNavBarItem(
     val titleResId: Int,
     @DrawableRes
     val iconResId: Int,
-    val baseRoute: BaseRouteReworked,
+    val baseRoute: BaseRoute,
 ) {
     data object Catalog : BottomNavBarItem(
         titleResId = R.string.catalog,
         iconResId = R.drawable.ic_catalog_24,
-        baseRoute = BaseRouteReworked.CATALOG_GRAPH,
+        baseRoute = BaseRoute.CATALOG_GRAPH,
     )
 
     data object Favorites : BottomNavBarItem(
         titleResId = R.string.favorites,
         iconResId = R.drawable.ic_heart_outline_24,
-        baseRoute = BaseRouteReworked.FAVORITES_GRAPH,
+        baseRoute = BaseRoute.FAVORITES_GRAPH,
     )
 
     data object Home : BottomNavBarItem(
         titleResId = R.string.home,
         iconResId = R.drawable.ic_home_outline_24,
-        baseRoute = BaseRouteReworked.HOME_GRAPH,
+        baseRoute = BaseRoute.HOME_GRAPH,
     )
 
     data object Profile : BottomNavBarItem(
         titleResId = R.string.profile,
         iconResId = R.drawable.ic_profile_outline_24,
-        baseRoute = BaseRouteReworked.PROFILE_GRAPH,
+        baseRoute = BaseRoute.PROFILE_GRAPH,
     )
 
     data object Cart : BottomNavBarItem(
         titleResId = R.string.cart,
         iconResId = R.drawable.ic_cart_outline_24,
-        baseRoute = BaseRouteReworked.CART_GRAPH,
+        baseRoute = BaseRoute.CART_GRAPH,
     )
 
     companion object {

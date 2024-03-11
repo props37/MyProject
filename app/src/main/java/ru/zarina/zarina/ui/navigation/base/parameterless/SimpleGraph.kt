@@ -1,7 +1,7 @@
 package ru.zarina.zarina.ui.navigation.base.parameterless
 
 import androidx.navigation.NamedNavArgument
-import ru.zarina.zarina.ui.navigation.BaseRouteReworked
+import ru.zarina.zarina.ui.navigation.BaseRoute
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Graph
 import ru.zarina.zarina.ui.navigation.old.destinations.BaseRouteOld
@@ -25,7 +25,7 @@ abstract class SimpleGraph(
     ) : this(baseRoute.route, startDestination)
 
     constructor(
-        baseRoute: BaseRouteReworked,
+        baseRoute: BaseRoute,
         startDestination: Destination<*>,
     ) : this(baseRoute.route, startDestination)
 
