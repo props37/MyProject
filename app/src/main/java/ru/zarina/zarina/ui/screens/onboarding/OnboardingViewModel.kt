@@ -13,8 +13,8 @@ import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Url
-import ru.zarina.zarina.domain.exception.MissingPermissionException
 import ru.zarina.zarina.domain.exception.ServiceUnavailableException
+import ru.zarina.zarina.domain.rework.common.exception.MissingPermissionException
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.MessageQueue
 import ru.zarina.zarina.ui.common.base.SideEffectQueue

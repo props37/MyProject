@@ -8,7 +8,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.tasks.await
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.GeoLocation
-import ru.zarina.zarina.domain.exception.MissingPermissionException
+import ru.zarina.zarina.domain.rework.common.exception.MissingPermissionException
 
 @Factory
 class PlayServicesGeoLocationSource(
