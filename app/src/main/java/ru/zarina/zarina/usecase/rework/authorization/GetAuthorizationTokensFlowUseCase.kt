@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.base.usecase.FlowUseCase
 import ru.zarina.zarina.data.authorization.AuthorizationRepository
-import ru.zarina.zarina.di.rework.Qualifiers
+import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
 import javax.inject.Inject
 

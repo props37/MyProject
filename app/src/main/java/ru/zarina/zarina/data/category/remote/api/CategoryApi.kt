@@ -4,7 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import ru.zarina.zarina.data.category.remote.api.dto.CategoriesDto
-import ru.zarina.zarina.di.rework.Qualifiers
+import ru.zarina.zarina.di.Qualifiers
 import javax.inject.Inject
 
 class CategoryApi @Inject constructor(

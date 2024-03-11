@@ -9,7 +9,7 @@ import ru.zarina.zarina.data.product.remote.api.dto.ProductsDto
 import ru.zarina.zarina.data.product.remote.api.dto.SubscribeToProductRequestBody
 import ru.zarina.zarina.data.remote.api.dto.SortingDto
 import ru.zarina.zarina.data.remote.api.exception.apiExceptionConverter
-import ru.zarina.zarina.di.rework.Qualifiers
+import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Barcode
 import ru.zarina.zarina.domain.rework.common.Sorting

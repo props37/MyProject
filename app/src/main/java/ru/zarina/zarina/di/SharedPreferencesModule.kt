@@ -1,4 +1,4 @@
-package ru.zarina.zarina.di.rework
+package ru.zarina.zarina.di
 
 import android.content.Context
 import android.content.SharedPreferences

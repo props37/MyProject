@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combineTransform
 import ru.zarina.zarina.base.usecase.FlowUseCase
 import ru.zarina.zarina.data.favorite.FavoriteRepository
-import ru.zarina.zarina.di.rework.Qualifiers
+import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.util.base.usecase.invoke
 import timber.log.Timber

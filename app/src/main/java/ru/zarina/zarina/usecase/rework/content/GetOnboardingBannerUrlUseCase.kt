@@ -3,7 +3,7 @@ package ru.zarina.zarina.usecase.rework.content
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.base.usecase.UseCase
 import ru.zarina.zarina.data.content.ContentRepository
-import ru.zarina.zarina.di.rework.Qualifiers
+import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.rework.common.Url
 import javax.inject.Inject
 

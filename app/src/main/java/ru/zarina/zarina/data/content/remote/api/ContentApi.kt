@@ -5,7 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import ru.zarina.zarina.BuildConfig
 import ru.zarina.zarina.data.content.remote.api.dto.HomeBannersDto
-import ru.zarina.zarina.di.rework.Qualifiers
+import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.rework.common.Url
 import javax.inject.Inject
 

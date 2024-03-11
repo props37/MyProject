@@ -3,7 +3,7 @@ package ru.zarina.zarina.usecase.rework.product
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.base.usecase.UseCase
 import ru.zarina.zarina.data.product.ProductRepository
-import ru.zarina.zarina.di.rework.Qualifiers
+import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.rework.common.Barcode
 import ru.zarina.zarina.domain.rework.common.exception.ValidationException
 import ru.zarina.zarina.usecase.rework.user.ValidateEmailUseCase
