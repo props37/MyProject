@@ -7,6 +7,7 @@ import org.junit.Test
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.test.KoinTest
 import org.koin.test.verify.verify
+import ru.zarina.zarina.di.old.appModule
 
 class ValidationTest : KoinTest {
 

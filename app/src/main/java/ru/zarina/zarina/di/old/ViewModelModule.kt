@@ -1,4 +1,4 @@
-package ru.zarina.zarina.di
+package ru.zarina.zarina.di.old
 
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module

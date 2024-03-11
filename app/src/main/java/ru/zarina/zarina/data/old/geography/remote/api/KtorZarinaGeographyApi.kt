@@ -7,7 +7,7 @@ import io.ktor.client.request.parameter
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.old.geography.remote.api.dto.CityDto
-import ru.zarina.zarina.di.Qualifiers
+import ru.zarina.zarina.di.old.Qualifiers
 
 @Factory
 class KtorZarinaGeographyApi(

@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.old.subscription.ISubscriptionRepository
-import ru.zarina.zarina.di.Qualifiers
+import ru.zarina.zarina.di.old.Qualifiers
 import ru.zarina.zarina.domain.Barcode
 import ru.zarina.zarina.base.usecase.UseCase
 

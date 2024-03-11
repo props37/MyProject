@@ -10,7 +10,7 @@ import ru.zarina.zarina.BuildConfig
 import ru.zarina.zarina.data.old.search.remote.api.dto.SearchAutocompleteDto
 import ru.zarina.zarina.data.old.search.remote.api.dto.SearchResultDto
 import ru.zarina.zarina.data.old.search.remote.api.dto.SortDto
-import ru.zarina.zarina.di.Qualifiers
+import ru.zarina.zarina.di.old.Qualifiers
 
 @Factory
 class KtorAnyQuerySearchApi(

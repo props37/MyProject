@@ -7,7 +7,7 @@ import io.ktor.client.request.parameter
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.old.remote.zarina.dto.ProductBatchDto
-import ru.zarina.zarina.di.Qualifiers
+import ru.zarina.zarina.di.old.Qualifiers
 
 @Factory
 class KtorZarinaRecommendationApi(

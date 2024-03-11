@@ -6,7 +6,7 @@ import io.ktor.client.request.get
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.old.device.remote.api.dto.TokenDto
-import ru.zarina.zarina.di.Qualifiers
+import ru.zarina.zarina.di.old.Qualifiers
 
 @Factory
 class KtorZarinaDeviceApi(

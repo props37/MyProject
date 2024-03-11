@@ -1,4 +1,4 @@
-package ru.zarina.zarina.di
+package ru.zarina.zarina.di.old
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

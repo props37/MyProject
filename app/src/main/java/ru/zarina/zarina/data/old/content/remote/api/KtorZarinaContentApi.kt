@@ -8,7 +8,7 @@ import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.old.content.remote.api.dto.BannerDto
 import ru.zarina.zarina.data.old.content.remote.api.dto.SelectionDto
 import ru.zarina.zarina.data.old.content.remote.api.dto.SplashDto
-import ru.zarina.zarina.di.Qualifiers
+import ru.zarina.zarina.di.old.Qualifiers
 
 @Factory
 class KtorZarinaContentApi(

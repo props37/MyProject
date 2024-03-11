@@ -1,4 +1,4 @@
-package ru.zarina.zarina.di
+package ru.zarina.zarina.di.old
 
 import android.content.Context
 import com.google.android.gms.location.FusedLocationProviderClient
