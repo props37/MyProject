@@ -1,6 +1,6 @@
 package ru.zarina.zarina.domain.rework.product
 
-import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.rework.filter.Filters
 
 data class CategoryProductInfo(

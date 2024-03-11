@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import ru.zarina.zarina.domain.rework.category.Categories
-import ru.zarina.zarina.domain.rework.category.Category
-import ru.zarina.zarina.domain.rework.category.find
+import ru.zarina.zarina.domain.category.Categories
+import ru.zarina.zarina.domain.category.Category
+import ru.zarina.zarina.domain.category.find
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton

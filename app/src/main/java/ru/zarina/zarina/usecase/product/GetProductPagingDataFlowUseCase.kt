@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.base.usecase.BasicUseCase
 import ru.zarina.zarina.data.product.ProductRepository
 import ru.zarina.zarina.data.product.pagination.ProductPagingSource
-import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.product.Product

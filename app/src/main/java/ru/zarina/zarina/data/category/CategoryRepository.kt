@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import ru.zarina.zarina.data.category.local.CategoryLocalDataSource
 import ru.zarina.zarina.data.category.remote.CategoryRemoteDataSource
-import ru.zarina.zarina.domain.rework.category.Categories
-import ru.zarina.zarina.domain.rework.category.Category
-import ru.zarina.zarina.domain.rework.category.find
+import ru.zarina.zarina.domain.category.Categories
+import ru.zarina.zarina.domain.category.Category
+import ru.zarina.zarina.domain.category.find
 import timber.log.Timber
 import javax.inject.Inject
 

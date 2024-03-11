@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.rework.common.Barcode
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.domain.rework.filter.Filters

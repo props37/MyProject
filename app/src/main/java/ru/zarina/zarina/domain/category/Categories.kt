@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.rework.category
+package ru.zarina.zarina.domain.category
 
 data class Categories(
     val women: List<Category>,

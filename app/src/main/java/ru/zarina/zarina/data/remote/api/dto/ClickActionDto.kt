@@ -2,7 +2,7 @@ package ru.zarina.zarina.data.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.rework.common.ClickAction
 import timber.log.Timber
 

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.remote.api.dto.FiltersDto
 import ru.zarina.zarina.data.remote.api.dto.PaginationInfoDto
 import ru.zarina.zarina.data.remote.api.dto.ProductDto
-import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.rework.common.Page
 import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
 import ru.zarina.zarina.domain.rework.product.ProductsWithFilters

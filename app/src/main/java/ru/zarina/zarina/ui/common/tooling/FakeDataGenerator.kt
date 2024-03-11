@@ -1,6 +1,6 @@
 package ru.zarina.zarina.ui.common.tooling
 
-import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.rework.common.Barcode
 import ru.zarina.zarina.domain.rework.common.Color
 import ru.zarina.zarina.domain.rework.common.Media

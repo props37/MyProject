@@ -10,7 +10,7 @@ import ru.zarina.zarina.data.product.remote.api.dto.SubscribeToProductRequestBod
 import ru.zarina.zarina.data.remote.api.dto.SortingDto
 import ru.zarina.zarina.data.remote.api.exception.apiExceptionConverter
 import ru.zarina.zarina.di.Qualifiers
-import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.rework.common.Barcode
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.util.library.ktor.setJsonBody

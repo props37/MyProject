@@ -9,7 +9,7 @@ import androidx.navigation.navArgument
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import ru.zarina.zarina.domain.rework.category.Category
+import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
