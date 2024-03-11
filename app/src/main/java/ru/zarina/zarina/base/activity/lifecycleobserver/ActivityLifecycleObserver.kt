@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.activity.lifecycleobserver.base
+package ru.zarina.zarina.base.activity.lifecycleobserver
 
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.LifecycleEventObserver
