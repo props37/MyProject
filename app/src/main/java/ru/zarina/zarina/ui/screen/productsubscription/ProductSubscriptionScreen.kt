@@ -115,7 +115,7 @@ private fun ScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colorsReworked.background.general.regular.default)
+            .background(UiKitTheme.colors.background.general.regular.default)
             .windowInsetsPadding(
                 WindowInsets.systemBars
                     .union(WindowInsets.displayCutout)
@@ -149,7 +149,7 @@ private fun ScreenContent(
             Text(
                 text = stringResource(R.string.product_subscription_description),
                 style = UiKitTheme.typography.secondary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
             Spacer(modifier = Modifier.height(20.dp))

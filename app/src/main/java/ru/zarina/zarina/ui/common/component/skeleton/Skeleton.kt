@@ -21,6 +21,6 @@ fun Skeleton(
         modifier = modifier
             .clip(shape)
             .then(shimmerModifier)
-            .background(UiKitTheme.colorsReworked.background.skeleton),
+            .background(UiKitTheme.colors.background.skeleton),
     )
 }

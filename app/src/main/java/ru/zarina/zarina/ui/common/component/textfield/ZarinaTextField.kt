@@ -85,7 +85,7 @@ fun ZarinaTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    cursorBrush: Brush = SolidColor(UiKitTheme.colorsReworked.text.general.regular.default),
+    cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
 ) {
     var focusState by remember { mutableStateOf<FocusState?>(null) }
 
@@ -151,7 +151,7 @@ fun ZarinaTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    cursorBrush: Brush = SolidColor(UiKitTheme.colorsReworked.text.general.regular.default),
+    cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
 ) {
     var focusState by remember { mutableStateOf<FocusState?>(null) }
 
@@ -434,25 +434,25 @@ object ZarinaTextFieldDefaults {
 
     @Composable
     fun colors(
-        textColor: Color = UiKitTheme.colorsReworked.text.general.regular.default,
-        placeholderColor: Color = UiKitTheme.colorsReworked.text.general.regular.muted,
-        labelColor: Color = UiKitTheme.colorsReworked.text.general.regular.muted,
-        leadingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.muted,
-        innerTrailingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.default,
-        outerTrailingContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.default, // TODO: [Low] Change to button-cell-default
-        descriptionColor: Color = UiKitTheme.colorsReworked.text.general.regular.muted,
-        indicationLineColor: Color = UiKitTheme.colorsReworked.border.general.default,
-        activeIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.active,
-        errorIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.error,
-        disabledTextColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
-        disabledPlaceholderColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
-        disabledLabelColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
-        disabledLeadingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.disabled,
-        disabledInnerTrailingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.disabled,
-        disabledOuterTrailingContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.disabled, // TODO: [Low] Change to button-cell-disabled
-        disabledDescriptionColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
-        disabledIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.disabled,
-        disabledErrorIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.errorDisabled,
+        textColor: Color = UiKitTheme.colors.text.general.regular.default,
+        placeholderColor: Color = UiKitTheme.colors.text.general.regular.muted,
+        labelColor: Color = UiKitTheme.colors.text.general.regular.muted,
+        leadingContentColor: Color = UiKitTheme.colors.icon.regular.muted,
+        innerTrailingContentColor: Color = UiKitTheme.colors.icon.regular.default,
+        outerTrailingContentColor: Color = UiKitTheme.colors.text.button.outline.default, // TODO: [Low] Change to button-cell-default
+        descriptionColor: Color = UiKitTheme.colors.text.general.regular.muted,
+        indicationLineColor: Color = UiKitTheme.colors.border.general.default,
+        activeIndicationLineColor: Color = UiKitTheme.colors.border.general.active,
+        errorIndicationLineColor: Color = UiKitTheme.colors.border.general.error,
+        disabledTextColor: Color = UiKitTheme.colors.text.general.regular.disabled,
+        disabledPlaceholderColor: Color = UiKitTheme.colors.text.general.regular.disabled,
+        disabledLabelColor: Color = UiKitTheme.colors.text.general.regular.disabled,
+        disabledLeadingContentColor: Color = UiKitTheme.colors.icon.regular.disabled,
+        disabledInnerTrailingContentColor: Color = UiKitTheme.colors.icon.regular.disabled,
+        disabledOuterTrailingContentColor: Color = UiKitTheme.colors.text.button.outline.disabled, // TODO: [Low] Change to button-cell-disabled
+        disabledDescriptionColor: Color = UiKitTheme.colors.text.general.regular.disabled,
+        disabledIndicationLineColor: Color = UiKitTheme.colors.border.general.disabled,
+        disabledErrorIndicationLineColor: Color = UiKitTheme.colors.border.general.errorDisabled,
     ): ZarinaTextFieldColors = ZarinaTextFieldColors(
         textColor = textColor,
         placeholderColor = placeholderColor,
@@ -561,7 +561,7 @@ fun Preview() {
                     outerTrailingContent = {
                         Text(
                             text = "Button".uppercase(),
-                            color = UiKitTheme.colorsReworked.text.button.secondary.default,
+                            color = UiKitTheme.colors.text.button.secondary.default,
                         )
                     },
                     description = {

@@ -28,7 +28,7 @@ fun CloseIconButton(
     isEnabled: Boolean = true,
     isLoading: Boolean = false,
     iconSize: Dp = 24.dp,
-    tint: Color = UiKitTheme.colorsReworked.icon.regular.default,
+    tint: Color = UiKitTheme.colors.icon.regular.default,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     indication: Indication = rememberRipple(bounded = false, radius = iconSize),
 ) {

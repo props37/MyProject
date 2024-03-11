@@ -38,7 +38,7 @@ fun ZarinaIconButton(
     isEnabled: Boolean = true,
     isLoading: Boolean = false,
     loaderSize: Dp = 24.dp,
-    loaderColor: Color = UiKitTheme.colorsReworked.icon.regular.default,
+    loaderColor: Color = UiKitTheme.colors.icon.regular.default,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     indication: Indication? = rememberRipple(bounded = false, radius = 24.dp),
     content: @Composable () -> Unit,

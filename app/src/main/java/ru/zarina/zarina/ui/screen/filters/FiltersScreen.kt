@@ -80,7 +80,7 @@ private fun ScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colorsReworked.background.general.regular.default)
+            .background(UiKitTheme.colors.background.general.regular.default)
             .windowInsetsPadding(
                 WindowInsets.systemBars
                     .union(WindowInsets.displayCutout),

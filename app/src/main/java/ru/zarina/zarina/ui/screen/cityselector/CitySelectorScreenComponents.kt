@@ -80,7 +80,7 @@ object CitySelectorScreenComponents {
                 Text(
                     text = textString(title),
                     style = UiKitTheme.typography.primary.regular,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    color = UiKitTheme.colors.text.general.regular.default,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -167,7 +167,7 @@ object CitySelectorScreenComponents {
                                 .windowInsetsPadding(WindowInsets.navigationBarsOrIme),
                         ) {
                             ZarinaCircularLoader(
-                                color = UiKitTheme.colorsReworked.icon.regular.default,
+                                color = UiKitTheme.colors.icon.regular.default,
                                 modifier = Modifier.size(40.dp),
                             )
                         }
@@ -280,7 +280,7 @@ object CitySelectorScreenComponents {
                         Text(
                             text = city.name,
                             style = UiKitTheme.typography.secondary.light,
-                            color = UiKitTheme.colorsReworked.text.general.regular.default,
+                            color = UiKitTheme.colors.text.general.regular.default,
                         )
 
                         if (showFullName) {
@@ -288,7 +288,7 @@ object CitySelectorScreenComponents {
                             Text(
                                 text = city.fullName,
                                 style = UiKitTheme.typography.footnote.light,
-                                color = UiKitTheme.colorsReworked.text.general.regular.muted,
+                                color = UiKitTheme.colors.text.general.regular.muted,
                             )
                         }
                     }
@@ -304,7 +304,7 @@ object CitySelectorScreenComponents {
             }
 
             Divider(
-                color = UiKitTheme.colorsReworked.border.general.default,
+                color = UiKitTheme.colors.border.general.default,
                 thickness = 1.dp,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -321,7 +321,7 @@ object CitySelectorScreenComponents {
         Text(
             text = letter.toString(),
             style = UiKitTheme.typography.primary.bold,
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            color = UiKitTheme.colors.text.general.regular.default,
             modifier = modifier.padding(start = 16.dp, top = 20.dp, bottom = 4.dp),
         )
     }
@@ -338,14 +338,14 @@ object CitySelectorScreenComponents {
             Text(
                 text = stringResource(R.string.city_not_found),
                 style = UiKitTheme.typography.primary.bold,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
                 textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.try_to_change_city_name),
                 style = UiKitTheme.typography.secondary.regular,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
                 textAlign = TextAlign.Center,
             )
         }

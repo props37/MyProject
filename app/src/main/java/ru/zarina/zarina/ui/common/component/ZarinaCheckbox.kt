@@ -51,7 +51,7 @@ fun ZarinaCheckbox(
             .size(sizeDp)
             .border(
                 width = 0.5.dp,
-                color = UiKitTheme.colorsReworked.background.general.inversed.default,
+                color = UiKitTheme.colors.background.general.inversed.default,
                 shape = shape,
             )
             .toggleable(
@@ -74,7 +74,7 @@ fun ZarinaCheckbox(
             Icon(
                 painter = painterResource(R.drawable.ic_checkbox_24),
                 contentDescription = null,
-                tint = UiKitTheme.colorsReworked.icon.regular.default,
+                tint = UiKitTheme.colors.icon.regular.default,
             )
         }
     }

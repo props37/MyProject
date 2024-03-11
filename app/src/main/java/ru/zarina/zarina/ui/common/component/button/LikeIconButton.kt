@@ -31,7 +31,7 @@ fun LikeIconButton(
         if (isLiked) R.string.remove_from_favorites else R.string.add_to_favorites
     },
     iconSize: Dp = 24.dp,
-    tint: Color = UiKitTheme.colorsReworked.icon.regular.default,
+    tint: Color = UiKitTheme.colors.icon.regular.default,
     indication: Indication? = rememberRipple(bounded = false, radius = iconSize),
     isBouncingEnabled: Boolean = true,
 ) {

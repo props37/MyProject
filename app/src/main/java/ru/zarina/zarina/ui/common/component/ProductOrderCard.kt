@@ -70,7 +70,7 @@ fun ProductOrderCard(
                     .height(ImageHeight)
                     .aspectRatio(ImageAspectRatio)
                     .shimmerToggleable(rememberSkeletonShimmer(), isImageShimmerEnabled)
-                    .background(UiKitTheme.colorsReworked.background.skeleton),
+                    .background(UiKitTheme.colors.background.skeleton),
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -79,7 +79,7 @@ fun ProductOrderCard(
                 Text(
                     text = name.uppercase(),
                     style = UiKitTheme.typography.caption1.regular,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    color = UiKitTheme.colors.text.general.regular.default,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 SizeText(size = size, sizeRu = sizeRu, height = height)
@@ -118,13 +118,13 @@ private fun SizeText(
         Text(
             text = stringResource(R.string.size),
             style = InfoTextStyle,
-            color = UiKitTheme.colorsReworked.text.general.regular.disabled,
+            color = UiKitTheme.colors.text.general.regular.disabled,
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = size + sizeRu.orEmpty(),
             style = InfoTextStyle,
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            color = UiKitTheme.colors.text.general.regular.default,
         )
 
         if (height != null) {
@@ -132,13 +132,13 @@ private fun SizeText(
             Text(
                 text = SizeHeightSeparator,
                 style = InfoTextStyle,
-                color = UiKitTheme.colorsReworked.text.general.regular.disabled,
+                color = UiKitTheme.colors.text.general.regular.disabled,
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = stringResource(R.string.height_cm, height),
                 style = InfoTextStyle,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
             )
         }
     }
@@ -156,13 +156,13 @@ private fun ColorText(
         Text(
             text = stringResource(R.string.color),
             style = InfoTextStyle,
-            color = UiKitTheme.colorsReworked.text.general.regular.disabled,
+            color = UiKitTheme.colors.text.general.regular.disabled,
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = color.name.capitalize(),
             style = InfoTextStyle,
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            color = UiKitTheme.colors.text.general.regular.default,
         )
     }
 }
@@ -188,7 +188,7 @@ private fun Price(
             Text(
                 text = stringResource(R.string.price_in_rubles_for_one_string, priceForOne),
                 style = UiKitTheme.typography.footnote.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.muted,
+                color = UiKitTheme.colors.text.general.regular.muted,
             )
             Spacer(modifier = Modifier.height(2.dp))
         }
@@ -201,7 +201,7 @@ private fun Price(
                 Text(
                     text = stringResource(R.string.price_in_rubles_string, totalOriginalPrice),
                     style = textStyle,
-                    color = UiKitTheme.colorsReworked.text.general.regular.disabled,
+                    color = UiKitTheme.colors.text.general.regular.disabled,
                     textDecoration = TextDecoration.LineThrough,
                 )
                 Spacer(modifier = Modifier.width(6.dp))
@@ -209,7 +209,7 @@ private fun Price(
             Text(
                 text = stringResource(R.string.price_in_rubles_string, totalCurrentPrice),
                 style = textStyle,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
             )
         }
     }

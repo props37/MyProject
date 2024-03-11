@@ -15,8 +15,8 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 fun ZarinaLinearProgressIndicator(
     progress: Float,
     modifier: Modifier = Modifier,
-    color: Color = UiKitTheme.colorsReworked.background.general.inversed.default,
-    backgroundColor: Color = UiKitTheme.colorsReworked.background.general.regular.muted,
+    color: Color = UiKitTheme.colors.background.general.inversed.default,
+    backgroundColor: Color = UiKitTheme.colors.background.general.regular.muted,
     strokeCap: StrokeCap = StrokeCap.Round,
 ) {
     val animatedProgress by animateFloatAsState(

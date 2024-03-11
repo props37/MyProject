@@ -131,7 +131,7 @@ object ProductsScreenComponents {
                     Text(
                         text = title,
                         style = UiKitTheme.typography.primary.regular,
-                        color = UiKitTheme.colorsReworked.text.general.regular.default,
+                        color = UiKitTheme.colors.text.general.regular.default,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -154,7 +154,7 @@ object ProductsScreenComponents {
                 Icon(
                     painter = painterResource(R.drawable.ic_search_24),
                     contentDescription = stringResource(R.string.search),
-                    tint = UiKitTheme.colorsReworked.icon.regular.default,
+                    tint = UiKitTheme.colors.icon.regular.default,
                     modifier = Modifier.size(TopBarIconSize),
                 )
             }
@@ -168,7 +168,7 @@ object ProductsScreenComponents {
                     Icon(
                         painter = painterResource(R.drawable.ic_filters_24),
                         contentDescription = stringResource(R.string.filters),
-                        tint = UiKitTheme.colorsReworked.icon.regular.default,
+                        tint = UiKitTheme.colors.icon.regular.default,
                         modifier = Modifier.size(TopBarIconSize),
                     )
                 }
@@ -307,8 +307,8 @@ object ProductsScreenComponents {
             PullRefreshIndicator(
                 refreshing = isPullRefreshing,
                 state = pullRefreshState,
-                backgroundColor = UiKitTheme.colorsReworked.background.general.regular.default,
-                contentColor = UiKitTheme.colorsReworked.icon.regular.default,
+                backgroundColor = UiKitTheme.colors.background.general.regular.default,
+                contentColor = UiKitTheme.colors.icon.regular.default,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .zIndex(1f),
@@ -457,21 +457,21 @@ object ProductsScreenComponents {
             Icon(
                 painter = painterResource(R.drawable.ic_search_24),
                 contentDescription = null,
-                tint = UiKitTheme.colorsReworked.icon.regular.disabled,
+                tint = UiKitTheme.colors.icon.regular.disabled,
                 modifier = Modifier.size(64.dp),
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = stringResource(R.string.could_not_find_products),
                 style = UiKitTheme.typography.primary.bold,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
                 textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.try_select_another_category),
                 style = UiKitTheme.typography.secondary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
                 textAlign = TextAlign.Center,
             )
         }
@@ -532,10 +532,10 @@ object ProductsScreenComponents {
             Text(
                 text = appliedFilterCount.toString(),
                 style = UiKitTheme.typography.caption2.bold.unscalable(LocalDensity.current),
-                color = UiKitTheme.colorsReworked.text.general.inversed.default,
+                color = UiKitTheme.colors.text.general.inversed.default,
                 modifier = modifier
                     .background(
-                        color = UiKitTheme.colorsReworked.background.general.inversed.default,
+                        color = UiKitTheme.colors.background.general.inversed.default,
                         shape = CircleShape,
                     )
                     .padding(start = 6.dp, top = 1.dp, end = 6.dp),

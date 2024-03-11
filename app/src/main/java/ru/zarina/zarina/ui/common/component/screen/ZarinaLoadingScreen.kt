@@ -24,7 +24,7 @@ fun ZarinaLoadingScreen(
     modifier: Modifier = Modifier,
     contentDescription: String = stringResource(R.string.loading),
     logoWidth: Dp = SplashScreenLogoSize,
-    logoColor: Color = UiKitTheme.colorsReworked.icon.regular.default,
+    logoColor: Color = UiKitTheme.colors.icon.regular.default,
     animate: Boolean = true,
 ) {
     Box(

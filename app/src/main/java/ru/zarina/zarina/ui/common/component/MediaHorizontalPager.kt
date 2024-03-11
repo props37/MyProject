@@ -86,7 +86,7 @@ fun MediaHorizontalPager(
                     shape = RectangleShape,
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(UiKitTheme.colorsReworked.background.general.regular.default),
+                        .background(UiKitTheme.colors.background.general.regular.default),
                 )
             }
         }

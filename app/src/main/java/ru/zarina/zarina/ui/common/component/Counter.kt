@@ -19,8 +19,8 @@ fun Counter(
     value: String,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = UiKitTheme.typography.caption2.bold,
-    textColor: Color = UiKitTheme.colorsReworked.text.general.inversed.default,
-    backgroundColor: Color = UiKitTheme.colorsReworked.background.general.inversed.default,
+    textColor: Color = UiKitTheme.colors.text.general.inversed.default,
+    backgroundColor: Color = UiKitTheme.colors.background.general.inversed.default,
     shape: Shape = CircleShape,
     contentPadding: PaddingValues = ContentPadding,
 ) {

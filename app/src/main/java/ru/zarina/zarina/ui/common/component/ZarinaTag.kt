@@ -52,18 +52,18 @@ fun ZarinaTag(
 ) {
     val backgroundColor = animateColorAsState(
         targetValue = if (isSelected) {
-            UiKitTheme.colorsReworked.background.tag.active
+            UiKitTheme.colors.background.tag.active
         } else {
-            UiKitTheme.colorsReworked.background.tag.default
+            UiKitTheme.colors.background.tag.default
         },
         label = "ZarinaTag background color",
     )
 
     val contentColor = animateColorAsState(
         targetValue = if (isSelected) {
-            UiKitTheme.colorsReworked.text.tag.active
+            UiKitTheme.colors.text.tag.active
         } else {
-            UiKitTheme.colorsReworked.text.tag.default
+            UiKitTheme.colors.text.tag.default
         },
         label = "ZarinaTag content color",
     )

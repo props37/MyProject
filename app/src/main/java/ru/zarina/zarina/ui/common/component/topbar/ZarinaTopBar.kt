@@ -99,7 +99,7 @@ private fun Preview() {
                 Text(
                     text = "Some title",
                     style = UiKitTheme.typography.primary.regular,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    color = UiKitTheme.colors.text.general.regular.default,
                 )
             },
             endContent = {

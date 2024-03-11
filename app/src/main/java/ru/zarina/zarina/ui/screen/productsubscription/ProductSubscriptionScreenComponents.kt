@@ -45,7 +45,7 @@ object ProductSubscriptionScreenComponents {
                 Text(
                     text = stringResource(R.string.product_subscription),
                     style = UiKitTheme.typography.primary.regular,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    color = UiKitTheme.colors.text.general.regular.default,
                 )
             },
             contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
@@ -80,10 +80,10 @@ object ProductSubscriptionScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         val baseTextStyle = UiKitTheme.typography.footnote.light.copy(
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            color = UiKitTheme.colors.text.general.regular.default,
         )
         val boldTextStyle = UiKitTheme.typography.footnote.bold.copy(
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            color = UiKitTheme.colors.text.general.regular.default,
         )
 
         val baseText = stringResource(R.string.product_subscription_policies)

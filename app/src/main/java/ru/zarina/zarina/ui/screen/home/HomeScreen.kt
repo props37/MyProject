@@ -84,7 +84,7 @@ private fun ScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colorsReworked.background.general.regular.default),
+            .background(UiKitTheme.colors.background.general.regular.default),
     ) {
         Crossfade(
             targetState = contentState,

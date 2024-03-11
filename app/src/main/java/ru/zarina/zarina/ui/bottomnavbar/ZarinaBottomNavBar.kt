@@ -126,8 +126,8 @@ fun ZarinaBottomNavBar(
             sizeTracker.onSizeChanged(size)
         },
     ) {
-        val backgroundColor = UiKitTheme.colorsReworked.background.general.regular.default
-        val topBorderColor = UiKitTheme.colorsReworked.border.general.default
+        val backgroundColor = UiKitTheme.colors.background.general.regular.default
+        val topBorderColor = UiKitTheme.colors.border.general.default
 
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -193,7 +193,7 @@ private fun RowScope.Item(
     isEnabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
-    val selectedColor = UiKitTheme.colorsReworked.text.general.regular.default
+    val selectedColor = UiKitTheme.colors.text.general.regular.default
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -210,9 +210,9 @@ private fun RowScope.Item(
     ) {
         val color by animateColorAsState(
             targetValue = if (isSelected) {
-                UiKitTheme.colorsReworked.text.general.regular.default
+                UiKitTheme.colors.text.general.regular.default
             } else {
-                UiKitTheme.colorsReworked.text.general.regular.disabled
+                UiKitTheme.colors.text.general.regular.disabled
             },
             label = "ZarinaBottomNavBar item color",
         )

@@ -45,14 +45,14 @@ fun ZarinaErrorScreen(
         Icon(
             painter = painterResource(state.iconResId),
             contentDescription = null,
-            tint = UiKitTheme.colorsReworked.icon.regular.disabled,
+            tint = UiKitTheme.colors.icon.regular.disabled,
             modifier = Modifier.size(64.dp),
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = textString(state.title),
             style = UiKitTheme.typography.primary.bold,
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            color = UiKitTheme.colors.text.general.regular.default,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp),
         )
@@ -60,7 +60,7 @@ fun ZarinaErrorScreen(
         Text(
             text = textString(state.body),
             style = UiKitTheme.typography.secondary.regular,
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            color = UiKitTheme.colors.text.general.regular.default,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp),
         )

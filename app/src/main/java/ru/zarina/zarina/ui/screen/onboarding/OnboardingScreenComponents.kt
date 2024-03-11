@@ -101,9 +101,9 @@ object OnboardingScreenComponents {
 
             val logoColor by animateColorAsState(
                 targetValue = if (isBannerDisplayed) {
-                    UiKitTheme.colorsReworked.text.general.inversed.default
+                    UiKitTheme.colors.text.general.inversed.default
                 } else {
-                    UiKitTheme.colorsReworked.text.general.regular.default
+                    UiKitTheme.colors.text.general.regular.default
                 },
                 label = "Banner logo color",
             )
@@ -147,7 +147,7 @@ object OnboardingScreenComponents {
                 Text(
                     text = stringResource(R.string.step),
                     style = textStyle,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    color = UiKitTheme.colors.text.general.regular.default,
                 )
                 AnimatedContent(
                     targetState = currentOnboardingStepNumber,
@@ -161,13 +161,13 @@ object OnboardingScreenComponents {
                     Text(
                         text = " $stepNumber",
                         style = textStyle.copy(fontFeatureSettings = FontFeatureSettings.Mono),
-                        color = UiKitTheme.colorsReworked.text.general.regular.default,
+                        color = UiKitTheme.colors.text.general.regular.default,
                     )
                 }
                 Text(
                     text = "/${onboardingSteps.size}",
                     style = textStyle.copy(fontFeatureSettings = FontFeatureSettings.Mono),
-                    color = UiKitTheme.colorsReworked.text.general.regular.disabled,
+                    color = UiKitTheme.colors.text.general.regular.disabled,
                 )
             }
         }
@@ -311,7 +311,7 @@ object OnboardingScreenComponents {
             Text(
                 text = title,
                 style = UiKitTheme.typography.primary.bold,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -319,7 +319,7 @@ object OnboardingScreenComponents {
             Text(
                 text = body,
                 style = UiKitTheme.typography.secondary.regular,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
             )
 
             Spacer(modifier = Modifier.height(20.dp))

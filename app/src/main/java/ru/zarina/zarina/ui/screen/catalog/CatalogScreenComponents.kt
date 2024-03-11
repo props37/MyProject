@@ -174,7 +174,7 @@ object CatalogScreenComponents {
                     Text(
                         text = stringResource(textResId).uppercase(),
                         style = style,
-                        color = UiKitTheme.colorsReworked.text.general.regular.default,
+                        color = UiKitTheme.colors.text.general.regular.default,
                     )
                 }
             }
@@ -311,7 +311,7 @@ object CatalogScreenComponents {
                         }
 
                         Divider(
-                            color = UiKitTheme.colorsReworked.border.general.default,
+                            color = UiKitTheme.colors.border.general.default,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
@@ -342,7 +342,7 @@ object CatalogScreenComponents {
                 modifier = Modifier.weight(1f),
             ) {
                 val color = item.category.color?.toComposeColor()
-                    ?: UiKitTheme.colorsReworked.text.general.regular.default
+                    ?: UiKitTheme.colors.text.general.regular.default
 
                 Text(
                     text = item.category.name.uppercase(),
@@ -406,7 +406,7 @@ object CatalogScreenComponents {
             Text(
                 text = stringResource(R.string.see_all).uppercase(),
                 style = UiKitTheme.typography.tertiary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
                 maxLines = 1,
             )
         }
@@ -431,7 +431,7 @@ object CatalogScreenComponents {
 
                 if (index != CategoryListSkeletonItemCount - 1) {
                     Divider(
-                        color = UiKitTheme.colorsReworked.border.general.default,
+                        color = UiKitTheme.colors.border.general.default,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),

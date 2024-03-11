@@ -93,7 +93,7 @@ object FiltersScreenComponents {
                 Text(
                     text = stringResource(R.string.filters),
                     style = UiKitTheme.typography.primary.regular,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    color = UiKitTheme.colors.text.general.regular.default,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -259,7 +259,7 @@ object FiltersScreenComponents {
 
                         if (filter !is PriceFilter && index < filterCount - 1) {
                             Divider(
-                                color = UiKitTheme.colorsReworked.background.skeleton,
+                                color = UiKitTheme.colors.background.skeleton,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp),
@@ -270,7 +270,7 @@ object FiltersScreenComponents {
             }
 
             Divider(
-                color = UiKitTheme.colorsReworked.background.skeleton,
+                color = UiKitTheme.colors.background.skeleton,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -316,7 +316,7 @@ object FiltersScreenComponents {
 
                 if (index < FilterSkeletonItemCount - 1) {
                     Divider(
-                        color = UiKitTheme.colorsReworked.background.skeleton,
+                        color = UiKitTheme.colors.background.skeleton,
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
@@ -354,7 +354,7 @@ object FiltersScreenComponents {
             Text(
                 text = selectedText,
                 style = UiKitTheme.typography.secondary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.muted,
+                color = UiKitTheme.colors.text.general.regular.muted,
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -516,5 +516,5 @@ object FiltersScreenComponents {
 
     private val FilterTitleColor: Color
         @Composable
-        get() = UiKitTheme.colorsReworked.text.general.regular.default
+        get() = UiKitTheme.colors.text.general.regular.default
 }

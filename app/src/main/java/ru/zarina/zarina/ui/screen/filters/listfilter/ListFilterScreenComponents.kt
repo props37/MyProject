@@ -61,7 +61,7 @@ object ListFilterScreenComponents {
                 Text(
                     text = title,
                     style = UiKitTheme.typography.primary.regular,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    color = UiKitTheme.colors.text.general.regular.default,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -112,7 +112,7 @@ object ListFilterScreenComponents {
 
                 if (index < items.size - 1) {
                     Divider(
-                        color = UiKitTheme.colorsReworked.background.skeleton,
+                        color = UiKitTheme.colors.background.skeleton,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
@@ -136,7 +136,7 @@ object ListFilterScreenComponents {
         ) {
             Column {
                 Divider(
-                    color = UiKitTheme.colorsReworked.background.skeleton,
+                    color = UiKitTheme.colors.background.skeleton,
                     modifier = Modifier.fillMaxWidth(),
                 )
 
@@ -183,7 +183,7 @@ object ListFilterScreenComponents {
             Text(
                 text = name,
                 style = UiKitTheme.typography.secondary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )

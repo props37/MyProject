@@ -57,7 +57,7 @@ private fun ScreenContent(
         Text(
             text = stringResource(R.string.default_city_dialog_title),
             style = UiKitTheme.typography.primary.bold,
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            color = UiKitTheme.colors.text.general.regular.default,
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -65,7 +65,7 @@ private fun ScreenContent(
         Text(
             text = bodyText(defaultCity),
             style = UiKitTheme.typography.secondary.regular,
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            color = UiKitTheme.colors.text.general.regular.default,
         )
 
         Spacer(modifier = Modifier.height(20.dp))

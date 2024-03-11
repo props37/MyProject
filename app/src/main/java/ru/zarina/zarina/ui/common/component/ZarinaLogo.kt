@@ -31,7 +31,7 @@ import ru.zarina.zarina.ui.theme.ZarinaTheme
 fun ZarinaLogo(
     modifier: Modifier = Modifier,
     contentDescription: String? = stringResource(R.string.zarina),
-    color: Color = UiKitTheme.colorsReworked.icon.regular.default,
+    color: Color = UiKitTheme.colors.icon.regular.default,
     animate: Boolean = false,
 ) {
     val shimmerTheme = remember { getShimmerTheme() }

@@ -68,7 +68,7 @@ object HomeScreenComponents {
         onGenderClicked: (GenderTab) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val color = UiKitTheme.colorsReworked.text.general.inversed.default
+        val color = UiKitTheme.colors.text.general.inversed.default
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier,
@@ -243,7 +243,7 @@ object HomeScreenComponents {
                 ZarinaLoadingScreen(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(UiKitTheme.colorsReworked.background.general.regular.default)
+                        .background(UiKitTheme.colors.background.general.regular.default)
                         // Add bottomNavBar padding at the top to align the loader at the center
                         // of the entire screen
                         .padding(top = bottomNavBarHeightAsState().value),
@@ -359,7 +359,7 @@ object HomeScreenComponents {
                 Text(
                     text = banner.title?.uppercase().orEmpty(),
                     style = UiKitTheme.typography.tertiary.regular,
-                    color = UiKitTheme.colorsReworked.text.general.inversed.default,
+                    color = UiKitTheme.colors.text.general.inversed.default,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
@@ -393,7 +393,7 @@ object HomeScreenComponents {
 
     @Composable
     fun rememberTopBarScrimBrush(): Brush {
-        val scrimColor = UiKitTheme.colorsReworked.background.general.inversed.default
+        val scrimColor = UiKitTheme.colors.background.general.inversed.default
         return remember(scrimColor) {
             val colors = listOf(
                 scrimColor.copy(alpha = TopBarScrimAlpha),

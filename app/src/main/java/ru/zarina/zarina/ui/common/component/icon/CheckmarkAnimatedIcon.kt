@@ -26,8 +26,8 @@ fun CheckmarkAnimatedIcon(
     contentDescriptionResId: (Boolean) -> Int? = { isVisible ->
         if (isVisible) R.string.checkmark_checked else R.string.checkmark_unchecked
     },
-    color: Color = UiKitTheme.colorsReworked.icon.regular.default,
-    maskColor: Color = UiKitTheme.colorsReworked.background.general.regular.default,
+    color: Color = UiKitTheme.colors.icon.regular.default,
+    maskColor: Color = UiKitTheme.colors.background.general.regular.default,
     iconSize: Dp = 24.dp,
 ) {
     Box(modifier = modifier) {

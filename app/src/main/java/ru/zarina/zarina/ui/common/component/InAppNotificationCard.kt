@@ -34,7 +34,7 @@ fun InAppNotificationCard(
         modifier = modifier
             .shadow(elevation = elevation, shape = shape)
             .background(
-                color = UiKitTheme.colorsReworked.background.general.regular.default,
+                color = UiKitTheme.colors.background.general.regular.default,
                 shape = shape,
             )
             .padding(contentPadding),

@@ -50,7 +50,7 @@ object HeightSelectorScreenComponents {
                 Text(
                     text = stringResource(R.string.choose_height),
                     style = UiKitTheme.typography.primary.bold,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    color = UiKitTheme.colors.text.general.regular.default,
                 )
             },
             endContent = {
@@ -81,7 +81,7 @@ object HeightSelectorScreenComponents {
 
                     if (index < offers.lastIndex) {
                         Divider(
-                            color = UiKitTheme.colorsReworked.background.skeleton,
+                            color = UiKitTheme.colors.background.skeleton,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
@@ -115,9 +115,9 @@ object HeightSelectorScreenComponents {
                 } else "",
                 style = UiKitTheme.typography.secondary.light,
                 color = if (offer.isAvailable) {
-                    UiKitTheme.colorsReworked.text.general.regular.default
+                    UiKitTheme.colors.text.general.regular.default
                 } else {
-                    UiKitTheme.colorsReworked.text.general.regular.disabled
+                    UiKitTheme.colors.text.general.regular.disabled
                 },
             )
 
@@ -128,7 +128,7 @@ object HeightSelectorScreenComponents {
                 Text(
                     text = stringResource(R.string.subscribe).uppercase(),
                     style = UiKitTheme.typography.caption1.regular,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    color = UiKitTheme.colors.text.general.regular.default,
                 )
             }
         }

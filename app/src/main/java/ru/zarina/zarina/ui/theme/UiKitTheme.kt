@@ -7,9 +7,9 @@ import ru.zarina.zarina.ui.theme.old.UiKitColorsOld
 import ru.zarina.zarina.ui.theme.old.UiKitTypographyOld
 
 object UiKitTheme {
-    val colorsReworked: UiKitColorsReworked
+    val colors: UiKitColors
         @Composable
-        get() = LocalUiKitColorsReworked.current
+        get() = LocalUiKitColors.current
 
     val typography: UiKitTypography
         @Composable

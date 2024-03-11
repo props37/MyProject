@@ -62,7 +62,7 @@ object CartScreenComponents {
                 Text(
                     text = stringResource(R.string.cart),
                     style = UiKitTheme.typography.primary.regular,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    color = UiKitTheme.colors.text.general.regular.default,
                 )
             },
             endContent = {
@@ -109,7 +109,7 @@ object CartScreenComponents {
                     Text(
                         text = city.name,
                         style = UiKitTheme.typography.secondary.light,
-                        color = UiKitTheme.colorsReworked.text.general.regular.default,
+                        color = UiKitTheme.colors.text.general.regular.default,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -118,7 +118,7 @@ object CartScreenComponents {
                     Icon(
                         painter = painterResource(R.drawable.ic_small_arrow_up_24),
                         contentDescription = stringResource(R.string.change_city),
-                        tint = UiKitTheme.colorsReworked.icon.regular.default,
+                        tint = UiKitTheme.colors.icon.regular.default,
                         modifier = Modifier
                             .size(16.dp)
                             .rotate(90f),
@@ -189,14 +189,14 @@ object CartScreenComponents {
             Icon(
                 painter = painterResource(R.drawable.ic_cart_outline_64),
                 contentDescription = null,
-                tint = UiKitTheme.colorsReworked.icon.regular.disabled,
+                tint = UiKitTheme.colors.icon.regular.disabled,
                 modifier = Modifier.size(64.dp),
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = stringResource(R.string.cart_screen_empty_cart_placeholder_title),
                 style = UiKitTheme.typography.primary.bold,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
@@ -204,7 +204,7 @@ object CartScreenComponents {
             Text(
                 text = stringResource(R.string.cart_screen_empty_cart_placeholder_description),
                 style = UiKitTheme.typography.secondary.regular,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
@@ -253,7 +253,7 @@ object CartScreenComponents {
             Text(
                 text = stringResource(textResId),
                 style = style,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
             )
 
             AnimatedContent(

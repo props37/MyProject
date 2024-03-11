@@ -37,10 +37,10 @@ fun ZarinaSwitch(
 object ZarinaSwitchDefaults {
     @Composable
     fun colors(
-        checkedThumbColor: Color = UiKitTheme.colorsReworked.background.general.regular.default,
-        checkedTrackColor: Color = UiKitTheme.colorsReworked.background.general.inversed.default,
-        uncheckedThumbColor: Color = UiKitTheme.colorsReworked.background.general.regular.default,
-        uncheckedTrackColor: Color = UiKitTheme.colorsReworked.background.skeleton,
+        checkedThumbColor: Color = UiKitTheme.colors.background.general.regular.default,
+        checkedTrackColor: Color = UiKitTheme.colors.background.general.inversed.default,
+        uncheckedThumbColor: Color = UiKitTheme.colors.background.general.regular.default,
+        uncheckedTrackColor: Color = UiKitTheme.colors.background.skeleton,
     ): SwitchColors = SwitchDefaults.colors(
         checkedThumbColor = checkedThumbColor,
         checkedTrackColor = checkedTrackColor,

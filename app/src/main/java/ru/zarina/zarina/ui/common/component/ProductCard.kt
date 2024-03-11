@@ -106,7 +106,7 @@ fun ProductCard(
             Text(
                 text = product.name.uppercase(),
                 style = UiKitTheme.typography.caption1.regular,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                color = UiKitTheme.colors.text.general.regular.default,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
@@ -139,11 +139,11 @@ fun ProductCard(
             modifier = Modifier.padding(horizontal = 16.dp),
         ) {
             val priceTextStyle = UiKitTheme.typography.caption1.regular
-            val discountColor = UiKitTheme.colorsReworked.text.general.accent.red
+            val discountColor = UiKitTheme.colors.text.general.accent.red
             val originalPriceColor = if (product.price.hasDiscount) {
-                UiKitTheme.colorsReworked.text.general.regular.disabled
+                UiKitTheme.colors.text.general.regular.disabled
             } else {
-                UiKitTheme.colorsReworked.text.general.regular.default
+                UiKitTheme.colors.text.general.regular.default
             }
             val originalPriceTextDecoration = if (product.price.hasDiscount) {
                 TextDecoration.LineThrough
@@ -301,7 +301,7 @@ private fun AddToCartIconButton(
             Icon(
                 painter = painterResource(iconResId),
                 contentDescription = stringResource(contentDescriptionResId),
-                tint = UiKitTheme.colorsReworked.icon.regular.default,
+                tint = UiKitTheme.colors.icon.regular.default,
                 modifier = Modifier.size(IconSize),
             )
         }
@@ -323,7 +323,7 @@ private fun SubscribeIconButton(
         Icon(
             painter = painterResource(R.drawable.ic_bell_24),
             contentDescription = stringResource(R.string.subscribe_to_product),
-            tint = UiKitTheme.colorsReworked.icon.regular.default,
+            tint = UiKitTheme.colors.icon.regular.default,
             modifier = Modifier.size(IconSize),
         )
     }
@@ -363,7 +363,7 @@ private fun Colors(
             Text(
                 text = moreColorsText,
                 style = UiKitTheme.typography.caption2.regular,
-                color = UiKitTheme.colorsReworked.text.general.regular.muted,
+                color = UiKitTheme.colors.text.general.regular.muted,
             )
         }
     }

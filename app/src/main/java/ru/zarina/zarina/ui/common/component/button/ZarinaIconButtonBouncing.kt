@@ -36,7 +36,7 @@ fun ZarinaIconButtonBouncing(
     isEnabled: Boolean = true,
     isLoading: Boolean = false,
     loaderSize: Dp = 24.dp,
-    loaderColor: Color = UiKitTheme.colorsReworked.icon.regular.default,
+    loaderColor: Color = UiKitTheme.colors.icon.regular.default,
     isBouncingEnabled: Boolean = true,
     pressedScale: Float = PressedScale,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },

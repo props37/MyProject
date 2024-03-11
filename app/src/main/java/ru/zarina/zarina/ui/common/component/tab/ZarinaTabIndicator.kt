@@ -18,7 +18,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 fun ZarinaTabIndicator(
     modifier: Modifier = Modifier,
     height: Dp = 1.dp,
-    color: Color = UiKitTheme.colorsReworked.background.general.inversed.default,
+    color: Color = UiKitTheme.colors.background.general.inversed.default,
     shape: Shape = CircleShape,
 ) {
     Box(

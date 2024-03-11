@@ -25,7 +25,7 @@ fun ColorIcon(
     val borderModifier = if (color.luminance() >= WhiteColorLuminanceThreshold) {
         Modifier.border(
             width = borderColor,
-            color = UiKitTheme.colorsReworked.border.general.disabled,
+            color = UiKitTheme.colors.border.general.disabled,
             shape = shape,
         )
     } else {

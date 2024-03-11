@@ -108,7 +108,7 @@ private fun Segment(
                 alpha = (IndicatorSegmentInactiveAlpha..1f).valueAt(progress())
             }
             .clip(CircleShape)
-            .background(UiKitTheme.colorsReworked.background.general.regular.default)
+            .background(UiKitTheme.colors.background.general.regular.default)
     )
 }
 

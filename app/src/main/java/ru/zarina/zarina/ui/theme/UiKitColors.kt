@@ -3,7 +3,7 @@ package ru.zarina.zarina.ui.theme
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-data class UiKitColorsReworked(
+data class UiKitColors(
     val background: Background = Background(),
     val text: Text = Text(),
     val icon: Icon = Icon(),
@@ -170,7 +170,7 @@ data class UiKitColorsReworked(
     }
 }
 
-val LightUiKitColors: UiKitColorsReworked
-    get() = UiKitColorsReworked()
+val LightUiKitColors: UiKitColors
+    get() = UiKitColors()
 
-val LocalUiKitColorsReworked = staticCompositionLocalOf { LightUiKitColors }
+val LocalUiKitColors = staticCompositionLocalOf { LightUiKitColors }

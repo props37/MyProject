@@ -101,7 +101,7 @@ fun PriceFilter(
         Text(
             text = stringResource(R.string.price_rubles),
             style = UiKitTheme.typography.secondary.light,
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            color = UiKitTheme.colors.text.general.regular.default,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -180,9 +180,9 @@ fun PriceFilter(
             },
             steps = 0,
             colors = SliderDefaults.colors(
-                thumbColor = UiKitTheme.colorsReworked.icon.inversed.default,
-                activeTrackColor = UiKitTheme.colorsReworked.background.general.inversed.default,
-                inactiveTrackColor = UiKitTheme.colorsReworked.background.skeleton,
+                thumbColor = UiKitTheme.colors.icon.inversed.default,
+                activeTrackColor = UiKitTheme.colors.background.general.inversed.default,
+                inactiveTrackColor = UiKitTheme.colors.background.skeleton,
             ),
             track = { Track(state = it) },
             modifier = Modifier
@@ -216,7 +216,7 @@ private fun TextField(
             Text(
                 text = leadingText,
                 style = UiKitTheme.typography.secondary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.muted,
+                color = UiKitTheme.colors.text.general.regular.muted,
                 modifier = Modifier.padding(start = 8.dp),
             )
         },
@@ -249,8 +249,8 @@ private fun TextField(
 private fun Track(
     state: RangeSliderState,
     modifier: Modifier = Modifier,
-    activeTrackColor: Color = UiKitTheme.colorsReworked.background.general.inversed.default,
-    inactiveTrackColor: Color = UiKitTheme.colorsReworked.background.skeleton,
+    activeTrackColor: Color = UiKitTheme.colors.background.general.inversed.default,
+    inactiveTrackColor: Color = UiKitTheme.colors.background.skeleton,
     trackHeight: Dp = 1.dp,
 ) {
     Canvas(
