@@ -6,7 +6,7 @@ import ru.zarina.zarina.data.remote.api.dto.ClickActionDto
 import ru.zarina.zarina.data.remote.api.dto.MediaTypeDto
 import ru.zarina.zarina.domain.common.Media
 import ru.zarina.zarina.domain.common.Url
-import ru.zarina.zarina.domain.rework.content.HomeContent
+import ru.zarina.zarina.domain.content.HomeContent
 import timber.log.Timber
 
 @Serializable

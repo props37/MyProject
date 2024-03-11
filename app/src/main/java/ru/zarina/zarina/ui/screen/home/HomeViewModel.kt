@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.parcelize.Parcelize
-import ru.zarina.zarina.domain.rework.content.HomeContent
+import ru.zarina.zarina.domain.content.HomeContent
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource

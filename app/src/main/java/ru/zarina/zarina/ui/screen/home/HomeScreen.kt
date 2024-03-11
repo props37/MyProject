@@ -26,7 +26,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import ru.zarina.zarina.domain.rework.content.HomeContent
+import ru.zarina.zarina.domain.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.behavior.systembars.ForcedSystemBarsBehavior
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen

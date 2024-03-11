@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.rework.content
+package ru.zarina.zarina.domain.content
 
 import ru.zarina.zarina.domain.common.ClickAction
 import ru.zarina.zarina.domain.common.Media
