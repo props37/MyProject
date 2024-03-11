@@ -8,7 +8,7 @@ import ru.zarina.zarina.ui.bottomnavbar.NoOpBottomNavBarSizeTracker
 import ru.zarina.zarina.ui.common.behavior.base.NoOpBehaviorController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.BottomNavBarBehavior
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
-import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
+import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @Composable
 fun ZarinaPreview(

@@ -29,7 +29,7 @@ import ru.zarina.zarina.ui.common.media.exoplayer.rememberExoPlayerCacheHolder
 import ru.zarina.zarina.ui.common.rememberToastController
 import ru.zarina.zarina.ui.navigation.ZarinaNavigation
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
-import ru.zarina.zarina.ui.theme.rework.Colors
+import ru.zarina.zarina.ui.theme.Colors
 import ru.zarina.zarina.util.library.accompanist.rememberBottomSheetNavigator
 
 @OptIn(ExperimentalMaterialNavigationApi::class)

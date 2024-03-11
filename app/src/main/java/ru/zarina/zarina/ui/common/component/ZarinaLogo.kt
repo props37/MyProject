@@ -25,7 +25,7 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.theme.old.UiKitTheme
-import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
+import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @Composable
 fun ZarinaLogo(
