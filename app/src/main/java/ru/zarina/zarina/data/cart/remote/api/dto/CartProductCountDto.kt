@@ -2,7 +2,7 @@ package ru.zarina.zarina.data.cart.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.rework.cart.ProductAdditionToCartResult
+import ru.zarina.zarina.domain.cart.ProductAdditionToCartResult
 
 @Serializable
 data class CartProductCountDto(

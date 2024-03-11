@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.cart.DeliveryType
+import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler

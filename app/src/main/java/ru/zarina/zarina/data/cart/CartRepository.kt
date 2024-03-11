@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import ru.zarina.zarina.data.cart.local.CartLocalDataSource
 import ru.zarina.zarina.data.cart.remote.CartRemoteDataSource
-import ru.zarina.zarina.domain.rework.cart.CartProductIds
-import ru.zarina.zarina.domain.rework.cart.ProductAdditionToCartResult
+import ru.zarina.zarina.domain.cart.CartProductIds
+import ru.zarina.zarina.domain.cart.ProductAdditionToCartResult
 import ru.zarina.zarina.domain.rework.common.Barcode
 import ru.zarina.zarina.domain.rework.product.Product
 import javax.inject.Inject

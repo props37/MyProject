@@ -3,8 +3,8 @@ package ru.zarina.zarina.data.cart.remote
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.zarina.zarina.data.cart.remote.api.CartApi
-import ru.zarina.zarina.domain.rework.cart.CartProductIds
-import ru.zarina.zarina.domain.rework.cart.ProductAdditionToCartResult
+import ru.zarina.zarina.domain.cart.CartProductIds
+import ru.zarina.zarina.domain.cart.ProductAdditionToCartResult
 import ru.zarina.zarina.domain.rework.common.Barcode
 import javax.inject.Inject
 

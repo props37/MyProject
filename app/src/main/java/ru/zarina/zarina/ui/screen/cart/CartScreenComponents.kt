@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.cart.DeliveryType
+import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.component.Counter
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
