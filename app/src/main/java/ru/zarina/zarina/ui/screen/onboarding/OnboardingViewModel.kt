@@ -25,9 +25,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import ru.zarina.zarina.R
-import ru.zarina.zarina.data.rework.permissionmanager.isDenied
-import ru.zarina.zarina.data.rework.permissionmanager.isGranted
-import ru.zarina.zarina.data.rework.permissionmanager.shouldShowRequestRationale
+import ru.zarina.zarina.data.permissionmanager.isDenied
+import ru.zarina.zarina.data.permissionmanager.isGranted
+import ru.zarina.zarina.data.permissionmanager.shouldShowRequestRationale
 import ru.zarina.zarina.domain.rework.common.Url
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.ui.common.base.Text

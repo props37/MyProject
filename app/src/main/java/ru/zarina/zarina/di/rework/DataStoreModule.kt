@@ -13,7 +13,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import ru.zarina.zarina.data.rework.user.local.entity.CityEntity
+import ru.zarina.zarina.data.user.local.entity.CityEntity
 import ru.zarina.zarina.util.library.datastore.DataStoreSerializer
 import javax.inject.Singleton
 

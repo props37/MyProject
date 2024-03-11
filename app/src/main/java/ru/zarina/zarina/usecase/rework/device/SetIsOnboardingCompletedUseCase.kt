@@ -1,9 +1,9 @@
 package ru.zarina.zarina.usecase.rework.device
 
 import kotlinx.coroutines.CoroutineDispatcher
-import ru.zarina.zarina.data.rework.device.DeviceRepository
-import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.base.usecase.UseCase
+import ru.zarina.zarina.data.device.DeviceRepository
+import ru.zarina.zarina.di.rework.Qualifiers
 import javax.inject.Inject
 
 class SetIsOnboardingCompletedUseCase @Inject constructor(

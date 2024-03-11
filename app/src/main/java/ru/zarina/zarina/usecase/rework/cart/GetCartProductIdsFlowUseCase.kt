@@ -2,10 +2,10 @@ package ru.zarina.zarina.usecase.rework.cart
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.data.rework.cart.CartRepository
+import ru.zarina.zarina.base.usecase.FlowUseCase
+import ru.zarina.zarina.data.cart.CartRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.base.usecase.FlowUseCase
 import javax.inject.Inject
 
 class GetCartProductIdsFlowUseCase @Inject constructor(

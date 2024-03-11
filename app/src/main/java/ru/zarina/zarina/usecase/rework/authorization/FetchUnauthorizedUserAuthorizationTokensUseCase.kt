@@ -3,7 +3,7 @@ package ru.zarina.zarina.usecase.rework.authorization
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.firstOrNull
 import ru.zarina.zarina.base.usecase.UseCase
-import ru.zarina.zarina.data.rework.authorization.AuthorizationRepository
+import ru.zarina.zarina.data.authorization.AuthorizationRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import timber.log.Timber
 import javax.inject.Inject

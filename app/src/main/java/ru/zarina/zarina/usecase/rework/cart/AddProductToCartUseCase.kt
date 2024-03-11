@@ -2,7 +2,7 @@ package ru.zarina.zarina.usecase.rework.cart
 
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.base.usecase.UseCase
-import ru.zarina.zarina.data.rework.cart.CartRepository
+import ru.zarina.zarina.data.cart.CartRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.common.Barcode
 import ru.zarina.zarina.domain.rework.product.Product

@@ -4,13 +4,13 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.data.rework.product.ProductRepository
-import ru.zarina.zarina.data.rework.product.pagination.ProductPagingSource
+import ru.zarina.zarina.base.usecase.BasicUseCase
+import ru.zarina.zarina.data.product.ProductRepository
+import ru.zarina.zarina.data.product.pagination.ProductPagingSource
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.base.usecase.BasicUseCase
 import timber.log.Timber
 import javax.inject.Inject
 

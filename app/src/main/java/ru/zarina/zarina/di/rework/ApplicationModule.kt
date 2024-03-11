@@ -7,10 +7,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import ru.zarina.zarina.data.rework.location.GooglePlayServicesLocationDataSource
-import ru.zarina.zarina.data.rework.location.LocationDataSource
-import ru.zarina.zarina.data.rework.permissionmanager.PermissionManager
-import ru.zarina.zarina.data.rework.permissionmanager.PermissionManagerImpl
+import ru.zarina.zarina.data.location.GooglePlayServicesLocationDataSource
+import ru.zarina.zarina.data.location.LocationDataSource
+import ru.zarina.zarina.data.permissionmanager.PermissionManager
+import ru.zarina.zarina.data.permissionmanager.PermissionManagerImpl
 import javax.inject.Singleton
 
 @Module

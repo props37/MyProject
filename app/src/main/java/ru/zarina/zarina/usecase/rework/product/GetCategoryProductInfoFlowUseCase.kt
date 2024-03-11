@@ -2,12 +2,12 @@ package ru.zarina.zarina.usecase.rework.product
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.data.rework.product.ProductRepository
+import ru.zarina.zarina.base.usecase.FlowUseCase
+import ru.zarina.zarina.data.product.ProductRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
-import ru.zarina.zarina.base.usecase.FlowUseCase
 import javax.inject.Inject
 
 class GetCategoryProductInfoFlowUseCase @Inject constructor(
