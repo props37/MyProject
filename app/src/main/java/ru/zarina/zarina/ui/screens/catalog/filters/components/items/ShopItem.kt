@@ -36,7 +36,7 @@ fun ShopItem(
             if (shop != null) {
                 Text(
                     text = stringResource(id = R.string.pickup_at_shop),
-                    style = UiKitTheme.typography.circle1316,
+                    style = UiKitTheme.typographyOld.circle1316,
                     color = UiKitTheme.colorsOld.hint,
                     modifier = Modifier.padding(end = 8.dp)
                 )
@@ -46,7 +46,7 @@ fun ShopItem(
                 shop?.name ?: stringResource(id = R.string.select_store)
             Text(
                 text = primaryText,
-                style = UiKitTheme.typography.circle1718,
+                style = UiKitTheme.typographyOld.circle1718,
                 color = UiKitTheme.colorsOld.primaryContentColor,
                 modifier = Modifier.padding(end = 8.dp)
             )

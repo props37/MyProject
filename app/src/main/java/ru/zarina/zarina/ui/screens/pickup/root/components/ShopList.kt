@@ -64,28 +64,28 @@ fun ShopItem(
     ) {
         Text(
             text = stock.shop.name,
-            style = UiKitTheme.typography.circle1718,
+            style = UiKitTheme.typographyOld.circle1718,
             color = UiKitTheme.colorsOld.primaryContentColor,
             textAlign = TextAlign.Start,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = stock.shop.address,
-            style = UiKitTheme.typography.circle1518,
+            style = UiKitTheme.typographyOld.circle1518,
             color = UiKitTheme.colorsOld.listItemSubtitle,
             textAlign = TextAlign.Start,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = stringResource(R.string.working_schedule_template, stock.shop.schedule),
-            style = UiKitTheme.typography.circle1518,
+            style = UiKitTheme.typographyOld.circle1518,
             color = UiKitTheme.colorsOld.listItemSubtitle,
             textAlign = TextAlign.Start,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = stringResource(stock.amount.getStringResource()),
-            style = UiKitTheme.typography.circle1718,
+            style = UiKitTheme.typographyOld.circle1718,
             color = UiKitTheme.colorsOld.primaryAccentColor,
             textAlign = TextAlign.Start,
         )
@@ -98,7 +98,7 @@ fun ShopItem(
             ) {
                 Text(
                     text = stringResource(R.string.pickup_at_shop),
-                    style = UiKitTheme.typography.circle1720bold,
+                    style = UiKitTheme.typographyOld.circle1720bold,
                     color = UiKitTheme.colorsOld.primaryButtonForeground,
                 )
             }

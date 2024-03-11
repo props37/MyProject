@@ -15,7 +15,7 @@ fun Header(
 ) {
     Text(
         text = text,
-        style = UiKitTheme.typography.circle1718bold,
+        style = UiKitTheme.typographyOld.circle1718bold,
         textAlign = TextAlign.Start,
         modifier = modifier.padding(top = 24.dp, bottom = 8.dp)
     )

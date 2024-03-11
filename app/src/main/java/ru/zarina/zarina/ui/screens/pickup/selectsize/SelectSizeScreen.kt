@@ -96,7 +96,7 @@ private fun SizeItem(
         ) {
             Text(
                 text = size.name,
-                style = UiKitTheme.typography.circle1718,
+                style = UiKitTheme.typographyOld.circle1718,
                 color = contentColor,
                 textAlign = TextAlign.Start,
                 modifier = modifier
@@ -118,7 +118,7 @@ private fun Subscribe(
     ) {
         Text(
             text = stringResource(R.string.subscribe),
-            style = UiKitTheme.typography.circle1718,
+            style = UiKitTheme.typographyOld.circle1718,
             modifier = Modifier.padding(end = 8.dp),
         )
         Image(

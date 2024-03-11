@@ -187,7 +187,7 @@ private fun ShopItem(
     ) {
         Text(
             text = shop.name,
-            style = UiKitTheme.typography.circle1718,
+            style = UiKitTheme.typographyOld.circle1718,
             color = UiKitTheme.colorsOld.primaryContentColor,
             modifier = Modifier.padding(end = 8.dp),
         )

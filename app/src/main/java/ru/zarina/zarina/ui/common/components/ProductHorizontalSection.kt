@@ -36,7 +36,7 @@ fun ProductHorizontalSection(
         if (title != null)
             Text(
                 text = title,
-                style = UiKitTheme.typography.circle2026bold,
+                style = UiKitTheme.typographyOld.circle2026bold,
                 modifier = Modifier
                     .padding(top = 16.dp)
                     .padding(horizontal = 16.dp),
@@ -44,7 +44,7 @@ fun ProductHorizontalSection(
         if (subtitle != null)
             Text(
                 text = subtitle,
-                style = UiKitTheme.typography.circle1518,
+                style = UiKitTheme.typographyOld.circle1518,
                 modifier = Modifier
                     .padding(top = 6.dp)
                     .padding(horizontal = 16.dp),

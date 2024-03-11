@@ -101,7 +101,7 @@ fun SubscribeScreenContent(
         ) {
             Text(
                 text = stringResource(R.string.leave_your_contacts),
-                style = UiKitTheme.typography.circle1718,
+                style = UiKitTheme.typographyOld.circle1718,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
             Input(
@@ -154,7 +154,7 @@ fun SubscribeScreenContent(
                 val text = acknowledgementText()
                 ClickableText(
                     text = text,
-                    style = UiKitTheme.typography.circle1718.copy(color = UiKitTheme.colorsOld.primaryContentColor),
+                    style = UiKitTheme.typographyOld.circle1718.copy(color = UiKitTheme.colorsOld.primaryContentColor),
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 4.dp),

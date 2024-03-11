@@ -34,7 +34,7 @@ fun Input(
         value = value,
         onValueChange = onValueChange,
         interactionSource = interactionSource,
-        textStyle = UiKitTheme.typography.circle1718.copy(color = UiKitTheme.colorsOld.primaryContentColor),
+        textStyle = UiKitTheme.typographyOld.circle1718.copy(color = UiKitTheme.colorsOld.primaryContentColor),
         singleLine = true,
         enabled = isEnabled,
         visualTransformation = visualTransformation,

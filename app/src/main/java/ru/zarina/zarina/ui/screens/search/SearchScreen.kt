@@ -234,7 +234,7 @@ private fun SearchHistory(
             ) {
                 Text(
                     text = query,
-                    style = UiKitTheme.typography.circle1718,
+                    style = UiKitTheme.typographyOld.circle1718,
                     color = UiKitTheme.colorsOld.primaryContentColor,
                     maxLines = 1,
                     modifier = Modifier
@@ -295,7 +295,7 @@ private fun Word(
         Text(
             text = word.word,
             maxLines = 1,
-            style = UiKitTheme.typography.circle1718,
+            style = UiKitTheme.typographyOld.circle1718,
             color = UiKitTheme.colorsOld.primaryContentColor,
         )
     }
@@ -320,7 +320,7 @@ private fun FrequentlySearched(
         for (query in queries) {
             Text(
                 text = query,
-                style = UiKitTheme.typography.circle1718,
+                style = UiKitTheme.typographyOld.circle1718,
                 color = UiKitTheme.colorsOld.primaryContentColor,
                 maxLines = 1,
                 modifier = Modifier
@@ -339,7 +339,7 @@ fun SectionHeader(
 ) {
     Text(
         text = text,
-        style = UiKitTheme.typography.circle1518,
+        style = UiKitTheme.typographyOld.circle1518,
         color = UiKitTheme.colorsOld.primaryContentColor,
         maxLines = 1,
         modifier = modifier,
@@ -421,13 +421,13 @@ private fun NothingFound(
         )
         Text(
             text = stringResource(id = R.string.nothing_found),
-            style = UiKitTheme.typography.circle1720bold,
+            style = UiKitTheme.typographyOld.circle1720bold,
             color = UiKitTheme.colorsOld.primaryContentColor,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         Text(
             text = stringResource(id = R.string.nothing_found),
-            style = UiKitTheme.typography.circle1518,
+            style = UiKitTheme.typographyOld.circle1518,
             color = UiKitTheme.colorsOld.primaryContentColor,
             modifier = Modifier
                 .padding(horizontal = 16.dp)

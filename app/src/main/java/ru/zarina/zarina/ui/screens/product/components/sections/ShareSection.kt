@@ -36,7 +36,7 @@ fun ShareSection(
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = stringResource(id = R.string.share_product),
-                style = UiKitTheme.typography.circle1720bold,
+                style = UiKitTheme.typographyOld.circle1720bold,
                 color = UiKitTheme.colorsOld.secondaryButtonForeground,
                 maxLines = 1,
             )

@@ -29,7 +29,7 @@ fun TreeItem(
     ) {
         Text(
             text = filterName,
-            style = UiKitTheme.typography.circle1718,
+            style = UiKitTheme.typographyOld.circle1718,
             color = UiKitTheme.colorsOld.primaryContentColor,
             modifier = Modifier.padding(end = 8.dp)
         )
@@ -38,7 +38,7 @@ fun TreeItem(
         if (selectedItems.isNotEmpty()) {
             Text(
                 text = selectedItems.first().name + if (selectedItems.size > 1) " +${selectedItems.size - 1}" else "",
-                style = UiKitTheme.typography.circle1718,
+                style = UiKitTheme.typographyOld.circle1718,
                 color = UiKitTheme.colorsOld.hint,
                 modifier = Modifier.padding(end = 8.dp)
             )

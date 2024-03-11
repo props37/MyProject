@@ -50,7 +50,7 @@ fun FilterButton(
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = text,
-            style = UiKitTheme.typography.circle1718,
+            style = UiKitTheme.typographyOld.circle1718,
             color = foregroundColor,
         )
     }

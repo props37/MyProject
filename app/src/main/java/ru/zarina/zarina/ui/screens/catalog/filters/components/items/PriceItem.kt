@@ -47,7 +47,7 @@ fun PriceItem(
             Text(
                 text = stringResource(id = R.string.price),
                 color = UiKitTheme.colorsOld.primaryContentColor,
-                style = UiKitTheme.typography.circle1718,
+                style = UiKitTheme.typographyOld.circle1718,
             )
             Text(
                 text = stringResource(
@@ -56,7 +56,7 @@ fun PriceItem(
                     stringResource(id = R.string.currency_amount_rubles, selectedMaxValue),
                 ),
                 color = UiKitTheme.colorsOld.primaryContentColor,
-                style = UiKitTheme.typography.circle1718,
+                style = UiKitTheme.typographyOld.circle1718,
             )
         }
         PriceSlider(

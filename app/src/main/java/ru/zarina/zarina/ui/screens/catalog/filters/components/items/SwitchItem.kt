@@ -26,7 +26,7 @@ fun SwitchItem(
     ) {
         Text(
             text = filterName,
-            style = UiKitTheme.typography.circle1718,
+            style = UiKitTheme.typographyOld.circle1718,
             color = UiKitTheme.colorsOld.primaryContentColor,
             modifier = Modifier
                 .padding(16.dp)

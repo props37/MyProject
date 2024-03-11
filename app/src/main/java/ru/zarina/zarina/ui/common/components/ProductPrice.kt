@@ -18,7 +18,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 fun ProductPrice(
     price: Price,
     modifier: Modifier = Modifier,
-    textStyle: TextStyle = UiKitTheme.typography.circle2028,
+    textStyle: TextStyle = UiKitTheme.typographyOld.circle2028,
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),

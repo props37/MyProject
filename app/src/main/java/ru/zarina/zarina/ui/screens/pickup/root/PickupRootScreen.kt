@@ -121,7 +121,7 @@ fun PickupRootScreenContent(
                         ) {
                             Text(
                                 text = stringResource(R.string.product_not_available_in_city),
-                                style = UiKitTheme.typography.circle1518,
+                                style = UiKitTheme.typographyOld.circle1518,
                                 color = UiKitTheme.colorsOld.primaryContentColor,
                                 textAlign = TextAlign.Start,
                                 modifier = Modifier.padding(16.dp),

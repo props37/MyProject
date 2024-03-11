@@ -127,7 +127,7 @@ fun ProductCard(
         Text(
             text = product.name,
             color = UiKitTheme.colorsOld.primaryContentColor,
-            style = UiKitTheme.typography.circle1518,
+            style = UiKitTheme.typographyOld.circle1518,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
@@ -144,7 +144,7 @@ fun ProductCard(
         Spacer(modifier = Modifier.height(4.dp))
         ProductPrice(
             price = product.price,
-            textStyle = UiKitTheme.typography.circle1614,
+            textStyle = UiKitTheme.typographyOld.circle1614,
         )
         Spacer(modifier = Modifier.height(8.dp))
     }
@@ -158,7 +158,7 @@ fun Tag(
     Text(
         text = text.uppercase(),
         color = UiKitTheme.colorsOld.primaryContentColor,
-        style = UiKitTheme.typography.circle811,
+        style = UiKitTheme.typographyOld.circle811,
         modifier = modifier
     )
 }

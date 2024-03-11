@@ -180,7 +180,7 @@ fun FilterTreeItem(
             }
             Text(
                 text = item.name,
-                style = UiKitTheme.typography.circle1718,
+                style = UiKitTheme.typographyOld.circle1718,
                 color = UiKitTheme.colorsOld.primaryContentColor,
                 modifier = Modifier
                     .padding(end = 8.dp),
@@ -188,7 +188,7 @@ fun FilterTreeItem(
             if (item.count != null)
                 Text(
                     text = item.count.toString(),
-                    style = UiKitTheme.typography.circle1718,
+                    style = UiKitTheme.typographyOld.circle1718,
                     color = UiKitTheme.colorsOld.hint,
                     modifier = Modifier.padding(end = 8.dp),
                 )

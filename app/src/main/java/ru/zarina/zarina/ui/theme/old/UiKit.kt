@@ -46,7 +46,7 @@ data class UiKitColorsOld(
 val LocalUiKitColorsOld = staticCompositionLocalOf { UiKitColorsOld() }
 
 @Immutable
-data class UiKitTypography(
+data class UiKitTypographyOld(
     val circle1720bold: TextStyle = TextStyle(
         fontSize = 17.sp,
         lineHeight = 20.sp,
@@ -129,4 +129,4 @@ data class UiKitTypography(
     ),
 )
 
-val LocalUiKitTypography = staticCompositionLocalOf { UiKitTypography() }
+val LocalUiKitTypographyOld = staticCompositionLocalOf { UiKitTypographyOld() }

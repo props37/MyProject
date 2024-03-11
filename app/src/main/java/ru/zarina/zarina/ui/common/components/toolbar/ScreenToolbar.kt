@@ -43,7 +43,7 @@ fun ScreenToolbar(
             ) {
                 Text(
                     text = title,
-                    style = UiKitTheme.typography.circle1718,
+                    style = UiKitTheme.typographyOld.circle1718,
                     color = UiKitTheme.colorsOld.primaryContentColor,
                     maxLines = 1,
                 )
@@ -55,7 +55,7 @@ fun ScreenToolbar(
                     if (subtitle != null)
                         Text(
                             text = subtitle,
-                            style = UiKitTheme.typography.circle1316,
+                            style = UiKitTheme.typographyOld.circle1316,
                             color = UiKitTheme.colorsOld.primaryContentColor,
                             maxLines = 1,
                             textAlign = TextAlign.Center,

@@ -21,7 +21,7 @@ fun CityPicker(
     ) {
         Text(
             text = city?.name.orEmpty(),
-            style = UiKitTheme.typography.circle1718,
+            style = UiKitTheme.typographyOld.circle1718,
             color = UiKitTheme.colorsOld.primaryContentColor,
             textAlign = TextAlign.Start,
             maxLines = 1,

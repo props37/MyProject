@@ -65,7 +65,7 @@ fun SuccessScreenContent(
             )
             Text(
                 text = stringResource(R.string.reservation_is_successful),
-                style = UiKitTheme.typography.circle1720bold,
+                style = UiKitTheme.typographyOld.circle1720bold,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -76,7 +76,7 @@ fun SuccessScreenContent(
                     R.string.reservation_confirmation_will_be_sent_to_email_template,
                     email
                 ),
-                style = UiKitTheme.typography.circle1518,
+                style = UiKitTheme.typographyOld.circle1518,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()

@@ -41,7 +41,7 @@ fun StateSnackbar(
         ) {
             Text(
                 text = textString(text),
-                style = UiKitTheme.typography.circle1420,
+                style = UiKitTheme.typographyOld.circle1420,
             )
         }
     }

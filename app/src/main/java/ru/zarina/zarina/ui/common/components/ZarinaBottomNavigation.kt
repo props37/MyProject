@@ -167,7 +167,7 @@ fun RowScope.BottomNavigationItem(
         )
         Text(
             text = stringResource(id = item.title),
-            style = UiKitTheme.typography.circle1012,
+            style = UiKitTheme.typographyOld.circle1012,
             color = foregroundColor.value,
             maxLines = 1,
             modifier = Modifier

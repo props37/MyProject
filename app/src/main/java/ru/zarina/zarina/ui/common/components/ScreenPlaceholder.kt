@@ -21,7 +21,7 @@ fun ScreenPlaceholder(
     ) {
         Text(
             text = title,
-            style = UiKitTheme.typography.circle2028,
+            style = UiKitTheme.typographyOld.circle2028,
             color = UiKitTheme.colorsOld.primaryContentColor,
             modifier = Modifier.padding(32.dp)
         )

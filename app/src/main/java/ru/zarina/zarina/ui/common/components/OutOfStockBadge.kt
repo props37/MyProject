@@ -22,7 +22,7 @@ fun OutOfStockBadge(
     ) {
         Text(
             text = stringResource(R.string.out_of_stock),
-            style = UiKitTheme.typography.circle1012,
+            style = UiKitTheme.typographyOld.circle1012,
             color = UiKitTheme.colorsOld.productBadgeForeground,
         )
     }

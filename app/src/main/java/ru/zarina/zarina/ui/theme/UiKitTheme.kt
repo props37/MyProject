@@ -2,9 +2,9 @@ package ru.zarina.zarina.ui.theme
 
 import androidx.compose.runtime.Composable
 import ru.zarina.zarina.ui.theme.old.LocalUiKitColorsOld
-import ru.zarina.zarina.ui.theme.old.LocalUiKitTypography
+import ru.zarina.zarina.ui.theme.old.LocalUiKitTypographyOld
 import ru.zarina.zarina.ui.theme.old.UiKitColorsOld
-import ru.zarina.zarina.ui.theme.old.UiKitTypography
+import ru.zarina.zarina.ui.theme.old.UiKitTypographyOld
 
 object UiKitTheme {
     val colorsReworked: UiKitColorsReworked
@@ -19,7 +19,7 @@ object UiKitTheme {
         @Composable
         get() = LocalUiKitColorsOld.current
 
-    val typography: UiKitTypography
+    val typographyOld: UiKitTypographyOld
         @Composable
-        get() = LocalUiKitTypography.current
+        get() = LocalUiKitTypographyOld.current
 }
