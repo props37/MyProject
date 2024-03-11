@@ -11,7 +11,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 fun SortDivider() {
     Divider(
         thickness = 1.dp,
-        color = UiKitTheme.colors.listDivider,
+        color = UiKitTheme.colorsOld.listDivider,
         modifier = Modifier.padding(horizontal = 16.dp),
     )
 }

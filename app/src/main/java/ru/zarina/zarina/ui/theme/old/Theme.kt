@@ -23,11 +23,11 @@ fun ZarinaTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-    val uiKitColors = UiKitColors()
+    val uiKitColorsOld = UiKitColorsOld()
     val uiKitTypography = UiKitTypography()
 
     CompositionLocalProvider(
-        LocalUiKitColors provides uiKitColors,
+        LocalUiKitColorsOld provides uiKitColorsOld,
         LocalUiKitTypography provides uiKitTypography,
     ) {
         MaterialTheme(
@@ -38,8 +38,8 @@ fun ZarinaTheme(
             ),
             content = {
                 val textSelectionColors = TextSelectionColors(
-                    handleColor = uiKitColors.primaryContentColor,
-                    backgroundColor = uiKitColors.primaryContentColor.copy(alpha = 0.2f),
+                    handleColor = uiKitColorsOld.primaryContentColor,
+                    backgroundColor = uiKitColorsOld.primaryContentColor.copy(alpha = 0.2f),
                 )
                 CompositionLocalProvider(
                     LocalTextSelectionColors provides textSelectionColors,

@@ -37,7 +37,7 @@ fun PickupSection(
             Text(
                 text = stringResource(id = R.string.find_and_pickup),
                 style = UiKitTheme.typography.circle1720bold,
-                color = UiKitTheme.colors.secondaryButtonForeground,
+                color = UiKitTheme.colorsOld.secondaryButtonForeground,
                 maxLines = 1,
             )
         }

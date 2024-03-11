@@ -113,7 +113,7 @@ private fun ProductName(
 ) {
     Text(
         text = product.name,
-        color = UiKitTheme.colors.primaryContentColor,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         style = UiKitTheme.typography.circle1518,
         maxLines = 2,
         textAlign = TextAlign.Start,
@@ -130,7 +130,7 @@ private fun ProductColor(
 
     Text(
         text = stringResource(R.string.key_value, stringResource(R.string.color), colorName),
-        color = UiKitTheme.colors.primaryContentColor,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         style = UiKitTheme.typography.circle1316,
         maxLines = 1,
         textAlign = TextAlign.Start,
@@ -168,7 +168,7 @@ private fun SingleProductSize(
             stringResource(R.string.size),
             selectedSize?.name.orEmpty()
         ),
-        color = UiKitTheme.colors.primaryContentColor,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         style = UiKitTheme.typography.circle1316,
         maxLines = 1,
         textAlign = TextAlign.Start,
@@ -194,7 +194,7 @@ fun PickSizeButton(
         ) { state ->
             Text(
                 text = state,
-                color = UiKitTheme.colors.primaryContentColor,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 style = UiKitTheme.typography.circle1718,
                 maxLines = 1,
                 textAlign = TextAlign.Start,

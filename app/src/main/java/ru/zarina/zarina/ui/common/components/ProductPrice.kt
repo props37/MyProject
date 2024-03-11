@@ -28,14 +28,14 @@ fun ProductPrice(
             Text(
                 text = stringResource(R.string.currency_amount_rubles, price.original),
                 style = textStyle,
-                color = UiKitTheme.colors.retiredPrice,
+                color = UiKitTheme.colorsOld.retiredPrice,
                 textAlign = TextAlign.Center,
                 textDecoration = TextDecoration.LineThrough,
                 maxLines = 1
             )
         }
         val currentPriceColor =
-            if (price.isDiscounted) UiKitTheme.colors.price else UiKitTheme.colors.primaryContentColor
+            if (price.isDiscounted) UiKitTheme.colorsOld.price else UiKitTheme.colorsOld.primaryContentColor
         Text(
             text = stringResource(R.string.currency_amount_rubles, price.current),
             style = textStyle,

@@ -100,11 +100,11 @@ private fun Loader(
 object ZarinaButtonDefaults {
     @Composable
     fun primaryColors(
-        background: Color = UiKitTheme.colors.primaryButtonBackground,
-        foreground: Color = UiKitTheme.colors.primaryButtonForeground,
-        disabledBackground: Color = UiKitTheme.colors.primaryButtonDisabledBackground,
-        disabledForeground: Color = UiKitTheme.colors.primaryButtonDisabledForeground,
-        border: Color = UiKitTheme.colors.primaryButtonBorder,
+        background: Color = UiKitTheme.colorsOld.primaryButtonBackground,
+        foreground: Color = UiKitTheme.colorsOld.primaryButtonForeground,
+        disabledBackground: Color = UiKitTheme.colorsOld.primaryButtonDisabledBackground,
+        disabledForeground: Color = UiKitTheme.colorsOld.primaryButtonDisabledForeground,
+        border: Color = UiKitTheme.colorsOld.primaryButtonBorder,
     ) = ZarinaButtonColors(
         background = background,
         foreground = foreground,
@@ -115,11 +115,11 @@ object ZarinaButtonDefaults {
 
     @Composable
     fun secondaryColors(
-        background: Color = UiKitTheme.colors.secondaryButtonBackground,
-        foreground: Color = UiKitTheme.colors.secondaryButtonForeground,
-        disabledBackground: Color = UiKitTheme.colors.secondaryButtonDisabledBackground,
-        disabledForeground: Color = UiKitTheme.colors.secondaryButtonDisabledForeground,
-        border: Color = UiKitTheme.colors.secondaryButtonBorder,
+        background: Color = UiKitTheme.colorsOld.secondaryButtonBackground,
+        foreground: Color = UiKitTheme.colorsOld.secondaryButtonForeground,
+        disabledBackground: Color = UiKitTheme.colorsOld.secondaryButtonDisabledBackground,
+        disabledForeground: Color = UiKitTheme.colorsOld.secondaryButtonDisabledForeground,
+        border: Color = UiKitTheme.colorsOld.secondaryButtonBorder,
     ) = ZarinaButtonColors(
         background = background,
         foreground = foreground,

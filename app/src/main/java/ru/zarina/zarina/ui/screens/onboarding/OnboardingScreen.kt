@@ -95,7 +95,7 @@ private fun OnboardingScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.screenBackground)
+            .background(UiKitTheme.colorsOld.screenBackground)
     ) {
         var isBannerLoaded by remember(splashState) { mutableStateOf(false) }
         val splashBannerAlpha by animateFloatAsState(
@@ -269,7 +269,7 @@ fun BottomContent(
 ) {
     val contentModifier = Modifier
         .fillMaxWidth()
-        .background(color = UiKitTheme.colors.screenBackground)
+        .background(color = UiKitTheme.colorsOld.screenBackground)
         .navigationBarsPadding()
     val selectCity = @Composable {
         SelectCity(
@@ -313,7 +313,7 @@ fun BottomContent(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(UiKitTheme.colors.screenBackground)
+                        .background(UiKitTheme.colorsOld.screenBackground)
                 ) { step ->
                     when (step) {
                         OnboardingViewModel.OnboardingStep.SELECT_CITY_TYPE -> selectCity()
@@ -343,7 +343,7 @@ fun SelectCity(
         Text(
             text = stringResource(R.string.select_your_city),
             style = UiKitTheme.typography.circle2028,
-            color = UiKitTheme.colors.primaryContentColor,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
@@ -351,7 +351,7 @@ fun SelectCity(
         Text(
             text = stringResource(R.string.to_see_in_your_city),
             style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
@@ -394,7 +394,7 @@ fun SelectionResult(
         Text(
             text = stringResource(R.string.is_your_city, city?.name.orEmpty()),
             style = UiKitTheme.typography.circle2028,
-            color = UiKitTheme.colors.primaryContentColor,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp),
         )

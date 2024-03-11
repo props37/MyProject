@@ -142,7 +142,7 @@ fun FiltersScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .shadow(elevation)
-                    .background(UiKitTheme.colors.screenBackground)
+                    .background(UiKitTheme.colorsOld.screenBackground)
                     .padding(16.dp)
                     .navigationBarsPadding()
                     .bottomNavigationPadding()

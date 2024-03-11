@@ -63,7 +63,7 @@ private fun ColorCircle(
 ) {
     val shape = CircleShape
     val selectionBorderColor by animateColorAsState(
-        targetValue = if (isSelected) UiKitTheme.colors.colorPickerCircleSelectionBorder else Color.Transparent,
+        targetValue = if (isSelected) UiKitTheme.colorsOld.colorPickerCircleSelectionBorder else Color.Transparent,
         label = "selection border color"
     )
     Box(
@@ -82,7 +82,7 @@ private fun ColorCircle(
             .padding(dimensions.selectionBorderPadding)
             .border(
                 width = dimensions.colorBorderWidth,
-                color = UiKitTheme.colors.colorPickerCircleBorder,
+                color = UiKitTheme.colorsOld.colorPickerCircleBorder,
                 shape = shape
             )
             .clip(shape)

@@ -67,7 +67,7 @@ fun SuccessScreenContent(
             Text(
                 text = stringResource(R.string.product_subscription_done),
                 style = UiKitTheme.typography.circle1720bold,
-                color = UiKitTheme.colors.primaryContentColor,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 12.dp),
             )
@@ -77,7 +77,7 @@ fun SuccessScreenContent(
                     email
                 ),
                 style = UiKitTheme.typography.circle1518,
-                color = UiKitTheme.colors.primaryContentColor,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 12.dp),
             )

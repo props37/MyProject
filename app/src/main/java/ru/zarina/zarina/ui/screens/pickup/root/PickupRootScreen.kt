@@ -117,12 +117,12 @@ fun PickupRootScreenContent(
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(UiKitTheme.colors.screenBackground)
+                                .background(UiKitTheme.colorsOld.screenBackground)
                         ) {
                             Text(
                                 text = stringResource(R.string.product_not_available_in_city),
                                 style = UiKitTheme.typography.circle1518,
-                                color = UiKitTheme.colors.primaryContentColor,
+                                color = UiKitTheme.colorsOld.primaryContentColor,
                                 textAlign = TextAlign.Start,
                                 modifier = Modifier.padding(16.dp),
                             )
@@ -134,7 +134,7 @@ fun PickupRootScreenContent(
                             pagerState = pagerState,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(UiKitTheme.colors.screenBackground)
+                                .background(UiKitTheme.colorsOld.screenBackground)
                         )
                     }
                 }

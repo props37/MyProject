@@ -266,7 +266,7 @@ private fun ColumnScope.OrderInformation(
         Text(
             text = stringResource(R.string.shop),
             style = UiKitTheme.typography.circle1518bold,
-            color = UiKitTheme.colors.primaryContentColor,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             textAlign = TextAlign.Start,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
@@ -274,7 +274,7 @@ private fun ColumnScope.OrderInformation(
         Text(
             text = "${shop.name}, ${shop.address}",
             style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             textAlign = TextAlign.Start,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
@@ -282,7 +282,7 @@ private fun ColumnScope.OrderInformation(
         Text(
             text = stringResource(R.string.working_schedule_template, shop.schedule),
             style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             textAlign = TextAlign.Start,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
@@ -291,7 +291,7 @@ private fun ColumnScope.OrderInformation(
     Text(
         text = stringResource(R.string.reservation_period),
         style = UiKitTheme.typography.circle1518bold,
-        color = UiKitTheme.colors.primaryContentColor,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = Modifier.padding(horizontal = 16.dp),
     )
@@ -299,7 +299,7 @@ private fun ColumnScope.OrderInformation(
     Text(
         text = stringResource(R.string.two_days),
         style = UiKitTheme.typography.circle1718,
-        color = UiKitTheme.colors.primaryContentColor,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = Modifier.padding(horizontal = 16.dp),
     )
@@ -307,7 +307,7 @@ private fun ColumnScope.OrderInformation(
     Text(
         text = stringResource(R.string.payment_method),
         style = UiKitTheme.typography.circle1518bold,
-        color = UiKitTheme.colors.primaryContentColor,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = Modifier.padding(horizontal = 16.dp),
     )
@@ -315,7 +315,7 @@ private fun ColumnScope.OrderInformation(
     Text(
         text = stringResource(R.string.in_cash_or_by_card_upon_receiving),
         style = UiKitTheme.typography.circle1718,
-        color = UiKitTheme.colors.primaryContentColor,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = Modifier.padding(horizontal = 16.dp),
     )
@@ -323,7 +323,7 @@ private fun ColumnScope.OrderInformation(
     Text(
         text = stringResource(R.string.you_ll_be_able_to_pickup_after_sms),
         style = UiKitTheme.typography.circle1720bold,
-        color = UiKitTheme.colors.primaryContentColor,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = Modifier.padding(horizontal = 16.dp),
     )

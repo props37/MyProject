@@ -151,7 +151,7 @@ fun ProductScreenContent(
                         .fillMaxWidth()
                 )
                 Divider(
-                    color = UiKitTheme.colors.listDivider,
+                    color = UiKitTheme.colorsOld.listDivider,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
@@ -161,7 +161,7 @@ fun ProductScreenContent(
                     modifier = Modifier.fillMaxWidth()
                 )
                 Divider(
-                    color = UiKitTheme.colors.listDivider,
+                    color = UiKitTheme.colorsOld.listDivider,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
@@ -218,7 +218,7 @@ private fun ToolbarTitle(
         Text(
             text = product?.name.orEmpty(),
             style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             maxLines = 1,
         )
         val attribute = product?.attributes?.firstOrNull()
@@ -226,7 +226,7 @@ private fun ToolbarTitle(
             Text(
                 text = attribute.uppercase(),
                 style = UiKitTheme.typography.circle811,
-                color = UiKitTheme.colors.primaryContentColor,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 maxLines = 1,
             )
         }

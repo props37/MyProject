@@ -88,7 +88,7 @@ fun HomeScreenContent(
                     + bottomNavigationPaddingValues(),
             modifier = Modifier
                 .fillMaxSize()
-                .background(UiKitTheme.colors.screenBackground),
+                .background(UiKitTheme.colorsOld.screenBackground),
         ) {
             item(
                 key = LAZY_KEY_BANNERS,

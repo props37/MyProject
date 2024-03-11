@@ -23,7 +23,7 @@ fun SectionHeader(
         Text(
             text = text,
             style = UiKitTheme.typography.circle1720bold,
-            color = UiKitTheme.colors.primaryContentColor,
+            color = UiKitTheme.colorsOld.primaryContentColor,
         )
     }
 }

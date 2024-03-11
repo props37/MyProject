@@ -31,7 +31,7 @@ fun ProductHorizontalSection(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.background(UiKitTheme.colors.screenBackground)
+        modifier = modifier.background(UiKitTheme.colorsOld.screenBackground)
     ) {
         if (title != null)
             Text(

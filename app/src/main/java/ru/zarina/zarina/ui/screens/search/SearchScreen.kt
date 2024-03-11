@@ -235,7 +235,7 @@ private fun SearchHistory(
                 Text(
                     text = query,
                     style = UiKitTheme.typography.circle1718,
-                    color = UiKitTheme.colors.primaryContentColor,
+                    color = UiKitTheme.colorsOld.primaryContentColor,
                     maxLines = 1,
                     modifier = Modifier
                         .weight(1f)
@@ -288,7 +288,7 @@ private fun Word(
     Box(
         modifier = modifier
             .padding(5.dp)
-            .background(UiKitTheme.colors.primaryBorderColor)
+            .background(UiKitTheme.colorsOld.primaryBorderColor)
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 8.dp),
     ) {
@@ -296,7 +296,7 @@ private fun Word(
             text = word.word,
             maxLines = 1,
             style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
+            color = UiKitTheme.colorsOld.primaryContentColor,
         )
     }
 }
@@ -321,7 +321,7 @@ private fun FrequentlySearched(
             Text(
                 text = query,
                 style = UiKitTheme.typography.circle1718,
-                color = UiKitTheme.colors.primaryContentColor,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 maxLines = 1,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -340,7 +340,7 @@ fun SectionHeader(
     Text(
         text = text,
         style = UiKitTheme.typography.circle1518,
-        color = UiKitTheme.colors.primaryContentColor,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         maxLines = 1,
         modifier = modifier,
     )
@@ -422,13 +422,13 @@ private fun NothingFound(
         Text(
             text = stringResource(id = R.string.nothing_found),
             style = UiKitTheme.typography.circle1720bold,
-            color = UiKitTheme.colors.primaryContentColor,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         Text(
             text = stringResource(id = R.string.nothing_found),
             style = UiKitTheme.typography.circle1518,
-            color = UiKitTheme.colors.primaryContentColor,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .padding(top = 12.dp)

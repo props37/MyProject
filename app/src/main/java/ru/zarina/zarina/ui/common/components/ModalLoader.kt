@@ -30,7 +30,7 @@ fun ModalLoader(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .background(UiKitTheme.colors.modalLoaderOverlay)
+                .background(UiKitTheme.colorsOld.modalLoaderOverlay)
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
@@ -38,7 +38,7 @@ fun ModalLoader(
                 )
         ) {
             CircularProgressIndicator(
-                color = UiKitTheme.colors.modalLoaderProgress,
+                color = UiKitTheme.colorsOld.modalLoaderProgress,
             )
         }
     }

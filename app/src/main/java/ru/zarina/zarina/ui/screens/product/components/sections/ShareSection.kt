@@ -37,7 +37,7 @@ fun ShareSection(
             Text(
                 text = stringResource(id = R.string.share_product),
                 style = UiKitTheme.typography.circle1720bold,
-                color = UiKitTheme.colors.secondaryButtonForeground,
+                color = UiKitTheme.colorsOld.secondaryButtonForeground,
                 maxLines = 1,
             )
         }

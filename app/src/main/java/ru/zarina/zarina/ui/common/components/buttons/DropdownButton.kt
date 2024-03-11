@@ -28,7 +28,7 @@ fun DropdownButton(
         modifier = modifier
             .border(
                 width = 1.dp,
-                color = UiKitTheme.colors.primaryBorderColor,
+                color = UiKitTheme.colorsOld.primaryBorderColor,
             )
             .clickable(onClick = onClick)
             .animateContentSize(),

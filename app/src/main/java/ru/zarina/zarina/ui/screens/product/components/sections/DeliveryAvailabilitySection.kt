@@ -49,7 +49,7 @@ fun DeliveryAvailabilitySection(
         modifier = modifier
             .border(
                 width = 1.dp,
-                color = UiKitTheme.colors.primaryBorderColor
+                color = UiKitTheme.colorsOld.primaryBorderColor
             )
             .padding(24.dp),
         label = "content type"
@@ -93,7 +93,7 @@ private fun DeliveryInformationHeader(
     deliveryAvailability: DeliveryAvailability,
     modifier: Modifier = Modifier,
 ) {
-    val cityTextColor = UiKitTheme.colors.primaryAccentColor
+    val cityTextColor = UiKitTheme.colorsOld.primaryAccentColor
     val headerString = stringResource(R.string.delivery_to, deliveryAvailability.cityName)
     val headerColored = remember(headerString) {
         buildAnnotatedString {
@@ -110,7 +110,7 @@ private fun DeliveryInformationHeader(
     Text(
         text = headerColored,
         style = UiKitTheme.typography.circle1720bold,
-        color = UiKitTheme.colors.primaryContentColor,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = modifier
     )
@@ -137,7 +137,7 @@ private fun DeliveryOption(
             Text(
                 text = option.name,
                 style = UiKitTheme.typography.circle1518,
-                color = UiKitTheme.colors.primaryContentColor,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 textAlign = TextAlign.Start,
             )
             Spacer(modifier = Modifier.height(2.dp))
@@ -150,7 +150,7 @@ private fun DeliveryOption(
             Text(
                 text = stringResource(timeResource),
                 style = UiKitTheme.typography.circle1518,
-                color = UiKitTheme.colors.primaryContentColor,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 textAlign = TextAlign.Start,
             )
         }

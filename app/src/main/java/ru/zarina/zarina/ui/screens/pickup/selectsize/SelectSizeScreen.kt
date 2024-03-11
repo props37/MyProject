@@ -51,7 +51,7 @@ fun SelectSizeScreenContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(UiKitTheme.colors.screenBackground)
+            .background(UiKitTheme.colorsOld.screenBackground)
     ) {
         Header(
             text = stringResource(id = R.string.select_size_appeal),
@@ -83,7 +83,7 @@ private fun SizeItem(
     modifier: Modifier = Modifier,
 ) {
     val contentColor by animateColorAsState(
-        if (isAvailable) UiKitTheme.colors.primaryContentColor else UiKitTheme.colors.disabled,
+        if (isAvailable) UiKitTheme.colorsOld.primaryContentColor else UiKitTheme.colorsOld.disabled,
         label = "size text color"
     )
     CompositionLocalProvider(LocalContentColor provides contentColor) {

@@ -8,10 +8,10 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun SwitchDefaults.zarinaColors() = colors(
-    checkedThumbColor = UiKitTheme.colors.primaryContentColor,
-    uncheckedThumbColor = UiKitTheme.colors.primaryContentColor
+    checkedThumbColor = UiKitTheme.colorsOld.primaryContentColor,
+    uncheckedThumbColor = UiKitTheme.colorsOld.primaryContentColor
         .copy(0.08f)
         .compositeOver(Color.White),
-    checkedTrackColor = UiKitTheme.colors.hint,
-    uncheckedTrackColor = UiKitTheme.colors.hint,
+    checkedTrackColor = UiKitTheme.colorsOld.hint,
+    uncheckedTrackColor = UiKitTheme.colorsOld.hint,
 )

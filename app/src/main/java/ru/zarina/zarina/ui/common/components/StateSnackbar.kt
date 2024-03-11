@@ -35,8 +35,8 @@ fun StateSnackbar(
         modifier = modifier
     ) {
         Snackbar(
-            containerColor = UiKitTheme.colors.snackbarBackground,
-            contentColor = UiKitTheme.colors.snackbarForeground,
+            containerColor = UiKitTheme.colorsOld.snackbarBackground,
+            contentColor = UiKitTheme.colorsOld.snackbarForeground,
             modifier = Modifier.padding(16.dp)
         ) {
             Text(

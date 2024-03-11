@@ -37,7 +37,7 @@ fun ShopItem(
                 Text(
                     text = stringResource(id = R.string.pickup_at_shop),
                     style = UiKitTheme.typography.circle1316,
-                    color = UiKitTheme.colors.hint,
+                    color = UiKitTheme.colorsOld.hint,
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
@@ -47,14 +47,14 @@ fun ShopItem(
             Text(
                 text = primaryText,
                 style = UiKitTheme.typography.circle1718,
-                color = UiKitTheme.colors.primaryContentColor,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 modifier = Modifier.padding(end = 8.dp)
             )
         }
         Icon(
             painter = painterResource(id = R.drawable.ic_chevron_right_24),
             contentDescription = null,
-            tint = UiKitTheme.colors.primaryContentColor,
+            tint = UiKitTheme.colorsOld.primaryContentColor,
         )
     }
 }

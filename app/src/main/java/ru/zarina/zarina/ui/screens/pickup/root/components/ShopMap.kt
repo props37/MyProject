@@ -100,7 +100,7 @@ fun ShopMap(
                 ) {
                     Box(
                         modifier = Modifier
-                            .background(UiKitTheme.colors.screenBackground)
+                            .background(UiKitTheme.colorsOld.screenBackground)
                             .padding(8.dp)
                     ) {
                         ShopItem(stock, {}, isButtonVisible = false)

@@ -68,14 +68,14 @@ private fun ErrorContent(
             Text(
                 text = textString(state.title),
                 style = UiKitTheme.typography.circle1720bold,
-                color = UiKitTheme.colors.primaryContentColor,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 textAlign = TextAlign.Center,
             )
         if (state.subtitle != null)
             Text(
                 text = textString(state.subtitle),
                 style = UiKitTheme.typography.circle1518,
-                color = UiKitTheme.colors.primaryContentColor,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 textAlign = TextAlign.Center,
             )
     }

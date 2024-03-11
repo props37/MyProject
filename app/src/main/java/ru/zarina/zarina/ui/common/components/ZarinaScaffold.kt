@@ -29,7 +29,7 @@ fun ZarinaScaffold(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.screenBackground)
+            .background(UiKitTheme.colorsOld.screenBackground)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -50,7 +50,7 @@ fun ZarinaScaffold(
                     onButtonClick = { onErrorButtonClick() },
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(UiKitTheme.colors.screenBackground)
+                        .background(UiKitTheme.colorsOld.screenBackground)
                         .navigationBarsPadding()
                 )
         }

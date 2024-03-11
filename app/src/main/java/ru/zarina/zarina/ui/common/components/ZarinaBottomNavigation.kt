@@ -89,7 +89,7 @@ fun ZarinaBottomNavigation(
                 )
                 .border(
                     width = 1.dp,
-                    color = UiKitTheme.colors.listDivider,
+                    color = UiKitTheme.colorsOld.listDivider,
                     shape = topLineShape(1.dp),
                 ),
         ) {
@@ -146,7 +146,7 @@ fun RowScope.BottomNavigationItem(
     modifier: Modifier = Modifier,
 ) {
     val foregroundColor = animateColorAsState(
-        targetValue = if (isSelected) UiKitTheme.colors.primaryContentColor else UiKitTheme.colors.disabledPale,
+        targetValue = if (isSelected) UiKitTheme.colorsOld.primaryContentColor else UiKitTheme.colorsOld.disabledPale,
         label = "$item foreground color",
     )
     Box(
@@ -162,7 +162,7 @@ fun RowScope.BottomNavigationItem(
         Icon(
             painter = painterResource(id = item.icon),
             contentDescription = null,
-            tint = if (isSelected) UiKitTheme.colors.primaryContentColor else UiKitTheme.colors.disabledPale,
+            tint = if (isSelected) UiKitTheme.colorsOld.primaryContentColor else UiKitTheme.colorsOld.disabledPale,
             modifier = Modifier.align(Alignment.TopCenter),
         )
         Text(

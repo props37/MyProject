@@ -106,7 +106,7 @@ fun FavoritesScreenContent(
                 state = errorState,
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(UiKitTheme.colors.screenBackground)
+                    .background(UiKitTheme.colorsOld.screenBackground)
                     .navigationBarsPadding()
                     .bottomNavigationPadding()
             )

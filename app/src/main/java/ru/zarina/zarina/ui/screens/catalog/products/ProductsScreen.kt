@@ -109,7 +109,7 @@ fun ProductsScreenContent(
                     isFilterButtonEnabled = isFilterButtonEnabled,
                     onFiltersClick = onFiltersClick,
                     modifier = Modifier
-                        .background(color = UiKitTheme.colors.screenBackground)
+                        .background(color = UiKitTheme.colorsOld.screenBackground)
                         .fillMaxWidth(),
                 )
             }
@@ -159,7 +159,7 @@ fun ProductsScreenContent(
                     state = errorState,
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(UiKitTheme.colors.screenBackground)
+                        .background(UiKitTheme.colorsOld.screenBackground)
                         .navigationBarsPadding()
                         .bottomNavigationPadding()
                 )

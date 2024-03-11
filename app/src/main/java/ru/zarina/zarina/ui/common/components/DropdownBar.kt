@@ -66,7 +66,7 @@ fun DropdownBar(
         Spacer(modifier = Modifier.height(8.dp))
         Divider(
             thickness = 1.dp,
-            color = UiKitTheme.colors.listDivider,
+            color = UiKitTheme.colorsOld.listDivider,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
     }

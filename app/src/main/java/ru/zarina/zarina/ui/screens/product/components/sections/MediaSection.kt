@@ -118,11 +118,11 @@ private fun BuyCompleteLookButton(
                 modifier = Modifier
                     .clip(CircleShape)
                     .aspectRatio(1f)
-                    .background(color = UiKitTheme.colors.productBadgeBackground),
+                    .background(color = UiKitTheme.colorsOld.productBadgeBackground),
             ) {
                 Text(
                     text = stringResource(R.string.buy_complete_look),
-                    color = UiKitTheme.colors.productBadgeForeground,
+                    color = UiKitTheme.colorsOld.productBadgeForeground,
                     style = UiKitTheme.typography.circle1012,
                     maxLines = 2,
                     textAlign = TextAlign.Center,

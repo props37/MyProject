@@ -20,7 +20,7 @@ fun DiscountBadge(
     if (price.isDiscounted)
         Box(
             modifier = modifier
-                .background(UiKitTheme.colors.productBadgeBackground)
+                .background(UiKitTheme.colorsOld.productBadgeBackground)
                 .padding(horizontal = 8.dp, vertical = 4.dp),
         ) {
             Text(
@@ -29,7 +29,7 @@ fun DiscountBadge(
                     (price.discount * 100f).toInt()
                 ),
                 style = UiKitTheme.typography.circle1012,
-                color = UiKitTheme.colors.productBadgeForeground,
+                color = UiKitTheme.colorsOld.productBadgeForeground,
             )
         }
 }

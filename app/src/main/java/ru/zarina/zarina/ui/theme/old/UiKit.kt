@@ -8,7 +8,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 @Immutable
-data class UiKitColors(
+data class UiKitColorsOld(
     val primaryContentColor: Color = Color.Black,
     val screenBackground: Color = Color.White,
     val primaryButtonBackground: Color = Mineshaft,
@@ -43,8 +43,7 @@ data class UiKitColors(
     val inactiveOverlay: Color = Color.White.copy(0.6f),
 )
 
-
-val LocalUiKitColors = staticCompositionLocalOf { UiKitColors() }
+val LocalUiKitColorsOld = staticCompositionLocalOf { UiKitColorsOld() }
 
 @Immutable
 data class UiKitTypography(

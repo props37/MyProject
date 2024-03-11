@@ -31,7 +31,7 @@ fun <T> FilterBar(
             .height(IntrinsicSize.Min)
             .border(
                 width = 1.dp,
-                color = UiKitTheme.colors.primaryBorderColor,
+                color = UiKitTheme.colorsOld.primaryBorderColor,
             ),
     ) {
         FilterButton(
@@ -46,7 +46,7 @@ fun <T> FilterBar(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(1.dp)
-                .background(UiKitTheme.colors.listDivider)
+                .background(UiKitTheme.colorsOld.listDivider)
         )
         FilterButton(
             isEnabled = isFilterButtonEnabled,

@@ -47,7 +47,7 @@ fun ProductCard(
     isMediaScrollable: Boolean = false,
     colorPickerDimensions: ColorPickerDimensions = ColorPickerDefaults.smallDimensions(),
 ) {
-    val inactiveOverlayColor = UiKitTheme.colors.inactiveOverlay
+    val inactiveOverlayColor = UiKitTheme.colorsOld.inactiveOverlay
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -126,7 +126,7 @@ fun ProductCard(
         )
         Text(
             text = product.name,
-            color = UiKitTheme.colors.primaryContentColor,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             style = UiKitTheme.typography.circle1518,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp)
@@ -157,7 +157,7 @@ fun Tag(
 ) {
     Text(
         text = text.uppercase(),
-        color = UiKitTheme.colors.primaryContentColor,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         style = UiKitTheme.typography.circle811,
         modifier = modifier
     )

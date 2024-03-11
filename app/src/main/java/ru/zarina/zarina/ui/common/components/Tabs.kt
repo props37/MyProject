@@ -32,30 +32,30 @@ fun <T> Tabs(
         divider = {
             Divider(
                 thickness = 1.dp,
-                color = UiKitTheme.colors.listDivider
+                color = UiKitTheme.colorsOld.listDivider
             )
         },
         indicator = @Composable { tabPositions ->
             TabRowDefaults.Indicator(
-                color = UiKitTheme.colors.primaryContentColor,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex])
             )
         },
-        containerColor = UiKitTheme.colors.screenBackground,
-        contentColor = UiKitTheme.colors.primaryContentColor,
+        containerColor = UiKitTheme.colorsOld.screenBackground,
+        contentColor = UiKitTheme.colorsOld.primaryContentColor,
         modifier = modifier,
     ) {
         options.forEach { item ->
             Text(
                 text = textResolver(item),
-                color = UiKitTheme.colors.primaryContentColor,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 style = UiKitTheme.typography.circle1718,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
                     .border(
                         width = 1.dp,
-                        color = UiKitTheme.colors.primaryBorderColor,
+                        color = UiKitTheme.colorsOld.primaryBorderColor,
                     )
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },

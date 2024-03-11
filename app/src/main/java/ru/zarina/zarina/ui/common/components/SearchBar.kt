@@ -148,7 +148,7 @@ private fun SearchInput(
             Text(
                 text = stringResource(id = R.string.search_products),
                 style = UiKitTheme.typography.circle1518,
-                color = UiKitTheme.colors.hint,
+                color = UiKitTheme.colorsOld.hint,
                 maxLines = 1,
                 textAlign = TextAlign.Start,
             )
@@ -156,7 +156,7 @@ private fun SearchInput(
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
-            textStyle = UiKitTheme.typography.circle1518.copy(color = UiKitTheme.colors.primaryContentColor),
+            textStyle = UiKitTheme.typography.circle1518.copy(color = UiKitTheme.colorsOld.primaryContentColor),
             singleLine = true,
             enabled = isEnabled,
             interactionSource = interactionSource,

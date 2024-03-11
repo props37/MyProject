@@ -154,7 +154,7 @@ fun SubscribeScreenContent(
                 val text = acknowledgementText()
                 ClickableText(
                     text = text,
-                    style = UiKitTheme.typography.circle1718.copy(color = UiKitTheme.colors.primaryContentColor),
+                    style = UiKitTheme.typography.circle1718.copy(color = UiKitTheme.colorsOld.primaryContentColor),
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 4.dp),
@@ -200,7 +200,7 @@ private fun acknowledgementText() = buildAnnotatedString {
     )
     append(fullString)
 
-    val linkStyle = SpanStyle(color = UiKitTheme.colors.primaryAccentColor)
+    val linkStyle = SpanStyle(color = UiKitTheme.colorsOld.primaryAccentColor)
     ApplyForString(
         fullString = fullString,
         target = policy,

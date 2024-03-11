@@ -21,7 +21,7 @@ fun ElevationContainer(
         if (isElevated) 6.dp else 0.dp,
         label = "elevation"
     )
-    val backgroundColor = UiKitTheme.colors.screenBackground
+    val backgroundColor = UiKitTheme.colorsOld.screenBackground
     Box(
         modifier = modifier
             .graphicsLayer {

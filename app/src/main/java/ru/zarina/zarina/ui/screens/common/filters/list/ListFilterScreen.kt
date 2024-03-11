@@ -120,7 +120,7 @@ fun ListFilterScreenContent(
                     if (index != items.lastIndex)
                         Divider(
                             thickness = 1.dp,
-                            color = UiKitTheme.colors.listDivider,
+                            color = UiKitTheme.colorsOld.listDivider,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
@@ -140,7 +140,7 @@ fun ListFilterScreenContent(
                         onClick = onApplyClick,
                         modifier = Modifier
                             .shadow(elevation)
-                            .background(UiKitTheme.colors.screenBackground)
+                            .background(UiKitTheme.colorsOld.screenBackground)
                             .padding(16.dp)
                             .navigationBarsPadding()
                             .fillMaxWidth()
@@ -172,13 +172,13 @@ fun FilterListItem(
                     .aspectRatio(1f)
                     .clip(shape = CircleShape)
                     .background(color = item.color.toColorOr(Color.Transparent))
-                    .border(2.dp, UiKitTheme.colors.colorPickerCircleBorder, CircleShape),
+                    .border(2.dp, UiKitTheme.colorsOld.colorPickerCircleBorder, CircleShape),
             )
         }
         Text(
             text = item.name,
             style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             modifier = Modifier.padding(end = 8.dp),
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -190,7 +190,7 @@ fun FilterListItem(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_checkmark_24),
                     contentDescription = stringResource(id = R.string.selected),
-                    tint = UiKitTheme.colors.primaryContentColor,
+                    tint = UiKitTheme.colorsOld.primaryContentColor,
                 )
         }
     }

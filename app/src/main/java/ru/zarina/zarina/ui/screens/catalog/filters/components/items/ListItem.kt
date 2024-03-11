@@ -30,7 +30,7 @@ fun ListItem(
         Text(
             text = filterName,
             style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             modifier = Modifier.padding(end = 8.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -39,14 +39,14 @@ fun ListItem(
             Text(
                 text = selectedItems.first().name + if (selectedItems.size > 1) " +${selectedItems.size - 1}" else "",
                 style = UiKitTheme.typography.circle1718,
-                color = UiKitTheme.colors.hint,
+                color = UiKitTheme.colorsOld.hint,
                 modifier = Modifier.padding(end = 8.dp)
             )
         }
         Icon(
             painter = painterResource(id = R.drawable.ic_chevron_right_24),
             contentDescription = null,
-            tint = UiKitTheme.colors.primaryContentColor,
+            tint = UiKitTheme.colorsOld.primaryContentColor,
         )
     }
 }
