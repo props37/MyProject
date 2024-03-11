@@ -6,9 +6,9 @@ import org.koin.core.annotation.Named
 import ru.zarina.zarina.base.usecase.UseCase
 import ru.zarina.zarina.data.old.shop.IShopRepository
 import ru.zarina.zarina.di.old.Qualifiers
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.Offer
-import ru.zarina.zarina.domain.Stock
+import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.domain.old.Offer
+import ru.zarina.zarina.domain.old.Stock
 import timber.log.Timber
 
 @Factory

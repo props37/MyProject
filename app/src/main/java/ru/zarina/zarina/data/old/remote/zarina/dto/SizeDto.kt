@@ -3,9 +3,9 @@ package ru.zarina.zarina.data.old.remote.zarina.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.old.ApiContract
-import ru.zarina.zarina.domain.Barcode
-import ru.zarina.zarina.domain.Offer
-import ru.zarina.zarina.domain.Size
+import ru.zarina.zarina.domain.old.Barcode
+import ru.zarina.zarina.domain.old.Offer
+import ru.zarina.zarina.domain.old.Size
 
 @Serializable
 data class SizeDto(

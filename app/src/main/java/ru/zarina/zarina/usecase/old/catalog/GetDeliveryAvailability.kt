@@ -5,8 +5,8 @@ import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.old.product.IProductRepository
 import ru.zarina.zarina.di.old.Qualifiers
-import ru.zarina.zarina.domain.DeliveryAvailability
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.DeliveryAvailability
+import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.base.usecase.UseCase
 import timber.log.Timber
 

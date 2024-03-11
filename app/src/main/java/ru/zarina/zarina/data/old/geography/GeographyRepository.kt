@@ -3,8 +3,8 @@ package ru.zarina.zarina.data.old.geography
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.geography.local.IGeographyLocalSource
 import ru.zarina.zarina.data.old.geography.remote.IGeographyRemoteSource
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.GeoLocation
+import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.domain.old.GeoLocation
 import timber.log.Timber
 
 @Factory

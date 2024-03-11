@@ -1,7 +1,7 @@
 package ru.zarina.zarina.data.old.device.local
 
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.domain.AuthorizationToken
+import ru.zarina.zarina.domain.old.AuthorizationToken
 
 interface IDeviceLocalSource {
 

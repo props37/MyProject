@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.first
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.device.local.IDeviceLocalSource
 import ru.zarina.zarina.data.old.device.remote.IDeviceRemoteSource
-import ru.zarina.zarina.domain.AuthorizationToken
+import ru.zarina.zarina.domain.old.AuthorizationToken
 import timber.log.Timber
 
 @Factory

@@ -3,7 +3,7 @@ package ru.zarina.zarina.ui.common.base.paging
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import ru.zarina.zarina.domain.Page
+import ru.zarina.zarina.domain.old.Page
 
 class PageHolder<T> {
     private val _pages = MutableStateFlow(mapOf<Int, Page<T>>())

@@ -3,7 +3,7 @@ package ru.zarina.zarina.ui.screens.bases.selectcity
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import org.koin.core.annotation.Factory
-import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.old.City
 
 @Factory
 class SelectCityComponent {

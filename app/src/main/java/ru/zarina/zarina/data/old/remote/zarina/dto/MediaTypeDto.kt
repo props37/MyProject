@@ -1,7 +1,7 @@
 package ru.zarina.zarina.data.old.remote.zarina.dto
 
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.Media
+import ru.zarina.zarina.domain.old.Media
 import timber.log.Timber
 
 @JvmInline

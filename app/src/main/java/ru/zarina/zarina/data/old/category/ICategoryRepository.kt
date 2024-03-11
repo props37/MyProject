@@ -1,7 +1,7 @@
 package ru.zarina.zarina.data.old.category
 
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.domain.Category
+import ru.zarina.zarina.domain.old.Category
 
 interface ICategoryRepository {
     suspend fun fetchCategories(): List<Category>

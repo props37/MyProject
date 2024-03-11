@@ -3,8 +3,8 @@ package ru.zarina.zarina.data.old.favorites
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.favorites.local.IFavoritesLocalSource
 import ru.zarina.zarina.data.old.favorites.remote.IFavoritesRemoteSource
-import ru.zarina.zarina.domain.Page
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.Page
+import ru.zarina.zarina.domain.old.Product
 
 @Factory
 class FavoritesRepository(

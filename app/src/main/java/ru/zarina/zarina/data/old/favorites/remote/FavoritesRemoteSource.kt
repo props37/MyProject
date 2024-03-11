@@ -2,8 +2,8 @@ package ru.zarina.zarina.data.old.favorites.remote
 
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.favorites.remote.api.IZarinaFavoritesApi
-import ru.zarina.zarina.domain.Page
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.Page
+import ru.zarina.zarina.domain.old.Product
 
 @Factory
 class FavoritesRemoteSource(

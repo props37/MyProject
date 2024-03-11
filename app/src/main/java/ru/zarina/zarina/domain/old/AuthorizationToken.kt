@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain
+package ru.zarina.zarina.domain.old
 
 sealed interface AuthorizationToken {
 

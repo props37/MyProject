@@ -28,7 +28,7 @@ import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState

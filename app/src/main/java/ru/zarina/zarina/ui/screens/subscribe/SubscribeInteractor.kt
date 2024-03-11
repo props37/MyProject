@@ -1,7 +1,7 @@
 package ru.zarina.zarina.ui.screens.subscribe
 
 import org.koin.core.annotation.Factory
-import ru.zarina.zarina.domain.Barcode
+import ru.zarina.zarina.domain.old.Barcode
 import ru.zarina.zarina.usecase.old.subscription.SubscribeToOfferUseCase
 import ru.zarina.zarina.usecase.old.user.ValidateEmailUseCase
 import ru.zarina.zarina.usecase.old.user.ValidateNameUseCase

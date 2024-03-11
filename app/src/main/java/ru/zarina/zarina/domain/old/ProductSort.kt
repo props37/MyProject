@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain
+package ru.zarina.zarina.domain.old
 
 enum class ProductSort {
     DATE_DESCENDING, POPULARITY, PRICE, PRICE_DESCENDING, DISCOUNT;

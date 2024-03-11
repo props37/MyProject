@@ -5,11 +5,11 @@ import ru.zarina.zarina.data.old.shop.remote.api.IZarinaShopApi
 import ru.zarina.zarina.data.old.shop.remote.api.dto.ReserveRequestBody
 import ru.zarina.zarina.data.old.shop.remote.api.dto.toCountries
 import ru.zarina.zarina.data.old.shop.remote.api.dto.toShops
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.Country
-import ru.zarina.zarina.domain.Offer
-import ru.zarina.zarina.domain.Shop
-import ru.zarina.zarina.domain.Stock
+import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.domain.old.Country
+import ru.zarina.zarina.domain.old.Offer
+import ru.zarina.zarina.domain.old.Shop
+import ru.zarina.zarina.domain.old.Stock
 
 @Factory
 class ZarinaShopRemoteSource(

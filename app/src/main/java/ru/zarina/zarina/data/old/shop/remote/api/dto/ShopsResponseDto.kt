@@ -1,8 +1,8 @@
 package ru.zarina.zarina.data.old.shop.remote.api.dto
 
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.Country
-import ru.zarina.zarina.domain.Shop
+import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.domain.old.Country
+import ru.zarina.zarina.domain.old.Shop
 
 fun List<ShopCountryDto>.toCountries(): List<Country> {
     return mapNotNull { it.toDomain() }

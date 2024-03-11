@@ -1,10 +1,10 @@
 package ru.zarina.zarina.data.old.shop
 
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.Country
-import ru.zarina.zarina.domain.Offer
-import ru.zarina.zarina.domain.Shop
-import ru.zarina.zarina.domain.Stock
+import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.domain.old.Country
+import ru.zarina.zarina.domain.old.Offer
+import ru.zarina.zarina.domain.old.Shop
+import ru.zarina.zarina.domain.old.Stock
 
 interface IShopRepository {
 

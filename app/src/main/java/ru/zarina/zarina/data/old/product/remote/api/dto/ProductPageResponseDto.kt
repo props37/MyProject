@@ -4,7 +4,7 @@ package ru.zarina.zarina.data.old.product.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.old.remote.zarina.dto.ProductDto
-import ru.zarina.zarina.domain.Pagination
+import ru.zarina.zarina.domain.old.Pagination
 
 @Serializable
 data class ProductPageResponseDto(

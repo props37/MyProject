@@ -1,7 +1,7 @@
 package ru.zarina.zarina.data.old.product.remote.api.dto
 
 import ru.zarina.zarina.data.old.ApiContract
-import ru.zarina.zarina.domain.ListFilter
+import ru.zarina.zarina.domain.old.ListFilter
 
 interface FilterItemDto {
     val id: String?

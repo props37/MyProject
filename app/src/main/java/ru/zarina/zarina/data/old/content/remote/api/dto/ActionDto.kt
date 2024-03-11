@@ -4,10 +4,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.old.ApiContract
 import ru.zarina.zarina.data.old.product.remote.api.dto.FiltersDto
-import ru.zarina.zarina.domain.Action
-import ru.zarina.zarina.domain.Category
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.Url
+import ru.zarina.zarina.domain.old.Action
+import ru.zarina.zarina.domain.old.Category
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.Url
 
 @Serializable
 data class ActionDto(

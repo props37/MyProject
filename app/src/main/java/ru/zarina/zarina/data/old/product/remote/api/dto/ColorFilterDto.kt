@@ -4,8 +4,8 @@ package ru.zarina.zarina.data.old.product.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.old.ApiContract
-import ru.zarina.zarina.domain.Color
-import ru.zarina.zarina.domain.ListFilter
+import ru.zarina.zarina.domain.old.Color
+import ru.zarina.zarina.domain.old.ListFilter
 
 @Serializable
 data class ColorFilterDto(

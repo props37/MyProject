@@ -2,11 +2,11 @@ package ru.zarina.zarina.data.old.product
 
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.product.remote.IProductRemoteSource
-import ru.zarina.zarina.domain.Category
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.Filtration
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.old.Category
+import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.domain.old.Filtration
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.ProductSort
 
 @Factory
 class ProductRepository(

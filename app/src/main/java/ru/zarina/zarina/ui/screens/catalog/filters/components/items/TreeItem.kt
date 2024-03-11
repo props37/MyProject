@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.TreeFilter
+import ru.zarina.zarina.domain.old.TreeFilter
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable

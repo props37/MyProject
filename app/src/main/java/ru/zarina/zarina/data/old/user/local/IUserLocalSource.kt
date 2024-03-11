@@ -1,7 +1,7 @@
 package ru.zarina.zarina.data.old.user.local
 
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.old.City
 
 interface IUserLocalSource {
 

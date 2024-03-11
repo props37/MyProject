@@ -31,10 +31,10 @@ import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Barcode
-import ru.zarina.zarina.domain.Offer
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.Size
+import ru.zarina.zarina.domain.old.Barcode
+import ru.zarina.zarina.domain.old.Offer
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.Size
 import ru.zarina.zarina.ui.common.components.bottomsheet.Header
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews

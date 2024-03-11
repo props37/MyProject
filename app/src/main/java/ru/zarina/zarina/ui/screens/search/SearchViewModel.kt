@@ -30,11 +30,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
-import ru.zarina.zarina.domain.AutocompleteWord
-import ru.zarina.zarina.domain.FilteredProducts
-import ru.zarina.zarina.domain.Filtration
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.old.AutocompleteWord
+import ru.zarina.zarina.domain.old.FilteredProducts
+import ru.zarina.zarina.domain.old.Filtration
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.ProductSort
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.paging.PageHolder

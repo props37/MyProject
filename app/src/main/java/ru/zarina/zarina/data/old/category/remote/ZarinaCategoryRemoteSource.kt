@@ -2,7 +2,7 @@ package ru.zarina.zarina.data.old.category.remote
 
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.category.remote.api.IZarinaCategoryApi
-import ru.zarina.zarina.domain.Category
+import ru.zarina.zarina.domain.old.Category
 
 @Factory
 class ZarinaCategoryRemoteSource(

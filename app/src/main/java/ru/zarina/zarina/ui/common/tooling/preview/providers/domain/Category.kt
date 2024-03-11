@@ -1,8 +1,8 @@
 package ru.zarina.zarina.ui.common.tooling.preview.providers.domain
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import ru.zarina.zarina.domain.Category
-import ru.zarina.zarina.domain.Url
+import ru.zarina.zarina.domain.old.Category
+import ru.zarina.zarina.domain.old.Url
 
 class CategoryListProvider : PreviewParameterProvider<List<Category>> {
     override val values = sequenceOf(

@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.category.local.ICategoryLocalSource
 import ru.zarina.zarina.data.old.category.remote.ICategoryRemoteSource
-import ru.zarina.zarina.domain.Category
+import ru.zarina.zarina.domain.old.Category
 
 @Factory
 class CategoryRepository(

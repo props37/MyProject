@@ -3,9 +3,9 @@ package ru.zarina.zarina.data.old.search.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.old.ApiContract
-import ru.zarina.zarina.domain.ListFilter
-import ru.zarina.zarina.domain.PriceRange
-import ru.zarina.zarina.domain.TreeFilter
+import ru.zarina.zarina.domain.old.ListFilter
+import ru.zarina.zarina.domain.old.PriceRange
+import ru.zarina.zarina.domain.old.TreeFilter
 
 @Serializable
 data class FacetDto(

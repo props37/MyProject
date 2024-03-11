@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.recommendation.remote.zarina.IZarinaRecommendationApi
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.RecommendationType
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.RecommendationType
 
 @Factory
 class ZarinaRecommendationRemoteSource(

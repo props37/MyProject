@@ -2,7 +2,7 @@ package ru.zarina.zarina.data.old.user.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.old.City
 
 @Serializable
 data class SetCityBody(

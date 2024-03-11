@@ -3,9 +3,9 @@ package ru.zarina.zarina.data.old.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.Filtration
-import ru.zarina.zarina.domain.ListFilter
-import ru.zarina.zarina.domain.TreeFilter
+import ru.zarina.zarina.domain.old.Filtration
+import ru.zarina.zarina.domain.old.ListFilter
+import ru.zarina.zarina.domain.old.TreeFilter
 
 @Serializable
 data class FiltersDto(

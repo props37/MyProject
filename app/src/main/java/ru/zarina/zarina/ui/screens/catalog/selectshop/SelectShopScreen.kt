@@ -40,8 +40,8 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.Shop
+import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.domain.old.Shop
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.CityPicker
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold

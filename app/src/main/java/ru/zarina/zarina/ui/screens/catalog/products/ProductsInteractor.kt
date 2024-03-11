@@ -2,8 +2,8 @@ package ru.zarina.zarina.ui.screens.catalog.products
 
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.category.ICategoryRepository
-import ru.zarina.zarina.domain.Category
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.Category
+import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.usecase.old.catalog.GetProductsPageUseCase
 import ru.zarina.zarina.usecase.old.favorites.GetFavoriteIdsUseCase
 import ru.zarina.zarina.usecase.old.favorites.SetIsFavoriteUseCase

@@ -5,7 +5,7 @@ import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.old.search.ISearchRepository
 import ru.zarina.zarina.di.old.Qualifiers
-import ru.zarina.zarina.domain.SearchAutocomplete
+import ru.zarina.zarina.domain.old.SearchAutocomplete
 import ru.zarina.zarina.base.usecase.UseCase
 
 @Factory

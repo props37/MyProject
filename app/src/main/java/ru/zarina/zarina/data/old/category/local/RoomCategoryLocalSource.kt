@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.category.local.database.CategoryDao
 import ru.zarina.zarina.data.old.category.local.database.entity.CategoryEntity
-import ru.zarina.zarina.domain.Category
+import ru.zarina.zarina.domain.old.Category
 
 @Factory
 class RoomCategoryLocalSource(

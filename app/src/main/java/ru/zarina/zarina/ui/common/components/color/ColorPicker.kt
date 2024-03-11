@@ -25,7 +25,7 @@ import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.ui.common.utils.domain.toColorOr
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.utils.compose.conditional
-import ru.zarina.zarina.domain.Color as ZarinaColor
+import ru.zarina.zarina.domain.old.Color as ZarinaColor
 
 @Composable
 fun ColorPicker(

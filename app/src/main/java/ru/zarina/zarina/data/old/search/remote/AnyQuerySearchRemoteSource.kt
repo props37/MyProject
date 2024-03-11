@@ -4,10 +4,10 @@ import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.search.remote.api.IAnyQuerySearchApi
 import ru.zarina.zarina.data.old.search.remote.api.dto.FacetDto
 import ru.zarina.zarina.data.old.search.remote.api.dto.SortDto
-import ru.zarina.zarina.domain.FilteredProducts
-import ru.zarina.zarina.domain.Filtration
-import ru.zarina.zarina.domain.Page
-import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.old.FilteredProducts
+import ru.zarina.zarina.domain.old.Filtration
+import ru.zarina.zarina.domain.old.Page
+import ru.zarina.zarina.domain.old.ProductSort
 
 @Factory
 class AnyQuerySearchRemoteSource(

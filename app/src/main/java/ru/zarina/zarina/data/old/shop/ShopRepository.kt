@@ -2,9 +2,9 @@ package ru.zarina.zarina.data.old.shop
 
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.shop.remote.IShopRemoteSource
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.Offer
-import ru.zarina.zarina.domain.Shop
+import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.domain.old.Offer
+import ru.zarina.zarina.domain.old.Shop
 
 @Factory
 class ShopRepository(

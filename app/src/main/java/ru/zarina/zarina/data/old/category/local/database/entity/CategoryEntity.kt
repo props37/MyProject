@@ -3,8 +3,8 @@ package ru.zarina.zarina.data.old.category.local.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import ru.zarina.zarina.domain.Category
-import ru.zarina.zarina.domain.Url
+import ru.zarina.zarina.domain.old.Category
+import ru.zarina.zarina.domain.old.Url
 
 @Entity(tableName = "categories")
 data class CategoryEntity(

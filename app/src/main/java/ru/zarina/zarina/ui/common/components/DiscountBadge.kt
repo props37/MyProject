@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Price
+import ru.zarina.zarina.domain.old.Price
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable

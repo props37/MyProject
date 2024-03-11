@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.old.City
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable

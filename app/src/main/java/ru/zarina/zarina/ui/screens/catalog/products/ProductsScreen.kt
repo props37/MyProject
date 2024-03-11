@@ -42,9 +42,9 @@ import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Category
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.old.Category
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.ProductSort
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState

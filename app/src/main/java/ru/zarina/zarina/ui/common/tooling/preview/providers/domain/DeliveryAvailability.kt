@@ -2,7 +2,7 @@ package ru.zarina.zarina.ui.common.tooling.preview.providers.domain
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import kotlinx.collections.immutable.persistentListOf
-import ru.zarina.zarina.domain.DeliveryAvailability
+import ru.zarina.zarina.domain.old.DeliveryAvailability
 
 class DeliveryAvailabilityProvider : PreviewParameterProvider<DeliveryAvailability> {
     override val values = sequenceOf(

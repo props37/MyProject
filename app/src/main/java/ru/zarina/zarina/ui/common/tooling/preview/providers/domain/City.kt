@@ -1,8 +1,8 @@
 package ru.zarina.zarina.ui.common.tooling.preview.providers.domain
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import ru.zarina.zarina.domain.AddressId
-import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.old.AddressId
+import ru.zarina.zarina.domain.old.City
 
 class CityProvider : PreviewParameterProvider<City> {
     override val values = sequenceOf(

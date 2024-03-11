@@ -2,10 +2,10 @@ package ru.zarina.zarina.data.old.search.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.FilteredProducts
-import ru.zarina.zarina.domain.Filtration
-import ru.zarina.zarina.domain.Page
-import ru.zarina.zarina.domain.Pagination
+import ru.zarina.zarina.domain.old.FilteredProducts
+import ru.zarina.zarina.domain.old.Filtration
+import ru.zarina.zarina.domain.old.Page
+import ru.zarina.zarina.domain.old.Pagination
 import kotlin.math.ceil
 
 @Serializable

@@ -3,7 +3,7 @@ package ru.zarina.zarina.data.old.user.remote
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.user.remote.api.IZarinaUserApi
 import ru.zarina.zarina.data.old.user.remote.api.dto.toSetCityDto
-import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.old.City
 
 @Factory
 class ZarinaUserRemoteSource(

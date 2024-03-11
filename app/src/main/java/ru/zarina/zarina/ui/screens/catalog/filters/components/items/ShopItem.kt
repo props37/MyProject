@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Shop
+import ru.zarina.zarina.domain.old.Shop
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable

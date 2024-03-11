@@ -1,15 +1,15 @@
 package ru.zarina.zarina.data.old.product
 
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.domain.Category
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.DeliveryAvailability
-import ru.zarina.zarina.domain.FilteredProducts
-import ru.zarina.zarina.domain.Filtration
-import ru.zarina.zarina.domain.Offer
-import ru.zarina.zarina.domain.Page
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.old.Category
+import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.domain.old.DeliveryAvailability
+import ru.zarina.zarina.domain.old.FilteredProducts
+import ru.zarina.zarina.domain.old.Filtration
+import ru.zarina.zarina.domain.old.Offer
+import ru.zarina.zarina.domain.old.Page
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.ProductSort
 
 interface IProductRepository {
     fun getProduct(id: Product.Id): Flow<Product>

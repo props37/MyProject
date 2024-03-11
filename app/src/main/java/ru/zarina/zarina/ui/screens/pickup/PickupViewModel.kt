@@ -21,10 +21,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.Offer
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.Stock
+import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.domain.old.Offer
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.Stock
 import ru.zarina.zarina.domain.exception.NotFoundException
 import ru.zarina.zarina.domain.exception.validation.EmptyException
 import ru.zarina.zarina.domain.exception.validation.FormatException

@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.DeliveryAvailability
+import ru.zarina.zarina.domain.old.DeliveryAvailability
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.DeliveryAvailabilityProvider
 import ru.zarina.zarina.ui.screens.product.components.sections.ContentType.*
 import ru.zarina.zarina.ui.theme.UiKitTheme

@@ -27,8 +27,8 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
-import ru.zarina.zarina.domain.Category
-import ru.zarina.zarina.domain.Media
+import ru.zarina.zarina.domain.old.Category
+import ru.zarina.zarina.domain.old.Media
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.AsyncImageLoader
 import ru.zarina.zarina.ui.common.components.ElevationContainer

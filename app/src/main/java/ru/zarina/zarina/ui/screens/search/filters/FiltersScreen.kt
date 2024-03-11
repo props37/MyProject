@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Filtration
+import ru.zarina.zarina.domain.old.Filtration
 import ru.zarina.zarina.ui.common.components.FilterButtonMode
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.bottomNavigationPadding

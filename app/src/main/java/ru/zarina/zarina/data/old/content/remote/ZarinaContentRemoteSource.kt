@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.content.remote.api.IZarinaContentApi
-import ru.zarina.zarina.domain.Selection
+import ru.zarina.zarina.domain.old.Selection
 
 @Factory
 class ZarinaContentRemoteSource(

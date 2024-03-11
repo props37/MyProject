@@ -58,10 +58,10 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.AutocompleteWord
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.ProductSort
-import ru.zarina.zarina.domain.SearchAutocomplete
+import ru.zarina.zarina.domain.old.AutocompleteWord
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.ProductSort
+import ru.zarina.zarina.domain.old.SearchAutocomplete
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ElevationContainer
 import ru.zarina.zarina.ui.common.components.FilterBar

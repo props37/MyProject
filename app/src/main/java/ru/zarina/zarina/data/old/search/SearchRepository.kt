@@ -3,8 +3,8 @@ package ru.zarina.zarina.data.old.search
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.search.local.ISearchLocalSource
 import ru.zarina.zarina.data.old.search.remote.ISearchRemoteSource
-import ru.zarina.zarina.domain.Filtration
-import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.old.Filtration
+import ru.zarina.zarina.domain.old.ProductSort
 
 @Factory
 class SearchRepository(

@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.media3.datasource.cache.Cache
 import kotlinx.collections.immutable.ImmutableList
-import ru.zarina.zarina.domain.Media
+import ru.zarina.zarina.domain.old.Media
 import ru.zarina.zarina.utils.compose.conditional
 import ru.zarina.zarina.utils.kotlin.loopingGet
 import ru.zarina.zarina.utils.kotlin.roundToMultipleOf

@@ -3,8 +3,8 @@ package ru.zarina.zarina.data.old.remote.zarina.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.old.ApiContract
-import ru.zarina.zarina.domain.Media
-import ru.zarina.zarina.domain.Url
+import ru.zarina.zarina.domain.old.Media
+import ru.zarina.zarina.domain.old.Url
 
 @Serializable
 data class MediaDto(

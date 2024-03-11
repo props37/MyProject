@@ -7,7 +7,7 @@ import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
-import ru.zarina.zarina.domain.AuthorizationToken
+import ru.zarina.zarina.domain.old.AuthorizationToken
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.navigation.destinations.Destinations

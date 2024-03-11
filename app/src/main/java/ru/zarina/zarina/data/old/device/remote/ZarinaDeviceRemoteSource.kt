@@ -2,7 +2,7 @@ package ru.zarina.zarina.data.old.device.remote
 
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.device.remote.api.IZarinaDeviceApi
-import ru.zarina.zarina.domain.AuthorizationToken
+import ru.zarina.zarina.domain.old.AuthorizationToken
 
 @Factory
 class ZarinaDeviceRemoteSource(

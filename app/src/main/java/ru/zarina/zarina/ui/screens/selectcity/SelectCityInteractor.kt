@@ -1,7 +1,7 @@
 package ru.zarina.zarina.ui.screens.selectcity
 
 import org.koin.core.annotation.Factory
-import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.old.City
 import ru.zarina.zarina.usecase.old.geography.GetCitiesUseCase
 import ru.zarina.zarina.usecase.old.onboarding.FinishOnboardingUseCase
 

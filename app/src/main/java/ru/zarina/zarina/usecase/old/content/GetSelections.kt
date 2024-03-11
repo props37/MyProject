@@ -10,7 +10,7 @@ import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.old.content.IContentRepository
 import ru.zarina.zarina.data.old.favorites.IFavoritesRepository
 import ru.zarina.zarina.di.old.Qualifiers
-import ru.zarina.zarina.domain.Selection
+import ru.zarina.zarina.domain.old.Selection
 import ru.zarina.zarina.base.usecase.FlowUseCase
 import timber.log.Timber
 

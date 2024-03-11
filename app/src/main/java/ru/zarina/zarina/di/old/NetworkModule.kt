@@ -24,7 +24,7 @@ import ru.zarina.zarina.data.old.MindboxHeaderProvider
 import ru.zarina.zarina.data.old.UserAgentHeaderProvider
 import ru.zarina.zarina.data.old.auth.ZarinaAuth
 import ru.zarina.zarina.data.old.auth.bearer
-import ru.zarina.zarina.domain.AuthorizationToken
+import ru.zarina.zarina.domain.old.AuthorizationToken
 import ru.zarina.zarina.usecase.old.authorization.ClearDeviceAuthorizationTokenUseCase
 import ru.zarina.zarina.usecase.old.authorization.GetAuthorizationTokenUseCase
 import ru.zarina.zarina.util.base.usecase.invoke

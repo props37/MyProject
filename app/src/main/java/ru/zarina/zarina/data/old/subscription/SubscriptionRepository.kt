@@ -2,7 +2,7 @@ package ru.zarina.zarina.data.old.subscription
 
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.subscription.remote.ISubscriptionRemoteSource
-import ru.zarina.zarina.domain.Barcode
+import ru.zarina.zarina.domain.old.Barcode
 
 @Factory
 class SubscriptionRepository(

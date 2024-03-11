@@ -7,7 +7,7 @@ import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.old.user.local.entity.CityDataEntity
 import ru.zarina.zarina.di.old.Qualifiers
-import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.old.City
 import ru.zarina.zarina.utils.datastore.safeData
 
 @Factory

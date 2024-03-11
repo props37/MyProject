@@ -4,7 +4,7 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.old.remote.zarina.dto.ProductDto
-import ru.zarina.zarina.domain.Selection
+import ru.zarina.zarina.domain.old.Selection
 
 @Serializable
 data class SelectionDto(

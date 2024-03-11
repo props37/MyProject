@@ -3,7 +3,7 @@ package ru.zarina.zarina.data.old.subscription.remote
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.data.old.subscription.remote.api.IZarinaSubscriptionApi
 import ru.zarina.zarina.data.old.subscription.remote.api.dto.SubscribeRequestBody
-import ru.zarina.zarina.domain.Barcode
+import ru.zarina.zarina.domain.old.Barcode
 
 @Factory
 class ZarinaSubscriptionRemoteSource(

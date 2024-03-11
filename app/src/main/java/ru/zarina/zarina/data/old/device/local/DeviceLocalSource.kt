@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.di.old.Qualifiers
-import ru.zarina.zarina.domain.AuthorizationToken
+import ru.zarina.zarina.domain.old.AuthorizationToken
 import ru.zarina.zarina.utils.datastore.safeData
 import ru.zarina.zarina.utils.datastore.set
 

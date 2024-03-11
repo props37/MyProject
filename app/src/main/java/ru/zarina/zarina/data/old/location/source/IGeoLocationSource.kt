@@ -1,6 +1,6 @@
 package ru.zarina.zarina.data.old.location.source
 
-import ru.zarina.zarina.domain.GeoLocation
+import ru.zarina.zarina.domain.old.GeoLocation
 
 interface IGeoLocationSource {
 

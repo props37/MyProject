@@ -2,8 +2,8 @@ package ru.zarina.zarina.data.old.user.local.entity
 
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.old.ApiContract
-import ru.zarina.zarina.domain.AddressId
-import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.old.AddressId
+import ru.zarina.zarina.domain.old.City
 
 @Serializable
 data class CityDataEntity(

@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.koin.core.annotation.Singleton
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.Product
 
 @Singleton
 class FavoritesLocalSource : IFavoritesLocalSource {

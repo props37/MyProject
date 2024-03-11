@@ -2,10 +2,10 @@ package ru.zarina.zarina.ui.navigation.destinations
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import ru.zarina.zarina.domain.Barcode
-import ru.zarina.zarina.domain.Category
-import ru.zarina.zarina.domain.Filtration
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.Barcode
+import ru.zarina.zarina.domain.old.Category
+import ru.zarina.zarina.domain.old.Filtration
+import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Filtration
 import ru.zarina.zarina.ui.navigation.base.Graph
@@ -39,7 +39,7 @@ object Destinations {
         )
 
         data class Arguments(
-            val productId: ru.zarina.zarina.domain.Product.Id,
+            val productId: ru.zarina.zarina.domain.old.Product.Id,
         )
     }
 

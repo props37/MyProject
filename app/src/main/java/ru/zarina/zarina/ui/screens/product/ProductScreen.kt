@@ -40,8 +40,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.DeliveryAvailability
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.DeliveryAvailability
+import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ProductHorizontalSection

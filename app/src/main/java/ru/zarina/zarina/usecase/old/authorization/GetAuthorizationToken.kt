@@ -5,7 +5,7 @@ import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.old.device.IDeviceRepository
 import ru.zarina.zarina.di.old.Qualifiers
-import ru.zarina.zarina.domain.AuthorizationToken
+import ru.zarina.zarina.domain.old.AuthorizationToken
 import ru.zarina.zarina.base.usecase.UseCase
 import timber.log.Timber
 

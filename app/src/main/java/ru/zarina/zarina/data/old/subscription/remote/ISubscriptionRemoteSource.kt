@@ -1,6 +1,6 @@
 package ru.zarina.zarina.data.old.subscription.remote
 
-import ru.zarina.zarina.domain.Barcode
+import ru.zarina.zarina.domain.old.Barcode
 
 interface ISubscriptionRemoteSource {
     suspend fun subscribe(offerBarcode: Barcode, name: String, email: String)

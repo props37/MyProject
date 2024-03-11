@@ -4,7 +4,7 @@ package ru.zarina.zarina.data.old.product.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.old.ApiContract
-import ru.zarina.zarina.domain.PriceRange
+import ru.zarina.zarina.domain.old.PriceRange
 
 @Serializable
 data class PriceFilterDto(

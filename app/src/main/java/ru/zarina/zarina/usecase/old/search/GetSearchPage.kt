@@ -5,10 +5,10 @@ import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.old.search.ISearchRepository
 import ru.zarina.zarina.di.old.Qualifiers
-import ru.zarina.zarina.domain.FilteredProducts
-import ru.zarina.zarina.domain.Filtration
-import ru.zarina.zarina.domain.Page
-import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.old.FilteredProducts
+import ru.zarina.zarina.domain.old.Filtration
+import ru.zarina.zarina.domain.old.Page
+import ru.zarina.zarina.domain.old.ProductSort
 import ru.zarina.zarina.base.usecase.UseCase
 
 @Factory

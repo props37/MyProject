@@ -1,10 +1,10 @@
 package ru.zarina.zarina.ui.screens.pickup
 
 import org.koin.core.annotation.Factory
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.Offer
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.Shop
+import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.domain.old.Offer
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.Shop
 import ru.zarina.zarina.usecase.old.catalog.GetProductUseCase
 import ru.zarina.zarina.usecase.old.shop.GetOffersUseCase
 import ru.zarina.zarina.usecase.old.shop.GetStocksUseCase

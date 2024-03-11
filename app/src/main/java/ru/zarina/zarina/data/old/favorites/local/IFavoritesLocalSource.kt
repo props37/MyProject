@@ -1,7 +1,7 @@
 package ru.zarina.zarina.data.old.favorites.local
 
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.Product
 
 interface IFavoritesLocalSource {
     fun getIds(): Flow<Set<Product.Id>>

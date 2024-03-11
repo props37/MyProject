@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.navigation.NavType
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import ru.zarina.zarina.domain.Filtration
+import ru.zarina.zarina.domain.old.Filtration
 
 val NavType.Companion.Filtration
     get() = FiltrationNavType

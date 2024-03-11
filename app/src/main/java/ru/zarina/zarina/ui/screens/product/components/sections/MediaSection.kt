@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.datasource.cache.Cache
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.ui.common.components.DiscountBadge
 import ru.zarina.zarina.ui.common.components.FavoriteHeart
 import ru.zarina.zarina.ui.common.components.InvertedRippleTheme

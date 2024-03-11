@@ -3,7 +3,7 @@ package ru.zarina.zarina.data.old.shop.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.old.ApiContract
-import ru.zarina.zarina.domain.Country
+import ru.zarina.zarina.domain.old.Country
 
 @Serializable
 data class ShopCountryDto(

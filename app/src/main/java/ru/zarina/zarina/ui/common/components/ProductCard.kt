@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toImmutableList
-import ru.zarina.zarina.domain.Media
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.Media
+import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.ui.common.components.color.ColorPicker
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDimensions

@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableSet
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @OptIn(ExperimentalFoundationApi::class)

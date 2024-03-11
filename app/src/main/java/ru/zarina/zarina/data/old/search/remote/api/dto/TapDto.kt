@@ -3,7 +3,7 @@ package ru.zarina.zarina.data.old.search.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.old.ApiContract
-import ru.zarina.zarina.domain.AutocompleteWord
+import ru.zarina.zarina.domain.old.AutocompleteWord
 import ru.zarina.zarina.utils.kotlin.capitalize
 
 @Serializable

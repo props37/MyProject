@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.data.old.StaticPages
-import ru.zarina.zarina.domain.Barcode
+import ru.zarina.zarina.domain.old.Barcode
 import ru.zarina.zarina.domain.exception.validation.EmptyException
 import ru.zarina.zarina.domain.exception.validation.FormatException
 import ru.zarina.zarina.domain.exception.validation.IllegalContentsException

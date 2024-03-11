@@ -1,7 +1,7 @@
 package ru.zarina.zarina.data.old.search.remote.api.dto
 
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.old.ProductSort
 
 @Serializable
 enum class SortDto {

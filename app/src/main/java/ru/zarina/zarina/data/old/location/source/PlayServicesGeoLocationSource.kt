@@ -7,7 +7,7 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.tasks.await
 import org.koin.core.annotation.Factory
-import ru.zarina.zarina.domain.GeoLocation
+import ru.zarina.zarina.domain.old.GeoLocation
 import ru.zarina.zarina.domain.rework.common.exception.MissingPermissionException
 
 @Factory

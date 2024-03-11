@@ -3,7 +3,7 @@ package ru.zarina.zarina.ui.navigation.graphs
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import ru.zarina.zarina.domain.Filtration
+import ru.zarina.zarina.domain.old.Filtration
 import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.base.navigationGraph
