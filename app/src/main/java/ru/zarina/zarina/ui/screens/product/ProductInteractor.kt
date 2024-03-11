@@ -3,11 +3,11 @@ package ru.zarina.zarina.ui.screens.product
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.RecommendationType
-import ru.zarina.zarina.usecase.catalog.GetCompleteLookUseCase
-import ru.zarina.zarina.usecase.catalog.GetDeliveryAvailabilityUseCase
-import ru.zarina.zarina.usecase.catalog.GetProductUseCase
-import ru.zarina.zarina.usecase.catalog.GetRecommendationsUseCase
-import ru.zarina.zarina.usecase.favorites.SetIsFavoriteUseCase
+import ru.zarina.zarina.usecase.old.catalog.GetCompleteLookUseCase
+import ru.zarina.zarina.usecase.old.catalog.GetDeliveryAvailabilityUseCase
+import ru.zarina.zarina.usecase.old.catalog.GetProductUseCase
+import ru.zarina.zarina.usecase.old.catalog.GetRecommendationsUseCase
+import ru.zarina.zarina.usecase.old.favorites.SetIsFavoriteUseCase
 
 @Factory
 class ProductInteractor(

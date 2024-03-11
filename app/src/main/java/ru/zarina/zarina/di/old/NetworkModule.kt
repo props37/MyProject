@@ -25,8 +25,8 @@ import ru.zarina.zarina.data.old.UserAgentHeaderProvider
 import ru.zarina.zarina.data.old.auth.ZarinaAuth
 import ru.zarina.zarina.data.old.auth.bearer
 import ru.zarina.zarina.domain.AuthorizationToken
-import ru.zarina.zarina.usecase.authorization.ClearDeviceAuthorizationTokenUseCase
-import ru.zarina.zarina.usecase.authorization.GetAuthorizationTokenUseCase
+import ru.zarina.zarina.usecase.old.authorization.ClearDeviceAuthorizationTokenUseCase
+import ru.zarina.zarina.usecase.old.authorization.GetAuthorizationTokenUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 import timber.log.Timber
 import java.io.File

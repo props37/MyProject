@@ -42,7 +42,7 @@ import ru.zarina.zarina.ui.navigation.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.products.ProductsViewModel
 import ru.zarina.zarina.ui.screens.search.paging.SearchPagingSource
 import ru.zarina.zarina.ui.screens.search.paging.SearchRemoteMediator
-import ru.zarina.zarina.usecase.search.GetSearchPageUseCase
+import ru.zarina.zarina.usecase.old.search.GetSearchPageUseCase
 import ru.zarina.zarina.utils.coroutine.mapState
 import kotlin.time.Duration.Companion.seconds
 

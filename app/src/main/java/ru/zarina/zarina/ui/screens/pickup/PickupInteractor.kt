@@ -5,14 +5,14 @@ import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.Shop
-import ru.zarina.zarina.usecase.catalog.GetProductUseCase
-import ru.zarina.zarina.usecase.shop.GetOffersUseCase
-import ru.zarina.zarina.usecase.shop.GetStocksUseCase
-import ru.zarina.zarina.usecase.shop.ReserveUseCase
-import ru.zarina.zarina.usecase.user.GetCityUseCase
-import ru.zarina.zarina.usecase.user.ValidateEmailUseCase
-import ru.zarina.zarina.usecase.user.ValidateNameUseCase
-import ru.zarina.zarina.usecase.user.ValidatePhoneUseCase
+import ru.zarina.zarina.usecase.old.catalog.GetProductUseCase
+import ru.zarina.zarina.usecase.old.shop.GetOffersUseCase
+import ru.zarina.zarina.usecase.old.shop.GetStocksUseCase
+import ru.zarina.zarina.usecase.old.shop.ReserveUseCase
+import ru.zarina.zarina.usecase.old.user.GetCityUseCase
+import ru.zarina.zarina.usecase.old.user.ValidateEmailUseCase
+import ru.zarina.zarina.usecase.old.user.ValidateNameUseCase
+import ru.zarina.zarina.usecase.old.user.ValidatePhoneUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 
 @Factory

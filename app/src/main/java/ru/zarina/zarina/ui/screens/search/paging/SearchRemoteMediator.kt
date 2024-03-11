@@ -12,7 +12,7 @@ import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.domain.ProductSort
 import ru.zarina.zarina.ui.common.base.paging.PageHolder
-import ru.zarina.zarina.usecase.search.GetSearchPageUseCase
+import ru.zarina.zarina.usecase.old.search.GetSearchPageUseCase
 
 @OptIn(ExperimentalPagingApi::class)
 class SearchRemoteMediator(

@@ -2,9 +2,9 @@ package ru.zarina.zarina.ui.screens.onboarding
 
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.usecase.content.GetOnboardingSplashUseCase
-import ru.zarina.zarina.usecase.location.DetectCityUseCase
-import ru.zarina.zarina.usecase.onboarding.FinishOnboardingUseCase
+import ru.zarina.zarina.usecase.old.content.GetOnboardingSplashUseCase
+import ru.zarina.zarina.usecase.old.location.DetectCityUseCase
+import ru.zarina.zarina.usecase.old.onboarding.FinishOnboardingUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 
 @Factory

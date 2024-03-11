@@ -2,8 +2,8 @@ package ru.zarina.zarina.ui.screens.catalog.selectshop
 
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.usecase.shop.GetShopsUseCase
-import ru.zarina.zarina.usecase.user.GetCityUseCase
+import ru.zarina.zarina.usecase.old.shop.GetShopsUseCase
+import ru.zarina.zarina.usecase.old.user.GetCityUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 
 @Factory

@@ -2,9 +2,9 @@ package ru.zarina.zarina.ui.screens.home
 
 import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.usecase.content.GetBannersUseCase
-import ru.zarina.zarina.usecase.content.GetSelectionsUseCase
-import ru.zarina.zarina.usecase.favorites.SetIsFavoriteUseCase
+import ru.zarina.zarina.usecase.old.content.GetBannersUseCase
+import ru.zarina.zarina.usecase.old.content.GetSelectionsUseCase
+import ru.zarina.zarina.usecase.old.favorites.SetIsFavoriteUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 
 @Factory
