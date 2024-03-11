@@ -24,7 +24,7 @@ import ru.zarina.zarina.domain.filter.ListFilter
 import ru.zarina.zarina.domain.filter.coerceInAvailable
 import ru.zarina.zarina.domain.filter.reset
 import ru.zarina.zarina.domain.filter.updateWith
-import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
+import ru.zarina.zarina.domain.product.CategoryProductInfo
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource

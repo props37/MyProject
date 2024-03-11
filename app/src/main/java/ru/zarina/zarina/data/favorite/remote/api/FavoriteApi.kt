@@ -7,7 +7,7 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import ru.zarina.zarina.data.favorite.remote.api.dto.FavoriteProductsDto
 import ru.zarina.zarina.di.Qualifiers
-import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.product.Product
 import javax.inject.Inject
 
 class FavoriteApi @Inject constructor(

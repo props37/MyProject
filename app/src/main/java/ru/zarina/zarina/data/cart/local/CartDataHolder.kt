@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.product.Product
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton

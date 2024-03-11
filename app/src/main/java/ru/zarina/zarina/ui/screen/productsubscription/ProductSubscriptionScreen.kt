@@ -34,8 +34,8 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.common.MediaType
 import ru.zarina.zarina.domain.common.Url
-import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.domain.rework.product.ProductOffer
+import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.domain.product.ProductOffer
 import ru.zarina.zarina.ui.common.component.ProductOrderCard
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField

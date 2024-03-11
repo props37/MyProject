@@ -7,7 +7,7 @@ import ru.zarina.zarina.data.product.ProductRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.filter.Filters
-import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
+import ru.zarina.zarina.domain.product.CategoryProductInfo
 import javax.inject.Inject
 
 class GetCategoryProductInfoFlowUseCase @Inject constructor(

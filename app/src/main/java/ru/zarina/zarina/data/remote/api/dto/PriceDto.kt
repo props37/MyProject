@@ -2,7 +2,7 @@ package ru.zarina.zarina.data.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.rework.product.Price
+import ru.zarina.zarina.domain.product.Price
 
 @Serializable
 data class PriceDto(

@@ -9,8 +9,8 @@ import androidx.navigation.navArgument
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.domain.rework.product.ProductOffer
+import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.domain.product.ProductOffer
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.base.Destination

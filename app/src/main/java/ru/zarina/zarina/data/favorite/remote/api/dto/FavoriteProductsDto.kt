@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.zarina.zarina.data.remote.api.dto.PaginationInfoDto
 import ru.zarina.zarina.data.remote.api.dto.ProductDto
 import ru.zarina.zarina.domain.common.Page
-import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.product.Product
 
 @Serializable
 data class FavoriteProductsDto(

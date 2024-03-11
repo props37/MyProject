@@ -1,6 +1,6 @@
 package ru.zarina.zarina.domain.cart
 
-import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.product.Product
 
 data class CartProductIds(
     val cartProductIds: Set<Product.Id>,

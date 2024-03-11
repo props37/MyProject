@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.first
 import ru.zarina.zarina.data.favorite.local.FavoriteLocalDataSource
 import ru.zarina.zarina.data.favorite.remote.FavoriteRemoteDataSource
 import ru.zarina.zarina.domain.common.Page
-import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.product.Product
 import javax.inject.Inject
 
 class FavoriteRepository @Inject constructor(

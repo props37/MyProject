@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.product.ProductOffer
+import ru.zarina.zarina.domain.product.ProductOffer
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.button.CloseIconButton
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults

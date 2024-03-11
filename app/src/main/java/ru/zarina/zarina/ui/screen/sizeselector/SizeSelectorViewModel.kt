@@ -9,8 +9,8 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.domain.rework.product.ProductOffer
+import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.domain.product.ProductOffer
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl

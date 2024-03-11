@@ -7,8 +7,8 @@ import ru.zarina.zarina.domain.common.Barcode
 import ru.zarina.zarina.domain.common.Page
 import ru.zarina.zarina.domain.common.Sorting
 import ru.zarina.zarina.domain.filter.Filters
-import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
-import ru.zarina.zarina.domain.rework.product.ProductsWithFilters
+import ru.zarina.zarina.domain.product.CategoryProductInfo
+import ru.zarina.zarina.domain.product.ProductsWithFilters
 import javax.inject.Inject
 
 class ProductRepository @Inject constructor(

@@ -33,7 +33,7 @@ import ru.zarina.zarina.domain.common.Sorting
 import ru.zarina.zarina.domain.filter.Filters
 import ru.zarina.zarina.domain.filter.coerceInAvailable
 import ru.zarina.zarina.domain.filter.selected
-import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource

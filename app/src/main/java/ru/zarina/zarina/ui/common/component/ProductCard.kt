@@ -39,9 +39,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.domain.rework.product.ProductColor
-import ru.zarina.zarina.domain.rework.product.currentPrice
+import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.domain.product.ProductColor
+import ru.zarina.zarina.domain.product.currentPrice
 import ru.zarina.zarina.ui.common.component.button.LikeIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaIconButton
 import ru.zarina.zarina.ui.common.component.pager.HorizontalPagerIndicator

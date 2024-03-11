@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.rework.product
+package ru.zarina.zarina.domain.product
 
 import ru.zarina.zarina.domain.common.Color
 

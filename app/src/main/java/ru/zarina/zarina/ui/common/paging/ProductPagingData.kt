@@ -4,7 +4,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.product.Product
 
 fun Flow<PagingData<Product>>.mapProducts(
     favoriteProductIdsResultFlow: Flow<Result<Set<Product.Id>>>,

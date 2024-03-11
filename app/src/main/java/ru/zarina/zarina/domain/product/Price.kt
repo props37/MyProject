@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.rework.product
+package ru.zarina.zarina.domain.product
 
 data class Price(
     val originalPrice: Long,

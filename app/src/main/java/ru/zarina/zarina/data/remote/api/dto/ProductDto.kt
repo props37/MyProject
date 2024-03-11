@@ -3,7 +3,7 @@ package ru.zarina.zarina.data.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.common.MediaType
-import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.product.Product
 import timber.log.Timber
 
 @Serializable

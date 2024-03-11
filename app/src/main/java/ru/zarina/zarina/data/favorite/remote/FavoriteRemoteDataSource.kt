@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import ru.zarina.zarina.data.favorite.remote.api.FavoriteApi
 import ru.zarina.zarina.domain.common.Page
-import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.product.Product
 import javax.inject.Inject
 
 class FavoriteRemoteDataSource @Inject constructor(

@@ -6,10 +6,10 @@ import ru.zarina.zarina.domain.common.Color
 import ru.zarina.zarina.domain.common.Media
 import ru.zarina.zarina.domain.common.MediaType
 import ru.zarina.zarina.domain.common.Url
-import ru.zarina.zarina.domain.rework.product.Price
-import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.domain.rework.product.ProductColor
-import ru.zarina.zarina.domain.rework.product.ProductOffer
+import ru.zarina.zarina.domain.product.Price
+import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.domain.product.ProductColor
+import ru.zarina.zarina.domain.product.ProductOffer
 import java.util.UUID
 import kotlin.random.Random
 

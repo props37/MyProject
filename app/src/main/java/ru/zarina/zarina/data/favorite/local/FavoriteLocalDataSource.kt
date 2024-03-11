@@ -1,7 +1,7 @@
 package ru.zarina.zarina.data.favorite.local
 
 import kotlinx.coroutines.flow.StateFlow
-import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.product.Product
 import javax.inject.Inject
 
 class FavoriteLocalDataSource @Inject constructor(

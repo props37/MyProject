@@ -2,7 +2,7 @@ package ru.zarina.zarina.ui.screen.products
 
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.filter.Filters
-import ru.zarina.zarina.domain.rework.product.Product
+import ru.zarina.zarina.domain.product.Product
 
 sealed class ProductsScreenAction {
     data class FiltersClicked(

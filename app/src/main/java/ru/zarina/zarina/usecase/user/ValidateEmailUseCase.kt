@@ -1,10 +1,10 @@
 package ru.zarina.zarina.usecase.user
 
 import kotlinx.coroutines.CoroutineDispatcher
-import ru.zarina.zarina.di.Qualifiers
-import ru.zarina.zarina.domain.rework.user.exception.EmptyEmailException
-import ru.zarina.zarina.domain.rework.user.exception.InvalidEmailException
 import ru.zarina.zarina.base.usecase.UseCase
+import ru.zarina.zarina.di.Qualifiers
+import ru.zarina.zarina.domain.exception.EmptyEmailException
+import ru.zarina.zarina.domain.exception.InvalidEmailException
 import javax.inject.Inject
 
 class ValidateEmailUseCase @Inject constructor(
