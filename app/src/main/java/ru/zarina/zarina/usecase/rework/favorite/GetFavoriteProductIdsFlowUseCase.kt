@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.combineTransform
 import ru.zarina.zarina.data.rework.favorite.FavoriteRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.usecase.base.FlowUseCase
+import ru.zarina.zarina.base.usecase.FlowUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 import timber.log.Timber
 import javax.inject.Inject

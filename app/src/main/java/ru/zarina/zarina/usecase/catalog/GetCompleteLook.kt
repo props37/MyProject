@@ -11,7 +11,7 @@ import ru.zarina.zarina.data.favorites.FavoritesRepository
 import ru.zarina.zarina.data.product.IProductRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.usecase.base.FlowUseCase
+import ru.zarina.zarina.base.usecase.FlowUseCase
 import timber.log.Timber
 
 @Factory

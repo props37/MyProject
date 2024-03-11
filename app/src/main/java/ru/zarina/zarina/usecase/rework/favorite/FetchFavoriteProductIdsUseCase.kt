@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.data.rework.favorite.FavoriteRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.usecase.base.UseCase
+import ru.zarina.zarina.base.usecase.UseCase
 import timber.log.Timber
 import javax.inject.Inject
 

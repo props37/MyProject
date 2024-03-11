@@ -7,7 +7,7 @@ import ru.zarina.zarina.data.shop.IShopRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Offer
 import ru.zarina.zarina.domain.Shop
-import ru.zarina.zarina.usecase.base.UseCase
+import ru.zarina.zarina.base.usecase.UseCase
 
 @Factory
 class ReserveUseCase(

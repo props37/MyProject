@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.data.rework.authorization.AuthorizationRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
-import ru.zarina.zarina.usecase.base.FlowUseCase
+import ru.zarina.zarina.base.usecase.FlowUseCase
 import javax.inject.Inject
 
 class GetAuthorizationTokensFlowUseCase @Inject constructor(

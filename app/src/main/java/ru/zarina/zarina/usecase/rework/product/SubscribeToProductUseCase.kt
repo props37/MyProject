@@ -5,7 +5,7 @@ import ru.zarina.zarina.data.rework.product.ProductRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.common.Barcode
 import ru.zarina.zarina.domain.rework.common.exception.ValidationException
-import ru.zarina.zarina.usecase.base.UseCase
+import ru.zarina.zarina.base.usecase.UseCase
 import ru.zarina.zarina.usecase.rework.user.ValidateEmailUseCase
 import ru.zarina.zarina.usecase.rework.user.ValidateFirstNameUseCase
 import javax.inject.Inject

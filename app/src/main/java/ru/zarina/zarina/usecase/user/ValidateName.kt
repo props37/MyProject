@@ -7,7 +7,7 @@ import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.exception.validation.EmptyException
 import ru.zarina.zarina.domain.exception.validation.IllegalContentsException
 import ru.zarina.zarina.domain.exception.validation.TooLongException
-import ru.zarina.zarina.usecase.base.UseCase
+import ru.zarina.zarina.base.usecase.UseCase
 
 
 @Factory

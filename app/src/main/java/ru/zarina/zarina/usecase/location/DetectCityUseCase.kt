@@ -8,7 +8,7 @@ import ru.zarina.zarina.data.location.IGeoLocationRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.domain.exception.ServiceUnavailableException
-import ru.zarina.zarina.usecase.base.UseCase
+import ru.zarina.zarina.base.usecase.UseCase
 import timber.log.Timber
 
 @Factory

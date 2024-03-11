@@ -6,7 +6,7 @@ import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.subscription.ISubscriptionRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Barcode
-import ru.zarina.zarina.usecase.base.UseCase
+import ru.zarina.zarina.base.usecase.UseCase
 
 @Factory
 class SubscribeToOfferUseCase(

@@ -1,9 +1,9 @@
 package ru.zarina.zarina.util.base.usecase
 
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.usecase.base.BasicUseCase
-import ru.zarina.zarina.usecase.base.FlowUseCase
-import ru.zarina.zarina.usecase.base.UseCase
+import ru.zarina.zarina.base.usecase.BasicUseCase
+import ru.zarina.zarina.base.usecase.FlowUseCase
+import ru.zarina.zarina.base.usecase.UseCase
 
 operator fun <T> BasicUseCase<Unit, T>.invoke(): T = this.invoke(Unit)
 

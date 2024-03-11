@@ -7,7 +7,7 @@ import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.favorites.IFavoritesRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.usecase.base.FlowUseCase
+import ru.zarina.zarina.base.usecase.FlowUseCase
 
 @Factory
 class GetFavoriteIdsUseCase(

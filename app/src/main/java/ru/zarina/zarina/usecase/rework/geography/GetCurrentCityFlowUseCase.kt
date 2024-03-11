@@ -7,7 +7,7 @@ import ru.zarina.zarina.data.rework.geography.GeographyRepository
 import ru.zarina.zarina.data.rework.location.LocationRepository
 import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.usecase.base.FlowUseCase
+import ru.zarina.zarina.base.usecase.FlowUseCase
 import timber.log.Timber
 import javax.inject.Inject
 

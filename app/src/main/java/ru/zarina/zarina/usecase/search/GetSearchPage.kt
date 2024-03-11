@@ -9,7 +9,7 @@ import ru.zarina.zarina.domain.FilteredProducts
 import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.ProductSort
-import ru.zarina.zarina.usecase.base.UseCase
+import ru.zarina.zarina.base.usecase.UseCase
 
 @Factory
 class GetSearchPageUseCase(

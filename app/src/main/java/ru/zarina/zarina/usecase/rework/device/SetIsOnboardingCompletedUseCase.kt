@@ -3,7 +3,7 @@ package ru.zarina.zarina.usecase.rework.device
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.data.rework.device.DeviceRepository
 import ru.zarina.zarina.di.rework.Qualifiers
-import ru.zarina.zarina.usecase.base.UseCase
+import ru.zarina.zarina.base.usecase.UseCase
 import javax.inject.Inject
 
 class SetIsOnboardingCompletedUseCase @Inject constructor(

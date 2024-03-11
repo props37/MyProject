@@ -7,7 +7,7 @@ import ru.zarina.zarina.data.favorites.IFavoritesRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.Page
 import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.usecase.base.UseCase
+import ru.zarina.zarina.base.usecase.UseCase
 import timber.log.Timber
 
 @Factory

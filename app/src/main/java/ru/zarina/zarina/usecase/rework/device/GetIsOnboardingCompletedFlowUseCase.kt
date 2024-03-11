@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.data.rework.device.DeviceRepository
 import ru.zarina.zarina.di.rework.Qualifiers
-import ru.zarina.zarina.usecase.base.FlowUseCase
+import ru.zarina.zarina.base.usecase.FlowUseCase
 import javax.inject.Inject
 
 class GetIsOnboardingCompletedFlowUseCase @Inject constructor(

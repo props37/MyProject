@@ -6,7 +6,7 @@ import org.koin.core.annotation.Named
 import ru.zarina.zarina.data.device.IDeviceRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.usecase.base.UseCase
+import ru.zarina.zarina.base.usecase.UseCase
 import ru.zarina.zarina.usecase.user.SetCityUseCase
 
 @Factory

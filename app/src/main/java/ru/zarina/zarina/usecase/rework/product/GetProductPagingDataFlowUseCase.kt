@@ -10,7 +10,7 @@ import ru.zarina.zarina.domain.rework.category.Category
 import ru.zarina.zarina.domain.rework.common.Sorting
 import ru.zarina.zarina.domain.rework.filter.Filters
 import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.usecase.base.BasicUseCase
+import ru.zarina.zarina.base.usecase.BasicUseCase
 import timber.log.Timber
 import javax.inject.Inject
 

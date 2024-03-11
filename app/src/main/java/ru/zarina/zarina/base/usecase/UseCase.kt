@@ -1,4 +1,4 @@
-package ru.zarina.zarina.usecase.base
+package ru.zarina.zarina.base.usecase
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
