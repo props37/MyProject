@@ -13,7 +13,7 @@ import ru.zarina.zarina.usecase.user.GetCityUseCase
 import ru.zarina.zarina.usecase.user.ValidateEmailUseCase
 import ru.zarina.zarina.usecase.user.ValidateNameUseCase
 import ru.zarina.zarina.usecase.user.ValidatePhoneUseCase
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.util.base.usecase.invoke
 
 @Factory
 class PickupInteractor(

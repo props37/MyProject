@@ -5,7 +5,7 @@ import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.usecase.content.GetOnboardingSplashUseCase
 import ru.zarina.zarina.usecase.location.DetectCityUseCase
 import ru.zarina.zarina.usecase.onboarding.FinishOnboardingUseCase
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.util.base.usecase.invoke
 
 @Factory
 class OnboardingInteractor(

@@ -27,8 +27,8 @@ import ru.zarina.zarina.ui.common.util.ScreenResultHandler
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.SideEffect
 import ru.zarina.zarina.usecase.rework.user.SetUserCityUseCase
+import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
-import ru.zarina.zarina.utils.clean.invoke
 
 @HiltViewModel(assistedFactory = CartViewModel.Factory::class)
 class CartViewModel @AssistedInject constructor(

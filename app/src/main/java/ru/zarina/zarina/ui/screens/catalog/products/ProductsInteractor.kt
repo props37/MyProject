@@ -7,7 +7,7 @@ import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.usecase.catalog.GetProductsPageUseCase
 import ru.zarina.zarina.usecase.favorites.GetFavoriteIdsUseCase
 import ru.zarina.zarina.usecase.favorites.SetIsFavoriteUseCase
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.util.base.usecase.invoke
 
 @Factory
 class ProductsInteractor(

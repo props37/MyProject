@@ -9,7 +9,7 @@ import ru.zarina.zarina.domain.Filtration
 import ru.zarina.zarina.domain.Product
 import ru.zarina.zarina.ui.common.base.paging.PageHolder
 import ru.zarina.zarina.usecase.favorites.GetFavoriteIdsUseCase
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.util.base.usecase.invoke
 
 class CategoryProductPagingSource(
     private val pageHolder: PageHolder<FilteredProducts>,

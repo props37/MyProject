@@ -4,7 +4,7 @@ import org.koin.core.annotation.Factory
 import ru.zarina.zarina.domain.City
 import ru.zarina.zarina.usecase.shop.GetShopsUseCase
 import ru.zarina.zarina.usecase.user.GetCityUseCase
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.util.base.usecase.invoke
 
 @Factory
 class SelectShopInteractor(

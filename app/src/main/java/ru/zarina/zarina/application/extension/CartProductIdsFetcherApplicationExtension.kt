@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.onEach
 import ru.zarina.zarina.application.extension.base.ApplicationExtension
 import ru.zarina.zarina.usecase.rework.authorization.GetAuthorizationTokensFlowUseCase
 import ru.zarina.zarina.usecase.rework.cart.FetchCartProductIdsUseCase
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.util.base.usecase.invoke
 import javax.inject.Inject
 
 class CartProductIdsFetcherApplicationExtension @Inject constructor(

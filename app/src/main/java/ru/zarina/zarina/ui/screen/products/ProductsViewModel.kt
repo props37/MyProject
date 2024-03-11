@@ -49,9 +49,9 @@ import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase
 import ru.zarina.zarina.usecase.rework.favorite.AddProductToFavoritesUseCase
 import ru.zarina.zarina.usecase.rework.favorite.RemoveProductFromFavoritesUseCase
 import ru.zarina.zarina.usecase.rework.product.GetProductPagingDataFlowUseCase
+import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
-import ru.zarina.zarina.utils.clean.invoke
 import timber.log.Timber
 
 @HiltViewModel(assistedFactory = ProductsViewModel.Factory::class)

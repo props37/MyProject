@@ -27,7 +27,7 @@ import ru.zarina.zarina.data.ktor.plugins.auth.bearer
 import ru.zarina.zarina.domain.AuthorizationToken
 import ru.zarina.zarina.usecase.authorization.ClearDeviceAuthorizationTokenUseCase
 import ru.zarina.zarina.usecase.authorization.GetAuthorizationTokenUseCase
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.util.base.usecase.invoke
 import timber.log.Timber
 import java.io.File
 

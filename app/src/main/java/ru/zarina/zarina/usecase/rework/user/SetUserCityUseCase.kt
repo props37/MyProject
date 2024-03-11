@@ -6,7 +6,7 @@ import ru.zarina.zarina.di.rework.Qualifiers
 import ru.zarina.zarina.domain.rework.geography.City
 import ru.zarina.zarina.usecase.base.UseCase
 import ru.zarina.zarina.usecase.rework.cart.FetchCartProductIdsUseCase
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.util.base.usecase.invoke
 import javax.inject.Inject
 
 class SetUserCityUseCase @Inject constructor(

@@ -25,7 +25,7 @@ import ru.zarina.zarina.data.rework.common.remote.ktor.plugin.bearer
 import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
 import ru.zarina.zarina.usecase.rework.authorization.GetAuthorizationTokensFlowUseCase
 import ru.zarina.zarina.usecase.rework.authorization.RefreshAuthorizationTokensUseCase
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.util.base.usecase.invoke
 import timber.log.Timber
 import javax.inject.Singleton
 

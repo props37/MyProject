@@ -14,8 +14,8 @@ import kotlinx.coroutines.runBlocking
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.rework.destination.graph.HomeGraph
+import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
-import ru.zarina.zarina.utils.clean.invoke
 import javax.inject.Inject
 
 @HiltViewModel
