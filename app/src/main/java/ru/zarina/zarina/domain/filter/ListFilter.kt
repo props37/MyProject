@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.rework.filter
+package ru.zarina.zarina.domain.filter
 
 data class ListFilter<T : ListFilterItem>(
     val items: List<T>,

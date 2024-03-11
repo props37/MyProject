@@ -15,7 +15,7 @@ import ru.zarina.zarina.domain.common.Barcode
 import ru.zarina.zarina.domain.common.Sorting
 import ru.zarina.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
-import ru.zarina.zarina.domain.rework.filter.Filters as DomainFilters
+import ru.zarina.zarina.domain.filter.Filters as DomainFilters
 
 class ProductApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)

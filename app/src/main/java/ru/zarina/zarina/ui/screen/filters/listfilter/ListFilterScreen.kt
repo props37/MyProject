@@ -24,8 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.domain.rework.filter.ListFilter
-import ru.zarina.zarina.domain.rework.filter.ListFilterItem
+import ru.zarina.zarina.domain.filter.ListFilter
+import ru.zarina.zarina.domain.filter.ListFilterItem
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview

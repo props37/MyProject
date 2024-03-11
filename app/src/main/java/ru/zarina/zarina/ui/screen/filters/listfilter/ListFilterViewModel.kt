@@ -6,10 +6,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import ru.zarina.zarina.domain.rework.filter.Filter
-import ru.zarina.zarina.domain.rework.filter.ListFilter
-import ru.zarina.zarina.domain.rework.filter.ListFilterItem
-import ru.zarina.zarina.domain.rework.filter.copy
+import ru.zarina.zarina.domain.filter.Filter
+import ru.zarina.zarina.domain.filter.ListFilter
+import ru.zarina.zarina.domain.filter.ListFilterItem
+import ru.zarina.zarina.domain.filter.copy
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl

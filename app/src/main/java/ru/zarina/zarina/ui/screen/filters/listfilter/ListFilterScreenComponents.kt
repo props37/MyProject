@@ -22,10 +22,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.filter.ColorFilterItem
-import ru.zarina.zarina.domain.rework.filter.ListFilterItem
-import ru.zarina.zarina.domain.rework.filter.SortFilterItem
-import ru.zarina.zarina.domain.rework.filter.sorting
+import ru.zarina.zarina.domain.filter.ColorFilterItem
+import ru.zarina.zarina.domain.filter.ListFilterItem
+import ru.zarina.zarina.domain.filter.SortFilterItem
+import ru.zarina.zarina.domain.filter.sorting
 import ru.zarina.zarina.ui.common.component.ColorIcon
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton

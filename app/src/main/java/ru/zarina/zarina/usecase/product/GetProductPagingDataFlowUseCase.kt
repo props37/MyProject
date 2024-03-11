@@ -9,7 +9,7 @@ import ru.zarina.zarina.data.product.ProductRepository
 import ru.zarina.zarina.data.product.pagination.ProductPagingSource
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.common.Sorting
-import ru.zarina.zarina.domain.rework.filter.Filters
+import ru.zarina.zarina.domain.filter.Filters
 import ru.zarina.zarina.domain.rework.product.Product
 import timber.log.Timber
 import javax.inject.Inject

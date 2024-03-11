@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.rework.filter
+package ru.zarina.zarina.domain.filter
 
 import ru.zarina.zarina.domain.common.PriceRange
 

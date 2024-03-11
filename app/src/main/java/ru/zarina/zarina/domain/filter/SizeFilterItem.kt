@@ -1,6 +1,6 @@
-package ru.zarina.zarina.domain.rework.filter
+package ru.zarina.zarina.domain.filter
 
-data class MaterialFilterItem(
+data class SizeFilterItem(
     override val id: Id,
     override val name: String,
     override val isSelected: Boolean,

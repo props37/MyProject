@@ -46,7 +46,7 @@ import com.google.common.primitives.Longs.max
 import kotlinx.coroutines.flow.distinctUntilChanged
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.common.PriceRange
-import ru.zarina.zarina.domain.rework.filter.PriceFilter
+import ru.zarina.zarina.domain.filter.PriceFilter
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldSize

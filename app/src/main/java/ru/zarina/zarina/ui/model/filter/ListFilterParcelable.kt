@@ -4,12 +4,12 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.common.Color
-import ru.zarina.zarina.domain.rework.filter.ColorFilterItem
-import ru.zarina.zarina.domain.rework.filter.ListFilter
-import ru.zarina.zarina.domain.rework.filter.ListFilterItem
-import ru.zarina.zarina.domain.rework.filter.MaterialFilterItem
-import ru.zarina.zarina.domain.rework.filter.SizeFilterItem
-import ru.zarina.zarina.domain.rework.filter.SortFilterItem
+import ru.zarina.zarina.domain.filter.ColorFilterItem
+import ru.zarina.zarina.domain.filter.ListFilter
+import ru.zarina.zarina.domain.filter.ListFilterItem
+import ru.zarina.zarina.domain.filter.MaterialFilterItem
+import ru.zarina.zarina.domain.filter.SizeFilterItem
+import ru.zarina.zarina.domain.filter.SortFilterItem
 
 @Serializable
 @Parcelize

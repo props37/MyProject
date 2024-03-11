@@ -2,7 +2,7 @@ package ru.zarina.zarina.ui.common.util.domain
 
 import androidx.compose.runtime.Stable
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.filter.Filter
+import ru.zarina.zarina.domain.filter.Filter
 
 @Stable
 val Filter.Type.nameResId: Int

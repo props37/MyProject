@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.rework.filter
+package ru.zarina.zarina.domain.filter
 
 data class ToggleFilter(
     val isEnabled: Boolean,

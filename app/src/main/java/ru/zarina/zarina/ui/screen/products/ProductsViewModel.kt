@@ -30,9 +30,9 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.common.Barcode
 import ru.zarina.zarina.domain.common.Sorting
-import ru.zarina.zarina.domain.rework.filter.Filters
-import ru.zarina.zarina.domain.rework.filter.coerceInAvailable
-import ru.zarina.zarina.domain.rework.filter.selected
+import ru.zarina.zarina.domain.filter.Filters
+import ru.zarina.zarina.domain.filter.coerceInAvailable
+import ru.zarina.zarina.domain.filter.selected
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler

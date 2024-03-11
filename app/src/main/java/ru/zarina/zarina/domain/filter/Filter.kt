@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.rework.filter
+package ru.zarina.zarina.domain.filter
 
 sealed interface Filter {
     val type: Type

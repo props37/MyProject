@@ -3,7 +3,7 @@ package ru.zarina.zarina.ui.model.filter
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.rework.filter.PriceFilter
+import ru.zarina.zarina.domain.filter.PriceFilter
 import ru.zarina.zarina.ui.model.common.PriceRangeParcelable
 
 @Serializable

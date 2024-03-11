@@ -32,8 +32,8 @@ import ru.zarina.zarina.ui.navigation.rework.base.navtype.ProductOfferParcelable
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.ProductParcelableType
 import ru.zarina.zarina.ui.navigation.rework.base.navtype.TextType
 import java.util.UUID
-import ru.zarina.zarina.domain.rework.filter.Filters as DomainFilters
-import ru.zarina.zarina.domain.rework.filter.ListFilter as DomainListFilter
+import ru.zarina.zarina.domain.filter.Filters as DomainFilters
+import ru.zarina.zarina.domain.filter.ListFilter as DomainListFilter
 
 object UnscopedDestinations {
     data object Onboarding : SimpleDestination(BaseRouteReworked.ONBOARDING)
