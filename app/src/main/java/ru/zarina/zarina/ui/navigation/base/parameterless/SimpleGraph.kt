@@ -1,10 +1,10 @@
 package ru.zarina.zarina.ui.navigation.base.parameterless
 
 import androidx.navigation.NamedNavArgument
+import ru.zarina.zarina.ui.navigation.BaseRouteReworked
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Graph
 import ru.zarina.zarina.ui.navigation.old.destinations.BaseRoute
-import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
 
 /**
  * An abstraction for a Compose Navigation nested graph that encapsulates graph's

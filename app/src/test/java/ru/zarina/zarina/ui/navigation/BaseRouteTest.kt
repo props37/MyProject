@@ -1,7 +1,6 @@
 package ru.zarina.zarina.ui.navigation
 
 import org.junit.Test
-import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
 import kotlin.test.assertEquals
 
 class BaseRouteTest {
