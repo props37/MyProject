@@ -5,7 +5,7 @@ import com.google.android.gms.location.Priority
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withTimeout
 import ru.zarina.zarina.domain.common.exception.MissingPermissionException
-import ru.zarina.zarina.domain.rework.location.Location
+import ru.zarina.zarina.domain.location.Location
 import timber.log.Timber
 import javax.inject.Inject
 

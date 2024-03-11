@@ -1,6 +1,6 @@
 package ru.zarina.zarina.data.location
 
-import ru.zarina.zarina.domain.rework.location.Location
+import ru.zarina.zarina.domain.location.Location
 import kotlin.time.Duration.Companion.seconds
 
 interface LocationDataSource {
