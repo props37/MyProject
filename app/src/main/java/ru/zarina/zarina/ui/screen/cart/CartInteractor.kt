@@ -1,9 +1,9 @@
 package ru.zarina.zarina.ui.screen.cart
 
-import ru.zarina.zarina.usecase.rework.cart.ClearCartUseCase
-import ru.zarina.zarina.usecase.rework.cart.GetCartProductCountFlowUseCase
-import ru.zarina.zarina.usecase.rework.user.GetUserCityFlowUseCase
-import ru.zarina.zarina.usecase.rework.user.SetUserCityUseCase
+import ru.zarina.zarina.usecase.cart.ClearCartUseCase
+import ru.zarina.zarina.usecase.cart.GetCartProductCountFlowUseCase
+import ru.zarina.zarina.usecase.user.GetUserCityFlowUseCase
+import ru.zarina.zarina.usecase.user.SetUserCityUseCase
 import javax.inject.Inject
 
 class CartInteractor @Inject constructor(

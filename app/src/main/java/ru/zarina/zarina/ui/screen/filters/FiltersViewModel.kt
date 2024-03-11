@@ -33,7 +33,7 @@ import ru.zarina.zarina.ui.common.util.ScreenResultHandler
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.filters.FiltersViewModel.SideEffect
-import ru.zarina.zarina.usecase.rework.product.GetCategoryProductInfoFlowUseCase
+import ru.zarina.zarina.usecase.product.GetCategoryProductInfoFlowUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import timber.log.Timber

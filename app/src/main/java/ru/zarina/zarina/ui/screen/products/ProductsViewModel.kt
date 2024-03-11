@@ -44,11 +44,11 @@ import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
-import ru.zarina.zarina.usecase.rework.cart.AddProductToCartUseCase
-import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase
-import ru.zarina.zarina.usecase.rework.favorite.AddProductToFavoritesUseCase
-import ru.zarina.zarina.usecase.rework.favorite.RemoveProductFromFavoritesUseCase
-import ru.zarina.zarina.usecase.rework.product.GetProductPagingDataFlowUseCase
+import ru.zarina.zarina.usecase.cart.AddProductToCartUseCase
+import ru.zarina.zarina.usecase.category.GetCategoryFlowUseCase
+import ru.zarina.zarina.usecase.favorite.AddProductToFavoritesUseCase
+import ru.zarina.zarina.usecase.favorite.RemoveProductFromFavoritesUseCase
+import ru.zarina.zarina.usecase.product.GetProductPagingDataFlowUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
@@ -246,6 +246,7 @@ class ProductsViewModel @AssistedInject constructor(
 
     fun onAddProductToFavoritesClicked(product: Product) {
         viewModelScope.launch {
+            // TODO: [High] Extract to ToggleProductInFavoritesUseCase
             val result = if (product.isInFavorites) {
                 val params = RemoveProductFromFavoritesUseCase.Params(product.id)
                 interactor.removeProductFromFavorites(params)

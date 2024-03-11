@@ -40,8 +40,8 @@ import ru.zarina.zarina.ui.common.util.ScreenResultHandler
 import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
-import ru.zarina.zarina.usecase.rework.device.SetIsOnboardingCompletedUseCase
-import ru.zarina.zarina.usecase.rework.user.SetUserCityUseCase
+import ru.zarina.zarina.usecase.device.SetIsOnboardingCompletedUseCase
+import ru.zarina.zarina.usecase.user.SetUserCityUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState

@@ -1,6 +1,6 @@
 package ru.zarina.zarina.ui.screen.catalog
 
-import ru.zarina.zarina.usecase.rework.category.GetCategoriesFlowUseCase
+import ru.zarina.zarina.usecase.category.GetCategoriesFlowUseCase
 import javax.inject.Inject
 
 class CatalogInteractor @Inject constructor(

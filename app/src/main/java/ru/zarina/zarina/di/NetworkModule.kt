@@ -23,8 +23,8 @@ import ru.zarina.zarina.data.remote.headerprovider.ZarinaApiHeaderProvider
 import ru.zarina.zarina.data.remote.ktor.plugin.ZarinaAuth
 import ru.zarina.zarina.data.remote.ktor.plugin.bearer
 import ru.zarina.zarina.domain.rework.authorization.AuthorizationTokens
-import ru.zarina.zarina.usecase.rework.authorization.GetAuthorizationTokensFlowUseCase
-import ru.zarina.zarina.usecase.rework.authorization.RefreshAuthorizationTokensUseCase
+import ru.zarina.zarina.usecase.authorization.GetAuthorizationTokensFlowUseCase
+import ru.zarina.zarina.usecase.authorization.RefreshAuthorizationTokensUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 import timber.log.Timber
 import javax.inject.Singleton

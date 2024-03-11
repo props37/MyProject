@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import ru.zarina.zarina.application.extension.base.ApplicationExtension
-import ru.zarina.zarina.usecase.rework.authorization.GetAuthorizationTokensFlowUseCase
-import ru.zarina.zarina.usecase.rework.cart.FetchCartProductIdsUseCase
+import ru.zarina.zarina.usecase.authorization.GetAuthorizationTokensFlowUseCase
+import ru.zarina.zarina.usecase.cart.FetchCartProductIdsUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 import javax.inject.Inject
 

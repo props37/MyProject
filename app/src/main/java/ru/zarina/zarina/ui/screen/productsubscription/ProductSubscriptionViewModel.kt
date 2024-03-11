@@ -28,7 +28,7 @@ import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionViewModel.SideEffect
-import ru.zarina.zarina.usecase.rework.product.SubscribeToProductUseCase
+import ru.zarina.zarina.usecase.product.SubscribeToProductUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject

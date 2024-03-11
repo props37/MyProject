@@ -1,9 +1,9 @@
 package ru.zarina.zarina.ui.app
 
-import ru.zarina.zarina.usecase.rework.cart.GetCartProductCountFlowUseCase
-import ru.zarina.zarina.usecase.rework.device.GetIsOnboardingCompletedFlowUseCase
-import ru.zarina.zarina.usecase.rework.media.exoplayer.GetExoPlayerCacheDataSourceFactoryUseCase
-import ru.zarina.zarina.usecase.rework.media.exoplayer.GetExoPlayerCacheUseCase
+import ru.zarina.zarina.usecase.cart.GetCartProductCountFlowUseCase
+import ru.zarina.zarina.usecase.device.GetIsOnboardingCompletedFlowUseCase
+import ru.zarina.zarina.usecase.exoplayer.GetExoPlayerCacheDataSourceFactoryUseCase
+import ru.zarina.zarina.usecase.exoplayer.GetExoPlayerCacheUseCase
 import javax.inject.Inject
 
 class AppInteractor @Inject constructor(

@@ -1,11 +1,11 @@
 package ru.zarina.zarina.ui.screen.onboarding
 
 import ru.zarina.zarina.data.permissionmanager.PermissionManager
-import ru.zarina.zarina.usecase.rework.content.GetOnboardingBannerUrlUseCase
-import ru.zarina.zarina.usecase.rework.device.SetIsOnboardingCompletedUseCase
-import ru.zarina.zarina.usecase.rework.geography.GetCurrentCityFlowUseCase
-import ru.zarina.zarina.usecase.rework.user.SetDefaultUserCityUseCase
-import ru.zarina.zarina.usecase.rework.user.SetUserCityUseCase
+import ru.zarina.zarina.usecase.content.GetOnboardingBannerUrlUseCase
+import ru.zarina.zarina.usecase.device.SetIsOnboardingCompletedUseCase
+import ru.zarina.zarina.usecase.geography.GetCurrentCityFlowUseCase
+import ru.zarina.zarina.usecase.user.SetDefaultUserCityUseCase
+import ru.zarina.zarina.usecase.user.SetUserCityUseCase
 import javax.inject.Inject
 
 class OnboardingInteractor @Inject constructor(
