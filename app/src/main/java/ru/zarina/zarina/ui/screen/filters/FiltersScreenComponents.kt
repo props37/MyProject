@@ -92,7 +92,7 @@ object FiltersScreenComponents {
             centerContent = {
                 Text(
                     text = stringResource(R.string.filters),
-                    style = UiKitTheme.typographyReworked.primary.regular,
+                    style = UiKitTheme.typography.primary.regular,
                     color = UiKitTheme.colorsReworked.text.general.regular.default,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -112,7 +112,7 @@ object FiltersScreenComponents {
                     ) {
                         Text(
                             text = stringResource(R.string.reset).uppercase(),
-                            style = UiKitTheme.typographyReworked.caption1.regular,
+                            style = UiKitTheme.typography.caption1.regular,
                         )
                     }
                 }
@@ -353,7 +353,7 @@ object FiltersScreenComponents {
             }
             Text(
                 text = selectedText,
-                style = UiKitTheme.typographyReworked.secondary.light,
+                style = UiKitTheme.typography.secondary.light,
                 color = UiKitTheme.colorsReworked.text.general.regular.muted,
             )
 
@@ -390,7 +390,7 @@ object FiltersScreenComponents {
             if (selectedCount > 0) {
                 Counter(
                     value = selectedCount.toString(),
-                    textStyle = UiKitTheme.typographyReworked.footnote.bold,
+                    textStyle = UiKitTheme.typography.footnote.bold,
                     contentPadding = PaddingValues(start = 8.dp, top = 1.dp, end = 8.dp),
                 )
             }
@@ -512,7 +512,7 @@ object FiltersScreenComponents {
 
     private val FilterTitleTextStyle: TextStyle
         @Composable
-        get() = UiKitTheme.typographyReworked.secondary.light
+        get() = UiKitTheme.typography.secondary.light
 
     private val FilterTitleColor: Color
         @Composable

@@ -56,7 +56,7 @@ private fun ScreenContent(
     ZarinaDialogContainer {
         Text(
             text = stringResource(R.string.default_city_dialog_title),
-            style = UiKitTheme.typographyReworked.primary.bold,
+            style = UiKitTheme.typography.primary.bold,
             color = UiKitTheme.colorsReworked.text.general.regular.default,
         )
 
@@ -64,7 +64,7 @@ private fun ScreenContent(
 
         Text(
             text = bodyText(defaultCity),
-            style = UiKitTheme.typographyReworked.secondary.regular,
+            style = UiKitTheme.typography.secondary.regular,
             color = UiKitTheme.colorsReworked.text.general.regular.default,
         )
 

@@ -58,13 +58,13 @@ private fun Preview() {
             Column {
                 Text(
                     text = "Мы определили твой город",
-                    style = UiKitTheme.typographyReworked.primary.bold,
+                    style = UiKitTheme.typography.primary.bold,
                     color = UiKitTheme.colorsReworked.text.general.regular.default,
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = "Текущая геолокация: Санкт-Петербург. Ты можешь изменить геолокацию в любой момент в настройках Профиля.",
-                    style = UiKitTheme.typographyReworked.secondary.regular,
+                    style = UiKitTheme.typography.secondary.regular,
                     color = UiKitTheme.colorsReworked.text.general.regular.default,
                 )
                 Spacer(modifier = Modifier.height(20.dp))

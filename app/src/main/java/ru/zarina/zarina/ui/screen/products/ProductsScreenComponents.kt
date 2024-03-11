@@ -130,7 +130,7 @@ object ProductsScreenComponents {
                 if (title != null) {
                     Text(
                         text = title,
-                        style = UiKitTheme.typographyReworked.primary.regular,
+                        style = UiKitTheme.typography.primary.regular,
                         color = UiKitTheme.colorsReworked.text.general.regular.default,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -463,14 +463,14 @@ object ProductsScreenComponents {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = stringResource(R.string.could_not_find_products),
-                style = UiKitTheme.typographyReworked.primary.bold,
+                style = UiKitTheme.typography.primary.bold,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.try_select_another_category),
-                style = UiKitTheme.typographyReworked.secondary.light,
+                style = UiKitTheme.typography.secondary.light,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 textAlign = TextAlign.Center,
             )
@@ -531,7 +531,7 @@ object ProductsScreenComponents {
         if (appliedFilterCount > 0) {
             Text(
                 text = appliedFilterCount.toString(),
-                style = UiKitTheme.typographyReworked.caption2.bold.unscalable(LocalDensity.current),
+                style = UiKitTheme.typography.caption2.bold.unscalable(LocalDensity.current),
                 color = UiKitTheme.colorsReworked.text.general.inversed.default,
                 modifier = modifier
                     .background(

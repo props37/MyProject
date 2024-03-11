@@ -60,7 +60,7 @@ object ListFilterScreenComponents {
             centerContent = {
                 Text(
                     text = title,
-                    style = UiKitTheme.typographyReworked.primary.regular,
+                    style = UiKitTheme.typography.primary.regular,
                     color = UiKitTheme.colorsReworked.text.general.regular.default,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -80,7 +80,7 @@ object ListFilterScreenComponents {
                     ) {
                         Text(
                             text = stringResource(R.string.reset).uppercase(),
-                            style = UiKitTheme.typographyReworked.caption1.regular,
+                            style = UiKitTheme.typography.caption1.regular,
                         )
                     }
                 }
@@ -182,7 +182,7 @@ object ListFilterScreenComponents {
 
             Text(
                 text = name,
-                style = UiKitTheme.typographyReworked.secondary.light,
+                style = UiKitTheme.typography.secondary.light,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

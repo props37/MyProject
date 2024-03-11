@@ -78,7 +78,7 @@ fun ProductOrderCard(
             Column {
                 Text(
                     text = name.uppercase(),
-                    style = UiKitTheme.typographyReworked.caption1.regular,
+                    style = UiKitTheme.typography.caption1.regular,
                     color = UiKitTheme.colorsReworked.text.general.regular.default,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
@@ -187,14 +187,14 @@ private fun Price(
             val priceForOne = rememberFormattedPrice(price.currentPrice)
             Text(
                 text = stringResource(R.string.price_in_rubles_for_one_string, priceForOne),
-                style = UiKitTheme.typographyReworked.footnote.light,
+                style = UiKitTheme.typography.footnote.light,
                 color = UiKitTheme.colorsReworked.text.general.regular.muted,
             )
             Spacer(modifier = Modifier.height(2.dp))
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            val textStyle = UiKitTheme.typographyReworked.secondary.regular
+            val textStyle = UiKitTheme.typography.secondary.regular
             val totalOriginalPrice = rememberFormattedPrice(price.originalPrice * count)
             val totalCurrentPrice = rememberFormattedPrice(price.currentPrice * count)
             if (showOriginalPrice) {
@@ -248,6 +248,6 @@ private const val ImageAspectRatio = 0.72f
 
 private val InfoTextStyle: TextStyle
     @Composable
-    get() = UiKitTheme.typographyReworked.footnote.regular
+    get() = UiKitTheme.typography.footnote.regular
 
 private const val SizeHeightSeparator = "|"

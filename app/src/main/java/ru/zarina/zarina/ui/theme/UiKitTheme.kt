@@ -11,9 +11,9 @@ object UiKitTheme {
         @Composable
         get() = LocalUiKitColorsReworked.current
 
-    val typographyReworked: UiKitTypographyReworked
+    val typography: UiKitTypography
         @Composable
-        get() = LocalUiKitTypographyReworked.current
+        get() = LocalUiKitTypography.current
 
     val colorsOld: UiKitColorsOld
         @Composable

@@ -98,7 +98,7 @@ private fun Preview() {
             centerContent = {
                 Text(
                     text = "Some title",
-                    style = UiKitTheme.typographyReworked.primary.regular,
+                    style = UiKitTheme.typography.primary.regular,
                     color = UiKitTheme.colorsReworked.text.general.regular.default,
                 )
             },

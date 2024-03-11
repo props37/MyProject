@@ -44,7 +44,7 @@ object ProductSubscriptionScreenComponents {
             centerContent = {
                 Text(
                     text = stringResource(R.string.product_subscription),
-                    style = UiKitTheme.typographyReworked.primary.regular,
+                    style = UiKitTheme.typography.primary.regular,
                     color = UiKitTheme.colorsReworked.text.general.regular.default,
                 )
             },
@@ -79,10 +79,10 @@ object ProductSubscriptionScreenComponents {
         onUrlClicked: (Url) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val baseTextStyle = UiKitTheme.typographyReworked.footnote.light.copy(
+        val baseTextStyle = UiKitTheme.typography.footnote.light.copy(
             color = UiKitTheme.colorsReworked.text.general.regular.default,
         )
-        val boldTextStyle = UiKitTheme.typographyReworked.footnote.bold.copy(
+        val boldTextStyle = UiKitTheme.typography.footnote.bold.copy(
             color = UiKitTheme.colorsReworked.text.general.regular.default,
         )
 

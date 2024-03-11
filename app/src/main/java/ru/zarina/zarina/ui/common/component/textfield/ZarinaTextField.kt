@@ -304,7 +304,7 @@ private fun DecorationBox(
                     label = "Outer trailing content color",
                 )
                 CompositionLocalProvider(
-                    LocalTextStyle provides UiKitTheme.typographyReworked.caption1.regular,
+                    LocalTextStyle provides UiKitTheme.typography.caption1.regular,
                     LocalContentColor provides outerTrailingContentColor,
                 ) {
                     content()
@@ -427,7 +427,7 @@ object ZarinaTextFieldDefaults {
         ) {
             Text(
                 text = stringResource(R.string.cancel).uppercase(),
-                style = UiKitTheme.typographyReworked.caption1.regular,
+                style = UiKitTheme.typography.caption1.regular,
             )
         }
     }
@@ -477,20 +477,20 @@ object ZarinaTextFieldDefaults {
 
     @Composable
     fun textStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Large -> UiKitTheme.typographyReworked.primary.light
-        ZarinaTextFieldSize.Small -> UiKitTheme.typographyReworked.secondary.light
+        ZarinaTextFieldSize.Large -> UiKitTheme.typography.primary.light
+        ZarinaTextFieldSize.Small -> UiKitTheme.typography.secondary.light
     }
 
     @Composable
     fun labelTextStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Large -> UiKitTheme.typographyReworked.tertiary.light
-        ZarinaTextFieldSize.Small -> UiKitTheme.typographyReworked.footnote.light
+        ZarinaTextFieldSize.Large -> UiKitTheme.typography.tertiary.light
+        ZarinaTextFieldSize.Small -> UiKitTheme.typography.footnote.light
     }
 
     @Composable
     fun descriptionTextStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Large -> UiKitTheme.typographyReworked.tertiary.light
-        ZarinaTextFieldSize.Small -> UiKitTheme.typographyReworked.footnote.light
+        ZarinaTextFieldSize.Large -> UiKitTheme.typography.tertiary.light
+        ZarinaTextFieldSize.Small -> UiKitTheme.typography.footnote.light
     }
 
     @Stable

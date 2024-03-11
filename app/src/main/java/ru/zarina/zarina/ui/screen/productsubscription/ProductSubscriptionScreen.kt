@@ -148,7 +148,7 @@ private fun ScreenContent(
 
             Text(
                 text = stringResource(R.string.product_subscription_description),
-                style = UiKitTheme.typographyReworked.secondary.light,
+                style = UiKitTheme.typography.secondary.light,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )

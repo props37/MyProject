@@ -69,9 +69,9 @@ fun ZarinaTag(
     )
 
     val textStyle = if (isSelected) {
-        UiKitTheme.typographyReworked.secondary.regular
+        UiKitTheme.typography.secondary.regular
     } else {
-        UiKitTheme.typographyReworked.secondary.light
+        UiKitTheme.typography.secondary.light
     }
 
     val rippleTheme = if (isSelected) LightRippleTheme else DarkRippleTheme

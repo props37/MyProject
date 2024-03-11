@@ -106,9 +106,9 @@ object HomeScreenComponents {
                         }
 
                         val style = if (gender == currentGender) {
-                            UiKitTheme.typographyReworked.tertiary.regular
+                            UiKitTheme.typography.tertiary.regular
                         } else {
-                            UiKitTheme.typographyReworked.tertiary.light
+                            UiKitTheme.typography.tertiary.light
                         }
 
                         Text(
@@ -358,7 +358,7 @@ object HomeScreenComponents {
             if (showTitle) {
                 Text(
                     text = banner.title?.uppercase().orEmpty(),
-                    style = UiKitTheme.typographyReworked.tertiary.regular,
+                    style = UiKitTheme.typography.tertiary.regular,
                     color = UiKitTheme.colorsReworked.text.general.inversed.default,
                     textAlign = TextAlign.Center,
                     modifier = Modifier

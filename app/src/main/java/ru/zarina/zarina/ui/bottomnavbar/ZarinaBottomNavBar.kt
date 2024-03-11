@@ -238,7 +238,7 @@ private fun RowScope.Item(
 
         Text(
             text = title,
-            style = UiKitTheme.typographyReworked.caption2.regular,
+            style = UiKitTheme.typography.caption2.regular,
             color = color,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -263,7 +263,7 @@ private fun ItemCounter(
         if (count != null && count != 0) {
             Counter(
                 value = count.toString(),
-                textStyle = UiKitTheme.typographyReworked.caption2.bold.unscalable(LocalDensity.current),
+                textStyle = UiKitTheme.typography.caption2.bold.unscalable(LocalDensity.current),
             )
         }
     }

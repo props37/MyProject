@@ -51,7 +51,7 @@ fun ZarinaErrorScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = textString(state.title),
-            style = UiKitTheme.typographyReworked.primary.bold,
+            style = UiKitTheme.typography.primary.bold,
             color = UiKitTheme.colorsReworked.text.general.regular.default,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp),
@@ -59,7 +59,7 @@ fun ZarinaErrorScreen(
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = textString(state.body),
-            style = UiKitTheme.typographyReworked.secondary.regular,
+            style = UiKitTheme.typography.secondary.regular,
             color = UiKitTheme.colorsReworked.text.general.regular.default,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp),

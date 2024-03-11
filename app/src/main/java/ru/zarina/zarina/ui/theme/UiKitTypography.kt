@@ -30,7 +30,7 @@ private val CirceLight: Font
 
 private val CirceFamily = FontFamily(CirceBold, CirceRegular, CirceLight)
 
-data class UiKitTypographyReworked(
+data class UiKitTypography(
     val heading1: Heading1 = Heading1(),
     val heading2: Heading2 = Heading2(),
     val heading3: Heading3 = Heading3(),
@@ -264,4 +264,4 @@ data class UiKitTypographyReworked(
     )
 }
 
-val LocalUiKitTypographyReworked = staticCompositionLocalOf { UiKitTypographyReworked() }
+val LocalUiKitTypography = staticCompositionLocalOf { UiKitTypography() }

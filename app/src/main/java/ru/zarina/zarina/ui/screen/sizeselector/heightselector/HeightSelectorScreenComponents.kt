@@ -49,7 +49,7 @@ object HeightSelectorScreenComponents {
             centerContent = {
                 Text(
                     text = stringResource(R.string.choose_height),
-                    style = UiKitTheme.typographyReworked.primary.bold,
+                    style = UiKitTheme.typography.primary.bold,
                     color = UiKitTheme.colorsReworked.text.general.regular.default,
                 )
             },
@@ -113,7 +113,7 @@ object HeightSelectorScreenComponents {
                 text = if (offer.height != null) {
                     stringResource(R.string.height_cm, offer.height)
                 } else "",
-                style = UiKitTheme.typographyReworked.secondary.light,
+                style = UiKitTheme.typography.secondary.light,
                 color = if (offer.isAvailable) {
                     UiKitTheme.colorsReworked.text.general.regular.default
                 } else {
@@ -127,7 +127,7 @@ object HeightSelectorScreenComponents {
             if (!offer.isAvailable) {
                 Text(
                     text = stringResource(R.string.subscribe).uppercase(),
-                    style = UiKitTheme.typographyReworked.caption1.regular,
+                    style = UiKitTheme.typography.caption1.regular,
                     color = UiKitTheme.colorsReworked.text.general.regular.default,
                 )
             }

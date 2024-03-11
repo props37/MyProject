@@ -166,9 +166,9 @@ object CatalogScreenComponents {
                     }
 
                     val style = if (gender == currentGender) {
-                        UiKitTheme.typographyReworked.tertiary.regular
+                        UiKitTheme.typography.tertiary.regular
                     } else {
-                        UiKitTheme.typographyReworked.tertiary.light
+                        UiKitTheme.typography.tertiary.light
                     }
 
                     Text(
@@ -346,7 +346,7 @@ object CatalogScreenComponents {
 
                 Text(
                     text = item.category.name.uppercase(),
-                    style = UiKitTheme.typographyReworked.tertiary.light,
+                    style = UiKitTheme.typography.tertiary.light,
                     color = color,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -356,7 +356,7 @@ object CatalogScreenComponents {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = item.category.label.uppercase(),
-                        style = UiKitTheme.typographyReworked.caption2.light,
+                        style = UiKitTheme.typography.caption2.light,
                         color = color,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -405,7 +405,7 @@ object CatalogScreenComponents {
         ) {
             Text(
                 text = stringResource(R.string.see_all).uppercase(),
-                style = UiKitTheme.typographyReworked.tertiary.light,
+                style = UiKitTheme.typography.tertiary.light,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 maxLines = 1,
             )

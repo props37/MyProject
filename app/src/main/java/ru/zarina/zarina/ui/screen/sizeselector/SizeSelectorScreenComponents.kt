@@ -111,7 +111,7 @@ object SizeSelectorScreenComponents {
             centerContent = {
                 Text(
                     text = stringResource(R.string.choose_size),
-                    style = UiKitTheme.typographyReworked.primary.bold,
+                    style = UiKitTheme.typography.primary.bold,
                     color = UiKitTheme.colorsReworked.text.general.regular.default,
                 )
             },
@@ -178,7 +178,7 @@ object SizeSelectorScreenComponents {
 
             Text(
                 text = size.size.capitalize(),
-                style = UiKitTheme.typographyReworked.secondary.light,
+                style = UiKitTheme.typography.secondary.light,
                 color = sizeColor,
             )
 
@@ -192,7 +192,7 @@ object SizeSelectorScreenComponents {
                     }
                     Text(
                         text = stringResource(R.string.available_height_cm, heightsText),
-                        style = UiKitTheme.typographyReworked.secondary.light,
+                        style = UiKitTheme.typography.secondary.light,
                         color = UiKitTheme.colorsReworked.text.general.regular.muted,
                     )
                 }
@@ -202,7 +202,7 @@ object SizeSelectorScreenComponents {
                 else -> {
                     Text(
                         text = stringResource(R.string.subscribe).uppercase(),
-                        style = UiKitTheme.typographyReworked.caption1.regular,
+                        style = UiKitTheme.typography.caption1.regular,
                         color = UiKitTheme.colorsReworked.text.general.regular.default,
                     )
                 }

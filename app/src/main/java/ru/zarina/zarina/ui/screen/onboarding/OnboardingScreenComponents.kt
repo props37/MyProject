@@ -142,7 +142,7 @@ object OnboardingScreenComponents {
             Spacer(modifier = Modifier.height(8.dp))
 
             Row {
-                val textStyle = UiKitTheme.typographyReworked.tertiary.regular
+                val textStyle = UiKitTheme.typography.tertiary.regular
 
                 Text(
                     text = stringResource(R.string.step),
@@ -310,7 +310,7 @@ object OnboardingScreenComponents {
         Column(modifier = modifier) {
             Text(
                 text = title,
-                style = UiKitTheme.typographyReworked.primary.bold,
+                style = UiKitTheme.typography.primary.bold,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
             )
 
@@ -318,7 +318,7 @@ object OnboardingScreenComponents {
 
             Text(
                 text = body,
-                style = UiKitTheme.typographyReworked.secondary.regular,
+                style = UiKitTheme.typography.secondary.regular,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
             )
 

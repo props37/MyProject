@@ -16,7 +16,7 @@ object DefaultCityDialogScreenComponents {
     fun bodyText(defaultCity: City): AnnotatedString {
         val defaultCityName = defaultCity.name
         val bodyTextRaw = stringResource(R.string.default_city_dialog_body, defaultCityName)
-        val defaultCityNameStyle = UiKitTheme.typographyReworked.secondary.bold
+        val defaultCityNameStyle = UiKitTheme.typography.secondary.bold
         return remember(bodyTextRaw, defaultCityName, defaultCityNameStyle) {
             buildAnnotatedString {
                 append(bodyTextRaw)

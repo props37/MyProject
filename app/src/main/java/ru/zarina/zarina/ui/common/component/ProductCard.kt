@@ -105,7 +105,7 @@ fun ProductCard(
         ) {
             Text(
                 text = product.name.uppercase(),
-                style = UiKitTheme.typographyReworked.caption1.regular,
+                style = UiKitTheme.typography.caption1.regular,
                 color = UiKitTheme.colorsReworked.text.general.regular.default,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -138,7 +138,7 @@ fun ProductCard(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(horizontal = 16.dp),
         ) {
-            val priceTextStyle = UiKitTheme.typographyReworked.caption1.regular
+            val priceTextStyle = UiKitTheme.typography.caption1.regular
             val discountColor = UiKitTheme.colorsReworked.text.general.accent.red
             val originalPriceColor = if (product.price.hasDiscount) {
                 UiKitTheme.colorsReworked.text.general.regular.disabled
@@ -179,7 +179,7 @@ fun ProductCard(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = stringResource(R.string.discount_percent, product.price.discountPercent).uppercase(),
-                    style = UiKitTheme.typographyReworked.caption2.regular,
+                    style = UiKitTheme.typography.caption2.regular,
                     color = discountColor,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -362,7 +362,7 @@ private fun Colors(
             val moreColorsText = if (colorsLeft > 0) "+$colorsLeft" else ""
             Text(
                 text = moreColorsText,
-                style = UiKitTheme.typographyReworked.caption2.regular,
+                style = UiKitTheme.typography.caption2.regular,
                 color = UiKitTheme.colorsReworked.text.general.regular.muted,
             )
         }

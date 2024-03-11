@@ -100,7 +100,7 @@ fun PriceFilter(
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.price_rubles),
-            style = UiKitTheme.typographyReworked.secondary.light,
+            style = UiKitTheme.typography.secondary.light,
             color = UiKitTheme.colorsReworked.text.general.regular.default,
         )
 
@@ -215,7 +215,7 @@ private fun TextField(
         leadingContent = {
             Text(
                 text = leadingText,
-                style = UiKitTheme.typographyReworked.secondary.light,
+                style = UiKitTheme.typography.secondary.light,
                 color = UiKitTheme.colorsReworked.text.general.regular.muted,
                 modifier = Modifier.padding(start = 8.dp),
             )
