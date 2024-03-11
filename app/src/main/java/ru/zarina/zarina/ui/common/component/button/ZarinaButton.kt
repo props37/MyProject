@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.rippletheme.DarkRippleTheme
 import ru.zarina.zarina.ui.common.rippletheme.LightRippleTheme
-import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 

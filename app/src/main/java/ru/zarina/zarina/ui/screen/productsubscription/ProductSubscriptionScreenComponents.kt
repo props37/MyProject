@@ -22,7 +22,7 @@ import ru.zarina.zarina.ui.common.component.ZarinaCheckbox
 import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
-import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
 import ru.zarina.zarina.util.compose.addStyles
 import ru.zarina.zarina.util.compose.addUrlAnnotations
 

@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
 
 private const val VISIBLE_DOT_COUNT = 5
 

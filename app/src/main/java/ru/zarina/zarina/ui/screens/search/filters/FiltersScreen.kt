@@ -39,7 +39,7 @@ import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.ListItem
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.PriceItem
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.TreeItem
-import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

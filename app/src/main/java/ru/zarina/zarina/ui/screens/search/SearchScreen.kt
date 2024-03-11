@@ -72,7 +72,7 @@ import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.bottomNavigationPadding
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
 import ru.zarina.zarina.ui.common.utils.domain.getStringResource
-import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
 import ru.zarina.zarina.utils.compose.navigationOrIme
 
 @OptIn(ExperimentalAnimationApi::class)

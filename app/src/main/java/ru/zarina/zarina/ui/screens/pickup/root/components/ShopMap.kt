@@ -33,7 +33,7 @@ import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.old.Stock
 import ru.zarina.zarina.ui.common.utils.domain.toLatLng
-import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
 import ru.zarina.zarina.utils.maps.getBitmapDescriptor
 
 @OptIn(ExperimentalPermissionsApi::class)

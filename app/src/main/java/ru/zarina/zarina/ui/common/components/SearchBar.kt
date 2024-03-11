@@ -35,8 +35,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @Composable
 fun RedirectSearchBar(

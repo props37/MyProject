@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.theme
+package ru.zarina.zarina.ui.theme.old
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

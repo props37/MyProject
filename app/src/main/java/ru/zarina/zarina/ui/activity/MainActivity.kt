@@ -20,7 +20,7 @@ import ru.zarina.zarina.ui.common.behavior.base.DefaultBehaviorController
 import ru.zarina.zarina.ui.common.behavior.systembars.LocalSystemBarsBehaviorController
 import ru.zarina.zarina.ui.common.behavior.systembars.SystemBarsBehavior
 import ru.zarina.zarina.ui.common.behavior.systembars.SystemBarsBehaviorController
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 import ru.zarina.zarina.util.library.activity.DefaultDarkScrim
 import ru.zarina.zarina.util.library.activity.DefaultLightScrim
 import ru.zarina.zarina.util.platform.getSizeInBytes

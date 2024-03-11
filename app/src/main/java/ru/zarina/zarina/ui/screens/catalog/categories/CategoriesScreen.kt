@@ -36,7 +36,7 @@ import ru.zarina.zarina.ui.common.components.RedirectSearchBar
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.bottomNavigationPadding
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.CategoryListProvider
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @Composable
 fun CategoriesScreenContent(

@@ -51,7 +51,7 @@ import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Graph
 import ru.zarina.zarina.ui.navigation.old.destinations.Catalog
 import ru.zarina.zarina.ui.navigation.old.destinations.Favorites
-import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
 import ru.zarina.zarina.utils.compose.topLineShape
 
 private val BottomNavigationHeight = 56.dp

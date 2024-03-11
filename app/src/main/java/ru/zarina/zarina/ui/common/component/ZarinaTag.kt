@@ -38,7 +38,7 @@ import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
 import ru.zarina.zarina.ui.common.rippletheme.DarkRippleTheme
 import ru.zarina.zarina.ui.common.rippletheme.LightRippleTheme
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
 
 @Composable
 fun ZarinaTag(

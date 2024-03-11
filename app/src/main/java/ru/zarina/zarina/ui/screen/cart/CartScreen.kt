@@ -30,7 +30,7 @@ import ru.zarina.zarina.ui.screen.cart.CartScreenComponents.DeliveryTypePicker
 import ru.zarina.zarina.ui.screen.cart.CartScreenComponents.EmptyCartPlaceholder
 import ru.zarina.zarina.ui.screen.cart.CartScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.SideEffect
-import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
 
 @Composable
 fun CartScreen(

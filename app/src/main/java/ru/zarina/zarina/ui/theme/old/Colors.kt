@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.theme
+package ru.zarina.zarina.ui.theme.old
 
 import androidx.compose.ui.graphics.Color
 

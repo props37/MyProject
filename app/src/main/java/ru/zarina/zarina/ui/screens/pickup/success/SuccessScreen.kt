@@ -31,8 +31,8 @@ import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
-import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

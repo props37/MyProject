@@ -41,7 +41,7 @@ import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderTab
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.SideEffect
 import ru.zarina.zarina.ui.screen.catalog.tooling.preview.CategoryListStatePreviewParameterProvider
-import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
 
 @Composable
 fun CatalogScreen(

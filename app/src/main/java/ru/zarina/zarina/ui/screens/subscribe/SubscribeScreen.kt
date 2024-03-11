@@ -54,8 +54,8 @@ import ru.zarina.zarina.ui.common.components.form.Input
 import ru.zarina.zarina.ui.common.components.material.zarinaColors
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
-import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 import ru.zarina.zarina.utils.compose.autofill
 import ru.zarina.zarina.utils.compose.navigationOrIme
 

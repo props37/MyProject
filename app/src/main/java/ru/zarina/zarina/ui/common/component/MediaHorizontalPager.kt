@@ -27,7 +27,7 @@ import ru.zarina.zarina.domain.common.MediaType
 import ru.zarina.zarina.ui.common.component.media.VideoPlayer
 import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
-import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
 import ru.zarina.zarina.util.kotlin.loopingGet
 
 @OptIn(ExperimentalFoundationApi::class)

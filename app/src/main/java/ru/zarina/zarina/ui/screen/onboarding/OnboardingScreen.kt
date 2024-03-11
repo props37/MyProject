@@ -41,7 +41,7 @@ import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenComponents.Progress
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.OnboardingStep
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
 import ru.zarina.zarina.ui.screen.onboarding.tooling.preview.OnboardingStepPreviewParameterProvider
-import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
 import ru.zarina.zarina.util.compose.HorizontalAndBottom
 
 @Composable

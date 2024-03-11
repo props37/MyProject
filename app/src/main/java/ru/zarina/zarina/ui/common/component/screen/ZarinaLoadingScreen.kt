@@ -16,7 +16,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.component.ZarinaLogo
 import ru.zarina.zarina.ui.common.component.ZarinaLogoAspectRatio
 import ru.zarina.zarina.ui.common.util.SplashScreenLogoSize
-import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
 import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
 
 @Composable

@@ -34,7 +34,7 @@ import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbarDefaults
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 import ru.zarina.zarina.utils.android.tryStartActivity
 import timber.log.Timber
 

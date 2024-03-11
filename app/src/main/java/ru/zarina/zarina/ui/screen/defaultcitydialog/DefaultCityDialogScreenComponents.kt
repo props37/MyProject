@@ -8,7 +8,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.geography.City
-import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
 
 object DefaultCityDialogScreenComponents {
 

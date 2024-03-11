@@ -28,9 +28,11 @@ import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.old.DeliveryAvailability
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.DeliveryAvailabilityProvider
-import ru.zarina.zarina.ui.screens.product.components.sections.ContentType.*
-import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.screens.product.components.sections.ContentType.Availability
+import ru.zarina.zarina.ui.screens.product.components.sections.ContentType.Error
+import ru.zarina.zarina.ui.screens.product.components.sections.ContentType.Loading
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

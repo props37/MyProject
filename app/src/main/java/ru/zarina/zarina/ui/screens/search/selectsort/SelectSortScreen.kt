@@ -27,7 +27,7 @@ import ru.zarina.zarina.ui.common.components.SortItem
 import ru.zarina.zarina.ui.common.components.bottomsheet.Header
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @Composable
 fun SelectSortScreenContent(

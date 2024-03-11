@@ -50,8 +50,8 @@ import ru.zarina.zarina.ui.common.components.bottomNavigationPaddingValues
 import ru.zarina.zarina.ui.common.components.rememberInfinitePagerState
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
-import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 import ru.zarina.zarina.utils.compose.plus
 
 
