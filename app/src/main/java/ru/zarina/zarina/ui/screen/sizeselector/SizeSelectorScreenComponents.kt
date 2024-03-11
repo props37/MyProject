@@ -43,7 +43,7 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorViewModel.Size
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.utils.kotlin.capitalize
 
 object SizeSelectorScreenComponents {

@@ -33,7 +33,7 @@ import ru.zarina.zarina.ui.common.components.color.ColorPicker
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDimensions
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @OptIn(ExperimentalFoundationApi::class)

@@ -34,7 +34,7 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import ru.zarina.zarina.domain.old.Media
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import timber.log.Timber
 
 @androidx.annotation.OptIn(UnstableApi::class)

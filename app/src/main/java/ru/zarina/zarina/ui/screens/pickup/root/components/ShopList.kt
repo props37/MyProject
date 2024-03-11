@@ -24,7 +24,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.old.Stock
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaButton
 import ru.zarina.zarina.ui.common.utils.domain.getStringResource
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun ShopList(

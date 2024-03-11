@@ -31,7 +31,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.DeliveryAvail
 import ru.zarina.zarina.ui.screens.product.components.sections.ContentType.Availability
 import ru.zarina.zarina.ui.screens.product.components.sections.ContentType.Error
 import ru.zarina.zarina.ui.screens.product.components.sections.ContentType.Loading
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @OptIn(ExperimentalAnimationApi::class)

@@ -59,7 +59,7 @@ import ru.zarina.zarina.ui.screens.product.components.sections.MediaSection
 import ru.zarina.zarina.ui.screens.product.components.sections.PickupSection
 import ru.zarina.zarina.ui.screens.product.components.sections.PriceSection
 import ru.zarina.zarina.ui.screens.product.components.sections.ShareSection
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 import ru.zarina.zarina.utils.android.share
 import java.util.UUID

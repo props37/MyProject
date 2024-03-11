@@ -8,7 +8,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.shimmer
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun Skeleton(

@@ -56,7 +56,7 @@ import ru.zarina.zarina.ui.common.component.tab.LooseTabRow
 import ru.zarina.zarina.ui.common.component.tab.LooseTabRowDefaults.looseTabIndicatorOffset
 import ru.zarina.zarina.ui.common.component.tab.ZarinaTabIndicator
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import timber.log.Timber
 
 object HomeScreenComponents {

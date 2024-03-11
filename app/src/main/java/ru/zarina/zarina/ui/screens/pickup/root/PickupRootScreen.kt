@@ -52,7 +52,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvid
 import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 import ru.zarina.zarina.ui.screens.pickup.root.components.ShopList
 import ru.zarina.zarina.ui.screens.pickup.root.components.ShopMap
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @OptIn(

@@ -37,7 +37,7 @@ import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenComponents.TopB
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 import ru.zarina.zarina.ui.screen.cityselector.tooling.preview.CityListStatePreviewParameterProvider
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun CitySelectorScreen(

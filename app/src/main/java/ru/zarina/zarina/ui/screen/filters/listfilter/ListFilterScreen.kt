@@ -34,7 +34,7 @@ import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterScreenComponents.
 import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterScreenComponents.FilterItems
 import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterScreenComponents.TopBarActions
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun ListFilterScreen(

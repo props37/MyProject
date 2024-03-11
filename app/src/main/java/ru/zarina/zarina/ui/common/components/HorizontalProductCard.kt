@@ -23,7 +23,7 @@ import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.domain.old.Size
 import ru.zarina.zarina.ui.common.components.buttons.DropdownButton
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @Composable

@@ -1,34 +1,11 @@
 package ru.zarina.zarina.ui.theme.old
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import ru.zarina.zarina.ui.theme.LocalUiKitColorsReworked
-import ru.zarina.zarina.ui.theme.LocalUiKitTypographyReworked
-import ru.zarina.zarina.ui.theme.UiKitColorsReworked
-import ru.zarina.zarina.ui.theme.UiKitTypographyReworked
-
-object UiKitTheme {
-    val colorsReworked: UiKitColorsReworked
-        @Composable
-        get() = LocalUiKitColorsReworked.current
-
-    val typographyReworked: UiKitTypographyReworked
-        @Composable
-        get() = LocalUiKitTypographyReworked.current
-
-    val colors: UiKitColors
-        @Composable
-        get() = LocalUiKitColors.current
-
-    val typography: UiKitTypography
-        @Composable
-        get() = LocalUiKitTypography.current
-}
 
 @Immutable
 data class UiKitColors(

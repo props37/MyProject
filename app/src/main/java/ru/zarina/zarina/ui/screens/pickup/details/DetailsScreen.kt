@@ -60,7 +60,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ShopProvider
 import ru.zarina.zarina.ui.common.utils.adaptPhoneValue
 import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 import ru.zarina.zarina.utils.compose.PhoneVisualTransformation
 import ru.zarina.zarina.utils.compose.autofill

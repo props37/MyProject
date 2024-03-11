@@ -45,7 +45,7 @@ import ru.zarina.zarina.ui.screens.catalog.filters.components.items.PriceItem
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.ShopItem
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.SwitchItem
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.TreeItem
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

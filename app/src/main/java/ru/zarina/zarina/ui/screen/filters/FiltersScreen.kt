@@ -24,7 +24,7 @@ import ru.zarina.zarina.ui.screen.filters.FiltersScreenComponents.FilterList
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenComponents.TopBarActions
 import ru.zarina.zarina.ui.screen.filters.FiltersViewModel.FilterListState
-import ru.zarina.zarina.ui.theme.old.UiKitTheme
+import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun FiltersScreen(
