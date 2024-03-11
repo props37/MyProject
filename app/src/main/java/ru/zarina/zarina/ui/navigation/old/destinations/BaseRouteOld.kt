@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.navigation.old.destinations
 
-enum class BaseRoute {
+@Deprecated("Use BaseRoute instead")
+enum class BaseRouteOld {
     GRAPH_PICKUP,
     GRAPH_SUBSCRIBE,
     GRAPH_CATALOG,
