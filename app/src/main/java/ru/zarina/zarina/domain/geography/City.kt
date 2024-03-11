@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.rework.geography
+package ru.zarina.zarina.domain.geography
 
 data class City(
     val name: String,

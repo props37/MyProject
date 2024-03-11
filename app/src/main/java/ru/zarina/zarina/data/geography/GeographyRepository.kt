@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import ru.zarina.zarina.data.geography.local.GeographyLocalDataSource
 import ru.zarina.zarina.data.geography.remote.GeographyRemoteDataSource
-import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.domain.rework.location.Location
 import timber.log.Timber
 import javax.inject.Inject

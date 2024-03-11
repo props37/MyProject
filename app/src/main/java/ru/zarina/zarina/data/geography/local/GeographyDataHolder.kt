@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.geography.City
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton

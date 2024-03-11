@@ -1,6 +1,6 @@
 package ru.zarina.zarina.ui.screen.cart
 
-import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.geography.City
 
 sealed class CartScreenAction {
     data object GoToCatalogClicked : CartScreenAction()

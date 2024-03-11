@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.zarina.zarina.domain.category.Category
-import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.domain.rework.product.Product
 import ru.zarina.zarina.domain.rework.product.ProductOffer
 import ru.zarina.zarina.ui.common.base.Text

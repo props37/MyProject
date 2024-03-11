@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.base.usecase.UseCase
 import ru.zarina.zarina.data.user.UserRepository
 import ru.zarina.zarina.di.Qualifiers
-import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.usecase.cart.FetchCartProductIdsUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 import javax.inject.Inject

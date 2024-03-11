@@ -1,7 +1,7 @@
 package ru.zarina.zarina.data.geography.local
 
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.geography.City
 import javax.inject.Inject
 
 class GeographyLocalDataSource @Inject constructor(

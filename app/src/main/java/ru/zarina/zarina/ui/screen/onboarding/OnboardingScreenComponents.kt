@@ -46,7 +46,7 @@ import kotlinx.collections.immutable.ImmutableList
 import okhttp3.OkHttpClient
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.common.Url
-import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.common.component.ZarinaLinearProgressIndicator
 import ru.zarina.zarina.ui.common.component.ZarinaLogo
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton

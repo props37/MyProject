@@ -3,7 +3,7 @@ package ru.zarina.zarina.data.geography.remote
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.zarina.zarina.data.geography.remote.api.GeographyApi
-import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.domain.rework.location.Location
 import javax.inject.Inject
 

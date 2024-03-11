@@ -29,7 +29,7 @@ import ru.zarina.zarina.data.permissionmanager.isDenied
 import ru.zarina.zarina.data.permissionmanager.isGranted
 import ru.zarina.zarina.data.permissionmanager.shouldShowRequestRationale
 import ru.zarina.zarina.domain.common.Url
-import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.operation.OperationKey

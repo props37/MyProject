@@ -2,8 +2,8 @@ package ru.zarina.zarina.data.geography.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.domain.rework.geography.KladrId
+import ru.zarina.zarina.domain.geography.City
+import ru.zarina.zarina.domain.geography.KladrId
 import timber.log.Timber
 
 @Serializable

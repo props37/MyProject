@@ -1,8 +1,8 @@
 package ru.zarina.zarina.data.user.local.entity
 
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.domain.rework.geography.KladrId
+import ru.zarina.zarina.domain.geography.City
+import ru.zarina.zarina.domain.geography.KladrId
 
 @Serializable
 data class CityEntity(

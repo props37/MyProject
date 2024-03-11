@@ -16,8 +16,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.domain.rework.geography.KladrId
+import ru.zarina.zarina.domain.geography.City
+import ru.zarina.zarina.domain.geography.KladrId
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler

@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.zarina.zarina.data.user.local.entity.CityEntity
-import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.geography.City
 import timber.log.Timber
 import javax.inject.Inject
 

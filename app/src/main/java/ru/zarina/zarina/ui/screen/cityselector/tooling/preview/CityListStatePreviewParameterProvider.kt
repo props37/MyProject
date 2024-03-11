@@ -2,8 +2,8 @@ package ru.zarina.zarina.ui.screen.cityselector.tooling.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import kotlinx.collections.immutable.toImmutableList
-import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.domain.rework.geography.KladrId
+import ru.zarina.zarina.domain.geography.City
+import ru.zarina.zarina.domain.geography.KladrId
 import ru.zarina.zarina.ui.common.base.ErrorStateRework
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState

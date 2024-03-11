@@ -4,7 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.put
 import ru.zarina.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
 import ru.zarina.zarina.di.Qualifiers
-import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
 
