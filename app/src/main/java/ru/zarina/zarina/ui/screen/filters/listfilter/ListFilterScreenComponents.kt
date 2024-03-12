@@ -26,7 +26,7 @@ import ru.zarina.zarina.domain.filter.ColorFilterItem
 import ru.zarina.zarina.domain.filter.ListFilterItem
 import ru.zarina.zarina.domain.filter.SortFilterItem
 import ru.zarina.zarina.domain.filter.sorting
-import ru.zarina.zarina.ui.common.component.ColorIcon
+import ru.zarina.zarina.ui.common.component.ZarinaColorIcon
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
@@ -167,7 +167,7 @@ object ListFilterScreenComponents {
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             if (item is ColorFilterItem) {
-                ColorIcon(
+                ZarinaColorIcon(
                     color = item.color.toComposeColor(),
                     size = 16.dp,
                 )

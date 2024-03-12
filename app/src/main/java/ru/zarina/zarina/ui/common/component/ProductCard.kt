@@ -354,7 +354,7 @@ private fun Colors(
                 val color = colors.getOrNull(i)
                 if (color != null) {
                     key(color.id.value) {
-                        ColorIcon(color = color.color.toComposeColor())
+                        ZarinaColorIcon(color = color.color.toComposeColor())
                     }
                 }
             }

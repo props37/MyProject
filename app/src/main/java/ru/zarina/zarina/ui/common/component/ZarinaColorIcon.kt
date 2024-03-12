@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
-fun ColorIcon(
+fun ZarinaColorIcon(
     color: Color,
     modifier: Modifier = Modifier,
     size: Dp = 8.dp,
