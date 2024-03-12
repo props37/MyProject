@@ -44,6 +44,8 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.library.shimmer.shimmerToggleable
 import ru.zarina.zarina.utils.kotlin.capitalize
 
+// TODO: [High] Refactor
+
 @Composable
 fun ProductOrderCard(
     name: String,
