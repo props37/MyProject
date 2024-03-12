@@ -71,8 +71,6 @@ import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.component.ProductCard
 import ru.zarina.zarina.ui.common.component.ProductCardPlaceholder
-import ru.zarina.zarina.ui.common.component.ZarinaTag
-import ru.zarina.zarina.ui.common.component.ZarinaTagSkeleton
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
@@ -81,6 +79,8 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaIconButton
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.tag.ZarinaTag
+import ru.zarina.zarina.ui.common.component.tag.ZarinaTagSkeleton
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.util.library.paging.retryAppendPrependErrors
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.TagListState
