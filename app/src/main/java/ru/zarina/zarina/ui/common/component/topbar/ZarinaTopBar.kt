@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaCloseIconButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -45,19 +47,23 @@ fun ZarinaTopBar(
         val centerContentMeasurable = measurables.find { it.layoutId == LayoutId.CenterContent }
         val endContentMeasurable = measurables.find { it.layoutId == LayoutId.EndContent }
 
-        val centerContentConstraints = constraints.copy(minWidth = 0, minHeight = 0)
-        val centerContentPlaceable = centerContentMeasurable?.measure(centerContentConstraints)
-        val centerContentWidth = centerContentPlaceable?.width
-
-        val sideContentConstraints = centerContentWidth?.let {
-            constraints.copy(
-                minWidth = 0,
-                minHeight = 0,
-                maxWidth = (constraints.maxWidth - centerContentWidth) / 2,
-            )
-        } ?: constraints.copy(minWidth = 0, minHeight = 0)
+        val sideContentConstraints = constraints.copy(minWidth = 0, minHeight = 0)
         val startContentPlaceable = startContentMeasurable?.measure(sideContentConstraints)
         val endContentPlaceable = endContentMeasurable?.measure(sideContentConstraints)
+        val sideContentMaxWidth = maxOf(
+            startContentPlaceable?.width ?: 0,
+            endContentPlaceable?.width ?: 0,
+        )
+
+        val centerContentMaxWidth = constraints.maxWidth -
+                sideContentMaxWidth * 2 -
+                CenterContentHorizontalPadding.roundToPx() * 2
+        val centerContentConstraints = constraints.copy(
+            minWidth = 0,
+            minHeight = 0,
+            maxWidth = centerContentMaxWidth,
+        )
+        val centerContentPlaceable = centerContentMeasurable?.measure(centerContentConstraints)
 
         val contentMaxHeight = maxOf(
             startContentPlaceable?.height ?: 0,
@@ -111,3 +117,5 @@ private fun Preview() {
 }
 
 private enum class LayoutId { StartContent, CenterContent, EndContent }
+
+private val CenterContentHorizontalPadding: Dp get() = 16.dp
