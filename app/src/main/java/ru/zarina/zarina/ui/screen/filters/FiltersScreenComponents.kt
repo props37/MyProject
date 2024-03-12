@@ -55,7 +55,7 @@ import ru.zarina.zarina.domain.filter.ToggleFilter
 import ru.zarina.zarina.domain.filter.sorting
 import ru.zarina.zarina.ui.common.component.Counter
 import ru.zarina.zarina.ui.common.component.PriceFilter
-import ru.zarina.zarina.ui.common.component.ZarinaSwitch
+import ru.zarina.zarina.ui.common.component.switch_.ZarinaSwitch
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults

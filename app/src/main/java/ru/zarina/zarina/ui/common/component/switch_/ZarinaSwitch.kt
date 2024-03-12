@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component
+package ru.zarina.zarina.ui.common.component.switch_
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
