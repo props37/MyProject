@@ -4,5 +4,5 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
-val SkeletonTextShape: Shape
+val ZarinaSkeletonTextShape: Shape
     get() = RoundedCornerShape(2.dp)

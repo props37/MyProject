@@ -25,8 +25,8 @@ import com.valentinilk.shimmer.Shimmer
 import ru.zarina.zarina.domain.common.Media
 import ru.zarina.zarina.domain.common.MediaType
 import ru.zarina.zarina.ui.common.component.media.VideoPlayer
-import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
-import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.kotlin.loopingGet
 
@@ -36,7 +36,7 @@ fun MediaHorizontalPager(
     pagerState: PagerState,
     medias: List<Media>,
     modifier: Modifier = Modifier,
-    shimmer: Shimmer? = rememberSkeletonShimmer(),
+    shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
 ) {
     val placeholderEnterTransition = remember { fadeIn() }
     val placeholderExitTransition = remember { fadeOut() }
@@ -81,7 +81,7 @@ fun MediaHorizontalPager(
                 exit = placeholderExitTransition,
                 modifier = Modifier.matchParentSize(),
             ) {
-                Skeleton(
+                ZarinaSkeleton(
                     shimmer = shimmer,
                     shape = RectangleShape,
                     modifier = Modifier

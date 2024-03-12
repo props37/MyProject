@@ -48,9 +48,9 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
-import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
-import ru.zarina.zarina.ui.common.component.skeleton.SkeletonTextShape
-import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeletonTextShape
+import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.tab.ZarinaTabRow
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
@@ -405,7 +405,7 @@ object CatalogScreenComponents {
     private fun CategoryListSkeleton(
         modifier: Modifier = Modifier,
     ) {
-        val shimmer = rememberSkeletonShimmer(ShimmerBounds.Window)
+        val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
 
         LazyColumn(modifier = modifier) {
             items(
@@ -450,9 +450,9 @@ object CatalogScreenComponents {
                 else -> 0.4f
             }
             val height = 16.dp
-            val shape = remember { SkeletonTextShape }
+            val shape = remember { ZarinaSkeletonTextShape }
 
-            Skeleton(
+            ZarinaSkeleton(
                 shimmer = shimmer,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
@@ -461,7 +461,7 @@ object CatalogScreenComponents {
                     .clip(shape),
             )
 
-            Skeleton(
+            ZarinaSkeleton(
                 shimmer = shimmer,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)

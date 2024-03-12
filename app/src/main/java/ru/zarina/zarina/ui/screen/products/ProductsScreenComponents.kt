@@ -79,8 +79,8 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.button.ZarinaIconButton
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
-import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
-import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.util.library.paging.retryAppendPrependErrors
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.TagListState
@@ -136,7 +136,7 @@ object ProductsScreenComponents {
                         overflow = TextOverflow.Ellipsis,
                     )
                 } else {
-                    Skeleton(
+                    ZarinaSkeleton(
                         modifier = Modifier
                             .wrapContentWidth(align = Alignment.Start)
                             .fillMaxWidth(fraction = 0.5f)
@@ -232,7 +232,7 @@ object ProductsScreenComponents {
                 }
 
                 TagListState.Loading -> {
-                    val skeletonShimmer = rememberSkeletonShimmer()
+                    val skeletonShimmer = rememberZarinaSkeletonShimmer()
                     LazyRow(
                         horizontalArrangement = horizontalArrangement,
                         contentPadding = contentPadding,
@@ -342,7 +342,7 @@ object ProductsScreenComponents {
                     }
 
                     LoadState.Loading -> {
-                        val placeholderShimmer = rememberSkeletonShimmer()
+                        val placeholderShimmer = rememberZarinaSkeletonShimmer()
                         val itemModifier = Modifier.fillMaxWidth()
 
                         LazyVerticalGrid(
@@ -396,7 +396,7 @@ object ProductsScreenComponents {
         productCardActions: ProductCardActions,
         modifier: Modifier = Modifier,
     ) {
-        val placeholderShimmer = rememberSkeletonShimmer()
+        val placeholderShimmer = rememberZarinaSkeletonShimmer()
         val itemModifier = Modifier.fillMaxWidth()
 
         if (productPagingItems.itemCount > 0) {

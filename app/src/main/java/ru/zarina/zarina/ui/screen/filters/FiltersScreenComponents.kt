@@ -61,8 +61,8 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
-import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
-import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.common.util.domain.nameResId
@@ -289,7 +289,7 @@ object FiltersScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
-            val shimmer = rememberSkeletonShimmer(ShimmerBounds.Window)
+            val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
             repeat(FilterSkeletonItemCount) { index ->
                 Box(
                     modifier = Modifier
@@ -298,7 +298,7 @@ object FiltersScreenComponents {
                         .padding(horizontal = 16.dp),
                 ) {
                     val height = 16.dp
-                    Skeleton(
+                    ZarinaSkeleton(
                         shimmer = shimmer,
                         modifier = Modifier
                             .align(Alignment.CenterStart)
@@ -306,7 +306,7 @@ object FiltersScreenComponents {
                             .height(height),
                     )
 
-                    Skeleton(
+                    ZarinaSkeleton(
                         shimmer = shimmer,
                         modifier = Modifier
                             .align(Alignment.CenterEnd)

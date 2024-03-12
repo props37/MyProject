@@ -16,7 +16,7 @@ import com.valentinilk.shimmer.ShimmerTheme
 import com.valentinilk.shimmer.rememberShimmer
 
 @Composable
-fun rememberSkeletonShimmer(
+fun rememberZarinaSkeletonShimmer(
     bounds: ShimmerBounds = ShimmerBounds.View,
     durationMillis: Int = DurationMillis,
     width: Dp = Width,

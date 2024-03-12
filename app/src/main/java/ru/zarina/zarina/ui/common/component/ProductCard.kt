@@ -45,8 +45,8 @@ import ru.zarina.zarina.domain.product.currentPrice
 import ru.zarina.zarina.ui.common.component.button.ZarinaIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaLikeIconButton
 import ru.zarina.zarina.ui.common.component.pager.ZarinaHorizontalPagerIndicator
-import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
-import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -65,7 +65,7 @@ fun ProductCard(
     onAddToCartClicked: () -> Unit,
     onSubscribeClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    shimmer: Shimmer? = rememberSkeletonShimmer(),
+    shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
 ) {
     Column(modifier = modifier.clickable(onClick = onClick)) {
         Box(
@@ -199,11 +199,11 @@ fun ProductCard(
 @Composable
 fun ProductCardPlaceholder(
     modifier: Modifier = Modifier,
-    shimmer: Shimmer = rememberSkeletonShimmer(),
+    shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
 ) {
     Column(modifier = modifier) {
-        Skeleton(
-            shimmer = rememberSkeletonShimmer(width = 350.dp),
+        ZarinaSkeleton(
+            shimmer = rememberZarinaSkeletonShimmer(width = 350.dp),
             shape = RectangleShape,
             modifier = Modifier
                 .fillMaxWidth()
@@ -218,14 +218,14 @@ fun ProductCardPlaceholder(
                 .padding(horizontal = 16.dp)
         ) {
             val height = 16.dp
-            Skeleton(
+            ZarinaSkeleton(
                 shimmer = shimmer,
                 modifier = Modifier
                     .weight(1f)
                     .height(height),
             )
             Spacer(modifier = Modifier.width(24.dp))
-            Skeleton(
+            ZarinaSkeleton(
                 shimmer = shimmer,
                 modifier = Modifier.size(height),
             )
@@ -239,21 +239,21 @@ fun ProductCardPlaceholder(
                 .padding(horizontal = 16.dp)
         ) {
             val height = 10.dp
-            Skeleton(
+            ZarinaSkeleton(
                 shimmer = shimmer,
                 modifier = Modifier
                     .width(44.dp)
                     .height(height),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Skeleton(
+            ZarinaSkeleton(
                 shimmer = shimmer,
                 modifier = Modifier
                     .width(48.dp)
                     .height(height),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Skeleton(
+            ZarinaSkeleton(
                 shimmer = shimmer,
                 modifier = Modifier
                     .width(28.dp)
@@ -263,7 +263,7 @@ fun ProductCardPlaceholder(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Skeleton(
+        ZarinaSkeleton(
             shimmer = shimmer,
             modifier = Modifier
                 .padding(start = 16.dp)

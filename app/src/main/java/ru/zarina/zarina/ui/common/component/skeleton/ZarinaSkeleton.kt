@@ -11,10 +11,10 @@ import com.valentinilk.shimmer.shimmer
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
-fun Skeleton(
+fun ZarinaSkeleton(
     modifier: Modifier = Modifier,
-    shimmer: Shimmer? = rememberSkeletonShimmer(),
-    shape: Shape = SkeletonTextShape,
+    shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
+    shape: Shape = ZarinaSkeletonTextShape,
 ) {
     val shimmerModifier = if (shimmer != null) Modifier.shimmer(shimmer) else Modifier
     Box(

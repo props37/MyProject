@@ -36,8 +36,8 @@ import ru.zarina.zarina.ui.common.component.Counter
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
-import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
-import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.tab.ZarinaTabRow
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -121,15 +121,15 @@ object CartScreenComponents {
                             .rotate(90f),
                     )
                 } else {
-                    val shimmer = rememberSkeletonShimmer(ShimmerBounds.Window)
-                    Skeleton(
+                    val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
+                    ZarinaSkeleton(
                         shimmer = shimmer,
                         modifier = Modifier
                             .fillMaxWidth(fraction = 0.55f)
                             .height(16.dp),
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    Skeleton(
+                    ZarinaSkeleton(
                         shimmer = shimmer,
                         modifier = Modifier.size(16.dp),
                     )

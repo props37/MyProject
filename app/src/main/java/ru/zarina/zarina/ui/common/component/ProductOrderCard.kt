@@ -34,7 +34,7 @@ import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.product.Price
 import ru.zarina.zarina.domain.product.ProductColor
 import ru.zarina.zarina.domain.product.currentPrice
-import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -69,7 +69,7 @@ fun ProductOrderCard(
                 modifier = Modifier
                     .height(ImageHeight)
                     .aspectRatio(ImageAspectRatio)
-                    .shimmerToggleable(rememberSkeletonShimmer(), isImageShimmerEnabled)
+                    .shimmerToggleable(rememberZarinaSkeletonShimmer(), isImageShimmerEnabled)
                     .background(UiKitTheme.colors.background.skeleton),
             )
 

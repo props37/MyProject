@@ -33,8 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
-import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
-import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.rippletheme.DarkRippleTheme
 import ru.zarina.zarina.ui.common.rippletheme.LightRippleTheme
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -106,9 +106,9 @@ fun ZarinaTag(
 @Composable
 fun ZarinaTagSkeleton(
     modifier: Modifier = Modifier,
-    shimmer: Shimmer = rememberSkeletonShimmer(),
+    shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
 ) {
-    Skeleton(
+    ZarinaSkeleton(
         shimmer = shimmer,
         shape = ZarinaTagDefaults.Shape,
         modifier = modifier.size(
