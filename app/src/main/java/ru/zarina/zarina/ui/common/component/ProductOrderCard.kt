@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.common.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -65,51 +66,53 @@ fun ProductOrderCard(
         }
     }
 
-    Box(modifier = modifier) {
-        Row {
-            var isImageShimmerEnabled by remember(imageUrl) { mutableStateOf(true) }
-            AsyncImage(
-                model = imageUrl.value,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                onSuccess = { isImageShimmerEnabled = false },
-                modifier = Modifier
-                    .height(ImageHeight)
-                    .aspectRatio(ImageAspectRatio)
-                    .shimmerToggleable(rememberZarinaSkeletonShimmer(), isImageShimmerEnabled)
-                    .background(UiKitTheme.colors.background.skeleton),
+    Row(modifier = modifier.height(IntrinsicSize.Min)) {
+        var isImageShimmerEnabled by remember(imageUrl) { mutableStateOf(true) }
+        AsyncImage(
+            model = imageUrl.value,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            onSuccess = { isImageShimmerEnabled = false },
+            modifier = Modifier
+                .height(ImageHeight)
+                .aspectRatio(ImageAspectRatio)
+                .shimmerToggleable(rememberZarinaSkeletonShimmer(), isImageShimmerEnabled)
+                .background(UiKitTheme.colors.background.skeleton),
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column {
+            Text(
+                text = name.uppercase(),
+                style = UiKitTheme.typography.caption1.regular,
+                color = UiKitTheme.colors.text.general.regular.default,
             )
+            Spacer(modifier = Modifier.height(4.dp))
+            SizeText(size = size, sizeRu = sizeRu, height = height)
+            if (color != null) {
+                Spacer(modifier = Modifier.height(2.dp))
+                ColorText(color = color)
+            }
+            if (count != null && countStyle == ProductOrderCardCountStyle.Info) {
+                Spacer(modifier = Modifier.height(2.dp))
+                CountInfoText(count = count)
+            }
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
-            Column {
-                Text(
-                    text = name.uppercase(),
-                    style = UiKitTheme.typography.caption1.regular,
-                    color = UiKitTheme.colors.text.general.regular.default,
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                SizeText(size = size, sizeRu = sizeRu, height = height)
-                if (color != null) {
-                    Spacer(modifier = Modifier.height(2.dp))
-                    ColorText(color = color)
-                }
-                if (count != null && countStyle == ProductOrderCardCountStyle.Info) {
-                    Spacer(modifier = Modifier.height(2.dp))
-                    CountInfoText(count = count)
+            Row(verticalAlignment = Alignment.Bottom) {
+                // TODO: [High] Add selector count
+
+                if (price != null) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Price(
+                        price = price,
+                        count = count ?: 1,
+                        showOriginalPrice = showOriginalPrice,
+                    )
                 }
             }
-        }
-
-        // TODO: [High] Add selector count
-
-        if (price != null) {
-            Price(
-                price = price,
-                count = count ?: 1,
-                showOriginalPrice = showOriginalPrice,
-                modifier = Modifier.align(Alignment.BottomEnd),
-            )
         }
     }
 }
@@ -261,7 +264,6 @@ private fun PreviewNoCount() {
                 sizeRu = "48",
                 height = "170",
                 color = remember { FakeDataGenerator.getProductColor() },
-                count = 3,
                 price = remember { FakeDataGenerator.getPrice() },
                 modifier = Modifier.fillMaxWidth(),
             )
