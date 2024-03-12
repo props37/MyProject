@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun ScreenPlaceholder(
+fun ZarinaScreenPlaceholder(
     title: String,
     modifier: Modifier = Modifier,
 ) {
