@@ -45,11 +45,11 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.common.MediaType
 import ru.zarina.zarina.domain.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarHeightAsState
-import ru.zarina.zarina.ui.common.component.ZarinaLogo
-import ru.zarina.zarina.ui.common.component.ZarinaLogoAspectRatio
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.component.logo.ZarinaLogo
+import ru.zarina.zarina.ui.common.component.logo.ZarinaLogoAspectRatio
 import ru.zarina.zarina.ui.common.component.media.VideoPlayer
 import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
 import ru.zarina.zarina.ui.common.component.tab.ZarinaLooseTabRow

@@ -13,8 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.component.ZarinaLogo
-import ru.zarina.zarina.ui.common.component.ZarinaLogoAspectRatio
+import ru.zarina.zarina.ui.common.component.logo.ZarinaLogo
+import ru.zarina.zarina.ui.common.component.logo.ZarinaLogoAspectRatio
 import ru.zarina.zarina.ui.common.util.SplashScreenLogoSize
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
