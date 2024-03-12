@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.product.ProductOffer
-import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.button.CloseIconButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorScreenComponents.NavigationBarSpacer
@@ -40,7 +40,7 @@ object HeightSelectorScreenComponents {
     ) {
         ZarinaTopBar(
             startContent = {
-                BackIconButton(
+                ZarinaBackIconButton(
                     onClick = onBackClicked,
                     iconSize = TopBarIconSize,
                     modifier = Modifier.padding(start = 2.dp),

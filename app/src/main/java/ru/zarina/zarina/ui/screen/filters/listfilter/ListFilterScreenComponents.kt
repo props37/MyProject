@@ -27,7 +27,7 @@ import ru.zarina.zarina.domain.filter.ListFilterItem
 import ru.zarina.zarina.domain.filter.SortFilterItem
 import ru.zarina.zarina.domain.filter.sorting
 import ru.zarina.zarina.ui.common.component.ColorIcon
-import ru.zarina.zarina.ui.common.component.button.BackIconButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
@@ -51,7 +51,7 @@ object ListFilterScreenComponents {
     ) {
         ZarinaTopBar(
             startContent = {
-                BackIconButton(
+                ZarinaBackIconButton(
                     onClick = actions.onBackClicked,
                     iconSize = 20.dp,
                     modifier = Modifier.padding(start = 2.dp),

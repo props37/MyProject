@@ -73,7 +73,7 @@ import ru.zarina.zarina.ui.common.component.ProductCard
 import ru.zarina.zarina.ui.common.component.ProductCardPlaceholder
 import ru.zarina.zarina.ui.common.component.ZarinaTag
 import ru.zarina.zarina.ui.common.component.ZarinaTagSkeleton
-import ru.zarina.zarina.ui.common.component.button.BackIconButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
@@ -110,7 +110,7 @@ object ProductsScreenComponents {
                 .heightIn(min = TopBarDefaults.MinHeight)
                 .padding(vertical = TopBarDefaults.VerticalPadding),
         ) {
-            BackIconButton(
+            ZarinaBackIconButton(
                 onClick = actions.onBackClicked,
                 iconSize = TopBarIconSize,
                 modifier = Modifier.padding(start = 2.dp),

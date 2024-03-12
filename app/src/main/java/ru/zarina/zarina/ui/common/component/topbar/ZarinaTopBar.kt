@@ -13,8 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
-import ru.zarina.zarina.ui.common.component.button.BackIconButton
 import ru.zarina.zarina.ui.common.component.button.CloseIconButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -93,7 +93,7 @@ private fun Preview() {
     ZarinaPreview {
         ZarinaTopBar(
             startContent = {
-                BackIconButton(onClick = {})
+                ZarinaBackIconButton(onClick = {})
             },
             centerContent = {
                 Text(

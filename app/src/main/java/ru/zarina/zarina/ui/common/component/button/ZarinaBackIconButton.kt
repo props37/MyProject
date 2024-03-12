@@ -22,7 +22,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
-fun BackIconButton(
+fun ZarinaBackIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentDescription: String = stringResource(R.string.back),
@@ -58,7 +58,7 @@ fun BackIconButton(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        BackIconButton(
+        ZarinaBackIconButton(
             onClick = {},
             modifier = Modifier
                 .background(Color.White)

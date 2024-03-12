@@ -41,7 +41,7 @@ import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
-import ru.zarina.zarina.ui.common.component.button.BackIconButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.icon.CheckmarkAnimatedIcon
@@ -70,7 +70,7 @@ object CitySelectorScreenComponents {
     ) {
         ZarinaTopBar(
             startContent = {
-                BackIconButton(
+                ZarinaBackIconButton(
                     onClick = onBackClicked,
                     iconSize = 20.dp,
                     modifier = Modifier.padding(start = 2.dp),
