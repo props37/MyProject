@@ -26,11 +26,11 @@ import ru.zarina.zarina.domain.filter.ColorFilterItem
 import ru.zarina.zarina.domain.filter.ListFilterItem
 import ru.zarina.zarina.domain.filter.SortFilterItem
 import ru.zarina.zarina.domain.filter.sorting
-import ru.zarina.zarina.ui.common.component.ZarinaColorIcon
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.component.color.ZarinaColorIcon
 import ru.zarina.zarina.ui.common.component.icon.ZarinaCheckmarkAnimatedIcon
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar

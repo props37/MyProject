@@ -54,11 +54,11 @@ import ru.zarina.zarina.domain.filter.PriceFilter
 import ru.zarina.zarina.domain.filter.SortFilterItem
 import ru.zarina.zarina.domain.filter.ToggleFilter
 import ru.zarina.zarina.domain.filter.sorting
-import ru.zarina.zarina.ui.common.component.ZarinaCounter
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.component.counter.ZarinaCounter
 import ru.zarina.zarina.ui.common.component.pricefilter.PriceFilter
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
