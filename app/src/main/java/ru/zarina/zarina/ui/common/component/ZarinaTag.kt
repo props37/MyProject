@@ -119,11 +119,11 @@ fun ZarinaTagSkeleton(
 }
 
 object ZarinaTagDefaults {
-    val MinSize: Dp get() = 40.dp
+    val MinSize: Dp get() = 36.dp
 
     val Shape: Shape get() = RoundedCornerShape(2.dp)
 
-    val ContentPadding: PaddingValues get() = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
+    val ContentPadding: PaddingValues get() = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
 }
 
 @Preview
