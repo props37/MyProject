@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
-fun Counter(
+fun ZarinaCounter(
     value: String,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = UiKitTheme.typography.caption2.bold,

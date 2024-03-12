@@ -53,9 +53,8 @@ import ru.zarina.zarina.domain.filter.PriceFilter
 import ru.zarina.zarina.domain.filter.SortFilterItem
 import ru.zarina.zarina.domain.filter.ToggleFilter
 import ru.zarina.zarina.domain.filter.sorting
-import ru.zarina.zarina.ui.common.component.Counter
 import ru.zarina.zarina.ui.common.component.PriceFilter
-import ru.zarina.zarina.ui.common.component.switch_.ZarinaSwitch
+import ru.zarina.zarina.ui.common.component.ZarinaCounter
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
@@ -63,6 +62,7 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.switch_.ZarinaSwitch
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.common.util.domain.nameResId
@@ -388,7 +388,7 @@ object FiltersScreenComponents {
             Spacer(modifier = Modifier.width(8.dp))
 
             if (selectedCount > 0) {
-                Counter(
+                ZarinaCounter(
                     value = selectedCount.toString(),
                     textStyle = UiKitTheme.typography.footnote.bold,
                     contentPadding = PaddingValues(start = 8.dp, top = 1.dp, end = 8.dp),

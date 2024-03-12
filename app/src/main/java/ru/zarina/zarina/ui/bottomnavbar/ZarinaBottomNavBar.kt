@@ -68,7 +68,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.BottomNavBarBehavior
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
-import ru.zarina.zarina.ui.common.component.Counter
+import ru.zarina.zarina.ui.common.component.ZarinaCounter
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -261,7 +261,7 @@ private fun ItemCounter(
         modifier = modifier,
     ) { count ->
         if (count != null && count != 0) {
-            Counter(
+            ZarinaCounter(
                 value = count.toString(),
                 textStyle = UiKitTheme.typography.caption2.bold.unscalable(LocalDensity.current),
             )
