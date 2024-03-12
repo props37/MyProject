@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.component
+package ru.zarina.zarina.ui.common.component.pricefilter
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
