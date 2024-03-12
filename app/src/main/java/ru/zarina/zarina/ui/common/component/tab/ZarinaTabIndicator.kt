@@ -22,7 +22,7 @@ fun ZarinaTabIndicator(
     shape: Shape = CircleShape,
 ) {
     Box(
-        modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(height)
             .background(color = color)
