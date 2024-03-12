@@ -52,9 +52,7 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.media.VideoPlayer
 import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
-import ru.zarina.zarina.ui.common.component.tab.LooseTabRowDefaults.looseTabIndicatorOffset
 import ru.zarina.zarina.ui.common.component.tab.ZarinaLooseTabRow
-import ru.zarina.zarina.ui.common.component.tab.ZarinaTabIndicator
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import timber.log.Timber
@@ -88,12 +86,7 @@ object HomeScreenComponents {
             ZarinaLooseTabRow(
                 selectedTabIndex = selectedTabIndex,
                 backgroundColor = Color.Unspecified,
-                indicator = { tabPositions ->
-                    ZarinaTabIndicator(
-                        color = color,
-                        modifier = Modifier.looseTabIndicatorOffset(tabPositions[selectedTabIndex]),
-                    )
-                },
+                contentColor = UiKitTheme.colors.background.general.regular.default,
             ) {
                 genders.forEach { gender ->
                     ZarinaButton(

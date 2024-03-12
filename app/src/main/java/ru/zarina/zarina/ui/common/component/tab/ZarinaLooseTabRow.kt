@@ -10,8 +10,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material.TabRowDefaults
+import androidx.compose.material.LocalContentColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -26,59 +27,64 @@ import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.common.component.tab.LooseTabRowDefaults.looseTabIndicatorOffset
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
+// TODO: [High] Add support for Pager integration
+
 @Composable
 fun ZarinaLooseTabRow(
     selectedTabIndex: Int,
     modifier: Modifier = Modifier,
     backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
+    contentColor: Color = UiKitTheme.colors.background.general.inversed.default,
     indicator: @Composable (tabPositions: List<LooseTabPosition>) -> Unit = { tabPositions ->
-        TabRowDefaults.Indicator(
+        ZarinaTabIndicator(
             modifier = Modifier.looseTabIndicatorOffset(tabPositions[selectedTabIndex]),
         )
     },
     tabs: @Composable () -> Unit,
 ) {
-    SubcomposeLayout(
-        modifier = modifier
-            .background(backgroundColor)
-            .selectableGroup(),
-    ) { constraints ->
-        val tabMeasurables = subcompose(Slot.Tabs, tabs)
-        val tabCount = tabMeasurables.size
+    CompositionLocalProvider(LocalContentColor provides contentColor) {
+        SubcomposeLayout(
+            modifier = modifier
+                .background(backgroundColor)
+                .selectableGroup(),
+        ) { constraints ->
+            val tabMeasurables = subcompose(Slot.Tabs, tabs)
+            val tabCount = tabMeasurables.size
 
-        var availableTabWidth = constraints.maxWidth
-        val tabPlaceables = tabMeasurables.map {
-            val constraints = constraints.copy(minWidth = 0, maxWidth = availableTabWidth)
-            val placeable = it.measure(constraints)
-            availableTabWidth -= placeable.width
-            placeable
-        }
-
-        var tabPositionLeft = 0.dp
-        val tabPositions = List(tabCount) { index ->
-            val tabPlaceable = tabPlaceables[index]
-            val tabWidthDp = tabPlaceable.width.toDp()
-            val tabPosition = LooseTabPosition(tabPositionLeft, tabWidthDp)
-            tabPositionLeft += tabWidthDp
-            tabPosition
-        }
-
-        val tabRowWidth = tabPlaceables.sumOf { it.width }
-        val tabRowHeight = tabPlaceables.maxByOrNull { it.height }?.height ?: 0
-
-        layout(tabRowWidth, tabRowHeight) {
-            var tabX = 0
-            tabPlaceables.forEach { placeable ->
-                placeable.placeRelative(tabX, 0)
-                tabX += placeable.width
+            var availableTabWidth = constraints.maxWidth
+            val tabPlaceables = tabMeasurables.map {
+                val constraints = constraints.copy(minWidth = 0, maxWidth = availableTabWidth)
+                val placeable = it.measure(constraints)
+                availableTabWidth -= placeable.width
+                placeable
             }
 
-            subcompose(Slot.Indicator) {
-                indicator(tabPositions)
-            }.forEach { measurable ->
-                val constraints = Constraints.fixed(tabRowWidth, tabRowHeight)
-                val placeable = measurable.measure(constraints)
-                placeable.placeRelative(0, 0)
+            var tabPositionLeft = 0.dp
+            val tabPositions = List(tabCount) { index ->
+                val tabPlaceable = tabPlaceables[index]
+                val tabWidthDp = tabPlaceable.width.toDp()
+                val tabPosition = LooseTabPosition(tabPositionLeft, tabWidthDp)
+                tabPositionLeft += tabWidthDp
+                tabPosition
+            }
+
+            val tabRowWidth = tabPlaceables.sumOf { it.width }
+            val tabRowHeight = tabPlaceables.maxByOrNull { it.height }?.height ?: 0
+
+            layout(tabRowWidth, tabRowHeight) {
+                var tabX = 0
+                tabPlaceables.forEach { placeable ->
+                    placeable.placeRelative(tabX, 0)
+                    tabX += placeable.width
+                }
+
+                subcompose(Slot.Indicator) {
+                    indicator(tabPositions)
+                }.forEach { measurable ->
+                    val constraints = Constraints.fixed(tabRowWidth, tabRowHeight)
+                    val placeable = measurable.measure(constraints)
+                    placeable.placeRelative(0, 0)
+                }
             }
         }
     }
@@ -136,5 +142,7 @@ class LooseTabPosition(val left: Dp, val width: Dp) {
         return "TabPosition(left=$left, right=$right, width=$width)"
     }
 }
+
+// TODO: [High] Add preview
 
 private enum class Slot { Tabs, Indicator }

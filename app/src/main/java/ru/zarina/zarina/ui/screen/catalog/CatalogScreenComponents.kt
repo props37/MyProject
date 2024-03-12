@@ -23,8 +23,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -54,7 +51,7 @@ import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
 import ru.zarina.zarina.ui.common.component.skeleton.SkeletonTextShape
 import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
-import ru.zarina.zarina.ui.common.component.tab.ZarinaTabIndicator
+import ru.zarina.zarina.ui.common.component.tab.ZarinaTabRow
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
@@ -141,16 +138,8 @@ object CatalogScreenComponents {
             genders.indexOf(currentGender)
         }
 
-        // TODO: [Medium] Extract?
-        TabRow(
+        ZarinaTabRow(
             selectedTabIndex = selectedTabIndex,
-            backgroundColor = Color.Unspecified,
-            indicator = { tabPositions ->
-                ZarinaTabIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                )
-            },
-            divider = {},
             modifier = modifier,
         ) {
             genders.forEach { gender ->

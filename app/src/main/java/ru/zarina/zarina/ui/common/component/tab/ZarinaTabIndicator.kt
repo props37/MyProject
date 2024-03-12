@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -12,20 +13,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun ZarinaTabIndicator(
     modifier: Modifier = Modifier,
     height: Dp = 1.dp,
-    color: Color = UiKitTheme.colors.background.general.inversed.default,
+    color: Color = LocalContentColor.current,
     shape: Shape = CircleShape,
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(height)
-            .background(color = color)
+            .background(color)
             .clip(shape),
     )
 }
