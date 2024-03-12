@@ -52,8 +52,8 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.media.VideoPlayer
 import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
-import ru.zarina.zarina.ui.common.component.tab.LooseTabRow
 import ru.zarina.zarina.ui.common.component.tab.LooseTabRowDefaults.looseTabIndicatorOffset
+import ru.zarina.zarina.ui.common.component.tab.ZarinaLooseTabRow
 import ru.zarina.zarina.ui.common.component.tab.ZarinaTabIndicator
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -85,7 +85,7 @@ object HomeScreenComponents {
             val selectedTabIndex = remember(genders, currentGender) {
                 genders.indexOf(currentGender)
             }
-            LooseTabRow(
+            ZarinaLooseTabRow(
                 selectedTabIndex = selectedTabIndex,
                 indicator = { tabPositions ->
                     ZarinaTabIndicator(

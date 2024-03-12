@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.common.component.tab.LooseTabRowDefaults.looseTabIndicatorOffset
 
 @Composable
-fun LooseTabRow(
+fun ZarinaLooseTabRow(
     selectedTabIndex: Int,
     modifier: Modifier = Modifier,
     indicator: @Composable (tabPositions: List<LooseTabPosition>) -> Unit = { tabPositions ->
@@ -96,7 +96,8 @@ object LooseTabRowDefaults {
             animationSpec = animationSpec,
             label = "looseTabIndicatorOffset indicator offset",
         )
-        fillMaxWidth()
+        this
+            .fillMaxWidth()
             .wrapContentSize(Alignment.BottomStart)
             .offset(x = indicatorOffset)
             .width(currentTabWidth)
