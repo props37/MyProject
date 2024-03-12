@@ -32,7 +32,7 @@ import ru.zarina.zarina.util.kotlin.loopingGet
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MediaHorizontalPager(
+fun ZarinaMediaHorizontalPager(
     pagerState: PagerState,
     medias: List<Media>,
     modifier: Modifier = Modifier,

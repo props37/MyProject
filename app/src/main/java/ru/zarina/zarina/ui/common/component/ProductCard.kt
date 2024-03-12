@@ -75,7 +75,7 @@ fun ProductCard(
         ) {
             val pagerState = rememberEndlessPagerState(itemCount = product.media.size)
 
-            MediaHorizontalPager(
+            ZarinaMediaHorizontalPager(
                 pagerState = pagerState,
                 medias = product.media,
                 shimmer = shimmer,
