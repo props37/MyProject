@@ -33,7 +33,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.ripple.rememberRipple
@@ -76,6 +75,7 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.button.ZarinaIconButton
+import ru.zarina.zarina.ui.common.component.pullrefresh.ZarinaPullRefreshIndicator
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
@@ -304,11 +304,9 @@ object ProductsScreenComponents {
                 },
             )
 
-            PullRefreshIndicator(
+            ZarinaPullRefreshIndicator(
                 refreshing = isPullRefreshing,
                 state = pullRefreshState,
-                backgroundColor = UiKitTheme.colors.background.general.regular.default,
-                contentColor = UiKitTheme.colors.icon.regular.default,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .zIndex(1f),
