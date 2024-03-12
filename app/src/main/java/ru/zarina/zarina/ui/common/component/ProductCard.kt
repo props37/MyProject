@@ -42,7 +42,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.domain.product.ProductColor
 import ru.zarina.zarina.domain.product.currentPrice
-import ru.zarina.zarina.ui.common.component.button.LikeIconButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaLikeIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaIconButton
 import ru.zarina.zarina.ui.common.component.pager.HorizontalPagerIndicator
 import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
@@ -81,7 +81,7 @@ fun ProductCard(
                 shimmer = shimmer,
                 modifier = Modifier.matchParentSize(),
             )
-            LikeIconButton(
+            ZarinaLikeIconButton(
                 isLiked = product.isInFavorites,
                 onClick = onAddToFavoritesClicked,
                 iconSize = IconSize,

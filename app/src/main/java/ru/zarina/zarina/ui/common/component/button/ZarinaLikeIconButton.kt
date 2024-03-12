@@ -23,7 +23,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
-fun LikeIconButton(
+fun ZarinaLikeIconButton(
     isLiked: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -60,7 +60,7 @@ fun LikeIconButton(
 @Composable
 private fun Preview() {
     var isLiked by remember { mutableStateOf(false) }
-    LikeIconButton(
+    ZarinaLikeIconButton(
         isLiked = isLiked,
         onClick = { isLiked = !isLiked },
         modifier = Modifier
