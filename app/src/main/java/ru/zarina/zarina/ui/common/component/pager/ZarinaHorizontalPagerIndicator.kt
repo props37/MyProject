@@ -34,7 +34,7 @@ import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HorizontalPagerIndicator(
+fun ZarinaHorizontalPagerIndicator(
     pagerState: PagerState,
     itemCount: Int,
     modifier: Modifier = Modifier,
