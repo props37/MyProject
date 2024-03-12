@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.domain.geography.KladrId
-import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
@@ -149,8 +149,8 @@ class CitySelectorViewModel @Inject constructor(
                     },
                     onFailure = { throwable ->
                         val errorState = when (throwable) {
-                            is IOException -> ErrorStateRework.NETWORK
-                            else -> ErrorStateRework.GENERIC
+                            is IOException -> ErrorState.NETWORK
+                            else -> ErrorState.GENERIC
                         }
                         CityListState.Error(errorState)
                     },
@@ -205,7 +205,7 @@ class CitySelectorViewModel @Inject constructor(
         data class CityList(val items: ImmutableList<CityListItem>) : CityListState()
 
         @Immutable
-        data class Error(val errorState: ErrorStateRework) : CityListState()
+        data class Error(val errorState: ErrorState) : CityListState()
     }
 
     @Stable

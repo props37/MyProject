@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.parcelize.Parcelize
 import ru.zarina.zarina.domain.content.HomeContent
-import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
@@ -76,8 +76,8 @@ class HomeViewModel @Inject constructor(
                 },
                 onFailure = { throwable ->
                     val errorState = when (throwable) {
-                        is IOException -> ErrorStateRework.NETWORK
-                        else -> ErrorStateRework.GENERIC
+                        is IOException -> ErrorState.NETWORK
+                        else -> ErrorState.GENERIC
                     }
                     ContentState.Error(errorState)
                 },
@@ -124,7 +124,7 @@ class HomeViewModel @Inject constructor(
         data class Success(val content: HomeContent) : ContentState()
 
         @Immutable
-        data class Error(val errorState: ErrorStateRework) : ContentState()
+        data class Error(val errorState: ErrorState) : ContentState()
     }
 
     companion object {

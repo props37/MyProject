@@ -30,7 +30,7 @@ import kotlinx.parcelize.Parcelize
 import ru.zarina.zarina.domain.category.Categories
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.category.withFlattenedChildren
-import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
@@ -94,8 +94,8 @@ class CatalogViewModel @Inject constructor(
                 },
                 onFailure = { throwable ->
                     val state = when (throwable) {
-                        is IOException -> ErrorStateRework.NETWORK
-                        else -> ErrorStateRework.GENERIC
+                        is IOException -> ErrorState.NETWORK
+                        else -> ErrorState.GENERIC
                     }
                     CategoryListState.Error(state)
                 },
@@ -239,7 +239,7 @@ class CatalogViewModel @Inject constructor(
         ) : CategoryListState()
 
         @Immutable
-        data class Error(val state: ErrorStateRework) : CategoryListState()
+        data class Error(val state: ErrorState) : CategoryListState()
     }
 
     @Immutable

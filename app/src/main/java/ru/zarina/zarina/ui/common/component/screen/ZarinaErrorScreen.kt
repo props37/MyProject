@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -32,7 +32,7 @@ import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 
 @Composable
 fun ZarinaErrorScreen(
-    state: ErrorStateRework,
+    state: ErrorState,
     onRefreshClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -94,7 +94,7 @@ fun ZarinaErrorScreen(
 private fun NetworkErrorPreview() {
     ZarinaTheme {
         ZarinaErrorScreen(
-            state = ErrorStateRework.NETWORK,
+            state = ErrorState.NETWORK,
             onRefreshClicked = {},
             modifier = Modifier
                 .background(Color.White)
@@ -110,7 +110,7 @@ private fun NetworkErrorPreview() {
 private fun GenericErrorPreview() {
     ZarinaTheme {
         ZarinaErrorScreen(
-            state = ErrorStateRework.GENERIC,
+            state = ErrorState.GENERIC,
             onRefreshClicked = {},
             modifier = Modifier
                 .background(Color.White)

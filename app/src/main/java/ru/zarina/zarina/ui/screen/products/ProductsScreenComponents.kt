@@ -68,7 +68,7 @@ import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.product.Product
-import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.component.ProductCard
 import ru.zarina.zarina.ui.common.component.ProductCardPlaceholder
 import ru.zarina.zarina.ui.common.component.ZarinaTag
@@ -368,8 +368,8 @@ object ProductsScreenComponents {
                     is LoadState.Error -> {
                         val state = remember(loadState.error) {
                             when (loadState.error) {
-                                is IOException -> ErrorStateRework.NETWORK
-                                else -> ErrorStateRework.GENERIC
+                                is IOException -> ErrorState.NETWORK
+                                else -> ErrorState.GENERIC
                             }
                         }
 

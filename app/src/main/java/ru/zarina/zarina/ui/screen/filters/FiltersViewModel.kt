@@ -25,7 +25,7 @@ import ru.zarina.zarina.domain.filter.coerceInAvailable
 import ru.zarina.zarina.domain.filter.reset
 import ru.zarina.zarina.domain.filter.updateWith
 import ru.zarina.zarina.domain.product.CategoryProductInfo
-import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
@@ -123,8 +123,8 @@ class FiltersViewModel @AssistedInject constructor(
                 },
                 onFailure = { throwable ->
                     val errorState = when (throwable) {
-                        is IOException -> ErrorStateRework.NETWORK
-                        else -> ErrorStateRework.GENERIC
+                        is IOException -> ErrorState.NETWORK
+                        else -> ErrorState.GENERIC
                     }
                     FilterListState.Error(errorState)
                 },
@@ -225,7 +225,7 @@ class FiltersViewModel @AssistedInject constructor(
 
         data class FilterList(val filters: Filters) : FilterListState()
 
-        data class Error(val errorState: ErrorStateRework) : FilterListState()
+        data class Error(val errorState: ErrorState) : FilterListState()
     }
 
     @AssistedFactory

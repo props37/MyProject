@@ -5,7 +5,7 @@ import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentSet
 import ru.zarina.zarina.domain.category.Category
-import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel
 
@@ -19,7 +19,7 @@ class CategoryListStatePreviewParameterProvider :
                 menItems = getCategoryListItems().toImmutableList(),
             ),
             CatalogViewModel.CategoryListState.Loading,
-            CatalogViewModel.CategoryListState.Error(ErrorStateRework.NETWORK),
+            CatalogViewModel.CategoryListState.Error(ErrorState.NETWORK),
         )
 
     private fun getCategoryListItems(): List<CatalogViewModel.CategoryListItem> {

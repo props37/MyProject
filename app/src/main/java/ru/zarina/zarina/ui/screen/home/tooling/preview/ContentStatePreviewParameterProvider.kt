@@ -5,7 +5,7 @@ import ru.zarina.zarina.domain.common.Media
 import ru.zarina.zarina.domain.common.MediaType
 import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.content.HomeContent
-import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.screen.home.HomeViewModel
 import kotlin.random.Random
 
@@ -14,7 +14,7 @@ class ContentStatePreviewParameterProvider : PreviewParameterProvider<HomeViewMo
         get() = sequenceOf(
             HomeViewModel.ContentState.Success(getHomeContent()),
             HomeViewModel.ContentState.Loading,
-            HomeViewModel.ContentState.Error(ErrorStateRework.NETWORK),
+            HomeViewModel.ContentState.Error(ErrorState.NETWORK),
         )
 
     private fun getHomeContent(): HomeContent {

@@ -3,7 +3,7 @@ package ru.zarina.zarina.ui.common.base
 import androidx.annotation.DrawableRes
 import ru.zarina.zarina.R
 
-data class ErrorStateRework(
+data class ErrorState(
     @DrawableRes
     val iconResId: Int,
     val title: Text,
@@ -12,8 +12,8 @@ data class ErrorStateRework(
     val refreshButtonText: Text = Text.Resource(R.string.refresh),
 ) {
     companion object {
-        val NETWORK: ErrorStateRework
-            get() = ErrorStateRework(
+        val NETWORK: ErrorState
+            get() = ErrorState(
                 iconResId = R.drawable.ic_wifi_error_24,
                 title = Text.Resource(R.string.internet_connection_error),
                 body = Text.Resource(R.string.check_internet_connection_and_refresh_page),
@@ -21,8 +21,8 @@ data class ErrorStateRework(
                 refreshButtonText = Text.Resource(R.string.refresh),
             )
 
-        val GENERIC: ErrorStateRework
-            get() = ErrorStateRework(
+        val GENERIC: ErrorState
+            get() = ErrorState(
                 iconResId = R.drawable.ic_heart_broken_outline_24,
                 title = Text.Resource(R.string.something_went_wrong),
                 body = Text.Resource(R.string.refresh_page_or_come_back_later),
