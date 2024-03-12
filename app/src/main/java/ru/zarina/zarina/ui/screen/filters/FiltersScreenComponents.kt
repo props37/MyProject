@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -391,7 +392,11 @@ object FiltersScreenComponents {
                 ZarinaCounter(
                     value = selectedCount.toString(),
                     textStyle = UiKitTheme.typography.footnote.bold,
-                    contentPadding = PaddingValues(start = 8.dp, top = 1.dp, end = 8.dp),
+                    modifier = Modifier
+                        .sizeIn(
+                            minWidth = MultiSelectionFilterItemCounterMinSize,
+                            minHeight = MultiSelectionFilterItemCounterMinSize,
+                        ),
                 )
             }
 
@@ -517,4 +522,6 @@ object FiltersScreenComponents {
     private val FilterTitleColor: Color
         @Composable
         get() = UiKitTheme.colors.text.general.regular.default
+
+    private val MultiSelectionFilterItemCounterMinSize: Dp get() = 24.dp
 }

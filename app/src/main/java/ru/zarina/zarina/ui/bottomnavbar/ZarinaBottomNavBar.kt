@@ -33,6 +33,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -59,6 +60,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -264,6 +266,8 @@ private fun ItemCounter(
             ZarinaCounter(
                 value = count.toString(),
                 textStyle = UiKitTheme.typography.caption2.bold.unscalable(LocalDensity.current),
+                modifier = Modifier
+                    .sizeIn(minWidth = ItemCounterMinSize, minHeight = ItemCounterMinSize),
             )
         }
     }
@@ -279,6 +283,20 @@ private fun isItemSelected(
         itemRoutes.contains(route)
     }
     return lastBottomNavItemEntry?.destination?.route == bottomNavItem.baseRoute.route
+}
+
+@Preview
+@FontScalePreviews
+@DensityPreviews
+@Composable
+private fun Preview() {
+    ZarinaPreview {
+        ZarinaBottomNavBar(
+            navController = rememberNavController(),
+            cartProductCount = 5,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
 }
 
 private val DefaultWindowInsets: WindowInsets
@@ -301,16 +319,4 @@ private val BottomNavBarContentAnimationSpec: SpringSpec<IntOffset>
         visibilityThreshold = IntOffset.VisibilityThreshold,
     )
 
-@Preview
-@FontScalePreviews
-@DensityPreviews
-@Composable
-private fun Preview() {
-    ZarinaPreview {
-        ZarinaBottomNavBar(
-            navController = rememberNavController(),
-            cartProductCount = 5,
-            modifier = Modifier.fillMaxWidth(),
-        )
-    }
-}
+private val ItemCounterMinSize: Dp get() = 16.dp
