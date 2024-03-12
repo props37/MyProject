@@ -40,11 +40,11 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.textString
-import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.icon.ZarinaCheckmarkAnimatedIcon
+import ru.zarina.zarina.ui.common.component.loader.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
