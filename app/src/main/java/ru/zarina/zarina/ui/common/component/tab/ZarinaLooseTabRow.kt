@@ -4,6 +4,7 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
@@ -16,17 +17,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.common.component.tab.LooseTabRowDefaults.looseTabIndicatorOffset
+import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun ZarinaLooseTabRow(
     selectedTabIndex: Int,
     modifier: Modifier = Modifier,
+    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
     indicator: @Composable (tabPositions: List<LooseTabPosition>) -> Unit = { tabPositions ->
         TabRowDefaults.Indicator(
             modifier = Modifier.looseTabIndicatorOffset(tabPositions[selectedTabIndex]),
@@ -34,7 +38,11 @@ fun ZarinaLooseTabRow(
     },
     tabs: @Composable () -> Unit,
 ) {
-    SubcomposeLayout(modifier = modifier.selectableGroup()) { constraints ->
+    SubcomposeLayout(
+        modifier = modifier
+            .background(backgroundColor)
+            .selectableGroup(),
+    ) { constraints ->
         val tabMeasurables = subcompose(Slot.Tabs, tabs)
         val tabCount = tabMeasurables.size
 

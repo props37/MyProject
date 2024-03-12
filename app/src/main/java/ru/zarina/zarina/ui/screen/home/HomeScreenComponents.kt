@@ -87,6 +87,7 @@ object HomeScreenComponents {
             }
             ZarinaLooseTabRow(
                 selectedTabIndex = selectedTabIndex,
+                backgroundColor = Color.Unspecified,
                 indicator = { tabPositions ->
                     ZarinaTabIndicator(
                         color = color,
