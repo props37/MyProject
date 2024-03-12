@@ -20,7 +20,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 
 // TODO: [Low] Rewrite animation
 @Composable
-fun CheckmarkAnimatedIcon(
+fun ZarinaCheckmarkAnimatedIcon(
     isVisible: Boolean,
     modifier: Modifier = Modifier,
     contentDescriptionResId: (Boolean) -> Int? = { isVisible ->
@@ -42,7 +42,7 @@ fun CheckmarkAnimatedIcon(
         val maskWidthFraction = animateFloatAsState(
             targetValue = if (isVisible) 0f else 1f,
             animationSpec = tween(durationMillis = 200),
-            label = "CheckmarkAnimatedIcon mask",
+            label = "ZarinaCheckmarkAnimatedIcon mask",
         )
 
         Box(

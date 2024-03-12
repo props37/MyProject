@@ -31,7 +31,7 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
-import ru.zarina.zarina.ui.common.component.icon.CheckmarkAnimatedIcon
+import ru.zarina.zarina.ui.common.component.icon.ZarinaCheckmarkAnimatedIcon
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.common.util.domain.nameResId
@@ -191,7 +191,7 @@ object ListFilterScreenComponents {
             Spacer(modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(16.dp))
 
-            CheckmarkAnimatedIcon(
+            ZarinaCheckmarkAnimatedIcon(
                 isVisible = item.isSelected,
                 iconSize = 16.dp,
                 modifier = Modifier.padding(start = if (item.isSelected) 16.dp else 0.dp),

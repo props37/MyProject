@@ -44,7 +44,7 @@ import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
-import ru.zarina.zarina.ui.common.component.icon.CheckmarkAnimatedIcon
+import ru.zarina.zarina.ui.common.component.icon.ZarinaCheckmarkAnimatedIcon
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
@@ -293,7 +293,7 @@ object CitySelectorScreenComponents {
                         }
                     }
 
-                    CheckmarkAnimatedIcon(
+                    ZarinaCheckmarkAnimatedIcon(
                         isVisible = isSelected,
                         iconSize = 16.dp,
                         modifier = Modifier.padding(start = if (isSelected) 16.dp else 0.dp),
