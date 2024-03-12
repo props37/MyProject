@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -45,6 +44,7 @@ import ru.zarina.zarina.ui.common.rippletheme.LightRippleTheme
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.ZarinaTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.util.compose.defaultMinSize
 
 @Composable
 fun ZarinaButton(
@@ -109,7 +109,7 @@ fun ZarinaButton(
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
-                .defaultMinSize(minHeight = minSize, minWidth = minSize)
+                .defaultMinSize(minSize)
                 .clip(shape)
                 .drawBehind { drawRect(backgroundColor.value) }
                 .border(width = 1.dp, color = borderColor.value, shape = shape)

@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -73,6 +72,7 @@ import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.Crossfade
+import ru.zarina.zarina.util.compose.sizeIn
 
 object FiltersScreenComponents {
 
@@ -392,11 +392,7 @@ object FiltersScreenComponents {
                 ZarinaCounter(
                     value = selectedCount.toString(),
                     textStyle = UiKitTheme.typography.footnote.bold,
-                    modifier = Modifier
-                        .sizeIn(
-                            minWidth = MultiSelectionFilterItemCounterMinSize,
-                            minHeight = MultiSelectionFilterItemCounterMinSize,
-                        ),
+                    modifier = Modifier.sizeIn(minSize = 24.dp),
                 )
             }
 

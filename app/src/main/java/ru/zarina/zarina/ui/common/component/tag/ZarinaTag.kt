@@ -8,7 +8,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,6 +38,7 @@ import ru.zarina.zarina.ui.common.rippletheme.DarkRippleTheme
 import ru.zarina.zarina.ui.common.rippletheme.LightRippleTheme
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.defaultMinSize
 
 @Composable
 fun ZarinaTag(
@@ -84,10 +84,7 @@ fun ZarinaTag(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
-                .defaultMinSize(
-                    minWidth = ZarinaTagDefaults.MinSize,
-                    minHeight = ZarinaTagDefaults.MinSize,
-                )
+                .defaultMinSize(ZarinaTagDefaults.MinSize)
                 .clip(shape)
                 .drawBehind { drawRect(backgroundColor.value) }
                 .clickable(

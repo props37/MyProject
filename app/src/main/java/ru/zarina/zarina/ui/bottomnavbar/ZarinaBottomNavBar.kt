@@ -33,7 +33,6 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -60,7 +59,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -77,6 +75,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.HorizontalAndBottom
+import ru.zarina.zarina.util.compose.sizeIn
 import ru.zarina.zarina.util.compose.unscalable
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -266,8 +265,7 @@ private fun ItemCounter(
             ZarinaCounter(
                 value = count.toString(),
                 textStyle = UiKitTheme.typography.caption2.bold.unscalable(LocalDensity.current),
-                modifier = Modifier
-                    .sizeIn(minWidth = ItemCounterMinSize, minHeight = ItemCounterMinSize),
+                modifier = Modifier.sizeIn(minSize = 16.dp),
             )
         }
     }
@@ -318,5 +316,3 @@ private val BottomNavBarContentAnimationSpec: SpringSpec<IntOffset>
         stiffness = BottomNavBarAnimationSpringStiffness,
         visibilityThreshold = IntOffset.VisibilityThreshold,
     )
-
-private val ItemCounterMinSize: Dp get() = 16.dp
