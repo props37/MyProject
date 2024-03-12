@@ -35,7 +35,7 @@ fun LikeIconButton(
     indication: Indication? = rememberRipple(bounded = false, radius = iconSize),
     isBouncingEnabled: Boolean = true,
 ) {
-    ZarinaIconButtonBouncing(
+    ZarinaBouncingIconButton(
         onClick = onClick,
         indication = indication,
         isBouncingEnabled = isBouncingEnabled,

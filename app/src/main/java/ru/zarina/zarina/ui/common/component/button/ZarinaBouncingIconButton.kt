@@ -30,7 +30,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
-fun ZarinaIconButtonBouncing(
+fun ZarinaBouncingIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
@@ -102,7 +102,7 @@ fun ZarinaIconButtonBouncing(
 @Preview
 @Composable
 private fun Preview() {
-    ZarinaIconButtonBouncing(
+    ZarinaBouncingIconButton(
         onClick = {},
         modifier = Modifier
             .background(Color.White)
