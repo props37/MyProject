@@ -42,7 +42,7 @@ import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.old.DeliveryAvailability
 import ru.zarina.zarina.domain.old.Product
-import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ProductHorizontalSection
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
@@ -87,14 +87,14 @@ fun ProductScreenContent(
     cache: State<Cache?>,
 ) {
     val errorState = when (errorType) {
-        ProductViewModel.ErrorType.NETWORK -> ErrorState.NETWORK
-        ProductViewModel.ErrorType.NOT_FOUND -> ErrorState(
+        ProductViewModel.ErrorType.NETWORK -> ErrorStateOld.NETWORK
+        ProductViewModel.ErrorType.NOT_FOUND -> ErrorStateOld(
             icon = R.drawable.ic_magnifying_glass_96,
             title = ru.zarina.zarina.ui.common.base.Text.Resource(R.string.product_not_on_sale),
             subtitle = ru.zarina.zarina.ui.common.base.Text.Resource(R.string.dont_fret_catalog),
         )
 
-        ProductViewModel.ErrorType.GENERIC -> ErrorState.GENERIC
+        ProductViewModel.ErrorType.GENERIC -> ErrorStateOld.GENERIC
         null -> null
     }
     val scrollState = rememberScrollState()

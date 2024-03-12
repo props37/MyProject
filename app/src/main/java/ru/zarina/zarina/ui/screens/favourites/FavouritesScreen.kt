@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.old.Product
-import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ModalError
@@ -60,7 +60,7 @@ fun FavoritesScreenContent(
         val isLoading =
             favorites.loadState.append == LoadState.Loading || favorites.loadState.refresh == LoadState.Loading
         val errorState = when {
-            !isLoading && favorites.itemCount == 0 -> ErrorState(
+            !isLoading && favorites.itemCount == 0 -> ErrorStateOld(
                 icon = R.drawable.ic_heart_96,
                 title = Text.Resource(R.string.favorites_are_empty),
                 subtitle = Text.Resource(R.string.save_interesting_products_to_favorites),

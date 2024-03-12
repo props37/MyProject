@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
@@ -28,7 +28,7 @@ import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @Composable
 fun ModalError(
-    state: ErrorState,
+    state: ErrorStateOld,
     modifier: Modifier = Modifier,
     onButtonClick: () -> Unit = {},
 ) {
@@ -49,7 +49,7 @@ fun ModalError(
 
 @Composable
 private fun ErrorContent(
-    state: ErrorState,
+    state: ErrorStateOld,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -83,7 +83,7 @@ private fun ErrorContent(
 
 @Composable
 private fun RefreshButton(
-    state: ErrorState,
+    state: ErrorStateOld,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -107,7 +107,7 @@ private fun RefreshButton(
 fun ModalErrorPreview() {
     ZarinaTheme {
         ModalError(
-            state = ErrorState(
+            state = ErrorStateOld(
                 icon = R.drawable.ic_no_network_96,
                 title = Text.String("Error title"),
                 subtitle = Text.String("Error subtitle"),

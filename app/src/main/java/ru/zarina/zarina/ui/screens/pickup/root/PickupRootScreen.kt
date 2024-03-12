@@ -40,7 +40,7 @@ import ru.zarina.zarina.domain.old.City
 import ru.zarina.zarina.domain.old.Offer
 import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.domain.old.Stock
-import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.CityPicker
 import ru.zarina.zarina.ui.common.components.HorizontalProductCard
@@ -74,8 +74,8 @@ fun PickupRootScreenContent(
     onRefreshClick: () -> Unit,
 ) {
     val errorState = when (errorType) {
-        PickupViewModel.ErrorType.NETWORK -> ErrorState.NETWORK
-        PickupViewModel.ErrorType.GENERIC -> ErrorState.GENERIC
+        PickupViewModel.ErrorType.NETWORK -> ErrorStateOld.NETWORK
+        PickupViewModel.ErrorType.GENERIC -> ErrorStateOld.GENERIC
         null -> null
     }
     ZarinaScaffold(

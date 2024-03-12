@@ -28,7 +28,7 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
-import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
@@ -50,7 +50,7 @@ fun WebpageScreenContent(
     var isWebViewLoading by remember { mutableStateOf(true) }
     val isLoading = headers == null || isWebViewLoading
     val errorState = when (errorType) {
-        WebpageViewModel.ErrorType.GENERIC -> ErrorState.GENERIC
+        WebpageViewModel.ErrorType.GENERIC -> ErrorStateOld.GENERIC
         else -> null
     }
     ZarinaScaffold(

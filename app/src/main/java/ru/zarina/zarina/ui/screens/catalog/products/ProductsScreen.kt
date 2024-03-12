@@ -45,7 +45,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.old.Category
 import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.domain.old.ProductSort
-import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.FilterBar
@@ -116,7 +116,7 @@ fun ProductsScreenContent(
             val isLoading =
                 products.loadState.append == LoadState.Loading || products.loadState.refresh == LoadState.Loading
             val errorState = when {
-                !isLoading && products.itemCount == 0 -> ErrorState(
+                !isLoading && products.itemCount == 0 -> ErrorStateOld(
                     icon = R.drawable.ic_magnifying_glass_96,
                     title = Text.Resource(R.string.products_not_found),
                     subtitle = Text.Resource(R.string.try_changing_filter),

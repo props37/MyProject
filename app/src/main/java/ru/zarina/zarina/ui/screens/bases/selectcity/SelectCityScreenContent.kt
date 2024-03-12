@@ -54,7 +54,7 @@ import androidx.compose.ui.zIndex
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.old.City
-import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.components.ModalError
 import ru.zarina.zarina.ui.common.components.StateSnackbar
@@ -144,12 +144,12 @@ fun SelectCityScreenContent(
             ) { type ->
                 if (type != null) {
                     val state = when (type) {
-                        SelectCityComponent.ErrorType.NETWORK -> ErrorState.NETWORK
-                        SelectCityComponent.ErrorType.NO_RESULTS -> ErrorState(
+                        SelectCityComponent.ErrorType.NETWORK -> ErrorStateOld.NETWORK
+                        SelectCityComponent.ErrorType.NO_RESULTS -> ErrorStateOld(
                             subtitle = Text.Resource(R.string.city_not_found),
                         )
 
-                        SelectCityComponent.ErrorType.GENERIC -> ErrorState.GENERIC
+                        SelectCityComponent.ErrorType.GENERIC -> ErrorStateOld.GENERIC
                     }
                     ModalError(
                         state = state,
