@@ -1,6 +1,5 @@
 package ru.zarina.zarina.ui.common.component
 
-import androidx.annotation.IntRange
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -60,6 +59,12 @@ fun ProductOrderCard(
     price: Price? = null,
     showOriginalPrice: Boolean = true,
 ) {
+    SideEffect {
+        if (count != null) {
+            require(count >= 1) { "count $count should be equal to or larger than 1" }
+        }
+    }
+
     Box(modifier = modifier) {
         Row {
             var isImageShimmerEnabled by remember(imageUrl) { mutableStateOf(true) }
@@ -89,18 +94,21 @@ fun ProductOrderCard(
                     Spacer(modifier = Modifier.height(2.dp))
                     ColorText(color = color)
                 }
+                if (count != null && countStyle == ProductOrderCardCountStyle.Info) {
+                    Spacer(modifier = Modifier.height(2.dp))
+                    CountInfoText(count = count)
+                }
             }
         }
 
-        // TODO: [High] Add counter
+        // TODO: [High] Add selector count
 
         if (price != null) {
             Price(
                 price = price,
                 count = count ?: 1,
                 showOriginalPrice = showOriginalPrice,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd),
+                modifier = Modifier.align(Alignment.BottomEnd),
             )
         }
     }
@@ -170,17 +178,35 @@ private fun ColorText(
 }
 
 @Composable
+private fun CountInfoText(
+    count: Int,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier,
+    ) {
+        Text(
+            text = stringResource(R.string.quantity),
+            style = InfoTextStyle,
+            color = UiKitTheme.colors.text.general.regular.disabled,
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = count.toString(),
+            style = InfoTextStyle,
+            color = UiKitTheme.colors.text.general.regular.default,
+        )
+    }
+}
+
+@Composable
 private fun Price(
     price: Price,
-    @IntRange(from = 0)
     count: Int,
     showOriginalPrice: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    SideEffect {
-        require(count > 0) { "Count $count can not be less than zero" }
-    }
-
     Column(
         horizontalAlignment = Alignment.End,
         modifier = modifier,
@@ -221,7 +247,7 @@ private fun Price(
 @FontScalePreviews
 @DensityPreviews
 @Composable
-private fun ProductOrderCardPreview() {
+private fun PreviewNoCount() {
     ZarinaPreview {
         Box(
             modifier = Modifier
@@ -236,6 +262,33 @@ private fun ProductOrderCardPreview() {
                 height = "170",
                 color = remember { FakeDataGenerator.getProductColor() },
                 count = 3,
+                price = remember { FakeDataGenerator.getPrice() },
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
+
+@Preview
+@FontScalePreviews
+@DensityPreviews
+@Composable
+private fun PreviewInfoCount() {
+    ZarinaPreview {
+        Box(
+            modifier = Modifier
+                .background(Color.White)
+                .padding(16.dp),
+        ) {
+            ProductOrderCard(
+                name = "Плащ с поясом",
+                imageUrl = remember { Url.EMPTY },
+                size = "M",
+                sizeRu = "48",
+                height = "170",
+                color = remember { FakeDataGenerator.getProductColor() },
+                count = 3,
+                countStyle = ProductOrderCardCountStyle.Info,
                 price = remember { FakeDataGenerator.getPrice() },
                 modifier = Modifier.fillMaxWidth(),
             )
