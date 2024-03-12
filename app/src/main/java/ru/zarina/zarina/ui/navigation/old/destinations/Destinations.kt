@@ -7,12 +7,12 @@ import ru.zarina.zarina.domain.old.Category
 import ru.zarina.zarina.domain.old.Filtration
 import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.ui.navigation.base.Destination
-import ru.zarina.zarina.ui.navigation.base.Filtration
 import ru.zarina.zarina.ui.navigation.base.Graph
 import ru.zarina.zarina.ui.navigation.base.OptionalNavArg
 import ru.zarina.zarina.ui.navigation.base.RouteUtils
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleGraph
+import ru.zarina.zarina.ui.navigation.old.Filtration
 import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 
 object Destinations {

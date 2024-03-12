@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.navigation.base
+package ru.zarina.zarina.ui.navigation.old
 
 import android.os.Bundle
 import androidx.navigation.NavType
