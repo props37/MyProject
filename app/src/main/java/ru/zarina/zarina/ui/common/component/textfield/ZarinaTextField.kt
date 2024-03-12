@@ -514,7 +514,7 @@ object ZarinaTextFieldDefaults {
 
 @Preview
 @Composable
-fun Preview() {
+private fun Preview() {
     ZarinaPreview {
         Column(
             modifier = Modifier
