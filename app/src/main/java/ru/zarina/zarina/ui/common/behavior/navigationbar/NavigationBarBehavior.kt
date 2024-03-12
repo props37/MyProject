@@ -2,6 +2,13 @@ package ru.zarina.zarina.ui.common.behavior.navigationbar
 
 import ru.zarina.zarina.base.behavior.Behavior
 
+@Deprecated(
+    message = "Use BottomNavBarBehavior instead.",
+    replaceWith = ReplaceWith(
+        expression = "BottomNavBarBehavior",
+        "ru.zarina.zarina.ui.common.behavior.bottomnavbar",
+    )
+)
 sealed interface NavigationBarBehavior : Behavior {
 
     val isAnimated: Boolean
