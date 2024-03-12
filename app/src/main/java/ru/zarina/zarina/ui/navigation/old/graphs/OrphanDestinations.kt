@@ -7,7 +7,6 @@ import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.old.destinations.Destinations
 import ru.zarina.zarina.ui.navigation.old.destinations.Home
 import ru.zarina.zarina.ui.navigation.old.destinations.Pickup
-import ru.zarina.zarina.ui.screens.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screens.product.ProductScreen
 import ru.zarina.zarina.ui.screens.selectcity.SelectCityScreen
 import ru.zarina.zarina.ui.screens.webpage.WebpageScreen
@@ -16,16 +15,6 @@ fun NavGraphBuilder.orphans(
     navController: NavController,
     changeStartDestination: (Destination<*>) -> Unit,
 ) {
-    composableDestination(Destinations.Onboarding) {
-        OnboardingScreen(
-            showHome = {
-                changeStartDestination(Home)
-            },
-            showSelectCity = {
-                navController.navigate(Destinations.SelectCity.route)
-            }
-        )
-    }
     composableDestination(Destinations.SelectCity) {
         SelectCityScreen(
             showHome = {
