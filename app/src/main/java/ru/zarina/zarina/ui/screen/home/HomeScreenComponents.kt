@@ -50,7 +50,7 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.logo.ZarinaLogo
 import ru.zarina.zarina.ui.common.component.logo.ZarinaLogoAspectRatio
-import ru.zarina.zarina.ui.common.component.media.VideoPlayer
+import ru.zarina.zarina.ui.common.component.media.ZarinaVideoPlayer
 import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
 import ru.zarina.zarina.ui.common.component.tab.ZarinaLooseTabRow
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
@@ -373,7 +373,7 @@ object HomeScreenComponents {
         onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        VideoPlayer(
+        ZarinaVideoPlayer(
             url = banner.media.url,
             isOnScreen = isOnScreen,
             onReadyToPlay = onBannerDisplayed,

@@ -24,7 +24,7 @@ import coil.compose.AsyncImage
 import com.valentinilk.shimmer.Shimmer
 import ru.zarina.zarina.domain.common.Media
 import ru.zarina.zarina.domain.common.MediaType
-import ru.zarina.zarina.ui.common.component.media.VideoPlayer
+import ru.zarina.zarina.ui.common.component.media.ZarinaVideoPlayer
 import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -65,7 +65,7 @@ fun MediaHorizontalPager(
                 }
 
                 MediaType.VIDEO -> {
-                    VideoPlayer(
+                    ZarinaVideoPlayer(
                         url = media.url,
                         onReadyToPlay = { isMediaDisplayed = true },
                         modifier = Modifier.matchParentSize(),

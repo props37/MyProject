@@ -23,7 +23,7 @@ import timber.log.Timber
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
-fun VideoPlayer(
+fun ZarinaVideoPlayer(
     url: Url,
     modifier: Modifier = Modifier,
     isOnScreen: Boolean = true,
@@ -102,7 +102,7 @@ fun VideoPlayer(
         onStopOrDispose { exoPlayer.pause() }
     }
 
-    VideoPlayer(
+    ZarinaVideoPlayer(
         exoPlayer = exoPlayer,
         resizeMode = resizeMode,
         modifier = modifier,
@@ -111,7 +111,7 @@ fun VideoPlayer(
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
-fun VideoPlayer(
+fun ZarinaVideoPlayer(
     exoPlayer: ExoPlayer,
     modifier: Modifier = Modifier,
     resizeMode: Int = AspectRatioFrameLayout.RESIZE_MODE_FIT,
