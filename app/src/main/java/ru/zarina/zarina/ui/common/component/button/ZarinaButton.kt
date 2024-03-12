@@ -244,9 +244,25 @@ object ZarinaButtonDefaults {
         disabledBorderColor = disabledBorderColor,
     )
 
-    // Also used for Cell buttons from design kit
     @Composable
     fun backlessColors(
+        backgroundColor: Color = Color.Unspecified,
+        contentColor: Color = UiKitTheme.colors.text.button.backless.default,
+        disabledBackgroundColor: Color = Color.Unspecified,
+        disabledContentColor: Color = UiKitTheme.colors.text.button.backless.disabled,
+        borderColor: Color = Color.Unspecified,
+        disabledBorderColor: Color = Color.Unspecified,
+    ): ZarinaButtonColors = ZarinaButtonColors(
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        disabledBackgroundColor = disabledBackgroundColor,
+        disabledContentColor = disabledContentColor,
+        borderColor = borderColor,
+        disabledBorderColor = disabledBorderColor,
+    )
+
+    @Composable
+    fun cellColors(
         backgroundColor: Color = Color.Unspecified,
         contentColor: Color = UiKitTheme.colors.text.button.backless.default,
         disabledBackgroundColor: Color = Color.Unspecified,
