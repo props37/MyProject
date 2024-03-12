@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.behavior.base
+package ru.zarina.zarina.base.behavior
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

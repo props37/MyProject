@@ -44,7 +44,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.behavior.base.DefaultBehaviorController
+import ru.zarina.zarina.base.behavior.DefaultBehaviorController
 import ru.zarina.zarina.ui.common.behavior.navigationbar.LocalNavigationBarController
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarBehavior
 import ru.zarina.zarina.ui.navigation.base.Destination

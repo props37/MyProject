@@ -14,9 +14,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.BuildConfig
+import ru.zarina.zarina.base.behavior.DefaultBehaviorController
 import ru.zarina.zarina.ui.activity.lifecycleobserver.ActivityLifecycleObserverManager
 import ru.zarina.zarina.ui.app.ZarinaApp
-import ru.zarina.zarina.ui.common.behavior.base.DefaultBehaviorController
 import ru.zarina.zarina.ui.common.behavior.systembars.LocalSystemBarsBehaviorController
 import ru.zarina.zarina.ui.common.behavior.systembars.SystemBarsBehavior
 import ru.zarina.zarina.ui.common.behavior.systembars.SystemBarsBehaviorController
