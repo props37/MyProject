@@ -34,6 +34,8 @@ import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.product.Price
 import ru.zarina.zarina.domain.product.ProductColor
 import ru.zarina.zarina.domain.product.currentPrice
+import ru.zarina.zarina.ui.common.component.selector.ZarinaButtonSelector
+import ru.zarina.zarina.ui.common.component.selector.ZarinaButtonSelectorSize
 import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -57,6 +59,7 @@ fun ProductOrderCard(
     modifier: Modifier = Modifier,
     count: Int? = null,
     countStyle: ProductOrderCardCountStyle = ProductOrderCardCountStyle.None,
+    onCountSelectorClicked: (() -> Unit)? = null,
     price: Price? = null,
     showOriginalPrice: Boolean = true,
 ) {
@@ -102,7 +105,14 @@ fun ProductOrderCard(
             Spacer(modifier = Modifier.weight(1f))
 
             Row(verticalAlignment = Alignment.Bottom) {
-                // TODO: [High] Add selector count
+                if (count != null && countStyle == ProductOrderCardCountStyle.Selector) {
+                    ZarinaButtonSelector(
+                        onClick = { onCountSelectorClicked?.invoke() },
+                        size = ZarinaButtonSelectorSize.Medium,
+                    ) {
+                        Text(text = count.toString())
+                    }
+                }
 
                 if (price != null) {
                     Spacer(modifier = Modifier.weight(1f))
@@ -291,6 +301,33 @@ private fun PreviewInfoCount() {
                 color = remember { FakeDataGenerator.getProductColor() },
                 count = 3,
                 countStyle = ProductOrderCardCountStyle.Info,
+                price = remember { FakeDataGenerator.getPrice() },
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
+
+@Preview
+@FontScalePreviews
+@DensityPreviews
+@Composable
+private fun PreviewSelectorCount() {
+    ZarinaPreview {
+        Box(
+            modifier = Modifier
+                .background(Color.White)
+                .padding(16.dp),
+        ) {
+            ProductOrderCard(
+                name = "Плащ с поясом",
+                imageUrl = remember { Url.EMPTY },
+                size = "M",
+                sizeRu = "48",
+                height = "170",
+                color = remember { FakeDataGenerator.getProductColor() },
+                count = 3,
+                countStyle = ProductOrderCardCountStyle.Selector,
                 price = remember { FakeDataGenerator.getPrice() },
                 modifier = Modifier.fillMaxWidth(),
             )

@@ -99,7 +99,7 @@ fun ZarinaButtonSelector(
 
             trailingContent?.let { content ->
                 Spacer(modifier = Modifier.weight(1f))
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(8.dp))
                 content()
             }
         }
