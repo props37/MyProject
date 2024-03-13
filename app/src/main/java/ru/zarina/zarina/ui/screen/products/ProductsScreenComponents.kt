@@ -197,7 +197,7 @@ object ProductsScreenComponents {
                     AnimatedContentDefaultTransitionSpec()
                 }.using(SizeTransform(clip = false))
             },
-            contentAlignment = Alignment.Center,
+            contentAlignment = Alignment.CenterStart,
             contentKey = {
                 when (it) {
                     is TagListState.TagList -> TagListContentKeyTagList
