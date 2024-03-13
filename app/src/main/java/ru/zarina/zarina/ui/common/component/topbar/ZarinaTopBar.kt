@@ -28,6 +28,7 @@ fun ZarinaTopBar(
     startContent: (@Composable () -> Unit)? = null,
     centerContent: (@Composable () -> Unit)? = null,
     endContent: (@Composable () -> Unit)? = null,
+    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
     contentPadding: PaddingValues = TopBarDefaults.ContentPadding,
 ) {
     val content = @Composable {
@@ -41,6 +42,7 @@ fun ZarinaTopBar(
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = TopBarDefaults.MinHeight)
+            .background(backgroundColor)
             .padding(contentPadding),
     ) { measurables, constraints ->
         val startContentMeasurable = measurables.find { it.layoutId == LayoutId.StartContent }
@@ -111,7 +113,6 @@ private fun Preview() {
             endContent = {
                 ZarinaCloseIconButton(onClick = {})
             },
-            modifier = Modifier.background(Color.White),
         )
     }
 }
