@@ -139,7 +139,7 @@ object ZarinaButtonSelectorDefaults {
             tint = tint,
             modifier = modifier
                 .size(16.dp)
-                .rotate(180f),
+                .rotate(degrees = 180f),
         )
     }
 
