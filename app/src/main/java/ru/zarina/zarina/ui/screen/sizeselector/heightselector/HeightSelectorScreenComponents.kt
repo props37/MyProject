@@ -81,7 +81,7 @@ object HeightSelectorScreenComponents {
 
                     if (index < offers.lastIndex) {
                         Divider(
-                            color = UiKitTheme.colors.background.skeleton,
+                            color = UiKitTheme.colors.border.general.default,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),

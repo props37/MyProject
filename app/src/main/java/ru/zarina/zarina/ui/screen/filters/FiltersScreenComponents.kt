@@ -260,7 +260,7 @@ object FiltersScreenComponents {
 
                         if (filter !is PriceFilter && index < filterCount - 1) {
                             Divider(
-                                color = UiKitTheme.colors.background.skeleton,
+                                color = UiKitTheme.colors.border.general.default,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp),
@@ -271,7 +271,7 @@ object FiltersScreenComponents {
             }
 
             Divider(
-                color = UiKitTheme.colors.background.skeleton,
+                color = UiKitTheme.colors.border.general.default,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -317,7 +317,7 @@ object FiltersScreenComponents {
 
                 if (index < FilterSkeletonItemCount - 1) {
                     Divider(
-                        color = UiKitTheme.colors.background.skeleton,
+                        color = UiKitTheme.colors.border.general.default,
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }

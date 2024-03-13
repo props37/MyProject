@@ -112,7 +112,7 @@ object ListFilterScreenComponents {
 
                 if (index < items.size - 1) {
                     Divider(
-                        color = UiKitTheme.colors.background.skeleton,
+                        color = UiKitTheme.colors.border.general.default,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
@@ -136,7 +136,7 @@ object ListFilterScreenComponents {
         ) {
             Column {
                 Divider(
-                    color = UiKitTheme.colors.background.skeleton,
+                    color = UiKitTheme.colors.border.general.default,
                     modifier = Modifier.fillMaxWidth(),
                 )
 
