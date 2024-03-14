@@ -30,7 +30,7 @@ class CartRepository @Inject constructor(
         return cartProductIds
     }
 
-    fun getCartFlow(deliveryType: DeliveryType, cityKladrId: KladrId): Flow<Cart> {
+    fun getCartFlow(deliveryType: DeliveryType, cityKladrId: KladrId?): Flow<Cart> {
         return remoteDataSource.getCartFlow(deliveryType, cityKladrId)
     }
 
