@@ -1,5 +1,6 @@
 package ru.zarina.zarina.di.old
 
+@Deprecated(message = "Use Qualifiers instead.")
 object Qualifiers {
     object DataStore {
         const val PREFERENCES = "datastore-preferences"

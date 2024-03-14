@@ -46,8 +46,7 @@ import ru.zarina.zarina.ui.navigation.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
 import ru.zarina.zarina.usecase.cart.AddProductToCartUseCase
 import ru.zarina.zarina.usecase.category.GetCategoryFlowUseCase
-import ru.zarina.zarina.usecase.favorite.AddProductToFavoritesUseCase
-import ru.zarina.zarina.usecase.favorite.RemoveProductFromFavoritesUseCase
+import ru.zarina.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.zarina.zarina.usecase.product.GetProductPagingDataFlowUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
@@ -246,23 +245,17 @@ class ProductsViewModel @AssistedInject constructor(
 
     fun onAddProductToFavoritesClicked(product: Product) {
         viewModelScope.launch {
-            // TODO: [High] Extract to ToggleProductInFavoritesUseCase
-            val result = if (product.isInFavorites) {
-                val params = RemoveProductFromFavoritesUseCase.Params(product.id)
-                interactor.removeProductFromFavorites(params)
-            } else {
-                val params = AddProductToFavoritesUseCase.Params(product.id)
-                interactor.addProductToFavorites(params)
-            }
-            result.onFailure {
-                val messageResId = if (product.isInFavorites) {
-                    R.string.removing_product_from_favorites_error_toast
-                } else {
-                    R.string.adding_product_to_favorites_error_toast
+            val params = ToggleProductPresenceInFavoritesUseCase.Params(product.id)
+            interactor.toggleProductPresenceInFavorites(params)
+                .onFailure {
+                    val messageResId = if (product.isInFavorites) {
+                        R.string.removing_product_from_favorites_error_toast
+                    } else {
+                        R.string.adding_product_to_favorites_error_toast
+                    }
+                    val message = Text.Resource(messageResId)
+                    emitSideEffect(SideEffect.ShowToast(message))
                 }
-                val message = Text.Resource(messageResId)
-                emitSideEffect(SideEffect.ShowToast(message))
-            }
         }
     }
 
