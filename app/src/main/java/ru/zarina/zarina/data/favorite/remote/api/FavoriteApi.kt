@@ -5,6 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import ru.zarina.zarina.data.favorite.remote.api.dto.FavoriteProductIdsDto
 import ru.zarina.zarina.data.favorite.remote.api.dto.FavoriteProductsDto
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.product.Product
@@ -14,6 +15,10 @@ class FavoriteApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
     private val httpClient: HttpClient,
 ) {
+    suspend fun getFavoriteProductIds(): FavoriteProductIdsDto {
+        return httpClient.get("/api/v1/favorites-list").body()
+    }
+
     suspend fun getFavoriteProducts(page: Int): FavoriteProductsDto {
         return httpClient.get("/api/v1/favorites") {
             parameter("page", page)

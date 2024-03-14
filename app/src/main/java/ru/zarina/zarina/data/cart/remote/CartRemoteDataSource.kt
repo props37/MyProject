@@ -12,7 +12,8 @@ class CartRemoteDataSource @Inject constructor(
     private val api: CartApi,
 ) {
     fun getCartProductIds(): Flow<CartProductIds> = flow {
-        emit(api.getCartProductIds().toCartProductIds())
+        val cartProductIds = api.getCartProductIds().toCartProductIds()
+        emit(cartProductIds)
     }
 
     suspend fun addProductToCart(barcode: Barcode, count: Int): ProductAdditionToCartResult {

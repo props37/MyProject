@@ -1,7 +1,6 @@
 package ru.zarina.zarina.data.favorite.remote
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import ru.zarina.zarina.data.favorite.remote.api.FavoriteApi
 import ru.zarina.zarina.domain.common.Page
@@ -17,15 +16,7 @@ class FavoriteRemoteDataSource @Inject constructor(
     }
 
     fun getFavoriteProductIds(): Flow<Set<Product.Id>> = flow {
-        val favoriteProductIds = mutableSetOf<Product.Id>()
-        var currentFavoriteProductPage = 1
-        var favoriteProductPageCount = Int.MAX_VALUE
-        while (currentFavoriteProductPage <= favoriteProductPageCount) {
-            val favoriteProductPage = getFavoriteProductPage(currentFavoriteProductPage).first()
-            favoriteProductIds.addAll(favoriteProductPage.data.map { it.id })
-            currentFavoriteProductPage++
-            favoriteProductPageCount = favoriteProductPage.paginationInfo.pageCount
-        }
+        val favoriteProductIds = api.getFavoriteProductIds().toFavoriteProductIds()
         emit(favoriteProductIds)
     }
 

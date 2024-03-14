@@ -18,7 +18,7 @@ class CartApi @Inject constructor(
     private val httpClient: HttpClient,
 ) {
     suspend fun getCartProductIds(): CartProductIdsDto {
-        return httpClient.get("/api/v1/cart/id").body()
+        return httpClient.get("/api/v1/cart-list").body()
     }
 
     suspend fun addProductToCard(barcode: Barcode, count: Int): CartProductCountDto {
