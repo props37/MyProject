@@ -11,7 +11,7 @@ import javax.inject.Inject
 class CartRemoteDataSource @Inject constructor(
     private val api: CartApi,
 ) {
-    fun getCartProductIds(): Flow<CartProductIds> = flow {
+    fun getCartProductIdsFlow(): Flow<CartProductIds> = flow {
         val cartProductIds = api.getCartProductIds().toCartProductIds()
         emit(cartProductIds)
     }

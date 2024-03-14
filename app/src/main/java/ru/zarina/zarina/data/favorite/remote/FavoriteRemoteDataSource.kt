@@ -10,12 +10,12 @@ import javax.inject.Inject
 class FavoriteRemoteDataSource @Inject constructor(
     private val api: FavoriteApi,
 ) {
-    fun getFavoriteProductPage(page: Int): Flow<Page<List<Product>>> = flow {
+    fun getFavoriteProductPageFlow(page: Int): Flow<Page<List<Product>>> = flow {
         val productPage = api.getFavoriteProducts(page).toProductPage()
         emit(productPage)
     }
 
-    fun getFavoriteProductIds(): Flow<Set<Product.Id>> = flow {
+    fun getFavoriteProductIdsFlow(): Flow<Set<Product.Id>> = flow {
         val favoriteProductIds = api.getFavoriteProductIds().toFavoriteProductIds()
         emit(favoriteProductIds)
     }

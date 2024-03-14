@@ -18,14 +18,14 @@ class FavoriteRepository @Inject constructor(
         localDataSource.areFavoriteProductIdsFetched
 
     suspend fun fetchFavoriteProductIds(): Set<Product.Id> {
-        val favoriteProductIds = remoteDataSource.getFavoriteProductIds().first()
+        val favoriteProductIds = remoteDataSource.getFavoriteProductIdsFlow().first()
         localDataSource.setFavoriteProductIds(favoriteProductIds)
         localDataSource.setAreFavoriteProductIdsFetched(true)
         return favoriteProductIds
     }
 
-    fun getFavoriteProductPage(page: Int): Flow<Page<List<Product>>> {
-        return remoteDataSource.getFavoriteProductPage(page)
+    fun getFavoriteProductPageFlow(page: Int): Flow<Page<List<Product>>> {
+        return remoteDataSource.getFavoriteProductPageFlow(page)
     }
 
     suspend fun addProductToFavorites(productId: Product.Id) {

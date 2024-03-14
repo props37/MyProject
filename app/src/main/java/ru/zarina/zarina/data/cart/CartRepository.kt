@@ -19,7 +19,7 @@ class CartRepository @Inject constructor(
     val cartProductCount: StateFlow<Int> = localDataSource.cartProductCount
 
     suspend fun fetchCartProductIds(): CartProductIds {
-        val cartProductIds = remoteDataSource.getCartProductIds().first()
+        val cartProductIds = remoteDataSource.getCartProductIdsFlow().first()
         localDataSource.setCartProductIds(cartProductIds.cartProductIds)
         localDataSource.setCartProductCount(cartProductIds.cartProductCount)
         localDataSource.setAreCartProductIdsFetched(true)
