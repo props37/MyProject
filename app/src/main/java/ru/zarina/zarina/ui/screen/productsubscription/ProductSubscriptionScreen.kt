@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.common.MediaType
 import ru.zarina.zarina.domain.common.Url
@@ -41,6 +42,7 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldSize
+import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -249,6 +251,24 @@ private fun ScreenContent(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        ScreenContent(
+            onBackClicked = {},
+            product = remember { FakeDataGenerator.getProduct() },
+            productOffer = remember { FakeDataGenerator.getProductOffer() },
+            firstName = "",
+            onFirstNameChanged = {},
+            isFirstNameInvalid = false,
+            email = "",
+            onEmailChanged = {},
+            isEmailInvalid = false,
+            arePoliciesAccepted = false,
+            isSubscribeButtonEnabled = true,
+            isSubscribeButtonLoading = false,
+            onUrlClicked = {},
+            onPoliciesAcceptedChanged = {},
+            onSubscribeClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigate = {},
+        )
     }
 }
