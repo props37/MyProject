@@ -42,7 +42,6 @@ class HomeViewModel @Inject constructor(
     val genderTabs: StateFlow<ImmutableList<GenderTab>> =
         MutableStateFlow(GenderTab.entries.toImmutableList()).asStateFlow()
 
-    // TODO: [Low] Store the last selected tab on the disk
     val currentGenderTab: StateFlow<GenderTab> = savedStateHandle.getStateFlow(
         key = KEY_CURRENT_GENDER_TAB,
         initialValue = GenderTab.WOMEN,

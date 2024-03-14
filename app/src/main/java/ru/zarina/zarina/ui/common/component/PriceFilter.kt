@@ -53,7 +53,6 @@ import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
 import kotlin.math.min
 
 // TODO: [High] Add visual transformations to text
-// TODO: [Low] Adjust slider thumbs appearance
 // TODO: [High] Refactor
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
