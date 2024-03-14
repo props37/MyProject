@@ -14,6 +14,6 @@ class ZarinaApiHeaderProvider @Inject constructor() : HeaderProvider {
     companion object {
         private const val KEY_CLIENT_SOURCE = "x-client-source"
 
-        private const val VALUE_CLIENT_SOURCE = "phoh8Meimu1uQuoH"
+        private const val VALUE_CLIENT_SOURCE = "android-app"
     }
 }
