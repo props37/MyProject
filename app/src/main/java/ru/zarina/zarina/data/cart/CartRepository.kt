@@ -1,12 +1,16 @@
 package ru.zarina.zarina.data.cart
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import ru.zarina.zarina.data.cart.local.CartLocalDataSource
 import ru.zarina.zarina.data.cart.remote.CartRemoteDataSource
+import ru.zarina.zarina.domain.cart.Cart
 import ru.zarina.zarina.domain.cart.CartProductIds
+import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.cart.ProductAdditionToCartResult
 import ru.zarina.zarina.domain.common.Barcode
+import ru.zarina.zarina.domain.geography.KladrId
 import ru.zarina.zarina.domain.product.Product
 import javax.inject.Inject
 
@@ -24,6 +28,10 @@ class CartRepository @Inject constructor(
         localDataSource.setCartProductCount(cartProductIds.cartProductCount)
         localDataSource.setAreCartProductIdsFetched(true)
         return cartProductIds
+    }
+
+    fun getCartFlow(deliveryType: DeliveryType, cityKladrId: KladrId): Flow<Cart> {
+        return remoteDataSource.getCartFlow(deliveryType, cityKladrId)
     }
 
     suspend fun addProductToCart(
