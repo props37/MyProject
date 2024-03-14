@@ -7,6 +7,7 @@ import ru.zarina.zarina.domain.product.ProductColor
 import ru.zarina.zarina.domain.product.ProductOffer
 
 data class CartProduct(
+    val id: Id,
     val offerId: ProductOffer.Id,
     val name: String,
     val price: Price,
@@ -17,4 +18,7 @@ data class CartProduct(
     val height: String?,
     val count: Int,
     val isInFavorites: Boolean,
-)
+) {
+    @JvmInline
+    value class Id(val value: Long)
+}

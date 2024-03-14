@@ -20,6 +20,7 @@ data class CartProductDto(
     val offer: Offer? = null,
 ) {
     fun toCartProduct(): CartProduct {
+        checkNotNull(id) { "id is null" }
         checkNotNull(offer) { "offer is null" }
         checkNotNull(offer.id) { "id is null" }
         checkNotNull(offer.name) { "name is null" }
@@ -30,6 +31,7 @@ data class CartProductDto(
         checkNotNull(offer.size) { "size is null" }
         checkNotNull(offer.count) { "count is null" }
         return CartProduct(
+            id = CartProduct.Id(id),
             offerId = ProductOffer.Id(offer.id),
             name = offer.name,
             price = offer.price.toPrice(),
