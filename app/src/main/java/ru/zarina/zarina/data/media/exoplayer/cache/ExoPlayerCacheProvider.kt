@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.cache
+package ru.zarina.zarina.data.media.exoplayer.cache
 
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
