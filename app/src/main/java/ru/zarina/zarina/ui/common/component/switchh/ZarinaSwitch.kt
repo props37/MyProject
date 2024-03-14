@@ -17,8 +17,6 @@ import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
-// TODO: [Low] Replace with fully custom Switcher
-
 @Composable
 fun ZarinaSwitch(
     isChecked: Boolean,
