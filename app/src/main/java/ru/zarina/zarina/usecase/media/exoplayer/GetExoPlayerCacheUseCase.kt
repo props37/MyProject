@@ -1,4 +1,4 @@
-package ru.zarina.zarina.usecase.exoplayer
+package ru.zarina.zarina.usecase.media.exoplayer
 
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
