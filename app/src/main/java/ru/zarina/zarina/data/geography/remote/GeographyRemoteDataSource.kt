@@ -10,10 +10,10 @@ import javax.inject.Inject
 class GeographyRemoteDataSource @Inject constructor(
     private val api: GeographyApi,
 ) {
-    // TODO: [Low] Rewrite to Flow
-    suspend fun getCity(location: Location): City {
+    suspend fun getCityFlow(location: Location): Flow<City> = flow {
         val city = api.getCity(location).toCity()
-        return checkNotNull(city) { "City is null" }
+        checkNotNull(city) { "city is null" }
+        emit(city)
     }
 
     fun getCitiesFlow(nameQuery: String?): Flow<List<City>> = flow {

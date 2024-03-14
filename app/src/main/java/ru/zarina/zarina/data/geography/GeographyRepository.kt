@@ -14,8 +14,8 @@ class GeographyRepository @Inject constructor(
     private val remoteDataSource: GeographyRemoteDataSource,
     private val localDataSource: GeographyLocalDataSource,
 ) {
-    suspend fun getCity(location: Location): City {
-        return remoteDataSource.getCity(location)
+    suspend fun getCityFlow(location: Location): Flow<City> {
+        return remoteDataSource.getCityFlow(location)
     }
 
     fun getCitiesFlow(nameQuery: String?): Flow<List<City>> = flow {

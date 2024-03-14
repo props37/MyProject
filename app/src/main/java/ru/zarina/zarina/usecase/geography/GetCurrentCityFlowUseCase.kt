@@ -1,8 +1,10 @@
 package ru.zarina.zarina.usecase.geography
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import ru.zarina.zarina.base.usecase.FlowUseCase
 import ru.zarina.zarina.data.geography.GeographyRepository
 import ru.zarina.zarina.data.location.LocationRepository
@@ -18,15 +20,14 @@ class GetCurrentCityFlowUseCase @Inject constructor(
     private val geographyRepository: GeographyRepository,
 ) : FlowUseCase<Unit, City?>(dispatcher) {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun execute(params: Unit): Flow<City?> {
-        return locationRepository.getCurrentLocationFlow().map { location ->
+        return locationRepository.getCurrentLocationFlow().flatMapLatest { location ->
             if (location != null) {
-                val city = geographyRepository.getCity(location)
-                Timber.v("The city is detected: $city")
-                city
+                geographyRepository.getCityFlow(location)
             } else {
                 Timber.v("Could not detect a city because the location is unknown")
-                null
+                flowOf(null)
             }
         }
     }
