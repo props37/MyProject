@@ -29,7 +29,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 import ru.zarina.zarina.utils.compose.layout.IntrinsicSizeOverride
 
-
+@Deprecated("Use ZarinaButton instead.")
 @Composable
 fun ZarinaButton(
     onClick: () -> Unit,
