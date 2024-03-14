@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class CartInteractor @Inject constructor(
     val getCartProductCountFlow: GetCartProductCountFlowUseCase,
-    val getUserCity: GetUserCityFlowUseCase,
+    val getUserCityFlow: GetUserCityFlowUseCase,
     val setUserCity: SetUserCityUseCase,
     val clearCart: ClearCartUseCase,
 )

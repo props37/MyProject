@@ -45,7 +45,7 @@ class CartViewModel @AssistedInject constructor(
         savedStateHandle = savedStateHandle,
     )
 
-    val city: StateFlow<City?> = interactor.getUserCity()
+    val city: StateFlow<City?> = interactor.getUserCityFlow()
         .map { result ->
             result.getOrNull() ?: City.DEFAULT
         }
