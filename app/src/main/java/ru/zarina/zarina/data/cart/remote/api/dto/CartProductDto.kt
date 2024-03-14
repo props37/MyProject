@@ -2,6 +2,14 @@ package ru.zarina.zarina.data.cart.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.zarina.zarina.data.remote.api.dto.PriceDto
+import ru.zarina.zarina.domain.cart.CartProduct
+import ru.zarina.zarina.domain.common.Barcode
+import ru.zarina.zarina.domain.common.Url
+import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.domain.product.ProductColor
+import ru.zarina.zarina.domain.product.ProductOffer
+import ru.zarina.zarina.domain.common.Color as DomainColor
 
 @Serializable
 data class CartProductDto(
@@ -11,6 +19,30 @@ data class CartProductDto(
     @SerialName("offer")
     val offer: Offer? = null,
 ) {
+    fun toCartProduct(): CartProduct {
+        checkNotNull(offer) { "offer is null" }
+        checkNotNull(offer.id) { "id is null" }
+        checkNotNull(offer.name) { "name is null" }
+        checkNotNull(offer.price) { "price is null" }
+        checkNotNull(offer.barcode) { "barcode is null" }
+        checkNotNull(offer.color) { "color is null" }
+        checkNotNull(offer.imageUrl) { "imageUrl is null" }
+        checkNotNull(offer.size) { "size is null" }
+        checkNotNull(offer.count) { "count is null" }
+        return CartProduct(
+            offerId = ProductOffer.Id(offer.id),
+            name = offer.name,
+            price = offer.price.toPrice(),
+            barcode = Barcode(offer.barcode),
+            color = offer.color.toProductColor(),
+            imageUrl = Url(offer.imageUrl),
+            size = offer.size,
+            height = offer.height?.takeIf { it.isNotBlank() },
+            count = offer.count,
+            isInFavorites = offer.isInFavorites ?: false,
+        )
+    }
+
     @Serializable
     data class Offer(
         @SerialName("id")
@@ -20,7 +52,7 @@ data class CartProductDto(
         val barcode: String? = null,
 
         @SerialName("title")
-        val title: String? = null,
+        val name: String? = null,
 
         @SerialName("color")
         val color: Color? = null,
@@ -32,7 +64,10 @@ data class CartProductDto(
         val size: String? = null,
 
         @SerialName("growth")
-        val growth: String? = null,
+        val height: String? = null,
+
+        @SerialName("price")
+        val price: PriceDto? = null,
 
         @SerialName("quantity")
         val count: Int? = null,
@@ -53,6 +88,19 @@ data class CartProductDto(
 
             @SerialName("productId")
             val productId: String? = null,
-        )
+        ) {
+            fun toProductColor(): ProductColor {
+                checkNotNull(id) { "id is null" }
+                checkNotNull(name) { "name is null" }
+                checkNotNull(code) { "code is null" }
+                checkNotNull(productId) { "productId is null" }
+                return ProductColor(
+                    id = ProductColor.Id(id),
+                    name = name,
+                    color = DomainColor(code),
+                    productId = Product.Id(productId),
+                )
+            }
+        }
     }
 }

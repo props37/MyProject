@@ -7,7 +7,12 @@ import ru.zarina.zarina.domain.cart.Cart
 @Serializable
 data class CartDto(
     @SerialName("items")
-    val items: List<CartProductDto>? = null,
+    val products: List<CartProductDto>? = null,
 ) {
-    fun toCart(): Cart = Cart()
+    fun toCart(): Cart {
+        checkNotNull(products) { "products is null" }
+        return Cart(
+            products = products.map { it.toCartProduct() },
+        )
+    }
 }

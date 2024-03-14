@@ -1,3 +1,5 @@
 package ru.zarina.zarina.domain.cart
 
-class Cart
+data class Cart(
+    val products: List<CartProduct>,
+)
