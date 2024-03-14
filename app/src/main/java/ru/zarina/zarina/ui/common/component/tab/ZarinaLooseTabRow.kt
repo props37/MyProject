@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -21,10 +22,15 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.debugInspectorInfo
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import ru.zarina.zarina.ui.common.component.button.ZarinaButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.tab.LooseTabRowDefaults.looseTabIndicatorOffset
+import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 // TODO: [High] Add support for Pager integration
@@ -143,6 +149,28 @@ class LooseTabPosition(val left: Dp, val width: Dp) {
     }
 }
 
-// TODO: [High] Add preview
+@Preview
+@Composable
+private fun Preview() {
+    ZarinaPreview {
+        ZarinaLooseTabRow(selectedTabIndex = 0) {
+            ZarinaButton(
+                onClick = {},
+                size = ZarinaButtonSize.Medium,
+                colors = ZarinaButtonDefaults.backlessColors(),
+            ) {
+                Text(text = "Женщинам".uppercase())
+            }
+
+            ZarinaButton(
+                onClick = {},
+                size = ZarinaButtonSize.Medium,
+                colors = ZarinaButtonDefaults.backlessColors(),
+            ) {
+                Text(text = "Мужчинам".uppercase())
+            }
+        }
+    }
+}
 
 private enum class Slot { Tabs, Indicator }
