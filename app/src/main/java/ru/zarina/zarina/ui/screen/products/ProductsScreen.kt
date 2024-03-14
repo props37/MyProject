@@ -20,10 +20,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
+import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
+import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
+import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.ProductCardActions
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.Products
@@ -137,9 +143,29 @@ private fun ScreenContent(
 }
 
 @Preview
+@FontScalePreviews
+@DensityPreviews
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        ScreenContent(
+            category = remember { FakeDataGenerator.getCategory() },
+            appliedFilterCount = 4,
+            topBarActions = remember { TopBarActions({}, {}, {}) },
+            tagListState = remember {
+                TagListState.TagList(FakeDataGenerator.getCategories().toImmutableList())
+            },
+            selectedTagId = null,
+            onTagClicked = {},
+            productPagingDataFlow = remember {
+                flowOf(PagingData.from(FakeDataGenerator.getProducts()))
+            },
+            productCardActions = remember { ProductCardActions({}, {}, {}, {}) },
+            onRefreshProducts = {},
+            onProductsErrorRefreshClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigateForward = {},
+            navigateBackward = {},
+        )
     }
 }

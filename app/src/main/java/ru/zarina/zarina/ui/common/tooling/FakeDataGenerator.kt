@@ -16,7 +16,7 @@ import kotlin.random.Random
 object FakeDataGenerator {
     fun getCategories(
         count: Int = 10,
-        generator: (Int) -> Category,
+        generator: (Int) -> Category = { getCategory() },
     ): List<Category> = List(count) { generator(it) }
 
     fun getCategory(
