@@ -32,11 +32,11 @@ import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.category.withFlattenedChildren
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Throttler
+import ru.zarina.zarina.ui.common.base.from
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
-import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -93,10 +93,7 @@ class CatalogViewModel @Inject constructor(
                     CategoryListState.Success(womenCategoryItems, menCategoryItems)
                 },
                 onFailure = { throwable ->
-                    val state = when (throwable) {
-                        is IOException -> ErrorState.NETWORK
-                        else -> ErrorState.GENERIC
-                    }
+                    val state = ErrorState.from(throwable)
                     CategoryListState.Error(state)
                 },
             )

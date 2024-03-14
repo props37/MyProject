@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.common.base
 
 import androidx.annotation.DrawableRes
 import ru.zarina.zarina.R
+import java.io.IOException
 
 data class ErrorState(
     @DrawableRes
@@ -30,4 +31,9 @@ data class ErrorState(
                 refreshButtonText = Text.Resource(R.string.refresh),
             )
     }
+}
+
+fun ErrorState.Companion.from(throwable: Throwable): ErrorState = when (throwable) {
+    is IOException -> NETWORK
+    else -> GENERIC
 }

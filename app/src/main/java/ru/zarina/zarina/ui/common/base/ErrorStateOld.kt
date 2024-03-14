@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.common.base
 import androidx.annotation.DrawableRes
 import ru.zarina.zarina.R
 
+@Deprecated("Use ErrorState instead.")
 data class ErrorStateOld(
     @DrawableRes
     val icon: Int? = null,

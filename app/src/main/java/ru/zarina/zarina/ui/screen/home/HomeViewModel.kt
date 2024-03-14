@@ -24,11 +24,11 @@ import kotlinx.parcelize.Parcelize
 import ru.zarina.zarina.domain.content.HomeContent
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Throttler
+import ru.zarina.zarina.ui.common.base.from
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
-import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,10 +74,7 @@ class HomeViewModel @Inject constructor(
                     ContentState.Success(content)
                 },
                 onFailure = { throwable ->
-                    val errorState = when (throwable) {
-                        is IOException -> ErrorState.NETWORK
-                        else -> ErrorState.GENERIC
-                    }
+                    val errorState = ErrorState.from(throwable)
                     ContentState.Error(errorState)
                 },
             )

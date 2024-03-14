@@ -27,6 +27,7 @@ import ru.zarina.zarina.domain.filter.updateWith
 import ru.zarina.zarina.domain.product.CategoryProductInfo
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Throttler
+import ru.zarina.zarina.ui.common.base.from
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.common.util.ScreenResultHandler
@@ -37,7 +38,6 @@ import ru.zarina.zarina.usecase.product.GetCategoryProductInfoFlowUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import timber.log.Timber
-import java.io.IOException
 
 @HiltViewModel(assistedFactory = FiltersViewModel.Factory::class)
 class FiltersViewModel @AssistedInject constructor(
@@ -122,10 +122,7 @@ class FiltersViewModel @AssistedInject constructor(
                     FilterListState.FilterList(info.availableFilters)
                 },
                 onFailure = { throwable ->
-                    val errorState = when (throwable) {
-                        is IOException -> ErrorState.NETWORK
-                        else -> ErrorState.GENERIC
-                    }
+                    val errorState = ErrorState.from(throwable)
                     FilterListState.Error(errorState)
                 },
             ) ?: FilterListState.Loading

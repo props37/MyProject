@@ -21,6 +21,7 @@ import ru.zarina.zarina.domain.geography.KladrId
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
+import ru.zarina.zarina.ui.common.base.from
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.geography.CityParcelable
@@ -29,7 +30,6 @@ import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
 import ru.zarina.zarina.usecase.geography.GetCitiesFlowUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
-import java.io.IOException
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -148,10 +148,7 @@ class CitySelectorViewModel @Inject constructor(
                         cityListStateFromFetchCitiesSuccess(cityNameQuery, cities)
                     },
                     onFailure = { throwable ->
-                        val errorState = when (throwable) {
-                            is IOException -> ErrorState.NETWORK
-                            else -> ErrorState.GENERIC
-                        }
+                        val errorState = ErrorState.from(throwable)
                         CityListState.Error(errorState)
                     },
                 )

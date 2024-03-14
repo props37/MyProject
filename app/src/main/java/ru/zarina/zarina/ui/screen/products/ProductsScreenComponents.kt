@@ -68,6 +68,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.base.from
 import ru.zarina.zarina.ui.common.component.ProductCard
 import ru.zarina.zarina.ui.common.component.ProductCardPlaceholder
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
@@ -93,7 +94,6 @@ import ru.zarina.zarina.util.compose.animateFastScrollToItem
 import ru.zarina.zarina.util.compose.collectIsScrollingBackwardAsState
 import ru.zarina.zarina.util.compose.unscalable
 import ru.zarina.zarina.util.library.paging3.PagingErrorTimberLogger
-import java.io.IOException
 
 object ProductsScreenComponents {
 
@@ -365,10 +365,7 @@ object ProductsScreenComponents {
 
                     is LoadState.Error -> {
                         val state = remember(loadState.error) {
-                            when (loadState.error) {
-                                is IOException -> ErrorState.NETWORK
-                                else -> ErrorState.GENERIC
-                            }
+                            ErrorState.from(loadState.error)
                         }
 
                         ZarinaErrorScreen(
