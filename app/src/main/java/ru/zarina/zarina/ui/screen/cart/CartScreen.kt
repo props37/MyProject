@@ -227,7 +227,7 @@ private fun ScreenContent(
                                         iconResId = iconResId,
                                         title = stringResource(titleResId),
                                         body = stringResource(bodyResId),
-                                        refreshButtonText = stringResource(R.string.go_to_catalog),
+                                        buttonText = stringResource(R.string.go_to_catalog),
                                     )
                                     ZarinaErrorScreen(
                                         state = errorState,
@@ -249,7 +249,7 @@ private fun ScreenContent(
                     iconResId = R.drawable.ic_cart_outline_64,
                     title = stringResource(R.string.cart_screen_empty_cart_placeholder_title),
                     body = stringResource(R.string.cart_screen_empty_cart_placeholder_description),
-                    refreshButtonText = stringResource(R.string.go_to_catalog),
+                    buttonText = stringResource(R.string.go_to_catalog),
                 )
                 ZarinaErrorScreen(
                     state = errorState,

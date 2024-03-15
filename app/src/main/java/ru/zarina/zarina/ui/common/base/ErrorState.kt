@@ -12,8 +12,8 @@ data class ErrorState(
     val iconResId: Int,
     val title: Text,
     val body: Text,
-    val isRefreshButtonVisible: Boolean = true,
-    val refreshButtonText: Text = Text.Resource(R.string.refresh),
+    val isButtonVisible: Boolean = true,
+    val buttonText: Text = Text.Resource(R.string.refresh),
 ) {
     companion object {
         val NETWORK: ErrorState
@@ -21,8 +21,8 @@ data class ErrorState(
                 iconResId = R.drawable.ic_wifi_error_24,
                 title = Text.Resource(R.string.internet_connection_error),
                 body = Text.Resource(R.string.check_internet_connection_and_refresh_page),
-                isRefreshButtonVisible = true,
-                refreshButtonText = Text.Resource(R.string.refresh),
+                isButtonVisible = true,
+                buttonText = Text.Resource(R.string.refresh),
             )
 
         val GENERIC: ErrorState
@@ -30,8 +30,8 @@ data class ErrorState(
                 iconResId = R.drawable.ic_heart_broken_outline_24,
                 title = Text.Resource(R.string.something_went_wrong),
                 body = Text.Resource(R.string.refresh_page_or_come_back_later),
-                isRefreshButtonVisible = true,
-                refreshButtonText = Text.Resource(R.string.refresh),
+                isButtonVisible = true,
+                buttonText = Text.Resource(R.string.refresh),
             )
     }
 }
@@ -42,16 +42,16 @@ fun rememberErrorState(
     iconResId: Int,
     title: String,
     body: String,
-    isRefreshButtonVisible: Boolean = true,
-    refreshButtonText: String = stringResource(R.string.refresh),
+    isButtonVisible: Boolean = true,
+    buttonText: String = stringResource(R.string.refresh),
 ): ErrorState {
-    return remember(iconResId, title, body, isRefreshButtonVisible, refreshButtonText) {
+    return remember(iconResId, title, body, isButtonVisible, buttonText) {
         ErrorState(
             iconResId = iconResId,
             title = Text.String(title),
             body = Text.String(body),
-            isRefreshButtonVisible = isRefreshButtonVisible,
-            refreshButtonText = Text.String(refreshButtonText),
+            isButtonVisible = isButtonVisible,
+            buttonText = Text.String(buttonText),
         )
     }
 }

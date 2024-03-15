@@ -69,7 +69,7 @@ fun ZarinaErrorScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         AnimatedContent(
-            targetState = state.isRefreshButtonVisible,
+            targetState = state.isButtonVisible,
             transitionSpec = {
                 AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
             },
