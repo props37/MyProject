@@ -89,7 +89,7 @@ class HomeViewModel @Inject constructor(
         contentFetchRequests.trySend(Unit)
     }
 
-    fun onGenderTabClicked(tab: GenderTab) {
+    fun onGenderTabChanged(tab: GenderTab) {
         savedStateHandle[KEY_CURRENT_GENDER_TAB] = tab
     }
 

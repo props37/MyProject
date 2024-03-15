@@ -59,7 +59,7 @@ fun HomeScreen(
     ScreenContent(
         genderTabs = genderTabs,
         currentGenderTab = currentGenderTab,
-        onGenderTabClicked = viewModel::onGenderTabClicked,
+        onGenderTabChanged = viewModel::onGenderTabChanged,
         contentState = contentState,
         onBannerClicked = viewModel::onBannerClicked,
         onContentErrorRefreshClicked = viewModel::onContentErrorRefreshClicked,
@@ -73,7 +73,7 @@ fun HomeScreen(
 private fun ScreenContent(
     genderTabs: ImmutableList<GenderTab>,
     currentGenderTab: GenderTab,
-    onGenderTabClicked: (GenderTab) -> Unit,
+    onGenderTabChanged: (GenderTab) -> Unit,
     contentState: ContentState,
     onBannerClicked: (HomeContent.Banner) -> Unit,
     onContentErrorRefreshClicked: () -> Unit,
@@ -112,13 +112,13 @@ private fun ScreenContent(
                             pagerState = pagerState,
                             tabs = genderTabs,
                             currentTab = currentGenderTab,
-                            onCurrentTabChanged = onGenderTabClicked,
+                            onCurrentTabChanged = onGenderTabChanged,
                         )
 
                         TopBar(
                             genders = genderTabs,
                             pagerState = pagerState,
-                            onGenderClicked = onGenderTabClicked,
+                            onGenderChanged = onGenderTabChanged,
                             modifier = Modifier
                                 .zIndex(1f)
                                 .align(Alignment.TopCenter)
@@ -172,7 +172,7 @@ private fun Preview(
         ScreenContent(
             genderTabs = remember { GenderTab.entries.toImmutableList() },
             currentGenderTab = GenderTab.WOMEN,
-            onGenderTabClicked = {},
+            onGenderTabChanged = {},
             contentState = contentState,
             onBannerClicked = {},
             onContentErrorRefreshClicked = {},

@@ -64,7 +64,7 @@ object HomeScreenComponents {
     fun TopBar(
         genders: ImmutableList<GenderTab>,
         pagerState: PagerState,
-        onGenderClicked: (GenderTab) -> Unit,
+        onGenderChanged: (GenderTab) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val color = UiKitTheme.colors.text.general.inversed.default
@@ -92,7 +92,7 @@ object HomeScreenComponents {
             ) {
                 genders.forEach { gender ->
                     ZarinaButton(
-                        onClick = { onGenderClicked(gender) },
+                        onClick = { onGenderChanged(gender) },
                         size = ZarinaButtonSize.Medium,
                         colors = ZarinaButtonDefaults.backlessColors(contentColor = color),
                     ) {
