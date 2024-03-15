@@ -1,9 +1,7 @@
 package ru.zarina.zarina.data.cart.remote.api.dto
 
-import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.cart.DeliveryType
 
-@Serializable
 @JvmInline
 value class DeliveryTypeDto(val value: String) {
     companion object {

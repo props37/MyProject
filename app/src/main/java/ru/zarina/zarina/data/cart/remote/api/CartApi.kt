@@ -28,7 +28,7 @@ class CartApi @Inject constructor(
 
     suspend fun getCart(deliveryType: DeliveryType, cityKladrId: KladrId?): CartDto {
         return httpClient.get("/api/cart") {
-            parameter("cart_type", DeliveryTypeDto.fromDeliveryType(deliveryType))
+            parameter("cart_type", DeliveryTypeDto.fromDeliveryType(deliveryType).value)
             parameter("city_kladr_id", cityKladrId?.value)
         }.body()
     }
