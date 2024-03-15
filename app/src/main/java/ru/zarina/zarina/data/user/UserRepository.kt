@@ -3,6 +3,7 @@ package ru.zarina.zarina.data.user
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.data.user.local.UserLocalDataSource
 import ru.zarina.zarina.data.user.remote.UserRemoteDataSource
+import ru.zarina.zarina.domain.common.Gender
 import ru.zarina.zarina.domain.geography.City
 import javax.inject.Inject
 
@@ -21,6 +22,14 @@ class UserRepository @Inject constructor(
 
     suspend fun setLocalUserCity(city: City) {
         localDataSource.setUserCity(city)
+    }
+
+    fun getUserContentGenderFlow(): Flow<Gender?> {
+        return localDataSource.getUserContentGenderFlow()
+    }
+
+    suspend fun setUserContentGender(gender: Gender) {
+        localDataSource.setUserContentGender(gender)
     }
 
     suspend fun clear() {

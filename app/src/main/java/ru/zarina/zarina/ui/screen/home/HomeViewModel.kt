@@ -16,17 +16,22 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.parcelize.Parcelize
+import ru.zarina.zarina.domain.common.Gender
 import ru.zarina.zarina.domain.content.HomeContent
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.from
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.usecase.user.SetUserContentGenderUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
@@ -44,7 +49,13 @@ class HomeViewModel @Inject constructor(
 
     val currentGenderTab: StateFlow<GenderTab> = savedStateHandle.getStateFlow(
         key = KEY_CURRENT_GENDER_TAB,
-        initialValue = GenderTab.WOMEN,
+        initialValue = runBlocking {
+            val gender = interactor.getUserContentGenderFlow()
+                .firstOrNull()
+                ?.getOrNull()
+                ?: Gender.getDefault()
+            GenderTab.from(gender)
+        },
     )
 
     private val contentFetchRequests = Channel<Unit>(Channel.CONFLATED)
@@ -91,6 +102,10 @@ class HomeViewModel @Inject constructor(
 
     fun onGenderTabChanged(tab: GenderTab) {
         savedStateHandle[KEY_CURRENT_GENDER_TAB] = tab
+        viewModelScope.launch {
+            val params = SetUserContentGenderUseCase.Params(tab.toGender())
+            interactor.setUserContentGender(params)
+        }
     }
 
     fun onBannerClicked(banner: HomeContent.Banner) {
@@ -110,7 +125,22 @@ class HomeViewModel @Inject constructor(
     }
 
     @Parcelize
-    enum class GenderTab : Parcelable { WOMEN, MEN }
+    enum class GenderTab : Parcelable {
+        WOMEN,
+        MEN;
+
+        fun toGender(): Gender = when (this) {
+            WOMEN -> Gender.FEMALE
+            MEN -> Gender.MALE
+        }
+
+        companion object {
+            fun from(gender: Gender): GenderTab = when (gender) {
+                Gender.FEMALE -> WOMEN
+                Gender.MALE -> MEN
+            }
+        }
+    }
 
     @Stable
     sealed class ContentState {
