@@ -56,7 +56,7 @@ googlePlayServices-maps-compose = "4.3.3"
 firebase-bom = "32.7.4"
 
 firebase-performance = "1.4.2"
-mindbox = "2.8.4"
+mindbox = "2.8.5"
 
 junit = "4.13.2"
 
