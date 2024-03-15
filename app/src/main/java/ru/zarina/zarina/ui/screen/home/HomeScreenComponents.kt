@@ -18,11 +18,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -59,10 +59,11 @@ import timber.log.Timber
 
 object HomeScreenComponents {
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun TopBar(
         genders: ImmutableList<GenderTab>,
-        currentGender: GenderTab,
+        pagerState: PagerState,
         onGenderClicked: (GenderTab) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -80,11 +81,12 @@ object HomeScreenComponents {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            val selectedTabIndex = remember(genders, currentGender) {
-                genders.indexOf(currentGender)
+            val currentGender = remember(genders, pagerState) {
+                derivedStateOf { genders.getOrNull(pagerState.currentPage) }
             }
+
             ZarinaLooseTabRow(
-                selectedTabIndex = selectedTabIndex,
+                selectedTabIndex = pagerState.currentPage,
                 backgroundColor = Color.Unspecified,
                 contentColor = UiKitTheme.colors.background.general.regular.default,
             ) {
@@ -99,7 +101,7 @@ object HomeScreenComponents {
                             GenderTab.MEN -> R.string.for_men
                         }
 
-                        val style = if (gender == currentGender) {
+                        val style = if (gender == currentGender.value) {
                             UiKitTheme.typography.tertiary.regular
                         } else {
                             UiKitTheme.typography.tertiary.light
@@ -119,25 +121,14 @@ object HomeScreenComponents {
     @Composable
     fun GenderContentPager(
         genders: ImmutableList<GenderTab>,
-        currentGender: GenderTab,
+        pagerState: PagerState,
         content: HomeContent,
         onBannerClicked: (HomeContent.Banner) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val pagerState = rememberPagerState(
-            initialPage = remember { genders.indexOf(currentGender) },
-            pageCount = { genders.size },
-        )
-
-        LaunchedEffect(pagerState, genders, currentGender) {
-            val page = genders.indexOf(currentGender)
-            pagerState.animateScrollToPage(page)
-        }
-
         HorizontalPager(
             state = pagerState,
             beyondBoundsPageCount = 0,
-            userScrollEnabled = false,
             modifier = modifier,
         ) { page ->
             val banners = when (genders[page]) {

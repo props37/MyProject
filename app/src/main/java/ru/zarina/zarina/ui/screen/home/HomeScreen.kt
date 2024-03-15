@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screen.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -43,6 +45,7 @@ import ru.zarina.zarina.ui.screen.home.HomeViewModel.SideEffect
 import ru.zarina.zarina.ui.screen.home.tooling.preview.ContentStatePreviewParameterProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.Crossfade
+import ru.zarina.zarina.util.compose.pager.PagerTabRowIntegration
 
 @Composable
 fun HomeScreen(
@@ -65,6 +68,7 @@ fun HomeScreen(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ScreenContent(
     genderTabs: ImmutableList<GenderTab>,
@@ -99,9 +103,21 @@ private fun ScreenContent(
                     Box(modifier = Modifier.fillMaxSize()) {
                         ForcedSystemBarsBehavior(isStatusBarContentLight = true)
 
+                        val pagerState = rememberPagerState(
+                            initialPage = remember { genderTabs.indexOf(currentGenderTab) },
+                            pageCount = { genderTabs.size },
+                        )
+
+                        PagerTabRowIntegration(
+                            pagerState = pagerState,
+                            tabs = genderTabs,
+                            currentTab = currentGenderTab,
+                            onCurrentTabChanged = onGenderTabClicked,
+                        )
+
                         TopBar(
                             genders = genderTabs,
-                            currentGender = currentGenderTab,
+                            pagerState = pagerState,
                             onGenderClicked = onGenderTabClicked,
                             modifier = Modifier
                                 .zIndex(1f)
@@ -114,7 +130,7 @@ private fun ScreenContent(
 
                         GenderContentPager(
                             genders = genderTabs,
-                            currentGender = currentGenderTab,
+                            pagerState = pagerState,
                             content = contentState.content,
                             onBannerClicked = onBannerClicked,
                             modifier = Modifier
