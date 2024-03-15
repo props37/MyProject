@@ -20,13 +20,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -127,24 +127,25 @@ object CatalogScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun GenderPicker(
         genders: ImmutableList<GenderTab>,
-        currentGender: GenderTab,
-        onGenderClicked: (GenderTab) -> Unit,
+        pagerState: PagerState,
+        onGenderСhanged: (GenderTab) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val selectedTabIndex = remember(genders, currentGender) {
-            genders.indexOf(currentGender)
+        val currentGender = remember(genders, pagerState) {
+            derivedStateOf { genders.getOrNull(pagerState.currentPage) }
         }
 
         ZarinaTabRow(
-            selectedTabIndex = selectedTabIndex,
+            selectedTabIndex = pagerState.currentPage,
             modifier = modifier,
         ) {
             genders.forEach { gender ->
                 ZarinaButton(
-                    onClick = { onGenderClicked(gender) },
+                    onClick = { onGenderСhanged(gender) },
                     size = ZarinaButtonSize.Medium,
                     colors = ZarinaButtonDefaults.backlessColors(),
                     contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
@@ -154,7 +155,7 @@ object CatalogScreenComponents {
                         GenderTab.MEN -> R.string.for_men
                     }
 
-                    val style = if (gender == currentGender) {
+                    val style = if (gender == currentGender.value) {
                         UiKitTheme.typography.tertiary.regular
                     } else {
                         UiKitTheme.typography.tertiary.light
@@ -174,26 +175,15 @@ object CatalogScreenComponents {
     @Composable
     fun GenderCategoryPager(
         genders: ImmutableList<GenderTab>,
-        currentGender: GenderTab,
+        pagerState: PagerState,
         categoryListState: CategoryListState,
         categoryListItemsState: CategoryListItemsState,
         onCategoryListItemClicked: (CategoryListItem) -> Unit,
         onCategoryListErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val pagerState = rememberPagerState(
-            initialPage = remember { genders.indexOf(currentGender) },
-            pageCount = { genders.size },
-        )
-
-        LaunchedEffect(pagerState, genders, currentGender) {
-            val page = genders.indexOf(currentGender)
-            pagerState.animateScrollToPage(page)
-        }
-
         HorizontalPager(
             state = pagerState,
-            userScrollEnabled = false,
             modifier = modifier,
         ) { page ->
             CategoryList(

@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screen.catalog
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -42,6 +44,7 @@ import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderTab
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.SideEffect
 import ru.zarina.zarina.ui.screen.catalog.tooling.preview.CategoryListStatePreviewParameterProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.pager.PagerTabRowIntegration
 
 @Composable
 fun CatalogScreen(
@@ -63,7 +66,7 @@ fun CatalogScreen(
         onSearchBarCancelClicked = viewModel::onSearchBarCancelClicked,
         genderTabs = genderTabs,
         currentGenderTab = currentGenderTab,
-        onGenderTabClicked = viewModel::onGenderTabClicked,
+        onGenderTabChanged = viewModel::onGenderTabChanged,
         categoryListState = categoryListState,
         categoryListItemsState = categoryListItemsState,
         onCategoryListItemClicked = viewModel::onCategoryListItemClicked,
@@ -73,6 +76,7 @@ fun CatalogScreen(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ScreenContent(
     searchQuery: String,
@@ -81,7 +85,7 @@ private fun ScreenContent(
     onSearchBarCancelClicked: () -> Unit,
     genderTabs: ImmutableList<GenderTab>,
     currentGenderTab: GenderTab,
-    onGenderTabClicked: (GenderTab) -> Unit,
+    onGenderTabChanged: (GenderTab) -> Unit,
     categoryListState: CategoryListState,
     categoryListItemsState: CategoryListItemsState,
     onCategoryListItemClicked: (CategoryListItem) -> Unit,
@@ -117,10 +121,22 @@ private fun ScreenContent(
 
         Spacer(modifier = Modifier.height(4.dp))
 
+        val pagerState = rememberPagerState(
+            initialPage = remember { genderTabs.indexOf(currentGenderTab) },
+            pageCount = { genderTabs.size },
+        )
+
+        PagerTabRowIntegration(
+            pagerState = pagerState,
+            tabs = genderTabs,
+            currentTab = currentGenderTab,
+            onCurrentTabChanged = onGenderTabChanged,
+        )
+
         GenderPicker(
             genders = genderTabs,
-            currentGender = currentGenderTab,
-            onGenderClicked = onGenderTabClicked,
+            pagerState = pagerState,
+            onGenderСhanged = onGenderTabChanged,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -128,7 +144,7 @@ private fun ScreenContent(
 
         GenderCategoryPager(
             genders = genderTabs,
-            currentGender = currentGenderTab,
+            pagerState = pagerState,
             categoryListState = categoryListState,
             categoryListItemsState = categoryListItemsState,
             onCategoryListItemClicked = onCategoryListItemClicked,
@@ -154,7 +170,7 @@ private fun Preview(
             onSearchBarCancelClicked = {},
             genderTabs = remember { GenderTab.entries.toImmutableList() },
             currentGenderTab = GenderTab.WOMEN,
-            onGenderTabClicked = {},
+            onGenderTabChanged = {},
             categoryListState = categoryListState,
             categoryListItemsState = remember {
                 CategoryListStatePreviewParameterProvider.getCategoryListItemsStatePreview()
