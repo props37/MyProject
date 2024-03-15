@@ -1,6 +1,9 @@
 package ru.zarina.zarina.ui.common.base
 
 import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.res.stringResource
 import ru.zarina.zarina.R
 import java.io.IOException
 
@@ -30,6 +33,26 @@ data class ErrorState(
                 isRefreshButtonVisible = true,
                 refreshButtonText = Text.Resource(R.string.refresh),
             )
+    }
+}
+
+@Composable
+fun rememberErrorState(
+    @DrawableRes
+    iconResId: Int,
+    title: String,
+    body: String,
+    isRefreshButtonVisible: Boolean = true,
+    refreshButtonText: String = stringResource(R.string.refresh),
+): ErrorState {
+    return remember(iconResId, title, body, isRefreshButtonVisible, refreshButtonText) {
+        ErrorState(
+            iconResId = iconResId,
+            title = Text.String(title),
+            body = Text.String(body),
+            isRefreshButtonVisible = isRefreshButtonVisible,
+            refreshButtonText = Text.String(refreshButtonText),
+        )
     }
 }
 

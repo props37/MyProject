@@ -15,13 +15,20 @@ import ru.zarina.zarina.ui.screen.cart.CartViewModel.SideEffect
 
 @Composable
 fun CartScreenBehavior(
+    onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CartScreenAction) -> Unit,
 ) {
     val updatedToastController by rememberUpdatedState(LocalToastController.current)
+    val updatedOnScreenOpened by rememberUpdatedState(onScreenOpened)
     val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = true)
+
+    LifecycleStartEffect(Unit) {
+        updatedOnScreenOpened()
+        onStopOrDispose {}
+    }
 
     LifecycleStartEffect(sideEffects) {
         lifecycleScope.launch {
