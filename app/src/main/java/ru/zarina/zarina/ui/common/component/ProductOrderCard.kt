@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -25,6 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -62,6 +64,7 @@ fun ProductOrderCard(
     onCountSelectorClicked: (() -> Unit)? = null,
     price: Price? = null,
     showOriginalPrice: Boolean = true,
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     SideEffect {
         if (count != null) {
@@ -69,7 +72,11 @@ fun ProductOrderCard(
         }
     }
 
-    Row(modifier = modifier.height(IntrinsicSize.Min)) {
+    Row(
+        modifier = modifier
+            .height(IntrinsicSize.Min)
+            .padding(contentPadding),
+    ) {
         var isImageShimmerEnabled by remember(imageUrl) { mutableStateOf(true) }
         AsyncImage(
             model = imageUrl.value,
@@ -90,6 +97,8 @@ fun ProductOrderCard(
                 text = name.uppercase(),
                 style = UiKitTheme.typography.caption1.regular,
                 color = UiKitTheme.colors.text.general.regular.default,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
             Spacer(modifier = Modifier.height(4.dp))
             SizeText(size = size, sizeRu = sizeRu, height = height)
