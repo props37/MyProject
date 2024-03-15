@@ -144,7 +144,8 @@ class CartViewModel @AssistedInject constructor(
         viewModelScope.launch {
             interactor.clearCart()
                 .onSuccess {
-                    // TODO: [High] Refresh cart products
+                    // TODO: [High] Test
+                    cartFetchRequests.trySend(Unit)
                 }
                 .onFailure {
                     val message = Text.Resource(R.string.cart_clearing_error_toast)
