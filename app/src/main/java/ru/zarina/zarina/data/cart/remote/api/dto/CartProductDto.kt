@@ -18,6 +18,9 @@ data class CartProductDto(
 
     @SerialName("offer")
     val offer: Offer? = null,
+
+    @SerialName("quantity")
+    val count: Int? = null,
 ) {
     fun toCartProduct(): CartProduct {
         checkNotNull(id) { "id is null" }
@@ -29,7 +32,7 @@ data class CartProductDto(
         checkNotNull(offer.color) { "color is null" }
         checkNotNull(offer.imageUrl) { "imageUrl is null" }
         checkNotNull(offer.size) { "size is null" }
-        checkNotNull(offer.count) { "count is null" }
+        checkNotNull(count) { "count is null" }
         return CartProduct(
             id = CartProduct.Id(id),
             offerId = ProductOffer.Id(offer.id),
@@ -40,7 +43,7 @@ data class CartProductDto(
             imageUrl = Url(offer.imageUrl),
             size = offer.size,
             height = offer.height?.takeIf { it.isNotBlank() },
-            count = offer.count,
+            count = count,
             isInFavorites = offer.isInFavorites ?: false,
         )
     }
@@ -71,9 +74,6 @@ data class CartProductDto(
         @SerialName("price")
         val price: PriceDto? = null,
 
-        @SerialName("quantity")
-        val count: Int? = null,
-
         @SerialName("is_favorite")
         val isInFavorites: Boolean? = null,
     ) {
@@ -88,7 +88,7 @@ data class CartProductDto(
             @SerialName("code")
             val code: String? = null,
 
-            @SerialName("productId")
+            @SerialName("product_id")
             val productId: String? = null,
         ) {
             fun toProductColor(): ProductColor {
