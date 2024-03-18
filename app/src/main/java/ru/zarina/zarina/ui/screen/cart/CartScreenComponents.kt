@@ -44,7 +44,6 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.cart.Cart
 import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.geography.City
-import ru.zarina.zarina.ui.base.error.rememberErrorState
 import ru.zarina.zarina.ui.common.component.ProductOrderCard
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
@@ -55,6 +54,7 @@ import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.tab.ZarinaTabRow
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
+import ru.zarina.zarina.ui.common.error.rememberErrorState
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.CartState
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition

@@ -28,9 +28,9 @@ import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.base.throttler.Throttler
 import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.geography.City
-import ru.zarina.zarina.ui.base.error.ErrorState
-import ru.zarina.zarina.ui.base.error.from
 import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.common.error.ErrorState
+import ru.zarina.zarina.ui.common.error.from
 import ru.zarina.zarina.ui.common.util.ScreenResultHandler
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations

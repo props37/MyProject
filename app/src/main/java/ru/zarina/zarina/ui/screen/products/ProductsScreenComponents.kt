@@ -67,8 +67,6 @@ import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.product.Product
-import ru.zarina.zarina.ui.base.error.ErrorState
-import ru.zarina.zarina.ui.base.error.from
 import ru.zarina.zarina.ui.common.component.ProductCard
 import ru.zarina.zarina.ui.common.component.ProductCardPlaceholder
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
@@ -83,6 +81,8 @@ import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimm
 import ru.zarina.zarina.ui.common.component.tag.ZarinaTag
 import ru.zarina.zarina.ui.common.component.tag.ZarinaTagSkeleton
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
+import ru.zarina.zarina.ui.common.error.ErrorState
+import ru.zarina.zarina.ui.common.error.from
 import ru.zarina.zarina.ui.common.util.library.paging.retryAppendPrependErrors
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.TagListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
