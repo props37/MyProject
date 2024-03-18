@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screen.cart
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -201,10 +202,12 @@ class CartViewModel @AssistedInject constructor(
     sealed class CartState {
         data object InitialLoading : CartState()
 
+        @Immutable
         data class Cart(val cart: DomainCart) : CartState()
 
         data object EmptyCart : CartState()
 
+        @Immutable
         data class Error(val state: ErrorState) : CartState()
     }
 
