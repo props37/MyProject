@@ -47,7 +47,7 @@ import ru.zarina.zarina.ui.screen.cart.CartScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.CartState
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.SideEffect
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.Crossfade
+import ru.zarina.zarina.util.compose.animation.Crossfade
 import ru.zarina.zarina.util.compose.pager.PagerTabRowIntegration
 
 // TODO: [High] Add pull refresh

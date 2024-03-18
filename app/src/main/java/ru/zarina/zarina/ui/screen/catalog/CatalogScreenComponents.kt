@@ -61,10 +61,10 @@ import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListItemsStat
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderTab
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
-import ru.zarina.zarina.util.compose.Crossfade
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.util.compose.animation.Crossfade
 
 object CatalogScreenComponents {
 

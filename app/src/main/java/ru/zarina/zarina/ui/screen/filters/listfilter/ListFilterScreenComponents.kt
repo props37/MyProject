@@ -37,8 +37,8 @@ import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.common.util.domain.nameResId
 import ru.zarina.zarina.ui.common.util.domain.toComposeColor
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 
 object ListFilterScreenComponents {
 

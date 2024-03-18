@@ -44,7 +44,7 @@ import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.SideEffect
 import ru.zarina.zarina.ui.screen.home.tooling.preview.ContentStatePreviewParameterProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.Crossfade
+import ru.zarina.zarina.util.compose.animation.Crossfade
 import ru.zarina.zarina.util.compose.pager.PagerTabRowIntegration
 
 @Composable

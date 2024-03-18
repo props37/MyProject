@@ -1,4 +1,4 @@
-package ru.zarina.zarina.util.compose
+package ru.zarina.zarina.util.compose.animation
 
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.EnterTransition

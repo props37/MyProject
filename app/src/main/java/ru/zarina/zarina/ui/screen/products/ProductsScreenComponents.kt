@@ -86,11 +86,11 @@ import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.util.library.paging.retryAppendPrependErrors
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.TagListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
-import ru.zarina.zarina.util.compose.Crossfade
 import ru.zarina.zarina.util.compose.animateFastScrollToItem
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.util.compose.animation.Crossfade
 import ru.zarina.zarina.util.compose.collectIsScrollingBackwardAsState
 import ru.zarina.zarina.util.compose.text.unscalable
 import ru.zarina.zarina.util.library.paging3.PagingErrorTimberLogger

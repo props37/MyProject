@@ -53,10 +53,10 @@ import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
-import ru.zarina.zarina.util.compose.Crossfade
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.util.compose.animation.Crossfade
 import ru.zarina.zarina.util.compose.navigationBarsOrIme
 import ru.zarina.zarina.utils.compose.plus
 

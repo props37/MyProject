@@ -29,7 +29,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.component.loader.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 
 @Composable
 fun ZarinaIconButton(
