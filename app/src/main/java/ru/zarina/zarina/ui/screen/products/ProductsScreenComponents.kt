@@ -92,7 +92,7 @@ import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.Crossfade
 import ru.zarina.zarina.util.compose.animateFastScrollToItem
 import ru.zarina.zarina.util.compose.collectIsScrollingBackwardAsState
-import ru.zarina.zarina.util.compose.unscalable
+import ru.zarina.zarina.util.compose.text.unscalable
 import ru.zarina.zarina.util.library.paging3.PagingErrorTimberLogger
 
 object ProductsScreenComponents {

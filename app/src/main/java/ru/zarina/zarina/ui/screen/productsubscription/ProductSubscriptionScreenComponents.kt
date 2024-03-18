@@ -18,13 +18,13 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.common.Url
-import ru.zarina.zarina.ui.common.component.checkbox.ZarinaCheckbox
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
+import ru.zarina.zarina.ui.common.component.checkbox.ZarinaCheckbox
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.addStyles
-import ru.zarina.zarina.util.compose.addUrlAnnotations
+import ru.zarina.zarina.util.compose.text.addStyles
+import ru.zarina.zarina.util.compose.text.addUrlAnnotations
 
 object ProductSubscriptionScreenComponents {
 

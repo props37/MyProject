@@ -54,7 +54,7 @@ import ru.zarina.zarina.ui.common.component.progressindicator.ZarinaLinearProgre
 import ru.zarina.zarina.ui.common.util.SplashScreenLogoSize
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.OnboardingStep
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.FontFeatureSettings
+import ru.zarina.zarina.util.compose.text.FontFeatureSettings
 import java.util.concurrent.TimeUnit
 
 object OnboardingScreenComponents {

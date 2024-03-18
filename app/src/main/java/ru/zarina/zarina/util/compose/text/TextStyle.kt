@@ -1,4 +1,4 @@
-package ru.zarina.zarina.util.compose
+package ru.zarina.zarina.util.compose.text
 
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.text.TextStyle

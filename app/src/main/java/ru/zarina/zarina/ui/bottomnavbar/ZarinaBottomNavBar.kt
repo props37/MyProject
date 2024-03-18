@@ -76,7 +76,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.HorizontalAndBottom
 import ru.zarina.zarina.util.compose.sizeIn
-import ru.zarina.zarina.util.compose.unscalable
+import ru.zarina.zarina.util.compose.text.unscalable
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
