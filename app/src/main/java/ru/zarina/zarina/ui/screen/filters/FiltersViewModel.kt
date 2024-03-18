@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.filter.Filter
 import ru.zarina.zarina.domain.filter.Filters
@@ -28,8 +30,6 @@ import ru.zarina.zarina.domain.product.CategoryProductInfo
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.from
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.common.util.ScreenResultHandler
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations

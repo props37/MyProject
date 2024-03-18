@@ -14,6 +14,8 @@ import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.base.operationtracker.OperationKey
 import ru.zarina.zarina.base.operationtracker.OperationTracker
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.common.exception.ValidationException
 import ru.zarina.zarina.domain.exception.InvalidEmailException
@@ -22,8 +24,6 @@ import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.domain.product.ProductOffer
 import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.base.Throttler
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations

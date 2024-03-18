@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.base.sideeffectsource
+package ru.zarina.zarina.base.sideeffectsource
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
