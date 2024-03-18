@@ -54,12 +54,12 @@ import androidx.compose.ui.zIndex
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.components.ModalError
 import ru.zarina.zarina.ui.common.components.StateSnackbar
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
-import ru.zarina.zarina.ui.common.text.Text
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.ui.CityListItemProvider

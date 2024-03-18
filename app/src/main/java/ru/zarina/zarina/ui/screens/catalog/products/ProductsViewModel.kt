@@ -33,12 +33,12 @@ import ru.zarina.zarina.domain.old.FilteredProducts
 import ru.zarina.zarina.domain.old.Filtration
 import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.domain.old.ProductSort
+import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.PluralManager
 import ru.zarina.zarina.ui.common.base.PluralResources
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.common.base.paging.PageHolder
-import ru.zarina.zarina.ui.common.text.Text
 import ru.zarina.zarina.ui.navigation.old.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.products.paging.CategoryProductPagingSource
 import ru.zarina.zarina.ui.screens.catalog.products.paging.ProductsRemoteMediator

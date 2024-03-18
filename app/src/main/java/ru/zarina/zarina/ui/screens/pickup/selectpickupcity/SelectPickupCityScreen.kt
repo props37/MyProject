@@ -10,8 +10,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
+import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
-import ru.zarina.zarina.ui.common.text.Text
 import ru.zarina.zarina.ui.screens.bases.selectcity.SelectCityScreenContent
 import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 

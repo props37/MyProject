@@ -16,9 +16,9 @@ import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.old.Filtration
 import ru.zarina.zarina.domain.old.TreeFilter
+import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
-import ru.zarina.zarina.ui.common.text.Text
 import ru.zarina.zarina.ui.navigation.old.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 import ru.zarina.zarina.ui.screens.catalog.filters.FiltersViewModel

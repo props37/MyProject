@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ModalError
@@ -37,7 +38,6 @@ import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.bottomNavigationPadding
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
-import ru.zarina.zarina.ui.common.text.Text
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

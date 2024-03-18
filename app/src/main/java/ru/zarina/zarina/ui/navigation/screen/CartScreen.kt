@@ -6,9 +6,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.zarina.zarina.R
+import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.bottomnavbar.BottomNavBarItem
 import ru.zarina.zarina.ui.bottomnavbar.navigateToBottomNavBarItem
-import ru.zarina.zarina.ui.common.text.Text
 import ru.zarina.zarina.ui.navigation.NavigationTransitionDurationMillis
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations

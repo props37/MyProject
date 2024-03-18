@@ -13,7 +13,7 @@ import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.domain.product.ProductOffer
-import ru.zarina.zarina.ui.common.text.Text
+import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.model.filter.ListFilterParcelable
 import ru.zarina.zarina.ui.model.geography.CityParcelable

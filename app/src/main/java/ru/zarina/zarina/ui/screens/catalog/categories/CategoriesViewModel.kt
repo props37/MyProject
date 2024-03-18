@@ -12,9 +12,9 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.base.operationtracker.OperationKey
 import ru.zarina.zarina.base.operationtracker.OperationTracker
 import ru.zarina.zarina.domain.old.Category
+import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
-import ru.zarina.zarina.ui.common.text.Text
 import ru.zarina.zarina.utils.coroutine.mapState
 
 @KoinViewModel

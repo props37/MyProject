@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.text
+package ru.zarina.zarina.ui.base.text
 
 import android.content.Context
 import android.os.Parcelable

@@ -32,10 +32,10 @@ import ru.zarina.zarina.domain.old.exception.validation.EmptyException
 import ru.zarina.zarina.domain.old.exception.validation.FormatException
 import ru.zarina.zarina.domain.old.exception.validation.IllegalContentsException
 import ru.zarina.zarina.domain.old.exception.validation.TooLongException
+import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.base.FocusState
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
-import ru.zarina.zarina.ui.common.text.Text
 import ru.zarina.zarina.ui.navigation.old.destinations.Pickup
 import ru.zarina.zarina.utils.coroutine.mapState
 import ru.zarina.zarina.utils.isNetworkException

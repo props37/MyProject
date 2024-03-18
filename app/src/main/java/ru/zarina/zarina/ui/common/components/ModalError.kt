@@ -17,10 +17,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
+import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.base.text.textString
 import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
-import ru.zarina.zarina.ui.common.text.Text
-import ru.zarina.zarina.ui.common.text.textString
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
