@@ -44,7 +44,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.cart.Cart
 import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.geography.City
-import ru.zarina.zarina.ui.common.base.rememberErrorState
+import ru.zarina.zarina.ui.base.error.rememberErrorState
 import ru.zarina.zarina.ui.common.component.ProductOrderCard
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults

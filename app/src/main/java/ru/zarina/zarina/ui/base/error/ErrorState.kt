@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.base
+package ru.zarina.zarina.ui.base.error
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable

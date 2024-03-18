@@ -67,8 +67,8 @@ import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.product.Product
-import ru.zarina.zarina.ui.common.base.ErrorState
-import ru.zarina.zarina.ui.common.base.from
+import ru.zarina.zarina.ui.base.error.ErrorState
+import ru.zarina.zarina.ui.base.error.from
 import ru.zarina.zarina.ui.common.component.ProductCard
 import ru.zarina.zarina.ui.common.component.ProductCardPlaceholder
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton

@@ -29,8 +29,8 @@ import kotlinx.coroutines.flow.StateFlow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.geography.City
+import ru.zarina.zarina.ui.base.error.rememberErrorState
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
-import ru.zarina.zarina.ui.common.base.rememberErrorState
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.cart.CartScreenComponents.CartContent
