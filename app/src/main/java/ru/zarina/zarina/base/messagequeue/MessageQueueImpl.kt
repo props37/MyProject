@@ -22,8 +22,8 @@ class MessageQueueImpl<T : MessageQueue.Message>(
 ) : MessageQueue<T> {
     private val queue = Channel<T>(Channel.UNLIMITED)
 
-    private val _message = MutableStateFlow<T?>(null)
-    override val message: StateFlow<T?> = _message.asStateFlow()
+    private val _currentMessage = MutableStateFlow<T?>(null)
+    override val currentMessage: StateFlow<T?> = _currentMessage.asStateFlow()
 
     private var currentMessageJob: Job? = null
     private var delayBetweenMessagesJob: Job? = null
@@ -51,15 +51,20 @@ class MessageQueueImpl<T : MessageQueue.Message>(
                 delayBetweenMessagesJob?.join()
 
                 currentMessageJob = coroutineScope.launch {
-                    Timber.tag(TAG).v("Process message: $message")
-                    _message.value = message
-                    delay(message.duration)
-                    _message.value = null
+                    try {
+                        Timber.tag(TAG).v("Process message: $message")
+                        _currentMessage.value = message
+                        delay(message.duration)
+                    } finally {
+                        _currentMessage.value = null
+                    }
                 }
+                currentMessageJob?.join()
 
                 delayBetweenMessagesJob = coroutineScope.launch(NonCancellable) {
                     delay(delayBetweenMessages)
                 }
+                delayBetweenMessagesJob?.join()
             }
             .launchIn(coroutineScope)
     }

@@ -5,7 +5,7 @@ import ru.zarina.zarina.base.messagequeue.MessageQueue.Message
 import kotlin.time.Duration
 
 interface MessageQueue<T : Message> {
-    val message: StateFlow<T?>
+    val currentMessage: StateFlow<T?>
 
     fun addMessage(message: T)
     fun removeCurrentMessage()
