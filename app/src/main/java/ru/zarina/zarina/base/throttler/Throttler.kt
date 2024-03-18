@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.base
+package ru.zarina.zarina.base.throttler
 
 import android.os.SystemClock
 import kotlin.time.Duration

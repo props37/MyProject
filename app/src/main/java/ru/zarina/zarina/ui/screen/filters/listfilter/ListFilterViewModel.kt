@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.throttler.Throttler
 import ru.zarina.zarina.domain.filter.Filter
 import ru.zarina.zarina.domain.filter.ListFilter
 import ru.zarina.zarina.domain.filter.ListFilterItem
 import ru.zarina.zarina.domain.filter.copy
-import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.model.filter.ListFilterParcelable
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterViewModel.SideEffect

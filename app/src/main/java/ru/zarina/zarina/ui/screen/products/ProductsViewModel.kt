@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.throttler.Throttler
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.common.Barcode
 import ru.zarina.zarina.domain.common.Sorting
@@ -37,7 +38,6 @@ import ru.zarina.zarina.domain.filter.coerceInAvailable
 import ru.zarina.zarina.domain.filter.selected
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.paging.mapProducts
 import ru.zarina.zarina.ui.common.util.ScreenResultHandler
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable

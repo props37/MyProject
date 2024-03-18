@@ -18,11 +18,11 @@ import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.throttler.Throttler
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.domain.geography.KladrId
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.base.Throttler
 import ru.zarina.zarina.ui.common.base.from
 import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
