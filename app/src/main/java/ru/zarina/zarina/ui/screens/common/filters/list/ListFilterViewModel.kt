@@ -18,7 +18,7 @@ import ru.zarina.zarina.domain.old.Filtration
 import ru.zarina.zarina.domain.old.ListFilter
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
-import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.text.Text
 import ru.zarina.zarina.ui.navigation.old.destinations.Catalog
 import ru.zarina.zarina.ui.screens.catalog.filters.FilterType
 import ru.zarina.zarina.ui.screens.catalog.filters.FiltersViewModel

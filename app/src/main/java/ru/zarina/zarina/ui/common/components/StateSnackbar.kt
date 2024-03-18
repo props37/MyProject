@@ -16,8 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.base.textString
+import ru.zarina.zarina.ui.common.text.Text
+import ru.zarina.zarina.ui.common.text.textString
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable

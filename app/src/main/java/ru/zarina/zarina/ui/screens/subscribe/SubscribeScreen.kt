@@ -45,8 +45,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
@@ -54,6 +52,8 @@ import ru.zarina.zarina.ui.common.components.form.Input
 import ru.zarina.zarina.ui.common.components.material.zarinaColors
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
+import ru.zarina.zarina.ui.common.text.Text
+import ru.zarina.zarina.ui.common.text.textString
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 import ru.zarina.zarina.utils.compose.autofill

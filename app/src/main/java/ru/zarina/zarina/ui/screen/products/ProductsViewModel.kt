@@ -37,8 +37,8 @@ import ru.zarina.zarina.domain.filter.Filters
 import ru.zarina.zarina.domain.filter.coerceInAvailable
 import ru.zarina.zarina.domain.filter.selected
 import ru.zarina.zarina.domain.product.Product
-import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.paging.mapProducts
+import ru.zarina.zarina.ui.common.text.Text
 import ru.zarina.zarina.ui.common.util.ScreenResultHandler
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable

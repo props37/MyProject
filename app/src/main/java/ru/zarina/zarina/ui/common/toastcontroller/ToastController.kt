@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
-import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.text.Text
 
 interface ToastController {
     fun show(text: CharSequence, duration: Int = Toast.LENGTH_SHORT)

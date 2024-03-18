@@ -35,7 +35,7 @@ import ru.zarina.zarina.domain.old.exception.validation.TooLongException
 import ru.zarina.zarina.ui.common.base.FocusState
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
-import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.text.Text
 import ru.zarina.zarina.ui.navigation.old.destinations.Pickup
 import ru.zarina.zarina.utils.coroutine.mapState
 import ru.zarina.zarina.utils.isNetworkException

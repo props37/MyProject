@@ -46,7 +46,6 @@ import ru.zarina.zarina.domain.old.Category
 import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.domain.old.ProductSort
 import ru.zarina.zarina.ui.common.base.ErrorStateOld
-import ru.zarina.zarina.ui.common.base.Text
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.FilterBar
 import ru.zarina.zarina.ui.common.components.ModalError
@@ -56,6 +55,7 @@ import ru.zarina.zarina.ui.common.components.bottomNavigationPadding
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
+import ru.zarina.zarina.ui.common.text.Text
 import ru.zarina.zarina.ui.common.utils.domain.getStringResource
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.ui.theme.old.ZarinaTheme

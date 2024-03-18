@@ -51,8 +51,6 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.old.TreeFilter
-import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.base.textString
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.CollapseButton
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
@@ -60,6 +58,8 @@ import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.components.toolbar.TextButton
+import ru.zarina.zarina.ui.common.text.Text
+import ru.zarina.zarina.ui.common.text.textString
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.utils.domain.toColorOr

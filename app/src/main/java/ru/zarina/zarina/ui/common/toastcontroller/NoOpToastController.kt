@@ -1,6 +1,6 @@
 package ru.zarina.zarina.ui.common.toastcontroller
 
-import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.text.Text
 
 class NoOpToastController : ToastController {
     override fun show(text: CharSequence, duration: Int) {

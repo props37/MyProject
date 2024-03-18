@@ -2,7 +2,7 @@ package ru.zarina.zarina.ui.common.toastcontroller
 
 import android.content.Context
 import android.widget.Toast
-import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.text.Text
 import java.lang.ref.WeakReference
 
 class ToastControllerImpl(private val context: Context) : ToastController {

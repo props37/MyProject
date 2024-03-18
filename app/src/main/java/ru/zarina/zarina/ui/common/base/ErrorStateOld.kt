@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.common.base
 
 import androidx.annotation.DrawableRes
 import ru.zarina.zarina.R
+import ru.zarina.zarina.ui.common.text.Text
 
 @Deprecated("Use ErrorState instead.")
 data class ErrorStateOld(

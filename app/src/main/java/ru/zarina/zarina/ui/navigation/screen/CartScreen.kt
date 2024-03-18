@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.bottomnavbar.BottomNavBarItem
 import ru.zarina.zarina.ui.bottomnavbar.navigateToBottomNavBarItem
-import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.text.Text
 import ru.zarina.zarina.ui.navigation.NavigationTransitionDurationMillis
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations

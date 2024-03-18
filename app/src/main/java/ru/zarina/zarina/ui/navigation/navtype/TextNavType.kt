@@ -3,7 +3,7 @@ package ru.zarina.zarina.ui.navigation.navtype
 import android.os.Bundle
 import androidx.navigation.NavType
 import kotlinx.serialization.json.Json
-import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.ui.common.text.Text
 import ru.zarina.zarina.util.platform.BundleCompat
 
 val NavType.Companion.TextType: TextNavType

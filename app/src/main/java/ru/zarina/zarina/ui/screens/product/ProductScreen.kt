@@ -90,8 +90,8 @@ fun ProductScreenContent(
         ProductViewModel.ErrorType.NETWORK -> ErrorStateOld.NETWORK
         ProductViewModel.ErrorType.NOT_FOUND -> ErrorStateOld(
             icon = R.drawable.ic_magnifying_glass_96,
-            title = ru.zarina.zarina.ui.common.base.Text.Resource(R.string.product_not_on_sale),
-            subtitle = ru.zarina.zarina.ui.common.base.Text.Resource(R.string.dont_fret_catalog),
+            title = ru.zarina.zarina.ui.common.text.Text.Resource(R.string.product_not_on_sale),
+            subtitle = ru.zarina.zarina.ui.common.text.Text.Resource(R.string.dont_fret_catalog),
         )
 
         ProductViewModel.ErrorType.GENERIC -> ErrorStateOld.GENERIC
