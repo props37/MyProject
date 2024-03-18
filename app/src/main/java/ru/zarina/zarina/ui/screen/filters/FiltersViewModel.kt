@@ -31,6 +31,7 @@ import ru.zarina.zarina.domain.product.CategoryProductInfo
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.from
 import ru.zarina.zarina.ui.common.util.ScreenResultHandler
+import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.filters.FiltersViewModel.SideEffect

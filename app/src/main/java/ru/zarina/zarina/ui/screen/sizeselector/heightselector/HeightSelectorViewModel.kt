@@ -13,6 +13,7 @@ import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.base.throttler.Throttler
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.domain.product.ProductOffer
+import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.destination.graph.SizeSelectorGraph

@@ -39,6 +39,7 @@ import ru.zarina.zarina.domain.category.withFlattenedChildren
 import ru.zarina.zarina.domain.common.Gender
 import ru.zarina.zarina.ui.common.base.ErrorState
 import ru.zarina.zarina.ui.common.base.from
+import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.usecase.user.SetUserContentGenderUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed

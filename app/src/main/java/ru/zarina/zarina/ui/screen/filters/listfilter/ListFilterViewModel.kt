@@ -13,6 +13,7 @@ import ru.zarina.zarina.domain.filter.Filter
 import ru.zarina.zarina.domain.filter.ListFilter
 import ru.zarina.zarina.domain.filter.ListFilterItem
 import ru.zarina.zarina.domain.filter.copy
+import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.model.filter.ListFilterParcelable
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterViewModel.SideEffect

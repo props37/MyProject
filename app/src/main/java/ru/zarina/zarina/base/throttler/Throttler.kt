@@ -2,7 +2,6 @@ package ru.zarina.zarina.base.throttler
 
 import android.os.SystemClock
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
 
 class Throttler(delay: Duration) {
     private val delayMillis = delay.inWholeMilliseconds
@@ -15,11 +14,5 @@ class Throttler(delay: Duration) {
         }
     }
 
-    companion object {
-        val DELAY_NAVIGATION = 500.milliseconds
-
-        fun getNavigationThrottler(): Throttler {
-            return Throttler(DELAY_NAVIGATION)
-        }
-    }
+    companion object
 }
