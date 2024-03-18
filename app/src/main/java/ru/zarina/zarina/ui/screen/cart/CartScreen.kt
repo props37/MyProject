@@ -1,9 +1,7 @@
 package ru.zarina.zarina.ui.screen.cart
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,13 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -38,17 +31,14 @@ import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.base.rememberErrorState
-import ru.zarina.zarina.ui.common.component.ProductOrderCard
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.zarina.zarina.ui.screen.cart.CartScreenComponents.City
-import ru.zarina.zarina.ui.screen.cart.CartScreenComponents.DeliveryTypePicker
+import ru.zarina.zarina.ui.screen.cart.CartScreenComponents.CartContent
 import ru.zarina.zarina.ui.screen.cart.CartScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.CartState
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.SideEffect
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.animation.Crossfade
-import ru.zarina.zarina.util.compose.pager.PagerTabRowIntegration
 
 // TODO: [High] Add pull refresh
 
@@ -81,7 +71,6 @@ fun CartScreen(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ScreenContent(
     isCartEmpty: Boolean,
@@ -126,124 +115,15 @@ private fun ScreenContent(
             modifier = Modifier.fillMaxSize(),
         ) { isCartEmpty ->
             if (!isCartEmpty) {
-                // TODO: [High] Extract
-                Column {
-                    City(
-                        city = city,
-                        onClick = onCityClicked,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-
-                    val pagerState = rememberPagerState { deliveryTypes.size }
-                    PagerTabRowIntegration(
-                        pagerState = pagerState,
-                        tabs = deliveryTypes,
-                        currentTab = currentDeliveryType,
-                        onCurrentTabChanged = onDeliveryTypeChanged,
-                    )
-
-                    DeliveryTypePicker(
-                        types = deliveryTypes,
-                        currentType = currentDeliveryType,
-                        onTypeChanged = onDeliveryTypeChanged,
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                    )
-
-                    // TODO: [High] Extract
-                    HorizontalPager(
-                        state = pagerState,
-                        userScrollEnabled = false,
-                        modifier = Modifier.fillMaxSize(),
-                    ) { page ->
-                        val deliveryType = deliveryTypes[page]
-                        val cartState = deliveryTypeToCartState[deliveryType]
-                            ?.collectAsStateWithLifecycle()?.value
-                            ?: CartState.InitialLoading
-
-                        Crossfade(
-                            targetState = cartState,
-                            contentKey = {
-                                // TODO: [High] Extract
-                                when (it) {
-                                    is CartState.Cart -> "Cart"
-                                    CartState.EmptyCart -> it
-                                    is CartState.Error -> it
-                                    CartState.InitialLoading -> it
-                                }
-                            },
-                            modifier = Modifier.fillMaxSize(),
-                        ) { state ->
-                            when (state) {
-                                is CartState.Cart -> {
-                                    // TODO: [High] Extract
-                                    LazyColumn(modifier = Modifier.fillMaxSize()) {
-                                        itemsIndexed(
-                                            items = state.cart.products,
-                                            key = { _, product -> product.id.value },
-                                            contentType = { _, product -> null }, // TODO: [High] Implement
-                                        ) { index, product ->
-                                            ProductOrderCard(
-                                                name = product.name,
-                                                imageUrl = product.imageUrl,
-                                                size = product.size,
-                                                sizeRu = null,
-                                                height = product.height,
-                                                color = product.color,
-                                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-                                            )
-
-                                            if (index < state.cart.products.lastIndex) {
-                                                Divider(
-                                                    color = UiKitTheme.colors.border.general.default,
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .padding(horizontal = 16.dp),
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-
-                                CartState.InitialLoading -> Unit // TODO: [High] Implement
-
-                                CartState.EmptyCart -> {
-                                    val iconResId: Int
-                                    val titleResId: Int
-                                    val bodyResId: Int
-                                    when (deliveryType) {
-                                        DeliveryType.DELIVERY -> {
-                                            iconResId = R.drawable.ic_delivery_24
-                                            titleResId = R.string.cart_screen_empty_delivery_cart_placeholder_title
-                                            bodyResId = R.string.cart_screen_empty_delivery_cart_placeholder_body
-                                        }
-
-                                        DeliveryType.PICK_UP_FROM_SHOP -> {
-                                            iconResId = R.drawable.ic_shop_24
-                                            titleResId = R.string.cart_screen_empty_pick_up_from_shop_cart_placeholder_title
-                                            bodyResId = R.string.cart_screen_empty_pick_up_from_shop_cart_placeholder_body
-                                        }
-                                    }
-                                    val errorState = rememberErrorState(
-                                        iconResId = iconResId,
-                                        title = stringResource(titleResId),
-                                        body = stringResource(bodyResId),
-                                        buttonText = stringResource(R.string.go_to_catalog),
-                                    )
-                                    ZarinaErrorScreen(
-                                        state = errorState,
-                                        onRefreshClicked = onGoToCatalogClicked,
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .verticalScroll(rememberScrollState())
-                                            .padding(16.dp),
-                                    )
-                                }
-
-                                is CartState.Error -> Unit // TODO: [High] Implement
-                            }
-                        }
-                    }
-                }
+                CartContent(
+                    city = city,
+                    onCityClicked = onCityClicked,
+                    deliveryTypes = deliveryTypes,
+                    currentDeliveryType = currentDeliveryType,
+                    onDeliveryTypeChanged = onDeliveryTypeChanged,
+                    deliveryTypeToCartState = deliveryTypeToCartState,
+                    onGoToCatalogClicked = onGoToCatalogClicked,
+                )
             } else {
                 val errorState = rememberErrorState(
                     iconResId = R.drawable.ic_cart_outline_64,
