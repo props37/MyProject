@@ -56,7 +56,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.parameterprovider.ProductPrevi
 import ru.zarina.zarina.ui.common.util.domain.toComposeColor
 import ru.zarina.zarina.ui.common.util.rememberFormattedPrice
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.rememberEndlessPagerState
+import ru.zarina.zarina.util.compose.pager.rememberEndlessPagerState
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable

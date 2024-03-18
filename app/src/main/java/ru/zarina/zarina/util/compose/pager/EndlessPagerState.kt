@@ -1,4 +1,4 @@
-package ru.zarina.zarina.util.compose
+package ru.zarina.zarina.util.compose.pager
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.PagerState
