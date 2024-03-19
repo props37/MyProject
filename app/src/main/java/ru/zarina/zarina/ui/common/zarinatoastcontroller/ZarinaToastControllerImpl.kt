@@ -3,7 +3,7 @@ package ru.zarina.zarina.ui.common.zarinatoastcontroller
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import ru.zarina.zarina.base.messagequeue.MessageQueueImpl
-import ru.zarina.zarina.ui.base.ZarinaMessage
+import ru.zarina.zarina.ui.base.message.ZarinaMessage
 
 class ZarinaToastControllerImpl(
     coroutineScope: CoroutineScope,

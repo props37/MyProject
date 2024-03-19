@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.base
+package ru.zarina.zarina.ui.base.message
 
 import ru.zarina.zarina.base.messagequeue.MessageQueue
 import ru.zarina.zarina.ui.base.text.Text

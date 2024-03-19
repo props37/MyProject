@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.zarina.zarina.ui.base.ZarinaMessage
+import ru.zarina.zarina.ui.base.message.ZarinaMessage
 import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.base.text.textString
 import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
