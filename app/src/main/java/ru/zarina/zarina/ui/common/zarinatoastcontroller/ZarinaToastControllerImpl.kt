@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.zarinatoast
+package ru.zarina.zarina.ui.common.zarinatoastcontroller
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
