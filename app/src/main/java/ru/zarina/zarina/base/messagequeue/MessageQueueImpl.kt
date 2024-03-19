@@ -29,6 +29,10 @@ class MessageQueueImpl<T : MessageQueue.Message>(
     private var delayBetweenMessagesJob: Job? = null
 
     init {
+        check(delayBetweenMessages > Duration.ZERO) {
+            "Delay between messages $delayBetweenMessages should be positive"
+        }
+
         processMessages()
     }
 
