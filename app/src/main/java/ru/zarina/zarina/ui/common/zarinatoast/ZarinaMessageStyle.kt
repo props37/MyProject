@@ -1,3 +1,3 @@
-package ru.zarina.zarina.ui.base.message
+package ru.zarina.zarina.ui.common.zarinatoast
 
 enum class ZarinaMessageStyle { DEFAULT, ERROR }
