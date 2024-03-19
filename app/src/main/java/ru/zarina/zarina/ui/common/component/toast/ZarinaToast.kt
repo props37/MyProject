@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.base.message.ZarinaMessage
+import ru.zarina.zarina.ui.base.message.ZarinaMessageStyle
 import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.base.text.textString
 import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
@@ -56,18 +57,18 @@ fun ZarinaToast(
     }
 }
 
-private val ZarinaMessage.Style.backgroundColor: Color
+private val ZarinaMessageStyle.backgroundColor: Color
     @Composable
     get() = when (this) {
-        ZarinaMessage.Style.DEFAULT -> UiKitTheme.colors.background.general.inversed.default
-        ZarinaMessage.Style.ERROR -> UiKitTheme.colors.background.accent.pink
+        ZarinaMessageStyle.DEFAULT -> UiKitTheme.colors.background.general.inversed.default
+        ZarinaMessageStyle.ERROR -> UiKitTheme.colors.background.accent.pink
     }
 
-private val ZarinaMessage.Style.contentColor: Color
+private val ZarinaMessageStyle.contentColor: Color
     @Composable
     get() = when (this) {
-        ZarinaMessage.Style.DEFAULT -> UiKitTheme.colors.text.general.inversed.default
-        ZarinaMessage.Style.ERROR -> UiKitTheme.colors.text.general.accent.red
+        ZarinaMessageStyle.DEFAULT -> UiKitTheme.colors.text.general.inversed.default
+        ZarinaMessageStyle.ERROR -> UiKitTheme.colors.text.general.accent.red
     }
 
 @Preview
@@ -94,7 +95,7 @@ private fun PreviewError() {
         val message = remember {
             ZarinaMessage(
                 text = Text.String(FakeDataGenerator.getLoremIpsum(10)),
-                style = ZarinaMessage.Style.ERROR,
+                style = ZarinaMessageStyle.ERROR,
             )
         }
 

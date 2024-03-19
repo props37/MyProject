@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import ru.zarina.zarina.ui.base.message.ZarinaMessage
+import ru.zarina.zarina.ui.base.message.ZarinaMessageStyle
 import ru.zarina.zarina.ui.common.behavior.systembars.ForcedSystemBarsBehavior
 import ru.zarina.zarina.ui.common.zarinatoastcontroller.ZarinaToastController
 import ru.zarina.zarina.util.compose.rememberAnchoredDraggableState
@@ -38,7 +38,7 @@ fun ZarinaToastContainer(
 
     if (shouldPaintStatusBar) {
         currentMessage?.let { message ->
-            val isStatusBarContentLight = message.style == ZarinaMessage.Style.DEFAULT
+            val isStatusBarContentLight = message.style == ZarinaMessageStyle.DEFAULT
             ForcedSystemBarsBehavior(isStatusBarContentLight = isStatusBarContentLight)
         }
     }
