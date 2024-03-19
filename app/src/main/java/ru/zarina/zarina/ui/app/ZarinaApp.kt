@@ -23,8 +23,11 @@ import ru.zarina.zarina.ui.bottomnavbar.rememberBottomNavBarSizeTracker
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.BottomNavBarBehavior
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.rememberBottomNavBarBehaviorController
+import ru.zarina.zarina.ui.common.component.toast.ZarinaToastContainer
 import ru.zarina.zarina.ui.common.media.exoplayer.LocalExoPlayerCacheHolder
 import ru.zarina.zarina.ui.common.media.exoplayer.rememberExoPlayerCacheHolder
+import ru.zarina.zarina.ui.common.toast.controller.LocalZarinaToastController
+import ru.zarina.zarina.ui.common.toast.controller.rememberZarinaToastController
 import ru.zarina.zarina.ui.common.toastcontroller.LocalToastController
 import ru.zarina.zarina.ui.common.toastcontroller.rememberToastController
 import ru.zarina.zarina.ui.navigation.ZarinaNavigation
@@ -62,11 +65,14 @@ fun ZarinaApp(
         cacheDataSourceFactory = viewModel.exoPlayerCacheDataSourceFactory,
     )
 
+    val zarinaToastController = rememberZarinaToastController()
+
     CompositionLocalProvider(
         LocalToastController provides toastController,
         LocalBottomNavBarBehaviorController provides bottomNavBarBehaviorController,
         LocalBottomNavBarSizeTracker provides bottomNavBarSizeTracker,
         LocalExoPlayerCacheHolder provides exoPlayerCacheHolder,
+        LocalZarinaToastController provides zarinaToastController,
     ) {
         ModalBottomSheetLayout(
             bottomSheetNavigator = bottomSheetNavigator,
@@ -89,6 +95,14 @@ fun ZarinaApp(
                     cartProductCount = cartProductCount,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
+                        .fillMaxWidth(),
+                )
+
+                ZarinaToastContainer(
+                    controller = zarinaToastController,
+                    shouldPaintStatusBar = true,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
                         .fillMaxWidth(),
                 )
             }

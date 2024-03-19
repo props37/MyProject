@@ -11,6 +11,7 @@ data class UiKitColors(
 ) {
     data class Background(
         val general: General = General(),
+        val accent: Accent = Accent(),
         val button: Button = Button(),
         val tag: Tag = Tag(),
         val skeleton: Color = Colors.Gallery,
@@ -29,6 +30,10 @@ data class UiKitColors(
         ) {
             data class Generic(val default: Color, val disabled: Color, val muted: Color)
         }
+
+        data class Accent(
+            val pink: Color = Colors.Chardon,
+        )
 
         data class Button(
             val primary: Generic = Generic(
