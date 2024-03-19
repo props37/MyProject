@@ -28,8 +28,8 @@ import ru.zarina.zarina.ui.common.media.exoplayer.LocalExoPlayerCacheHolder
 import ru.zarina.zarina.ui.common.media.exoplayer.rememberExoPlayerCacheHolder
 import ru.zarina.zarina.ui.common.toastcontroller.LocalToastController
 import ru.zarina.zarina.ui.common.toastcontroller.rememberToastController
-import ru.zarina.zarina.ui.common.zarinatoast.controller.LocalZarinaToastController
-import ru.zarina.zarina.ui.common.zarinatoast.controller.rememberZarinaToastController
+import ru.zarina.zarina.ui.common.zarinatoast.LocalZarinaToastController
+import ru.zarina.zarina.ui.common.zarinatoast.rememberZarinaToastController
 import ru.zarina.zarina.ui.navigation.ZarinaNavigation
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.theme.Colors

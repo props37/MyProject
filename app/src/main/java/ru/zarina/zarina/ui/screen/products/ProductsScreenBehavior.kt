@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.zarina.zarina.ui.common.toastcontroller.LocalToastController
-import ru.zarina.zarina.ui.common.zarinatoast.controller.LocalZarinaToastController
+import ru.zarina.zarina.ui.common.zarinatoast.LocalZarinaToastController
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
 
 @Composable
