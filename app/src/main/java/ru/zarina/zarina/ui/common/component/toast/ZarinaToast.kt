@@ -24,9 +24,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.base.text.textString
-import ru.zarina.zarina.ui.common.toast.ZarinaToastMessage
 import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
