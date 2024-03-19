@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.zarinatoast
+package ru.zarina.zarina.ui.common.zarinatoast.controller
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
