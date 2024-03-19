@@ -22,8 +22,8 @@ import ru.zarina.zarina.base.throttler.Throttler
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.domain.geography.KladrId
 import ru.zarina.zarina.ui.base.text.Text
-import ru.zarina.zarina.ui.common.error.ErrorState
-import ru.zarina.zarina.ui.common.error.from
+import ru.zarina.zarina.ui.common.ErrorState
+import ru.zarina.zarina.ui.common.from
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations

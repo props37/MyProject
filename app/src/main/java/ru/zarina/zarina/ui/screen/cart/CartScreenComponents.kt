@@ -54,7 +54,7 @@ import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.tab.ZarinaTabRow
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
-import ru.zarina.zarina.ui.common.error.rememberErrorState
+import ru.zarina.zarina.ui.common.rememberErrorState
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.CartState
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition

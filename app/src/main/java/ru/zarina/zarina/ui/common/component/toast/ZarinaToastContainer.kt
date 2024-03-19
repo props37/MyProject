@@ -21,8 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ru.zarina.zarina.ui.common.ZarinaMessage
 import ru.zarina.zarina.ui.common.behavior.systembars.ForcedSystemBarsBehavior
-import ru.zarina.zarina.ui.common.message.ZarinaMessage
 import ru.zarina.zarina.ui.common.zarinatoast.controller.ZarinaToastController
 import ru.zarina.zarina.util.compose.rememberAnchoredDraggableState
 import kotlin.math.roundToInt

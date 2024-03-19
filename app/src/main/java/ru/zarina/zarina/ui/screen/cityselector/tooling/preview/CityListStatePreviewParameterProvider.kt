@@ -4,7 +4,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import kotlinx.collections.immutable.toImmutableList
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.domain.geography.KladrId
-import ru.zarina.zarina.ui.common.error.ErrorState
+import ru.zarina.zarina.ui.common.ErrorState
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 
