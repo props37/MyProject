@@ -38,10 +38,10 @@ import ru.zarina.zarina.domain.filter.coerceInAvailable
 import ru.zarina.zarina.domain.filter.selected
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.common.message.ZarinaMessage
 import ru.zarina.zarina.ui.common.paging.mapProducts
 import ru.zarina.zarina.ui.common.util.ScreenResultHandler
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
-import ru.zarina.zarina.ui.common.zarinatoast.ZarinaMessage
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.destination.graph.SizeSelectorGraph

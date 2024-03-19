@@ -24,8 +24,8 @@ import ru.zarina.zarina.domain.exception.InvalidFirstNameException
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.domain.product.ProductOffer
 import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.common.message.ZarinaMessage
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
-import ru.zarina.zarina.ui.common.zarinatoast.ZarinaMessage
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
