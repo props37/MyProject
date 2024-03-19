@@ -33,8 +33,6 @@ import ru.zarina.zarina.ui.common.component.tab.LooseTabRowDefaults.looseTabIndi
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
-// TODO: [High] Add support for Pager integration
-
 @Composable
 fun ZarinaLooseTabRow(
     selectedTabIndex: Int,

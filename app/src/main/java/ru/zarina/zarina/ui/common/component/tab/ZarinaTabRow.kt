@@ -14,8 +14,6 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
-// TODO: [High] Add support for Pager integration
-
 @Composable
 fun ZarinaTabRow(
     selectedTabIndex: Int,
