@@ -2,8 +2,8 @@ package ru.zarina.zarina.data.content.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.data.remote.api.dto.ClickActionDto
-import ru.zarina.zarina.data.remote.api.dto.MediaTypeDto
+import ru.zarina.zarina.data.common.remote.api.dto.ClickActionDto
+import ru.zarina.zarina.data.common.remote.api.dto.MediaTypeDto
 import ru.zarina.zarina.domain.common.Media
 import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.content.HomeContent

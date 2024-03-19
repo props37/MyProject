@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.remote.api.exception
+package ru.zarina.zarina.data.common.remote.api.exception
 
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.statement.bodyAsText

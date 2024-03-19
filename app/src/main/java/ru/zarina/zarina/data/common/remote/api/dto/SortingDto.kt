@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.remote.api.dto
+package ru.zarina.zarina.data.common.remote.api.dto
 
 import kotlinx.serialization.Serializable
 import ru.zarina.zarina.domain.common.Sorting

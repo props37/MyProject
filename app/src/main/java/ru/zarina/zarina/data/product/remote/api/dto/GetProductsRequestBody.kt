@@ -3,7 +3,7 @@ package ru.zarina.zarina.data.product.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import ru.zarina.zarina.data.remote.api.dto.SortingDto
+import ru.zarina.zarina.data.common.remote.api.dto.SortingDto
 
 @Serializable
 data class GetProductsRequestBody(

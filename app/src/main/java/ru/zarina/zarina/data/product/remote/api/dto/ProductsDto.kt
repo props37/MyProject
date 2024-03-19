@@ -2,9 +2,9 @@ package ru.zarina.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.data.remote.api.dto.FiltersDto
-import ru.zarina.zarina.data.remote.api.dto.PaginationInfoDto
-import ru.zarina.zarina.data.remote.api.dto.ProductDto
+import ru.zarina.zarina.data.common.remote.api.dto.FiltersDto
+import ru.zarina.zarina.data.common.remote.api.dto.PaginationInfoDto
+import ru.zarina.zarina.data.common.remote.api.dto.ProductDto
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.common.Page
 import ru.zarina.zarina.domain.product.CategoryProductInfo

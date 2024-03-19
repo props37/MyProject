@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.remote.ktor.plugin
+package ru.zarina.zarina.data.common.remote.ktor.plugin
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.HttpClientCall

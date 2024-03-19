@@ -3,12 +3,12 @@ package ru.zarina.zarina.data.product.remote.api
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.post
+import ru.zarina.zarina.data.common.remote.api.dto.SortingDto
+import ru.zarina.zarina.data.common.remote.api.exception.apiExceptionConverter
 import ru.zarina.zarina.data.product.remote.api.dto.FiltersRequestDto
 import ru.zarina.zarina.data.product.remote.api.dto.GetProductsRequestBody
 import ru.zarina.zarina.data.product.remote.api.dto.ProductsDto
 import ru.zarina.zarina.data.product.remote.api.dto.SubscribeToProductRequestBody
-import ru.zarina.zarina.data.remote.api.dto.SortingDto
-import ru.zarina.zarina.data.remote.api.exception.apiExceptionConverter
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.common.Barcode

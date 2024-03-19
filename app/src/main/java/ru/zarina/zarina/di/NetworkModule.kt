@@ -19,9 +19,9 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
 import ru.zarina.zarina.BuildConfig
-import ru.zarina.zarina.data.remote.headerprovider.ZarinaApiHeaderProvider
-import ru.zarina.zarina.data.remote.ktor.plugin.ZarinaAuth
-import ru.zarina.zarina.data.remote.ktor.plugin.bearer
+import ru.zarina.zarina.data.common.remote.headerprovider.ZarinaApiHeaderProvider
+import ru.zarina.zarina.data.common.remote.ktor.plugin.ZarinaAuth
+import ru.zarina.zarina.data.common.remote.ktor.plugin.bearer
 import ru.zarina.zarina.domain.authorization.AuthorizationTokens
 import ru.zarina.zarina.usecase.authorization.GetAuthorizationTokensFlowUseCase
 import ru.zarina.zarina.usecase.authorization.RefreshAuthorizationTokensUseCase
