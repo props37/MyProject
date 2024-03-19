@@ -29,8 +29,8 @@ import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.base.throttler.Throttler
 import ru.zarina.zarina.domain.common.Gender
 import ru.zarina.zarina.domain.content.HomeContent
-import ru.zarina.zarina.ui.common.ErrorState
-import ru.zarina.zarina.ui.common.from
+import ru.zarina.zarina.ui.base.ErrorState
+import ru.zarina.zarina.ui.base.from
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.usecase.user.SetUserContentGenderUseCase
 import ru.zarina.zarina.util.base.usecase.invoke

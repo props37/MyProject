@@ -23,8 +23,8 @@ import ru.zarina.zarina.domain.exception.InvalidEmailException
 import ru.zarina.zarina.domain.exception.InvalidFirstNameException
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.domain.product.ProductOffer
+import ru.zarina.zarina.ui.base.ZarinaMessage
 import ru.zarina.zarina.ui.base.text.Text
-import ru.zarina.zarina.ui.common.ZarinaMessage
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
