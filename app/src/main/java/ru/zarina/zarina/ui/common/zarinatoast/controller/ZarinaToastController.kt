@@ -6,12 +6,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.staticCompositionLocalOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
-import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaMessage
 
 interface ZarinaToastController {
-    val currentMessage: StateFlow<ZarinaToastMessage?>
+    val currentMessage: StateFlow<ZarinaMessage?>
 
-    fun show(message: ZarinaToastMessage)
+    fun show(message: ZarinaMessage)
     fun hideCurrentToast()
 }
 

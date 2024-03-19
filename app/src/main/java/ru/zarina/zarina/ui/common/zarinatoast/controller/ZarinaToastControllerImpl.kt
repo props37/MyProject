@@ -3,16 +3,16 @@ package ru.zarina.zarina.ui.common.zarinatoast.controller
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import ru.zarina.zarina.base.messagequeue.MessageQueueImpl
-import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaMessage
 
 class ZarinaToastControllerImpl(
     coroutineScope: CoroutineScope,
 ) : ZarinaToastController {
-    private val messageQueue = MessageQueueImpl<ZarinaToastMessage>(coroutineScope)
+    private val messageQueue = MessageQueueImpl<ZarinaMessage>(coroutineScope)
 
-    override val currentMessage: StateFlow<ZarinaToastMessage?> = messageQueue.currentMessage
+    override val currentMessage: StateFlow<ZarinaMessage?> = messageQueue.currentMessage
 
-    override fun show(message: ZarinaToastMessage) {
+    override fun show(message: ZarinaMessage) {
         messageQueue.addMessage(message)
     }
 

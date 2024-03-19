@@ -25,7 +25,7 @@ import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.domain.product.ProductOffer
 import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
-import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaMessage
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
@@ -143,7 +143,7 @@ class ProductSubscriptionViewModel @Inject constructor(
                 interactor.subscribeToProduct(params)
                     .onSuccess {
                         val messageText = Text.Resource(R.string.product_subscription_completed)
-                        val message = ZarinaToastMessage(messageText)
+                        val message = ZarinaMessage(messageText)
                         emitSideEffect(SideEffect.ShowZarinaToast(message))
 
                         val action = ProductSubscriptionScreenAction.SubscriptionCompleted
@@ -175,7 +175,7 @@ class ProductSubscriptionViewModel @Inject constructor(
 
         data class OpenUrl(val url: Url) : SideEffect
 
-        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
+        data class ShowZarinaToast(val message: ZarinaMessage) : SideEffect
 
         data class ShowToast(val message: Text) : SideEffect
     }
