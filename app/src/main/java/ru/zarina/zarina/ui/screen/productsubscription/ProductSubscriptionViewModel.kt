@@ -24,6 +24,7 @@ import ru.zarina.zarina.domain.exception.InvalidFirstNameException
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.domain.product.ProductOffer
 import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.common.toast.ZarinaToastMessage
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
@@ -141,8 +142,9 @@ class ProductSubscriptionViewModel @Inject constructor(
                 )
                 interactor.subscribeToProduct(params)
                     .onSuccess {
-                        val message = Text.Resource(R.string.product_subscription_completed)
-                        emitSideEffect(SideEffect.ShowToast(message))
+                        val messageText = Text.Resource(R.string.product_subscription_completed)
+                        val message = ZarinaToastMessage(messageText)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
 
                         val action = ProductSubscriptionScreenAction.SubscriptionCompleted
                         emitSideEffect(SideEffect.Navigate(action))
@@ -172,6 +174,8 @@ class ProductSubscriptionViewModel @Inject constructor(
         data class Navigate(val action: ProductSubscriptionScreenAction) : SideEffect
 
         data class OpenUrl(val url: Url) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
 
         data class ShowToast(val message: Text) : SideEffect
     }
