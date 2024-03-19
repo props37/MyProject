@@ -1,4 +1,4 @@
-package ru.zarina.zarina.ui.common.paging
+package ru.zarina.zarina.ui.common.util.library.paging
 
 import androidx.paging.PagingData
 import androidx.paging.map
