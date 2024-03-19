@@ -12,5 +12,6 @@ interface MessageQueue<T : Message> {
 
     interface Message {
         val duration: Duration
+        val isRemovable: Boolean
     }
 }

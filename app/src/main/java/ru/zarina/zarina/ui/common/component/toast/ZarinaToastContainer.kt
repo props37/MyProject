@@ -57,6 +57,7 @@ fun ZarinaToastContainer(
 
         val anchoredDraggableState = rememberAnchoredDraggableState(
             initialValue = SwipeableState.Default,
+            confirmValueChange = { message?.isRemovable == true },
         )
 
         DisposableEffect(anchoredDraggableState, toastHeightPx) {

@@ -9,6 +9,7 @@ data class ZarinaToastMessage(
     val text: Text,
     val style: Style = Style.DEFAULT,
     override val duration: Duration = DURATION_SHORT,
+    override val isRemovable: Boolean = true,
 ) : MessageQueue.Message {
     enum class Style { DEFAULT, ERROR }
 

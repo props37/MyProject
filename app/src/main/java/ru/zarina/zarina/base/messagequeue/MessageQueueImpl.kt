@@ -12,7 +12,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -55,18 +57,24 @@ class MessageQueueImpl<T : MessageQueue.Message>(
                 delayBetweenMessagesJob?.join()
 
                 currentMessageJob = coroutineScope.launch {
-                    try {
-                        Timber.tag(TAG).v("Process message: $message")
-                        _currentMessage.value = message
-                        delay(message.duration)
-                    } finally {
-                        _currentMessage.value = null
+                    val context =
+                        if (message.isRemovable) EmptyCoroutineContext else NonCancellable
+                    withContext(context) {
+                        try {
+                            Timber.tag(TAG).v("Process message: $message")
+                            _currentMessage.value = message
+                            delay(message.duration)
+                        } finally {
+                            _currentMessage.value = null
+                        }
                     }
                 }
                 currentMessageJob?.join()
 
-                delayBetweenMessagesJob = coroutineScope.launch(NonCancellable) {
-                    delay(delayBetweenMessages)
+                delayBetweenMessagesJob = coroutineScope.launch {
+                    withContext(NonCancellable) {
+                        delay(delayBetweenMessages)
+                    }
                 }
                 delayBetweenMessagesJob?.join()
             }
