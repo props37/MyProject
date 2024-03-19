@@ -26,13 +26,13 @@ import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.base.text.textString
 import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.zarina.zarina.ui.common.zarinatoast.ZarinaMessage
-import ru.zarina.zarina.ui.common.zarinatoast.ZarinaMessageStyle
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessageStyle
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun ZarinaToast(
-    message: ZarinaMessage,
+    message: ZarinaToastMessage,
     modifier: Modifier = Modifier,
     backgroundColor: Color = message.style.backgroundColor,
     contentColor: Color = message.style.contentColor,
@@ -57,18 +57,18 @@ fun ZarinaToast(
     }
 }
 
-private val ZarinaMessageStyle.backgroundColor: Color
+private val ZarinaToastMessageStyle.backgroundColor: Color
     @Composable
     get() = when (this) {
-        ZarinaMessageStyle.DEFAULT -> UiKitTheme.colors.background.general.inversed.default
-        ZarinaMessageStyle.ERROR -> UiKitTheme.colors.background.accent.pink
+        ZarinaToastMessageStyle.DEFAULT -> UiKitTheme.colors.background.general.inversed.default
+        ZarinaToastMessageStyle.ERROR -> UiKitTheme.colors.background.accent.pink
     }
 
-private val ZarinaMessageStyle.contentColor: Color
+private val ZarinaToastMessageStyle.contentColor: Color
     @Composable
     get() = when (this) {
-        ZarinaMessageStyle.DEFAULT -> UiKitTheme.colors.text.general.inversed.default
-        ZarinaMessageStyle.ERROR -> UiKitTheme.colors.text.general.accent.red
+        ZarinaToastMessageStyle.DEFAULT -> UiKitTheme.colors.text.general.inversed.default
+        ZarinaToastMessageStyle.ERROR -> UiKitTheme.colors.text.general.accent.red
     }
 
 @Preview
@@ -76,7 +76,7 @@ private val ZarinaMessageStyle.contentColor: Color
 private fun PreviewDefault() {
     ZarinaPreview {
         val message = remember {
-            ZarinaMessage(
+            ZarinaToastMessage(
                 text = Text.String(FakeDataGenerator.getLoremIpsum(10))
             )
         }
@@ -93,9 +93,9 @@ private fun PreviewDefault() {
 private fun PreviewError() {
     ZarinaPreview {
         val message = remember {
-            ZarinaMessage(
+            ZarinaToastMessage(
                 text = Text.String(FakeDataGenerator.getLoremIpsum(10)),
-                style = ZarinaMessageStyle.ERROR,
+                style = ZarinaToastMessageStyle.ERROR,
             )
         }
 

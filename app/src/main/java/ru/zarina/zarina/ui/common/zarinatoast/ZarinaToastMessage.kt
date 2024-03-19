@@ -5,9 +5,9 @@ import ru.zarina.zarina.ui.base.text.Text
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-data class ZarinaMessage(
+data class ZarinaToastMessage(
     val text: Text,
-    val style: ZarinaMessageStyle = ZarinaMessageStyle.DEFAULT,
+    val style: ZarinaToastMessageStyle = ZarinaToastMessageStyle.DEFAULT,
     override val duration: Duration = DURATION_SHORT,
     override val isRemovable: Boolean = true,
 ) : MessageQueue.Message {

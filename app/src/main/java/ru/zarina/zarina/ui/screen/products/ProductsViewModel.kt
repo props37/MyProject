@@ -41,7 +41,7 @@ import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.util.ScreenResultHandler
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.common.util.library.paging.mapProducts
-import ru.zarina.zarina.ui.common.zarinatoast.ZarinaMessage
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.destination.graph.SizeSelectorGraph
@@ -309,7 +309,7 @@ class ProductsViewModel @AssistedInject constructor(
             interactor.addProductToCart(params)
                 .onSuccess {
                     val messageText = Text.Resource(R.string.product_adding_to_cart_completed)
-                    val message = ZarinaMessage(messageText)
+                    val message = ZarinaToastMessage(messageText)
                     emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
                 .onFailure {
@@ -349,7 +349,7 @@ class ProductsViewModel @AssistedInject constructor(
 
         data object NavigateBackward : SideEffect
 
-        data class ShowZarinaToast(val message: ZarinaMessage) : SideEffect
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
 
         data class ShowToast(val message: Text) : SideEffect
     }

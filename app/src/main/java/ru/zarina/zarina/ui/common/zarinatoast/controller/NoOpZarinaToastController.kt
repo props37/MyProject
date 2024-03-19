@@ -1,13 +1,13 @@
 package ru.zarina.zarina.ui.common.zarinatoast.controller
 
 import kotlinx.coroutines.flow.StateFlow
-import ru.zarina.zarina.ui.common.zarinatoast.ZarinaMessage
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
 
 class NoOpZarinaToastController : ZarinaToastController {
-    override val currentMessage: StateFlow<ZarinaMessage?>
+    override val currentMessage: StateFlow<ZarinaToastMessage?>
         get() = throw NotImplementedError()
 
-    override fun show(message: ZarinaMessage) {
+    override fun show(message: ZarinaToastMessage) {
         throw NotImplementedError()
     }
 
