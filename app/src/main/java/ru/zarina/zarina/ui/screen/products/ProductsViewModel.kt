@@ -251,9 +251,9 @@ class ProductsViewModel @AssistedInject constructor(
             interactor.toggleProductPresenceInFavorites(params)
                 .onFailure {
                     val messageResId = if (product.isInFavorites) {
-                        R.string.removing_product_from_favorites_error_toast
+                        R.string.product_removing_from_favorites_error
                     } else {
-                        R.string.adding_product_to_favorites_error_toast
+                        R.string.product_adding_to_favorites_error
                     }
                     val message = Text.Resource(messageResId)
                     emitSideEffect(SideEffect.ShowToast(message))
@@ -313,7 +313,7 @@ class ProductsViewModel @AssistedInject constructor(
                     emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
                 .onFailure {
-                    val message = Text.Resource(R.string.adding_product_to_cart_error_toast)
+                    val message = Text.Resource(R.string.product_adding_to_cart_error)
                     emitSideEffect(SideEffect.ShowToast(message))
                 }
         }

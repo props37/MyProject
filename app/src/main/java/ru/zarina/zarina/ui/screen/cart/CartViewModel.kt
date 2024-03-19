@@ -150,7 +150,7 @@ class CartViewModel @AssistedInject constructor(
                     cartFetchRequests.trySend(Unit)
                 }
                 .onFailure {
-                    val message = Text.Resource(R.string.cart_clearing_error_toast)
+                    val message = Text.Resource(R.string.cart_clearing_error)
                     emitSideEffect(SideEffect.ShowToast(message))
                 }
         }
@@ -185,7 +185,7 @@ class CartViewModel @AssistedInject constructor(
                     val params = SetUserCityUseCase.Params(newCity)
                     interactor.setUserCity(params)
                         .onFailure {
-                            val message = Text.Resource(R.string.city_changing_error_toast)
+                            val message = Text.Resource(R.string.city_changing_error)
                             emitSideEffect(SideEffect.ShowToast(message))
                         }
                 }
