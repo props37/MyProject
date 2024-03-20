@@ -23,6 +23,7 @@ import ru.zarina.zarina.ui.navigation.screen.listFilterScreen
 import ru.zarina.zarina.ui.navigation.screen.onboardingScreen
 import ru.zarina.zarina.ui.navigation.screen.productSubscriptionScreen
 import ru.zarina.zarina.ui.navigation.screen.productsScreen
+import ru.zarina.zarina.ui.navigation.util.NavigationTransitionDurationMillis
 
 @Composable
 fun ZarinaNavigation(
@@ -57,5 +58,3 @@ fun ZarinaNavigation(
         productSubscriptionScreen(updatedNavController)
     }
 }
-
-const val NavigationTransitionDurationMillis = 300

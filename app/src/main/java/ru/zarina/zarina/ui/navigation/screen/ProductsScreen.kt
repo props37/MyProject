@@ -1,14 +1,13 @@
 package ru.zarina.zarina.ui.navigation.screen
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import ru.zarina.zarina.ui.navigation.NavigationTransitionDurationMillis
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.destination.graph.SizeSelectorGraph
+import ru.zarina.zarina.ui.navigation.util.slideExitTransition
+import ru.zarina.zarina.ui.navigation.util.slidePopEnterTransition
 import ru.zarina.zarina.ui.screen.products.ProductsScreen
 import ru.zarina.zarina.ui.screen.products.ProductsScreenAction
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel
@@ -20,12 +19,7 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
         exitTransition = {
             when (targetState.destination.route) {
                 UnscopedDestinations.Filters.routeSchema,
-                UnscopedDestinations.ProductSubscription.routeSchema -> {
-                    slideOutOfContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Start,
-                        animationSpec = tween(NavigationTransitionDurationMillis),
-                    )
-                }
+                UnscopedDestinations.ProductSubscription.routeSchema -> slideExitTransition()
 
                 else -> null
             }
@@ -33,12 +27,7 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
         popEnterTransition = {
             when (initialState.destination.route) {
                 UnscopedDestinations.Filters.routeSchema,
-                UnscopedDestinations.ProductSubscription.routeSchema -> {
-                    slideIntoContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.End,
-                        animationSpec = tween(NavigationTransitionDurationMillis),
-                    )
-                }
+                UnscopedDestinations.ProductSubscription.routeSchema -> slidePopEnterTransition()
 
                 else -> null
             }

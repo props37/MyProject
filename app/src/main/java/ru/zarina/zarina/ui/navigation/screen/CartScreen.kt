@@ -1,7 +1,5 @@
 package ru.zarina.zarina.ui.navigation.screen
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -9,12 +7,13 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.bottomnavbar.BottomNavBarItem
 import ru.zarina.zarina.ui.bottomnavbar.navigateToBottomNavBarItem
-import ru.zarina.zarina.ui.navigation.NavigationTransitionDurationMillis
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.destination.graph.CartGraph
 import ru.zarina.zarina.ui.navigation.destination.graph.CatalogGraph
 import ru.zarina.zarina.ui.navigation.util.BottomNavBarItemSecondaryStartDestinationBackHandler
+import ru.zarina.zarina.ui.navigation.util.slideExitTransition
+import ru.zarina.zarina.ui.navigation.util.slidePopEnterTransition
 import ru.zarina.zarina.ui.screen.cart.CartScreen
 import ru.zarina.zarina.ui.screen.cart.CartScreenAction
 import ru.zarina.zarina.ui.screen.cart.CartViewModel
@@ -25,25 +24,13 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
         destination = CartGraph.Cart,
         exitTransition = {
             when (targetState.destination.route) {
-                UnscopedDestinations.CitySelector.routeSchema -> {
-                    slideOutOfContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Start,
-                        animationSpec = tween(NavigationTransitionDurationMillis),
-                    )
-                }
-
+                UnscopedDestinations.CitySelector.routeSchema -> slideExitTransition()
                 else -> null
             }
         },
         popEnterTransition = {
             when (initialState.destination.route) {
-                UnscopedDestinations.CitySelector.routeSchema -> {
-                    slideIntoContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.End,
-                        animationSpec = tween(NavigationTransitionDurationMillis),
-                    )
-                }
-
+                UnscopedDestinations.CitySelector.routeSchema -> slidePopEnterTransition()
                 else -> null
             }
         },

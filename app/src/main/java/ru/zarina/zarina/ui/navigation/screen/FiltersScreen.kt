@@ -1,14 +1,15 @@
 package ru.zarina.zarina.ui.navigation.screen
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
-import ru.zarina.zarina.ui.navigation.NavigationTransitionDurationMillis
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.util.slideEnterTransition
+import ru.zarina.zarina.ui.navigation.util.slideExitTransition
+import ru.zarina.zarina.ui.navigation.util.slidePopEnterTransition
+import ru.zarina.zarina.ui.navigation.util.slidePopExitTransition
 import ru.zarina.zarina.ui.screen.filters.FiltersScreen
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenAction
 import ru.zarina.zarina.ui.screen.filters.FiltersScreenResult
@@ -20,49 +21,25 @@ fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
         destination = UnscopedDestinations.Filters,
         enterTransition = {
             when (initialState.destination.route) {
-                UnscopedDestinations.Products.routeSchema -> {
-                    slideIntoContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Start,
-                        animationSpec = tween(NavigationTransitionDurationMillis),
-                    )
-                }
-
+                UnscopedDestinations.Products.routeSchema -> slideEnterTransition()
                 else -> null
             }
         },
         exitTransition = {
             when (targetState.destination.route) {
-                UnscopedDestinations.ListFilter.routeSchema -> {
-                    slideOutOfContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Start,
-                        animationSpec = tween(NavigationTransitionDurationMillis),
-                    )
-                }
-
+                UnscopedDestinations.ListFilter.routeSchema -> slideExitTransition()
                 else -> null
             }
         },
         popEnterTransition = {
             when (initialState.destination.route) {
-                UnscopedDestinations.ListFilter.routeSchema -> {
-                    slideIntoContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.End,
-                        animationSpec = tween(NavigationTransitionDurationMillis),
-                    )
-                }
-
+                UnscopedDestinations.ListFilter.routeSchema -> slidePopEnterTransition()
                 else -> null
             }
         },
         popExitTransition = {
             when (targetState.destination.route) {
-                UnscopedDestinations.Products.routeSchema -> {
-                    slideOutOfContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.End,
-                        animationSpec = tween(NavigationTransitionDurationMillis),
-                    )
-                }
-
+                UnscopedDestinations.Products.routeSchema -> slidePopExitTransition()
                 else -> null
             }
         },
