@@ -97,6 +97,7 @@
     <string name="quantity">Количество</string>
     <string name="select">Выбрать</string>
     <string name="product_adding_to_cart_completed">Товар добавлен в корзину</string>
+    <string name="product_adding_to_favorites_completed">Товар добавлен в избранное</string>
     <string name="delete">Удалить</string>
     <string name="to_favorites">В избранное</string>
     <string name="in_favorites">В избранном</string>

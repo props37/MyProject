@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.zarina.zarina.ui.common.toastcontroller.LocalToastController
+import ru.zarina.zarina.ui.common.zarinatoast.controller.LocalZarinaToastController
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.SideEffect
 
 @Composable
@@ -19,6 +20,7 @@ fun CartScreenBehavior(
     sideEffects: Flow<SideEffect>,
     navigate: (CartScreenAction) -> Unit,
 ) {
+    val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedToastController by rememberUpdatedState(LocalToastController.current)
     val updatedOnScreenOpened by rememberUpdatedState(onScreenOpened)
     val updatedNavigate by rememberUpdatedState(navigate)
@@ -36,6 +38,10 @@ fun CartScreenBehavior(
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
                         is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
+                        is SideEffect.ShowZarinaToast -> {
+                            updatedZarinaToastController.show(sideEffect.message)
+                        }
+
                         is SideEffect.ShowToast -> updatedToastController.show(sideEffect.message)
                     }
                 }

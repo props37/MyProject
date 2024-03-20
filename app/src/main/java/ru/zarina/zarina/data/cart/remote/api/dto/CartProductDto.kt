@@ -25,6 +25,7 @@ data class CartProductDto(
     fun toCartProduct(): CartProduct {
         checkNotNull(id) { "id is null" }
         checkNotNull(offer) { "offer is null" }
+        checkNotNull(offer.productId) { "id is null" }
         checkNotNull(offer.id) { "id is null" }
         checkNotNull(offer.name) { "name is null" }
         checkNotNull(offer.price) { "price is null" }
@@ -35,6 +36,7 @@ data class CartProductDto(
         checkNotNull(count) { "count is null" }
         return CartProduct(
             id = CartProduct.Id(id),
+            productId = Product.Id(offer.productId),
             offerId = ProductOffer.Id(offer.id),
             name = offer.name,
             price = offer.price.toPrice(),
@@ -55,6 +57,9 @@ data class CartProductDto(
 
         @SerialName("barcode")
         val barcode: String? = null,
+
+        @SerialName("group_id")
+        val productId: String? = null,
 
         @SerialName("title")
         val name: String? = null,

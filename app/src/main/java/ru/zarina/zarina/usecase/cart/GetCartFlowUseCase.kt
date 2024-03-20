@@ -3,10 +3,12 @@ package ru.zarina.zarina.usecase.cart
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import ru.zarina.zarina.base.usecase.FlowUseCase
 import ru.zarina.zarina.data.cart.CartRepository
+import ru.zarina.zarina.data.favorite.FavoriteRepository
 import ru.zarina.zarina.data.user.UserRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.cart.Cart
@@ -18,17 +20,30 @@ class GetCartFlowUseCase @Inject constructor(
     dispatcher: CoroutineDispatcher,
     private val userRepository: UserRepository,
     private val cartRepository: CartRepository,
+    private val favoriteRepository: FavoriteRepository,
 ) : FlowUseCase<GetCartFlowUseCase.Params, Cart>(dispatcher) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun execute(params: Params): Flow<Cart> {
         val deliveryType = params.deliveryType
-        return userRepository.getUserCityFlow().flatMapLatest { city ->
-            cartRepository.getCartFlow(deliveryType, city?.kladrId)
-                .onEach { cart ->
-                    cartRepository.setCartSize(cart.size)
+        return userRepository.getUserCityFlow()
+            .flatMapLatest { city ->
+                cartRepository.getCartFlow(deliveryType, city?.kladrId)
+            }
+            .onEach { cart ->
+                cartRepository.setCartSize(cart.size)
+            }
+            .combineTransform(favoriteRepository.favoriteProductIds) { cart, favoriteProductIds ->
+                val products = cart.products.map { product ->
+                    val isInFavorites = product.productId in favoriteProductIds
+                    if (isInFavorites != product.isInFavorites) {
+                        product.copy(isInFavorites = isInFavorites)
+                    } else {
+                        product
+                    }
                 }
-        }
+                emit(cart.copy(products = products))
+            }
     }
 
     data class Params(val deliveryType: DeliveryType)

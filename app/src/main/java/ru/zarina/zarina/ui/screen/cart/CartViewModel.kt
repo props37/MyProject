@@ -36,9 +36,11 @@ import ru.zarina.zarina.ui.base.from
 import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.util.ScreenResultHandler
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.SideEffect
 import ru.zarina.zarina.usecase.cart.GetCartFlowUseCase
+import ru.zarina.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.zarina.zarina.usecase.user.SetUserCityUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
@@ -175,7 +177,26 @@ class CartViewModel @AssistedInject constructor(
     }
 
     fun onAddProductToFavoritesClicked(product: CartProduct) {
-        // TODO: [High] Implement
+        viewModelScope.launch {
+            val params = ToggleProductPresenceInFavoritesUseCase.Params(product.productId)
+            interactor.toggleProductPresenceInFavorites(params)
+                .onSuccess {
+                    if (!product.isInFavorites) {
+                        val messageText = Text.Resource(R.string.product_adding_to_favorites_completed)
+                        val message = ZarinaToastMessage(messageText)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
+                    }
+                }
+                .onFailure {
+                    val messageResId = if (product.isInFavorites) {
+                        R.string.product_removing_from_favorites_error
+                    } else {
+                        R.string.product_adding_to_favorites_error
+                    }
+                    val message = Text.Resource(messageResId)
+                    emitSideEffect(SideEffect.ShowToast(message))
+                }
+        }
     }
 
     fun onDeleteProductFromCartClicked(product: CartProduct) {
@@ -210,6 +231,7 @@ class CartViewModel @AssistedInject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CartScreenAction) : SideEffect
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
         data class ShowToast(val message: Text) : SideEffect
     }
 

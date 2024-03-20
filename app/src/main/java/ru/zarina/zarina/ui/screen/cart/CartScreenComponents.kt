@@ -45,6 +45,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -473,6 +474,8 @@ object CartScreenComponents {
 
             ProductOrderCardSwipeActionButtons(
                 product = product,
+                onAddToFavoritesClicked = productCardActions.onAddToFavoritesClicked,
+                onDeleteFromCartClicked = productCardActions.onDeleteFromCartClicked,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
                     .zIndex(zIndex = 0.5f)
@@ -485,11 +488,13 @@ object CartScreenComponents {
     @Composable
     private fun ProductOrderCardSwipeActionButtons(
         product: CartProduct,
+        onAddToFavoritesClicked: (CartProduct) -> Unit,
+        onDeleteFromCartClicked: (CartProduct) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
             ZarinaButton(
-                onClick = { /*TODO*/ },
+                onClick = { onAddToFavoritesClicked(product) },
                 colors = ZarinaButtonDefaults.tertiaryColors(),
                 shape = RectangleShape,
                 contentPadding = PaddingValues(8.dp),
@@ -497,38 +502,49 @@ object CartScreenComponents {
                     .fillMaxWidth()
                     .weight(1f),
             ) {
-                Crossfade(targetState = product.isInFavorites) { isLiked ->
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        val iconResId: Int
-                        val textRedId: Int
-                        if (isLiked) {
-                            iconResId = R.drawable.ic_heart_24
-                            textRedId = R.string.in_favorites
-                        } else {
-                            iconResId = R.drawable.ic_heart_outline_24
-                            textRedId = R.string.to_favorites
-                        }
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    val iconResId: Int
+                    val textRedId: Int
+                    if (product.isInFavorites) {
+                        iconResId = R.drawable.ic_heart_24
+                        textRedId = R.string.in_favorites
+                    } else {
+                        iconResId = R.drawable.ic_heart_outline_24
+                        textRedId = R.string.to_favorites
+                    }
+
+                    Crossfade(
+                        targetState = iconResId,
+                        label = "Add To Favorites button icon",
+                    ) { iconResId ->
                         Icon(
                             painter = painterResource(iconResId),
                             contentDescription = null,
                             modifier = Modifier.size(16.dp),
                         )
-                        Spacer(modifier = Modifier.height(6.dp))
+                    }
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Crossfade(
+                        targetState = textRedId,
+                        label = "Add To Favorites button text",
+                    ) { textRedId ->
                         Text(
                             text = stringResource(textRedId).uppercase(),
                             style = UiKitTheme.typography.caption2.regular,
+                            textAlign = TextAlign.Center,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
                 }
             }
 
             ZarinaButton(
-                onClick = { /* TODO */ },
+                onClick = { onDeleteFromCartClicked(product) },
                 shape = RectangleShape,
                 contentPadding = PaddingValues(8.dp),
                 modifier = Modifier
