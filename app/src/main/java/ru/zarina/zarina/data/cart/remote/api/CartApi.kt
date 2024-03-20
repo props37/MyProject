@@ -40,6 +40,10 @@ class CartApi @Inject constructor(
         }.body()
     }
 
+    suspend fun removeProductFromCart(barcode: Barcode): CartProductCountDto {
+        return httpClient.delete("/api/cart/item/${barcode.value}").body()
+    }
+
     suspend fun clearCart() {
         httpClient.delete("/api/cart")
     }

@@ -82,9 +82,12 @@
     <string name="first_name">Имя</string>
     <string name="incorrect_data">Некорректные данные</string>
     <string name="product_subscription_completed">Подписка на товар оформлена</string>
+    <string name="product_adding_to_favorites_completed">Товар добавлен в избранное</string>
     <string name="product_adding_to_favorites_error">Не удалось добавить товар в избранное</string>
     <string name="product_removing_from_favorites_error">Не удалось удалить товар из избранного</string>
+    <string name="product_adding_to_cart_completed">Товар добавлен в корзину</string>
     <string name="product_adding_to_cart_error">Не удалось добавить товар в корзину</string>
+    <string name="product_removing_from_cart_error">Не удалось удалить товар из корзины</string>
     <string name="go_to_catalog">В каталог</string>
     <string name="price_in_rubles_for_one_decimal">%1$d₽ / шт</string>
     <string name="price_in_rubles_for_one_string">%1$s₽ / шт</string>
@@ -96,8 +99,6 @@
     <string name="from_shop">Из магазина</string>
     <string name="quantity">Количество</string>
     <string name="select">Выбрать</string>
-    <string name="product_adding_to_cart_completed">Товар добавлен в корзину</string>
-    <string name="product_adding_to_favorites_completed">Товар добавлен в избранное</string>
     <string name="delete">Удалить</string>
     <string name="to_favorites">В избранное</string>
     <string name="in_favorites">В избранном</string>

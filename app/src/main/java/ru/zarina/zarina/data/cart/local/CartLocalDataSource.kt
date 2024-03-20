@@ -24,6 +24,10 @@ class CartLocalDataSource @Inject constructor(
         dataHolder.addProductToCart(productId)
     }
 
+    fun removeProductFromCart(productId: Product.Id) {
+        dataHolder.removeProductFromCart(productId)
+    }
+
     fun setCartSize(size: CartSize) {
         dataHolder.setCartSize(size)
     }

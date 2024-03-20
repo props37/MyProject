@@ -36,6 +36,11 @@ class CartDataHolder @Inject constructor() {
         _cartProductIds.update { it + productId }
     }
 
+    fun removeProductFromCart(productId: Product.Id) {
+        Timber.v("Remove product $productId from cart")
+        _cartProductIds.update { it - productId }
+    }
+
     fun setCartSize(size: CartSize) {
         Timber.v("Set cart size: $size")
         _cartSize.value = size

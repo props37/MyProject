@@ -40,6 +40,7 @@ import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.SideEffect
 import ru.zarina.zarina.usecase.cart.GetCartFlowUseCase
+import ru.zarina.zarina.usecase.cart.RemoveProductFromCartUseCase
 import ru.zarina.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.zarina.zarina.usecase.user.SetUserCityUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
@@ -200,7 +201,18 @@ class CartViewModel @AssistedInject constructor(
     }
 
     fun onDeleteProductFromCartClicked(product: CartProduct) {
-        // TODO: [High] Implement
+        viewModelScope.launch {
+            val params = RemoveProductFromCartUseCase.Params(product.productId, product.barcode)
+            interactor.removeProductFromCart(params)
+                .onSuccess {
+                    cartFetchRequests.trySend(Unit)
+                    // TODO: [High] Display temp card that user can use to undo the deletion
+                }
+                .onFailure {
+                    val message = Text.Resource(R.string.product_removing_from_cart_error)
+                    emitSideEffect(SideEffect.ShowToast(message))
+                }
+        }
     }
 
     fun onGoToCatalogClicked() {

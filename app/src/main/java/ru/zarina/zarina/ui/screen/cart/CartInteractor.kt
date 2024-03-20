@@ -3,6 +3,7 @@ package ru.zarina.zarina.ui.screen.cart
 import ru.zarina.zarina.usecase.cart.ClearCartUseCase
 import ru.zarina.zarina.usecase.cart.GetCartFlowUseCase
 import ru.zarina.zarina.usecase.cart.GetCartSizeFlowUseCase
+import ru.zarina.zarina.usecase.cart.RemoveProductFromCartUseCase
 import ru.zarina.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.zarina.zarina.usecase.user.GetUserCityFlowUseCase
 import ru.zarina.zarina.usecase.user.SetUserCityUseCase
@@ -15,4 +16,5 @@ class CartInteractor @Inject constructor(
     val getCartFlow: GetCartFlowUseCase,
     val clearCart: ClearCartUseCase,
     val toggleProductPresenceInFavorites: ToggleProductPresenceInFavoritesUseCase,
+    val removeProductFromCart: RemoveProductFromCartUseCase,
 )

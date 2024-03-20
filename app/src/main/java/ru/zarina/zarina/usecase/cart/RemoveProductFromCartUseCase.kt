@@ -10,18 +10,17 @@ import ru.zarina.zarina.util.base.usecase.invoke
 import timber.log.Timber
 import javax.inject.Inject
 
-class AddProductToCartUseCase @Inject constructor(
+class RemoveProductFromCartUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val cartRepository: CartRepository,
     private val fetchCartProductIdsUseCase: FetchCartProductIdsUseCase,
-) : UseCase<AddProductToCartUseCase.Params, Unit>(dispatcher) {
+) : UseCase<RemoveProductFromCartUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
         val productId = params.productId
         val barcode = params.barcode
-        val count = params.count
-        val cartProductCount = cartRepository.addProductToCart(productId, barcode, count)
+        val cartProductCount = cartRepository.removeProductFromCart(productId, barcode)
         cartRepository.setCartTotalProductCount(cartProductCount.value)
         if (!cartRepository.areCartProductIdsFetched.value) {
             Timber.w("Cart product IDs are not fetched. Trying to fetch")
@@ -29,5 +28,5 @@ class AddProductToCartUseCase @Inject constructor(
         }
     }
 
-    data class Params(val productId: Product.Id, val barcode: Barcode, val count: Int)
+    data class Params(val productId: Product.Id, val barcode: Barcode)
 }

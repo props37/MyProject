@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.first
 import ru.zarina.zarina.data.cart.local.CartLocalDataSource
 import ru.zarina.zarina.data.cart.remote.CartRemoteDataSource
 import ru.zarina.zarina.domain.cart.Cart
+import ru.zarina.zarina.domain.cart.CartProductCount
 import ru.zarina.zarina.domain.cart.CartProductIds
 import ru.zarina.zarina.domain.cart.CartSize
 import ru.zarina.zarina.domain.cart.DeliveryType
-import ru.zarina.zarina.domain.cart.ProductAdditionToCartResult
 import ru.zarina.zarina.domain.common.Barcode
 import ru.zarina.zarina.domain.geography.KladrId
 import ru.zarina.zarina.domain.product.Product
@@ -39,10 +39,19 @@ class CartRepository @Inject constructor(
         productId: Product.Id,
         barcode: Barcode,
         count: Int,
-    ): ProductAdditionToCartResult {
-        val result = remoteDataSource.addProductToCart(barcode, count)
+    ): CartProductCount {
+        val cartProductCount = remoteDataSource.addProductToCart(barcode, count)
         localDataSource.addProductToCart(productId)
-        return result
+        return cartProductCount
+    }
+
+    suspend fun removeProductFromCart(
+        productId: Product.Id,
+        barcode: Barcode,
+    ): CartProductCount {
+        val cartProductCount = remoteDataSource.removeProductFromCart(barcode)
+        localDataSource.removeProductFromCart(productId)
+        return cartProductCount
     }
 
     fun setCartSize(size: CartSize) {
