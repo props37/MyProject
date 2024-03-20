@@ -5,15 +5,16 @@ import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.base.usecase.FlowUseCase
 import ru.zarina.zarina.data.cart.CartRepository
 import ru.zarina.zarina.di.Qualifiers
+import ru.zarina.zarina.domain.cart.CartSize
 import javax.inject.Inject
 
-class GetCartProductCountFlowUseCase @Inject constructor(
+class GetCartSizeFlowUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val cartRepository: CartRepository,
-) : FlowUseCase<Unit, Int>(dispatcher) {
+) : FlowUseCase<Unit, CartSize>(dispatcher) {
 
-    override fun execute(params: Unit): Flow<Int> {
-        return cartRepository.cartProductCount
+    override fun execute(params: Unit): Flow<CartSize> {
+        return cartRepository.cartSize
     }
 }

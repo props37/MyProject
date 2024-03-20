@@ -7,7 +7,6 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
-import androidx.media3.datasource.cache.CacheDataSource.Factory
 
 val LocalExoPlayerCacheHolder = staticCompositionLocalOf<ExoPlayerCacheHolder?> { null }
 
@@ -15,7 +14,7 @@ val LocalExoPlayerCacheHolder = staticCompositionLocalOf<ExoPlayerCacheHolder?> 
 @Composable
 fun rememberExoPlayerCacheHolder(
     cache: Cache,
-    cacheDataSourceFactory: Factory,
+    cacheDataSourceFactory: CacheDataSource.Factory,
 ): ExoPlayerCacheHolder {
     return remember(cache, cacheDataSourceFactory) {
         ExoPlayerCacheHolderImpl(cache, cacheDataSourceFactory)

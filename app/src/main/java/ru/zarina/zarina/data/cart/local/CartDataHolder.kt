@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import ru.zarina.zarina.domain.cart.CartSize
 import ru.zarina.zarina.domain.product.Product
 import timber.log.Timber
 import javax.inject.Inject
@@ -17,12 +18,8 @@ class CartDataHolder @Inject constructor() {
     private val _areCartProductIdsFetched = MutableStateFlow(false)
     val areCartProductIdsFetched: StateFlow<Boolean> = _areCartProductIdsFetched.asStateFlow()
 
-    private val _cartProductCount = MutableStateFlow(0)
-
-    /**
-     * Can be larger than [cartProductIds] since a product can be added to the cart several times.
-     */
-    val cartProductCount: StateFlow<Int> = _cartProductCount.asStateFlow()
+    private val _cartSize = MutableStateFlow(CartSize.EMPTY)
+    val cartSize: StateFlow<CartSize> = _cartSize.asStateFlow()
 
     fun setCartProductIds(ids: Set<Product.Id>) {
         Timber.v("Set cart product IDs: $ids")
@@ -39,15 +36,20 @@ class CartDataHolder @Inject constructor() {
         _cartProductIds.update { it + productId }
     }
 
-    fun setCartProductCount(count: Int) {
-        Timber.v("Set cart product count: $count")
-        _cartProductCount.value = count
+    fun setCartSize(cartSize: CartSize) {
+        Timber.v("Set cart size: $cartSize")
+        _cartSize.value = cartSize
+    }
+
+    fun setCartTotalProductCount(count: Int) {
+        Timber.v("Set cart total product count: $count")
+        _cartSize.update { it.copy(totalProductCount = count) }
     }
 
     fun clear() {
         Timber.v("Clear cart data")
         _cartProductIds.value = emptySet()
         _areCartProductIdsFetched.value = false
-        _cartProductCount.value = 0
+        _cartSize.value = CartSize.EMPTY
     }
 }

@@ -7,6 +7,7 @@ import ru.zarina.zarina.data.cart.local.CartLocalDataSource
 import ru.zarina.zarina.data.cart.remote.CartRemoteDataSource
 import ru.zarina.zarina.domain.cart.Cart
 import ru.zarina.zarina.domain.cart.CartProductIds
+import ru.zarina.zarina.domain.cart.CartSize
 import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.cart.ProductAdditionToCartResult
 import ru.zarina.zarina.domain.common.Barcode
@@ -20,12 +21,12 @@ class CartRepository @Inject constructor(
 ) {
     val cartProductIds: StateFlow<Set<Product.Id>> = localDataSource.cartProductIds
     val areCartProductIdsFetched: StateFlow<Boolean> = localDataSource.areCartProductIdsFetched
-    val cartProductCount: StateFlow<Int> = localDataSource.cartProductCount
+    val cartSize: StateFlow<CartSize> = localDataSource.cartSize
 
     suspend fun fetchCartProductIds(): CartProductIds {
         val cartProductIds = remoteDataSource.getCartProductIdsFlow().first()
         localDataSource.setCartProductIds(cartProductIds.cartProductIds)
-        localDataSource.setCartProductCount(cartProductIds.cartProductCount)
+        localDataSource.setCartTotalProductCount(cartProductIds.cartProductCount)
         localDataSource.setAreCartProductIdsFetched(true)
         return cartProductIds
     }
@@ -44,14 +45,14 @@ class CartRepository @Inject constructor(
         return result
     }
 
-    fun setCartProductCount(count: Int) {
-        localDataSource.setCartProductCount(count)
+    fun setCartTotalProductCount(count: Int) {
+        localDataSource.setCartTotalProductCount(count)
     }
 
     suspend fun clearCart() {
         remoteDataSource.clearCart()
         localDataSource.setCartProductIds(emptySet())
-        localDataSource.setCartProductCount(0)
+        localDataSource.setCartSize(CartSize.EMPTY)
     }
 
     fun clear() {

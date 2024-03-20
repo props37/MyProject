@@ -22,7 +22,7 @@ class AddProductToCartUseCase @Inject constructor(
         val barcode = params.barcode
         val count = params.count
         val result = cartRepository.addProductToCart(productId, barcode, count)
-        cartRepository.setCartProductCount(result.cartProductCount)
+        cartRepository.setCartTotalProductCount(result.cartProductCount)
         if (!cartRepository.areCartProductIdsFetched.value) {
             Timber.w("Cart product IDs are not fetched. Trying to fetch")
             fetchCartProductIdsUseCase()

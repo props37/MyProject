@@ -27,6 +27,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.domain.cart.CartSize
 import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.base.ErrorState
@@ -58,10 +59,10 @@ class CartViewModel @AssistedInject constructor(
         savedStateHandle = savedStateHandle,
     )
 
-    val isCartEmpty: StateFlow<Boolean> = interactor.getCartProductCountFlow()
+    val isCartEmpty: StateFlow<Boolean> = interactor.getCartSizeFlow()
         .map { result ->
-            val count = result.getOrDefault(0)
-            count <= 0
+            val cartSize = result.getOrDefault(CartSize.EMPTY)
+            cartSize.totalProductCount <= 0
         }
         .stateIn(
             scope = viewModelScope,
