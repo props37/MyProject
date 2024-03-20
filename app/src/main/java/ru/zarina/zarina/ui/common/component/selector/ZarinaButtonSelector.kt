@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,6 +57,7 @@ fun ZarinaButtonSelector(
         ZarinaButtonSelectorDefaults.TrailingArrow(isEditable = isEditable)
     },
     textStyle: TextStyle = ZarinaButtonSelectorDefaults.textStyleFromSize(size),
+    contentPadding: PaddingValues = ZarinaButtonSelectorDefaults.ContentPadding,
     content: (@Composable () -> Unit)?,
 ) {
     Column(modifier = modifier.width(IntrinsicSize.Min)) {
@@ -82,7 +84,8 @@ fun ZarinaButtonSelector(
                     enabled = isEnabled && isEditable,
                     role = Role.Button,
                     onClick = onClick,
-                ),
+                )
+                .padding(contentPadding),
         ) {
             val contentColor = if (content != null) {
                 UiKitTheme.colors.text.general.regular.default
@@ -118,6 +121,8 @@ object ZarinaButtonSelectorDefaults {
     val ButtonHeightMedium: Dp get() = 40.dp
 
     val ButtonShape: Shape get() = RoundedCornerShape(topStart = 2.dp, topEnd = 2.dp)
+
+    val ContentPadding: PaddingValues get() = PaddingValues(horizontal = 6.dp, vertical = 4.dp)
 
     @Composable
     fun TrailingArrow(
