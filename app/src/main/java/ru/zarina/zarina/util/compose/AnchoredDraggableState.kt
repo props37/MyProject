@@ -71,6 +71,25 @@ fun <T> rememberAnchoredDraggableState(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
+fun <T> AnchoredDraggableState<T>.requireCoercedOffset(): Float {
+    val minOffset = this.anchors.minAnchor()
+    val maxOffset = this.anchors.maxAnchor()
+    return this.requireOffset().coerceIn(minOffset, maxOffset)
+}
+
+/**
+ * Strongly consider using [requireCoercedOffset] which will throw if the offset is read before
+ * it is initialized.
+ */
+@OptIn(ExperimentalFoundationApi::class)
+val <T> AnchoredDraggableState<T>.coercedOffset: Float
+    get() {
+        val minOffset = this.anchors.minAnchor()
+        val maxOffset = this.anchors.maxAnchor()
+        return this.offset.coerceIn(minOffset, maxOffset)
+    }
+
 @Stable
 private val PositionalThreshold: (totalDistance: Float) -> Float
     get() = { it * 0.5f }

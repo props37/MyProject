@@ -4,15 +4,24 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.DraggableAnchors
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,14 +36,20 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
@@ -42,6 +57,7 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.coroutines.flow.StateFlow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.cart.Cart
+import ru.zarina.zarina.domain.cart.CartProduct
 import ru.zarina.zarina.domain.cart.CartSize
 import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.geography.City
@@ -64,6 +80,9 @@ import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransit
 import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.animation.Crossfade
 import ru.zarina.zarina.util.compose.pager.PagerTabRowIntegration
+import ru.zarina.zarina.util.compose.rememberAnchoredDraggableState
+import ru.zarina.zarina.util.compose.requireCoercedOffset
+import kotlin.math.roundToInt
 
 object CartScreenComponents {
 
@@ -111,6 +130,7 @@ object CartScreenComponents {
         currentDeliveryType: DeliveryType,
         onDeliveryTypeChanged: (DeliveryType) -> Unit,
         deliveryTypeToCartState: ImmutableMap<DeliveryType, StateFlow<CartState>>,
+        productCardActions: ProductCardActions,
         onGoToCatalogClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -141,6 +161,7 @@ object CartScreenComponents {
                 pagerState = pagerState,
                 deliveryTypes = deliveryTypes,
                 deliveryTypeToCartState = deliveryTypeToCartState,
+                productCardActions = productCardActions,
                 onGoToCatalogClicked = onGoToCatalogClicked,
                 modifier = Modifier.fillMaxSize(),
             )
@@ -290,6 +311,7 @@ object CartScreenComponents {
         pagerState: PagerState,
         deliveryTypes: ImmutableList<DeliveryType>,
         deliveryTypeToCartState: ImmutableMap<DeliveryType, StateFlow<CartState>>,
+        productCardActions: ProductCardActions,
         onGoToCatalogClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -312,6 +334,7 @@ object CartScreenComponents {
                     is CartState.Cart -> {
                         Cart(
                             cart = state.cart,
+                            productCardActions = productCardActions,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
@@ -365,6 +388,7 @@ object CartScreenComponents {
     @Composable
     private fun Cart(
         cart: Cart,
+        productCardActions: ProductCardActions,
         modifier: Modifier = Modifier,
     ) {
         LazyColumn(modifier = modifier) {
@@ -373,6 +397,56 @@ object CartScreenComponents {
                 items = cart.products,
                 key = { _, product -> product.id.value },
             ) { index, product ->
+                SwipeableProductOrderCard(
+                    product = product,
+                    productCardActions = productCardActions,
+                    isDividerVisible = index < cart.products.lastIndex,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        }
+    }
+
+    @OptIn(ExperimentalFoundationApi::class)
+    @Composable
+    private fun SwipeableProductOrderCard(
+        product: CartProduct,
+        productCardActions: ProductCardActions,
+        isDividerVisible: Boolean,
+        modifier: Modifier = Modifier,
+    ) {
+        val density = LocalDensity.current
+        val anchors = remember(density) {
+            with(density) {
+                DraggableAnchors {
+                    ProductOrderCardSwipeableState.Default at 0f
+                    ProductOrderCardSwipeableState.SwipedLeft at
+                            (-ProductOrderCardSwipeDistance).toPx()
+                }
+            }
+        }
+        val anchoredDraggableState = rememberAnchoredDraggableState(
+            initialValue = ProductOrderCardSwipeableState.Default,
+            anchors = anchors,
+        )
+
+        Box(modifier = modifier.height(IntrinsicSize.Min)) {
+            Column(
+                modifier = Modifier
+                    .zIndex(1f)
+                    .offset {
+                        IntOffset(
+                            x = anchoredDraggableState
+                                .requireCoercedOffset()
+                                .roundToInt(),
+                            y = 0,
+                        )
+                    }
+                    .anchoredDraggable(
+                        state = anchoredDraggableState,
+                        orientation = Orientation.Horizontal,
+                    ),
+            ) {
                 ProductOrderCard(
                     name = product.name,
                     imageUrl = product.imageUrl,
@@ -383,14 +457,99 @@ object CartScreenComponents {
                     count = product.count,
                     countStyle = ProductOrderCardCountStyle.Selector,
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
-                if (index < cart.products.lastIndex) {
+                if (isDividerVisible) {
                     Divider(
                         color = UiKitTheme.colors.border.general.default,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .background(UiKitTheme.colors.background.general.regular.default)
                             .padding(horizontal = 16.dp),
+                    )
+                }
+            }
+
+            ProductOrderCardSwipeActionButtons(
+                product = product,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .zIndex(zIndex = 0.5f)
+                    .width(ProductOrderCardSwipeDistance)
+                    .fillMaxHeight(),
+            )
+        }
+    }
+
+    @Composable
+    private fun ProductOrderCardSwipeActionButtons(
+        product: CartProduct,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            ZarinaButton(
+                onClick = { /*TODO*/ },
+                colors = ZarinaButtonDefaults.tertiaryColors(),
+                shape = RectangleShape,
+                contentPadding = PaddingValues(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+            ) {
+                Crossfade(targetState = product.isInFavorites) { isLiked ->
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        val iconResId: Int
+                        val textRedId: Int
+                        if (isLiked) {
+                            iconResId = R.drawable.ic_heart_24
+                            textRedId = R.string.in_favorites
+                        } else {
+                            iconResId = R.drawable.ic_heart_outline_24
+                            textRedId = R.string.to_favorites
+                        }
+                        Icon(
+                            painter = painterResource(iconResId),
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = stringResource(textRedId).uppercase(),
+                            style = UiKitTheme.typography.caption2.regular,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+            }
+
+            ZarinaButton(
+                onClick = { /* TODO */ },
+                shape = RectangleShape,
+                contentPadding = PaddingValues(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_trash_can_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = stringResource(R.string.delete).uppercase(),
+                        style = UiKitTheme.typography.caption2.regular,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
             }
@@ -404,5 +563,36 @@ object CartScreenComponents {
         CartState.InitialLoading -> cartState
     }
 
+    @Stable
+    class ProductCardActions(
+        val onCountClicked: (CartProduct) -> Unit,
+        val onAddToFavoritesClicked: (CartProduct) -> Unit,
+        val onDeleteFromCartClicked: (CartProduct) -> Unit,
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as ProductCardActions
+
+            if (onCountClicked != other.onCountClicked) return false
+            if (onAddToFavoritesClicked != other.onAddToFavoritesClicked) return false
+            if (onDeleteFromCartClicked != other.onDeleteFromCartClicked) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = onCountClicked.hashCode()
+            result = 31 * result + onAddToFavoritesClicked.hashCode()
+            result = 31 * result + onDeleteFromCartClicked.hashCode()
+            return result
+        }
+    }
+
+    private enum class ProductOrderCardSwipeableState { Default, SwipedLeft }
+
     private const val DeliveryTypePagerContentKeyCart = "DeliveryTypePagerContentKeyCart"
+
+    private val ProductOrderCardSwipeDistance: Dp get() = 120.dp
 }

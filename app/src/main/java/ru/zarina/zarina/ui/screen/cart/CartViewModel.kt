@@ -27,6 +27,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.domain.cart.CartProduct
 import ru.zarina.zarina.domain.cart.CartSize
 import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.geography.City
@@ -167,6 +168,18 @@ class CartViewModel @AssistedInject constructor(
 
     fun onDeliveryTypeChanged(type: DeliveryType) {
         _currentDeliveryType.value = type
+    }
+
+    fun onProductCountClicked(product: CartProduct) {
+        // TODO: [High] Implement
+    }
+
+    fun onAddProductToFavoritesClicked(product: CartProduct) {
+        // TODO: [High] Implement
+    }
+
+    fun onDeleteProductFromCartClicked(product: CartProduct) {
+        // TODO: [High] Implement
     }
 
     fun onGoToCatalogClicked() {

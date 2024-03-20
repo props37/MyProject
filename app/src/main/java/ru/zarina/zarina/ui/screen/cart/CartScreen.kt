@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,6 +36,7 @@ import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.cart.CartScreenComponents.CartContent
+import ru.zarina.zarina.ui.screen.cart.CartScreenComponents.ProductCardActions
 import ru.zarina.zarina.ui.screen.cart.CartScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.CartState
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.SideEffect
@@ -54,6 +56,13 @@ fun CartScreen(
     val deliveryTypes by viewModel.deliveryTypes.collectAsStateWithLifecycle()
     val currentDeliveryType by viewModel.currentDeliveryType.collectAsStateWithLifecycle()
     val deliveryTypeToCartState by viewModel.deliveryTypeToCartState.collectAsStateWithLifecycle()
+    val productCardActions = remember(viewModel) {
+        ProductCardActions(
+            onCountClicked = viewModel::onProductCountClicked,
+            onAddToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
+            onDeleteFromCartClicked = viewModel::onDeleteProductFromCartClicked,
+        )
+    }
 
     ScreenContent(
         cartSize = cartSize,
@@ -66,6 +75,7 @@ fun CartScreen(
         currentDeliveryType = currentDeliveryType,
         onDeliveryTypeChanged = viewModel::onDeliveryTypeChanged,
         deliveryTypeToCartState = deliveryTypeToCartState,
+        productCardActions = productCardActions,
         onScreenOpened = viewModel::onScreenOpened,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
@@ -84,6 +94,7 @@ private fun ScreenContent(
     currentDeliveryType: DeliveryType,
     onDeliveryTypeChanged: (DeliveryType) -> Unit,
     deliveryTypeToCartState: ImmutableMap<DeliveryType, StateFlow<CartState>>,
+    productCardActions: ProductCardActions,
     onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CartScreenAction) -> Unit,
@@ -124,6 +135,7 @@ private fun ScreenContent(
                     currentDeliveryType = currentDeliveryType,
                     onDeliveryTypeChanged = onDeliveryTypeChanged,
                     deliveryTypeToCartState = deliveryTypeToCartState,
+                    productCardActions = productCardActions,
                     onGoToCatalogClicked = onGoToCatalogClicked,
                 )
             } else {
