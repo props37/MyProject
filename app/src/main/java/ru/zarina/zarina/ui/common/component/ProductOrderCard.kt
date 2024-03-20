@@ -64,6 +64,7 @@ fun ProductOrderCard(
     onCountSelectorClicked: (() -> Unit)? = null,
     price: Price? = null,
     showOriginalPrice: Boolean = true,
+    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     SideEffect {
@@ -75,6 +76,7 @@ fun ProductOrderCard(
     Row(
         modifier = modifier
             .height(IntrinsicSize.Min)
+            .background(backgroundColor)
             .padding(contentPadding),
     ) {
         var isImageShimmerEnabled by remember(imageUrl) { mutableStateOf(true) }

@@ -68,8 +68,13 @@ fun ProductCard(
     onSubscribeClicked: () -> Unit,
     modifier: Modifier = Modifier,
     shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
+    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
 ) {
-    Column(modifier = modifier.clickable(onClick = onClick)) {
+    Column(
+        modifier = modifier
+            .background(backgroundColor)
+            .clickable(onClick = onClick),
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
