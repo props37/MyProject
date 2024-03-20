@@ -117,7 +117,7 @@ object ZarinaButtonSelectorDefaults {
     val ButtonHeightLarge: Dp get() = 48.dp
     val ButtonHeightMedium: Dp get() = 40.dp
 
-    val ButtonShape: Shape get() = RoundedCornerShape(2.dp)
+    val ButtonShape: Shape get() = RoundedCornerShape(topStart = 2.dp, topEnd = 2.dp)
 
     @Composable
     fun TrailingArrow(
