@@ -21,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import ru.zarina.zarina.ui.common.behavior.systembars.ForcedSystemBarsBehavior
 import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessageStyle
 import ru.zarina.zarina.ui.common.zarinatoast.controller.ZarinaToastController
@@ -71,8 +73,13 @@ fun ZarinaToastContainer(
 
         LaunchedEffect(controller, anchoredDraggableState) {
             snapshotFlow { anchoredDraggableState.progress }
-                .collect { progress ->
-                    if (progress == 1f && anchoredDraggableState.targetValue == SwipeableState.Swiped) {
+                .map { it == 1f }
+                .distinctUntilChanged()
+                .collect { isAnimationCompleted ->
+                    if (
+                        isAnimationCompleted
+                        && anchoredDraggableState.targetValue == SwipeableState.Swiped
+                    ) {
                         controller.hideCurrentToast()
                     }
                 }
