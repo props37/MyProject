@@ -111,7 +111,9 @@ class CartViewModel @AssistedInject constructor(
                                     }
                                 },
                                 onFailure = { throwable ->
-                                    val errorState = ErrorState.from(throwable)
+                                    val errorState = ErrorState
+                                        .from(throwable)
+                                        .copy(buttonText = Text.Resource(R.string.go_to_catalog))
                                     CartState.Error(errorState)
                                 },
                             )
@@ -216,4 +218,3 @@ class CartViewModel @AssistedInject constructor(
         fun create(backStackEntrySavedStateHandle: SavedStateHandle): CartViewModel
     }
 }
-

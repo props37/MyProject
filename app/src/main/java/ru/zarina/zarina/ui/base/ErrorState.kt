@@ -14,7 +14,7 @@ data class ErrorState(
     val title: Text,
     val body: Text,
     val isButtonVisible: Boolean = true,
-    val buttonText: Text = Text.Resource(R.string.refresh),
+    val buttonText: Text = ButtonText,
 ) {
     companion object {
         val NETWORK: ErrorState
@@ -23,7 +23,7 @@ data class ErrorState(
                 title = Text.Resource(R.string.internet_connection_error),
                 body = Text.Resource(R.string.check_internet_connection_and_refresh_page),
                 isButtonVisible = true,
-                buttonText = Text.Resource(R.string.refresh),
+                buttonText = ButtonText,
             )
 
         val GENERIC: ErrorState
@@ -32,8 +32,10 @@ data class ErrorState(
                 title = Text.Resource(R.string.something_went_wrong),
                 body = Text.Resource(R.string.refresh_page_or_come_back_later),
                 isButtonVisible = true,
-                buttonText = Text.Resource(R.string.refresh),
+                buttonText = ButtonText,
             )
+
+        private val ButtonText: Text get() = Text.Resource(R.string.refresh)
     }
 }
 
