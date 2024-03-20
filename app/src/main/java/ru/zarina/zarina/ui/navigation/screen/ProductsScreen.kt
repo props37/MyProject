@@ -19,7 +19,8 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
         destination = UnscopedDestinations.Products,
         exitTransition = {
             when (targetState.destination.route) {
-                UnscopedDestinations.Filters.routeSchema -> {
+                UnscopedDestinations.Filters.routeSchema,
+                UnscopedDestinations.ProductSubscription.routeSchema -> {
                     slideOutOfContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Start,
                         animationSpec = tween(NavigationTransitionDurationMillis),
@@ -31,7 +32,8 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
         },
         popEnterTransition = {
             when (initialState.destination.route) {
-                UnscopedDestinations.Filters.routeSchema -> {
+                UnscopedDestinations.Filters.routeSchema,
+                UnscopedDestinations.ProductSubscription.routeSchema -> {
                     slideIntoContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.End,
                         animationSpec = tween(NavigationTransitionDurationMillis),
