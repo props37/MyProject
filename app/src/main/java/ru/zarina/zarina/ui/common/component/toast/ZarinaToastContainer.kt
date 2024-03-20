@@ -83,10 +83,6 @@ fun ZarinaToastContainer(
                 message = message,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .anchoredDraggable(
-                        state = anchoredDraggableState,
-                        orientation = Orientation.Vertical,
-                    )
                     .onSizeChanged { toastHeightPx = it.height }
                     .offset {
                         val yOffset = anchoredDraggableState.offset.takeIf { !it.isNaN() } ?: 0f
@@ -96,7 +92,11 @@ fun ZarinaToastContainer(
                                 .coerceAtMost(0f)
                                 .roundToInt(),
                         )
-                    },
+                    }
+                    .anchoredDraggable(
+                        state = anchoredDraggableState,
+                        orientation = Orientation.Vertical,
+                    ),
             )
         }
     }
