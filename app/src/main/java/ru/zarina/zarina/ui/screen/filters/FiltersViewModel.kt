@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screen.filters
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -221,8 +222,10 @@ class FiltersViewModel @AssistedInject constructor(
     sealed class FilterListState {
         data object Loading : FilterListState()
 
+        @Immutable
         data class FilterList(val filters: Filters) : FilterListState()
 
+        @Immutable
         data class Error(val errorState: ErrorState) : FilterListState()
     }
 
