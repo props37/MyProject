@@ -47,6 +47,7 @@ import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.base.rememberErrorState
 import ru.zarina.zarina.ui.common.component.ProductOrderCard
+import ru.zarina.zarina.ui.common.component.ProductOrderCardCountStyle
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
@@ -379,6 +380,8 @@ object CartScreenComponents {
                     sizeRu = null,
                     height = product.height,
                     color = product.color,
+                    count = product.count,
+                    countStyle = ProductOrderCardCountStyle.Selector,
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                 )
 
