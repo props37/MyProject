@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
@@ -74,37 +75,40 @@ fun ZarinaApp(
         LocalExoPlayerCacheHolder provides exoPlayerCacheHolder,
         LocalZarinaToastController provides zarinaToastController,
     ) {
-        ModalBottomSheetLayout(
-            bottomSheetNavigator = bottomSheetNavigator,
-            sheetShape = RectangleShape,
-            sheetElevation = 0.dp,
-            sheetBackgroundColor = Color.Unspecified,
-            sheetContentColor = Color.Unspecified,
-            scrimColor = Colors.MineShaftDark.copy(alpha = 0.4f),
-        ) {
-            Box(modifier = modifier) {
-                ZarinaNavigation(
-                    navController = navController,
-                    startDestination = viewModel.startDestination,
-                    modifier = Modifier.fillMaxSize(),
-                )
+        Box(modifier = Modifier.fillMaxSize()) {
+            ZarinaToastContainer(
+                controller = zarinaToastController,
+                shouldPaintStatusBar = true,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .zIndex(1f)
+                    .fillMaxWidth(),
+            )
 
-                val cartProductCount by viewModel.cartProductCount.collectAsStateWithLifecycle()
-                ZarinaBottomNavBar(
-                    navController = navController,
-                    cartProductCount = cartProductCount,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth(),
-                )
+            ModalBottomSheetLayout(
+                bottomSheetNavigator = bottomSheetNavigator,
+                sheetShape = RectangleShape,
+                sheetElevation = 0.dp,
+                sheetBackgroundColor = Color.Unspecified,
+                sheetContentColor = Color.Unspecified,
+                scrimColor = Colors.MineShaftDark.copy(alpha = 0.4f),
+            ) {
+                Box(modifier = modifier) {
+                    ZarinaNavigation(
+                        navController = navController,
+                        startDestination = viewModel.startDestination,
+                        modifier = Modifier.fillMaxSize(),
+                    )
 
-                ZarinaToastContainer(
-                    controller = zarinaToastController,
-                    shouldPaintStatusBar = true,
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .fillMaxWidth(),
-                )
+                    val cartProductCount by viewModel.cartProductCount.collectAsStateWithLifecycle()
+                    ZarinaBottomNavBar(
+                        navController = navController,
+                        cartProductCount = cartProductCount,
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth(),
+                    )
+                }
             }
         }
     }
