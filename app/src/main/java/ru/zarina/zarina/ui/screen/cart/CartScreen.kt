@@ -27,6 +27,7 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.cart.CartSize
 import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.base.rememberErrorState
@@ -47,7 +48,7 @@ fun CartScreen(
     navigate: (CartScreenAction) -> Unit,
     viewModel: CartViewModel = hiltViewModel(),
 ) {
-    val isCartEmpty by viewModel.isCartEmpty.collectAsStateWithLifecycle()
+    val cartSize by viewModel.cartSize.collectAsStateWithLifecycle()
     val city by viewModel.city.collectAsStateWithLifecycle()
     val isClearCartButtonVisible by viewModel.isClearCartButtonVisible.collectAsStateWithLifecycle()
     val deliveryTypes by viewModel.deliveryTypes.collectAsStateWithLifecycle()
@@ -55,7 +56,7 @@ fun CartScreen(
     val deliveryTypeToCartState by viewModel.deliveryTypeToCartState.collectAsStateWithLifecycle()
 
     ScreenContent(
-        isCartEmpty = isCartEmpty,
+        cartSize = cartSize,
         city = city,
         onCityClicked = viewModel::onCityClicked,
         onGoToCatalogClicked = viewModel::onGoToCatalogClicked,
@@ -73,7 +74,7 @@ fun CartScreen(
 
 @Composable
 private fun ScreenContent(
-    isCartEmpty: Boolean,
+    cartSize: CartSize,
     city: City?,
     onCityClicked: () -> Unit,
     onGoToCatalogClicked: () -> Unit,
@@ -111,13 +112,14 @@ private fun ScreenContent(
         )
 
         Crossfade(
-            targetState = isCartEmpty,
+            targetState = cartSize.isEmpty,
             modifier = Modifier.fillMaxSize(),
         ) { isCartEmpty ->
             if (!isCartEmpty) {
                 CartContent(
                     city = city,
                     onCityClicked = onCityClicked,
+                    cartSize = cartSize,
                     deliveryTypes = deliveryTypes,
                     currentDeliveryType = currentDeliveryType,
                     onDeliveryTypeChanged = onDeliveryTypeChanged,

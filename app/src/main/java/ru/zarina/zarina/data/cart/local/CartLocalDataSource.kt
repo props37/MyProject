@@ -24,8 +24,8 @@ class CartLocalDataSource @Inject constructor(
         dataHolder.addProductToCart(productId)
     }
 
-    fun setCartSize(cartSize: CartSize) {
-        dataHolder.setCartSize(cartSize)
+    fun setCartSize(size: CartSize) {
+        dataHolder.setCartSize(size)
     }
 
     fun setCartTotalProductCount(count: Int) {

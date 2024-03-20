@@ -45,6 +45,10 @@ class CartRepository @Inject constructor(
         return result
     }
 
+    fun setCartSize(size: CartSize) {
+        localDataSource.setCartSize(size)
+    }
+
     fun setCartTotalProductCount(count: Int) {
         localDataSource.setCartTotalProductCount(count)
     }

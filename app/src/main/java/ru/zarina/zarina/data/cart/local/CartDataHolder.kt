@@ -36,9 +36,9 @@ class CartDataHolder @Inject constructor() {
         _cartProductIds.update { it + productId }
     }
 
-    fun setCartSize(cartSize: CartSize) {
-        Timber.v("Set cart size: $cartSize")
-        _cartSize.value = cartSize
+    fun setCartSize(size: CartSize) {
+        Timber.v("Set cart size: $size")
+        _cartSize.value = size
     }
 
     fun setCartTotalProductCount(count: Int) {

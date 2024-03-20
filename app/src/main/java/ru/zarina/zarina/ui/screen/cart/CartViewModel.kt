@@ -59,15 +59,14 @@ class CartViewModel @AssistedInject constructor(
         savedStateHandle = savedStateHandle,
     )
 
-    val isCartEmpty: StateFlow<Boolean> = interactor.getCartSizeFlow()
+    val cartSize: StateFlow<CartSize> = interactor.getCartSizeFlow()
         .map { result ->
-            val cartSize = result.getOrDefault(CartSize.EMPTY)
-            cartSize.totalProductCount <= 0
+            result.getOrDefault(CartSize.EMPTY)
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileUiSubscribed,
-            initialValue = true,
+            initialValue = CartSize.EMPTY,
         )
 
     val city: StateFlow<City?> = interactor.getUserCityFlow()
@@ -80,10 +79,10 @@ class CartViewModel @AssistedInject constructor(
             initialValue = null,
         )
 
-    val isClearCartButtonVisible: StateFlow<Boolean> = isCartEmpty.mapState(
+    val isClearCartButtonVisible: StateFlow<Boolean> = cartSize.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
-    ) { isCartEmpty -> !isCartEmpty }
+    ) { cartSize -> !cartSize.isEmpty }
 
     val deliveryTypes: StateFlow<ImmutableList<DeliveryType>> =
         MutableStateFlow(DeliveryType.entries.toImmutableList()).asStateFlow()

@@ -5,6 +5,8 @@ data class CartSize(
     val deliveryProductCount: Int,
     val pickUpFromShopProductCount: Int,
 ) {
+    val isEmpty: Boolean get() = totalProductCount <= 0
+
     companion object {
         val EMPTY: CartSize get() = CartSize(0, 0, 0)
     }

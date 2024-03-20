@@ -42,6 +42,7 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.coroutines.flow.StateFlow
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.cart.Cart
+import ru.zarina.zarina.domain.cart.CartSize
 import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.base.rememberErrorState
@@ -104,6 +105,7 @@ object CartScreenComponents {
     fun CartContent(
         city: City?,
         onCityClicked: () -> Unit,
+        cartSize: CartSize,
         deliveryTypes: ImmutableList<DeliveryType>,
         currentDeliveryType: DeliveryType,
         onDeliveryTypeChanged: (DeliveryType) -> Unit,
@@ -130,6 +132,7 @@ object CartScreenComponents {
                 types = deliveryTypes,
                 currentType = currentDeliveryType,
                 onTypeChanged = onDeliveryTypeChanged,
+                cartSize = cartSize,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
 
@@ -204,6 +207,7 @@ object CartScreenComponents {
         types: ImmutableList<DeliveryType>,
         currentType: DeliveryType,
         onTypeChanged: (DeliveryType) -> Unit,
+        cartSize: CartSize,
         modifier: Modifier = Modifier,
     ) {
         val selectedTabIndex = remember(types, currentType) {
@@ -215,11 +219,15 @@ object CartScreenComponents {
             modifier = modifier,
         ) {
             types.forEach { type ->
+                val productCount = when (type) {
+                    DeliveryType.DELIVERY -> cartSize.deliveryProductCount
+                    DeliveryType.PICK_UP_FROM_SHOP -> cartSize.pickUpFromShopProductCount
+                }
                 DeliveryTypeButton(
                     type = type,
                     onClick = { onTypeChanged(type) },
                     isSelected = type == currentType,
-                    productCount = 0, // TODO: [High] Implement
+                    productCount = productCount,
                 )
             }
         }

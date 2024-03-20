@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
 import ru.zarina.zarina.base.usecase.FlowUseCase
 import ru.zarina.zarina.data.cart.CartRepository
 import ru.zarina.zarina.data.user.UserRepository
@@ -24,6 +25,9 @@ class GetCartFlowUseCase @Inject constructor(
         val deliveryType = params.deliveryType
         return userRepository.getUserCityFlow().flatMapLatest { city ->
             cartRepository.getCartFlow(deliveryType, city?.kladrId)
+                .onEach { cart ->
+                    cartRepository.setCartSize(cart.size)
+                }
         }
     }
 
