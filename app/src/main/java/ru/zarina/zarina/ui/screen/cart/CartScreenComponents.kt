@@ -9,6 +9,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.gestures.animateTo
+import androidx.compose.foundation.interaction.DragInteraction
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,8 +39,13 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -392,6 +400,8 @@ object CartScreenComponents {
         productCardActions: ProductCardActions,
         modifier: Modifier = Modifier,
     ) {
+        var lastDraggedProductId by remember { mutableStateOf<CartProduct.Id?>(null) }
+
         LazyColumn(modifier = modifier) {
             // TODO: [High] Implement contentType
             itemsIndexed(
@@ -402,6 +412,9 @@ object CartScreenComponents {
                     product = product,
                     productCardActions = productCardActions,
                     isDividerVisible = index < cart.products.lastIndex,
+                    onDragStarted = { lastDraggedProductId = it },
+                    lastDraggedProductId = lastDraggedProductId,
+                    onResetSwipeState = { lastDraggedProductId = null },
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -414,6 +427,9 @@ object CartScreenComponents {
         product: CartProduct,
         productCardActions: ProductCardActions,
         isDividerVisible: Boolean,
+        onDragStarted: (CartProduct.Id) -> Unit,
+        lastDraggedProductId: CartProduct.Id?,
+        onResetSwipeState: (CartProduct) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val density = LocalDensity.current
@@ -431,6 +447,22 @@ object CartScreenComponents {
             anchors = anchors,
         )
 
+        val anchoredDraggableInteractionSource = remember { MutableInteractionSource() }
+        val updatedProductId by rememberUpdatedState(product.id)
+        LaunchedEffect(anchoredDraggableInteractionSource) {
+            anchoredDraggableInteractionSource.interactions.collect {
+                when (it) {
+                     is DragInteraction.Start -> onDragStarted(updatedProductId)
+                }
+            }
+        }
+
+        LaunchedEffect(product.id, lastDraggedProductId, anchoredDraggableState) {
+            if (product.id != lastDraggedProductId) {
+                anchoredDraggableState.animateTo(ProductOrderCardSwipeableState.Default)
+            }
+        }
+
         Box(modifier = modifier.height(IntrinsicSize.Min)) {
             Column(
                 modifier = Modifier
@@ -446,6 +478,7 @@ object CartScreenComponents {
                     .anchoredDraggable(
                         state = anchoredDraggableState,
                         orientation = Orientation.Horizontal,
+                        interactionSource = anchoredDraggableInteractionSource,
                     ),
             ) {
                 ProductOrderCard(
@@ -474,8 +507,14 @@ object CartScreenComponents {
 
             ProductOrderCardSwipeActionButtons(
                 product = product,
-                onAddToFavoritesClicked = productCardActions.onAddToFavoritesClicked,
-                onDeleteFromCartClicked = productCardActions.onDeleteFromCartClicked,
+                onAddToFavoritesClicked = {
+                    onResetSwipeState(it)
+                    productCardActions.onAddToFavoritesClicked(it)
+                },
+                onDeleteFromCartClicked = {
+                    onResetSwipeState(it)
+                    productCardActions.onDeleteFromCartClicked(it)
+                },
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
                     .zIndex(zIndex = 0.5f)
