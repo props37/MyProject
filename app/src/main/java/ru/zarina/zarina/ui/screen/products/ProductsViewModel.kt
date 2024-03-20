@@ -249,6 +249,14 @@ class ProductsViewModel @AssistedInject constructor(
         viewModelScope.launch {
             val params = ToggleProductPresenceInFavoritesUseCase.Params(product.id)
             interactor.toggleProductPresenceInFavorites(params)
+                .onSuccess {
+                    if (!product.isInFavorites) {
+                        val messageText =
+                            Text.Resource(R.string.product_adding_to_favorites_completed)
+                        val message = ZarinaToastMessage(messageText)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
+                    }
+                }
                 .onFailure {
                     val messageResId = if (product.isInFavorites) {
                         R.string.product_removing_from_favorites_error
