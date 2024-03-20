@@ -122,7 +122,7 @@ object ZarinaButtonSelectorDefaults {
 
     val ButtonShape: Shape get() = RoundedCornerShape(topStart = 2.dp, topEnd = 2.dp)
 
-    val ContentPadding: PaddingValues get() = PaddingValues(horizontal = 6.dp, vertical = 4.dp)
+    val ContentPadding: PaddingValues get() = PaddingValues(horizontal = 8.dp, vertical = 6.dp)
 
     @Composable
     fun TrailingArrow(
