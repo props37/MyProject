@@ -20,7 +20,13 @@ data class CartProduct(
     val height: String?,
     val count: Int,
     val isInFavorites: Boolean,
+    val availableCount: AvailableCount,
 ) {
     @JvmInline
     value class Id(val value: Long)
+
+    data class AvailableCount(
+        val delivery: Int,
+        val pickUpFromShop: Int,
+    )
 }

@@ -34,6 +34,8 @@ data class CartProductDto(
         checkNotNull(offer.imageUrl) { "imageUrl is null" }
         checkNotNull(offer.size) { "size is null" }
         checkNotNull(count) { "count is null" }
+        checkNotNull(offer.deliveryAvailableCount) { "deliveryAvailableCount is null" }
+        checkNotNull(offer.pickUpFromShopAvailableCount) { "pickUpFromShopAvailableCount is null" }
         return CartProduct(
             id = CartProduct.Id(id),
             productId = Product.Id(offer.productId),
@@ -47,6 +49,10 @@ data class CartProductDto(
             height = offer.height?.takeIf { it.isNotBlank() },
             count = count,
             isInFavorites = offer.isInFavorites ?: false,
+            availableCount = CartProduct.AvailableCount(
+                delivery = offer.deliveryAvailableCount,
+                pickUpFromShop = offer.pickUpFromShopAvailableCount,
+            ),
         )
     }
 
@@ -81,6 +87,12 @@ data class CartProductDto(
 
         @SerialName("is_favorite")
         val isInFavorites: Boolean? = null,
+
+        @SerialName("online_amount")
+        val deliveryAvailableCount: Int? = null,
+
+        @SerialName("retail_amount")
+        val pickUpFromShopAvailableCount: Int? = null,
     ) {
         @Serializable
         data class Color(

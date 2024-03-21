@@ -177,11 +177,15 @@ class CartViewModel @AssistedInject constructor(
 
     fun onProductCountClicked(product: CartProduct) {
         navigationThrottler.throttle {
+            val availableCount = when (currentDeliveryType.value) {
+                DeliveryType.DELIVERY -> product.availableCount.delivery
+                DeliveryType.PICK_UP_FROM_SHOP -> product.availableCount.pickUpFromShop
+            }
             val action = CartScreenAction.ProductCountClicked(
                 productId = product.productId,
                 barcode = product.barcode,
                 initialCount = product.count,
-                availableCount = 10, // TODO: [High] Implement
+                availableCount = availableCount,
             )
             emitSideEffect(SideEffect.Navigate(action))
         }
