@@ -12,6 +12,7 @@ sealed class CartScreenAction {
     data class ProductCountClicked(
         val productId: Product.Id,
         val barcode: Barcode,
+        val initialCount: Int,
         val availableCount: Int,
     ) : CartScreenAction()
 }

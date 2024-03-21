@@ -66,6 +66,7 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
                         val args = CartGraph.ProductCountSelector.Args(
                             productId = action.productId,
                             barcode = action.barcode,
+                            initialCount = action.initialCount,
                             availableCount = action.availableCount,
                         )
                         navController.navigate(

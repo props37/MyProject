@@ -178,6 +178,7 @@ class CartViewModel @AssistedInject constructor(
             val action = CartScreenAction.ProductCountClicked(
                 productId = product.productId,
                 barcode = product.barcode,
+                initialCount = product.count,
                 availableCount = 10, // TODO: [High] Implement
             )
             emitSideEffect(SideEffect.Navigate(action))

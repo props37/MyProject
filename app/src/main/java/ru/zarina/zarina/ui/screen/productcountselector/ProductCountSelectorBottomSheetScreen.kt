@@ -36,7 +36,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 fun ProductCountSelectorBottomSheetScreen(
     viewModel: ProductCountSelectorViewModel = hiltViewModel(),
 ) {
-    val availableCount by viewModel.availbableCount.collectAsStateWithLifecycle()
+    val availableCount by viewModel.availableCount.collectAsStateWithLifecycle()
 
     ScreenContent(
         availableCount = availableCount,

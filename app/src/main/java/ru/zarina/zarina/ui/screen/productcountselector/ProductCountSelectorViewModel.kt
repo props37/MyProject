@@ -47,7 +47,19 @@ class ProductCountSelectorViewModel @Inject constructor(
             Barcode(string)
         }
 
-    val availbableCount: StateFlow<Int> = savedStateHandle
+    private val initialCount: StateFlow<Int> = savedStateHandle
+        .getStateFlow<Int?>(
+            key = CartGraph.ProductCountSelector.ARG_KEY_INITIAL_COUNT,
+            initialValue = null,
+        )
+        .mapState(
+            coroutineScope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { count ->
+            checkNotNull(count) { "initialCount is null" }
+        }
+
+    val availableCount: StateFlow<Int> = savedStateHandle
         .getStateFlow<Int?>(
             key = CartGraph.ProductCountSelector.ARG_KEY_AVAILABLE_COUNT,
             initialValue = null,

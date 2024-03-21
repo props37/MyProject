@@ -21,6 +21,7 @@ data object CartGraph : SimpleGraph(
     data object ProductCountSelector : Destination<ProductCountSelector.Args>() {
         const val ARG_KEY_PRODUCT_ID = "arg_product_id"
         const val ARG_KEY_BARCODE = "arg_barcode"
+        const val ARG_KEY_INITIAL_COUNT = "arg_initial_count"
         const val ARG_KEY_AVAILABLE_COUNT = "arg_available_count"
 
         private val routeBase: String
@@ -32,6 +33,7 @@ data object CartGraph : SimpleGraph(
                 optionalArgNames = arrayOf(
                     ARG_KEY_PRODUCT_ID,
                     ARG_KEY_BARCODE,
+                    ARG_KEY_INITIAL_COUNT,
                     ARG_KEY_AVAILABLE_COUNT,
                 ),
             )
@@ -39,7 +41,7 @@ data object CartGraph : SimpleGraph(
         override fun createRoute(args: Args): String {
             return RouteUtils.generateRoute(
                 routeBase = routeBase,
-                args = arrayOf()
+                args = arrayOf(), // TODO: [High] Implement
             )
         }
 
@@ -47,18 +49,21 @@ data object CartGraph : SimpleGraph(
             get() = listOf(
                 navArgument(ARG_KEY_PRODUCT_ID) { type = NavType.StringType },
                 navArgument(ARG_KEY_BARCODE) { type = NavType.StringType },
+                navArgument(ARG_KEY_INITIAL_COUNT) { type = NavType.IntType },
                 navArgument(ARG_KEY_AVAILABLE_COUNT) { type = NavType.IntType },
             )
 
         override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
             putString(ARG_KEY_PRODUCT_ID, args.productId.value)
             putString(ARG_KEY_BARCODE, args.barcode.value)
+            putInt(ARG_KEY_INITIAL_COUNT, args.initialCount)
             putInt(ARG_KEY_AVAILABLE_COUNT, args.availableCount)
         }
 
         data class Args(
             val productId: Product.Id,
             val barcode: Barcode,
+            val initialCount: Int,
             val availableCount: Int,
         )
     }
