@@ -38,6 +38,7 @@ import ru.zarina.zarina.ui.common.util.ScreenResultHandler
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.destination.graph.CartGraph
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.SideEffect
 import ru.zarina.zarina.usecase.cart.GetCartFlowUseCase
 import ru.zarina.zarina.usecase.cart.RemoveProductFromCartUseCase
@@ -142,6 +143,7 @@ class CartViewModel @AssistedInject constructor(
         cartFetchRequests.trySend(Unit)
 
         handleCitySelectorResult()
+        handleProductCountSelectorResult()
     }
 
     fun onScreenOpened() {
@@ -244,6 +246,18 @@ class CartViewModel @AssistedInject constructor(
                             val message = Text.Resource(R.string.city_changing_error)
                             emitSideEffect(SideEffect.ShowToast(message))
                         }
+                }
+            }
+        }
+    }
+
+    private fun handleProductCountSelectorResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<CartGraph.ProductCountSelector.Result>(
+                key = CartGraph.ProductCountSelector.RESULT_KEY,
+            ) { result ->
+                if (result.countChanged) {
+                    cartFetchRequests.trySend(Unit)
                 }
             }
         }

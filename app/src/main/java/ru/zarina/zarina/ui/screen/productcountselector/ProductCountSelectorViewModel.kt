@@ -9,7 +9,9 @@ import io.ktor.client.plugins.ClientRequestException
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -92,17 +94,16 @@ class ProductCountSelectorViewModel @Inject constructor(
             count.coerceAtMost(AVAILABLE_COUNT_MAX_VALUE)
         }
 
-    private val newCount = MutableStateFlow<Int?>(null)
+    private val currentCount = MutableStateFlow(initialCount.value)
 
     private val loadingCountItem = MutableStateFlow<Int?>(null)
 
     val countItems: StateFlow<ImmutableList<CountItem>> = combine(
-        initialCount,
         availableCount,
-        newCount,
+        currentCount,
         loadingCountItem,
-    ) { initialCount, availableCount, newCount, loadingCountItem ->
-        val selectedCount = newCount ?: initialCount
+    ) { availableCount, currentCount, loadingCountItem ->
+        val selectedCount = currentCount
         List(availableCount) { count ->
             val adjustedCount = count + 1
             CountItem(
@@ -128,24 +129,27 @@ class ProductCountSelectorViewModel @Inject constructor(
         changeProductCountInCartJob?.cancel()
 
         val count = item.count
-        if (count == initialCount.value) {
+        if (count == currentCount.value) {
             val action = ProductCountSelectorScreenAction.ScreenClosed
             emitSideEffect(SideEffect.Navigate(action))
+            return
         }
 
+        loadingCountItem.value = count
         changeProductCountInCartJob = viewModelScope.launch {
             val params = ChangeProductCountInCartUseCase.Params(
                 productId = productId.value,
                 barcode = barcode.value,
                 count = count,
             )
-            loadingCountItem.value = count
             interactor.changeProductCountInCart(params)
                 .onSuccess {
-                    newCount.value = count
-                    // TODO: [High] Return back and refresh the cart
+                    currentCount.value = count
+                    val action = ProductCountSelectorScreenAction.CountChanged
+                    emitSideEffect(SideEffect.Navigate(action))
                 }
                 .onFailure { throwable ->
+                    if (throwable is CancellationException) return@onFailure
                     val messageResId = if (throwable is ClientRequestException) {
                         R.string.product_changing_count_in_cart_count_not_enough_product_error
                     } else {
@@ -154,6 +158,7 @@ class ProductCountSelectorViewModel @Inject constructor(
                     val message = Text.Resource(messageResId)
                     emitSideEffect(SideEffect.ShowToast(message))
                 }
+            ensureActive()
             loadingCountItem.value = null
         }
     }

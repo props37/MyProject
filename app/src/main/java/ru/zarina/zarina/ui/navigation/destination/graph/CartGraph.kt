@@ -1,16 +1,20 @@
 package ru.zarina.zarina.ui.navigation.destination.graph
 
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import kotlinx.parcelize.Parcelize
 import ru.zarina.zarina.domain.common.Barcode
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.ui.navigation.BaseRoute
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.RouteUtils
+import ru.zarina.zarina.ui.navigation.base.ScreenResult
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleGraph
+import java.util.UUID
 
 data object CartGraph : SimpleGraph(
     baseRoute = BaseRoute.CART_GRAPH,
@@ -23,6 +27,8 @@ data object CartGraph : SimpleGraph(
         const val ARG_KEY_BARCODE = "arg_barcode"
         const val ARG_KEY_INITIAL_COUNT = "arg_initial_count"
         const val ARG_KEY_AVAILABLE_COUNT = "arg_available_count"
+
+        const val RESULT_KEY = "product_count_selector_result"
 
         private val routeBase: String
             get() = BaseRoute.PRODUCT_COUNT_SELECTOR.route
@@ -71,5 +77,11 @@ data object CartGraph : SimpleGraph(
             val initialCount: Int,
             val availableCount: Int,
         )
+
+        @Parcelize
+        data class Result(
+            val countChanged: Boolean,
+            override val id: String = UUID.randomUUID().toString(),
+        ) : ScreenResult, Parcelable
     }
 }

@@ -18,6 +18,16 @@ fun NavGraphBuilder.productCountSelectorBottomSheetScreen(navController: NavHost
                             inclusive = true,
                         )
                     }
+
+                    ProductCountSelectorScreenAction.CountChanged -> {
+                        navController.popBackStack(
+                            route = CartGraph.ProductCountSelector.routeSchema,
+                            inclusive = true,
+                        )
+                        val result = CartGraph.ProductCountSelector.Result(countChanged = true)
+                        navController.currentBackStackEntry?.savedStateHandle
+                            ?.set(CartGraph.ProductCountSelector.RESULT_KEY, result)
+                    }
                 }
             },
         )
