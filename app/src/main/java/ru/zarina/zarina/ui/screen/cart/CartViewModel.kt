@@ -174,7 +174,14 @@ class CartViewModel @AssistedInject constructor(
     }
 
     fun onProductCountClicked(product: CartProduct) {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val action = CartScreenAction.ProductCountClicked(
+                productId = product.productId,
+                barcode = product.barcode,
+                availableCount = 10, // TODO: [High] Implement
+            )
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     fun onAddProductToFavoritesClicked(product: CartProduct) {

@@ -61,6 +61,18 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
                             args = UnscopedDestinations.CitySelector.createArgsBundle(args),
                         )
                     }
+
+                    is CartScreenAction.ProductCountClicked -> {
+                        val args = CartGraph.ProductCountSelector.Args(
+                            productId = action.productId,
+                            barcode = action.barcode,
+                            availableCount = action.availableCount,
+                        )
+                        navController.navigate(
+                            route = CartGraph.ProductCountSelector.routeSchema,
+                            args = CartGraph.ProductCountSelector.createArgsBundle(args),
+                        )
+                    }
                 }
             },
         )
