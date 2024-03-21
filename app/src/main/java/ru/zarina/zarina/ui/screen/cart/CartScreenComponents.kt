@@ -387,6 +387,7 @@ object CartScreenComponents {
                         ZarinaErrorScreen(
                             state = state.state,
                             onRefreshClicked = { /*TODO*/ },
+                            modifier = Modifier.padding(16.dp),
                         )
                     }
                 }
