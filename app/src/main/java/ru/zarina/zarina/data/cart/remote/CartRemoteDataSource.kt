@@ -32,6 +32,10 @@ class CartRemoteDataSource @Inject constructor(
         return api.removeProductFromCart(barcode).toCartProductCount()
     }
 
+    suspend fun changeProductCountInCart(barcode: Barcode, count: Int) {
+        api.changeProductCountInCart(barcode, count)
+    }
+
     suspend fun clearCart() {
         api.clearCart()
     }
