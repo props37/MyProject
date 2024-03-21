@@ -41,7 +41,12 @@ data object CartGraph : SimpleGraph(
         override fun createRoute(args: Args): String {
             return RouteUtils.generateRoute(
                 routeBase = routeBase,
-                args = arrayOf(), // TODO: [High] Implement
+                args = arrayOf(
+                    args.productId.value,
+                    args.barcode.value,
+                    args.initialCount,
+                    args.availableCount,
+                ),
             )
         }
 
