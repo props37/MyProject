@@ -35,7 +35,8 @@ enum class BaseRoute {
 
     // Cart graph
     CART_GRAPH,
-    CART;
+    CART,
+    PRODUCT_COUNT_SELECTOR;
 
     val route: String get() = name.lowercase()
 }
