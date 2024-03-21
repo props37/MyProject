@@ -20,6 +20,7 @@ import ru.zarina.zarina.ui.common.component.icon.ZarinaCheckmarkAnimatedIcon
 import ru.zarina.zarina.ui.common.component.loader.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
+import ru.zarina.zarina.ui.screen.productcountselector.ProductCountSelectorViewModel.CountItem
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 
@@ -52,21 +53,19 @@ object ProductCountSelectorScreenComponents {
 
     @Composable
     fun CountItem(
-        count: Int,
-        onClick: (count: Int) -> Unit,
-        isSelected: Boolean,
-        isLoading: Boolean,
+        item: CountItem,
+        onClick: (item: CountItem) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .heightIn(min = 56.dp)
-                .clickable { onClick(count) }
+                .clickable { onClick(item) }
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             Text(
-                text = count.toString(),
+                text = item.count.toString(),
                 style = UiKitTheme.typography.secondary.light,
                 color = UiKitTheme.colors.text.general.regular.default,
             )
@@ -74,8 +73,8 @@ object ProductCountSelectorScreenComponents {
             Spacer(modifier = Modifier.weight(1f))
 
             val state = when {
-                isLoading -> CountItemState.Loading
-                isSelected -> CountItemState.Selected
+                item.isLoading -> CountItemState.Loading
+                item.isSelected -> CountItemState.Selected
                 else -> CountItemState.Default
             }
             AnimatedContent(

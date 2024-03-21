@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,6 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.ui.common.component.bottomsheet.ZarinaBottomSheet
@@ -29,6 +32,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.productcountselector.ProductCountSelectorScreenComponents.CountItem
 import ru.zarina.zarina.ui.screen.productcountselector.ProductCountSelectorScreenComponents.TopBar
+import ru.zarina.zarina.ui.screen.productcountselector.ProductCountSelectorViewModel.CountItem
 import ru.zarina.zarina.ui.screen.productcountselector.ProductCountSelectorViewModel.SideEffect
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
@@ -36,17 +40,17 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 fun ProductCountSelectorBottomSheetScreen(
     viewModel: ProductCountSelectorViewModel = hiltViewModel(),
 ) {
-    val availableCount by viewModel.availableCount.collectAsStateWithLifecycle()
+    val countItems by viewModel.countItems.collectAsStateWithLifecycle()
 
     ScreenContent(
-        availableCount = availableCount,
+        countItems = countItems,
         sideEffects = viewModel.sideEffects,
     )
 }
 
 @Composable
 private fun ScreenContent(
-    availableCount: Int,
+    countItems: ImmutableList<CountItem>,
     sideEffects: Flow<SideEffect>,
 ) {
     ProductCountSelectorScreenBehavior(sideEffects = sideEffects)
@@ -65,20 +69,17 @@ private fun ScreenContent(
                 .asPaddingValues()
 
             LazyColumn(contentPadding = contentPadding) {
-                items(
-                    count = availableCount,
-                    key = { it },
-                ) { count ->
-                    val adjustedCount = count + 1
+                itemsIndexed(
+                    items = countItems,
+                    key = { _, item -> item.count },
+                ) { index, item ->
                     CountItem(
-                        count = adjustedCount,
+                        item = item,
                         onClick = { /*TODO*/ },
-                        isSelected = false,
-                        isLoading = false,
                         modifier = Modifier.fillMaxWidth(),
                     )
 
-                    if (adjustedCount < availableCount) {
+                    if (index < countItems.lastIndex) {
                         Divider(
                             color = UiKitTheme.colors.border.general.default,
                             modifier = Modifier
@@ -92,6 +93,7 @@ private fun ScreenContent(
     }
 }
 
+@Suppress("MagicNumber")
 @Preview
 @FontScalePreviews
 @DensityPreviews
@@ -99,7 +101,17 @@ private fun ScreenContent(
 private fun Preview() {
     ZarinaPreview {
         ScreenContent(
-            availableCount = 10,
+            countItems = remember {
+                val selectedItem = 1
+                val loadingItem = 3
+                List(10) { count ->
+                    CountItem(
+                        count = count + 1,
+                        isSelected = count == selectedItem,
+                        isLoading = count == loadingItem,
+                    )
+                }.toImmutableList()
+            },
             sideEffects = remember { emptyFlow() },
         )
     }
