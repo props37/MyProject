@@ -38,29 +38,39 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun ProductCountSelectorBottomSheetScreen(
+    navigate: (ProductCountSelectorScreenAction) -> Unit,
     viewModel: ProductCountSelectorViewModel = hiltViewModel(),
 ) {
     val countItems by viewModel.countItems.collectAsStateWithLifecycle()
 
     ScreenContent(
+        onCloseClicked = viewModel::onCloseClicked,
         countItems = countItems,
+        onCountItemClicked = viewModel::onCountItemClicked,
         sideEffects = viewModel.sideEffects,
+        navigate = navigate,
     )
 }
 
 @Composable
 private fun ScreenContent(
+    onCloseClicked: () -> Unit,
     countItems: ImmutableList<CountItem>,
+    onCountItemClicked: (CountItem) -> Unit,
     sideEffects: Flow<SideEffect>,
+    navigate: (ProductCountSelectorScreenAction) -> Unit,
 ) {
-    ProductCountSelectorScreenBehavior(sideEffects = sideEffects)
+    ProductCountSelectorScreenBehavior(
+        sideEffects = sideEffects,
+        navigate = navigate,
+    )
 
     ZarinaBottomSheet(
         windowInsets = WindowInsets.statusBars.union(WindowInsets.displayCutout),
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             TopBar(
-                onCloseClicked = { /*TODO*/ },
+                onCloseClicked = onCloseClicked,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -75,7 +85,7 @@ private fun ScreenContent(
                 ) { index, item ->
                     CountItem(
                         item = item,
-                        onClick = { /*TODO*/ },
+                        onClick = onCountItemClicked,
                         modifier = Modifier.fillMaxWidth(),
                     )
 
@@ -101,6 +111,7 @@ private fun ScreenContent(
 private fun Preview() {
     ZarinaPreview {
         ScreenContent(
+            onCloseClicked = {},
             countItems = remember {
                 val selectedItem = 1
                 val loadingItem = 3
@@ -112,7 +123,9 @@ private fun Preview() {
                     )
                 }.toImmutableList()
             },
+            onCountItemClicked = {},
             sideEffects = remember { emptyFlow() },
+            navigate = {},
         )
     }
 }

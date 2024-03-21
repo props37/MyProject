@@ -5,20 +5,28 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.ktor.client.plugins.ClientRequestException
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import ru.zarina.zarina.R
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.throttler.Throttler
 import ru.zarina.zarina.domain.common.Barcode
 import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.navigation.destination.graph.CartGraph
 import ru.zarina.zarina.ui.screen.productcountselector.ProductCountSelectorViewModel.SideEffect
+import ru.zarina.zarina.usecase.cart.ChangeProductCountInCartUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
@@ -28,6 +36,10 @@ class ProductCountSelectorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val interactor: ProductCountSelectorInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private var changeProductCountInCartJob: Job? = null
 
     private val productId: StateFlow<Product.Id> = savedStateHandle
         .getStateFlow<String?>(
@@ -105,7 +117,52 @@ class ProductCountSelectorViewModel @Inject constructor(
         initialValue = persistentListOf(),
     )
 
-    sealed interface SideEffect : SideEffectSource.SideEffect
+    fun onCloseClicked() {
+        navigationThrottler.throttle {
+            val action = ProductCountSelectorScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
+    fun onCountItemClicked(item: CountItem) {
+        changeProductCountInCartJob?.cancel()
+
+        val count = item.count
+        if (count == initialCount.value) {
+            val action = ProductCountSelectorScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+
+        changeProductCountInCartJob = viewModelScope.launch {
+            val params = ChangeProductCountInCartUseCase.Params(
+                productId = productId.value,
+                barcode = barcode.value,
+                count = count,
+            )
+            loadingCountItem.value = count
+            interactor.changeProductCountInCart(params)
+                .onSuccess {
+                    newCount.value = count
+                    // TODO: [High] Return back and refresh the cart
+                }
+                .onFailure { throwable ->
+                    val messageResId = if (throwable is ClientRequestException) {
+                        R.string.product_changing_count_in_cart_count_not_enough_product_error
+                    } else {
+                        R.string.product_changing_count_in_cart_error
+                    }
+                    val message = Text.Resource(messageResId)
+                    emitSideEffect(SideEffect.ShowToast(message))
+                }
+            loadingCountItem.value = null
+        }
+    }
+
+    sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class Navigate(val action: ProductCountSelectorScreenAction) : SideEffect
+
+        data class ShowToast(val message: Text) : SideEffect
+    }
 
     @Immutable
     data class CountItem(

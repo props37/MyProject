@@ -87,6 +87,8 @@
     <string name="product_adding_to_cart_completed">Товар добавлен в корзину</string>
     <string name="product_adding_to_cart_error">Не удалось добавить товар в корзину</string>
     <string name="product_removing_from_cart_error">Не удалось удалить товар из корзины</string>
+    <string name="product_changing_count_in_cart_error">Не удалось изменить количество товара</string>
+    <string name="product_changing_count_in_cart_count_not_enough_product_error">Недостаточно товара</string>
     <string name="go_to_catalog">В каталог</string>
     <string name="price_in_rubles_for_one_decimal">%1$d₽ / шт</string>
     <string name="price_in_rubles_for_one_string">%1$s₽ / шт</string>
