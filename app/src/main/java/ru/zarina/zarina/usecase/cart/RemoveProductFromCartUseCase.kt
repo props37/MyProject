@@ -20,6 +20,7 @@ class RemoveProductFromCartUseCase @Inject constructor(
     override suspend fun execute(params: Params) {
         val productId = params.productId
         val barcode = params.barcode
+        Timber.v("Remove product $productId from the cart")
         val cartProductCount = cartRepository.removeProductFromCart(productId, barcode)
         cartRepository.setCartTotalProductCount(cartProductCount.value)
         if (!cartRepository.areCartProductIdsFetched.value) {

@@ -21,6 +21,7 @@ class AddProductToCartUseCase @Inject constructor(
         val productId = params.productId
         val barcode = params.barcode
         val count = params.count
+        Timber.v("Add product $productId to the cart")
         val cartProductCount = cartRepository.addProductToCart(productId, barcode, count)
         cartRepository.setCartTotalProductCount(cartProductCount.value)
         if (!cartRepository.areCartProductIdsFetched.value) {
