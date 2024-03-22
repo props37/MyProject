@@ -490,8 +490,11 @@ object CartScreenComponents {
                     height = product.height,
                     color = product.color,
                     count = product.count,
-                    countStyle = ProductOrderCardCountStyle.Selector,
-                    onCountSelectorClicked = { productCardActions.onCountClicked(product) },
+                    countStyle = remember(productCardActions.onCountClicked) {
+                        ProductOrderCardCountStyle.Selector(
+                            onClick = { productCardActions.onCountClicked(product) },
+                        )
+                    },
                     price = product.price,
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                     modifier = Modifier.fillMaxWidth(),

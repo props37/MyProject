@@ -61,7 +61,6 @@ fun ProductOrderCard(
     modifier: Modifier = Modifier,
     count: Int? = null,
     countStyle: ProductOrderCardCountStyle = ProductOrderCardCountStyle.None,
-    onCountSelectorClicked: (() -> Unit)? = null,
     price: Price? = null,
     showOriginalPrice: Boolean = true,
     backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
@@ -116,9 +115,9 @@ fun ProductOrderCard(
             Spacer(modifier = Modifier.weight(1f))
 
             Row(verticalAlignment = Alignment.Bottom) {
-                if (count != null && countStyle == ProductOrderCardCountStyle.Selector) {
+                if (count != null && countStyle is ProductOrderCardCountStyle.Selector) {
                     ZarinaButtonSelector(
-                        onClick = { onCountSelectorClicked?.invoke() },
+                        onClick = countStyle.onClick,
                         size = ZarinaButtonSelectorSize.Medium,
                     ) {
                         Text(text = count.toString())
@@ -338,7 +337,7 @@ private fun PreviewSelectorCount() {
                 height = "170",
                 color = remember { FakeDataGenerator.getProductColor() },
                 count = 3,
-                countStyle = ProductOrderCardCountStyle.Selector,
+                countStyle = remember { ProductOrderCardCountStyle.Selector(onClick = {}) },
                 price = remember { FakeDataGenerator.getPrice() },
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -346,7 +345,17 @@ private fun PreviewSelectorCount() {
     }
 }
 
-enum class ProductOrderCardCountStyle { None, Info, Selector }
+sealed class ProductOrderCardCountStyle {
+    data object None : ProductOrderCardCountStyle()
+
+    data object Info : ProductOrderCardCountStyle()
+
+    data class Selector(
+        val isEnabled: Boolean = true,
+        val isEditable: Boolean = true,
+        val onClick: () -> Unit,
+    ) : ProductOrderCardCountStyle()
+}
 
 private val ImageHeight: Dp get() = 128.dp
 private const val ImageAspectRatio = 0.72f
