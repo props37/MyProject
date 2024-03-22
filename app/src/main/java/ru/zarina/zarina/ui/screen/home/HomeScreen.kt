@@ -13,11 +13,19 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshDefaults
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -31,6 +39,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.domain.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.behavior.systembars.ForcedSystemBarsBehavior
+import ru.zarina.zarina.ui.common.component.pullrefresh.ZarinaPullRefreshIndicator
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -55,6 +64,7 @@ fun HomeScreen(
     val genderTabs by viewModel.genderTabs.collectAsStateWithLifecycle()
     val currentGenderTab by viewModel.currentGenderTab.collectAsStateWithLifecycle()
     val contentState by viewModel.contentState.collectAsStateWithLifecycle()
+    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     ScreenContent(
         genderTabs = genderTabs,
@@ -62,13 +72,15 @@ fun HomeScreen(
         onGenderTabChanged = viewModel::onGenderTabChanged,
         contentState = contentState,
         onBannerClicked = viewModel::onBannerClicked,
+        isRefreshing = isRefreshing,
+        onRefreshTriggered = viewModel::onRefreshTriggered,
         onContentErrorRefreshClicked = viewModel::onContentErrorRefreshClicked,
         sideEffects = viewModel.sideEffects,
         navigateForward = navigateForward,
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 private fun ScreenContent(
     genderTabs: ImmutableList<GenderTab>,
@@ -76,6 +88,8 @@ private fun ScreenContent(
     onGenderTabChanged: (GenderTab) -> Unit,
     contentState: ContentState,
     onBannerClicked: (HomeContent.Banner) -> Unit,
+    isRefreshing: Boolean,
+    onRefreshTriggered: () -> Unit,
     onContentErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigateForward: (HomeScreenAction) -> Unit,
@@ -103,9 +117,28 @@ private fun ScreenContent(
                     Box(modifier = Modifier.fillMaxSize()) {
                         ForcedSystemBarsBehavior(isStatusBarContentLight = true)
 
+                        val density = LocalDensity.current
+                        var pullRefreshOffset by remember {
+                            mutableStateOf(PullRefreshDefaults.RefreshThreshold)
+                        }
+
+                        val pullRefreshState = rememberPullRefreshState(
+                            refreshing = isRefreshing,
+                            onRefresh = onRefreshTriggered,
+                            refreshingOffset = pullRefreshOffset,
+                        )
+
                         val pagerState = rememberPagerState(
                             initialPage = remember { genderTabs.indexOf(currentGenderTab) },
                             pageCount = { genderTabs.size },
+                        )
+
+                        ZarinaPullRefreshIndicator(
+                            refreshing = isRefreshing,
+                            state = pullRefreshState,
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .zIndex(2f),
                         )
 
                         PagerTabRowIntegration(
@@ -115,6 +148,7 @@ private fun ScreenContent(
                             onCurrentTabChanged = onGenderTabChanged,
                         )
 
+                        val topBarBottomPadding = 80.dp
                         TopBar(
                             genders = genderTabs,
                             pagerState = pagerState,
@@ -124,8 +158,13 @@ private fun ScreenContent(
                                 .align(Alignment.TopCenter)
                                 .fillMaxWidth()
                                 .background(rememberTopBarScrimBrush())
+                                .onSizeChanged {
+                                    with(density) {
+                                        pullRefreshOffset = it.height.toDp() - topBarBottomPadding
+                                    }
+                                }
                                 .statusBarsPadding()
-                                .padding(top = 12.dp, bottom = 80.dp),
+                                .padding(top = 12.dp, bottom = topBarBottomPadding),
                         )
 
                         GenderContentPager(
@@ -135,7 +174,8 @@ private fun ScreenContent(
                             onBannerClicked = onBannerClicked,
                             modifier = Modifier
                                 .fillMaxSize()
-                                .bottomNavBarPadding(),
+                                .bottomNavBarPadding()
+                                .pullRefresh(pullRefreshState),
                         )
                     }
                 }
@@ -175,6 +215,8 @@ private fun Preview(
             onGenderTabChanged = {},
             contentState = contentState,
             onBannerClicked = {},
+            isRefreshing = false,
+            onRefreshTriggered = {},
             onContentErrorRefreshClicked = {},
             sideEffects = remember { emptyFlow() },
             navigateForward = {},

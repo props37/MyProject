@@ -35,6 +35,7 @@ import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.usecase.user.SetUserContentGenderUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
+import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,14 +61,13 @@ class HomeViewModel @Inject constructor(
     )
 
     private val contentFetchRequests = Channel<Unit>(Channel.CONFLATED)
-
-    private val isFetchingContent = MutableStateFlow(false)
+    private val contentFetchingType = MutableStateFlow(ContentFetchingType.NONE)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val contentResult: StateFlow<Result<HomeContent>?> = contentFetchRequests
         .receiveAsFlow()
         .flatMapLatest { interactor.getHomeContentFlow() }
-        .onEach { isFetchingContent.value = false }
+        .onEach { contentFetchingType.value = ContentFetchingType.NONE }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
@@ -75,10 +75,10 @@ class HomeViewModel @Inject constructor(
         )
 
     val contentState: StateFlow<ContentState> = combine(
-        isFetchingContent,
+        contentFetchingType,
         contentResult,
-    ) { isFetchingContent, contentResult ->
-        if (isFetchingContent || contentResult == null) {
+    ) { contentFetchingType, contentResult ->
+        if (contentFetchingType == ContentFetchingType.LOADING || contentResult == null) {
             ContentState.Loading
         } else {
             contentResult.fold(
@@ -97,8 +97,13 @@ class HomeViewModel @Inject constructor(
         initialValue = ContentState.Loading,
     )
 
+    val isRefreshing: StateFlow<Boolean> = contentFetchingType.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { it == ContentFetchingType.REFRESHING }
+
     init {
-        contentFetchRequests.trySend(Unit)
+        fetchContent(ContentFetchingType.LOADING)
     }
 
     fun onGenderTabChanged(tab: GenderTab) {
@@ -116,9 +121,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun onRefreshTriggered() {
+        fetchContent(ContentFetchingType.REFRESHING)
+    }
+
     fun onContentErrorRefreshClicked() {
+        fetchContent(ContentFetchingType.LOADING)
+    }
+
+    private fun fetchContent(type: ContentFetchingType) {
         contentFetchRequests.trySend(Unit)
-        isFetchingContent.value = true
+        contentFetchingType.value = type
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -153,6 +166,8 @@ class HomeViewModel @Inject constructor(
         @Immutable
         data class Error(val errorState: ErrorState) : ContentState()
     }
+
+    private enum class ContentFetchingType { NONE, LOADING, REFRESHING }
 
     companion object {
         private const val KEY_CURRENT_GENDER_TAB = "current_gender_tab"
