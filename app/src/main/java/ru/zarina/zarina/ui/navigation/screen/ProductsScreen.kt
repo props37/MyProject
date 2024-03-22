@@ -37,8 +37,15 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
             viewModel = hiltViewModel { factory: ProductsViewModel.Factory ->
                 factory.create(it.savedStateHandle)
             },
-            navigateForward = { action ->
+            navigate = { action ->
                 when (action) {
+                    ProductsScreenAction.ScreenClosed -> {
+                        navController.popBackStack(
+                            route = UnscopedDestinations.Products.routeSchema,
+                            inclusive = true,
+                        )
+                    }
+
                     is ProductsScreenAction.FiltersClicked -> {
                         val args = UnscopedDestinations.Filters.Args(
                             categoryId = action.categoryId,
@@ -89,12 +96,6 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                         }
                     }
                 }
-            },
-            navigateBackward = {
-                navController.popBackStack(
-                    route = UnscopedDestinations.Products.routeSchema,
-                    inclusive = true,
-                )
             },
         )
     }

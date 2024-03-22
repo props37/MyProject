@@ -41,8 +41,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun ProductsScreen(
-    navigateForward: (ProductsScreenAction) -> Unit,
-    navigateBackward: () -> Unit,
+    navigate: (ProductsScreenAction) -> Unit,
     viewModel: ProductsViewModel = hiltViewModel(),
 ) {
     val category by viewModel.category.collectAsStateWithLifecycle()
@@ -81,8 +80,7 @@ fun ProductsScreen(
         onRefreshProducts = viewModel::onRefreshProducts,
         onProductsErrorRefreshClicked = viewModel::onProductsErrorRefreshClicked,
         sideEffects = viewModel.sideEffects,
-        navigateForward = navigateForward,
-        navigateBackward = navigateBackward,
+        navigate = navigate,
     )
 }
 
@@ -99,13 +97,11 @@ private fun ScreenContent(
     onRefreshProducts: () -> Unit,
     onProductsErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<ProductsViewModel.SideEffect>,
-    navigateForward: (ProductsScreenAction) -> Unit,
-    navigateBackward: () -> Unit,
+    navigate: (ProductsScreenAction) -> Unit,
 ) {
     ProductsScreenBehavior(
         sideEffects = sideEffects,
-        navigateForward = navigateForward,
-        navigateBackward = navigateBackward,
+        navigate = navigate,
     )
 
     Column(
@@ -164,8 +160,7 @@ private fun Preview() {
             onRefreshProducts = {},
             onProductsErrorRefreshClicked = {},
             sideEffects = remember { emptyFlow() },
-            navigateForward = {},
-            navigateBackward = {},
+            navigate = {},
         )
     }
 }

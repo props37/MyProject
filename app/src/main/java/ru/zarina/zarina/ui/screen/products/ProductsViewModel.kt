@@ -200,7 +200,8 @@ class ProductsViewModel @AssistedInject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            emitSideEffect(SideEffect.NavigateBackward)
+            val action = ProductsScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -225,7 +226,7 @@ class ProductsViewModel @AssistedInject constructor(
                 categoryId = categoryId.value,
                 filters = combinedFilters,
             )
-            emitSideEffect(SideEffect.NavigateForward(action))
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -235,7 +236,7 @@ class ProductsViewModel @AssistedInject constructor(
         } else {
             navigationThrottler.throttle {
                 val action = ProductsScreenAction.TagClicked(tag = tag, filters = filters.value)
-                emitSideEffect(SideEffect.NavigateForward(action))
+                emitSideEffect(SideEffect.Navigate(action))
                 _selectedTagId.value = null
             }
         }
@@ -273,7 +274,7 @@ class ProductsViewModel @AssistedInject constructor(
         if (product.offers.size > 1) {
             navigationThrottler.throttle {
                 val action = ProductsScreenAction.AddProductToCartClicked(product)
-                emitSideEffect(SideEffect.NavigateForward(action))
+                emitSideEffect(SideEffect.Navigate(action))
             }
         } else {
             val offer = product.offers.firstOrNull() ?: run {
@@ -287,7 +288,7 @@ class ProductsViewModel @AssistedInject constructor(
     fun onSubscribeToProductClicked(product: Product) {
         navigationThrottler.throttle {
             val action = ProductsScreenAction.SubscribeToProductClicked(product)
-            emitSideEffect(SideEffect.NavigateForward(action))
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -353,9 +354,7 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class NavigateForward(val action: ProductsScreenAction) : SideEffect
-
-        data object NavigateBackward : SideEffect
+        data class Navigate(val action: ProductsScreenAction) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
 
