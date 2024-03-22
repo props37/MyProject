@@ -30,3 +30,10 @@ data class CartProduct(
         val pickUpFromShop: Int,
     )
 }
+
+fun CartProduct.getAvailableCountForDeliveryType(deliveryType: DeliveryType): Int {
+    return when (deliveryType) {
+        DeliveryType.DELIVERY -> availableCount.delivery
+        DeliveryType.PICK_UP_FROM_SHOP -> availableCount.pickUpFromShop
+    }
+}

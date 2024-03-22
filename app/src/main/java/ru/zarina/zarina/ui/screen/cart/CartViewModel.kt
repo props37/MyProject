@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -27,9 +28,11 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.domain.cart.Cart
 import ru.zarina.zarina.domain.cart.CartProduct
 import ru.zarina.zarina.domain.cart.CartSize
 import ru.zarina.zarina.domain.cart.DeliveryType
+import ru.zarina.zarina.domain.cart.getAvailableCountForDeliveryType
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.base.ErrorState
 import ru.zarina.zarina.ui.base.from
@@ -47,7 +50,6 @@ import ru.zarina.zarina.usecase.user.SetUserCityUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
-import ru.zarina.zarina.domain.cart.Cart as DomainCart
 
 @HiltViewModel(assistedFactory = CartViewModel.Factory::class)
 class CartViewModel @AssistedInject constructor(
@@ -97,7 +99,7 @@ class CartViewModel @AssistedInject constructor(
 
     private val cartFetchRequests = Channel<Unit>(Channel.CONFLATED)
 
-    val deliveryTypeToCartState: StateFlow<ImmutableMap<DeliveryType, StateFlow<CartState>>> =
+    private val deliveryTypeToCartResult: StateFlow<Map<DeliveryType, StateFlow<Result<Cart>?>>> =
         combine(
             cartFetchRequests.receiveAsFlow(),
             deliveryTypes,
@@ -106,28 +108,53 @@ class CartViewModel @AssistedInject constructor(
                 .associateWith { type ->
                     val params = GetCartFlowUseCase.Params(type)
                     interactor.getCartFlow(params)
-                        .map { result ->
-                            result.fold(
-                                onSuccess = {
-                                    if (it.products.isNotEmpty()) {
-                                        CartState.Cart(it)
-                                    } else {
-                                        CartState.EmptyCart
-                                    }
-                                },
-                                onFailure = { throwable ->
-                                    val errorState = ErrorState
-                                        .from(throwable)
-                                        .copy(buttonText = Text.Resource(R.string.go_to_catalog))
-                                    CartState.Error(errorState)
-                                },
-                            )
-                        }
                         .stateIn(
                             scope = viewModelScope,
-                            started = SharingStarted.WhileUiSubscribed,
-                            initialValue = CartState.InitialLoading,
+                            started = SharingStarted.WhileSubscribed(),
+                            initialValue = null,
                         )
+                }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = mapOf(),
+        )
+
+    val deliveryTypeToCartState: StateFlow<ImmutableMap<DeliveryType, StateFlow<CartState>>> =
+        combine(
+            flowOf(Unit),
+            deliveryTypeToCartResult,
+        ) { _, deliveryTypeToCartResult ->
+            deliveryTypeToCartResult
+                .mapValues { (deliveryType, cartResult) ->
+                    cartResult.mapState(
+                        scope = viewModelScope,
+                        started = SharingStarted.WhileUiSubscribed,
+                    ) { result ->
+                        result?.fold(
+                            onSuccess = { cart ->
+                                if (cart.products.isNotEmpty()) {
+                                    val productItems = cart.products
+                                        .map { product ->
+                                            val availableCount =
+                                                product.getAvailableCountForDeliveryType(deliveryType)
+                                            CartProductItem.Product(
+                                                product = product,
+                                                availableCount = availableCount,
+                                            )
+                                        }
+                                        .toImmutableList()
+                                    CartState.Cart(productItems)
+                                } else {
+                                    CartState.EmptyCart
+                                }
+                            },
+                            onFailure = { throwable ->
+                                val errorState = ErrorState.from(throwable)
+                                CartState.Error(errorState)
+                            },
+                        ) ?: CartState.InitialLoading
+                    }
                 }
                 .toImmutableMap()
         }
@@ -154,7 +181,6 @@ class CartViewModel @AssistedInject constructor(
         viewModelScope.launch {
             interactor.clearCart()
                 .onSuccess {
-                    // TODO: [High] Test
                     cartFetchRequests.trySend(Unit)
                 }
                 .onFailure {
@@ -278,12 +304,22 @@ class CartViewModel @AssistedInject constructor(
         data object InitialLoading : CartState()
 
         @Immutable
-        data class Cart(val cart: DomainCart) : CartState()
+        data class Cart(
+            val productItems: ImmutableList<CartProductItem>,
+        ) : CartState()
 
         data object EmptyCart : CartState()
 
         @Immutable
         data class Error(val state: ErrorState) : CartState()
+    }
+
+    @Stable
+    sealed class CartProductItem {
+        data class Product(
+            val product: CartProduct,
+            val availableCount: Int,
+        ) : CartProductItem()
     }
 
     @AssistedFactory

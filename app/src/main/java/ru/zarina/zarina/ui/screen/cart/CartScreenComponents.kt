@@ -65,7 +65,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.coroutines.flow.StateFlow
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.cart.Cart
 import ru.zarina.zarina.domain.cart.CartProduct
 import ru.zarina.zarina.domain.cart.CartSize
 import ru.zarina.zarina.domain.cart.DeliveryType
@@ -342,7 +341,7 @@ object CartScreenComponents {
                 when (state) {
                     is CartState.Cart -> {
                         Cart(
-                            cart = state.cart,
+                            cartState = state,
                             productCardActions = productCardActions,
                             modifier = Modifier.fillMaxSize(),
                         )
@@ -397,7 +396,7 @@ object CartScreenComponents {
 
     @Composable
     private fun Cart(
-        cart: Cart,
+        cartState: CartState.Cart,
         productCardActions: ProductCardActions,
         modifier: Modifier = Modifier,
     ) {
@@ -406,18 +405,26 @@ object CartScreenComponents {
         LazyColumn(modifier = modifier) {
             // TODO: [High] Implement contentType
             itemsIndexed(
-                items = cart.products,
-                key = { _, product -> product.id.value },
-            ) { index, product ->
-                SwipeableProductOrderCard(
-                    product = product,
-                    productCardActions = productCardActions,
-                    isDividerVisible = index < cart.products.lastIndex,
-                    onDragStarted = { lastDraggedProductId = it },
-                    lastDraggedProductId = lastDraggedProductId,
-                    onResetSwipeState = { lastDraggedProductId = null },
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                items = cartState.productItems,
+                key = { _, item ->
+                    when (item) {
+                        is CartViewModel.CartProductItem.Product -> item.product.id.value
+                    }
+                },
+            ) { index, item ->
+                when (item) {
+                    is CartViewModel.CartProductItem.Product -> {
+                        SwipeableProductOrderCard(
+                            productItem = item,
+                            productCardActions = productCardActions,
+                            isDividerVisible = index < cartState.productItems.lastIndex,
+                            onDragStarted = { lastDraggedProductId = it },
+                            lastDraggedProductId = lastDraggedProductId,
+                            onResetSwipeState = { lastDraggedProductId = null },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                }
             }
         }
     }
@@ -425,7 +432,7 @@ object CartScreenComponents {
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun SwipeableProductOrderCard(
-        product: CartProduct,
+        productItem: CartViewModel.CartProductItem.Product,
         productCardActions: ProductCardActions,
         isDividerVisible: Boolean,
         onDragStarted: (CartProduct.Id) -> Unit,
@@ -433,6 +440,8 @@ object CartScreenComponents {
         onResetSwipeState: (CartProduct) -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        val product = productItem.product
+
         val density = LocalDensity.current
         val anchors = remember(density) {
             with(density) {
@@ -482,6 +491,16 @@ object CartScreenComponents {
                         interactionSource = anchoredDraggableInteractionSource,
                     ),
             ) {
+                val countStyle = remember(
+                    productItem.availableCount,
+                    productCardActions.onCountClicked,
+                ) {
+                    ProductOrderCardCountStyle.Selector(
+                        isEditable = productItem.availableCount > 1,
+                        onClick = { productCardActions.onCountClicked(product) },
+                    )
+                }
+
                 ProductOrderCard(
                     name = product.name,
                     imageUrl = product.imageUrl,
@@ -490,11 +509,7 @@ object CartScreenComponents {
                     height = product.height,
                     color = product.color,
                     count = product.count,
-                    countStyle = remember(productCardActions.onCountClicked) {
-                        ProductOrderCardCountStyle.Selector(
-                            onClick = { productCardActions.onCountClicked(product) },
-                        )
-                    },
+                    countStyle = countStyle,
                     price = product.price,
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                     modifier = Modifier.fillMaxWidth(),

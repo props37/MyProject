@@ -119,6 +119,8 @@ fun ProductOrderCard(
                     ZarinaButtonSelector(
                         onClick = countStyle.onClick,
                         size = ZarinaButtonSelectorSize.Medium,
+                        isEnabled = countStyle.isEnabled,
+                        isEditable = countStyle.isEditable,
                     ) {
                         Text(text = count.toString())
                     }
