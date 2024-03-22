@@ -70,7 +70,7 @@ import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.ui.base.ErrorState
 import ru.zarina.zarina.ui.base.from
 import ru.zarina.zarina.ui.common.component.ProductCard
-import ru.zarina.zarina.ui.common.component.ProductCardPlaceholder
+import ru.zarina.zarina.ui.common.component.ProductCardSkeleton
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
@@ -355,7 +355,7 @@ object ProductsScreenComponents {
                                 span = { index -> getProductGridItemSpan(index) },
                                 contentType = { ProductGridContentTypeProductCardPlaceholder },
                             ) {
-                                ProductCardPlaceholder(
+                                ProductCardSkeleton(
                                     shimmer = placeholderShimmer,
                                     modifier = itemModifier,
                                 )
@@ -424,7 +424,7 @@ object ProductsScreenComponents {
                             modifier = itemModifier,
                         )
                     } else {
-                        ProductCardPlaceholder(
+                        ProductCardSkeleton(
                             shimmer = placeholderShimmer,
                             modifier = itemModifier,
                         )

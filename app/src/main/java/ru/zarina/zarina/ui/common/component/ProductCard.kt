@@ -204,7 +204,7 @@ fun ProductCard(
 }
 
 @Composable
-fun ProductCardPlaceholder(
+fun ProductCardSkeleton(
     modifier: Modifier = Modifier,
     shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
 ) {
@@ -400,7 +400,7 @@ private fun ProductCardPreview(
 @Composable
 private fun ProductCardPreview() {
     ZarinaPreview {
-        ProductCardPlaceholder(modifier = Modifier.background(Color.White))
+        ProductCardSkeleton(modifier = Modifier.background(Color.White))
     }
 }
 
