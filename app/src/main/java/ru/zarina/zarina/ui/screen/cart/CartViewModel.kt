@@ -307,7 +307,9 @@ class CartViewModel @AssistedInject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CartScreenAction) : SideEffect
+
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
+
         data class ShowToast(val message: Text) : SideEffect
     }
 
