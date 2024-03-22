@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.common.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -31,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.valentinilk.shimmer.Shimmer
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.product.Price
@@ -38,6 +42,7 @@ import ru.zarina.zarina.domain.product.ProductColor
 import ru.zarina.zarina.domain.product.currentPrice
 import ru.zarina.zarina.ui.common.component.selector.ZarinaButtonSelector
 import ru.zarina.zarina.ui.common.component.selector.ZarinaButtonSelectorSize
+import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -135,6 +140,86 @@ fun ProductOrderCard(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ProductOrderCardSkeleton(
+    modifier: Modifier = Modifier,
+    shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
+    contentPadding: PaddingValues = PaddingValues(),
+) {
+    Row(
+        modifier = modifier
+            .height(IntrinsicSize.Min)
+            .padding(contentPadding),
+    ) {
+        ZarinaSkeleton(
+            shimmer = shimmer,
+            shape = RectangleShape,
+            modifier = Modifier
+                .height(ImageHeight)
+                .aspectRatio(ImageAspectRatio),
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            val height = 10.dp
+
+            ZarinaSkeleton(
+                shimmer = shimmer,
+                modifier = Modifier
+                    .fillMaxWidth(fraction = 0.5f)
+                    .height(height),
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            ZarinaSkeleton(
+                shimmer = shimmer,
+                modifier = Modifier
+                    .fillMaxWidth(fraction = 0.7f)
+                    .height(height),
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            ZarinaSkeleton(
+                shimmer = shimmer,
+                modifier = Modifier
+                    .fillMaxWidth(fraction = 0.35f)
+                    .height(height),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.weight(1f))
+
+            ZarinaSkeleton(
+                shimmer = shimmer,
+                modifier = Modifier
+                    .width(56.dp)
+                    .height(24.dp),
+            )
+        }
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column(
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.End,
+            modifier = Modifier.fillMaxHeight(),
+        ) {
+            ZarinaSkeleton(
+                shimmer = shimmer,
+                modifier = Modifier
+                    .width(60.dp)
+                    .height(12.dp),
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            ZarinaSkeleton(
+                shimmer = shimmer,
+                modifier = Modifier
+                    .width(48.dp)
+                    .height(14.dp),
+            )
         }
     }
 }
@@ -343,6 +428,20 @@ private fun PreviewSelectorCount() {
                 price = remember { FakeDataGenerator.getPrice() },
                 modifier = Modifier.fillMaxWidth(),
             )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewSkeleton() {
+    ZarinaPreview {
+        Box(
+            modifier = Modifier
+                .background(Color.White)
+                .padding(16.dp),
+        ) {
+            ProductOrderCardSkeleton(modifier = Modifier.fillMaxWidth())
         }
     }
 }

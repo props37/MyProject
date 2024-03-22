@@ -72,6 +72,7 @@ import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.base.rememberErrorState
 import ru.zarina.zarina.ui.common.component.ProductOrderCard
 import ru.zarina.zarina.ui.common.component.ProductOrderCardCountStyle
+import ru.zarina.zarina.ui.common.component.ProductOrderCardSkeleton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
@@ -331,7 +332,7 @@ object CartScreenComponents {
             val deliveryType = deliveryTypes[page]
             val cartState = deliveryTypeToCartState[deliveryType]
                 ?.collectAsStateWithLifecycle()?.value
-                ?: CartState.InitialLoading
+                ?: CartState.Skeleton
 
             Crossfade(
                 targetState = cartState,
@@ -347,7 +348,9 @@ object CartScreenComponents {
                         )
                     }
 
-                    CartState.InitialLoading -> Unit // TODO: [High] Implement
+                    CartState.Skeleton -> {
+                        CartSkeleton()
+                    }
 
                     CartState.EmptyCart -> {
                         val iconResId: Int
@@ -424,6 +427,31 @@ object CartScreenComponents {
                             modifier = Modifier.fillMaxWidth(),
                         )
                     }
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun CartSkeleton(
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+            val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
+
+            repeat(CartProductSkeletonCount) { index ->
+                ProductOrderCardSkeleton(
+                    shimmer = shimmer,
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
+                )
+
+                if (index < CartProductSkeletonCount - 1) {
+                    Divider(
+                        color = UiKitTheme.colors.border.general.default,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    )
                 }
             }
         }
@@ -636,7 +664,7 @@ object CartScreenComponents {
         is CartState.Cart -> DeliveryTypePagerContentKeyCart
         CartState.EmptyCart -> cartState
         is CartState.Error -> cartState
-        CartState.InitialLoading -> cartState
+        CartState.Skeleton -> cartState
     }
 
     @Stable
@@ -665,6 +693,8 @@ object CartScreenComponents {
             return result
         }
     }
+
+    private const val CartProductSkeletonCount = 6
 
     private enum class ProductOrderCardSwipeableState { Default, SwipedLeft }
 

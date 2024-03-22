@@ -122,7 +122,7 @@ class CartViewModel @AssistedInject constructor(
             scope = viewModelScope,
             started = SharingStarted.WhileUiSubscribed,
             initialValue = deliveryTypes.value
-                .associateWith { MutableStateFlow(CartState.InitialLoading) }
+                .associateWith { MutableStateFlow(CartState.Skeleton) }
                 .toImmutableMap(),
         )
 
@@ -299,7 +299,7 @@ class CartViewModel @AssistedInject constructor(
                             val errorState = ErrorState.from(throwable)
                             CartState.Error(errorState)
                         },
-                    ) ?: CartState.InitialLoading
+                    ) ?: CartState.Skeleton
                 }
             }
             .toImmutableMap()
@@ -313,7 +313,7 @@ class CartViewModel @AssistedInject constructor(
 
     @Stable
     sealed class CartState {
-        data object InitialLoading : CartState()
+        data object Skeleton : CartState()
 
         @Immutable
         data class Cart(
