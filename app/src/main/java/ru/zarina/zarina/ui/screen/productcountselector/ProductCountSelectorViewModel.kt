@@ -26,6 +26,7 @@ import ru.zarina.zarina.domain.common.Barcode
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.zarina.zarina.ui.navigation.destination.graph.CartGraph
 import ru.zarina.zarina.ui.screen.productcountselector.ProductCountSelectorViewModel.SideEffect
 import ru.zarina.zarina.usecase.cart.ChangeProductCountInCartUseCase
@@ -149,14 +150,21 @@ class ProductCountSelectorViewModel @Inject constructor(
                     emitSideEffect(SideEffect.Navigate(action))
                 }
                 .onFailure { throwable ->
-                    if (throwable is CancellationException) return@onFailure
-                    val messageResId = if (throwable is ClientRequestException) {
-                        R.string.product_changing_count_in_cart_count_not_enough_product_error
-                    } else {
-                        R.string.product_changing_count_in_cart_error
+                    when (throwable) {
+                        is CancellationException -> return@onFailure
+                        is ClientRequestException -> {
+                            val messageText =
+                                Text.Resource(R.string.product_changing_count_in_cart_count_not_enough_product_error)
+                            val message = ZarinaToastMessage(messageText)
+                            emitSideEffect(SideEffect.ShowZarinaToast(message))
+                        }
+
+                        else -> {
+                            val message =
+                                Text.Resource(R.string.product_changing_count_in_cart_error)
+                            emitSideEffect(SideEffect.ShowToast(message))
+                        }
                     }
-                    val message = Text.Resource(messageResId)
-                    emitSideEffect(SideEffect.ShowToast(message))
                 }
             ensureActive()
             loadingCountItem.value = null
@@ -165,6 +173,8 @@ class ProductCountSelectorViewModel @Inject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: ProductCountSelectorScreenAction) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
 
         data class ShowToast(val message: Text) : SideEffect
     }
