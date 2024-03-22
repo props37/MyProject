@@ -22,11 +22,13 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.common.Barcode
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
+import ru.zarina.zarina.ui.model.cart.DeliveryTypeParcelable
 import ru.zarina.zarina.ui.navigation.destination.graph.CartGraph
 import ru.zarina.zarina.ui.screen.productcountselector.ProductCountSelectorViewModel.SideEffect
 import ru.zarina.zarina.usecase.cart.ChangeProductCountInCartUseCase
@@ -95,6 +97,19 @@ class ProductCountSelectorViewModel @Inject constructor(
             count.coerceAtMost(AVAILABLE_COUNT_MAX_VALUE)
         }
 
+    private val deliveryType: StateFlow<DeliveryType> = savedStateHandle
+        .getStateFlow<DeliveryTypeParcelable?>(
+            key = CartGraph.ProductCountSelector.ARG_KEY_DELIVERY_TYPE,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { parcelable ->
+            checkNotNull(parcelable) { "deliveryType is null" }
+            parcelable.toDeliveryType()
+        }
+
     private val currentCount = MutableStateFlow(initialCount.value)
 
     private val loadingCountItem = MutableStateFlow<Int?>(null)
@@ -142,6 +157,7 @@ class ProductCountSelectorViewModel @Inject constructor(
                 productId = productId.value,
                 barcode = barcode.value,
                 count = count,
+                deliveryType = deliveryType.value,
             )
             interactor.changeProductCountInCart(params)
                 .onSuccess {

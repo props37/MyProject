@@ -172,6 +172,7 @@ class CartViewModel @AssistedInject constructor(
                 barcode = product.barcode,
                 initialCount = product.count,
                 availableCount = availableCount,
+                deliveryType = currentDeliveryType.value,
             )
             emitSideEffect(SideEffect.Navigate(action))
         }

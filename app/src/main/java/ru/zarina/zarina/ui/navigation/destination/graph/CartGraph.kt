@@ -6,8 +6,10 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import kotlinx.parcelize.Parcelize
+import ru.zarina.zarina.domain.cart.DeliveryType
 import ru.zarina.zarina.domain.common.Barcode
 import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.ui.model.cart.DeliveryTypeParcelable
 import ru.zarina.zarina.ui.navigation.BaseRoute
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.RouteUtils
@@ -27,6 +29,7 @@ data object CartGraph : SimpleGraph(
         const val ARG_KEY_BARCODE = "arg_barcode"
         const val ARG_KEY_INITIAL_COUNT = "arg_initial_count"
         const val ARG_KEY_AVAILABLE_COUNT = "arg_available_count"
+        const val ARG_KEY_DELIVERY_TYPE = "arg_delivery_type"
 
         const val RESULT_KEY = "product_count_selector_result"
 
@@ -36,11 +39,12 @@ data object CartGraph : SimpleGraph(
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(
                 routeBase = routeBase,
-                optionalArgNames = arrayOf(
+                argNames = arrayOf(
                     ARG_KEY_PRODUCT_ID,
                     ARG_KEY_BARCODE,
                     ARG_KEY_INITIAL_COUNT,
                     ARG_KEY_AVAILABLE_COUNT,
+                    ARG_KEY_DELIVERY_TYPE,
                 ),
             )
 
@@ -52,6 +56,7 @@ data object CartGraph : SimpleGraph(
                     args.barcode.value,
                     args.initialCount,
                     args.availableCount,
+                    DeliveryTypeParcelable.from(args.deliveryType),
                 ),
             )
         }
@@ -62,6 +67,9 @@ data object CartGraph : SimpleGraph(
                 navArgument(ARG_KEY_BARCODE) { type = NavType.StringType },
                 navArgument(ARG_KEY_INITIAL_COUNT) { type = NavType.IntType },
                 navArgument(ARG_KEY_AVAILABLE_COUNT) { type = NavType.IntType },
+                navArgument(ARG_KEY_DELIVERY_TYPE) {
+                    type = NavType.EnumType(DeliveryTypeParcelable::class.java)
+                },
             )
 
         override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
@@ -69,6 +77,7 @@ data object CartGraph : SimpleGraph(
             putString(ARG_KEY_BARCODE, args.barcode.value)
             putInt(ARG_KEY_INITIAL_COUNT, args.initialCount)
             putInt(ARG_KEY_AVAILABLE_COUNT, args.availableCount)
+            putParcelable(ARG_KEY_DELIVERY_TYPE, DeliveryTypeParcelable.from(args.deliveryType))
         }
 
         data class Args(
@@ -76,6 +85,7 @@ data object CartGraph : SimpleGraph(
             val barcode: Barcode,
             val initialCount: Int,
             val availableCount: Int,
+            val deliveryType: DeliveryType,
         )
 
         @Parcelize

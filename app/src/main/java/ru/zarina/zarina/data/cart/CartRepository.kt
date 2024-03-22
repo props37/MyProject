@@ -54,8 +54,8 @@ class CartRepository @Inject constructor(
         return cartProductCount
     }
 
-    suspend fun changeProductCountInCart(barcode: Barcode, count: Int) {
-        remoteDataSource.changeProductCountInCart(barcode, count)
+    suspend fun changeProductCountInCart(barcode: Barcode, count: Int, deliveryType: DeliveryType) {
+        remoteDataSource.changeProductCountInCart(barcode, count, deliveryType)
     }
 
     fun setCartSize(size: CartSize) {

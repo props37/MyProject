@@ -6,12 +6,10 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
-import io.ktor.client.request.put
 import ru.zarina.zarina.data.cart.remote.api.dto.AddProductToCartRequestBody
 import ru.zarina.zarina.data.cart.remote.api.dto.CartDto
 import ru.zarina.zarina.data.cart.remote.api.dto.CartProductCountDto
 import ru.zarina.zarina.data.cart.remote.api.dto.CartProductIdsDto
-import ru.zarina.zarina.data.cart.remote.api.dto.ChangeProductCountInCartRequestBody
 import ru.zarina.zarina.data.cart.remote.api.dto.DeliveryTypeDto
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.cart.DeliveryType
@@ -46,10 +44,11 @@ class CartApi @Inject constructor(
         return httpClient.delete("/api/cart/item/${barcode.value}").body()
     }
 
-    suspend fun changeProductCountInCart(barcode: Barcode, count: Int) {
-        val body = ChangeProductCountInCartRequestBody(barcode.value, count)
-        httpClient.put("/api/cart/item") {
-            setJsonBody(body)
+    suspend fun changeProductCountInCart(barcode: Barcode, count: Int, deliveryType: DeliveryType) {
+        httpClient.post("/api/cart/item/update") {
+            parameter("barcode", barcode.value)
+            parameter("quantity", count)
+            parameter("cart_type", DeliveryTypeDto.fromDeliveryType(deliveryType).value)
         }
     }
 
