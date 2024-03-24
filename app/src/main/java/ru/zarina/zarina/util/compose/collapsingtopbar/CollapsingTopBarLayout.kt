@@ -55,12 +55,11 @@ private fun CollapsingTopBar(
 
     val heightOffsetLimit = -contentHeightPx
     SideEffect {
-        if (scrollBehavior.state.heightOffsetLimit != heightOffsetLimit.toFloat()) {
-            scrollBehavior.state.heightOffsetLimit = heightOffsetLimit.toFloat()
+        val heightOffsetLimitFloat = heightOffsetLimit.toFloat()
+        if (scrollBehavior.state.heightOffsetLimit != heightOffsetLimitFloat) {
+            scrollBehavior.state.heightOffsetLimit = heightOffsetLimitFloat
         }
     }
-
-    val heightPx = contentHeightPx + scrollBehavior.state.heightOffset
 
     Layout(
         content = content,
@@ -70,7 +69,8 @@ private fun CollapsingTopBar(
 
         contentHeightPx = placeables.maxByOrNull { it.height }?.height ?: 0
 
-        val layoutHeight = heightPx.roundToInt()
+        val heightPx = contentHeightPx + scrollBehavior.state.heightOffset
+        val layoutHeight = heightPx.roundToInt().coerceAtLeast(0)
         layout(constraints.maxWidth, layoutHeight) {
             placeables.forEach {
                 it.place(x = 0, y = layoutHeight - it.height)
