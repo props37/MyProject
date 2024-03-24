@@ -6,6 +6,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.unit.Velocity
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 
 // Source: androidx.compose.material3.ExitUntilCollapsedScrollBehavior
 
@@ -15,13 +18,17 @@ class ExitUntilCollapsedScrollBehavior(
     override val flingAnimationSpec: DecayAnimationSpec<Float>?,
     val canScroll: () -> Boolean = { true }
 ) : CollapsingTopBarScrollBehavior {
+    private var settleTopBarJob: Job? = null
+
     override val isPinned: Boolean = false
+
     override var nestedScrollConnection =
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
                 // Don't intercept if scrolling down.
                 if (!canScroll() || available.y > 0f) return Offset.Zero
 
+                settleTopBarJob?.cancel()
                 val prevHeightOffset = state.heightOffset
                 state.heightOffset += available.y
                 return if (prevHeightOffset != state.heightOffset) {
@@ -66,12 +73,17 @@ class ExitUntilCollapsedScrollBehavior(
 
             override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
                 val superConsumed = super.onPostFling(consumed, available)
-                return superConsumed + settleTopBar(
-                    state,
-                    available.y,
-                    flingAnimationSpec,
-                    snapAnimationSpec
-                )
+                val thisConsumed = coroutineScope {
+                    async {
+                        settleTopBar(
+                            state,
+                            available.y,
+                            flingAnimationSpec,
+                            snapAnimationSpec
+                        )
+                    }.also { settleTopBarJob = it }.await()
+                }
+                return superConsumed + thisConsumed
             }
         }
 }

@@ -15,6 +15,7 @@ class PinnedScrollBehavior(
     override val isPinned: Boolean = true
     override val snapAnimationSpec: AnimationSpec<Float>? = null
     override val flingAnimationSpec: DecayAnimationSpec<Float>? = null
+
     override var nestedScrollConnection =
         object : NestedScrollConnection {
             override fun onPostScroll(
