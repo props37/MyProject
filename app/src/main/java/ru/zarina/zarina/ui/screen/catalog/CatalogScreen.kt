@@ -3,12 +3,10 @@ package ru.zarina.zarina.ui.screen.catalog
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -20,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -44,6 +44,8 @@ import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderTab
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.SideEffect
 import ru.zarina.zarina.ui.screen.catalog.tooling.preview.CategoryListStatePreviewParameterProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.collapsingtopbar.CollapsingTopBarDefaults
+import ru.zarina.zarina.util.compose.collapsingtopbar.CollapsingTopBarLayout
 import ru.zarina.zarina.util.compose.pager.PagerTabRowIntegration
 
 @Composable
@@ -98,7 +100,21 @@ private fun ScreenContent(
         navigate = navigate,
     )
 
-    Column(
+    val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior()
+    CollapsingTopBarLayout(
+        topBar = {
+            SearchBar(
+                searchQuery = searchQuery,
+                onSearchQueryChanged = onSearchQueryChanged,
+                onClearClicked = onSearchBarClearClicked,
+                onCancelClicked = onSearchBarCancelClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 4.dp),
+            )
+        },
+        scrollBehavior = topBarScrollBehavior,
         modifier = Modifier
             .fillMaxSize()
             .background(UiKitTheme.colors.background.general.regular.default)
@@ -107,50 +123,45 @@ private fun ScreenContent(
                     .union(WindowInsets.displayCutout),
             )
             .imePadding()
-            .bottomNavBarPadding(WindowInsets.ime),
-    ) {
-        SearchBar(
-            searchQuery = searchQuery,
-            onSearchQueryChanged = onSearchQueryChanged,
-            onClearClicked = onSearchBarClearClicked,
-            onCancelClicked = onSearchBarCancelClicked,
+            .bottomNavBarPadding(WindowInsets.ime)
+            .clipToBounds(),
+    ) { padding ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-        )
+                .padding(padding)
+                .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
+        ) {
+            val pagerState = rememberPagerState(
+                initialPage = remember { genderTabs.indexOf(currentGenderTab) },
+                pageCount = { genderTabs.size },
+            )
 
-        Spacer(modifier = Modifier.height(4.dp))
+            PagerTabRowIntegration(
+                pagerState = pagerState,
+                tabs = genderTabs,
+                currentTab = currentGenderTab,
+                onCurrentTabChanged = onGenderTabChanged,
+            )
 
-        val pagerState = rememberPagerState(
-            initialPage = remember { genderTabs.indexOf(currentGenderTab) },
-            pageCount = { genderTabs.size },
-        )
+            GenderPicker(
+                genders = genderTabs,
+                pagerState = pagerState,
+                onGenderСhanged = onGenderTabChanged,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
 
-        PagerTabRowIntegration(
-            pagerState = pagerState,
-            tabs = genderTabs,
-            currentTab = currentGenderTab,
-            onCurrentTabChanged = onGenderTabChanged,
-        )
-
-        GenderPicker(
-            genders = genderTabs,
-            pagerState = pagerState,
-            onGenderСhanged = onGenderTabChanged,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-        )
-
-        GenderCategoryPager(
-            genders = genderTabs,
-            pagerState = pagerState,
-            categoryListState = categoryListState,
-            categoryListItemsState = categoryListItemsState,
-            onCategoryListItemClicked = onCategoryListItemClicked,
-            onCategoryListErrorRefreshClicked = onCategoryListErrorRefreshClicked,
-            modifier = Modifier.fillMaxSize(),
-        )
+            GenderCategoryPager(
+                genders = genderTabs,
+                pagerState = pagerState,
+                categoryListState = categoryListState,
+                categoryListItemsState = categoryListItemsState,
+                onCategoryListItemClicked = onCategoryListItemClicked,
+                onCategoryListErrorRefreshClicked = onCategoryListErrorRefreshClicked,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
     }
 }
 
