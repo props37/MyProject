@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -16,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -38,6 +41,8 @@ import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBarActions
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.TagListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.collapsingtopbar.CollapsingTopBarDefaults
+import ru.zarina.zarina.util.compose.collapsingtopbar.CollapsingTopBarLayout
 
 @Composable
 fun ProductsScreen(
@@ -122,19 +127,29 @@ private fun ScreenContent(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        Tags(
-            state = tagListState,
-            selectedTagId = selectedTagId,
-            onTagClicked = onTagClicked,
-        )
-
-        Products(
-            productPagingDataFlow = productPagingDataFlow,
-            productCardActions = productCardActions,
-            onRefreshProducts = onRefreshProducts,
-            onProductsErrorRefreshClicked = onProductsErrorRefreshClicked,
-            modifier = Modifier.fillMaxSize(),
-        )
+        val tagsScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior()
+        CollapsingTopBarLayout(
+            topBar = {
+                Tags(
+                    state = tagListState,
+                    selectedTagId = selectedTagId,
+                    onTagClicked = onTagClicked,
+                )
+            },
+            scrollBehavior = tagsScrollBehavior,
+            modifier = Modifier.clipToBounds(),
+        ) { padding ->
+            Products(
+                productPagingDataFlow = productPagingDataFlow,
+                productCardActions = productCardActions,
+                onRefreshProducts = onRefreshProducts,
+                onProductsErrorRefreshClicked = onProductsErrorRefreshClicked,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .nestedScroll(tagsScrollBehavior.nestedScrollConnection),
+            )
+        }
     }
 }
 
