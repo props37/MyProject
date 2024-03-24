@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -23,6 +24,7 @@ import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -126,21 +128,23 @@ object HomeScreenComponents {
         onBannerClicked: (HomeContent.Banner) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        HorizontalPager(
-            state = pagerState,
-            beyondBoundsPageCount = 0,
-            modifier = modifier,
-        ) { page ->
-            val banners = when (genders[page]) {
-                GenderTab.WOMEN -> content.womenBanners
-                GenderTab.MEN -> content.menBanners
-            }
+        CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
+            HorizontalPager(
+                state = pagerState,
+                beyondBoundsPageCount = 0,
+                modifier = modifier,
+            ) { page ->
+                val banners = when (genders[page]) {
+                    GenderTab.WOMEN -> content.womenBanners
+                    GenderTab.MEN -> content.menBanners
+                }
 
-            BannerPager(
-                banners = banners,
-                onBannerClicked = onBannerClicked,
-                modifier = Modifier.fillMaxSize(),
-            )
+                BannerPager(
+                    banners = banners,
+                    onBannerClicked = onBannerClicked,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
         }
     }
 
