@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -37,16 +39,18 @@ fun ZarinaToast(
     backgroundColor: Color = message.style.backgroundColor,
     contentColor: Color = message.style.contentColor,
     shape: Shape = RoundedCornerShape(bottomStart = 2.dp, bottomEnd = 2.dp),
-    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     windowInsets: WindowInsets = WindowInsets.safeDrawing
         .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
 ) {
     CompositionLocalProvider(LocalContentColor provides contentColor) {
         Box(
+            contentAlignment = Alignment.CenterStart,
             modifier = modifier
-                .background(backgroundColor)
                 .clip(shape)
+                .background(backgroundColor)
                 .windowInsetsPadding(windowInsets)
+                .defaultMinSize(minHeight = 56.dp)
                 .padding(contentPadding),
         ) {
             Text(
