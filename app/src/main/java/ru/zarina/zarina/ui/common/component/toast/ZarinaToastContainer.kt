@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
@@ -52,6 +53,7 @@ fun ZarinaToastContainer(
             val exit = slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Up)
             (enter togetherWith exit).using(sizeTransform = null)
         },
+        contentAlignment = Alignment.TopCenter,
         label = "ZarinaToastContainer",
         modifier = modifier,
     ) { message ->
