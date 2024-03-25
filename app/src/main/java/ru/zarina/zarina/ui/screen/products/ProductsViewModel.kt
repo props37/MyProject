@@ -181,7 +181,7 @@ class ProductsViewModel @AssistedInject constructor(
         }
         .cachedIn(viewModelScope)
         .mapProducts(
-            favoriteProductIdsResultFlow =  interactor.getFavoriteProductIdsFlow(),
+            favoriteProductIdsResultFlow = interactor.getFavoriteProductIdsFlow(),
             cartProductIdsResultFlow = interactor.getCartProductIdsFlow(),
         )
         .cachedIn(viewModelScope)

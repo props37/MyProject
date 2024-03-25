@@ -14,6 +14,8 @@ import ru.zarina.zarina.domain.product.Product
 import timber.log.Timber
 import javax.inject.Inject
 
+// TODO: [Medium] Move logic to repository
+
 class GetProductPagingDataFlowUseCase @Inject constructor(
     private val productRepository: ProductRepository,
 ) : BasicUseCase<GetProductPagingDataFlowUseCase.Params, Flow<PagingData<Product>>> {
