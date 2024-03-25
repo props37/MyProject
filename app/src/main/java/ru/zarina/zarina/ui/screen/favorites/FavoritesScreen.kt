@@ -13,11 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.favorites.FavoritesScreenComponents.TopBar
+import ru.zarina.zarina.ui.screen.favorites.FavoritesViewModel.SideEffect
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
@@ -25,13 +28,15 @@ fun FavoritesScreen(
     viewModel: FavoritesViewModel = hiltViewModel(),
 ) {
     ScreenContent(
+        productPagingDataFlow = viewModel.productPagingDataFlow,
         sideEffects = viewModel.sideEffects,
     )
 }
 
 @Composable
 private fun ScreenContent(
-    sideEffects: Flow<FavoritesViewModel.SideEffect>,
+    productPagingDataFlow: Flow<PagingData<Product>>,
+    sideEffects: Flow<SideEffect>,
 ) {
     FavoritesScreenBehavior(sideEffects = sideEffects)
 
