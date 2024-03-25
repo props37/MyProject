@@ -48,8 +48,10 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -88,6 +90,8 @@ import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransi
 import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.animation.Crossfade
+import ru.zarina.zarina.util.compose.collapsingtopbar.CollapsingTopBarDefaults
+import ru.zarina.zarina.util.compose.collapsingtopbar.CollapsingTopBarLayout
 import ru.zarina.zarina.util.compose.pager.PagerTabRowIntegration
 import ru.zarina.zarina.util.compose.rememberAnchoredDraggableState
 import ru.zarina.zarina.util.compose.requireCoercedOffset
@@ -143,37 +147,48 @@ object CartScreenComponents {
         onGoToCatalogClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        Column(modifier = modifier) {
-            City(
-                city = city,
-                onClick = onCityClicked,
-                modifier = Modifier.fillMaxWidth(),
-            )
+        val cityScrollBehavior = CollapsingTopBarDefaults.rememberExitUntilCollapsedScrollBehavior()
+        CollapsingTopBarLayout(
+            topBar = {
+                City(
+                    city = city,
+                    onClick = onCityClicked,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            },
+            scrollBehavior = cityScrollBehavior,
+            modifier = modifier.clipToBounds(),
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .padding(padding)
+                    .nestedScroll(cityScrollBehavior.nestedScrollConnection),
+            ) {
+                val pagerState = rememberPagerState { deliveryTypes.size }
+                PagerTabRowIntegration(
+                    pagerState = pagerState,
+                    tabs = deliveryTypes,
+                    currentTab = currentDeliveryType,
+                    onCurrentTabChanged = onDeliveryTypeChanged,
+                )
 
-            val pagerState = rememberPagerState { deliveryTypes.size }
-            PagerTabRowIntegration(
-                pagerState = pagerState,
-                tabs = deliveryTypes,
-                currentTab = currentDeliveryType,
-                onCurrentTabChanged = onDeliveryTypeChanged,
-            )
+                DeliveryTypePicker(
+                    types = deliveryTypes,
+                    currentType = currentDeliveryType,
+                    onTypeChanged = onDeliveryTypeChanged,
+                    cartSize = cartSize,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
 
-            DeliveryTypePicker(
-                types = deliveryTypes,
-                currentType = currentDeliveryType,
-                onTypeChanged = onDeliveryTypeChanged,
-                cartSize = cartSize,
-                modifier = Modifier.padding(horizontal = 16.dp),
-            )
-
-            DeliveryTypeContentPager(
-                pagerState = pagerState,
-                deliveryTypes = deliveryTypes,
-                deliveryTypeToCartState = deliveryTypeToCartState,
-                productCardActions = productCardActions,
-                onGoToCatalogClicked = onGoToCatalogClicked,
-                modifier = Modifier.fillMaxSize(),
-            )
+                DeliveryTypeContentPager(
+                    pagerState = pagerState,
+                    deliveryTypes = deliveryTypes,
+                    deliveryTypeToCartState = deliveryTypeToCartState,
+                    productCardActions = productCardActions,
+                    onGoToCatalogClicked = onGoToCatalogClicked,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
         }
     }
 
