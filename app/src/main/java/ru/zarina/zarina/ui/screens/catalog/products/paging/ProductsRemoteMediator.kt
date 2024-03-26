@@ -7,13 +7,13 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
-import ru.zarina.zarina.domain.Category
-import ru.zarina.zarina.domain.FilteredProducts
-import ru.zarina.zarina.domain.Filtration
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.old.Category
+import ru.zarina.zarina.domain.old.FilteredProducts
+import ru.zarina.zarina.domain.old.Filtration
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.ProductSort
 import ru.zarina.zarina.ui.common.base.paging.PageHolder
-import ru.zarina.zarina.usecase.catalog.GetProductsPageUseCase
+import ru.zarina.zarina.usecase.old.catalog.GetProductsPageUseCase
 
 @OptIn(ExperimentalPagingApi::class)
 class ProductsRemoteMediator(

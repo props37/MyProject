@@ -1,32 +1,17 @@
 package ru.zarina.zarina.data.device
 
-import kotlinx.coroutines.flow.first
-import org.koin.core.annotation.Factory
-import ru.zarina.zarina.data.device.local.IDeviceLocalSource
-import ru.zarina.zarina.data.device.remote.IDeviceRemoteSource
-import ru.zarina.zarina.domain.AuthorizationToken
-import timber.log.Timber
+import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.data.device.local.DeviceLocalDataSource
+import javax.inject.Inject
 
-@Factory
-class DeviceRepository(
-    private val local: IDeviceLocalSource,
-    private val remote: IDeviceRemoteSource,
-) : IDeviceRepository {
-
-    override suspend fun getToken(): AuthorizationToken.Device {
-        val localToken = local.getToken().first()
-        if (localToken != null) return localToken
-        Timber.v("No local device token is present, getting new one")
-        val remoteToken = remote.getToken()
-        local.setToken(remoteToken)
-        return remoteToken
+class DeviceRepository @Inject constructor(
+    private val localDataSource: DeviceLocalDataSource,
+) {
+    fun getIsOnboardingCompletedFlow(): Flow<Boolean> {
+        return localDataSource.getIsOnboardingCompletedFlow()
     }
 
-    override suspend fun setToken(token: AuthorizationToken.Device?) = local.setToken(token)
-
-    override fun getIsOnboardingCompleted() = local.getIsOnboardingCompleted()
-
-    override suspend fun setIsOnboardingCompleted(isOnboardingCompleted: Boolean) =
-        local.setIsOnboardingCompleted(isOnboardingCompleted)
-
+    suspend fun setIsOnboardingCompleted(isCompleted: Boolean) {
+        localDataSource.setIsOnboardingCompleted(isCompleted)
+    }
 }

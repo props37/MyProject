@@ -21,13 +21,13 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.old.ProductSort
 import ru.zarina.zarina.ui.common.components.SortDivider
 import ru.zarina.zarina.ui.common.components.SortItem
 import ru.zarina.zarina.ui.common.components.bottomsheet.Header
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @Composable
 fun SelectSortScreenContent(

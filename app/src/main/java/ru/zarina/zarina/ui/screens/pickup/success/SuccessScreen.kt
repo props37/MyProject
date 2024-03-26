@@ -32,7 +32,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,12 +60,12 @@ fun SuccessScreenContent(
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Image(
-                painter = painterResource(R.drawable.ic_box_96),
+                painter = painterResource(R.drawable.old_ic_box_96),
                 contentDescription = null,
             )
             Text(
                 text = stringResource(R.string.reservation_is_successful),
-                style = UiKitTheme.typography.circle1720bold,
+                style = UiKitTheme.typographyOld.circle1720bold,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -76,7 +76,7 @@ fun SuccessScreenContent(
                     R.string.reservation_confirmation_will_be_sent_to_email_template,
                     email
                 ),
-                style = UiKitTheme.typography.circle1518,
+                style = UiKitTheme.typographyOld.circle1518,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()

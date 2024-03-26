@@ -46,8 +46,8 @@ fun PriceItem(
         ) {
             Text(
                 text = stringResource(id = R.string.price),
-                color = UiKitTheme.colors.primaryContentColor,
-                style = UiKitTheme.typography.circle1718,
+                color = UiKitTheme.colorsOld.primaryContentColor,
+                style = UiKitTheme.typographyOld.circle1718,
             )
             Text(
                 text = stringResource(
@@ -55,8 +55,8 @@ fun PriceItem(
                     stringResource(id = R.string.currency_amount_rubles, selectedMinValue),
                     stringResource(id = R.string.currency_amount_rubles, selectedMaxValue),
                 ),
-                color = UiKitTheme.colors.primaryContentColor,
-                style = UiKitTheme.typography.circle1718,
+                color = UiKitTheme.colorsOld.primaryContentColor,
+                style = UiKitTheme.typographyOld.circle1718,
             )
         }
         PriceSlider(
@@ -104,15 +104,15 @@ private fun PriceSlider(
             onSelectedValueChange(it.start.roundToInt(), it.endInclusive.roundToInt())
         },
         colors = SliderDefaults.colors(
-            thumbColor = UiKitTheme.colors.primaryButtonBackground,
-            activeTrackColor = UiKitTheme.colors.primaryButtonBackground,
+            thumbColor = UiKitTheme.colorsOld.primaryButtonBackground,
+            activeTrackColor = UiKitTheme.colorsOld.primaryButtonBackground,
             activeTickColor = Color.Transparent,
-            inactiveTrackColor = UiKitTheme.colors.primaryButtonDisabledBackground,
+            inactiveTrackColor = UiKitTheme.colorsOld.primaryButtonDisabledBackground,
             inactiveTickColor = Color.Transparent,
             disabledActiveTickColor = Color.Transparent,
             disabledInactiveTickColor = Color.Transparent,
-            disabledActiveTrackColor = UiKitTheme.colors.primaryButtonBackground,
-            disabledInactiveTrackColor = UiKitTheme.colors.hint,
+            disabledActiveTrackColor = UiKitTheme.colorsOld.primaryButtonBackground,
+            disabledInactiveTrackColor = UiKitTheme.colorsOld.hint,
         ),
         modifier = modifier,
     )

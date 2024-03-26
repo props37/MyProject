@@ -7,7 +7,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 object DefaultCityDialogScreenComponents {
@@ -16,7 +16,7 @@ object DefaultCityDialogScreenComponents {
     fun bodyText(defaultCity: City): AnnotatedString {
         val defaultCityName = defaultCity.name
         val bodyTextRaw = stringResource(R.string.default_city_dialog_body, defaultCityName)
-        val defaultCityNameStyle = UiKitTheme.typographyReworked.secondary.bold
+        val defaultCityNameStyle = UiKitTheme.typography.secondary.bold
         return remember(bodyTextRaw, defaultCityName, defaultCityNameStyle) {
             buildAnnotatedString {
                 append(bodyTextRaw)

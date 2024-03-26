@@ -26,10 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
+import ru.zarina.zarina.ui.common.component.loader.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 
 @Composable
 fun ZarinaIconButton(
@@ -38,7 +38,7 @@ fun ZarinaIconButton(
     isEnabled: Boolean = true,
     isLoading: Boolean = false,
     loaderSize: Dp = 24.dp,
-    loaderColor: Color = UiKitTheme.colorsReworked.icon.regular.default,
+    loaderColor: Color = UiKitTheme.colors.icon.regular.default,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     indication: Indication? = rememberRipple(bounded = false, radius = 24.dp),
     content: @Composable () -> Unit,

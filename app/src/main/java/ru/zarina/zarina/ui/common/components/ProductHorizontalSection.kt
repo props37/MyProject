@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableSet
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -31,12 +31,12 @@ fun ProductHorizontalSection(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.background(UiKitTheme.colors.screenBackground)
+        modifier = modifier.background(UiKitTheme.colorsOld.screenBackground)
     ) {
         if (title != null)
             Text(
                 text = title,
-                style = UiKitTheme.typography.circle2026bold,
+                style = UiKitTheme.typographyOld.circle2026bold,
                 modifier = Modifier
                     .padding(top = 16.dp)
                     .padding(horizontal = 16.dp),
@@ -44,7 +44,7 @@ fun ProductHorizontalSection(
         if (subtitle != null)
             Text(
                 text = subtitle,
-                style = UiKitTheme.typography.circle1518,
+                style = UiKitTheme.typographyOld.circle1518,
                 modifier = Modifier
                     .padding(top = 6.dp)
                     .padding(horizontal = 16.dp),

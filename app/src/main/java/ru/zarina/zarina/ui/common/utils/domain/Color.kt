@@ -1,7 +1,7 @@
 package ru.zarina.zarina.ui.common.utils.domain
 
 import androidx.compose.ui.graphics.Color
-import ru.zarina.zarina.domain.Color as ZarinaColor
+import ru.zarina.zarina.domain.old.Color as ZarinaColor
 
 
 fun ZarinaColor.toColorOr(fallback: Color): Color {

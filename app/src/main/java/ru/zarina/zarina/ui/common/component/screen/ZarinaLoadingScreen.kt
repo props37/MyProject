@@ -13,18 +13,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.component.ZarinaLogo
-import ru.zarina.zarina.ui.common.component.ZarinaLogoAspectRatio
+import ru.zarina.zarina.ui.common.component.logo.ZarinaLogo
+import ru.zarina.zarina.ui.common.component.logo.ZarinaLogoAspectRatio
 import ru.zarina.zarina.ui.common.util.SplashScreenLogoSize
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
+import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 @Composable
 fun ZarinaLoadingScreen(
     modifier: Modifier = Modifier,
     contentDescription: String = stringResource(R.string.loading),
     logoWidth: Dp = SplashScreenLogoSize,
-    logoColor: Color = UiKitTheme.colorsReworked.icon.regular.default,
+    logoColor: Color = UiKitTheme.colors.icon.regular.default,
     animate: Boolean = true,
 ) {
     Box(

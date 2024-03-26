@@ -39,14 +39,16 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.domain.rework.product.ProductColor
-import ru.zarina.zarina.domain.rework.product.currentPrice
-import ru.zarina.zarina.ui.common.component.button.LikeIconButton
+import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.domain.product.ProductColor
+import ru.zarina.zarina.domain.product.currentPrice
 import ru.zarina.zarina.ui.common.component.button.ZarinaIconButton
-import ru.zarina.zarina.ui.common.component.pager.HorizontalPagerIndicator
-import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
-import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.button.ZarinaLikeIconButton
+import ru.zarina.zarina.ui.common.component.color.ZarinaColorIcon
+import ru.zarina.zarina.ui.common.component.pager.ZarinaHorizontalPagerIndicator
+import ru.zarina.zarina.ui.common.component.pager.ZarinaMediaHorizontalPager
+import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -54,7 +56,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.parameterprovider.ProductPrevi
 import ru.zarina.zarina.ui.common.util.domain.toComposeColor
 import ru.zarina.zarina.ui.common.util.rememberFormattedPrice
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.rememberEndlessPagerState
+import ru.zarina.zarina.util.compose.pager.rememberEndlessPagerState
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
@@ -65,9 +67,14 @@ fun ProductCard(
     onAddToCartClicked: () -> Unit,
     onSubscribeClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    shimmer: Shimmer? = rememberSkeletonShimmer(),
+    shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
+    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
 ) {
-    Column(modifier = modifier.clickable(onClick = onClick)) {
+    Column(
+        modifier = modifier
+            .background(backgroundColor)
+            .clickable(onClick = onClick),
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -75,20 +82,20 @@ fun ProductCard(
         ) {
             val pagerState = rememberEndlessPagerState(itemCount = product.media.size)
 
-            MediaHorizontalPager(
+            ZarinaMediaHorizontalPager(
                 pagerState = pagerState,
                 medias = product.media,
                 shimmer = shimmer,
                 modifier = Modifier.matchParentSize(),
             )
-            LikeIconButton(
+            ZarinaLikeIconButton(
                 isLiked = product.isInFavorites,
                 onClick = onAddToFavoritesClicked,
                 iconSize = IconSize,
                 indication = rememberRipple(bounded = false, radius = IconSize),
                 modifier = Modifier.align(Alignment.TopEnd),
             )
-            HorizontalPagerIndicator(
+            ZarinaHorizontalPagerIndicator(
                 pagerState = pagerState,
                 itemCount = product.media.size,
                 modifier = Modifier
@@ -105,8 +112,8 @@ fun ProductCard(
         ) {
             Text(
                 text = product.name.uppercase(),
-                style = UiKitTheme.typographyReworked.caption1.regular,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                style = UiKitTheme.typography.caption1.regular,
+                color = UiKitTheme.colors.text.general.regular.default,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
@@ -138,12 +145,12 @@ fun ProductCard(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(horizontal = 16.dp),
         ) {
-            val priceTextStyle = UiKitTheme.typographyReworked.caption1.regular
-            val discountColor = UiKitTheme.colorsReworked.text.general.accent.red
+            val priceTextStyle = UiKitTheme.typography.caption1.regular
+            val discountColor = UiKitTheme.colors.text.general.accent.red
             val originalPriceColor = if (product.price.hasDiscount) {
-                UiKitTheme.colorsReworked.text.general.regular.disabled
+                UiKitTheme.colors.text.general.regular.disabled
             } else {
-                UiKitTheme.colorsReworked.text.general.regular.default
+                UiKitTheme.colors.text.general.regular.default
             }
             val originalPriceTextDecoration = if (product.price.hasDiscount) {
                 TextDecoration.LineThrough
@@ -179,7 +186,7 @@ fun ProductCard(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = stringResource(R.string.discount_percent, product.price.discountPercent).uppercase(),
-                    style = UiKitTheme.typographyReworked.caption2.regular,
+                    style = UiKitTheme.typography.caption2.regular,
                     color = discountColor,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -197,13 +204,13 @@ fun ProductCard(
 }
 
 @Composable
-fun ProductCardPlaceholder(
+fun ProductCardSkeleton(
     modifier: Modifier = Modifier,
-    shimmer: Shimmer = rememberSkeletonShimmer(),
+    shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
 ) {
     Column(modifier = modifier) {
-        Skeleton(
-            shimmer = rememberSkeletonShimmer(width = 350.dp),
+        ZarinaSkeleton(
+            shimmer = rememberZarinaSkeletonShimmer(width = 350.dp),
             shape = RectangleShape,
             modifier = Modifier
                 .fillMaxWidth()
@@ -218,14 +225,14 @@ fun ProductCardPlaceholder(
                 .padding(horizontal = 16.dp)
         ) {
             val height = 16.dp
-            Skeleton(
+            ZarinaSkeleton(
                 shimmer = shimmer,
                 modifier = Modifier
                     .weight(1f)
                     .height(height),
             )
             Spacer(modifier = Modifier.width(24.dp))
-            Skeleton(
+            ZarinaSkeleton(
                 shimmer = shimmer,
                 modifier = Modifier.size(height),
             )
@@ -239,21 +246,21 @@ fun ProductCardPlaceholder(
                 .padding(horizontal = 16.dp)
         ) {
             val height = 10.dp
-            Skeleton(
+            ZarinaSkeleton(
                 shimmer = shimmer,
                 modifier = Modifier
                     .width(44.dp)
                     .height(height),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Skeleton(
+            ZarinaSkeleton(
                 shimmer = shimmer,
                 modifier = Modifier
                     .width(48.dp)
                     .height(height),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Skeleton(
+            ZarinaSkeleton(
                 shimmer = shimmer,
                 modifier = Modifier
                     .width(28.dp)
@@ -263,7 +270,7 @@ fun ProductCardPlaceholder(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Skeleton(
+        ZarinaSkeleton(
             shimmer = shimmer,
             modifier = Modifier
                 .padding(start = 16.dp)
@@ -294,14 +301,14 @@ private fun AddToCartIconButton(
             label = "AddToCartIconButton",
         ) { isAdded ->
             val iconResId =
-                if (isAdded) R.drawable.ic_cart_added_outline_24 else R.drawable.ic_cart_outline_24
+                if (isAdded) R.drawable.ic_shopper_checkmark_outline_24 else R.drawable.ic_shopper_outline_24
             val contentDescriptionResId =
                 if (isAdded) R.string.remove_from_cart else R.string.add_to_cart
 
             Icon(
                 painter = painterResource(iconResId),
                 contentDescription = stringResource(contentDescriptionResId),
-                tint = UiKitTheme.colorsReworked.icon.regular.default,
+                tint = UiKitTheme.colors.icon.regular.default,
                 modifier = Modifier.size(IconSize),
             )
         }
@@ -323,7 +330,7 @@ private fun SubscribeIconButton(
         Icon(
             painter = painterResource(R.drawable.ic_bell_24),
             contentDescription = stringResource(R.string.subscribe_to_product),
-            tint = UiKitTheme.colorsReworked.icon.regular.default,
+            tint = UiKitTheme.colors.icon.regular.default,
             modifier = Modifier.size(IconSize),
         )
     }
@@ -354,7 +361,7 @@ private fun Colors(
                 val color = colors.getOrNull(i)
                 if (color != null) {
                     key(color.id.value) {
-                        ColorIcon(color = color.color.toComposeColor())
+                        ZarinaColorIcon(color = color.color.toComposeColor())
                     }
                 }
             }
@@ -362,8 +369,8 @@ private fun Colors(
             val moreColorsText = if (colorsLeft > 0) "+$colorsLeft" else ""
             Text(
                 text = moreColorsText,
-                style = UiKitTheme.typographyReworked.caption2.regular,
-                color = UiKitTheme.colorsReworked.text.general.regular.muted,
+                style = UiKitTheme.typography.caption2.regular,
+                color = UiKitTheme.colors.text.general.regular.muted,
             )
         }
     }
@@ -393,7 +400,7 @@ private fun ProductCardPreview(
 @Composable
 private fun ProductCardPreview() {
     ZarinaPreview {
-        ProductCardPlaceholder(modifier = Modifier.background(Color.White))
+        ProductCardSkeleton(modifier = Modifier.background(Color.White))
     }
 }
 

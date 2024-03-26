@@ -14,7 +14,7 @@ fun FiltersDivider(
 ) {
     Divider(
         thickness = 1.dp,
-        color = UiKitTheme.colors.listDivider,
+        color = UiKitTheme.colorsOld.listDivider,
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)

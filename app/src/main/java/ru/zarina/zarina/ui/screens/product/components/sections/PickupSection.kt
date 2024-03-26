@@ -30,14 +30,14 @@ fun PickupSection(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_map_marker_2_24),
+                painter = painterResource(id = R.drawable.old_ic_map_marker_2_24),
                 contentDescription = null,
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = stringResource(id = R.string.find_and_pickup),
-                style = UiKitTheme.typography.circle1720bold,
-                color = UiKitTheme.colors.secondaryButtonForeground,
+                style = UiKitTheme.typographyOld.circle1720bold,
+                color = UiKitTheme.colorsOld.secondaryButtonForeground,
                 maxLines = 1,
             )
         }

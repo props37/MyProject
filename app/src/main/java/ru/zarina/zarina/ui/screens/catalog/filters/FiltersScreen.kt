@@ -27,8 +27,8 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Filtration
-import ru.zarina.zarina.domain.PriceRange
+import ru.zarina.zarina.domain.old.Filtration
+import ru.zarina.zarina.domain.old.PriceRange
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.FilterButtonMode
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
@@ -46,7 +46,7 @@ import ru.zarina.zarina.ui.screens.catalog.filters.components.items.ShopItem
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.SwitchItem
 import ru.zarina.zarina.ui.screens.catalog.filters.components.items.TreeItem
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -171,7 +171,7 @@ fun FiltersScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .shadow(elevation)
-                    .background(UiKitTheme.colors.screenBackground)
+                    .background(UiKitTheme.colorsOld.screenBackground)
                     .padding(16.dp)
                     .navigationBarsPadding()
                     .bottomNavigationPadding()

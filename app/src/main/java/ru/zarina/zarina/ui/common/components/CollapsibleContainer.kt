@@ -66,14 +66,14 @@ fun CollapseButton(
             label = "icon rotation degrees"
         )
         Icon(
-            painter = painterResource(R.drawable.ic_minus_24),
+            painter = painterResource(R.drawable.old_ic_minus_24),
             contentDescription = null,
             modifier = Modifier.graphicsLayer {
                 rotationZ = iconRotationDegrees * 2
             }
         )
         Icon(
-            painter = painterResource(R.drawable.ic_minus_24),
+            painter = painterResource(R.drawable.old_ic_minus_24),
             contentDescription = null,
             modifier = Modifier.graphicsLayer {
                 rotationZ = iconRotationDegrees

@@ -22,23 +22,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.filter.ColorFilterItem
-import ru.zarina.zarina.domain.rework.filter.ListFilterItem
-import ru.zarina.zarina.domain.rework.filter.SortFilterItem
-import ru.zarina.zarina.domain.rework.filter.sorting
-import ru.zarina.zarina.ui.common.component.ColorIcon
-import ru.zarina.zarina.ui.common.component.button.BackIconButton
+import ru.zarina.zarina.domain.filter.ColorFilterItem
+import ru.zarina.zarina.domain.filter.ListFilterItem
+import ru.zarina.zarina.domain.filter.SortFilterItem
+import ru.zarina.zarina.domain.filter.sorting
+import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
-import ru.zarina.zarina.ui.common.component.icon.CheckmarkAnimatedIcon
+import ru.zarina.zarina.ui.common.component.color.ZarinaColorIcon
+import ru.zarina.zarina.ui.common.component.icon.ZarinaCheckmarkAnimatedIcon
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.common.util.domain.nameResId
 import ru.zarina.zarina.ui.common.util.domain.toComposeColor
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 
 object ListFilterScreenComponents {
 
@@ -51,7 +51,7 @@ object ListFilterScreenComponents {
     ) {
         ZarinaTopBar(
             startContent = {
-                BackIconButton(
+                ZarinaBackIconButton(
                     onClick = actions.onBackClicked,
                     iconSize = 20.dp,
                     modifier = Modifier.padding(start = 2.dp),
@@ -60,8 +60,8 @@ object ListFilterScreenComponents {
             centerContent = {
                 Text(
                     text = title,
-                    style = UiKitTheme.typographyReworked.primary.regular,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    style = UiKitTheme.typography.primary.regular,
+                    color = UiKitTheme.colors.text.general.regular.default,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -80,7 +80,7 @@ object ListFilterScreenComponents {
                     ) {
                         Text(
                             text = stringResource(R.string.reset).uppercase(),
-                            style = UiKitTheme.typographyReworked.caption1.regular,
+                            style = UiKitTheme.typography.caption1.regular,
                         )
                     }
                 }
@@ -112,7 +112,7 @@ object ListFilterScreenComponents {
 
                 if (index < items.size - 1) {
                     Divider(
-                        color = UiKitTheme.colorsReworked.background.skeleton,
+                        color = UiKitTheme.colors.border.general.default,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
@@ -136,7 +136,7 @@ object ListFilterScreenComponents {
         ) {
             Column {
                 Divider(
-                    color = UiKitTheme.colorsReworked.background.skeleton,
+                    color = UiKitTheme.colors.border.general.default,
                     modifier = Modifier.fillMaxWidth(),
                 )
 
@@ -167,7 +167,7 @@ object ListFilterScreenComponents {
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             if (item is ColorFilterItem) {
-                ColorIcon(
+                ZarinaColorIcon(
                     color = item.color.toComposeColor(),
                     size = 16.dp,
                 )
@@ -182,8 +182,8 @@ object ListFilterScreenComponents {
 
             Text(
                 text = name,
-                style = UiKitTheme.typographyReworked.secondary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                style = UiKitTheme.typography.secondary.light,
+                color = UiKitTheme.colors.text.general.regular.default,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -191,7 +191,7 @@ object ListFilterScreenComponents {
             Spacer(modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(16.dp))
 
-            CheckmarkAnimatedIcon(
+            ZarinaCheckmarkAnimatedIcon(
                 isVisible = item.isSelected,
                 iconSize = 16.dp,
                 modifier = Modifier.padding(start = if (item.isSelected) 16.dp else 0.dp),

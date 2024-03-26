@@ -9,13 +9,14 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.domain.rework.product.ProductOffer
-import ru.zarina.zarina.ui.common.base.Throttler
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.domain.product.ProductOffer
+import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.model.product.ProductParcelable
-import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
+import ru.zarina.zarina.ui.navigation.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorViewModel.SideEffect
 import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
@@ -64,7 +65,6 @@ class SizeSelectorViewModel @Inject constructor(
     }
 
     fun onSizeClicked(size: Size) {
-        // TODO: [High] Add product to cart if it is available
         navigationThrottler.throttle {
             val action = SizeSelectorScreenAction.SizeClicked(product.value, size.offers)
             emitSideEffect(SideEffect.Navigate(action))

@@ -15,7 +15,7 @@ plugins {
     alias(libs.plugins.firebase.performance)
 
     alias(libs.plugins.androidGitVersion)
-    alias(libs.plugins.gradleVersions)
+    alias(libs.plugins.checkDependencyUpdates)
 }
 
 androidGitVersion {

@@ -42,11 +42,11 @@ import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Category
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.ProductSort
-import ru.zarina.zarina.ui.common.base.ErrorState
-import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.domain.old.Category
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.ProductSort
+import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.FilterBar
 import ru.zarina.zarina.ui.common.components.ModalError
@@ -58,7 +58,7 @@ import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.common.utils.domain.getStringResource
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,15 +109,15 @@ fun ProductsScreenContent(
                     isFilterButtonEnabled = isFilterButtonEnabled,
                     onFiltersClick = onFiltersClick,
                     modifier = Modifier
-                        .background(color = UiKitTheme.colors.screenBackground)
+                        .background(color = UiKitTheme.colorsOld.screenBackground)
                         .fillMaxWidth(),
                 )
             }
             val isLoading =
                 products.loadState.append == LoadState.Loading || products.loadState.refresh == LoadState.Loading
             val errorState = when {
-                !isLoading && products.itemCount == 0 -> ErrorState(
-                    icon = R.drawable.ic_magnifying_glass_96,
+                !isLoading && products.itemCount == 0 -> ErrorStateOld(
+                    icon = R.drawable.old_ic_magnifying_glass_96,
                     title = Text.Resource(R.string.products_not_found),
                     subtitle = Text.Resource(R.string.try_changing_filter),
                     isButtonVisible = false,
@@ -159,7 +159,7 @@ fun ProductsScreenContent(
                     state = errorState,
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(UiKitTheme.colors.screenBackground)
+                        .background(UiKitTheme.colorsOld.screenBackground)
                         .navigationBarsPadding()
                         .bottomNavigationPadding()
                 )

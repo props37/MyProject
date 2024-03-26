@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.old.ProductSort
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
 import ru.zarina.zarina.ui.screens.catalog.products.ProductsViewModel

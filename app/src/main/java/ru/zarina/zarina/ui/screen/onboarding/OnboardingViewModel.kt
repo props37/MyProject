@@ -21,31 +21,31 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import ru.zarina.zarina.R
-import ru.zarina.zarina.data.rework.permissionmanager.isDenied
-import ru.zarina.zarina.data.rework.permissionmanager.isGranted
-import ru.zarina.zarina.data.rework.permissionmanager.shouldShowRequestRationale
-import ru.zarina.zarina.domain.rework.common.Url
-import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.base.Throttler
-import ru.zarina.zarina.ui.common.base.operation.OperationKey
-import ru.zarina.zarina.ui.common.base.operation.OperationTracker
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.operationtracker.OperationKey
+import ru.zarina.zarina.base.operationtracker.OperationTracker
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.data.permissionmanager.isDenied
+import ru.zarina.zarina.data.permissionmanager.isGranted
+import ru.zarina.zarina.data.permissionmanager.shouldShowRequestRationale
+import ru.zarina.zarina.domain.common.Url
+import ru.zarina.zarina.domain.geography.City
+import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.common.util.ScreenResultHandler
+import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.model.geography.CityParcelable
-import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
-import ru.zarina.zarina.usecase.rework.device.SetIsOnboardingCompletedUseCase
-import ru.zarina.zarina.usecase.rework.geography.UpdateUserCityUseCase
+import ru.zarina.zarina.usecase.device.SetIsOnboardingCompletedUseCase
+import ru.zarina.zarina.usecase.user.SetUserCityUseCase
+import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
-import ru.zarina.zarina.utils.clean.invoke
 import timber.log.Timber
 import kotlin.coroutines.coroutineContext
 
@@ -56,6 +56,11 @@ class OnboardingViewModel @AssistedInject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val interactor: OnboardingInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val screenResultHandler = ScreenResultHandler(
+        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
+        savedStateHandle = savedStateHandle,
+    )
 
     private val operationTracker = OperationTracker()
 
@@ -135,7 +140,7 @@ class OnboardingViewModel @AssistedInject constructor(
     )
 
     init {
-        handleCitySelectorResult(backStackEntrySavedStateHandle)
+        handleCitySelectorResult()
     }
 
     fun onRequestNotificationsPermissionClicked() {
@@ -285,25 +290,22 @@ class OnboardingViewModel @AssistedInject constructor(
                 SetIsOnboardingCompletedUseCase.Params(isCompleted = true)
             interactor.setIsOnboardingCompleted(setIsOnboardingCompletedParams)
 
-            val updateUserCityParams = UpdateUserCityUseCase.Params(userCity ?: City.DEFAULT)
-            val result = interactor.updateUserCity(updateUserCityParams)
+            val setUserCityParams = SetUserCityUseCase.Params(userCity ?: City.DEFAULT)
+            val result = interactor.setUserCity(setUserCityParams)
+            result.onFailure { interactor.setDefaultUserCity() }
             coroutineContext.ensureActive()
             result
         }
     }
 
-    private fun handleCitySelectorResult(backStackEntrySavedStateHandle: SavedStateHandle) {
-        backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.CitySelector.Result?>(
-            key = UnscopedDestinations.CitySelector.RESULT_KEY,
-            initialValue = null,
-        )
-            .onEach { result ->
-                if (result != null) {
-                    Timber.v("CitySelector screen result: $result")
-                    savedStateHandle[KEY_CURRENT_CITY] = result.city
-                }
+    private fun handleCitySelectorResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<UnscopedDestinations.CitySelector.Result>(
+                key = UnscopedDestinations.CitySelector.RESULT_KEY,
+            ) { result ->
+                savedStateHandle[KEY_CURRENT_CITY] = result.city
             }
-            .launchIn(viewModelScope)
+        }
     }
 
     private fun createOnboardingSteps(): List<OnboardingStep> {

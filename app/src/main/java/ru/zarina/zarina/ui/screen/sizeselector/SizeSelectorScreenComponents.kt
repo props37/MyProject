@@ -35,11 +35,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.component.ZarinaBottomSheet
-import ru.zarina.zarina.ui.common.component.button.CloseIconButton
+import ru.zarina.zarina.ui.common.component.bottomsheet.ZarinaBottomSheet
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.component.button.ZarinaCloseIconButton
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorViewModel.Size
@@ -85,8 +85,8 @@ object SizeSelectorScreenComponents {
             isEnabled = false,
             size = ZarinaButtonSize.Medium,
             colors = ZarinaButtonDefaults.secondaryColors(
-                disabledBackgroundColor = UiKitTheme.colorsReworked.background.button.secondary.default,
-                disabledContentColor = UiKitTheme.colorsReworked.text.button.secondary.default,
+                disabledBackgroundColor = UiKitTheme.colors.background.button.secondary.default,
+                disabledContentColor = UiKitTheme.colors.text.button.secondary.default,
             ),
             modifier = modifier,
         ) {
@@ -111,12 +111,12 @@ object SizeSelectorScreenComponents {
             centerContent = {
                 Text(
                     text = stringResource(R.string.choose_size),
-                    style = UiKitTheme.typographyReworked.primary.bold,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    style = UiKitTheme.typography.primary.bold,
+                    color = UiKitTheme.colors.text.general.regular.default,
                 )
             },
             endContent = {
-                CloseIconButton(
+                ZarinaCloseIconButton(
                     onClick = onCloseClicked,
                     iconSize = 20.dp,
                     modifier = Modifier.padding(end = 2.dp),
@@ -143,7 +143,7 @@ object SizeSelectorScreenComponents {
 
                     if (index < sizes.lastIndex) {
                         Divider(
-                            color = UiKitTheme.colorsReworked.background.skeleton,
+                            color = UiKitTheme.colors.border.general.default,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
@@ -171,14 +171,14 @@ object SizeSelectorScreenComponents {
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             val sizeColor = if (size.isAvailable) {
-                UiKitTheme.colorsReworked.text.general.regular.default
+                UiKitTheme.colors.text.general.regular.default
             } else {
-                UiKitTheme.colorsReworked.text.general.regular.disabled
+                UiKitTheme.colors.text.general.regular.disabled
             }
 
             Text(
                 text = size.size.capitalize(),
-                style = UiKitTheme.typographyReworked.secondary.light,
+                style = UiKitTheme.typography.secondary.light,
                 color = sizeColor,
             )
 
@@ -192,8 +192,8 @@ object SizeSelectorScreenComponents {
                     }
                     Text(
                         text = stringResource(R.string.available_height_cm, heightsText),
-                        style = UiKitTheme.typographyReworked.secondary.light,
-                        color = UiKitTheme.colorsReworked.text.general.regular.muted,
+                        style = UiKitTheme.typography.secondary.light,
+                        color = UiKitTheme.colors.text.general.regular.muted,
                     )
                 }
 
@@ -202,8 +202,8 @@ object SizeSelectorScreenComponents {
                 else -> {
                     Text(
                         text = stringResource(R.string.subscribe).uppercase(),
-                        style = UiKitTheme.typographyReworked.caption1.regular,
-                        color = UiKitTheme.colorsReworked.text.general.regular.default,
+                        style = UiKitTheme.typography.caption1.regular,
+                        color = UiKitTheme.colors.text.general.regular.default,
                     )
                 }
             }

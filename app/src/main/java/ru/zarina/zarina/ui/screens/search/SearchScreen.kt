@@ -58,10 +58,10 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.AutocompleteWord
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.ProductSort
-import ru.zarina.zarina.domain.SearchAutocomplete
+import ru.zarina.zarina.domain.old.AutocompleteWord
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.ProductSort
+import ru.zarina.zarina.domain.old.SearchAutocomplete
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ElevationContainer
 import ru.zarina.zarina.ui.common.components.FilterBar
@@ -234,15 +234,15 @@ private fun SearchHistory(
             ) {
                 Text(
                     text = query,
-                    style = UiKitTheme.typography.circle1718,
-                    color = UiKitTheme.colors.primaryContentColor,
+                    style = UiKitTheme.typographyOld.circle1718,
+                    color = UiKitTheme.colorsOld.primaryContentColor,
                     maxLines = 1,
                     modifier = Modifier
                         .weight(1f)
                         .padding(vertical = 12.dp)
                 )
                 Image(
-                    painter = painterResource(id = R.drawable.ic_close_24),
+                    painter = painterResource(id = R.drawable.ic_cross_24),
                     contentDescription = stringResource(id = R.string.remove_from_history),
                     modifier = Modifier
                         .padding(start = 8.dp)
@@ -288,15 +288,15 @@ private fun Word(
     Box(
         modifier = modifier
             .padding(5.dp)
-            .background(UiKitTheme.colors.primaryBorderColor)
+            .background(UiKitTheme.colorsOld.primaryBorderColor)
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 8.dp),
     ) {
         Text(
             text = word.word,
             maxLines = 1,
-            style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
+            style = UiKitTheme.typographyOld.circle1718,
+            color = UiKitTheme.colorsOld.primaryContentColor,
         )
     }
 }
@@ -320,8 +320,8 @@ private fun FrequentlySearched(
         for (query in queries) {
             Text(
                 text = query,
-                style = UiKitTheme.typography.circle1718,
-                color = UiKitTheme.colors.primaryContentColor,
+                style = UiKitTheme.typographyOld.circle1718,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 maxLines = 1,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -339,8 +339,8 @@ fun SectionHeader(
 ) {
     Text(
         text = text,
-        style = UiKitTheme.typography.circle1518,
-        color = UiKitTheme.colors.primaryContentColor,
+        style = UiKitTheme.typographyOld.circle1518,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         maxLines = 1,
         modifier = modifier,
     )
@@ -415,20 +415,20 @@ private fun NothingFound(
     ) {
         Spacer(modifier = Modifier.height(36.dp))
         Image(
-            painter = painterResource(id = R.drawable.ic_magnifying_glass_96),
+            painter = painterResource(id = R.drawable.old_ic_magnifying_glass_96),
             contentDescription = null,
             modifier = Modifier.padding(bottom = 4.dp)
         )
         Text(
             text = stringResource(id = R.string.nothing_found),
-            style = UiKitTheme.typography.circle1720bold,
-            color = UiKitTheme.colors.primaryContentColor,
+            style = UiKitTheme.typographyOld.circle1720bold,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         Text(
             text = stringResource(id = R.string.nothing_found),
-            style = UiKitTheme.typography.circle1518,
-            color = UiKitTheme.colors.primaryContentColor,
+            style = UiKitTheme.typographyOld.circle1518,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .padding(top = 12.dp)

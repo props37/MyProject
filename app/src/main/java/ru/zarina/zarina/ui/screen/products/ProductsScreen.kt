@@ -9,34 +9,47 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
-import ru.zarina.zarina.domain.rework.category.Category
-import ru.zarina.zarina.domain.rework.product.Product
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
+import ru.zarina.zarina.domain.category.Category
+import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
+import ru.zarina.zarina.ui.common.component.ProductGrid
+import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
+import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
+import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.ProductCardActions
-import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.Products
+import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.ProductsNotFoundPlaceholder
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.Tags
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBarActions
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.TagListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.collapsingtopbar.CollapsingTopBarDefaults
+import ru.zarina.zarina.util.compose.collapsingtopbar.CollapsingTopBarLayout
 
 @Composable
 fun ProductsScreen(
-    navigateForward: (ProductsScreenAction) -> Unit,
-    navigateBackward: () -> Unit,
+    navigate: (ProductsScreenAction) -> Unit,
     viewModel: ProductsViewModel = hiltViewModel(),
 ) {
     val category by viewModel.category.collectAsStateWithLifecycle()
@@ -52,15 +65,6 @@ fun ProductsScreen(
         )
     }
 
-    val productCardActions = remember(viewModel) {
-        ProductCardActions(
-            onProductClicked = viewModel::onProductClicked,
-            onAddToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
-            onAddToCartClicked = viewModel::onAddProductToCartClicked,
-            onSubscribeClicked = viewModel::onSubscribeToProductClicked,
-        )
-    }
-
     BackHandler(onBack = viewModel::onSystemBackClicked)
 
     ScreenContent(
@@ -71,12 +75,14 @@ fun ProductsScreen(
         selectedTagId = selectedTagId,
         onTagClicked = viewModel::onTagClicked,
         productPagingDataFlow = viewModel.productPagingDataFlow,
-        productCardActions = productCardActions,
+        onProductClicked = viewModel::onProductClicked,
+        onAddProductToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
+        onAddProductToCartClicked = viewModel::onAddProductToCartClicked,
+        onSubscribeToProductClicked = viewModel::onSubscribeToProductClicked,
         onRefreshProducts = viewModel::onRefreshProducts,
         onProductsErrorRefreshClicked = viewModel::onProductsErrorRefreshClicked,
         sideEffects = viewModel.sideEffects,
-        navigateForward = navigateForward,
-        navigateBackward = navigateBackward,
+        navigate = navigate,
     )
 }
 
@@ -89,23 +95,24 @@ private fun ScreenContent(
     selectedTagId: Category.Id?,
     onTagClicked: (Category) -> Unit,
     productPagingDataFlow: Flow<PagingData<Product>>,
-    productCardActions: ProductCardActions,
+    onProductClicked: (Product) -> Unit,
+    onAddProductToFavoritesClicked: (Product) -> Unit,
+    onAddProductToCartClicked: (Product) -> Unit,
+    onSubscribeToProductClicked: (Product) -> Unit,
     onRefreshProducts: () -> Unit,
     onProductsErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<ProductsViewModel.SideEffect>,
-    navigateForward: (ProductsScreenAction) -> Unit,
-    navigateBackward: () -> Unit,
+    navigate: (ProductsScreenAction) -> Unit,
 ) {
     ProductsScreenBehavior(
         sideEffects = sideEffects,
-        navigateForward = navigateForward,
-        navigateBackward = navigateBackward,
+        navigate = navigate,
     )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colorsReworked.background.general.regular.default)
+            .background(UiKitTheme.colors.background.general.regular.default)
             .windowInsetsPadding(
                 WindowInsets.statusBars
                     .union(WindowInsets.displayCutout),
@@ -120,26 +127,69 @@ private fun ScreenContent(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        Tags(
-            state = tagListState,
-            selectedTagId = selectedTagId,
-            onTagClicked = onTagClicked,
-        )
-
-        Products(
-            productPagingDataFlow = productPagingDataFlow,
-            productCardActions = productCardActions,
-            onRefreshProducts = onRefreshProducts,
-            onProductsErrorRefreshClicked = onProductsErrorRefreshClicked,
-            modifier = Modifier.fillMaxSize(),
-        )
+        val tagsScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior()
+        CollapsingTopBarLayout(
+            topBar = {
+                Tags(
+                    state = tagListState,
+                    selectedTagId = selectedTagId,
+                    onTagClicked = onTagClicked,
+                )
+            },
+            scrollBehavior = tagsScrollBehavior,
+            modifier = Modifier.clipToBounds(),
+        ) { padding ->
+            ProductGrid(
+                productPagingDataFlow = productPagingDataFlow,
+                onProductClicked = onProductClicked,
+                onAddToFavoritesClicked = onAddProductToFavoritesClicked,
+                onAddToCartClicked = onAddProductToCartClicked,
+                onSubscribeClicked = onSubscribeToProductClicked,
+                onRefreshProducts = onRefreshProducts,
+                onProductsErrorRefreshClicked = onProductsErrorRefreshClicked,
+                noProductsPlaceholder = {
+                    ProductsNotFoundPlaceholder(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(16.dp),
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .nestedScroll(tagsScrollBehavior.nestedScrollConnection),
+            )
+        }
     }
 }
 
 @Preview
+@FontScalePreviews
+@DensityPreviews
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        ScreenContent(
+            category = remember { FakeDataGenerator.getCategory() },
+            appliedFilterCount = 4,
+            topBarActions = remember { TopBarActions({}, {}, {}) },
+            tagListState = remember {
+                TagListState.TagList(FakeDataGenerator.getCategories().toImmutableList())
+            },
+            selectedTagId = null,
+            onTagClicked = {},
+            productPagingDataFlow = remember {
+                flowOf(PagingData.from(FakeDataGenerator.getProducts()))
+            },
+            onProductClicked = {},
+            onAddProductToFavoritesClicked = {},
+            onAddProductToCartClicked = {},
+            onSubscribeToProductClicked = {},
+            onRefreshProducts = {},
+            onProductsErrorRefreshClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigate = {},
+        )
     }
 }

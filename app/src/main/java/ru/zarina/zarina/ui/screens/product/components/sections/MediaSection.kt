@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.datasource.cache.Cache
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.ui.common.components.DiscountBadge
 import ru.zarina.zarina.ui.common.components.FavoriteHeart
 import ru.zarina.zarina.ui.common.components.InvertedRippleTheme
@@ -118,12 +118,12 @@ private fun BuyCompleteLookButton(
                 modifier = Modifier
                     .clip(CircleShape)
                     .aspectRatio(1f)
-                    .background(color = UiKitTheme.colors.productBadgeBackground),
+                    .background(color = UiKitTheme.colorsOld.productBadgeBackground),
             ) {
                 Text(
                     text = stringResource(R.string.buy_complete_look),
-                    color = UiKitTheme.colors.productBadgeForeground,
-                    style = UiKitTheme.typography.circle1012,
+                    color = UiKitTheme.colorsOld.productBadgeForeground,
+                    style = UiKitTheme.typographyOld.circle1012,
                     maxLines = 2,
                     textAlign = TextAlign.Center,
                     modifier = Modifier

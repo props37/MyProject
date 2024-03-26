@@ -25,7 +25,7 @@ import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.ui.common.utils.domain.toColorOr
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.utils.compose.conditional
-import ru.zarina.zarina.domain.Color as ZarinaColor
+import ru.zarina.zarina.domain.old.Color as ZarinaColor
 
 @Composable
 fun ColorPicker(
@@ -63,7 +63,7 @@ private fun ColorCircle(
 ) {
     val shape = CircleShape
     val selectionBorderColor by animateColorAsState(
-        targetValue = if (isSelected) UiKitTheme.colors.colorPickerCircleSelectionBorder else Color.Transparent,
+        targetValue = if (isSelected) UiKitTheme.colorsOld.colorPickerCircleSelectionBorder else Color.Transparent,
         label = "selection border color"
     )
     Box(
@@ -82,7 +82,7 @@ private fun ColorCircle(
             .padding(dimensions.selectionBorderPadding)
             .border(
                 width = dimensions.colorBorderWidth,
-                color = UiKitTheme.colors.colorPickerCircleBorder,
+                color = UiKitTheme.colorsOld.colorPickerCircleBorder,
                 shape = shape
             )
             .clip(shape)

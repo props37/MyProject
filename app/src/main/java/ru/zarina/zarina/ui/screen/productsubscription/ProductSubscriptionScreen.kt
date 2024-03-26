@@ -31,24 +31,27 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.common.Url
-import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.domain.rework.product.ProductOffer
+import ru.zarina.zarina.domain.common.MediaType
+import ru.zarina.zarina.domain.common.Url
+import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.domain.product.ProductOffer
+import ru.zarina.zarina.ui.common.component.ProductOrderCard
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldSize
+import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionScreenComponents.Policies
-import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionScreenComponents.ProductCard
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionViewModel.SideEffect
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 
 @Composable
 fun ProductSubscriptionScreen(
@@ -114,7 +117,7 @@ private fun ScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colorsReworked.background.general.regular.default)
+            .background(UiKitTheme.colors.background.general.regular.default)
             .windowInsetsPadding(
                 WindowInsets.systemBars
                     .union(WindowInsets.displayCutout)
@@ -128,9 +131,17 @@ private fun ScreenContent(
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(12.dp))
-            ProductCard(
-                product = product,
-                productOffer = productOffer,
+            ProductOrderCard(
+                name = product.name,
+                imageUrl = remember(product.media) {
+                    product.media.firstOrNull { it.type == MediaType.IMAGE }?.url ?: Url.EMPTY
+                },
+                size = productOffer.size,
+                sizeRu = productOffer.sizeRu,
+                height = productOffer.height,
+                color = remember(product) { product.colors.find { it.productId == product.id } },
+                price = product.price,
+                showOriginalPrice = false,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
@@ -139,8 +150,8 @@ private fun ScreenContent(
 
             Text(
                 text = stringResource(R.string.product_subscription_description),
-                style = UiKitTheme.typographyReworked.secondary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                style = UiKitTheme.typography.secondary.light,
+                color = UiKitTheme.colors.text.general.regular.default,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
             Spacer(modifier = Modifier.height(20.dp))
@@ -240,6 +251,24 @@ private fun ScreenContent(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        ScreenContent(
+            onBackClicked = {},
+            product = remember { FakeDataGenerator.getProduct() },
+            productOffer = remember { FakeDataGenerator.getProductOffer() },
+            firstName = "",
+            onFirstNameChanged = {},
+            isFirstNameInvalid = false,
+            email = "",
+            onEmailChanged = {},
+            isEmailInvalid = false,
+            arePoliciesAccepted = false,
+            isSubscribeButtonEnabled = true,
+            isSubscribeButtonLoading = false,
+            onUrlClicked = {},
+            onPoliciesAcceptedChanged = {},
+            onSubscribeClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigate = {},
+        )
     }
 }

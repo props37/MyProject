@@ -54,7 +54,7 @@ fun DropdownBar(
             content()
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
-                painter = painterResource(R.drawable.ic_chevron_down_24),
+                painter = painterResource(R.drawable.old_ic_chevron_down_24),
                 contentDescription = stringResource(R.string.dropdown),
                 modifier = Modifier
                     .indication(
@@ -66,7 +66,7 @@ fun DropdownBar(
         Spacer(modifier = Modifier.height(8.dp))
         Divider(
             thickness = 1.dp,
-            color = UiKitTheme.colors.listDivider,
+            color = UiKitTheme.colorsOld.listDivider,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
     }

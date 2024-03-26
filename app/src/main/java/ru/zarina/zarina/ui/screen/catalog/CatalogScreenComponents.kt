@@ -20,15 +20,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -36,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -51,10 +48,10 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
-import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
-import ru.zarina.zarina.ui.common.component.skeleton.SkeletonTextShape
-import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
-import ru.zarina.zarina.ui.common.component.tab.ZarinaTabIndicator
+import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeletonTextShape
+import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.tab.ZarinaTabRow
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
@@ -64,10 +61,10 @@ import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListItemsStat
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderTab
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
-import ru.zarina.zarina.util.compose.Crossfade
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.util.compose.animation.Crossfade
 
 object CatalogScreenComponents {
 
@@ -93,7 +90,7 @@ object CatalogScreenComponents {
                 },
                 leadingContent = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_search_24),
+                        painter = painterResource(R.drawable.ic_magnifying_glass_24),
                         contentDescription = null,
                         modifier = Modifier.size(20.dp),
                     )
@@ -130,32 +127,25 @@ object CatalogScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun GenderPicker(
         genders: ImmutableList<GenderTab>,
-        currentGender: GenderTab,
-        onGenderClicked: (GenderTab) -> Unit,
+        pagerState: PagerState,
+        onGenderСhanged: (GenderTab) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val selectedTabIndex = remember(genders, currentGender) {
-            genders.indexOf(currentGender)
+        val currentGender = remember(genders, pagerState) {
+            derivedStateOf { genders.getOrNull(pagerState.currentPage) }
         }
 
-        // TODO: [Medium] Extract?
-        TabRow(
-            selectedTabIndex = selectedTabIndex,
-            backgroundColor = Color.Unspecified,
-            indicator = { tabPositions ->
-                ZarinaTabIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                )
-            },
-            divider = {},
+        ZarinaTabRow(
+            selectedTabIndex = pagerState.currentPage,
             modifier = modifier,
         ) {
             genders.forEach { gender ->
                 ZarinaButton(
-                    onClick = { onGenderClicked(gender) },
+                    onClick = { onGenderСhanged(gender) },
                     size = ZarinaButtonSize.Medium,
                     colors = ZarinaButtonDefaults.backlessColors(),
                     contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
@@ -165,16 +155,16 @@ object CatalogScreenComponents {
                         GenderTab.MEN -> R.string.for_men
                     }
 
-                    val style = if (gender == currentGender) {
-                        UiKitTheme.typographyReworked.tertiary.regular
+                    val style = if (gender == currentGender.value) {
+                        UiKitTheme.typography.tertiary.regular
                     } else {
-                        UiKitTheme.typographyReworked.tertiary.light
+                        UiKitTheme.typography.tertiary.light
                     }
 
                     Text(
                         text = stringResource(textResId).uppercase(),
                         style = style,
-                        color = UiKitTheme.colorsReworked.text.general.regular.default,
+                        color = UiKitTheme.colors.text.general.regular.default,
                     )
                 }
             }
@@ -185,26 +175,15 @@ object CatalogScreenComponents {
     @Composable
     fun GenderCategoryPager(
         genders: ImmutableList<GenderTab>,
-        currentGender: GenderTab,
+        pagerState: PagerState,
         categoryListState: CategoryListState,
         categoryListItemsState: CategoryListItemsState,
         onCategoryListItemClicked: (CategoryListItem) -> Unit,
         onCategoryListErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val pagerState = rememberPagerState(
-            initialPage = remember { genders.indexOf(currentGender) },
-            pageCount = { genders.size },
-        )
-
-        LaunchedEffect(pagerState, genders, currentGender) {
-            val page = genders.indexOf(currentGender)
-            pagerState.animateScrollToPage(page)
-        }
-
         HorizontalPager(
             state = pagerState,
-            userScrollEnabled = false,
             modifier = modifier,
         ) { page ->
             CategoryList(
@@ -254,7 +233,7 @@ object CatalogScreenComponents {
                 is CategoryListState.Error -> {
                     ZarinaErrorScreen(
                         state = state.state,
-                        onRefreshClicked = onErrorRefreshClicked,
+                        onButtonClicked = onErrorRefreshClicked,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(16.dp),
@@ -311,7 +290,7 @@ object CatalogScreenComponents {
                         }
 
                         Divider(
-                            color = UiKitTheme.colorsReworked.border.general.default,
+                            color = UiKitTheme.colors.border.general.default,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
@@ -342,11 +321,11 @@ object CatalogScreenComponents {
                 modifier = Modifier.weight(1f),
             ) {
                 val color = item.category.color?.toComposeColor()
-                    ?: UiKitTheme.colorsReworked.text.general.regular.default
+                    ?: UiKitTheme.colors.text.general.regular.default
 
                 Text(
                     text = item.category.name.uppercase(),
-                    style = UiKitTheme.typographyReworked.tertiary.light,
+                    style = UiKitTheme.typography.tertiary.light,
                     color = color,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -356,7 +335,7 @@ object CatalogScreenComponents {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = item.category.label.uppercase(),
-                        style = UiKitTheme.typographyReworked.caption2.light,
+                        style = UiKitTheme.typography.caption2.light,
                         color = color,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -405,8 +384,8 @@ object CatalogScreenComponents {
         ) {
             Text(
                 text = stringResource(R.string.see_all).uppercase(),
-                style = UiKitTheme.typographyReworked.tertiary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                style = UiKitTheme.typography.tertiary.light,
+                color = UiKitTheme.colors.text.general.regular.default,
                 maxLines = 1,
             )
         }
@@ -416,7 +395,7 @@ object CatalogScreenComponents {
     private fun CategoryListSkeleton(
         modifier: Modifier = Modifier,
     ) {
-        val shimmer = rememberSkeletonShimmer(ShimmerBounds.Window)
+        val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
 
         LazyColumn(modifier = modifier) {
             items(
@@ -431,7 +410,7 @@ object CatalogScreenComponents {
 
                 if (index != CategoryListSkeletonItemCount - 1) {
                     Divider(
-                        color = UiKitTheme.colorsReworked.border.general.default,
+                        color = UiKitTheme.colors.border.general.default,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
@@ -461,9 +440,9 @@ object CatalogScreenComponents {
                 else -> 0.4f
             }
             val height = 16.dp
-            val shape = remember { SkeletonTextShape }
+            val shape = remember { ZarinaSkeletonTextShape }
 
-            Skeleton(
+            ZarinaSkeleton(
                 shimmer = shimmer,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
@@ -472,7 +451,7 @@ object CatalogScreenComponents {
                     .clip(shape),
             )
 
-            Skeleton(
+            ZarinaSkeleton(
                 shimmer = shimmer,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)

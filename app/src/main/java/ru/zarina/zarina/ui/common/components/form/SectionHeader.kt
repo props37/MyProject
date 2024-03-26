@@ -22,8 +22,8 @@ fun SectionHeader(
     ) {
         Text(
             text = text,
-            style = UiKitTheme.typography.circle1720bold,
-            color = UiKitTheme.colors.primaryContentColor,
+            style = UiKitTheme.typographyOld.circle1720bold,
+            color = UiKitTheme.colorsOld.primaryContentColor,
         )
     }
 }

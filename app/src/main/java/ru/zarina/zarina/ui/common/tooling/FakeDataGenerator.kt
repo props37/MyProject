@@ -1,22 +1,22 @@
 package ru.zarina.zarina.ui.common.tooling
 
-import ru.zarina.zarina.domain.rework.category.Category
-import ru.zarina.zarina.domain.rework.common.Barcode
-import ru.zarina.zarina.domain.rework.common.Color
-import ru.zarina.zarina.domain.rework.common.Media
-import ru.zarina.zarina.domain.rework.common.MediaType
-import ru.zarina.zarina.domain.rework.common.Url
-import ru.zarina.zarina.domain.rework.product.Price
-import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.domain.rework.product.ProductColor
-import ru.zarina.zarina.domain.rework.product.ProductOffer
+import ru.zarina.zarina.domain.category.Category
+import ru.zarina.zarina.domain.common.Barcode
+import ru.zarina.zarina.domain.common.Color
+import ru.zarina.zarina.domain.common.Media
+import ru.zarina.zarina.domain.common.MediaType
+import ru.zarina.zarina.domain.common.Url
+import ru.zarina.zarina.domain.product.Price
+import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.domain.product.ProductColor
+import ru.zarina.zarina.domain.product.ProductOffer
 import java.util.UUID
 import kotlin.random.Random
 
 object FakeDataGenerator {
     fun getCategories(
         count: Int = 10,
-        generator: (Int) -> Category,
+        generator: (Int) -> Category = { getCategory() },
     ): List<Category> = List(count) { generator(it) }
 
     fun getCategory(
@@ -131,6 +131,11 @@ object FakeDataGenerator {
         discountPercent = discountPercent,
     )
 
+    fun getLoremIpsum(words: Int): String {
+        val wordList = LOREM_IPSUM.split(" ")
+        return wordList.take(words).joinToString(" ")
+    }
+
     private fun getProductNames(): List<String> = listOf(
         "Свитер из вискозы",
         "Платье",
@@ -141,4 +146,7 @@ object FakeDataGenerator {
 
     @Suppress("NOTHING_TO_INLINE")
     private inline fun getRandomString(): String = UUID.randomUUID().toString()
+
+    @Suppress("MaxLineLength")
+    private const val LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse pharetra ante ut justo euismod, vitae tempor diam venenatis. Sed egestas, tellus at vulputate ultricies, elit neque facilisis nibh, non commodo nunc mi nec quam. Proin mollis viverra est in faucibus. Aliquam erat volutpat. Cras id arcu porttitor, dignissim velit iaculis, congue magna. Etiam tincidunt ex vitae diam varius pellentesque. Ut gravida, lacus ac mollis blandit, nibh ante vulputate nisl, in ullamcorper tellus nibh sit amet enim. Phasellus fermentum odio diam, at pellentesque arcu luctus id. Proin ac urna id nisi convallis imperdiet. Pellentesque tellus dolor, feugiat scelerisque congue a, hendrerit id leo."
 }

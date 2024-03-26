@@ -3,14 +3,14 @@ package ru.zarina.zarina.ui.common.tooling.preview.providers.domain
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
-import ru.zarina.zarina.domain.Barcode
-import ru.zarina.zarina.domain.Color
-import ru.zarina.zarina.domain.Media
-import ru.zarina.zarina.domain.Offer
-import ru.zarina.zarina.domain.Price
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.Size
-import ru.zarina.zarina.domain.Url
+import ru.zarina.zarina.domain.old.Barcode
+import ru.zarina.zarina.domain.old.Color
+import ru.zarina.zarina.domain.old.Media
+import ru.zarina.zarina.domain.old.Offer
+import ru.zarina.zarina.domain.old.Price
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.Size
+import ru.zarina.zarina.domain.old.Url
 
 class ProductProvider : PreviewParameterProvider<Product> {
     override val values = sequenceOf(

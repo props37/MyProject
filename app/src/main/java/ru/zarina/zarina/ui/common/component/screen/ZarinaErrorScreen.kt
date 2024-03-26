@@ -16,24 +16,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.base.ErrorStateRework
-import ru.zarina.zarina.ui.common.base.textString
+import ru.zarina.zarina.ui.base.ErrorState
+import ru.zarina.zarina.ui.base.text.textString
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 
 @Composable
 fun ZarinaErrorScreen(
-    state: ErrorStateRework,
-    onRefreshClicked: () -> Unit,
+    state: ErrorState,
+    onButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -45,22 +43,22 @@ fun ZarinaErrorScreen(
         Icon(
             painter = painterResource(state.iconResId),
             contentDescription = null,
-            tint = UiKitTheme.colorsReworked.icon.regular.disabled,
+            tint = UiKitTheme.colors.icon.regular.disabled,
             modifier = Modifier.size(64.dp),
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = textString(state.title),
-            style = UiKitTheme.typographyReworked.primary.bold,
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            style = UiKitTheme.typography.primary.bold,
+            color = UiKitTheme.colors.text.general.regular.default,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp),
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = textString(state.body),
-            style = UiKitTheme.typographyReworked.secondary.regular,
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            style = UiKitTheme.typography.secondary.regular,
+            color = UiKitTheme.colors.text.general.regular.default,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp),
         )
@@ -69,7 +67,7 @@ fun ZarinaErrorScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         AnimatedContent(
-            targetState = state.isRefreshButtonVisible,
+            targetState = state.isButtonVisible,
             transitionSpec = {
                 AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
             },
@@ -77,10 +75,10 @@ fun ZarinaErrorScreen(
         ) { isVisible ->
             if (isVisible) {
                 ZarinaButton(
-                    onClick = onRefreshClicked,
+                    onClick = onButtonClicked,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text(text = stringResource(R.string.refresh).uppercase())
+                    Text(text = textString(state.buttonText).uppercase())
                 }
             }
         }
@@ -94,8 +92,8 @@ fun ZarinaErrorScreen(
 private fun NetworkErrorPreview() {
     ZarinaTheme {
         ZarinaErrorScreen(
-            state = ErrorStateRework.NETWORK,
-            onRefreshClicked = {},
+            state = ErrorState.NETWORK,
+            onButtonClicked = {},
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp),
@@ -110,8 +108,8 @@ private fun NetworkErrorPreview() {
 private fun GenericErrorPreview() {
     ZarinaTheme {
         ZarinaErrorScreen(
-            state = ErrorStateRework.GENERIC,
-            onRefreshClicked = {},
+            state = ErrorState.GENERIC,
+            onButtonClicked = {},
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp),

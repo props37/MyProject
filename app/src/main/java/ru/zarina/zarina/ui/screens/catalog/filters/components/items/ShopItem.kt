@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Shop
+import ru.zarina.zarina.domain.old.Shop
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
@@ -36,8 +36,8 @@ fun ShopItem(
             if (shop != null) {
                 Text(
                     text = stringResource(id = R.string.pickup_at_shop),
-                    style = UiKitTheme.typography.circle1316,
-                    color = UiKitTheme.colors.hint,
+                    style = UiKitTheme.typographyOld.circle1316,
+                    color = UiKitTheme.colorsOld.hint,
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
@@ -46,15 +46,15 @@ fun ShopItem(
                 shop?.name ?: stringResource(id = R.string.select_store)
             Text(
                 text = primaryText,
-                style = UiKitTheme.typography.circle1718,
-                color = UiKitTheme.colors.primaryContentColor,
+                style = UiKitTheme.typographyOld.circle1718,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 modifier = Modifier.padding(end = 8.dp)
             )
         }
         Icon(
-            painter = painterResource(id = R.drawable.ic_chevron_right_24),
+            painter = painterResource(id = R.drawable.old_ic_chevron_right_24),
             contentDescription = null,
-            tint = UiKitTheme.colors.primaryContentColor,
+            tint = UiKitTheme.colorsOld.primaryContentColor,
         )
     }
 }

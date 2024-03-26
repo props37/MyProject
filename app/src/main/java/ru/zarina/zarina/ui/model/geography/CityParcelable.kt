@@ -3,8 +3,8 @@ package ru.zarina.zarina.ui.model.geography
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.domain.rework.geography.KladrId
+import ru.zarina.zarina.domain.geography.City
+import ru.zarina.zarina.domain.geography.KladrId
 
 @Serializable
 @Parcelize

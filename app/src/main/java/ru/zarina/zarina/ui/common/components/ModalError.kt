@@ -17,18 +17,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.base.ErrorState
-import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.base.textString
+import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.base.text.textString
+import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @Composable
 fun ModalError(
-    state: ErrorState,
+    state: ErrorStateOld,
     modifier: Modifier = Modifier,
     onButtonClick: () -> Unit = {},
 ) {
@@ -49,7 +49,7 @@ fun ModalError(
 
 @Composable
 private fun ErrorContent(
-    state: ErrorState,
+    state: ErrorStateOld,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -67,15 +67,15 @@ private fun ErrorContent(
         if (state.title != null)
             Text(
                 text = textString(state.title),
-                style = UiKitTheme.typography.circle1720bold,
-                color = UiKitTheme.colors.primaryContentColor,
+                style = UiKitTheme.typographyOld.circle1720bold,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 textAlign = TextAlign.Center,
             )
         if (state.subtitle != null)
             Text(
                 text = textString(state.subtitle),
-                style = UiKitTheme.typography.circle1518,
-                color = UiKitTheme.colors.primaryContentColor,
+                style = UiKitTheme.typographyOld.circle1518,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 textAlign = TextAlign.Center,
             )
     }
@@ -83,7 +83,7 @@ private fun ErrorContent(
 
 @Composable
 private fun RefreshButton(
-    state: ErrorState,
+    state: ErrorStateOld,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -107,8 +107,8 @@ private fun RefreshButton(
 fun ModalErrorPreview() {
     ZarinaTheme {
         ModalError(
-            state = ErrorState(
-                icon = R.drawable.ic_no_network_96,
+            state = ErrorStateOld(
+                icon = R.drawable.old_ic_no_network_96,
                 title = Text.String("Error title"),
                 subtitle = Text.String("Error subtitle"),
                 isButtonVisible = true,

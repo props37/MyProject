@@ -39,7 +39,7 @@ fun FilterButton(
             .padding(16.dp)
     ) {
         val foregroundColor by animateColorAsState(
-            targetValue = if (isEnabled) UiKitTheme.colors.primaryContentColor else UiKitTheme.colors.disabled,
+            targetValue = if (isEnabled) UiKitTheme.colorsOld.primaryContentColor else UiKitTheme.colorsOld.disabled,
             label = "foreground color"
         )
         Image(
@@ -50,7 +50,7 @@ fun FilterButton(
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = text,
-            style = UiKitTheme.typography.circle1718,
+            style = UiKitTheme.typographyOld.circle1718,
             color = foregroundColor,
         )
     }

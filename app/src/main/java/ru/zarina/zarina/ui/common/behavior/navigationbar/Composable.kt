@@ -3,6 +3,13 @@ package ru.zarina.zarina.ui.common.behavior.navigationbar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 
+@Deprecated(
+    message = "Use ForcedBottomNavBarBehavior instead.",
+    replaceWith = ReplaceWith(
+        expression = "ForcedBottomNavBarBehavior",
+        "ru.zarina.zarina.ui.common.behavior.bottomnavbar",
+    )
+)
 @Composable
 fun NavigationBarState(
     isVisible: Boolean,

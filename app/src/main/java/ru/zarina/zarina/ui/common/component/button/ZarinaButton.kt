@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -39,12 +38,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
+import ru.zarina.zarina.ui.common.component.loader.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.rippletheme.DarkRippleTheme
 import ru.zarina.zarina.ui.common.rippletheme.LightRippleTheme
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.util.compose.defaultMinSize
 
 @Composable
 fun ZarinaButton(
@@ -109,7 +109,7 @@ fun ZarinaButton(
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
-                .defaultMinSize(minHeight = minSize, minWidth = minSize)
+                .defaultMinSize(minSize)
                 .clip(shape)
                 .drawBehind { drawRect(backgroundColor.value) }
                 .border(width = 1.dp, color = borderColor.value, shape = shape)
@@ -130,7 +130,7 @@ fun ZarinaButton(
                 contentAlignment = Alignment.Center,
                 label = "ZarinaButton content",
             ) { isLoading ->
-                Row {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     if (!isLoading) {
                         content()
                     } else {
@@ -178,10 +178,10 @@ object ZarinaButtonDefaults {
 
     @Composable
     fun primaryColors(
-        backgroundColor: Color = UiKitTheme.colorsReworked.background.button.primary.default,
-        contentColor: Color = UiKitTheme.colorsReworked.text.button.primary.default,
-        disabledBackgroundColor: Color = UiKitTheme.colorsReworked.background.button.primary.disabled,
-        disabledContentColor: Color = UiKitTheme.colorsReworked.text.button.primary.disabled,
+        backgroundColor: Color = UiKitTheme.colors.background.button.primary.default,
+        contentColor: Color = UiKitTheme.colors.text.button.primary.default,
+        disabledBackgroundColor: Color = UiKitTheme.colors.background.button.primary.disabled,
+        disabledContentColor: Color = UiKitTheme.colors.text.button.primary.disabled,
         borderColor: Color = Color.Unspecified,
         disabledBorderColor: Color = Color.Unspecified,
     ): ZarinaButtonColors = ZarinaButtonColors(
@@ -195,10 +195,10 @@ object ZarinaButtonDefaults {
 
     @Composable
     fun secondaryColors(
-        backgroundColor: Color = UiKitTheme.colorsReworked.background.button.secondary.default,
-        contentColor: Color = UiKitTheme.colorsReworked.text.button.secondary.default,
-        disabledBackgroundColor: Color = UiKitTheme.colorsReworked.background.button.secondary.disabled,
-        disabledContentColor: Color = UiKitTheme.colorsReworked.text.button.secondary.disabled,
+        backgroundColor: Color = UiKitTheme.colors.background.button.secondary.default,
+        contentColor: Color = UiKitTheme.colors.text.button.secondary.default,
+        disabledBackgroundColor: Color = UiKitTheme.colors.background.button.secondary.disabled,
+        disabledContentColor: Color = UiKitTheme.colors.text.button.secondary.disabled,
         borderColor: Color = Color.Unspecified,
         disabledBorderColor: Color = Color.Unspecified,
     ): ZarinaButtonColors = ZarinaButtonColors(
@@ -212,10 +212,10 @@ object ZarinaButtonDefaults {
 
     @Composable
     fun tertiaryColors(
-        backgroundColor: Color = UiKitTheme.colorsReworked.background.button.tertiary.default,
-        contentColor: Color = UiKitTheme.colorsReworked.text.button.tertiary.default,
-        disabledBackgroundColor: Color = UiKitTheme.colorsReworked.background.button.tertiary.disabled,
-        disabledContentColor: Color = UiKitTheme.colorsReworked.text.button.tertiary.disabled,
+        backgroundColor: Color = UiKitTheme.colors.background.button.tertiary.default,
+        contentColor: Color = UiKitTheme.colors.text.button.tertiary.default,
+        disabledBackgroundColor: Color = UiKitTheme.colors.background.button.tertiary.disabled,
+        disabledContentColor: Color = UiKitTheme.colors.text.button.tertiary.disabled,
         borderColor: Color = Color.Unspecified,
         disabledBorderColor: Color = Color.Unspecified,
     ): ZarinaButtonColors = ZarinaButtonColors(
@@ -229,12 +229,12 @@ object ZarinaButtonDefaults {
 
     @Composable
     fun outlineColors(
-        backgroundColor: Color = UiKitTheme.colorsReworked.background.button.outline.default,
-        contentColor: Color = UiKitTheme.colorsReworked.text.button.outline.default,
-        disabledBackgroundColor: Color = UiKitTheme.colorsReworked.background.button.outline.disabled,
-        disabledContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.disabled,
-        borderColor: Color = UiKitTheme.colorsReworked.border.button.default,
-        disabledBorderColor: Color = UiKitTheme.colorsReworked.border.button.disabled,
+        backgroundColor: Color = UiKitTheme.colors.background.button.outline.default,
+        contentColor: Color = UiKitTheme.colors.text.button.outline.default,
+        disabledBackgroundColor: Color = UiKitTheme.colors.background.button.outline.disabled,
+        disabledContentColor: Color = UiKitTheme.colors.text.button.outline.disabled,
+        borderColor: Color = UiKitTheme.colors.border.button.default,
+        disabledBorderColor: Color = UiKitTheme.colors.border.button.disabled,
     ): ZarinaButtonColors = ZarinaButtonColors(
         backgroundColor = backgroundColor,
         contentColor = contentColor,
@@ -244,13 +244,12 @@ object ZarinaButtonDefaults {
         disabledBorderColor = disabledBorderColor,
     )
 
-    // Also used for Cell buttons from design kit
     @Composable
     fun backlessColors(
         backgroundColor: Color = Color.Unspecified,
-        contentColor: Color = UiKitTheme.colorsReworked.text.button.backless.default,
+        contentColor: Color = UiKitTheme.colors.text.button.backless.default,
         disabledBackgroundColor: Color = Color.Unspecified,
-        disabledContentColor: Color = UiKitTheme.colorsReworked.text.button.backless.disabled,
+        disabledContentColor: Color = UiKitTheme.colors.text.button.backless.disabled,
         borderColor: Color = Color.Unspecified,
         disabledBorderColor: Color = Color.Unspecified,
     ): ZarinaButtonColors = ZarinaButtonColors(
@@ -271,9 +270,9 @@ object ZarinaButtonDefaults {
 
     @Composable
     fun textStyleFromSize(size: ZarinaButtonSize): TextStyle = when (size) {
-        ZarinaButtonSize.Large -> UiKitTheme.typographyReworked.tertiary.regular
-        ZarinaButtonSize.Medium -> UiKitTheme.typographyReworked.caption1.regular
-        ZarinaButtonSize.Small -> UiKitTheme.typographyReworked.caption3.regular
+        ZarinaButtonSize.Large -> UiKitTheme.typography.tertiary.regular
+        ZarinaButtonSize.Medium -> UiKitTheme.typography.caption1.regular
+        ZarinaButtonSize.Small -> UiKitTheme.typography.caption3.regular
     }
 }
 

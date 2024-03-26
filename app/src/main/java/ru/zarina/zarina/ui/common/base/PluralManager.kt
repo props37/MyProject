@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.common.base
 
 import androidx.annotation.StringRes
+import ru.zarina.zarina.ui.base.text.Text
 
 /* The plural string management is done through this class as a workaround to Android not allowing
  to specify the locale (and, in turn, the plural rules) of the default string resources. It uses

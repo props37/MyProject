@@ -1,9 +1,9 @@
 package ru.zarina.zarina.ui.screens.webpage
 
 import org.koin.core.annotation.Factory
-import ru.zarina.zarina.data.UserAgentHeaderProvider
-import ru.zarina.zarina.usecase.authorization.GetAuthorizationTokenUseCase
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.data.old.UserAgentHeaderProvider
+import ru.zarina.zarina.usecase.old.authorization.GetAuthorizationTokenUseCase
+import ru.zarina.zarina.util.base.usecase.invoke
 
 @Factory
 class WebpageInteractor(

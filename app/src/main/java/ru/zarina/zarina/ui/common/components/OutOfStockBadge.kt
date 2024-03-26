@@ -17,13 +17,13 @@ fun OutOfStockBadge(
 ) {
     Box(
         modifier = modifier
-            .background(UiKitTheme.colors.productBadgeBackground)
+            .background(UiKitTheme.colorsOld.productBadgeBackground)
             .padding(horizontal = 8.dp, vertical = 4.dp),
     ) {
         Text(
             text = stringResource(R.string.out_of_stock),
-            style = UiKitTheme.typography.circle1012,
-            color = UiKitTheme.colors.productBadgeForeground,
+            style = UiKitTheme.typographyOld.circle1012,
+            color = UiKitTheme.colorsOld.productBadgeForeground,
         )
     }
 }

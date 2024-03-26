@@ -15,6 +15,7 @@ inline fun <F, reified T : Throwable> Flow<F>.catch(
     return this.catch { if (it is T) this.action(it) else throw it }
 }
 
+@Deprecated("Use mapState instead.")
 fun <T, R> StateFlow<T>.mapState(
     coroutineScope: CoroutineScope,
     started: SharingStarted = SharingStarted.WhileSubscribed(),

@@ -16,7 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.dialog.ZarinaDialogContainer
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -56,16 +56,16 @@ private fun ScreenContent(
     ZarinaDialogContainer {
         Text(
             text = stringResource(R.string.default_city_dialog_title),
-            style = UiKitTheme.typographyReworked.primary.bold,
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            style = UiKitTheme.typography.primary.bold,
+            color = UiKitTheme.colors.text.general.regular.default,
         )
 
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
             text = bodyText(defaultCity),
-            style = UiKitTheme.typographyReworked.secondary.regular,
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            style = UiKitTheme.typography.secondary.regular,
+            color = UiKitTheme.colors.text.general.regular.default,
         )
 
         Spacer(modifier = Modifier.height(20.dp))

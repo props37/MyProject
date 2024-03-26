@@ -2,27 +2,35 @@ package ru.zarina.zarina.data.geography.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.data.ApiContract
-import ru.zarina.zarina.domain.AddressId
-import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.domain.geography.City
+import ru.zarina.zarina.domain.geography.KladrId
+import timber.log.Timber
 
 @Serializable
 data class CityDto(
-    @SerialName("kladr_id")
-    val id: String? = null,
-    @SerialName("name")
+    @SerialName("name") 
     val name: String? = null,
-    @SerialName("region")
+    
+    @SerialName("full_name") 
+    val fullName: String? = null,
+    
+    @SerialName("region") 
     val region: String? = null,
+
+    @SerialName("kladr_id")
+    val kladrId: String? = null,
 ) {
-
-    fun toDomain(): City? {
-        if (
-            ApiContract.isNotNull(id, "id")
-            && ApiContract.isNotNull(name, "name")
-            && ApiContract.isNotNull(region, "region")
-        ) return City(AddressId(id), name, region)
-        return null
+    fun toCity(): City? {
+        return if (name != null && fullName != null && region != null && kladrId != null) {
+            return City(
+                name = name,
+                fullName = fullName,
+                region = region,
+                kladrId = KladrId(kladrId),
+            )
+        } else {
+            Timber.e("Drop City because its name, fullName, region or kladrId is null")
+            null
+        }
     }
-
 }

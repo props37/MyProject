@@ -36,7 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @Composable
 fun RedirectSearchBar(
@@ -93,7 +93,7 @@ private fun SearchBar(
             ),
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_search_24),
+            painter = painterResource(id = R.drawable.ic_magnifying_glass_24),
             contentDescription = stringResource(id = R.string.search),
             modifier = Modifier
                 .minimumInteractiveComponentSize()
@@ -115,7 +115,7 @@ private fun SearchBar(
             exit = fadeOut(),
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_close_24),
+                painter = painterResource(id = R.drawable.ic_cross_24),
                 contentDescription = stringResource(id = R.string.clear),
                 modifier = Modifier
                     .padding(end = 16.dp)
@@ -147,8 +147,8 @@ private fun SearchInput(
         ) {
             Text(
                 text = stringResource(id = R.string.search_products),
-                style = UiKitTheme.typography.circle1518,
-                color = UiKitTheme.colors.hint,
+                style = UiKitTheme.typographyOld.circle1518,
+                color = UiKitTheme.colorsOld.hint,
                 maxLines = 1,
                 textAlign = TextAlign.Start,
             )
@@ -156,7 +156,7 @@ private fun SearchInput(
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
-            textStyle = UiKitTheme.typography.circle1518.copy(color = UiKitTheme.colors.primaryContentColor),
+            textStyle = UiKitTheme.typographyOld.circle1518.copy(color = UiKitTheme.colorsOld.primaryContentColor),
             singleLine = true,
             enabled = isEnabled,
             interactionSource = interactionSource,

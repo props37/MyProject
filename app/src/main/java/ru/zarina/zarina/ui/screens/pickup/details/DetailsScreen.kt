@@ -45,9 +45,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Shop
-import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.base.textString
+import ru.zarina.zarina.domain.old.Shop
+import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.base.text.textString
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
@@ -61,7 +61,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ShopProvider
 import ru.zarina.zarina.ui.common.utils.adaptPhoneValue
 import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 import ru.zarina.zarina.utils.compose.PhoneVisualTransformation
 import ru.zarina.zarina.utils.compose.autofill
 import ru.zarina.zarina.utils.compose.navigationOrIme
@@ -265,24 +265,24 @@ private fun ColumnScope.OrderInformation(
     if (shop != null) {
         Text(
             text = stringResource(R.string.shop),
-            style = UiKitTheme.typography.circle1518bold,
-            color = UiKitTheme.colors.primaryContentColor,
+            style = UiKitTheme.typographyOld.circle1518bold,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             textAlign = TextAlign.Start,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "${shop.name}, ${shop.address}",
-            style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
+            style = UiKitTheme.typographyOld.circle1718,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             textAlign = TextAlign.Start,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = stringResource(R.string.working_schedule_template, shop.schedule),
-            style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
+            style = UiKitTheme.typographyOld.circle1718,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             textAlign = TextAlign.Start,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
@@ -290,40 +290,40 @@ private fun ColumnScope.OrderInformation(
     }
     Text(
         text = stringResource(R.string.reservation_period),
-        style = UiKitTheme.typography.circle1518bold,
-        color = UiKitTheme.colors.primaryContentColor,
+        style = UiKitTheme.typographyOld.circle1518bold,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = Modifier.padding(horizontal = 16.dp),
     )
     Spacer(modifier = Modifier.height(8.dp))
     Text(
         text = stringResource(R.string.two_days),
-        style = UiKitTheme.typography.circle1718,
-        color = UiKitTheme.colors.primaryContentColor,
+        style = UiKitTheme.typographyOld.circle1718,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = Modifier.padding(horizontal = 16.dp),
     )
     Spacer(modifier = Modifier.height(12.dp))
     Text(
         text = stringResource(R.string.payment_method),
-        style = UiKitTheme.typography.circle1518bold,
-        color = UiKitTheme.colors.primaryContentColor,
+        style = UiKitTheme.typographyOld.circle1518bold,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = Modifier.padding(horizontal = 16.dp),
     )
     Spacer(modifier = Modifier.height(8.dp))
     Text(
         text = stringResource(R.string.in_cash_or_by_card_upon_receiving),
-        style = UiKitTheme.typography.circle1718,
-        color = UiKitTheme.colors.primaryContentColor,
+        style = UiKitTheme.typographyOld.circle1718,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = Modifier.padding(horizontal = 16.dp),
     )
     Spacer(modifier = Modifier.height(16.dp))
     Text(
         text = stringResource(R.string.you_ll_be_able_to_pickup_after_sms),
-        style = UiKitTheme.typography.circle1720bold,
-        color = UiKitTheme.colors.primaryContentColor,
+        style = UiKitTheme.typographyOld.circle1720bold,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = Modifier.padding(horizontal = 16.dp),
     )

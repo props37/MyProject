@@ -1,8 +1,8 @@
 package ru.zarina.zarina.ui.common.tooling.preview.providers.domain
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import ru.zarina.zarina.domain.GeoLocation
-import ru.zarina.zarina.domain.Shop
+import ru.zarina.zarina.domain.old.GeoLocation
+import ru.zarina.zarina.domain.old.Shop
 import java.util.UUID
 
 class ShopProvider : PreviewParameterProvider<Shop> {

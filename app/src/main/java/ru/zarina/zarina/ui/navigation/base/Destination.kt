@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.navigation.base
 
+import android.os.Bundle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDeepLink
 import ru.zarina.zarina.ui.navigation.base.parameterless.SimpleDestination
@@ -32,6 +33,8 @@ abstract class Destination<P> {
      */
     open val arguments: List<NamedNavArgument>
         get() = emptyList()
+
+    open fun createArgsBundle(args: P): Bundle? = null
 
     /**
      * List of deep links associated with the destinations.

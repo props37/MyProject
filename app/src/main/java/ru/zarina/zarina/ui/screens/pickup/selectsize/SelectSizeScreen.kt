@@ -31,17 +31,17 @@ import androidx.navigation.NavBackStackEntry
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Barcode
-import ru.zarina.zarina.domain.Offer
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.Size
+import ru.zarina.zarina.domain.old.Barcode
+import ru.zarina.zarina.domain.old.Offer
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.Size
 import ru.zarina.zarina.ui.common.components.bottomsheet.Header
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @Composable
 fun SelectSizeScreenContent(
@@ -51,7 +51,7 @@ fun SelectSizeScreenContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(UiKitTheme.colors.screenBackground)
+            .background(UiKitTheme.colorsOld.screenBackground)
     ) {
         Header(
             text = stringResource(id = R.string.select_size_appeal),
@@ -83,7 +83,7 @@ private fun SizeItem(
     modifier: Modifier = Modifier,
 ) {
     val contentColor by animateColorAsState(
-        if (isAvailable) UiKitTheme.colors.primaryContentColor else UiKitTheme.colors.disabled,
+        if (isAvailable) UiKitTheme.colorsOld.primaryContentColor else UiKitTheme.colorsOld.disabled,
         label = "size text color"
     )
     CompositionLocalProvider(LocalContentColor provides contentColor) {
@@ -96,7 +96,7 @@ private fun SizeItem(
         ) {
             Text(
                 text = size.name,
-                style = UiKitTheme.typography.circle1718,
+                style = UiKitTheme.typographyOld.circle1718,
                 color = contentColor,
                 textAlign = TextAlign.Start,
                 modifier = modifier
@@ -118,11 +118,11 @@ private fun Subscribe(
     ) {
         Text(
             text = stringResource(R.string.subscribe),
-            style = UiKitTheme.typography.circle1718,
+            style = UiKitTheme.typographyOld.circle1718,
             modifier = Modifier.padding(end = 8.dp),
         )
         Image(
-            painter = painterResource(id = R.drawable.ic_chevron_right_24),
+            painter = painterResource(id = R.drawable.old_ic_chevron_right_24),
             contentDescription = null,
         )
     }

@@ -28,7 +28,7 @@ fun DropdownButton(
         modifier = modifier
             .border(
                 width = 1.dp,
-                color = UiKitTheme.colors.primaryBorderColor,
+                color = UiKitTheme.colorsOld.primaryBorderColor,
             )
             .clickable(onClick = onClick)
             .animateContentSize(),
@@ -40,7 +40,7 @@ fun DropdownButton(
             content()
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
-                painter = painterResource(R.drawable.ic_chevron_down_24),
+                painter = painterResource(R.drawable.old_ic_chevron_down_24),
                 contentDescription = stringResource(R.string.dropdown),
             )
         }

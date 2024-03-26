@@ -13,14 +13,14 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ZarinaScaffold(
     modifier: Modifier = Modifier,
-    errorState: ErrorState? = null,
+    errorState: ErrorStateOld? = null,
     onErrorButtonClick: () -> Unit = {},
     isModalLoaderVisible: Boolean = false,
     toolbar: @Composable () -> Unit = {},
@@ -29,7 +29,7 @@ fun ZarinaScaffold(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.screenBackground)
+            .background(UiKitTheme.colorsOld.screenBackground)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -50,7 +50,7 @@ fun ZarinaScaffold(
                     onButtonClick = { onErrorButtonClick() },
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(UiKitTheme.colors.screenBackground)
+                        .background(UiKitTheme.colorsOld.screenBackground)
                         .navigationBarsPadding()
                 )
         }

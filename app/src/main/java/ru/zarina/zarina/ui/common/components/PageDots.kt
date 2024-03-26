@@ -69,9 +69,9 @@ private fun Dot(
     )
     val color by animateColorAsState(
         targetValue = if (state == DotState.ACTIVE)
-            UiKitTheme.colors.pagerDot
+            UiKitTheme.colorsOld.pagerDot
         else
-            UiKitTheme.colors.pagerDot.copy(0.5f),
+            UiKitTheme.colorsOld.pagerDot.copy(0.5f),
         label = "dot color"
     )
     val horizontalPadding by animateDpAsState(

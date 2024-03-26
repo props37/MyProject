@@ -2,8 +2,8 @@ package ru.zarina.zarina.ui.screens.favourites.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.usecase.favorites.GetFavoritesPageUseCase
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.usecase.old.favorites.GetFavoritesPageUseCase
 
 class FavouritesPagingSource(
     private val getFavoritesPageUseCase: GetFavoritesPageUseCase,

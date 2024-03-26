@@ -1,13 +1,19 @@
 package ru.zarina.zarina.data.content
 
-import org.koin.core.annotation.Factory
-import ru.zarina.zarina.data.content.remote.IContentRemoteSource
+import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.data.content.remote.ContentRemoteDataSource
+import ru.zarina.zarina.domain.common.Url
+import ru.zarina.zarina.domain.content.HomeContent
+import javax.inject.Inject
 
-@Factory
-class ContentRepository(
-    private val remoteSource: IContentRemoteSource,
-) : IContentRepository {
-    override suspend fun getOnboardingSplash() = remoteSource.getOnboardingSplash()
-    override suspend fun getBanners() = remoteSource.getBanners()
-    override fun getSelections() = remoteSource.getSelections()
+class ContentRepository @Inject constructor(
+    private val remoteDataSource: ContentRemoteDataSource,
+) {
+    fun getOnboardingBannerUrl(): Url {
+        return remoteDataSource.getOnboardingBannerUrl()
+    }
+
+    fun getHomeContentFlow(): Flow<HomeContent> {
+        return remoteDataSource.getHomeContentFlow()
+    }
 }

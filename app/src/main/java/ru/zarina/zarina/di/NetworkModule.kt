@@ -1,140 +1,77 @@
 package ru.zarina.zarina.di
 
-import android.content.Context
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.providers.BearerTokens
-import io.ktor.client.plugins.cache.HttpCache
-import io.ktor.client.plugins.cache.storage.FileStorage
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
-import org.koin.core.annotation.Module
-import org.koin.core.annotation.Named
-import org.koin.core.annotation.Singleton
 import ru.zarina.zarina.BuildConfig
-import ru.zarina.zarina.data.MindboxHeaderProvider
-import ru.zarina.zarina.data.UserAgentHeaderProvider
-import ru.zarina.zarina.data.ktor.plugins.auth.ZarinaAuth
-import ru.zarina.zarina.data.ktor.plugins.auth.bearer
-import ru.zarina.zarina.domain.AuthorizationToken
-import ru.zarina.zarina.usecase.authorization.ClearDeviceAuthorizationTokenUseCase
-import ru.zarina.zarina.usecase.authorization.GetAuthorizationTokenUseCase
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.data.common.remote.headerprovider.ZarinaApiHeaderProvider
+import ru.zarina.zarina.data.common.remote.ktor.plugin.ZarinaAuth
+import ru.zarina.zarina.data.common.remote.ktor.plugin.bearer
+import ru.zarina.zarina.domain.authorization.AuthorizationTokens
+import ru.zarina.zarina.usecase.authorization.GetAuthorizationTokensFlowUseCase
+import ru.zarina.zarina.usecase.authorization.RefreshAuthorizationTokensUseCase
+import ru.zarina.zarina.util.base.usecase.invoke
 import timber.log.Timber
-import java.io.File
+import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 class NetworkModule {
 
-    @OptIn(ExperimentalSerializationApi::class)
+    @Provides
     @Singleton
-    fun providesJson() = Json {
-        isLenient = true
-        ignoreUnknownKeys = true
-        coerceInputValues = true
-        explicitNulls = false
-    }
-
-    @Named(Qualifiers.Api.ZARINA_RESTRICTED)
-    @Singleton
-    fun providesTokenAuthorizationHttpClient(
-        context: Context,
-        getAuthorizationToken: GetAuthorizationTokenUseCase,
-        clearDeviceAuthorizationToken: ClearDeviceAuthorizationTokenUseCase,
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
+    fun provideAuthorizedZarinaHttpClient(
         json: Json,
-        headerProvider: UserAgentHeaderProvider,
-    ) = HttpClient(OkHttp) {
+        zarinaApiHeaderProvider: ZarinaApiHeaderProvider,
+        getAuthorizationTokensFlow: GetAuthorizationTokensFlowUseCase,
+        refreshAuthorizationTokens: RefreshAuthorizationTokensUseCase,
+    ): HttpClient = HttpClient(OkHttp) {
         baseConfig(json)
-        baseZarinaConfig(context, headerProvider)
+        baseZarinaConfig(zarinaApiHeaderProvider)
         install(ZarinaAuth) {
             bearer {
                 loadTokens {
-                    getAuthorizationToken().getOrNull()?.toBearerTokens()
+                    val tokens = getAuthorizationTokensFlow().firstOrNull()?.getOrNull()
+                    tokens?.toBearerTokens()
                 }
+
                 refreshTokens {
-                    clearDeviceAuthorizationToken()
-                    getAuthorizationToken().getOrNull()?.toBearerTokens()
+                    refreshAuthorizationTokens()
+                    val tokens = getAuthorizationTokensFlow().firstOrNull()?.getOrNull()
+                    tokens?.toBearerTokens()
                 }
             }
         }
     }
 
-    @Named(Qualifiers.Api.ZARINA)
+    @Provides
     @Singleton
-    fun providesHttpClient(
-        context: Context,
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.UNAUTHORIZED)
+    fun provideUnauthorizedZarinaHttpClient(
         json: Json,
-        headerProvider: UserAgentHeaderProvider,
-    ) = HttpClient(OkHttp) {
+        zarinaApiHeaderProvider: ZarinaApiHeaderProvider,
+    ): HttpClient = HttpClient(OkHttp) {
         baseConfig(json)
-        baseZarinaConfig(context, headerProvider)
+        baseZarinaConfig(zarinaApiHeaderProvider)
     }
 
-    @Named(Qualifiers.Api.MINDBOX_RESTRICTED)
-    @Singleton
-    fun providesMindboxSecretHttpClient(
-        context: Context,
-        json: Json,
-        headerProvider: MindboxHeaderProvider,
-    ) = HttpClient(OkHttp) {
-        baseConfig(json)
-        install(DefaultRequest) {
-            url("https://api.mindbox.ru/v3/operations/sync/")
-            headers {
-                headerProvider.getHeaders().forEach { (key, value) ->
-                    append(key, value)
-                }
-            }
-        }
-        install(HttpCache) {
-            val cacheFile = File(context.cacheDir, CACHE_DIR_MINDBOX)
-            privateStorage(FileStorage(cacheFile))
-        }
-    }
-
-    @Named(Qualifiers.Api.ANYQUERY_AUTOCOMPLETE)
-    @Singleton
-    fun providesAnyQueryAutocompleteHttpClient(
-        context: Context,
-        json: Json,
-    ) = HttpClient(OkHttp) {
-        baseConfig(json)
-        install(DefaultRequest) {
-            url("https://autocomplete.diginetica.net/")
-        }
-        install(HttpCache) {
-            val cacheFile = File(context.cacheDir, CACHE_DIR_MINDBOX)
-            privateStorage(FileStorage(cacheFile))
-        }
-    }
-
-    @Named(Qualifiers.Api.ANYQUERY_SEARCH)
-    @Singleton
-    fun providesAnyQuerySearchHttpClient(
-        context: Context,
-        json: Json,
-    ) = HttpClient(OkHttp) {
-        baseConfig(json)
-        install(DefaultRequest) {
-            url("https://sort.diginetica.net/")
-        }
-        install(HttpCache) {
-            val cacheFile = File(context.cacheDir, CACHE_DIR_MINDBOX)
-            privateStorage(FileStorage(cacheFile))
-        }
-    }
-
-    private fun HttpClientConfig<*>.baseConfig(
-        json: Json,
-    ) {
+    private fun HttpClientConfig<*>.baseConfig(json: Json) {
         expectSuccess = true
         install(ContentNegotiation) {
             json(json)
@@ -142,37 +79,32 @@ class NetworkModule {
         install(Logging) {
             level = LogLevel.ALL
             logger = object : Logger {
-                override fun log(message: String) = Timber.tag("ktor").v(message)
+                override fun log(message: String) {
+                    Timber.tag(HTTP_CLIENT_TAG).v(message)
+                }
             }
         }
+        install(HttpTimeout)
     }
 
     private fun HttpClientConfig<*>.baseZarinaConfig(
-        context: Context,
-        headerProvider: UserAgentHeaderProvider,
+        zarinaApiHeaderProvider: ZarinaApiHeaderProvider,
     ) {
         install(DefaultRequest) {
             url(BuildConfig.BACKEND_URL)
             headers {
-                headerProvider.getHeaders().forEach { (key, value) ->
+                zarinaApiHeaderProvider.provide().forEach { (key, value) ->
                     append(key, value)
                 }
             }
         }
-        install(HttpCache) {
-            val cacheFile = File(context.cacheDir, CACHE_DIR_ZARINA)
-            privateStorage(FileStorage(cacheFile))
-        }
     }
 
-    private fun AuthorizationToken.toBearerTokens(): BearerTokens {
-        return BearerTokens(this.token, "")
+    private fun AuthorizationTokens.toBearerTokens(): BearerTokens {
+        return BearerTokens(accessToken.value, refreshToken.value)
     }
 
     companion object {
-        private const val CACHE_DIR_ZARINA = "ktor-zarina-cache"
-        private const val CACHE_DIR_MINDBOX = "ktor-mindbox-cache"
+        private const val HTTP_CLIENT_TAG = "HttpClient"
     }
 }
-
-

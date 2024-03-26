@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -18,11 +19,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -42,33 +44,32 @@ import androidx.media3.common.util.UnstableApi
 import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.common.MediaType
-import ru.zarina.zarina.domain.rework.content.HomeContent
+import ru.zarina.zarina.domain.common.MediaType
+import ru.zarina.zarina.domain.content.HomeContent
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarHeightAsState
-import ru.zarina.zarina.ui.common.component.ZarinaLogo
-import ru.zarina.zarina.ui.common.component.ZarinaLogoAspectRatio
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
-import ru.zarina.zarina.ui.common.component.media.VideoPlayer
+import ru.zarina.zarina.ui.common.component.logo.ZarinaLogo
+import ru.zarina.zarina.ui.common.component.logo.ZarinaLogoAspectRatio
+import ru.zarina.zarina.ui.common.component.media.ZarinaVideoPlayer
 import ru.zarina.zarina.ui.common.component.screen.ZarinaLoadingScreen
-import ru.zarina.zarina.ui.common.component.tab.LooseTabRow
-import ru.zarina.zarina.ui.common.component.tab.LooseTabRowDefaults.looseTabIndicatorOffset
-import ru.zarina.zarina.ui.common.component.tab.ZarinaTabIndicator
+import ru.zarina.zarina.ui.common.component.tab.ZarinaLooseTabRow
 import ru.zarina.zarina.ui.screen.home.HomeViewModel.GenderTab
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import timber.log.Timber
 
 object HomeScreenComponents {
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun TopBar(
         genders: ImmutableList<GenderTab>,
-        currentGender: GenderTab,
-        onGenderClicked: (GenderTab) -> Unit,
+        pagerState: PagerState,
+        onGenderChanged: (GenderTab) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val color = UiKitTheme.colorsReworked.text.general.inversed.default
+        val color = UiKitTheme.colors.text.general.inversed.default
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier,
@@ -82,21 +83,18 @@ object HomeScreenComponents {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            val selectedTabIndex = remember(genders, currentGender) {
-                genders.indexOf(currentGender)
+            val currentGender = remember(genders, pagerState) {
+                derivedStateOf { genders.getOrNull(pagerState.currentPage) }
             }
-            LooseTabRow(
-                selectedTabIndex = selectedTabIndex,
-                indicator = { tabPositions ->
-                    ZarinaTabIndicator(
-                        color = color,
-                        modifier = Modifier.looseTabIndicatorOffset(tabPositions[selectedTabIndex]),
-                    )
-                },
+
+            ZarinaLooseTabRow(
+                selectedTabIndex = pagerState.currentPage,
+                backgroundColor = Color.Unspecified,
+                contentColor = UiKitTheme.colors.background.general.regular.default,
             ) {
                 genders.forEach { gender ->
                     ZarinaButton(
-                        onClick = { onGenderClicked(gender) },
+                        onClick = { onGenderChanged(gender) },
                         size = ZarinaButtonSize.Medium,
                         colors = ZarinaButtonDefaults.backlessColors(contentColor = color),
                     ) {
@@ -105,10 +103,10 @@ object HomeScreenComponents {
                             GenderTab.MEN -> R.string.for_men
                         }
 
-                        val style = if (gender == currentGender) {
-                            UiKitTheme.typographyReworked.tertiary.regular
+                        val style = if (gender == currentGender.value) {
+                            UiKitTheme.typography.tertiary.regular
                         } else {
-                            UiKitTheme.typographyReworked.tertiary.light
+                            UiKitTheme.typography.tertiary.light
                         }
 
                         Text(
@@ -125,37 +123,28 @@ object HomeScreenComponents {
     @Composable
     fun GenderContentPager(
         genders: ImmutableList<GenderTab>,
-        currentGender: GenderTab,
+        pagerState: PagerState,
         content: HomeContent,
         onBannerClicked: (HomeContent.Banner) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val pagerState = rememberPagerState(
-            initialPage = remember { genders.indexOf(currentGender) },
-            pageCount = { genders.size },
-        )
+        CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
+            HorizontalPager(
+                state = pagerState,
+                beyondBoundsPageCount = 0,
+                modifier = modifier,
+            ) { page ->
+                val banners = when (genders[page]) {
+                    GenderTab.WOMEN -> content.womenBanners
+                    GenderTab.MEN -> content.menBanners
+                }
 
-        LaunchedEffect(pagerState, genders, currentGender) {
-            val page = genders.indexOf(currentGender)
-            pagerState.animateScrollToPage(page)
-        }
-
-        HorizontalPager(
-            state = pagerState,
-            beyondBoundsPageCount = 0,
-            userScrollEnabled = false,
-            modifier = modifier,
-        ) { page ->
-            val banners = when (genders[page]) {
-                GenderTab.WOMEN -> content.womenBanners
-                GenderTab.MEN -> content.menBanners
+                BannerPager(
+                    banners = banners,
+                    onBannerClicked = onBannerClicked,
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
-
-            BannerPager(
-                banners = banners,
-                onBannerClicked = onBannerClicked,
-                modifier = Modifier.fillMaxSize(),
-            )
         }
     }
 
@@ -243,7 +232,7 @@ object HomeScreenComponents {
                 ZarinaLoadingScreen(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(UiKitTheme.colorsReworked.background.general.regular.default)
+                        .background(UiKitTheme.colors.background.general.regular.default)
                         // Add bottomNavBar padding at the top to align the loader at the center
                         // of the entire screen
                         .padding(top = bottomNavBarHeightAsState().value),
@@ -358,8 +347,8 @@ object HomeScreenComponents {
             if (showTitle) {
                 Text(
                     text = banner.title?.uppercase().orEmpty(),
-                    style = UiKitTheme.typographyReworked.tertiary.regular,
-                    color = UiKitTheme.colorsReworked.text.general.inversed.default,
+                    style = UiKitTheme.typography.tertiary.regular,
+                    color = UiKitTheme.colors.text.general.inversed.default,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
@@ -379,7 +368,7 @@ object HomeScreenComponents {
         onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        VideoPlayer(
+        ZarinaVideoPlayer(
             url = banner.media.url,
             isOnScreen = isOnScreen,
             onReadyToPlay = onBannerDisplayed,
@@ -393,7 +382,7 @@ object HomeScreenComponents {
 
     @Composable
     fun rememberTopBarScrimBrush(): Brush {
-        val scrimColor = UiKitTheme.colorsReworked.background.general.inversed.default
+        val scrimColor = UiKitTheme.colors.background.general.inversed.default
         return remember(scrimColor) {
             val colors = listOf(
                 scrimColor.copy(alpha = TopBarScrimAlpha),

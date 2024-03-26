@@ -23,8 +23,8 @@ fun DetailsSection(
         header = {
             Text(
                 text = stringResource(id = R.string.details),
-                style = UiKitTheme.typography.circle1718,
-                color = UiKitTheme.colors.primaryContentColor,
+                style = UiKitTheme.typographyOld.circle1718,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
         },
@@ -37,8 +37,8 @@ fun DetailsSection(
             description.forEach {
                 Text(
                     text = stringResource(R.string.key_value, it.first, it.second),
-                    style = UiKitTheme.typography.circle1518,
-                    color = UiKitTheme.colors.primaryContentColor,
+                    style = UiKitTheme.typographyOld.circle1518,
+                    color = UiKitTheme.colorsOld.primaryContentColor,
                     textAlign = TextAlign.Start,
                 )
             }

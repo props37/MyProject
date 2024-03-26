@@ -1,7 +1,6 @@
 package ru.zarina.zarina.ui.common.component
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,9 +17,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.RangeSlider
-import androidx.compose.material3.RangeSliderState
-import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,21 +28,19 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.google.common.primitives.Longs.max
 import kotlinx.coroutines.flow.distinctUntilChanged
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.common.PriceRange
-import ru.zarina.zarina.domain.rework.filter.PriceFilter
+import ru.zarina.zarina.domain.common.PriceRange
+import ru.zarina.zarina.domain.filter.PriceFilter
+import ru.zarina.zarina.ui.common.component.slider.ZarinaRangeSlider
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldSize
@@ -54,12 +48,11 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 import kotlin.math.min
 
 // TODO: [High] Add visual transformations to text
-// TODO: [Low] Adjust slider thumbs appearance
 // TODO: [High] Refactor
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -100,8 +93,8 @@ fun PriceFilter(
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.price_rubles),
-            style = UiKitTheme.typographyReworked.secondary.light,
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            style = UiKitTheme.typography.secondary.light,
+            color = UiKitTheme.colors.text.general.regular.default,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -161,10 +154,9 @@ fun PriceFilter(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // TODO: [High] Extract
-        RangeSlider(
+        ZarinaRangeSlider(
             value = createSliderValue(minPrice, maxPrice, limits),
-            onValueChange = {
+            onValueChanged = {
                 val startLong = it.start.toLong()
                 val endLong = it.endInclusive.toLong()
                 minPrice = if (startLong != limits.min) startLong else null
@@ -178,13 +170,6 @@ fun PriceFilter(
                 maxPrice = newMaxPrice
                 onFilterChanged(filter.copy(min = newMinPrice, max = newMaxPrice))
             },
-            steps = 0,
-            colors = SliderDefaults.colors(
-                thumbColor = UiKitTheme.colorsReworked.icon.inversed.default,
-                activeTrackColor = UiKitTheme.colorsReworked.background.general.inversed.default,
-                inactiveTrackColor = UiKitTheme.colorsReworked.background.skeleton,
-            ),
-            track = { Track(state = it) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = sliderAdditionalHorizontalPadding),
@@ -215,8 +200,8 @@ private fun TextField(
         leadingContent = {
             Text(
                 text = leadingText,
-                style = UiKitTheme.typographyReworked.secondary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.muted,
+                style = UiKitTheme.typography.secondary.light,
+                color = UiKitTheme.colors.text.general.regular.muted,
                 modifier = Modifier.padding(start = 8.dp),
             )
         },
@@ -244,63 +229,6 @@ private fun TextField(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun Track(
-    state: RangeSliderState,
-    modifier: Modifier = Modifier,
-    activeTrackColor: Color = UiKitTheme.colorsReworked.background.general.inversed.default,
-    inactiveTrackColor: Color = UiKitTheme.colorsReworked.background.skeleton,
-    trackHeight: Dp = 1.dp,
-) {
-    Canvas(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(trackHeight),
-    ) {
-        val isRtl = layoutDirection == LayoutDirection.Rtl
-        val sliderLeft = Offset(0f, center.y)
-        val sliderRight = Offset(size.width, center.y)
-        val sliderStart = if (isRtl) sliderRight else sliderLeft
-        val sliderEnd = if (isRtl) sliderLeft else sliderRight
-        val trackStrokeWidth = trackHeight.toPx()
-        drawLine(
-            color = inactiveTrackColor,
-            start = sliderStart,
-            end = sliderEnd,
-            strokeWidth = trackStrokeWidth,
-            cap = StrokeCap.Square,
-        )
-
-        val coercedActiveRangeStartAsFraction = calculateFraction(
-            state.valueRange.start,
-            state.valueRange.endInclusive,
-            state.activeRangeStart,
-        )
-        val coercedActiveRangeEndAsFraction = calculateFraction(
-            state.valueRange.start,
-            state.valueRange.endInclusive,
-            state.activeRangeEnd,
-        )
-
-        val sliderValueStart = Offset(
-            x = sliderStart.x + (sliderEnd.x - sliderStart.x) * coercedActiveRangeStartAsFraction,
-            y = center.y
-        )
-        val sliderValueEnd = Offset(
-            x = sliderStart.x + (sliderEnd.x - sliderStart.x) * coercedActiveRangeEndAsFraction,
-            y = center.y
-        )
-        drawLine(
-            color = activeTrackColor,
-            start = sliderValueStart,
-            end = sliderValueEnd,
-            strokeWidth = trackStrokeWidth,
-            cap = StrokeCap.Square,
-        )
-    }
-}
-
 private fun Long.coerceMinPrice(maxPrice: Long?, limits: PriceRange): Long {
     val max = maxPrice?.let { minOf(it.coerceAtLeast(limits.min), limits.max) } ?: limits.max
     return this.coerceIn(limits.min, max)
@@ -326,9 +254,6 @@ private fun createSliderValue(
     ) ?: limits.max
     return minValue.toFloat()..maxValue.toFloat()
 }
-
-private fun calculateFraction(a: Float, b: Float, pos: Float): Float =
-    (if (b - a == 0f) 0f else (pos - a) / (b - a)).coerceIn(0f, 1f)
 
 @Preview
 @FontScalePreviews

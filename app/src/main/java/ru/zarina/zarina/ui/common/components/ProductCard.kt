@@ -27,14 +27,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.toImmutableList
-import ru.zarina.zarina.domain.Media
-import ru.zarina.zarina.domain.Product
+import ru.zarina.zarina.domain.old.Media
+import ru.zarina.zarina.domain.old.Product
 import ru.zarina.zarina.ui.common.components.color.ColorPicker
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDefaults
 import ru.zarina.zarina.ui.common.components.color.ColorPickerDimensions
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -47,7 +47,7 @@ fun ProductCard(
     isMediaScrollable: Boolean = false,
     colorPickerDimensions: ColorPickerDimensions = ColorPickerDefaults.smallDimensions(),
 ) {
-    val inactiveOverlayColor = UiKitTheme.colors.inactiveOverlay
+    val inactiveOverlayColor = UiKitTheme.colorsOld.inactiveOverlay
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -126,8 +126,8 @@ fun ProductCard(
         )
         Text(
             text = product.name,
-            color = UiKitTheme.colors.primaryContentColor,
-            style = UiKitTheme.typography.circle1518,
+            color = UiKitTheme.colorsOld.primaryContentColor,
+            style = UiKitTheme.typographyOld.circle1518,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
@@ -144,7 +144,7 @@ fun ProductCard(
         Spacer(modifier = Modifier.height(4.dp))
         ProductPrice(
             price = product.price,
-            textStyle = UiKitTheme.typography.circle1614,
+            textStyle = UiKitTheme.typographyOld.circle1614,
         )
         Spacer(modifier = Modifier.height(8.dp))
     }
@@ -157,8 +157,8 @@ fun Tag(
 ) {
     Text(
         text = text.uppercase(),
-        color = UiKitTheme.colors.primaryContentColor,
-        style = UiKitTheme.typography.circle811,
+        color = UiKitTheme.colorsOld.primaryContentColor,
+        style = UiKitTheme.typographyOld.circle811,
         modifier = modifier
     )
 }

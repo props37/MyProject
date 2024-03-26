@@ -18,7 +18,7 @@ fun BackButton(
         modifier = modifier
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_back_24),
+            painter = painterResource(id = R.drawable.old_ic_back_24),
             contentDescription = stringResource(id = R.string.back)
         )
     }

@@ -2,9 +2,9 @@ package ru.zarina.zarina.ui.screen.cityselector.tooling.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import kotlinx.collections.immutable.toImmutableList
-import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.domain.rework.geography.KladrId
-import ru.zarina.zarina.ui.common.base.ErrorStateRework
+import ru.zarina.zarina.domain.geography.City
+import ru.zarina.zarina.domain.geography.KladrId
+import ru.zarina.zarina.ui.base.ErrorState
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 
@@ -13,7 +13,7 @@ class CityListStatePreviewParameterProvider : PreviewParameterProvider<CityListS
         get() = sequenceOf(
             CityListState.CityList(getCityListItems().toImmutableList()),
             CityListState.Loading,
-            CityListState.Error(ErrorStateRework.NETWORK),
+            CityListState.Error(ErrorState.NETWORK),
         )
 
     private fun getCityListItems(): List<CityListItem> {

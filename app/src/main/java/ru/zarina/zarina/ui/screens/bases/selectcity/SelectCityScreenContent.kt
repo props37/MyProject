@@ -53,9 +53,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.ui.common.base.ErrorState
-import ru.zarina.zarina.ui.common.base.Text
+import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.components.ModalError
 import ru.zarina.zarina.ui.common.components.StateSnackbar
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
@@ -64,7 +64,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.providers.ui.CityListItemProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 import ru.zarina.zarina.utils.compose.navigationOrIme
 
 @OptIn(
@@ -93,14 +93,14 @@ fun SelectCityScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.screenBackground),
+            .background(UiKitTheme.colorsOld.screenBackground),
     ) {
         ScreenToolbar(
             title = stringResource(id = R.string.city),
             endIcon = {
                 IconButton(onClick = onCloseClick) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_close_24),
+                        painter = painterResource(id = R.drawable.ic_cross_24),
                         contentDescription = stringResource(id = R.string.skip),
                     )
                 }
@@ -144,12 +144,12 @@ fun SelectCityScreenContent(
             ) { type ->
                 if (type != null) {
                     val state = when (type) {
-                        SelectCityComponent.ErrorType.NETWORK -> ErrorState.NETWORK
-                        SelectCityComponent.ErrorType.NO_RESULTS -> ErrorState(
+                        SelectCityComponent.ErrorType.NETWORK -> ErrorStateOld.NETWORK
+                        SelectCityComponent.ErrorType.NO_RESULTS -> ErrorStateOld(
                             subtitle = Text.Resource(R.string.city_not_found),
                         )
 
-                        SelectCityComponent.ErrorType.GENERIC -> ErrorState.GENERIC
+                        SelectCityComponent.ErrorType.GENERIC -> ErrorStateOld.GENERIC
                     }
                     ModalError(
                         state = state,
@@ -182,7 +182,7 @@ fun SelectCityScreenContent(
                                 ) {
                                     val cityModifier = Modifier
                                         .fillMaxWidth()
-                                        .background(UiKitTheme.colors.screenBackground)
+                                        .background(UiKitTheme.colorsOld.screenBackground)
                                         .clickable(onClick = { onCityClick(item.city) })
                                         .animateItemPlacement()
                                     if (isRegionVisible)
@@ -226,7 +226,7 @@ fun SelectCityScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .shadow(elevation)
-                        .background(UiKitTheme.colors.screenBackground)
+                        .background(UiKitTheme.colorsOld.screenBackground)
                         .padding(16.dp)
                         .padding(WindowInsets.navigationOrIme.asPaddingValues())
                 )
@@ -241,7 +241,7 @@ private fun CityHeader(
     modifier: Modifier = Modifier,
 ) {
     Divider(
-        color = UiKitTheme.colors.listDivider,
+        color = UiKitTheme.colorsOld.listDivider,
         thickness = Dp.Hairline,
         modifier = Modifier
             .fillMaxWidth()
@@ -249,11 +249,11 @@ private fun CityHeader(
     )
     Text(
         text = text,
-        style = UiKitTheme.typography.circle2026,
-        color = UiKitTheme.colors.primaryContentColor,
+        style = UiKitTheme.typographyOld.circle2026,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = modifier
-            .background(UiKitTheme.colors.screenBackground)
+            .background(UiKitTheme.colorsOld.screenBackground)
             .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 8.dp),
     )
 }
@@ -266,7 +266,7 @@ private fun CitySimpleItem(
     isSelected: Boolean = false,
 ) {
     Divider(
-        color = UiKitTheme.colors.listDivider,
+        color = UiKitTheme.colorsOld.listDivider,
         thickness = Dp.Hairline,
         modifier = Modifier
             .fillMaxWidth()
@@ -276,13 +276,13 @@ private fun CitySimpleItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .background(UiKitTheme.colors.screenBackground)
+            .background(UiKitTheme.colorsOld.screenBackground)
             .padding(16.dp)
     ) {
         Text(
             text = city.name,
-            style = UiKitTheme.typography.circle1618,
-            color = UiKitTheme.colors.primaryContentColor,
+            style = UiKitTheme.typographyOld.circle1618,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             textAlign = TextAlign.Start,
             modifier = Modifier.weight(1f),
         )
@@ -294,7 +294,7 @@ private fun CitySimpleItem(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_checkmark_24),
                     contentDescription = stringResource(id = R.string.selected),
-                    tint = UiKitTheme.colors.primaryContentColor,
+                    tint = UiKitTheme.colorsOld.primaryContentColor,
                     modifier = Modifier.size(20.dp),
                 )
         }
@@ -309,7 +309,7 @@ private fun CityExtendedItem(
     isSelected: Boolean = false,
 ) {
     Divider(
-        color = UiKitTheme.colors.listDivider,
+        color = UiKitTheme.colorsOld.listDivider,
         thickness = Dp.Hairline,
         modifier = Modifier
             .fillMaxWidth()
@@ -319,21 +319,21 @@ private fun CityExtendedItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .background(UiKitTheme.colors.screenBackground)
+            .background(UiKitTheme.colorsOld.screenBackground)
             .padding(16.dp)
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = city.name,
-                style = UiKitTheme.typography.circle1618,
-                color = UiKitTheme.colors.primaryContentColor,
+                style = UiKitTheme.typographyOld.circle1618,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 textAlign = TextAlign.Start,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = city.region.orEmpty(),
-                style = UiKitTheme.typography.circle1316,
-                color = UiKitTheme.colors.listItemSubtitle,
+                style = UiKitTheme.typographyOld.circle1316,
+                color = UiKitTheme.colorsOld.listItemSubtitle,
                 textAlign = TextAlign.Start,
             )
         }
@@ -345,7 +345,7 @@ private fun CityExtendedItem(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_checkmark_24),
                     contentDescription = stringResource(id = R.string.selected),
-                    tint = UiKitTheme.colors.primaryContentColor,
+                    tint = UiKitTheme.colorsOld.primaryContentColor,
                 )
         }
     }
@@ -363,7 +363,7 @@ private fun SearchBar(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .background(UiKitTheme.colors.screenBackground)
+            .background(UiKitTheme.colorsOld.screenBackground)
             .padding(horizontal = 16.dp),
     ) {
         AnimatedContent(
@@ -372,7 +372,7 @@ private fun SearchBar(
         ) { isLoadingVisible ->
             if (isLoadingVisible)
                 CircularProgressIndicator(
-                    color = UiKitTheme.colors.primaryContentColor,
+                    color = UiKitTheme.colorsOld.primaryContentColor,
                     strokeWidth = 2.dp,
                     modifier = Modifier
                         .size(24.dp)
@@ -380,7 +380,7 @@ private fun SearchBar(
                 )
             else
                 Icon(
-                    painter = painterResource(R.drawable.ic_search_24),
+                    painter = painterResource(R.drawable.ic_magnifying_glass_24),
                     contentDescription = null,
                 )
         }
@@ -399,8 +399,8 @@ private fun SearchBar(
             ) {
                 Text(
                     text = stringResource(R.string.city_search),
-                    style = UiKitTheme.typography.circle1518,
-                    color = UiKitTheme.colors.hint,
+                    style = UiKitTheme.typographyOld.circle1518,
+                    color = UiKitTheme.colorsOld.hint,
                     textAlign = TextAlign.Start,
                     maxLines = 1,
                 )
@@ -408,7 +408,7 @@ private fun SearchBar(
             BasicTextField(
                 value = query,
                 onValueChange = { onQueryChange(it) },
-                textStyle = UiKitTheme.typography.circle1518.copy(color = UiKitTheme.colors.primaryContentColor),
+                textStyle = UiKitTheme.typographyOld.circle1518.copy(color = UiKitTheme.colorsOld.primaryContentColor),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -417,7 +417,7 @@ private fun SearchBar(
             visible = query.isNotEmpty(),
         ) {
             Image(
-                painter = painterResource(R.drawable.ic_clear_24),
+                painter = painterResource(R.drawable.old_ic_clear_24),
                 contentDescription = stringResource(R.string.clear),
                 modifier = Modifier
                     .padding(start = 12.dp)

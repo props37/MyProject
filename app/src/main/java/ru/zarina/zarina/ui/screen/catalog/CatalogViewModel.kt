@@ -20,23 +20,29 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
+import kotlinx.coroutines.runBlocking
 import kotlinx.parcelize.Parcelize
-import ru.zarina.zarina.domain.rework.category.Categories
-import ru.zarina.zarina.domain.rework.category.Category
-import ru.zarina.zarina.domain.rework.category.withFlattenedChildren
-import ru.zarina.zarina.ui.common.base.ErrorStateRework
-import ru.zarina.zarina.ui.common.base.Throttler
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.domain.category.Categories
+import ru.zarina.zarina.domain.category.Category
+import ru.zarina.zarina.domain.category.withFlattenedChildren
+import ru.zarina.zarina.domain.common.Gender
+import ru.zarina.zarina.ui.base.ErrorState
+import ru.zarina.zarina.ui.base.from
+import ru.zarina.zarina.ui.common.util.getNavigationThrottler
+import ru.zarina.zarina.usecase.user.SetUserContentGenderUseCase
+import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
-import ru.zarina.zarina.utils.clean.invoke
-import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,7 +63,13 @@ class CatalogViewModel @Inject constructor(
 
     val currentGenderTab: StateFlow<GenderTab> = savedStateHandle.getStateFlow(
         key = KEY_CURRENT_GENDER_TAB,
-        initialValue = GenderTab.WOMEN,
+        initialValue = runBlocking {
+            val gender = interactor.getUserContentGenderFlow()
+                .firstOrNull()
+                ?.getOrNull()
+                ?: Gender.getDefault()
+            GenderTab.from(gender)
+        },
     )
 
     private val categoriesFetchRequests = Channel<Unit>(Channel.CONFLATED)
@@ -93,10 +105,7 @@ class CatalogViewModel @Inject constructor(
                     CategoryListState.Success(womenCategoryItems, menCategoryItems)
                 },
                 onFailure = { throwable ->
-                    val state = when (throwable) {
-                        is IOException -> ErrorStateRework.NETWORK
-                        else -> ErrorStateRework.GENERIC
-                    }
+                    val state = ErrorState.from(throwable)
                     CategoryListState.Error(state)
                 },
             )
@@ -150,8 +159,12 @@ class CatalogViewModel @Inject constructor(
         emitSideEffect(SideEffect.FreeSearchBarFocus)
     }
 
-    fun onGenderTabClicked(tab: GenderTab) {
+    fun onGenderTabChanged(tab: GenderTab) {
         savedStateHandle[KEY_CURRENT_GENDER_TAB] = tab
+        viewModelScope.launch {
+            val params = SetUserContentGenderUseCase.Params(tab.toGender())
+            interactor.setUserContentGender(params)
+        }
     }
 
     fun onCategoryListItemClicked(item: CategoryListItem) {
@@ -226,7 +239,22 @@ class CatalogViewModel @Inject constructor(
     }
 
     @Parcelize
-    enum class GenderTab : Parcelable { WOMEN, MEN }
+    enum class GenderTab : Parcelable {
+        WOMEN,
+        MEN;
+
+        fun toGender(): Gender = when (this) {
+            WOMEN -> Gender.FEMALE
+            MEN -> Gender.MALE
+        }
+
+        companion object {
+            fun from(gender: Gender): GenderTab = when (gender) {
+                Gender.FEMALE -> WOMEN
+                Gender.MALE -> MEN
+            }
+        }
+    }
 
     @Stable
     sealed class CategoryListState {
@@ -239,7 +267,7 @@ class CatalogViewModel @Inject constructor(
         ) : CategoryListState()
 
         @Immutable
-        data class Error(val state: ErrorStateRework) : CategoryListState()
+        data class Error(val state: ErrorState) : CategoryListState()
     }
 
     @Immutable

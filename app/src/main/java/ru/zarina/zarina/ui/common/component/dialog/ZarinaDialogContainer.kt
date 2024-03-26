@@ -21,14 +21,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.rework.ZarinaTheme
+import ru.zarina.zarina.ui.theme.ZarinaTheme
 
 // TODO: [Low] Add maxWidth to support landscape orientation
 
 @Composable
 fun ZarinaDialogContainer(
     modifier: Modifier = Modifier,
-    color: Color = UiKitTheme.colorsReworked.background.general.regular.default,
+    color: Color = UiKitTheme.colors.background.general.regular.default,
     shape: Shape = RoundedCornerShape(4.dp),
     elevation: Dp = 12.dp,
     contentPadding: PaddingValues = PaddingValues(24.dp),
@@ -58,14 +58,14 @@ private fun Preview() {
             Column {
                 Text(
                     text = "Мы определили твой город",
-                    style = UiKitTheme.typographyReworked.primary.bold,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    style = UiKitTheme.typography.primary.bold,
+                    color = UiKitTheme.colors.text.general.regular.default,
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = "Текущая геолокация: Санкт-Петербург. Ты можешь изменить геолокацию в любой момент в настройках Профиля.",
-                    style = UiKitTheme.typographyReworked.secondary.regular,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    style = UiKitTheme.typography.secondary.regular,
+                    color = UiKitTheme.colors.text.general.regular.default,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 ZarinaButton(

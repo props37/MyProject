@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Stock
+import ru.zarina.zarina.domain.old.Stock
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaButton
 import ru.zarina.zarina.ui.common.utils.domain.getStringResource
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -45,7 +45,7 @@ fun ShopList(
             if (index != stocks.lastIndex)
                 Divider(
                     thickness = 1.dp,
-                    color = UiKitTheme.colors.listDivider,
+                    color = UiKitTheme.colorsOld.listDivider,
                     modifier = Modifier.padding(horizontal = 16.dp),
                 )
         }
@@ -64,29 +64,29 @@ fun ShopItem(
     ) {
         Text(
             text = stock.shop.name,
-            style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
+            style = UiKitTheme.typographyOld.circle1718,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             textAlign = TextAlign.Start,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = stock.shop.address,
-            style = UiKitTheme.typography.circle1518,
-            color = UiKitTheme.colors.listItemSubtitle,
+            style = UiKitTheme.typographyOld.circle1518,
+            color = UiKitTheme.colorsOld.listItemSubtitle,
             textAlign = TextAlign.Start,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = stringResource(R.string.working_schedule_template, stock.shop.schedule),
-            style = UiKitTheme.typography.circle1518,
-            color = UiKitTheme.colors.listItemSubtitle,
+            style = UiKitTheme.typographyOld.circle1518,
+            color = UiKitTheme.colorsOld.listItemSubtitle,
             textAlign = TextAlign.Start,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = stringResource(stock.amount.getStringResource()),
-            style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryAccentColor,
+            style = UiKitTheme.typographyOld.circle1718,
+            color = UiKitTheme.colorsOld.primaryAccentColor,
             textAlign = TextAlign.Start,
         )
         if (isButtonVisible) {
@@ -98,8 +98,8 @@ fun ShopItem(
             ) {
                 Text(
                     text = stringResource(R.string.pickup_at_shop),
-                    style = UiKitTheme.typography.circle1720bold,
-                    color = UiKitTheme.colors.primaryButtonForeground,
+                    style = UiKitTheme.typographyOld.circle1720bold,
+                    color = UiKitTheme.colorsOld.primaryButtonForeground,
                 )
             }
         }

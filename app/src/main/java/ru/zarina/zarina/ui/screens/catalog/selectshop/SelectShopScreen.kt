@@ -40,8 +40,8 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.Shop
+import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.domain.old.Shop
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.CityPicker
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
@@ -88,7 +88,7 @@ fun SelectShopScreenContent(
                     .fillMaxWidth()
                     .shadow(elevation.value)
                     .zIndex(1f)
-                    .background(UiKitTheme.colors.screenBackground)
+                    .background(UiKitTheme.colorsOld.screenBackground)
             ) {
                 CityPicker(
                     city = city,
@@ -114,7 +114,7 @@ fun SelectShopScreenContent(
                             modifier = Modifier.fillMaxSize(),
                         ) {
                             CircularProgressIndicator(
-                                color = UiKitTheme.colors.primaryContentColor,
+                                color = UiKitTheme.colorsOld.primaryContentColor,
                                 modifier = Modifier.align(Alignment.Center)
                             )
                         }
@@ -134,7 +134,7 @@ fun SelectShopScreenContent(
                                 )
                                 if (index != shops.lastIndex)
                                     Divider(
-                                        color = UiKitTheme.colors.listDivider,
+                                        color = UiKitTheme.colorsOld.listDivider,
                                         thickness = 1.dp,
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -161,7 +161,7 @@ fun SelectShopScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .shadow(elevation)
-                            .background(UiKitTheme.colors.screenBackground)
+                            .background(UiKitTheme.colorsOld.screenBackground)
                             .padding(16.dp)
                             .navigationBarsPadding(),
                     )
@@ -187,8 +187,8 @@ private fun ShopItem(
     ) {
         Text(
             text = shop.name,
-            style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
+            style = UiKitTheme.typographyOld.circle1718,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             modifier = Modifier.padding(end = 8.dp),
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -200,7 +200,7 @@ private fun ShopItem(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_checkmark_24),
                     contentDescription = stringResource(id = R.string.selected),
-                    tint = UiKitTheme.colors.primaryContentColor,
+                    tint = UiKitTheme.colorsOld.primaryContentColor,
                 )
         }
     }

@@ -3,10 +3,10 @@ package ru.zarina.zarina.ui.model.filter
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.rework.filter.Filter
-import ru.zarina.zarina.domain.rework.filter.Filters
-import ru.zarina.zarina.domain.rework.filter.ListFilter
-import ru.zarina.zarina.domain.rework.filter.ToggleFilter
+import ru.zarina.zarina.domain.filter.Filter
+import ru.zarina.zarina.domain.filter.Filters
+import ru.zarina.zarina.domain.filter.ListFilter
+import ru.zarina.zarina.domain.filter.ToggleFilter
 
 @Serializable
 @Parcelize

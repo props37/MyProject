@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.old.ProductSort
 import ru.zarina.zarina.ui.common.utils.domain.getStringResource
 
 @Composable

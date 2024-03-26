@@ -40,9 +40,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.DeliveryAvailability
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.domain.old.DeliveryAvailability
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ProductHorizontalSection
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
@@ -60,7 +60,7 @@ import ru.zarina.zarina.ui.screens.product.components.sections.PickupSection
 import ru.zarina.zarina.ui.screens.product.components.sections.PriceSection
 import ru.zarina.zarina.ui.screens.product.components.sections.ShareSection
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 import ru.zarina.zarina.utils.android.share
 import java.util.UUID
 
@@ -87,14 +87,14 @@ fun ProductScreenContent(
     cache: State<Cache?>,
 ) {
     val errorState = when (errorType) {
-        ProductViewModel.ErrorType.NETWORK -> ErrorState.NETWORK
-        ProductViewModel.ErrorType.NOT_FOUND -> ErrorState(
-            icon = R.drawable.ic_magnifying_glass_96,
-            title = ru.zarina.zarina.ui.common.base.Text.Resource(R.string.product_not_on_sale),
-            subtitle = ru.zarina.zarina.ui.common.base.Text.Resource(R.string.dont_fret_catalog),
+        ProductViewModel.ErrorType.NETWORK -> ErrorStateOld.NETWORK
+        ProductViewModel.ErrorType.NOT_FOUND -> ErrorStateOld(
+            icon = R.drawable.old_ic_magnifying_glass_96,
+            title = ru.zarina.zarina.ui.base.text.Text.Resource(R.string.product_not_on_sale),
+            subtitle = ru.zarina.zarina.ui.base.text.Text.Resource(R.string.dont_fret_catalog),
         )
 
-        ProductViewModel.ErrorType.GENERIC -> ErrorState.GENERIC
+        ProductViewModel.ErrorType.GENERIC -> ErrorStateOld.GENERIC
         null -> null
     }
     val scrollState = rememberScrollState()
@@ -151,7 +151,7 @@ fun ProductScreenContent(
                         .fillMaxWidth()
                 )
                 Divider(
-                    color = UiKitTheme.colors.listDivider,
+                    color = UiKitTheme.colorsOld.listDivider,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
@@ -161,7 +161,7 @@ fun ProductScreenContent(
                     modifier = Modifier.fillMaxWidth()
                 )
                 Divider(
-                    color = UiKitTheme.colors.listDivider,
+                    color = UiKitTheme.colorsOld.listDivider,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
@@ -217,16 +217,16 @@ private fun ToolbarTitle(
     ) {
         Text(
             text = product?.name.orEmpty(),
-            style = UiKitTheme.typography.circle1718,
-            color = UiKitTheme.colors.primaryContentColor,
+            style = UiKitTheme.typographyOld.circle1718,
+            color = UiKitTheme.colorsOld.primaryContentColor,
             maxLines = 1,
         )
         val attribute = product?.attributes?.firstOrNull()
         if (attribute != null) {
             Text(
                 text = attribute.uppercase(),
-                style = UiKitTheme.typography.circle811,
-                color = UiKitTheme.colors.primaryContentColor,
+                style = UiKitTheme.typographyOld.circle811,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 maxLines = 1,
             )
         }

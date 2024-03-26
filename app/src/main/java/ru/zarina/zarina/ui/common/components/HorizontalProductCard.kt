@@ -18,13 +18,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Media
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.Size
+import ru.zarina.zarina.domain.old.Media
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.Size
 import ru.zarina.zarina.ui.common.components.buttons.DropdownButton
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.ProductProvider
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @Composable
 fun HorizontalProductCard(
@@ -113,8 +113,8 @@ private fun ProductName(
 ) {
     Text(
         text = product.name,
-        color = UiKitTheme.colors.primaryContentColor,
-        style = UiKitTheme.typography.circle1518,
+        color = UiKitTheme.colorsOld.primaryContentColor,
+        style = UiKitTheme.typographyOld.circle1518,
         maxLines = 2,
         textAlign = TextAlign.Start,
         modifier = modifier,
@@ -130,8 +130,8 @@ private fun ProductColor(
 
     Text(
         text = stringResource(R.string.key_value, stringResource(R.string.color), colorName),
-        color = UiKitTheme.colors.primaryContentColor,
-        style = UiKitTheme.typography.circle1316,
+        color = UiKitTheme.colorsOld.primaryContentColor,
+        style = UiKitTheme.typographyOld.circle1316,
         maxLines = 1,
         textAlign = TextAlign.Start,
         modifier = modifier,
@@ -148,7 +148,7 @@ private fun ProductPrice(
     ) {
         ProductPrice(
             price = product.price,
-            textStyle = UiKitTheme.typography.circle1614,
+            textStyle = UiKitTheme.typographyOld.circle1614,
         )
         Spacer(modifier = Modifier.width(8.dp))
         DiscountBadge(
@@ -168,8 +168,8 @@ private fun SingleProductSize(
             stringResource(R.string.size),
             selectedSize?.name.orEmpty()
         ),
-        color = UiKitTheme.colors.primaryContentColor,
-        style = UiKitTheme.typography.circle1316,
+        color = UiKitTheme.colorsOld.primaryContentColor,
+        style = UiKitTheme.typographyOld.circle1316,
         maxLines = 1,
         textAlign = TextAlign.Start,
         modifier = modifier,
@@ -194,8 +194,8 @@ fun PickSizeButton(
         ) { state ->
             Text(
                 text = state,
-                color = UiKitTheme.colors.primaryContentColor,
-                style = UiKitTheme.typography.circle1718,
+                color = UiKitTheme.colorsOld.primaryContentColor,
+                style = UiKitTheme.typographyOld.circle1718,
                 maxLines = 1,
                 textAlign = TextAlign.Start,
             )

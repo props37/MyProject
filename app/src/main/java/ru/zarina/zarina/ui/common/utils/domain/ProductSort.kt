@@ -2,7 +2,7 @@ package ru.zarina.zarina.ui.common.utils.domain
 
 import androidx.annotation.StringRes
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.ProductSort
+import ru.zarina.zarina.domain.old.ProductSort
 
 @StringRes
 fun ProductSort.getStringResource() = when (this) {

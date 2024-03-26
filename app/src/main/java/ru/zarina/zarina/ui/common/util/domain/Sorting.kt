@@ -2,7 +2,7 @@ package ru.zarina.zarina.ui.common.util.domain
 
 import androidx.compose.runtime.Stable
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.common.Sorting
+import ru.zarina.zarina.domain.common.Sorting
 
 @Stable
 val Sorting.nameResId: Int

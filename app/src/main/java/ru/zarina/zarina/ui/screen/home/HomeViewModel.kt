@@ -16,19 +16,26 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.parcelize.Parcelize
-import ru.zarina.zarina.domain.rework.content.HomeContent
-import ru.zarina.zarina.ui.common.base.ErrorStateRework
-import ru.zarina.zarina.ui.common.base.Throttler
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.domain.common.Gender
+import ru.zarina.zarina.domain.content.HomeContent
+import ru.zarina.zarina.ui.base.ErrorState
+import ru.zarina.zarina.ui.base.from
+import ru.zarina.zarina.ui.common.util.getNavigationThrottler
+import ru.zarina.zarina.usecase.user.SetUserContentGenderUseCase
+import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
-import ru.zarina.zarina.utils.clean.invoke
-import java.io.IOException
+import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,21 +49,25 @@ class HomeViewModel @Inject constructor(
     val genderTabs: StateFlow<ImmutableList<GenderTab>> =
         MutableStateFlow(GenderTab.entries.toImmutableList()).asStateFlow()
 
-    // TODO: [Low] Store the last selected tab on the disk
     val currentGenderTab: StateFlow<GenderTab> = savedStateHandle.getStateFlow(
         key = KEY_CURRENT_GENDER_TAB,
-        initialValue = GenderTab.WOMEN,
+        initialValue = runBlocking {
+            val gender = interactor.getUserContentGenderFlow()
+                .firstOrNull()
+                ?.getOrNull()
+                ?: Gender.getDefault()
+            GenderTab.from(gender)
+        },
     )
 
     private val contentFetchRequests = Channel<Unit>(Channel.CONFLATED)
-
-    private val isFetchingContent = MutableStateFlow(false)
+    private val contentFetchingType = MutableStateFlow(ContentFetchingType.NONE)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val contentResult: StateFlow<Result<HomeContent>?> = contentFetchRequests
         .receiveAsFlow()
         .flatMapLatest { interactor.getHomeContentFlow() }
-        .onEach { isFetchingContent.value = false }
+        .onEach { contentFetchingType.value = ContentFetchingType.NONE }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
@@ -64,10 +75,10 @@ class HomeViewModel @Inject constructor(
         )
 
     val contentState: StateFlow<ContentState> = combine(
-        isFetchingContent,
+        contentFetchingType,
         contentResult,
-    ) { isFetchingContent, contentResult ->
-        if (isFetchingContent || contentResult == null) {
+    ) { contentFetchingType, contentResult ->
+        if (contentFetchingType == ContentFetchingType.LOADING || contentResult == null) {
             ContentState.Loading
         } else {
             contentResult.fold(
@@ -75,10 +86,7 @@ class HomeViewModel @Inject constructor(
                     ContentState.Success(content)
                 },
                 onFailure = { throwable ->
-                    val errorState = when (throwable) {
-                        is IOException -> ErrorStateRework.NETWORK
-                        else -> ErrorStateRework.GENERIC
-                    }
+                    val errorState = ErrorState.from(throwable)
                     ContentState.Error(errorState)
                 },
             )
@@ -89,12 +97,21 @@ class HomeViewModel @Inject constructor(
         initialValue = ContentState.Loading,
     )
 
+    val isRefreshing: StateFlow<Boolean> = contentFetchingType.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { it == ContentFetchingType.REFRESHING }
+
     init {
-        contentFetchRequests.trySend(Unit)
+        fetchContent(ContentFetchingType.LOADING)
     }
 
-    fun onGenderTabClicked(tab: GenderTab) {
+    fun onGenderTabChanged(tab: GenderTab) {
         savedStateHandle[KEY_CURRENT_GENDER_TAB] = tab
+        viewModelScope.launch {
+            val params = SetUserContentGenderUseCase.Params(tab.toGender())
+            interactor.setUserContentGender(params)
+        }
     }
 
     fun onBannerClicked(banner: HomeContent.Banner) {
@@ -104,9 +121,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun onRefreshTriggered() {
+        fetchContent(ContentFetchingType.REFRESHING)
+    }
+
     fun onContentErrorRefreshClicked() {
+        fetchContent(ContentFetchingType.LOADING)
+    }
+
+    private fun fetchContent(type: ContentFetchingType) {
         contentFetchRequests.trySend(Unit)
-        isFetchingContent.value = true
+        contentFetchingType.value = type
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -114,7 +139,22 @@ class HomeViewModel @Inject constructor(
     }
 
     @Parcelize
-    enum class GenderTab : Parcelable { WOMEN, MEN }
+    enum class GenderTab : Parcelable {
+        WOMEN,
+        MEN;
+
+        fun toGender(): Gender = when (this) {
+            WOMEN -> Gender.FEMALE
+            MEN -> Gender.MALE
+        }
+
+        companion object {
+            fun from(gender: Gender): GenderTab = when (gender) {
+                Gender.FEMALE -> WOMEN
+                Gender.MALE -> MEN
+            }
+        }
+    }
 
     @Stable
     sealed class ContentState {
@@ -124,8 +164,10 @@ class HomeViewModel @Inject constructor(
         data class Success(val content: HomeContent) : ContentState()
 
         @Immutable
-        data class Error(val errorState: ErrorStateRework) : ContentState()
+        data class Error(val errorState: ErrorState) : ContentState()
     }
+
+    private enum class ContentFetchingType { NONE, LOADING, REFRESHING }
 
     companion object {
         private const val KEY_CURRENT_GENDER_TAB = "current_gender_tab"

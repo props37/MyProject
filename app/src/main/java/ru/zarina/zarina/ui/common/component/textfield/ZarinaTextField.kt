@@ -50,10 +50,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.component.button.IconButtonCustom
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.component.button.ZarinaIconButton
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
@@ -85,7 +85,7 @@ fun ZarinaTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    cursorBrush: Brush = SolidColor(UiKitTheme.colorsReworked.text.general.regular.default),
+    cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
 ) {
     var focusState by remember { mutableStateOf<FocusState?>(null) }
 
@@ -151,7 +151,7 @@ fun ZarinaTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    cursorBrush: Brush = SolidColor(UiKitTheme.colorsReworked.text.general.regular.default),
+    cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
 ) {
     var focusState by remember { mutableStateOf<FocusState?>(null) }
 
@@ -304,7 +304,7 @@ private fun DecorationBox(
                     label = "Outer trailing content color",
                 )
                 CompositionLocalProvider(
-                    LocalTextStyle provides UiKitTheme.typographyReworked.caption1.regular,
+                    LocalTextStyle provides UiKitTheme.typography.caption1.regular,
                     LocalContentColor provides outerTrailingContentColor,
                 ) {
                     content()
@@ -399,13 +399,13 @@ object ZarinaTextFieldDefaults {
         indication: Indication? = rememberRipple(bounded = false, radius = 8.dp),
     ) {
         CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-            IconButtonCustom(
+            ZarinaIconButton(
                 onClick = onClick,
                 indication = indication,
                 modifier = modifier,
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_clear_new_24),
+                    painter = painterResource(R.drawable.ic_cross_shaped_24),
                     contentDescription = stringResource(R.string.clear),
                     tint = Color.Unspecified,
                     modifier = Modifier.size(iconSize),
@@ -427,32 +427,32 @@ object ZarinaTextFieldDefaults {
         ) {
             Text(
                 text = stringResource(R.string.cancel).uppercase(),
-                style = UiKitTheme.typographyReworked.caption1.regular,
+                style = UiKitTheme.typography.caption1.regular,
             )
         }
     }
 
     @Composable
     fun colors(
-        textColor: Color = UiKitTheme.colorsReworked.text.general.regular.default,
-        placeholderColor: Color = UiKitTheme.colorsReworked.text.general.regular.muted,
-        labelColor: Color = UiKitTheme.colorsReworked.text.general.regular.muted,
-        leadingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.muted,
-        innerTrailingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.default,
-        outerTrailingContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.default, // TODO: [Low] Change to button-cell-default
-        descriptionColor: Color = UiKitTheme.colorsReworked.text.general.regular.muted,
-        indicationLineColor: Color = UiKitTheme.colorsReworked.border.general.default,
-        activeIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.active,
-        errorIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.error,
-        disabledTextColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
-        disabledPlaceholderColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
-        disabledLabelColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
-        disabledLeadingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.disabled,
-        disabledInnerTrailingContentColor: Color = UiKitTheme.colorsReworked.icon.regular.disabled,
-        disabledOuterTrailingContentColor: Color = UiKitTheme.colorsReworked.text.button.outline.disabled, // TODO: [Low] Change to button-cell-disabled
-        disabledDescriptionColor: Color = UiKitTheme.colorsReworked.text.general.regular.disabled,
-        disabledIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.disabled,
-        disabledErrorIndicationLineColor: Color = UiKitTheme.colorsReworked.border.general.errorDisabled,
+        textColor: Color = UiKitTheme.colors.text.general.regular.default,
+        placeholderColor: Color = UiKitTheme.colors.text.general.regular.muted,
+        labelColor: Color = UiKitTheme.colors.text.general.regular.muted,
+        leadingContentColor: Color = UiKitTheme.colors.icon.regular.muted,
+        innerTrailingContentColor: Color = UiKitTheme.colors.icon.regular.default,
+        outerTrailingContentColor: Color = UiKitTheme.colors.text.button.outline.default, // TODO: [Low] Change to button-cell-default
+        descriptionColor: Color = UiKitTheme.colors.text.general.regular.muted,
+        indicationLineColor: Color = UiKitTheme.colors.border.general.default,
+        activeIndicationLineColor: Color = UiKitTheme.colors.border.general.active,
+        errorIndicationLineColor: Color = UiKitTheme.colors.border.general.error,
+        disabledTextColor: Color = UiKitTheme.colors.text.general.regular.disabled,
+        disabledPlaceholderColor: Color = UiKitTheme.colors.text.general.regular.disabled,
+        disabledLabelColor: Color = UiKitTheme.colors.text.general.regular.disabled,
+        disabledLeadingContentColor: Color = UiKitTheme.colors.icon.regular.disabled,
+        disabledInnerTrailingContentColor: Color = UiKitTheme.colors.icon.regular.disabled,
+        disabledOuterTrailingContentColor: Color = UiKitTheme.colors.text.button.outline.disabled, // TODO: [Low] Change to button-cell-disabled
+        disabledDescriptionColor: Color = UiKitTheme.colors.text.general.regular.disabled,
+        disabledIndicationLineColor: Color = UiKitTheme.colors.border.general.disabled,
+        disabledErrorIndicationLineColor: Color = UiKitTheme.colors.border.general.errorDisabled,
     ): ZarinaTextFieldColors = ZarinaTextFieldColors(
         textColor = textColor,
         placeholderColor = placeholderColor,
@@ -477,20 +477,20 @@ object ZarinaTextFieldDefaults {
 
     @Composable
     fun textStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Large -> UiKitTheme.typographyReworked.primary.light
-        ZarinaTextFieldSize.Small -> UiKitTheme.typographyReworked.secondary.light
+        ZarinaTextFieldSize.Large -> UiKitTheme.typography.primary.light
+        ZarinaTextFieldSize.Small -> UiKitTheme.typography.secondary.light
     }
 
     @Composable
     fun labelTextStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Large -> UiKitTheme.typographyReworked.tertiary.light
-        ZarinaTextFieldSize.Small -> UiKitTheme.typographyReworked.footnote.light
+        ZarinaTextFieldSize.Large -> UiKitTheme.typography.tertiary.light
+        ZarinaTextFieldSize.Small -> UiKitTheme.typography.footnote.light
     }
 
     @Composable
     fun descriptionTextStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Large -> UiKitTheme.typographyReworked.tertiary.light
-        ZarinaTextFieldSize.Small -> UiKitTheme.typographyReworked.footnote.light
+        ZarinaTextFieldSize.Large -> UiKitTheme.typography.tertiary.light
+        ZarinaTextFieldSize.Small -> UiKitTheme.typography.footnote.light
     }
 
     @Stable
@@ -514,7 +514,7 @@ object ZarinaTextFieldDefaults {
 
 @Preview
 @Composable
-fun Preview() {
+private fun Preview() {
     ZarinaPreview {
         Column(
             modifier = Modifier
@@ -544,14 +544,14 @@ fun Preview() {
                     },
                     leadingContent = {
                         Icon(
-                            painter = painterResource(R.drawable.ic_search_24),
+                            painter = painterResource(R.drawable.ic_magnifying_glass_24),
                             contentDescription = null,
                             modifier = Modifier.size(iconSize),
                         )
                     },
                     innerTrailingContent = {
                         Icon(
-                            painter = painterResource(R.drawable.ic_close_24),
+                            painter = painterResource(R.drawable.ic_cross_24),
                             contentDescription = null,
                             modifier = Modifier
                                 .size(iconSize)
@@ -561,7 +561,7 @@ fun Preview() {
                     outerTrailingContent = {
                         Text(
                             text = "Button".uppercase(),
-                            color = UiKitTheme.colorsReworked.text.button.secondary.default,
+                            color = UiKitTheme.colors.text.button.secondary.default,
                         )
                     },
                     description = {

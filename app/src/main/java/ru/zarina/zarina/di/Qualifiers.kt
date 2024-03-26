@@ -1,20 +1,25 @@
 package ru.zarina.zarina.di
 
+import javax.inject.Qualifier
+
 object Qualifiers {
-    object DataStore {
-        const val PREFERENCES = "datastore-preferences"
-        const val USER_CITY = "datastore-user-city"
-    }
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class ZarinaApi(val api: ZarinaApis)
 
-    object Dispatcher {
-        const val IO = "dispatcher-io"
-    }
+    enum class ZarinaApis { AUTHORIZED, UNAUTHORIZED }
 
-    object Api {
-        const val ZARINA = "api-zarina"
-        const val ZARINA_RESTRICTED = "api-zarina-restricted"
-        const val MINDBOX_RESTRICTED = "api-mindbox-restricted"
-        const val ANYQUERY_AUTOCOMPLETE = "api-anyquery-autocomplete"
-        const val ANYQUERY_SEARCH = "api-anyquery-search"
-    }
+
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class CoroutineDispatcher(val dispatcher: CoroutineDispatchers)
+
+    enum class CoroutineDispatchers { MAIN, MAIN_IMMEDIATE, IO, DEFAULT }
+
+
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class SharedPreferences(val type: ShapredPreferencesType)
+
+    enum class ShapredPreferencesType { ENCRYPTED }
 }

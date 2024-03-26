@@ -16,8 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.base.textString
+import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.base.text.textString
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
@@ -35,13 +35,13 @@ fun StateSnackbar(
         modifier = modifier
     ) {
         Snackbar(
-            containerColor = UiKitTheme.colors.snackbarBackground,
-            contentColor = UiKitTheme.colors.snackbarForeground,
+            containerColor = UiKitTheme.colorsOld.snackbarBackground,
+            contentColor = UiKitTheme.colorsOld.snackbarForeground,
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
                 text = textString(text),
-                style = UiKitTheme.typography.circle1420,
+                style = UiKitTheme.typographyOld.circle1420,
             )
         }
     }

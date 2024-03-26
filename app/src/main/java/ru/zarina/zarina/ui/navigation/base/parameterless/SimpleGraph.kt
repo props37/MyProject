@@ -1,10 +1,10 @@
 package ru.zarina.zarina.ui.navigation.base.parameterless
 
 import androidx.navigation.NamedNavArgument
+import ru.zarina.zarina.ui.navigation.BaseRoute
 import ru.zarina.zarina.ui.navigation.base.Destination
 import ru.zarina.zarina.ui.navigation.base.Graph
-import ru.zarina.zarina.ui.navigation.destinations.BaseRoute
-import ru.zarina.zarina.ui.navigation.rework.BaseRouteReworked
+import ru.zarina.zarina.ui.navigation.old.destinations.BaseRouteOld
 
 /**
  * An abstraction for a Compose Navigation nested graph that encapsulates graph's
@@ -20,12 +20,12 @@ abstract class SimpleGraph(
 ) : Graph<Unit>() {
 
     constructor(
-        baseRoute: BaseRoute,
+        baseRoute: BaseRouteOld,
         startDestination: Destination<*>,
     ) : this(baseRoute.route, startDestination)
 
     constructor(
-        baseRoute: BaseRouteReworked,
+        baseRoute: BaseRoute,
         startDestination: Destination<*>,
     ) : this(baseRoute.route, startDestination)
 

@@ -1,7 +1,7 @@
 package ru.zarina.zarina.ui.common.behavior.bottomnavbar
 
 import androidx.compose.runtime.Stable
-import ru.zarina.zarina.ui.common.behavior.base.Behavior
+import ru.zarina.zarina.base.behavior.Behavior
 
 @Stable
 sealed class BottomNavBarBehavior : Behavior {

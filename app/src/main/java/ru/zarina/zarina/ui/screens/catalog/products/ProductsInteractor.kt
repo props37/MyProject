@@ -1,13 +1,13 @@
 package ru.zarina.zarina.ui.screens.catalog.products
 
 import org.koin.core.annotation.Factory
-import ru.zarina.zarina.data.category.ICategoryRepository
-import ru.zarina.zarina.domain.Category
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.usecase.catalog.GetProductsPageUseCase
-import ru.zarina.zarina.usecase.favorites.GetFavoriteIdsUseCase
-import ru.zarina.zarina.usecase.favorites.SetIsFavoriteUseCase
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.data.old.category.ICategoryRepository
+import ru.zarina.zarina.domain.old.Category
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.usecase.old.catalog.GetProductsPageUseCase
+import ru.zarina.zarina.usecase.old.favorites.GetFavoriteIdsUseCase
+import ru.zarina.zarina.usecase.old.favorites.SetIsFavoriteUseCase
+import ru.zarina.zarina.util.base.usecase.invoke
 
 @Factory
 class ProductsInteractor(

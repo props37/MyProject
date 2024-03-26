@@ -43,8 +43,8 @@ fun ScreenToolbar(
             ) {
                 Text(
                     text = title,
-                    style = UiKitTheme.typography.circle1718,
-                    color = UiKitTheme.colors.primaryContentColor,
+                    style = UiKitTheme.typographyOld.circle1718,
+                    color = UiKitTheme.colorsOld.primaryContentColor,
                     maxLines = 1,
                 )
                 AnimatedContent(
@@ -55,8 +55,8 @@ fun ScreenToolbar(
                     if (subtitle != null)
                         Text(
                             text = subtitle,
-                            style = UiKitTheme.typography.circle1316,
-                            color = UiKitTheme.colors.primaryContentColor,
+                            style = UiKitTheme.typographyOld.circle1316,
+                            color = UiKitTheme.colorsOld.primaryContentColor,
                             maxLines = 1,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.animateEnterExit(
@@ -103,10 +103,10 @@ object ScreenToolbarDefaults {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun colors(
-        containerColor: Color = UiKitTheme.colors.screenBackground,
-        actionIconContentColor: Color = UiKitTheme.colors.primaryContentColor,
-        navigationIconContentColor: Color = UiKitTheme.colors.primaryContentColor,
-        titleContentColor: Color = UiKitTheme.colors.primaryContentColor,
+        containerColor: Color = UiKitTheme.colorsOld.screenBackground,
+        actionIconContentColor: Color = UiKitTheme.colorsOld.primaryContentColor,
+        navigationIconContentColor: Color = UiKitTheme.colorsOld.primaryContentColor,
+        titleContentColor: Color = UiKitTheme.colorsOld.primaryContentColor,
     ) = TopAppBarDefaults.centerAlignedTopAppBarColors(
         containerColor = containerColor,
         actionIconContentColor = actionIconContentColor,

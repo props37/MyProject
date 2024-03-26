@@ -1,21 +1,38 @@
 package ru.zarina.zarina.data.user
 
 import kotlinx.coroutines.flow.Flow
-import org.koin.core.annotation.Factory
-import ru.zarina.zarina.data.user.local.IUserLocalSource
-import ru.zarina.zarina.data.user.remote.IUserRemoteSource
-import ru.zarina.zarina.domain.City
+import ru.zarina.zarina.data.user.local.UserLocalDataSource
+import ru.zarina.zarina.data.user.remote.UserRemoteDataSource
+import ru.zarina.zarina.domain.common.Gender
+import ru.zarina.zarina.domain.geography.City
+import javax.inject.Inject
 
-@Factory
-class UserRepository(
-    private val remoteSource: IUserRemoteSource,
-    private val localSource: IUserLocalSource,
-) : IUserRepository {
-
-    override suspend fun setCity(city: City) {
-        remoteSource.setCity(city)
-        localSource.setCity(city)
+class UserRepository @Inject constructor(
+    private val localDataSource: UserLocalDataSource,
+    private val remoteDataSource: UserRemoteDataSource,
+) {
+    fun getUserCityFlow(): Flow<City?> {
+        return localDataSource.getUserCityFlow()
     }
 
-    override fun getCity(): Flow<City?> = localSource.getCity()
+    suspend fun setUserCity(city: City) {
+        remoteDataSource.setUserCity(city)
+        localDataSource.setUserCity(city)
+    }
+
+    suspend fun setLocalUserCity(city: City) {
+        localDataSource.setUserCity(city)
+    }
+
+    fun getUserContentGenderFlow(): Flow<Gender?> {
+        return localDataSource.getUserContentGenderFlow()
+    }
+
+    suspend fun setUserContentGender(gender: Gender) {
+        localDataSource.setUserContentGender(gender)
+    }
+
+    suspend fun clear() {
+        localDataSource.clear()
+    }
 }

@@ -6,51 +6,57 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.serialization.decodeFromString
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.koin.core.annotation.Factory
-import org.koin.core.annotation.Module
-import org.koin.core.annotation.Named
-import org.koin.core.annotation.Singleton
-import ru.zarina.zarina.data.user.local.entity.CityDataEntity
-import ru.zarina.zarina.utils.datastore.Serializer
+import ru.zarina.zarina.data.user.local.entity.CityEntity
+import ru.zarina.zarina.util.library.datastore.DataStoreSerializer
+import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 class DataStoreModule {
 
-    private val Context.dataStore by preferencesDataStore(DATA_STORE_NAME)
+    private val Context.preferencesDataStore by preferencesDataStore(PREFERENCES_DATA_STORE_NAME)
 
+    @Provides
     @Singleton
-    @Named(Qualifiers.DataStore.PREFERENCES)
-    fun providesPreferencesDataStore(
+    fun provideUserCityDataStore(
+        @ApplicationContext
         context: Context,
-    ): DataStore<Preferences> = context.dataStore
-
-    @Factory
-    fun provideUserCitySerializer(
-        json: Json,
-    ) = Serializer<CityDataEntity?>(
-        defaultValueProducer = { null },
-        decodeFromString = { json.decodeFromString(it) },
-        encodeToString = { json.encodeToString(it) }
-    )
-
-    @Singleton
-    @Named(Qualifiers.DataStore.USER_CITY)
-    fun providesUserCityDataStore(
-        context: Context,
-        serializer: Serializer<CityDataEntity?>,
-    ): DataStore<CityDataEntity?> {
+        serializer: DataStoreSerializer<CityEntity?>,
+    ): DataStore<CityEntity?> {
         return DataStoreFactory.create(
             serializer = serializer,
             produceFile = { context.dataStoreFile(USER_CITY_DATA_STORE_NAME) },
         )
     }
 
-    companion object {
-        private const val DATA_STORE_NAME = "zarina-main"
-        private const val USER_CITY_DATA_STORE_NAME = "zarina-user-city"
+    @Provides
+    fun providePreferencesDataStore(
+        @ApplicationContext
+        context: Context,
+    ): DataStore<Preferences> {
+        return context.preferencesDataStore
     }
 
+    @Provides
+    fun provideUserCitySerializer(
+        json: Json,
+    ): DataStoreSerializer<CityEntity?> {
+        return DataStoreSerializer(
+            defaultValueProducer = { null },
+            decodeFromString = { json.decodeFromString(it) },
+            encodeToString = { json.encodeToString(it) },
+        )
+    }
+
+    companion object {
+        private const val PREFERENCES_DATA_STORE_NAME = "preferences_data_store"
+        private const val USER_CITY_DATA_STORE_NAME = "user_city_data_store"
+    }
 }

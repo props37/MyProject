@@ -2,7 +2,7 @@ package ru.zarina.zarina.ui.common.utils.domain
 
 import androidx.annotation.StringRes
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Stock
+import ru.zarina.zarina.domain.old.Stock
 
 @StringRes
 fun Stock.Amount.getStringResource() = when (this) {

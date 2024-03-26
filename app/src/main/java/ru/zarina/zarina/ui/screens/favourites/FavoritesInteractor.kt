@@ -1,11 +1,11 @@
 package ru.zarina.zarina.ui.screens.favourites
 
 import org.koin.core.annotation.Factory
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.usecase.favorites.GetFavoriteIdsUseCase
-import ru.zarina.zarina.usecase.favorites.GetFavoritesPageUseCase
-import ru.zarina.zarina.usecase.favorites.SetIsFavoriteUseCase
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.usecase.old.favorites.GetFavoriteIdsUseCase
+import ru.zarina.zarina.usecase.old.favorites.GetFavoritesPageUseCase
+import ru.zarina.zarina.usecase.old.favorites.SetIsFavoriteUseCase
+import ru.zarina.zarina.util.base.usecase.invoke
 
 @Factory
 class FavoritesInteractor(

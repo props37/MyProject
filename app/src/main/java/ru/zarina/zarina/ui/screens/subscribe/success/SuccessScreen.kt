@@ -30,7 +30,7 @@ import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
 import ru.zarina.zarina.ui.common.components.toolbar.CloseButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,14 +60,14 @@ fun SuccessScreenContent(
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Image(
-                painter = painterResource(id = R.drawable.ic_envelope_96),
+                painter = painterResource(id = R.drawable.old_ic_envelope_96),
                 contentDescription = null,
                 modifier = Modifier.padding(bottom = 12.dp),
             )
             Text(
                 text = stringResource(R.string.product_subscription_done),
-                style = UiKitTheme.typography.circle1720bold,
-                color = UiKitTheme.colors.primaryContentColor,
+                style = UiKitTheme.typographyOld.circle1720bold,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 12.dp),
             )
@@ -76,8 +76,8 @@ fun SuccessScreenContent(
                     R.string.product_availability_will_be_sent_to_mail_template,
                     email
                 ),
-                style = UiKitTheme.typography.circle1518,
-                color = UiKitTheme.colors.primaryContentColor,
+                style = UiKitTheme.typographyOld.circle1518,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 12.dp),
             )

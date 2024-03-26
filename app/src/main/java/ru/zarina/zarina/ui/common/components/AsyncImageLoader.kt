@@ -42,7 +42,7 @@ fun AsyncImageLoader(
         )
         if (!isLoaded)
             CircularProgressIndicator(
-                color = UiKitTheme.colors.primaryContentColor,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 modifier = Modifier.align(Alignment.Center)
             )
     }

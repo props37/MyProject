@@ -16,7 +16,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,7 +38,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
@@ -70,13 +68,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.BottomNavBarBehavior
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
+import ru.zarina.zarina.ui.common.component.counter.ZarinaCounter
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.HorizontalAndBottom
-import ru.zarina.zarina.util.compose.unscalable
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.util.compose.sizeIn
+import ru.zarina.zarina.util.compose.text.unscalable
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -127,8 +127,8 @@ fun ZarinaBottomNavBar(
             sizeTracker.onSizeChanged(size)
         },
     ) {
-        val backgroundColor = UiKitTheme.colorsReworked.background.general.regular.default
-        val topBorderColor = UiKitTheme.colorsReworked.border.general.default
+        val backgroundColor = UiKitTheme.colors.background.general.regular.default
+        val topBorderColor = UiKitTheme.colors.border.general.default
 
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -194,7 +194,7 @@ private fun RowScope.Item(
     isEnabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
-    val selectedColor = UiKitTheme.colorsReworked.text.general.regular.default
+    val selectedColor = UiKitTheme.colors.text.general.regular.default
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -211,9 +211,9 @@ private fun RowScope.Item(
     ) {
         val color by animateColorAsState(
             targetValue = if (isSelected) {
-                UiKitTheme.colorsReworked.text.general.regular.default
+                UiKitTheme.colors.text.general.regular.default
             } else {
-                UiKitTheme.colorsReworked.text.general.regular.disabled
+                UiKitTheme.colors.text.general.regular.disabled
             },
             label = "ZarinaBottomNavBar item color",
         )
@@ -239,7 +239,7 @@ private fun RowScope.Item(
 
         Text(
             text = title,
-            style = UiKitTheme.typographyReworked.caption2.regular,
+            style = UiKitTheme.typography.caption2.regular,
             color = color,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -257,21 +257,15 @@ private fun ItemCounter(
         transitionSpec = {
             AnimatedContentDefaultTransitionSpec().using(sizeTransform = null)
         },
-        contentKey = { it != null },
+        contentAlignment = Alignment.TopEnd,
         label = "ItemCounter",
         modifier = modifier,
     ) { count ->
         if (count != null && count != 0) {
-            Text(
-                text = count.toString(),
-                style = UiKitTheme.typographyReworked.caption2.bold.unscalable(LocalDensity.current),
-                color = UiKitTheme.colorsReworked.text.general.inversed.default,
-                modifier = Modifier
-                    .background(
-                        color = UiKitTheme.colorsReworked.background.general.inversed.default,
-                        shape = CircleShape,
-                    )
-                    .padding(start = 6.dp, top = 1.dp, end = 6.dp),
+            ZarinaCounter(
+                value = count.toString(),
+                textStyle = UiKitTheme.typography.caption2.bold.unscalable(LocalDensity.current),
+                modifier = Modifier.sizeIn(minSize = 16.dp),
             )
         }
     }
@@ -287,6 +281,20 @@ private fun isItemSelected(
         itemRoutes.contains(route)
     }
     return lastBottomNavItemEntry?.destination?.route == bottomNavItem.baseRoute.route
+}
+
+@Preview
+@FontScalePreviews
+@DensityPreviews
+@Composable
+private fun Preview() {
+    ZarinaPreview {
+        ZarinaBottomNavBar(
+            navController = rememberNavController(),
+            cartProductCount = 5,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
 }
 
 private val DefaultWindowInsets: WindowInsets
@@ -308,17 +316,3 @@ private val BottomNavBarContentAnimationSpec: SpringSpec<IntOffset>
         stiffness = BottomNavBarAnimationSpringStiffness,
         visibilityThreshold = IntOffset.VisibilityThreshold,
     )
-
-@Preview
-@FontScalePreviews
-@DensityPreviews
-@Composable
-private fun Preview() {
-    ZarinaPreview {
-        ZarinaBottomNavBar(
-            navController = rememberNavController(),
-            cartProductCount = 5,
-            modifier = Modifier.fillMaxWidth(),
-        )
-    }
-}

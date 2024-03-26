@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screen.filters
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -14,30 +15,31 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
-import ru.zarina.zarina.domain.rework.category.Category
-import ru.zarina.zarina.domain.rework.filter.Filter
-import ru.zarina.zarina.domain.rework.filter.Filters
-import ru.zarina.zarina.domain.rework.filter.ListFilter
-import ru.zarina.zarina.domain.rework.filter.coerceInAvailable
-import ru.zarina.zarina.domain.rework.filter.reset
-import ru.zarina.zarina.domain.rework.filter.updateWith
-import ru.zarina.zarina.domain.rework.product.CategoryProductInfo
-import ru.zarina.zarina.ui.common.base.ErrorStateRework
-import ru.zarina.zarina.ui.common.base.Throttler
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import kotlinx.coroutines.launch
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.domain.category.Category
+import ru.zarina.zarina.domain.filter.Filter
+import ru.zarina.zarina.domain.filter.Filters
+import ru.zarina.zarina.domain.filter.ListFilter
+import ru.zarina.zarina.domain.filter.coerceInAvailable
+import ru.zarina.zarina.domain.filter.reset
+import ru.zarina.zarina.domain.filter.updateWith
+import ru.zarina.zarina.domain.product.CategoryProductInfo
+import ru.zarina.zarina.ui.base.ErrorState
+import ru.zarina.zarina.ui.base.from
+import ru.zarina.zarina.ui.common.util.ScreenResultHandler
+import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
-import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.filters.FiltersViewModel.SideEffect
-import ru.zarina.zarina.usecase.rework.product.GetCategoryProductInfoFlowUseCase
+import ru.zarina.zarina.usecase.product.GetCategoryProductInfoFlowUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import timber.log.Timber
-import java.io.IOException
 
 @HiltViewModel(assistedFactory = FiltersViewModel.Factory::class)
 class FiltersViewModel @AssistedInject constructor(
@@ -46,6 +48,11 @@ class FiltersViewModel @AssistedInject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val interactor: FiltersInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val screenResultHandler = ScreenResultHandler(
+        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
+        savedStateHandle = savedStateHandle,
+    )
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -117,10 +124,7 @@ class FiltersViewModel @AssistedInject constructor(
                     FilterListState.FilterList(info.availableFilters)
                 },
                 onFailure = { throwable ->
-                    val errorState = when (throwable) {
-                        is IOException -> ErrorStateRework.NETWORK
-                        else -> ErrorStateRework.GENERIC
-                    }
+                    val errorState = ErrorState.from(throwable)
                     FilterListState.Error(errorState)
                 },
             ) ?: FilterListState.Loading
@@ -141,7 +145,7 @@ class FiltersViewModel @AssistedInject constructor(
     init {
         categoryProductInfoFetchRequests.trySend(Unit)
 
-        handleListFilterResult(backStackEntrySavedStateHandle)
+        handleListFilterResult()
     }
 
     val productCount: StateFlow<Int?> = categoryProductInfoResult
@@ -196,20 +200,16 @@ class FiltersViewModel @AssistedInject constructor(
         categoryProductInfoFetchRequests.trySend(Unit)
     }
 
-    private fun handleListFilterResult(backStackEntrySavedStateHandle: SavedStateHandle) {
-        backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.ListFilter.Result?>(
-            key = UnscopedDestinations.ListFilter.RESULT_KEY,
-            initialValue = null,
-        )
-            .onEach { result ->
-                if (result != null) {
-                    Timber.v("ListFilter screen result: $result")
-                    val filter = result.filter.toListFilter()
-                    val newFilters = filters.value?.updateWith(filter)
-                    savedStateHandle[KEY_FILTERS] = newFilters?.let { FiltersParcelable.from(it) }
-                }
+    private fun handleListFilterResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<UnscopedDestinations.ListFilter.Result>(
+                key = UnscopedDestinations.ListFilter.RESULT_KEY,
+            ) { result ->
+                val filter = result.filter.toListFilter()
+                val newFilters = filters.value?.updateWith(filter)
+                savedStateHandle[KEY_FILTERS] = newFilters?.let { FiltersParcelable.from(it) }
             }
-            .launchIn(viewModelScope)
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -222,9 +222,11 @@ class FiltersViewModel @AssistedInject constructor(
     sealed class FilterListState {
         data object Loading : FilterListState()
 
+        @Immutable
         data class FilterList(val filters: Filters) : FilterListState()
 
-        data class Error(val errorState: ErrorStateRework) : FilterListState()
+        @Immutable
+        data class Error(val errorState: ErrorState) : FilterListState()
     }
 
     @AssistedFactory

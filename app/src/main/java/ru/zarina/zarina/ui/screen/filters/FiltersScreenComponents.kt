@@ -2,7 +2,6 @@ package ru.zarina.zarina.ui.screen.filters
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Box
@@ -21,7 +20,6 @@ import androidx.compose.foundation.layout.safeGestures
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -47,32 +45,34 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.filter.Filter
-import ru.zarina.zarina.domain.rework.filter.Filters
-import ru.zarina.zarina.domain.rework.filter.ListFilter
-import ru.zarina.zarina.domain.rework.filter.ListFilterItem
-import ru.zarina.zarina.domain.rework.filter.PriceFilter
-import ru.zarina.zarina.domain.rework.filter.SortFilterItem
-import ru.zarina.zarina.domain.rework.filter.ToggleFilter
-import ru.zarina.zarina.domain.rework.filter.sorting
+import ru.zarina.zarina.domain.filter.Filter
+import ru.zarina.zarina.domain.filter.Filters
+import ru.zarina.zarina.domain.filter.ListFilter
+import ru.zarina.zarina.domain.filter.ListFilterItem
+import ru.zarina.zarina.domain.filter.PriceFilter
+import ru.zarina.zarina.domain.filter.SortFilterItem
+import ru.zarina.zarina.domain.filter.ToggleFilter
+import ru.zarina.zarina.domain.filter.sorting
 import ru.zarina.zarina.ui.common.component.PriceFilter
-import ru.zarina.zarina.ui.common.component.ZarinaSwitch
-import ru.zarina.zarina.ui.common.component.button.BackIconButton
+import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.zarina.zarina.ui.common.component.counter.ZarinaCounter
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
-import ru.zarina.zarina.ui.common.component.skeleton.Skeleton
-import ru.zarina.zarina.ui.common.component.skeleton.rememberSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
+import ru.zarina.zarina.ui.common.component.switchh.ZarinaSwitch
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.common.util.domain.nameResId
 import ru.zarina.zarina.ui.screen.filters.FiltersViewModel.FilterListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
-import ru.zarina.zarina.util.compose.Crossfade
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.util.compose.animation.Crossfade
+import ru.zarina.zarina.util.compose.sizeIn
 
 object FiltersScreenComponents {
 
@@ -84,7 +84,7 @@ object FiltersScreenComponents {
     ) {
         ZarinaTopBar(
             startContent = {
-                BackIconButton(
+                ZarinaBackIconButton(
                     onClick = actions.onBackClicked,
                     iconSize = 20.dp,
                     modifier = Modifier.padding(start = 2.dp),
@@ -93,8 +93,8 @@ object FiltersScreenComponents {
             centerContent = {
                 Text(
                     text = stringResource(R.string.filters),
-                    style = UiKitTheme.typographyReworked.primary.regular,
-                    color = UiKitTheme.colorsReworked.text.general.regular.default,
+                    style = UiKitTheme.typography.primary.regular,
+                    color = UiKitTheme.colors.text.general.regular.default,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -113,7 +113,7 @@ object FiltersScreenComponents {
                     ) {
                         Text(
                             text = stringResource(R.string.reset).uppercase(),
-                            style = UiKitTheme.typographyReworked.caption1.regular,
+                            style = UiKitTheme.typography.caption1.regular,
                         )
                     }
                 }
@@ -162,7 +162,7 @@ object FiltersScreenComponents {
                 is FilterListState.Error -> {
                     ZarinaErrorScreen(
                         state = state.errorState,
-                        onRefreshClicked = onFilterListErrorRefreshClicked,
+                        onButtonClicked = onFilterListErrorRefreshClicked,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(16.dp),
@@ -260,7 +260,7 @@ object FiltersScreenComponents {
 
                         if (filter !is PriceFilter && index < filterCount - 1) {
                             Divider(
-                                color = UiKitTheme.colorsReworked.background.skeleton,
+                                color = UiKitTheme.colors.border.general.default,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp),
@@ -271,7 +271,7 @@ object FiltersScreenComponents {
             }
 
             Divider(
-                color = UiKitTheme.colorsReworked.background.skeleton,
+                color = UiKitTheme.colors.border.general.default,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -290,7 +290,7 @@ object FiltersScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
-            val shimmer = rememberSkeletonShimmer(ShimmerBounds.Window)
+            val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
             repeat(FilterSkeletonItemCount) { index ->
                 Box(
                     modifier = Modifier
@@ -299,7 +299,7 @@ object FiltersScreenComponents {
                         .padding(horizontal = 16.dp),
                 ) {
                     val height = 16.dp
-                    Skeleton(
+                    ZarinaSkeleton(
                         shimmer = shimmer,
                         modifier = Modifier
                             .align(Alignment.CenterStart)
@@ -307,7 +307,7 @@ object FiltersScreenComponents {
                             .height(height),
                     )
 
-                    Skeleton(
+                    ZarinaSkeleton(
                         shimmer = shimmer,
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
@@ -317,7 +317,7 @@ object FiltersScreenComponents {
 
                 if (index < FilterSkeletonItemCount - 1) {
                     Divider(
-                        color = UiKitTheme.colorsReworked.background.skeleton,
+                        color = UiKitTheme.colors.border.general.default,
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
@@ -354,8 +354,8 @@ object FiltersScreenComponents {
             }
             Text(
                 text = selectedText,
-                style = UiKitTheme.typographyReworked.secondary.light,
-                color = UiKitTheme.colorsReworked.text.general.regular.muted,
+                style = UiKitTheme.typography.secondary.light,
+                color = UiKitTheme.colors.text.general.regular.muted,
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -389,16 +389,10 @@ object FiltersScreenComponents {
             Spacer(modifier = Modifier.width(8.dp))
 
             if (selectedCount > 0) {
-                Text(
-                    text = selectedCount.toString(),
-                    style = UiKitTheme.typographyReworked.footnote.bold,
-                    color = UiKitTheme.colorsReworked.text.general.inversed.default,
-                    modifier = Modifier
-                        .background(
-                            color = UiKitTheme.colorsReworked.background.general.inversed.default,
-                            shape = CircleShape,
-                        )
-                        .padding(start = 8.dp, top = 1.dp, end = 8.dp),
+                ZarinaCounter(
+                    value = selectedCount.toString(),
+                    textStyle = UiKitTheme.typography.footnote.bold,
+                    modifier = Modifier.sizeIn(minSize = 24.dp),
                 )
             }
 
@@ -519,9 +513,11 @@ object FiltersScreenComponents {
 
     private val FilterTitleTextStyle: TextStyle
         @Composable
-        get() = UiKitTheme.typographyReworked.secondary.light
+        get() = UiKitTheme.typography.secondary.light
 
     private val FilterTitleColor: Color
         @Composable
-        get() = UiKitTheme.colorsReworked.text.general.regular.default
+        get() = UiKitTheme.colors.text.general.regular.default
+
+    private val MultiSelectionFilterItemCounterMinSize: Dp get() = 24.dp
 }

@@ -12,23 +12,25 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.common.Url
-import ru.zarina.zarina.domain.rework.common.exception.ValidationException
-import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.domain.rework.product.ProductOffer
-import ru.zarina.zarina.domain.rework.user.exception.InvalidEmailException
-import ru.zarina.zarina.domain.rework.user.exception.InvalidFirstNameException
-import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.base.Throttler
-import ru.zarina.zarina.ui.common.base.operation.OperationKey
-import ru.zarina.zarina.ui.common.base.operation.OperationTracker
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.operationtracker.OperationKey
+import ru.zarina.zarina.base.operationtracker.OperationTracker
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.domain.common.Url
+import ru.zarina.zarina.domain.common.exception.ValidationException
+import ru.zarina.zarina.domain.exception.InvalidEmailException
+import ru.zarina.zarina.domain.exception.InvalidFirstNameException
+import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.domain.product.ProductOffer
+import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.common.util.getNavigationThrottler
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
-import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionViewModel.SideEffect
-import ru.zarina.zarina.usecase.rework.product.SubscribeToProductUseCase
+import ru.zarina.zarina.usecase.product.SubscribeToProductUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
@@ -140,8 +142,9 @@ class ProductSubscriptionViewModel @Inject constructor(
                 )
                 interactor.subscribeToProduct(params)
                     .onSuccess {
-                        val message = Text.Resource(R.string.product_subscription_completed)
-                        emitSideEffect(SideEffect.ShowToast(message))
+                        val messageText = Text.Resource(R.string.product_subscription_completed)
+                        val message = ZarinaToastMessage(messageText)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
 
                         val action = ProductSubscriptionScreenAction.SubscriptionCompleted
                         emitSideEffect(SideEffect.Navigate(action))
@@ -171,6 +174,8 @@ class ProductSubscriptionViewModel @Inject constructor(
         data class Navigate(val action: ProductSubscriptionScreenAction) : SideEffect
 
         data class OpenUrl(val url: Url) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
 
         data class ShowToast(val message: Text) : SideEffect
     }

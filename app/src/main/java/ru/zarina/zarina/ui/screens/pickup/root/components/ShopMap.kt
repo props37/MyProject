@@ -31,7 +31,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.Stock
+import ru.zarina.zarina.domain.old.Stock
 import ru.zarina.zarina.ui.common.utils.domain.toLatLng
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.utils.maps.getBitmapDescriptor
@@ -92,7 +92,7 @@ fun ShopMap(
         ) {
             val context = LocalContext.current
             val pinBitmapDescriptor =
-                remember(context) { context.getBitmapDescriptor(R.drawable.ic_map_pin_marker) }
+                remember(context) { context.getBitmapDescriptor(R.drawable.old_ic_map_pin_marker) }
             stocks.forEach { stock ->
                 MarkerInfoWindowContent(
                     state = MarkerState(position = stock.shop.geoLocation.toLatLng()),
@@ -100,7 +100,7 @@ fun ShopMap(
                 ) {
                     Box(
                         modifier = Modifier
-                            .background(UiKitTheme.colors.screenBackground)
+                            .background(UiKitTheme.colorsOld.screenBackground)
                             .padding(8.dp)
                     ) {
                         ShopItem(stock, {}, isButtonVisible = false)

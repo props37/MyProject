@@ -13,19 +13,19 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.R
-import ru.zarina.zarina.data.StaticPages
-import ru.zarina.zarina.domain.Barcode
-import ru.zarina.zarina.domain.exception.validation.EmptyException
-import ru.zarina.zarina.domain.exception.validation.FormatException
-import ru.zarina.zarina.domain.exception.validation.IllegalContentsException
-import ru.zarina.zarina.domain.exception.validation.TooLongException
+import ru.zarina.zarina.base.operationtracker.OperationKey
+import ru.zarina.zarina.base.operationtracker.OperationTracker
+import ru.zarina.zarina.data.old.StaticPages
+import ru.zarina.zarina.domain.old.Barcode
+import ru.zarina.zarina.domain.old.exception.validation.EmptyException
+import ru.zarina.zarina.domain.old.exception.validation.FormatException
+import ru.zarina.zarina.domain.old.exception.validation.IllegalContentsException
+import ru.zarina.zarina.domain.old.exception.validation.TooLongException
+import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.base.FocusState
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
-import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.base.operation.OperationKey
-import ru.zarina.zarina.ui.common.base.operation.OperationTracker
-import ru.zarina.zarina.ui.navigation.destinations.Subscribe
+import ru.zarina.zarina.ui.navigation.old.destinations.Subscribe
 import ru.zarina.zarina.utils.coroutine.mapState
 
 @KoinViewModel

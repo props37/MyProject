@@ -18,7 +18,7 @@ fun SelectionCircle(
     isSelected: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val color = UiKitTheme.colors.primaryContentColor
+    val color = UiKitTheme.colorsOld.primaryContentColor
     val selectionFillRadiusMultiplier by animateFloatAsState(
         targetValue = if (isSelected) 1f else 0f,
         label = "selection fill radius multiplier",

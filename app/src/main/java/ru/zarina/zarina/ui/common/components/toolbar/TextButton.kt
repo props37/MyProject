@@ -28,7 +28,7 @@ fun TextButton(
     ) {
         Text(
             text = text.uppercase(),
-            style = UiKitTheme.typography.circle1216,
+            style = UiKitTheme.typographyOld.circle1216,
             modifier = Modifier.align(Alignment.Center),
         )
     }

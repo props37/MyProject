@@ -1,17 +1,17 @@
 package ru.zarina.zarina.ui.screens.search
 
 import org.koin.core.annotation.Factory
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.RecommendationType
-import ru.zarina.zarina.usecase.catalog.GetRecommendationsUseCase
-import ru.zarina.zarina.usecase.favorites.GetFavoriteIdsUseCase
-import ru.zarina.zarina.usecase.favorites.SetIsFavoriteUseCase
-import ru.zarina.zarina.usecase.search.AddToSearchHistoryUseCase
-import ru.zarina.zarina.usecase.search.GetAutocompleteUseCase
-import ru.zarina.zarina.usecase.search.GetSearchHistoryUseCase
-import ru.zarina.zarina.usecase.search.GetSearchPageUseCase
-import ru.zarina.zarina.usecase.search.RemoveFromSearchHistoryUseCase
-import ru.zarina.zarina.utils.clean.invoke
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.RecommendationType
+import ru.zarina.zarina.usecase.old.catalog.GetRecommendationsUseCase
+import ru.zarina.zarina.usecase.old.favorites.GetFavoriteIdsUseCase
+import ru.zarina.zarina.usecase.old.favorites.SetIsFavoriteUseCase
+import ru.zarina.zarina.usecase.old.search.AddToSearchHistoryUseCase
+import ru.zarina.zarina.usecase.old.search.GetAutocompleteUseCase
+import ru.zarina.zarina.usecase.old.search.GetSearchHistoryUseCase
+import ru.zarina.zarina.usecase.old.search.GetSearchPageUseCase
+import ru.zarina.zarina.usecase.old.search.RemoveFromSearchHistoryUseCase
+import ru.zarina.zarina.util.base.usecase.invoke
 
 @Factory
 class SearchInteractor(

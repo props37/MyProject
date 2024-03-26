@@ -36,11 +36,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.Offer
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.Stock
-import ru.zarina.zarina.ui.common.base.ErrorState
+import ru.zarina.zarina.domain.old.City
+import ru.zarina.zarina.domain.old.Offer
+import ru.zarina.zarina.domain.old.Product
+import ru.zarina.zarina.domain.old.Stock
+import ru.zarina.zarina.ui.common.base.ErrorStateOld
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.CityPicker
 import ru.zarina.zarina.ui.common.components.HorizontalProductCard
@@ -53,7 +53,7 @@ import ru.zarina.zarina.ui.screens.pickup.PickupViewModel
 import ru.zarina.zarina.ui.screens.pickup.root.components.ShopList
 import ru.zarina.zarina.ui.screens.pickup.root.components.ShopMap
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class,
@@ -74,8 +74,8 @@ fun PickupRootScreenContent(
     onRefreshClick: () -> Unit,
 ) {
     val errorState = when (errorType) {
-        PickupViewModel.ErrorType.NETWORK -> ErrorState.NETWORK
-        PickupViewModel.ErrorType.GENERIC -> ErrorState.GENERIC
+        PickupViewModel.ErrorType.NETWORK -> ErrorStateOld.NETWORK
+        PickupViewModel.ErrorType.GENERIC -> ErrorStateOld.GENERIC
         null -> null
     }
     ZarinaScaffold(
@@ -117,12 +117,12 @@ fun PickupRootScreenContent(
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(UiKitTheme.colors.screenBackground)
+                                .background(UiKitTheme.colorsOld.screenBackground)
                         ) {
                             Text(
                                 text = stringResource(R.string.product_not_available_in_city),
-                                style = UiKitTheme.typography.circle1518,
-                                color = UiKitTheme.colors.primaryContentColor,
+                                style = UiKitTheme.typographyOld.circle1518,
+                                color = UiKitTheme.colorsOld.primaryContentColor,
                                 textAlign = TextAlign.Start,
                                 modifier = Modifier.padding(16.dp),
                             )
@@ -134,7 +134,7 @@ fun PickupRootScreenContent(
                             pagerState = pagerState,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(UiKitTheme.colors.screenBackground)
+                                .background(UiKitTheme.colorsOld.screenBackground)
                         )
                     }
                 }

@@ -12,8 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import ru.zarina.zarina.ui.common.LocalToastController
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
+import ru.zarina.zarina.ui.common.toastcontroller.LocalToastController
+import ru.zarina.zarina.ui.common.zarinatoast.controller.LocalZarinaToastController
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionViewModel.SideEffect
 
 @Composable
@@ -22,6 +23,7 @@ fun ProductSubscriptionScreenBehavior(
     navigate: (ProductSubscriptionScreenAction) -> Unit,
 ) {
     val updatedContext by rememberUpdatedState(LocalContext.current)
+    val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedToastController by rememberUpdatedState(LocalToastController.current)
     val updatedNavigate by rememberUpdatedState(navigate)
 
@@ -38,6 +40,10 @@ fun ProductSubscriptionScreenBehavior(
                                 .setShowTitle(true)
                                 .build()
                             intent.launchUrl(updatedContext, sideEffect.url.value.toUri())
+                        }
+
+                        is SideEffect.ShowZarinaToast -> {
+                            updatedZarinaToastController.show(sideEffect.message)
                         }
 
                         is SideEffect.ShowToast -> updatedToastController.show(sideEffect.message)

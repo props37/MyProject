@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import org.koin.android.annotation.KoinViewModel
 import ru.zarina.zarina.ui.common.base.ISideEffectSource
 import ru.zarina.zarina.ui.common.base.SideEffectQueue
-import ru.zarina.zarina.ui.navigation.destinations.Subscribe
+import ru.zarina.zarina.ui.navigation.old.destinations.Subscribe
 
 @KoinViewModel
 class SuccessViewModel(

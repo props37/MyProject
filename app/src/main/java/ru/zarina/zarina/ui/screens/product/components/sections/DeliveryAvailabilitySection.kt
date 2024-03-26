@@ -26,11 +26,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.DeliveryAvailability
+import ru.zarina.zarina.domain.old.DeliveryAvailability
 import ru.zarina.zarina.ui.common.tooling.preview.providers.domain.DeliveryAvailabilityProvider
-import ru.zarina.zarina.ui.screens.product.components.sections.ContentType.*
+import ru.zarina.zarina.ui.screens.product.components.sections.ContentType.Availability
+import ru.zarina.zarina.ui.screens.product.components.sections.ContentType.Error
+import ru.zarina.zarina.ui.screens.product.components.sections.ContentType.Loading
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -47,7 +49,7 @@ fun DeliveryAvailabilitySection(
         modifier = modifier
             .border(
                 width = 1.dp,
-                color = UiKitTheme.colors.primaryBorderColor
+                color = UiKitTheme.colorsOld.primaryBorderColor
             )
             .padding(24.dp),
         label = "content type"
@@ -91,7 +93,7 @@ private fun DeliveryInformationHeader(
     deliveryAvailability: DeliveryAvailability,
     modifier: Modifier = Modifier,
 ) {
-    val cityTextColor = UiKitTheme.colors.primaryAccentColor
+    val cityTextColor = UiKitTheme.colorsOld.primaryAccentColor
     val headerString = stringResource(R.string.delivery_to, deliveryAvailability.cityName)
     val headerColored = remember(headerString) {
         buildAnnotatedString {
@@ -107,8 +109,8 @@ private fun DeliveryInformationHeader(
     }
     Text(
         text = headerColored,
-        style = UiKitTheme.typography.circle1720bold,
-        color = UiKitTheme.colors.primaryContentColor,
+        style = UiKitTheme.typographyOld.circle1720bold,
+        color = UiKitTheme.colorsOld.primaryContentColor,
         textAlign = TextAlign.Start,
         modifier = modifier
     )
@@ -134,8 +136,8 @@ private fun DeliveryOption(
         ) {
             Text(
                 text = option.name,
-                style = UiKitTheme.typography.circle1518,
-                color = UiKitTheme.colors.primaryContentColor,
+                style = UiKitTheme.typographyOld.circle1518,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 textAlign = TextAlign.Start,
             )
             Spacer(modifier = Modifier.height(2.dp))
@@ -147,8 +149,8 @@ private fun DeliveryOption(
             }
             Text(
                 text = stringResource(timeResource),
-                style = UiKitTheme.typography.circle1518,
-                color = UiKitTheme.colors.primaryContentColor,
+                style = UiKitTheme.typographyOld.circle1518,
+                color = UiKitTheme.colorsOld.primaryContentColor,
                 textAlign = TextAlign.Start,
             )
         }
@@ -159,9 +161,9 @@ private fun DeliveryOption(
 private fun DeliveryAvailability.Option.Type.getDrawable(): Int {
     return when (this) {
         DeliveryAvailability.Option.Type.EXPRESS -> R.drawable.ic_scooter_24
-        DeliveryAvailability.Option.Type.POST -> R.drawable.ic_box_24
-        DeliveryAvailability.Option.Type.PICKUP -> R.drawable.ic_map_marker_24
-        DeliveryAvailability.Option.Type.RETAIL -> R.drawable.ic_z_24
+        DeliveryAvailability.Option.Type.POST -> R.drawable.old_ic_box_24
+        DeliveryAvailability.Option.Type.PICKUP -> R.drawable.old_ic_map_marker_24
+        DeliveryAvailability.Option.Type.RETAIL -> R.drawable.old_ic_z_24
     }
 }
 

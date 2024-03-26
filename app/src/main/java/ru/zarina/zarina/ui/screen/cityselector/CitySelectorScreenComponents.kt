@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,23 +40,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.ui.common.component.ZarinaCircularLoader
-import ru.zarina.zarina.ui.common.component.button.CloseIconButton
+import ru.zarina.zarina.domain.geography.City
+import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.base.text.textString
+import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
-import ru.zarina.zarina.ui.common.component.icon.CheckmarkAnimatedIcon
+import ru.zarina.zarina.ui.common.component.icon.ZarinaCheckmarkAnimatedIcon
+import ru.zarina.zarina.ui.common.component.loader.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
+import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.CityListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultEnterTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultExitTransition
-import ru.zarina.zarina.util.compose.AnimatedContentDefaultTransitionSpec
-import ru.zarina.zarina.util.compose.Crossfade
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
+import ru.zarina.zarina.util.compose.animation.Crossfade
 import ru.zarina.zarina.util.compose.navigationBarsOrIme
 import ru.zarina.zarina.utils.compose.plus
 
@@ -62,32 +67,30 @@ object CitySelectorScreenComponents {
 
     @Composable
     fun TopBar(
-        onCloseClicked: () -> Unit,
+        title: Text,
+        onBackClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .heightIn(min = TopBarDefaults.MinHeight)
-                .padding(vertical = TopBarDefaults.VerticalPadding),
-        ) {
-            Text(
-                text = stringResource(R.string.city),
-                style = UiKitTheme.typographyReworked.primary.bold,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.align(Alignment.Center),
-            )
-
-            CloseIconButton(
-                onClick = onCloseClicked,
-                iconSize = 20.dp,
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 2.dp),
-            )
-        }
+        ZarinaTopBar(
+            startContent = {
+                ZarinaBackIconButton(
+                    onClick = onBackClicked,
+                    iconSize = 20.dp,
+                    modifier = Modifier.padding(start = 2.dp),
+                )
+            },
+            centerContent = {
+                Text(
+                    text = textString(title),
+                    style = UiKitTheme.typography.primary.regular,
+                    color = UiKitTheme.colors.text.general.regular.default,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            },
+            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
+            modifier = modifier,
+        )
     }
 
     @Composable
@@ -108,7 +111,7 @@ object CitySelectorScreenComponents {
             },
             leadingContent = {
                 Icon(
-                    painter = painterResource(R.drawable.ic_search_24),
+                    painter = painterResource(R.drawable.ic_magnifying_glass_24),
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
                 )
@@ -167,7 +170,7 @@ object CitySelectorScreenComponents {
                                 .windowInsetsPadding(WindowInsets.navigationBarsOrIme),
                         ) {
                             ZarinaCircularLoader(
-                                color = UiKitTheme.colorsReworked.icon.regular.default,
+                                color = UiKitTheme.colors.icon.regular.default,
                                 modifier = Modifier.size(40.dp),
                             )
                         }
@@ -185,7 +188,10 @@ object CitySelectorScreenComponents {
                                 PaddingValues(top = 8.dp, bottom = bottom)
                             }
                             val contentPadding =
-                                baseContentPadding + WindowInsets.navigationBarsOrIme.asPaddingValues()
+                                baseContentPadding +
+                                        WindowInsets.safeDrawing
+                                            .only(WindowInsetsSides.Bottom)
+                                            .asPaddingValues()
 
                             LazyColumn(
                                 contentPadding = contentPadding,
@@ -227,7 +233,7 @@ object CitySelectorScreenComponents {
                     is CityListState.Error -> {
                         ZarinaErrorScreen(
                             state = listState.errorState,
-                            onRefreshClicked = onErrorRefreshClicked,
+                            onButtonClicked = onErrorRefreshClicked,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(horizontal = 16.dp)
@@ -279,21 +285,21 @@ object CitySelectorScreenComponents {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = city.name,
-                            style = UiKitTheme.typographyReworked.secondary.light,
-                            color = UiKitTheme.colorsReworked.text.general.regular.default,
+                            style = UiKitTheme.typography.secondary.light,
+                            color = UiKitTheme.colors.text.general.regular.default,
                         )
 
                         if (showFullName) {
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = city.fullName,
-                                style = UiKitTheme.typographyReworked.footnote.light,
-                                color = UiKitTheme.colorsReworked.text.general.regular.muted,
+                                style = UiKitTheme.typography.footnote.light,
+                                color = UiKitTheme.colors.text.general.regular.muted,
                             )
                         }
                     }
 
-                    CheckmarkAnimatedIcon(
+                    ZarinaCheckmarkAnimatedIcon(
                         isVisible = isSelected,
                         iconSize = 16.dp,
                         modifier = Modifier.padding(start = if (isSelected) 16.dp else 0.dp),
@@ -304,7 +310,7 @@ object CitySelectorScreenComponents {
             }
 
             Divider(
-                color = UiKitTheme.colorsReworked.border.general.default,
+                color = UiKitTheme.colors.border.general.default,
                 thickness = 1.dp,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -320,8 +326,8 @@ object CitySelectorScreenComponents {
     ) {
         Text(
             text = letter.toString(),
-            style = UiKitTheme.typographyReworked.primary.bold,
-            color = UiKitTheme.colorsReworked.text.general.regular.default,
+            style = UiKitTheme.typography.primary.bold,
+            color = UiKitTheme.colors.text.general.regular.default,
             modifier = modifier.padding(start = 16.dp, top = 20.dp, bottom = 4.dp),
         )
     }
@@ -337,15 +343,15 @@ object CitySelectorScreenComponents {
         ) {
             Text(
                 text = stringResource(R.string.city_not_found),
-                style = UiKitTheme.typographyReworked.primary.bold,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                style = UiKitTheme.typography.primary.bold,
+                color = UiKitTheme.colors.text.general.regular.default,
                 textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.try_to_change_city_name),
-                style = UiKitTheme.typographyReworked.secondary.regular,
-                color = UiKitTheme.colorsReworked.text.general.regular.default,
+                style = UiKitTheme.typography.secondary.regular,
+                color = UiKitTheme.colors.text.general.regular.default,
                 textAlign = TextAlign.Center,
             )
         }

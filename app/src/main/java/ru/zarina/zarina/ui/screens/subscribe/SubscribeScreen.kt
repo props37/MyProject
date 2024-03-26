@@ -45,8 +45,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.zarina.zarina.R
-import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.base.textString
+import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.base.text.textString
 import ru.zarina.zarina.ui.common.behavior.navigationbar.NavigationBarState
 import ru.zarina.zarina.ui.common.components.ZarinaScaffold
 import ru.zarina.zarina.ui.common.components.buttons.ZarinaTextButton
@@ -55,7 +55,7 @@ import ru.zarina.zarina.ui.common.components.material.zarinaColors
 import ru.zarina.zarina.ui.common.components.toolbar.BackButton
 import ru.zarina.zarina.ui.common.components.toolbar.ScreenToolbar
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.ui.theme.ZarinaTheme
+import ru.zarina.zarina.ui.theme.old.ZarinaTheme
 import ru.zarina.zarina.utils.compose.autofill
 import ru.zarina.zarina.utils.compose.navigationOrIme
 
@@ -101,7 +101,7 @@ fun SubscribeScreenContent(
         ) {
             Text(
                 text = stringResource(R.string.leave_your_contacts),
-                style = UiKitTheme.typography.circle1718,
+                style = UiKitTheme.typographyOld.circle1718,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
             Input(
@@ -154,7 +154,7 @@ fun SubscribeScreenContent(
                 val text = acknowledgementText()
                 ClickableText(
                     text = text,
-                    style = UiKitTheme.typography.circle1718.copy(color = UiKitTheme.colors.primaryContentColor),
+                    style = UiKitTheme.typographyOld.circle1718.copy(color = UiKitTheme.colorsOld.primaryContentColor),
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 4.dp),
@@ -200,7 +200,7 @@ private fun acknowledgementText() = buildAnnotatedString {
     )
     append(fullString)
 
-    val linkStyle = SpanStyle(color = UiKitTheme.colors.primaryAccentColor)
+    val linkStyle = SpanStyle(color = UiKitTheme.colorsOld.primaryAccentColor)
     ApplyForString(
         fullString = fullString,
         target = policy,

@@ -1,6 +1,6 @@
 package ru.zarina.zarina.ui.screen.cityselector
 
-import ru.zarina.zarina.domain.rework.geography.City
+import ru.zarina.zarina.domain.geography.City
 
 sealed class CitySelectorScreenAction {
     data object ScreenClosed : CitySelectorScreenAction()

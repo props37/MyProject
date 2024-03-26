@@ -22,37 +22,37 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
-import ru.zarina.zarina.domain.rework.category.Category
-import ru.zarina.zarina.domain.rework.common.Barcode
-import ru.zarina.zarina.domain.rework.common.Sorting
-import ru.zarina.zarina.domain.rework.filter.Filters
-import ru.zarina.zarina.domain.rework.filter.coerceInAvailable
-import ru.zarina.zarina.domain.rework.filter.selected
-import ru.zarina.zarina.domain.rework.product.Product
-import ru.zarina.zarina.ui.common.base.Text
-import ru.zarina.zarina.ui.common.base.Throttler
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
-import ru.zarina.zarina.ui.common.paging.mapProducts
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.domain.category.Category
+import ru.zarina.zarina.domain.common.Barcode
+import ru.zarina.zarina.domain.common.Sorting
+import ru.zarina.zarina.domain.filter.Filters
+import ru.zarina.zarina.domain.filter.coerceInAvailable
+import ru.zarina.zarina.domain.filter.selected
+import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.common.util.ScreenResultHandler
+import ru.zarina.zarina.ui.common.util.getNavigationThrottler
+import ru.zarina.zarina.ui.common.util.library.paging.mapProducts
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
-import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
-import ru.zarina.zarina.ui.navigation.rework.destination.graph.SizeSelectorGraph
+import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.SideEffect
-import ru.zarina.zarina.usecase.rework.cart.AddProductToCartUseCase
-import ru.zarina.zarina.usecase.rework.category.GetCategoryFlowUseCase
-import ru.zarina.zarina.usecase.rework.favorite.AddProductToFavoritesUseCase
-import ru.zarina.zarina.usecase.rework.favorite.RemoveProductFromFavoritesUseCase
-import ru.zarina.zarina.usecase.rework.product.GetProductPagingDataFlowUseCase
+import ru.zarina.zarina.usecase.cart.AddProductToCartUseCase
+import ru.zarina.zarina.usecase.category.GetCategoryFlowUseCase
+import ru.zarina.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
+import ru.zarina.zarina.usecase.product.GetProductPagingDataFlowUseCase
+import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
-import ru.zarina.zarina.utils.clean.invoke
 import timber.log.Timber
 
 @HiltViewModel(assistedFactory = ProductsViewModel.Factory::class)
@@ -62,6 +62,11 @@ class ProductsViewModel @AssistedInject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val interactor: ProductsInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val screenResultHandler = ScreenResultHandler(
+        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
+        savedStateHandle = savedStateHandle,
+    )
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -140,11 +145,20 @@ class ProductsViewModel @AssistedInject constructor(
             parcelable?.toFilters()
         }
 
-    private val filters = MutableStateFlow(
-        initialFilters.value ?: Filters.create(
-            sorting = Filters.getDefaultSorting(Sorting.getDefault()),
+    private val filters: StateFlow<Filters> = savedStateHandle
+        .getStateFlow<FiltersParcelable?>(
+            key = KEY_FILTERS,
+            initialValue = null,
         )
-    )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) {
+            val fallbackFilters = initialFilters.value ?: Filters.create(
+                sorting = Filters.getDefaultSorting(Sorting.getDefault()),
+            )
+            it?.toFilters() ?: fallbackFilters
+        }
 
     private var availableFilters: Filters? = null
 
@@ -167,7 +181,7 @@ class ProductsViewModel @AssistedInject constructor(
         }
         .cachedIn(viewModelScope)
         .mapProducts(
-            favoriteProductIdsResultFlow =  interactor.getFavoriteProductIdsFlow(),
+            favoriteProductIdsResultFlow = interactor.getFavoriteProductIdsFlow(),
             cartProductIdsResultFlow = interactor.getCartProductIdsFlow(),
         )
         .cachedIn(viewModelScope)
@@ -180,13 +194,14 @@ class ProductsViewModel @AssistedInject constructor(
     init {
         categoryFetchRequests.trySend(Unit)
 
-        handleFiltersResult(backStackEntrySavedStateHandle)
-        handleSizeSelectorResult(backStackEntrySavedStateHandle)
+        handleFiltersResult()
+        handleSizeSelectorResult()
     }
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            emitSideEffect(SideEffect.NavigateBackward)
+            val action = ProductsScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -211,7 +226,7 @@ class ProductsViewModel @AssistedInject constructor(
                 categoryId = categoryId.value,
                 filters = combinedFilters,
             )
-            emitSideEffect(SideEffect.NavigateForward(action))
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -221,7 +236,7 @@ class ProductsViewModel @AssistedInject constructor(
         } else {
             navigationThrottler.throttle {
                 val action = ProductsScreenAction.TagClicked(tag = tag, filters = filters.value)
-                emitSideEffect(SideEffect.NavigateForward(action))
+                emitSideEffect(SideEffect.Navigate(action))
                 _selectedTagId.value = null
             }
         }
@@ -233,22 +248,25 @@ class ProductsViewModel @AssistedInject constructor(
 
     fun onAddProductToFavoritesClicked(product: Product) {
         viewModelScope.launch {
-            val result = if (product.isInFavorites) {
-                val params = RemoveProductFromFavoritesUseCase.Params(product.id)
-                interactor.removeProductFromFavorites(params)
-            } else {
-                val params = AddProductToFavoritesUseCase.Params(product.id)
-                interactor.addProductToFavorites(params)
-            }
-            result.onFailure {
-                val messageResId = if (product.isInFavorites) {
-                    R.string.removing_product_from_favorites_error_toast
-                } else {
-                    R.string.adding_product_to_favorites_error_toast
+            val params = ToggleProductPresenceInFavoritesUseCase.Params(product.id)
+            interactor.toggleProductPresenceInFavorites(params)
+                .onSuccess {
+                    if (!product.isInFavorites) {
+                        val messageText =
+                            Text.Resource(R.string.product_adding_to_favorites_completed)
+                        val message = ZarinaToastMessage(messageText)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
+                    }
                 }
-                val message = Text.Resource(messageResId)
-                emitSideEffect(SideEffect.ShowToast(message))
-            }
+                .onFailure {
+                    val messageResId = if (product.isInFavorites) {
+                        R.string.product_removing_from_favorites_error
+                    } else {
+                        R.string.product_adding_to_favorites_error
+                    }
+                    val message = Text.Resource(messageResId)
+                    emitSideEffect(SideEffect.ShowToast(message))
+                }
         }
     }
 
@@ -256,7 +274,7 @@ class ProductsViewModel @AssistedInject constructor(
         if (product.offers.size > 1) {
             navigationThrottler.throttle {
                 val action = ProductsScreenAction.AddProductToCartClicked(product)
-                emitSideEffect(SideEffect.NavigateForward(action))
+                emitSideEffect(SideEffect.Navigate(action))
             }
         } else {
             val offer = product.offers.firstOrNull() ?: run {
@@ -270,7 +288,7 @@ class ProductsViewModel @AssistedInject constructor(
     fun onSubscribeToProductClicked(product: Product) {
         navigationThrottler.throttle {
             val action = ProductsScreenAction.SubscribeToProductClicked(product)
-            emitSideEffect(SideEffect.NavigateForward(action))
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -298,52 +316,47 @@ class ProductsViewModel @AssistedInject constructor(
                 count = 1,
             )
             interactor.addProductToCart(params)
+                .onSuccess {
+                    val messageText = Text.Resource(R.string.product_adding_to_cart_completed)
+                    val message = ZarinaToastMessage(messageText)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                }
                 .onFailure {
-                    val message = Text.Resource(R.string.adding_product_to_cart_error_toast)
+                    val message = Text.Resource(R.string.product_adding_to_cart_error)
                     emitSideEffect(SideEffect.ShowToast(message))
                 }
         }
     }
 
-    private fun handleFiltersResult(backStackEntrySavedStateHandle: SavedStateHandle) {
-        backStackEntrySavedStateHandle.getStateFlow<UnscopedDestinations.Filters.Result?>(
-            key = UnscopedDestinations.Filters.RESULT_KEY,
-            initialValue = null,
-        )
-            .onEach { result ->
-                if (result != null) {
-                    Timber.v("Filters screen result: $result")
-                    val filters = result.filters.toFilters()
-                    this.filters.value = filters
-                }
+    private fun handleFiltersResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<UnscopedDestinations.Filters.Result>(
+                key = UnscopedDestinations.Filters.RESULT_KEY,
+            ) { result ->
+                val filters = result.filters.toFilters()
+                val filtersParcelable = FiltersParcelable.from(filters)
+                savedStateHandle[KEY_FILTERS] = filtersParcelable
             }
-            .launchIn(viewModelScope)
+        }
     }
 
-    private fun handleSizeSelectorResult(backStackEntrySavedStateHandle: SavedStateHandle) {
-        backStackEntrySavedStateHandle.getStateFlow<SizeSelectorGraph.Result?>(
-            key = SizeSelectorGraph.RESULT_KEY,
-            initialValue = null,
-        )
-            .onEach { result ->
-                val previousSizeSelectorResult: String? =
-                    savedStateHandle[KEY_PREV_SIZE_SELECTOR_RESULT]
-                if (result != null && result.id != previousSizeSelectorResult) {
-                    Timber.v("SizeSelector screen result: $result")
-                    addProductToCart(
-                        productId = result.product.toProduct().id,
-                        barcode = result.offer.toProductOffer().barcode,
-                    )
-                    savedStateHandle[KEY_PREV_SIZE_SELECTOR_RESULT] = result.id
-                }
+    private fun handleSizeSelectorResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<SizeSelectorGraph.Result>(
+                key = SizeSelectorGraph.RESULT_KEY,
+            ) { result ->
+                addProductToCart(
+                    productId = result.product.toProduct().id,
+                    barcode = result.offer.toProductOffer().barcode,
+                )
             }
-            .launchIn(viewModelScope)
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class NavigateForward(val action: ProductsScreenAction) : SideEffect
+        data class Navigate(val action: ProductsScreenAction) : SideEffect
 
-        data object NavigateBackward : SideEffect
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
 
         data class ShowToast(val message: Text) : SideEffect
     }
@@ -362,6 +375,6 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     companion object {
-        private const val KEY_PREV_SIZE_SELECTOR_RESULT = "prev_size_selector_result"
+        private const val KEY_FILTERS = "filters"
     }
 }

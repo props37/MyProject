@@ -15,19 +15,22 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.zarina.zarina.domain.rework.geography.City
-import ru.zarina.zarina.domain.rework.geography.KladrId
-import ru.zarina.zarina.ui.common.base.ErrorStateRework
-import ru.zarina.zarina.ui.common.base.Throttler
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSource
-import ru.zarina.zarina.ui.common.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.R
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
+import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.domain.geography.City
+import ru.zarina.zarina.domain.geography.KladrId
+import ru.zarina.zarina.ui.base.ErrorState
+import ru.zarina.zarina.ui.base.from
+import ru.zarina.zarina.ui.base.text.Text
+import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.model.geography.CityParcelable
-import ru.zarina.zarina.ui.navigation.rework.destination.UnscopedDestinations
+import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorViewModel.SideEffect
-import ru.zarina.zarina.usecase.rework.geography.GetCitiesFlowUseCase
+import ru.zarina.zarina.usecase.geography.GetCitiesFlowUseCase
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.zarina.zarina.util.library.coroutines.mapState
-import java.io.IOException
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -41,6 +44,16 @@ class CitySelectorViewModel @Inject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private var fetchCitiesJob: Job? = null
+
+    val title: StateFlow<Text> = savedStateHandle
+        .getStateFlow<Text?>(
+            key = UnscopedDestinations.CitySelector.ARG_KEY_TITLE,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { it ?: TITLE_DEFAULT_VALUE }
 
     private val initialCity: StateFlow<City?> = savedStateHandle
         .getStateFlow<CityParcelable?>(
@@ -83,7 +96,7 @@ class CitySelectorViewModel @Inject constructor(
         fetchCities(cityNameQuery = null)
     }
 
-    fun onCloseClicked() {
+    fun onBackClicked() {
         navigationThrottler.throttle {
             val action = CitySelectorScreenAction.ScreenClosed
             emitSideEffect(SideEffect.Navigate(action))
@@ -136,10 +149,7 @@ class CitySelectorViewModel @Inject constructor(
                         cityListStateFromFetchCitiesSuccess(cityNameQuery, cities)
                     },
                     onFailure = { throwable ->
-                        val errorState = when (throwable) {
-                            is IOException -> ErrorStateRework.NETWORK
-                            else -> ErrorStateRework.GENERIC
-                        }
+                        val errorState = ErrorState.from(throwable)
                         CityListState.Error(errorState)
                     },
                 )
@@ -193,7 +203,7 @@ class CitySelectorViewModel @Inject constructor(
         data class CityList(val items: ImmutableList<CityListItem>) : CityListState()
 
         @Immutable
-        data class Error(val errorState: ErrorStateRework) : CityListState()
+        data class Error(val errorState: ErrorState) : CityListState()
     }
 
     @Stable
@@ -211,6 +221,9 @@ class CitySelectorViewModel @Inject constructor(
     companion object {
         private const val KEY_SELECTED_CITY = "selected_city"
         private const val KEY_CITY_NAME_QUERY = "city_name_query"
+
+        private val TITLE_DEFAULT_VALUE: Text
+            get() = Text.Resource(R.string.city)
 
         private val SEARCH_CITIES_BY_NAME_DELAY = 200.milliseconds
 

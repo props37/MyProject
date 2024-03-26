@@ -1,33 +1,44 @@
 package ru.zarina.zarina.data.product
 
-import org.koin.core.annotation.Factory
-import ru.zarina.zarina.data.product.remote.IProductRemoteSource
-import ru.zarina.zarina.domain.Category
-import ru.zarina.zarina.domain.City
-import ru.zarina.zarina.domain.Filtration
-import ru.zarina.zarina.domain.Product
-import ru.zarina.zarina.domain.ProductSort
+import kotlinx.coroutines.flow.Flow
+import ru.zarina.zarina.data.product.remote.ProductRemoteDataSource
+import ru.zarina.zarina.domain.category.Category
+import ru.zarina.zarina.domain.common.Barcode
+import ru.zarina.zarina.domain.common.Page
+import ru.zarina.zarina.domain.common.Sorting
+import ru.zarina.zarina.domain.filter.Filters
+import ru.zarina.zarina.domain.product.CategoryProductInfo
+import ru.zarina.zarina.domain.product.ProductsWithFilters
+import javax.inject.Inject
 
-@Factory
-class ProductRepository(
-    private val remote: IProductRemoteSource,
-) : IProductRepository {
+class ProductRepository @Inject constructor(
+    private val remoteDataSource: ProductRemoteDataSource,
+) {
+    fun getProductsWithFiltersPageFlow(
+        categoryId: Category.Id,
+        filters: Filters?,
+        sorting: Sorting,
+        page: Int,
+    ): Flow<Page<ProductsWithFilters>> {
+        return remoteDataSource.getProductsWithFiltersPageFlow(
+            categoryId = categoryId,
+            filters = filters,
+            sorting = sorting,
+            page = page,
+        )
+    }
 
-    override fun getProduct(id: Product.Id) = remote.getProduct(id)
+    fun getCategoryProductInfoFlow(
+        categoryId: Category.Id,
+        filters: Filters?,
+    ): Flow<CategoryProductInfo> {
+        return remoteDataSource.getCategoryProductInfoFlow(
+            categoryId = categoryId,
+            filters = filters,
+        )
+    }
 
-    override suspend fun getProducts(
-        category: Category,
-        sort: ProductSort,
-        filtration: Filtration?,
-        pageIndex: Int,
-    ) =
-        remote.getProductPage(category, sort, filtration, pageIndex)
-
-    override fun getCompleteLook(product: Product) = remote.getCompleteLook(product)
-
-    override suspend fun getDeliveryAvailability(product: Product) =
-        remote.getDeliveryAvailability(product)
-
-    override suspend fun getOffers(product: Product, city: City) = remote.getOffers(product, city)
-
+    suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: String) {
+        remoteDataSource.subscribeToProduct(barcode, firstName, email)
+    }
 }

@@ -2,55 +2,64 @@ package ru.zarina.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.zarina.zarina.domain.Filtration
-import ru.zarina.zarina.domain.ListFilter
+import ru.zarina.zarina.data.common.remote.api.dto.PriceFilterDto
+import ru.zarina.zarina.domain.filter.Filters
 
 @Serializable
 data class FiltersRequestDto(
     @SerialName("price")
-    val price: PriceFilterDto?,
-    @SerialName("colors")
-    val color: List<String>?,
-    @SerialName("attributes")
-    val attributes: List<String>?,
-    @SerialName("sizes")
-    val sizes: List<String>?,
-    @SerialName("materials")
-    val materials: List<String>?,
-    @SerialName("available_for_shipping")
-    val availableForShipping: Boolean?,
-    @SerialName("available_for_store_pickup")
-    val availableForPickup: AvailableForPickupDto?,
-) {
-    companion object {
-        fun from(filtration: Filtration): FiltersRequestDto {
-            return FiltersRequestDto(
-                price = filtration.price?.let { PriceFilterDto.from(it) },
-                color = filtration.colors?.toDto(),
-                attributes = filtration.attributes?.toDto(),
-                materials = filtration.materials?.toDto(),
-                sizes = filtration.sizes?.toDto(),
-                availableForShipping = filtration.isShippingAvailable.takeIf { it == true },
-                availableForPickup = filtration.isPickupAvailable
-                    .takeIf { it == true }
-                    ?.let {
-                        AvailableForPickupDto(
-                            isApplied = true,
-                            storeId = filtration.pickupShop?.id
-                        )
-                    },
-            )
-        }
+    val price: PriceFilterDto? = null,
 
-        private fun ListFilter.toDto(): List<String> =
-            this.items.filter { it.isSelected }.map { it.id }
+    @SerialName("materials")
+    val materials: List<String>? = null,
+
+    @SerialName("sizes")
+    val sizes: List<String>? = null,
+
+    @SerialName("colors")
+    val colors: List<String>? = null,
+
+    @SerialName("available_for_shipping")
+    val availableForDelivery: Boolean? = null,
+
+    @SerialName("available_for_store_pickup")
+    val availableForStorePickup: StorePickupAvailability? = null,
+) {
+    @Serializable
+    data class StorePickupAvailability(
+        @SerialName("applied")
+        val isApplied: Boolean,
+    )
+
+    companion object {
+        fun from(filters: Filters): FiltersRequestDto? {
+            return if (!filters.isEmptyIgnoringSorting) {
+                val materials = filters.materials?.let { filter ->
+                    if (!filter.isEmpty) filter.selectedItems.map { it.id.value } else null
+                }
+                val sizes = filters.sizes?.let { filter ->
+                    if (!filter.isEmpty) filter.selectedItems.map { it.id.value } else null
+                }
+                val colors = filters.colors?.let { filter ->
+                    if (!filter.isEmpty) filter.selectedItems.map { it.id.value } else null
+                }
+                val availableForDelivery = filters.deliveryAvailability?.let { filter ->
+                    if (filter.isEnabled) true else null
+                }
+                val availableForStorePickup = filters.storePickupAvailability?.let { filter ->
+                    if (filter.isEnabled) StorePickupAvailability(isApplied = true) else null
+                }
+                FiltersRequestDto(
+                    price = filters.price?.let { PriceFilterDto.from(it) },
+                    materials = materials,
+                    sizes = sizes,
+                    colors = colors,
+                    availableForDelivery = availableForDelivery,
+                    availableForStorePickup = availableForStorePickup,
+                )
+            } else {
+                null
+            }
+        }
     }
 }
-
-@Serializable
-data class AvailableForPickupDto(
-    @SerialName("applied")
-    val isApplied: Boolean,
-    @SerialName("store_id")
-    val storeId: String? = null,
-)
