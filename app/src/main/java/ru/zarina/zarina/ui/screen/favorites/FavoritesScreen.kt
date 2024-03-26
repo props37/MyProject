@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.component.ProductGrid
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -29,19 +30,19 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun FavoritesScreen(
+    navigate: (FavoritesScreenAction) -> Unit,
     viewModel: FavoritesViewModel = hiltViewModel(),
 ) {
     ScreenContent(
         productPagingDataFlow = viewModel.productPagingDataFlow,
-        onProductClicked = { /* TODO */ },
-        onAddProductToFavoritesClicked = { /* TODO */ },
-        onAddProductToCartClicked = { /* TODO */ },
-        onSubscribeToProductClicked = { /* TODO */ },
-        onRefreshProducts = { /* TODO */ },
-        onProductsErrorRefreshClicked = { /* TODO */ },
-        onClearFavoritesClicked = { /* TODO */ },
-        onGoToCatalogClicked = { /* TODO */ },
+        onProductClicked = viewModel::onProductClicked,
+        onAddProductToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
+        onAddProductToCartClicked = viewModel::onAddProductToCartClicked,
+        onSubscribeToProductClicked = viewModel::onSubscribeToProductClicked,
+        onClearFavoritesClicked = viewModel::onClearFavoritesClicked,
+        onGoToCatalogClicked = viewModel::onGoToCatalogClicked,
         sideEffects = viewModel.sideEffects,
+        navigate = navigate,
     )
 }
 
@@ -52,13 +53,15 @@ private fun ScreenContent(
     onAddProductToFavoritesClicked: (Product) -> Unit,
     onAddProductToCartClicked: (Product) -> Unit,
     onSubscribeToProductClicked: (Product) -> Unit,
-    onRefreshProducts: () -> Unit,
-    onProductsErrorRefreshClicked: () -> Unit,
     onClearFavoritesClicked: () -> Unit,
     onGoToCatalogClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
+    navigate: (FavoritesScreenAction) -> Unit,
 ) {
-    FavoritesScreenBehavior(sideEffects = sideEffects)
+    FavoritesScreenBehavior(
+        sideEffects = sideEffects,
+        navigate = navigate,
+    )
 
     Column(
         modifier = Modifier
@@ -67,7 +70,8 @@ private fun ScreenContent(
             .windowInsetsPadding(
                 WindowInsets.statusBars
                     .union(WindowInsets.displayCutout),
-            ),
+            )
+            .bottomNavBarPadding(),
     ) {
         TopBar(
             isClearButtonVisible = true, // TODO: [High] Implement
@@ -81,8 +85,8 @@ private fun ScreenContent(
             onAddToFavoritesClicked = onAddProductToFavoritesClicked,
             onAddToCartClicked = onAddProductToCartClicked,
             onSubscribeClicked = onSubscribeToProductClicked,
-            onRefreshProducts = onRefreshProducts,
-            onProductsErrorRefreshClicked = onProductsErrorRefreshClicked,
+            onRefreshProducts = {}, // No need for additional logic
+            onProductsErrorRefreshClicked = {}, // No need for additional logic
             noProductsPlaceholder = {
                 FavoriteProductsNotFoundPlaceholder(
                     onGoToCatalogClicked = onGoToCatalogClicked,
