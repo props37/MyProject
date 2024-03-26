@@ -30,7 +30,7 @@ fun ShareSection(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_share_24),
+                painter = painterResource(id = R.drawable.old_ic_share_24),
                 contentDescription = null,
             )
             Spacer(modifier = Modifier.width(8.dp))

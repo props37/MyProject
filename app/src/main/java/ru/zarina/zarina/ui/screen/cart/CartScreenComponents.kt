@@ -461,13 +461,13 @@ object CartScreenComponents {
         val bodyResId: Int
         when (deliveryType) {
             DeliveryType.DELIVERY -> {
-                iconResId = R.drawable.ic_delivery_24
+                iconResId = R.drawable.ic_scooter_64
                 titleResId = R.string.cart_empty_delivery_cart_placeholder_title
                 bodyResId = R.string.cart_empty_delivery_cart_placeholder_body
             }
 
             DeliveryType.PICK_UP_FROM_SHOP -> {
-                iconResId = R.drawable.ic_shop_24
+                iconResId = R.drawable.ic_shop_64
                 titleResId = R.string.cart_empty_pick_up_from_shop_cart_placeholder_title
                 bodyResId = R.string.cart_empty_pick_up_from_shop_cart_placeholder_body
             }

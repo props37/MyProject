@@ -60,7 +60,7 @@ fun SuccessScreenContent(
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Image(
-                painter = painterResource(R.drawable.ic_box_96),
+                painter = painterResource(R.drawable.old_ic_box_96),
                 contentDescription = null,
             )
             Text(

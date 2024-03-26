@@ -117,7 +117,7 @@ fun ProductsScreenContent(
                 products.loadState.append == LoadState.Loading || products.loadState.refresh == LoadState.Loading
             val errorState = when {
                 !isLoading && products.itemCount == 0 -> ErrorStateOld(
-                    icon = R.drawable.ic_magnifying_glass_96,
+                    icon = R.drawable.old_ic_magnifying_glass_96,
                     title = Text.Resource(R.string.products_not_found),
                     subtitle = Text.Resource(R.string.try_changing_filter),
                     isButtonVisible = false,

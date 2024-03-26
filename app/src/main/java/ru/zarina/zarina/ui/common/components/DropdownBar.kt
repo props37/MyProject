@@ -54,7 +54,7 @@ fun DropdownBar(
             content()
             Spacer(modifier = Modifier.width(8.dp))
             Icon(
-                painter = painterResource(R.drawable.ic_chevron_down_24),
+                painter = painterResource(R.drawable.old_ic_chevron_down_24),
                 contentDescription = stringResource(R.string.dropdown),
                 modifier = Modifier
                     .indication(

@@ -100,7 +100,7 @@ fun SelectCityScreenContent(
             endIcon = {
                 IconButton(onClick = onCloseClick) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_close_24),
+                        painter = painterResource(id = R.drawable.ic_cross_24),
                         contentDescription = stringResource(id = R.string.skip),
                     )
                 }
@@ -417,7 +417,7 @@ private fun SearchBar(
             visible = query.isNotEmpty(),
         ) {
             Image(
-                painter = painterResource(R.drawable.ic_clear_24),
+                painter = painterResource(R.drawable.old_ic_clear_24),
                 contentDescription = stringResource(R.string.clear),
                 modifier = Modifier
                     .padding(start = 12.dp)

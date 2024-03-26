@@ -161,9 +161,9 @@ private fun DeliveryOption(
 private fun DeliveryAvailability.Option.Type.getDrawable(): Int {
     return when (this) {
         DeliveryAvailability.Option.Type.EXPRESS -> R.drawable.ic_scooter_24
-        DeliveryAvailability.Option.Type.POST -> R.drawable.ic_box_24
-        DeliveryAvailability.Option.Type.PICKUP -> R.drawable.ic_map_marker_24
-        DeliveryAvailability.Option.Type.RETAIL -> R.drawable.ic_z_24
+        DeliveryAvailability.Option.Type.POST -> R.drawable.old_ic_box_24
+        DeliveryAvailability.Option.Type.PICKUP -> R.drawable.old_ic_map_marker_24
+        DeliveryAvailability.Option.Type.RETAIL -> R.drawable.old_ic_z_24
     }
 }
 

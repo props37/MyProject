@@ -59,31 +59,31 @@ sealed class BottomNavigationTab(
 ) {
 
     object Catalogue : BottomNavigationTab(
-        icon = R.drawable.ic_magnifying_glass_lines_36,
+        icon = R.drawable.old_ic_magnifying_glass_lines_36,
         title = R.string.catalogue,
         destination = Catalog,
     )
 
     object Favourites : BottomNavigationTab(
-        icon = R.drawable.ic_heart_36,
+        icon = R.drawable.old_ic_heart_36,
         title = R.string.favorites,
         destination = Favorites,
     )
 
     object Home : BottomNavigationTab(
-        icon = R.drawable.ic_home_36,
+        icon = R.drawable.old_ic_home_36,
         title = R.string.main_page,
         destination = ru.zarina.zarina.ui.navigation.old.destinations.Home,
     )
 
     object Profile : BottomNavigationTab(
-        icon = R.drawable.ic_person_36,
+        icon = R.drawable.old_ic_person_36,
         title = R.string.profile,
         destination = ru.zarina.zarina.ui.navigation.old.destinations.Profile,
     )
 
     object Cart : BottomNavigationTab(
-        icon = R.drawable.ic_shopping_bag_36,
+        icon = R.drawable.old_ic_shopping_bag_36,
         title = R.string.cart,
         destination = ru.zarina.zarina.ui.navigation.old.destinations.Cart,
     )

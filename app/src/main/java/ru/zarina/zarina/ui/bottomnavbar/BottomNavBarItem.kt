@@ -36,7 +36,7 @@ sealed class BottomNavBarItem(
 
     data object Profile : BottomNavBarItem(
         titleResId = R.string.profile,
-        iconResId = R.drawable.ic_profile_outline_24,
+        iconResId = R.drawable.ic_human_outline_24,
         baseRoute = BaseRoute.PROFILE_GRAPH,
     )
 

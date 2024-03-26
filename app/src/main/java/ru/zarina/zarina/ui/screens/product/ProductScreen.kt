@@ -89,7 +89,7 @@ fun ProductScreenContent(
     val errorState = when (errorType) {
         ProductViewModel.ErrorType.NETWORK -> ErrorStateOld.NETWORK
         ProductViewModel.ErrorType.NOT_FOUND -> ErrorStateOld(
-            icon = R.drawable.ic_magnifying_glass_96,
+            icon = R.drawable.old_ic_magnifying_glass_96,
             title = ru.zarina.zarina.ui.base.text.Text.Resource(R.string.product_not_on_sale),
             subtitle = ru.zarina.zarina.ui.base.text.Text.Resource(R.string.dont_fret_catalog),
         )

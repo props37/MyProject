@@ -242,7 +242,7 @@ private fun SearchHistory(
                         .padding(vertical = 12.dp)
                 )
                 Image(
-                    painter = painterResource(id = R.drawable.ic_close_24),
+                    painter = painterResource(id = R.drawable.ic_cross_24),
                     contentDescription = stringResource(id = R.string.remove_from_history),
                     modifier = Modifier
                         .padding(start = 8.dp)
@@ -415,7 +415,7 @@ private fun NothingFound(
     ) {
         Spacer(modifier = Modifier.height(36.dp))
         Image(
-            painter = painterResource(id = R.drawable.ic_magnifying_glass_96),
+            painter = painterResource(id = R.drawable.old_ic_magnifying_glass_96),
             contentDescription = null,
             modifier = Modifier.padding(bottom = 4.dp)
         )

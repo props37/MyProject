@@ -44,7 +44,7 @@ fun TreeItem(
             )
         }
         Icon(
-            painter = painterResource(id = R.drawable.ic_chevron_right_24),
+            painter = painterResource(id = R.drawable.old_ic_chevron_right_24),
             contentDescription = null,
             tint = UiKitTheme.colorsOld.primaryContentColor,
         )

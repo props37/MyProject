@@ -61,7 +61,7 @@ fun FavoriteHeart(
             }
     ) {
         val iconRes = if (it)
-            R.drawable.ic_heart_filled_24
+            R.drawable.old_ic_heart_filled_24
         else
             R.drawable.ic_heart_24
         Box(

@@ -60,7 +60,7 @@ fun SuccessScreenContent(
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Image(
-                painter = painterResource(id = R.drawable.ic_envelope_96),
+                painter = painterResource(id = R.drawable.old_ic_envelope_96),
                 contentDescription = null,
                 modifier = Modifier.padding(bottom = 12.dp),
             )

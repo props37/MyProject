@@ -92,7 +92,7 @@ fun ShopMap(
         ) {
             val context = LocalContext.current
             val pinBitmapDescriptor =
-                remember(context) { context.getBitmapDescriptor(R.drawable.ic_map_pin_marker) }
+                remember(context) { context.getBitmapDescriptor(R.drawable.old_ic_map_pin_marker) }
             stocks.forEach { stock ->
                 MarkerInfoWindowContent(
                     state = MarkerState(position = stock.shop.geoLocation.toLatLng()),

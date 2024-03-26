@@ -405,7 +405,7 @@ object ZarinaTextFieldDefaults {
                 modifier = modifier,
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_clear_new_24),
+                    painter = painterResource(R.drawable.ic_cross_shaped_24),
                     contentDescription = stringResource(R.string.clear),
                     tint = Color.Unspecified,
                     modifier = Modifier.size(iconSize),
@@ -551,7 +551,7 @@ private fun Preview() {
                     },
                     innerTrailingContent = {
                         Icon(
-                            painter = painterResource(R.drawable.ic_close_24),
+                            painter = painterResource(R.drawable.ic_cross_24),
                             contentDescription = null,
                             modifier = Modifier
                                 .size(iconSize)

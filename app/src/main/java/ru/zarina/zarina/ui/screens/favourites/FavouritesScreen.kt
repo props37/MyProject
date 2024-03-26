@@ -61,7 +61,7 @@ fun FavoritesScreenContent(
             favorites.loadState.append == LoadState.Loading || favorites.loadState.refresh == LoadState.Loading
         val errorState = when {
             !isLoading && favorites.itemCount == 0 -> ErrorStateOld(
-                icon = R.drawable.ic_heart_96,
+                icon = R.drawable.old_ic_heart_96,
                 title = Text.Resource(R.string.favorites_are_empty),
                 subtitle = Text.Resource(R.string.save_interesting_products_to_favorites),
                 isButtonVisible = false,

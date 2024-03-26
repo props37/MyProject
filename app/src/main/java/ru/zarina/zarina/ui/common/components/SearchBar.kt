@@ -115,7 +115,7 @@ private fun SearchBar(
             exit = fadeOut(),
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_close_24),
+                painter = painterResource(id = R.drawable.ic_cross_24),
                 contentDescription = stringResource(id = R.string.clear),
                 modifier = Modifier
                     .padding(end = 16.dp)

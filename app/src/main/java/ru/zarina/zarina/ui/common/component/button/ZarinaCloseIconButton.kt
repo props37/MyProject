@@ -43,7 +43,7 @@ fun ZarinaCloseIconButton(
         modifier = modifier,
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_close_24),
+            painter = painterResource(R.drawable.ic_cross_24),
             contentDescription = contentDescription,
             tint = tint,
             modifier = Modifier.size(iconSize),

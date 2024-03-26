@@ -35,7 +35,7 @@ fun <T> FilterBar(
             ),
     ) {
         FilterButton(
-            icon = R.drawable.ic_sort_24,
+            icon = R.drawable.old_ic_sort_24,
             text = sortName(sort),
             onClick = onSortClick,
             modifier = Modifier
@@ -50,7 +50,7 @@ fun <T> FilterBar(
         )
         FilterButton(
             isEnabled = isFilterButtonEnabled,
-            icon = R.drawable.ic_sliders_24,
+            icon = R.drawable.old_ic_sliders_24,
             text = stringResource(R.string.filters),
             onClick = onFiltersClick,
             modifier = Modifier

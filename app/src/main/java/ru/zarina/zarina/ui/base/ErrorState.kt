@@ -19,7 +19,7 @@ data class ErrorState(
     companion object {
         val NETWORK: ErrorState
             get() = ErrorState(
-                iconResId = R.drawable.ic_wifi_error_24,
+                iconResId = R.drawable.ic_wifi_error_64,
                 title = Text.Resource(R.string.internet_connection_error),
                 body = Text.Resource(R.string.check_internet_connection_and_refresh_page),
                 isButtonVisible = true,
@@ -28,7 +28,7 @@ data class ErrorState(
 
         val GENERIC: ErrorState
             get() = ErrorState(
-                iconResId = R.drawable.ic_heart_broken_outline_24,
+                iconResId = R.drawable.ic_heart_broken_outline_64,
                 title = Text.Resource(R.string.something_went_wrong),
                 body = Text.Resource(R.string.refresh_page_or_come_back_later),
                 isButtonVisible = true,

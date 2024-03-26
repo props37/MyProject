@@ -18,7 +18,7 @@ fun CloseButton(
         modifier = modifier
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_close_24),
+            painter = painterResource(id = R.drawable.ic_cross_24),
             contentDescription = stringResource(id = R.string.skip)
         )
     }

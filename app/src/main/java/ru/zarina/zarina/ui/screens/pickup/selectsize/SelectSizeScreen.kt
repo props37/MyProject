@@ -122,7 +122,7 @@ private fun Subscribe(
             modifier = Modifier.padding(end = 8.dp),
         )
         Image(
-            painter = painterResource(id = R.drawable.ic_chevron_right_24),
+            painter = painterResource(id = R.drawable.old_ic_chevron_right_24),
             contentDescription = null,
         )
     }

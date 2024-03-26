@@ -18,7 +18,7 @@ data class ErrorStateOld(
 
         val GENERIC
             get() = ErrorStateOld(
-                icon = R.drawable.ic_broken_heart_96,
+                icon = R.drawable.old_ic_broken_heart_96,
                 title = Text.Resource(R.string.something_went_wrong),
                 subtitle = Text.Resource(R.string.try_again_later),
                 isButtonVisible = true,
@@ -27,7 +27,7 @@ data class ErrorStateOld(
 
         val NETWORK
             get() = ErrorStateOld(
-                icon = R.drawable.ic_no_network_96,
+                icon = R.drawable.old_ic_no_network_96,
                 title = Text.Resource(R.string.loading_error),
                 subtitle = Text.Resource(R.string.check_connection_and_try_again_later),
                 isButtonVisible = true,

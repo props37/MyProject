@@ -108,7 +108,7 @@ fun ModalErrorPreview() {
     ZarinaTheme {
         ModalError(
             state = ErrorStateOld(
-                icon = R.drawable.ic_no_network_96,
+                icon = R.drawable.old_ic_no_network_96,
                 title = Text.String("Error title"),
                 subtitle = Text.String("Error subtitle"),
                 isButtonVisible = true,

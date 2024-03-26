@@ -30,7 +30,7 @@ fun PickupSection(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_map_marker_2_24),
+                painter = painterResource(id = R.drawable.old_ic_map_marker_2_24),
                 contentDescription = null,
             )
             Spacer(modifier = Modifier.width(8.dp))
