@@ -36,7 +36,7 @@ import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.ProductsNotFound
+import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.ProductsNotFoundPlaceholder
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.Tags
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBarActions
@@ -146,7 +146,7 @@ private fun ScreenContent(
                 onRefreshProducts = onRefreshProducts,
                 onProductsErrorRefreshClicked = onProductsErrorRefreshClicked,
                 noProductsPlaceholder = {
-                    ProductsNotFound(
+                    ProductsNotFoundPlaceholder(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(16.dp),

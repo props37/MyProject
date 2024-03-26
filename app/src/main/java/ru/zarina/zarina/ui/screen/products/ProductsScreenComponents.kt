@@ -205,7 +205,7 @@ object ProductsScreenComponents {
     }
 
     @Composable
-    fun ProductsNotFound(
+    fun ProductsNotFoundPlaceholder(
         modifier: Modifier = Modifier,
     ) {
         Column(
