@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
@@ -30,12 +31,12 @@ import kotlinx.coroutines.flow.flowOf
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
+import ru.zarina.zarina.ui.common.component.ProductGrid
 import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.ProductCardActions
-import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.Products
+import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.ProductsNotFound
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.Tags
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.products.ProductsScreenComponents.TopBarActions
@@ -62,15 +63,6 @@ fun ProductsScreen(
         )
     }
 
-    val productCardActions = remember(viewModel) {
-        ProductCardActions(
-            onProductClicked = viewModel::onProductClicked,
-            onAddToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
-            onAddToCartClicked = viewModel::onAddProductToCartClicked,
-            onSubscribeClicked = viewModel::onSubscribeToProductClicked,
-        )
-    }
-
     BackHandler(onBack = viewModel::onSystemBackClicked)
 
     ScreenContent(
@@ -81,7 +73,10 @@ fun ProductsScreen(
         selectedTagId = selectedTagId,
         onTagClicked = viewModel::onTagClicked,
         productPagingDataFlow = viewModel.productPagingDataFlow,
-        productCardActions = productCardActions,
+        onProductClicked = viewModel::onProductClicked,
+        onAddProductToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
+        onAddProductToCartClicked = viewModel::onAddProductToCartClicked,
+        onSubscribeToProductClicked = viewModel::onSubscribeToProductClicked,
         onRefreshProducts = viewModel::onRefreshProducts,
         onProductsErrorRefreshClicked = viewModel::onProductsErrorRefreshClicked,
         sideEffects = viewModel.sideEffects,
@@ -98,7 +93,10 @@ private fun ScreenContent(
     selectedTagId: Category.Id?,
     onTagClicked: (Category) -> Unit,
     productPagingDataFlow: Flow<PagingData<Product>>,
-    productCardActions: ProductCardActions,
+    onProductClicked: (Product) -> Unit,
+    onAddProductToFavoritesClicked: (Product) -> Unit,
+    onAddProductToCartClicked: (Product) -> Unit,
+    onSubscribeToProductClicked: (Product) -> Unit,
     onRefreshProducts: () -> Unit,
     onProductsErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<ProductsViewModel.SideEffect>,
@@ -139,11 +137,21 @@ private fun ScreenContent(
             scrollBehavior = tagsScrollBehavior,
             modifier = Modifier.clipToBounds(),
         ) { padding ->
-            Products(
+            ProductGrid(
                 productPagingDataFlow = productPagingDataFlow,
-                productCardActions = productCardActions,
+                onProductClicked = onProductClicked,
+                onAddToFavoritesClicked = onAddProductToFavoritesClicked,
+                onAddToCartClicked = onAddProductToCartClicked,
+                onSubscribeClicked = onSubscribeToProductClicked,
                 onRefreshProducts = onRefreshProducts,
                 onProductsErrorRefreshClicked = onProductsErrorRefreshClicked,
+                noProductsPlaceholder = {
+                    ProductsNotFound(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                    )
+                },
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
@@ -171,7 +179,10 @@ private fun Preview() {
             productPagingDataFlow = remember {
                 flowOf(PagingData.from(FakeDataGenerator.getProducts()))
             },
-            productCardActions = remember { ProductCardActions({}, {}, {}, {}) },
+            onProductClicked = {},
+            onAddProductToFavoritesClicked = {},
+            onAddProductToCartClicked = {},
+            onSubscribeToProductClicked = {},
             onRefreshProducts = {},
             onProductsErrorRefreshClicked = {},
             sideEffects = remember { emptyFlow() },
