@@ -77,23 +77,7 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                     }
 
                     is ProductsScreenAction.SubscribeToProductClicked -> {
-                        if (action.product.offers.size > 1) {
-                            val args = SizeSelectorGraph.SizeSelector.Args(action.product)
-                            navController.navigate(
-                                route = SizeSelectorGraph.routeSchema,
-                                args = SizeSelectorGraph.createArgsBundle(args),
-                            )
-                        } else {
-                            val offer = action.product.offers.firstOrNull() ?: return@ProductsScreen
-                            val args = UnscopedDestinations.ProductSubscription.Args(
-                                product = action.product,
-                                offer = offer,
-                            )
-                            navController.navigate(
-                                route = UnscopedDestinations.ProductSubscription.routeSchema,
-                                args = UnscopedDestinations.ProductSubscription.createArgsBundle(args),
-                            )
-                        }
+                        navigateToProductSubscriptionScreen(navController, action.product)
                     }
                 }
             },

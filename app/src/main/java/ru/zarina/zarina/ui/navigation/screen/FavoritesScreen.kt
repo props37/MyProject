@@ -6,17 +6,36 @@ import androidx.navigation.NavHostController
 import ru.zarina.zarina.ui.bottomnavbar.BottomNavBarItem
 import ru.zarina.zarina.ui.bottomnavbar.navigateToBottomNavBarItem
 import ru.zarina.zarina.ui.navigation.base.composableDestination
+import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.destination.graph.CatalogGraph
 import ru.zarina.zarina.ui.navigation.destination.graph.FavoritesGraph
 import ru.zarina.zarina.ui.navigation.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.navigation.util.BottomNavBarItemSecondaryStartDestinationBackHandler
+import ru.zarina.zarina.ui.navigation.util.slideExitTransition
+import ru.zarina.zarina.ui.navigation.util.slidePopEnterTransition
 import ru.zarina.zarina.ui.screen.favorites.FavoritesScreen
 import ru.zarina.zarina.ui.screen.favorites.FavoritesScreenAction
 import ru.zarina.zarina.ui.screen.favorites.FavoritesViewModel
 import ru.zarina.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.favoritesScreen(navController: NavHostController) {
-    composableDestination(FavoritesGraph.Favorites) {
+    composableDestination(
+        destination = FavoritesGraph.Favorites,
+        exitTransition = {
+            when (targetState.destination.route) {
+                UnscopedDestinations.ProductSubscription.routeSchema -> slideExitTransition()
+
+                else -> null
+            }
+        },
+        popEnterTransition = {
+            when (initialState.destination.route) {
+                UnscopedDestinations.ProductSubscription.routeSchema -> slidePopEnterTransition()
+
+                else -> null
+            }
+        },
+    ) {
         BottomNavBarItemSecondaryStartDestinationBackHandler(navController)
 
         FavoritesScreen(
@@ -39,6 +58,10 @@ fun NavGraphBuilder.favoritesScreen(navController: NavHostController) {
                             route = SizeSelectorGraph.routeSchema,
                             args = SizeSelectorGraph.createArgsBundle(args),
                         )
+                    }
+
+                    is FavoritesScreenAction.SubscribeToProductClicked -> {
+                        navigateToProductSubscriptionScreen(navController, action.product)
                     }
                 }
             },

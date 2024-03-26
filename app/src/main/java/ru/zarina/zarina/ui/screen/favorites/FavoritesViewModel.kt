@@ -114,7 +114,10 @@ class FavoritesViewModel @AssistedInject constructor(
     }
 
     fun onSubscribeToProductClicked(product: Product) {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val action = FavoritesScreenAction.SubscribeToProductClicked(product)
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     fun onClearFavoritesClicked() {
