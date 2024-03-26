@@ -83,6 +83,7 @@ import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.tab.ZarinaTabRow
+import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.CartState
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -124,11 +125,13 @@ object CartScreenComponents {
                         size = ZarinaButtonSize.Small,
                         colors = ZarinaButtonDefaults.backlessColors(),
                         textStyle = UiKitTheme.typography.caption1.regular,
+                        modifier = Modifier.padding(end = 8.dp),
                     ) {
                         Text(text = stringResource(R.string.clear).uppercase())
                     }
                 }
             },
+            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
             modifier = modifier,
         )
     }
