@@ -203,11 +203,10 @@ object CartScreenComponents {
     ) {
         Crossfade(
             targetState = city,
-            modifier = modifier
-                .clickable(
-                    enabled = city != null,
-                    onClick = onClick,
-                ),
+            modifier = modifier.clickable(
+                enabled = city != null,
+                onClick = onClick,
+            ),
         ) { city ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
