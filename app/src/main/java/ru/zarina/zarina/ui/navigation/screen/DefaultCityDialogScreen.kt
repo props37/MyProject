@@ -30,3 +30,7 @@ fun NavGraphBuilder.defaultCityDialogScreen(navController: NavHostController) {
         )
     }
 }
+
+fun NavHostController.navigateToDefaultCityDialog() {
+    this.navigate(UnscopedDestinations.DefaultCityDialog.route)
+}

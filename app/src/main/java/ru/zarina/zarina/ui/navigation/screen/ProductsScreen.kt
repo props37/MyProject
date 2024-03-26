@@ -3,9 +3,11 @@ package ru.zarina.zarina.ui.navigation.screen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.zarina.zarina.domain.category.Category
+import ru.zarina.zarina.domain.filter.Filters
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
-import ru.zarina.zarina.ui.navigation.destination.graph.SizeSelectorGraph
+import ru.zarina.zarina.ui.navigation.screen.graph.navigateToSizeSelectorGraph
 import ru.zarina.zarina.ui.navigation.util.slideExitTransition
 import ru.zarina.zarina.ui.navigation.util.slidePopEnterTransition
 import ru.zarina.zarina.ui.screen.products.ProductsScreen
@@ -47,40 +49,44 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                     }
 
                     is ProductsScreenAction.FiltersClicked -> {
-                        val args = UnscopedDestinations.Filters.Args(
+                        navController.navigateToFiltersScreen(
                             categoryId = action.categoryId,
                             filters = action.filters,
-                        )
-                        navController.navigate(
-                            route = UnscopedDestinations.Filters.routeSchema,
-                            args = UnscopedDestinations.Filters.createArgsBundle(args),
                         )
                     }
 
                     is ProductsScreenAction.TagClicked -> {
-                        val args = UnscopedDestinations.Products.Args(
+                        navController.navigateToProductsScreen(
                             categoryId = action.tag.id,
                             filters = action.filters,
-                        )
-                        navController.navigate(
-                            route = UnscopedDestinations.Products.routeSchema,
-                            args = UnscopedDestinations.Products.createArgsBundle(args),
                         )
                     }
 
                     is ProductsScreenAction.AddProductToCartClicked -> {
-                        val args = SizeSelectorGraph.SizeSelector.Args(action.product)
-                        navController.navigate(
-                            route = SizeSelectorGraph.routeSchema,
-                            args = SizeSelectorGraph.createArgsBundle(args),
-                        )
+                        navController.navigateToSizeSelectorGraph(action.product)
                     }
 
                     is ProductsScreenAction.SubscribeToProductClicked -> {
-                        navigateToProductSubscriptionScreen(navController, action.product)
+                        if (action.product.offers.size > 1) {
+                            navController.navigateToSizeSelectorGraph(action.product)
+                        } else {
+                            val offer = action.product.offers.firstOrNull() ?: return@ProductsScreen
+                            navController.navigateToProductSubscriptionScreen(action.product, offer)
+                        }
                     }
                 }
             },
         )
     }
+}
+
+fun NavHostController.navigateToProductsScreen(
+    categoryId: Category.Id,
+    filters: Filters? = null,
+) {
+    val args = UnscopedDestinations.Products.Args(categoryId, filters)
+    this.navigate(
+        route = UnscopedDestinations.Products.routeSchema,
+        args = UnscopedDestinations.Products.createArgsBundle(args),
+    )
 }

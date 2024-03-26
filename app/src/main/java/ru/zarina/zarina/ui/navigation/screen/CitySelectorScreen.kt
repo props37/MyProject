@@ -3,6 +3,8 @@ package ru.zarina.zarina.ui.navigation.screen
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.zarina.zarina.domain.geography.City
+import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.model.geography.CityParcelable
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
@@ -11,6 +13,7 @@ import ru.zarina.zarina.ui.navigation.util.slideEnterTransition
 import ru.zarina.zarina.ui.navigation.util.slidePopExitTransition
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreen
 import ru.zarina.zarina.ui.screen.cityselector.CitySelectorScreenAction
+import ru.zarina.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.citySelectorBottomSheetScreen(navController: NavHostController) {
     composableDestination(
@@ -66,4 +69,15 @@ fun NavGraphBuilder.citySelectorBottomSheetScreen(navController: NavHostControll
             },
         )
     }
+}
+
+fun NavHostController.navigateToCitySelectorScreen(
+    city: City? = null,
+    title: Text? = null,
+) {
+    val args = UnscopedDestinations.CitySelector.Args(city = city, title = title)
+    this.navigate(
+        route = UnscopedDestinations.CitySelector.routeSchema,
+        args = UnscopedDestinations.CitySelector.createArgsBundle(args),
+    )
 }

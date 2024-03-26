@@ -2,11 +2,12 @@ package ru.zarina.zarina.ui.navigation.screen
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.domain.product.ProductOffer
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.destination.graph.FavoritesGraph
-import ru.zarina.zarina.ui.navigation.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.navigation.util.slideEnterTransition
 import ru.zarina.zarina.ui.navigation.util.slidePopExitTransition
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionScreen
@@ -49,22 +50,15 @@ fun NavGraphBuilder.productSubscriptionScreen(navController: NavHostController) 
     }
 }
 
-fun navigateToProductSubscriptionScreen(
-    navController: NavHostController,
+fun NavHostController.navigateToProductSubscriptionScreen(
     product: Product,
+    offer: ProductOffer,
+    navOptions: NavOptions? = null,
 ) {
-    if (product.offers.size > 1) {
-        val args = SizeSelectorGraph.SizeSelector.Args(product)
-        navController.navigate(
-            route = SizeSelectorGraph.routeSchema,
-            args = SizeSelectorGraph.createArgsBundle(args),
-        )
-    } else {
-        val offer = product.offers.firstOrNull() ?: return
-        val args = UnscopedDestinations.ProductSubscription.Args(product, offer)
-        navController.navigate(
-            route = UnscopedDestinations.ProductSubscription.routeSchema,
-            args = UnscopedDestinations.ProductSubscription.createArgsBundle(args),
-        )
-    }
+    val args = UnscopedDestinations.ProductSubscription.Args(product, offer)
+    this.navigate(
+        route = UnscopedDestinations.ProductSubscription.routeSchema,
+        args = UnscopedDestinations.ProductSubscription.createArgsBundle(args),
+        navOptions = navOptions,
+    )
 }

@@ -13,7 +13,6 @@ import ru.zarina.zarina.ui.navigation.destination.graph.HomeGraph
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreen
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingScreenAction
 import ru.zarina.zarina.ui.screen.onboarding.OnboardingViewModel
-import ru.zarina.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
     composableDestination(
@@ -53,16 +52,12 @@ fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
                         }
 
                         if (action.userCity == null) {
-                            navController.navigate(UnscopedDestinations.DefaultCityDialog.route)
+                            navController.navigateToDefaultCityDialog()
                         }
                     }
 
                     is OnboardingScreenAction.SelectCityClicked -> {
-                        val args = UnscopedDestinations.CitySelector.Args(action.currentCity)
-                        navController.navigate(
-                            route = UnscopedDestinations.CitySelector.routeSchema,
-                            args = UnscopedDestinations.CitySelector.createArgsBundle(args),
-                        )
+                        navController.navigateToCitySelectorScreen(action.currentCity)
                     }
                 }
             },

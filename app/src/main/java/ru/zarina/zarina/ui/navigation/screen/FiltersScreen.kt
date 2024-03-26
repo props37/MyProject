@@ -3,6 +3,8 @@ package ru.zarina.zarina.ui.navigation.screen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.zarina.zarina.domain.category.Category
+import ru.zarina.zarina.domain.filter.Filters
 import ru.zarina.zarina.ui.model.filter.FiltersParcelable
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
@@ -51,11 +53,7 @@ fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
             navigateForward = { action ->
                 when (action) {
                     is FiltersScreenAction.ListFilterClicked -> {
-                        val args = UnscopedDestinations.ListFilter.Args(action.filter)
-                        navController.navigate(
-                            route = UnscopedDestinations.ListFilter.routeSchema,
-                            args = UnscopedDestinations.ListFilter.createArgsBundle(args),
-                        )
+                        navController.navigateToListFilterScreen(action.filter)
                     }
                 }
             },
@@ -82,4 +80,18 @@ fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
             },
         )
     }
+}
+
+fun NavHostController.navigateToFiltersScreen(
+    categoryId: Category.Id,
+    filters: Filters? = null,
+) {
+    val args = UnscopedDestinations.Filters.Args(
+        categoryId = categoryId,
+        filters = filters,
+    )
+    this.navigate(
+        route = UnscopedDestinations.Filters.routeSchema,
+        args = UnscopedDestinations.Filters.createArgsBundle(args),
+    )
 }

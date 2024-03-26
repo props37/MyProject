@@ -2,6 +2,7 @@ package ru.zarina.zarina.ui.navigation.screen
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.zarina.zarina.domain.filter.ListFilter
 import ru.zarina.zarina.ui.model.filter.ListFilterParcelable
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
@@ -9,6 +10,7 @@ import ru.zarina.zarina.ui.navigation.util.slideEnterTransition
 import ru.zarina.zarina.ui.navigation.util.slidePopExitTransition
 import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterScreen
 import ru.zarina.zarina.ui.screen.filters.listfilter.ListFilterScreenResult
+import ru.zarina.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.listFilterScreen(navController: NavHostController) {
     composableDestination(
@@ -50,4 +52,12 @@ fun NavGraphBuilder.listFilterScreen(navController: NavHostController) {
             },
         )
     }
+}
+
+fun NavHostController.navigateToListFilterScreen(filter: ListFilter<*>) {
+    val args = UnscopedDestinations.ListFilter.Args(filter)
+    this.navigate(
+        route = UnscopedDestinations.ListFilter.routeSchema,
+        args = UnscopedDestinations.ListFilter.createArgsBundle(args),
+    )
 }

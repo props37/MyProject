@@ -3,6 +3,8 @@ package ru.zarina.zarina.ui.navigation.screen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navOptions
+import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.domain.product.ProductOffer
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
@@ -66,4 +68,15 @@ fun NavGraphBuilder.heightSelectorBottomSheetScreen(navController: NavHostContro
             },
         )
     }
+}
+
+fun NavHostController.navigateToHeightSelectorScreen(
+    product: Product,
+    offers: List<ProductOffer>,
+) {
+    val args = SizeSelectorGraph.HeightSelector.Args(product, offers)
+    this.navigate(
+        route = SizeSelectorGraph.HeightSelector.routeSchema,
+        args = SizeSelectorGraph.HeightSelector.createArgsBundle(args),
+    )
 }

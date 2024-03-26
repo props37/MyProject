@@ -6,11 +6,9 @@ import androidx.navigation.navOptions
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.base.bottomSheetDestination
-import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.zarina.zarina.ui.navigation.destination.graph.SizeSelectorGraph
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorBottomSheetScreen
 import ru.zarina.zarina.ui.screen.sizeselector.SizeSelectorScreenAction
-import ru.zarina.zarina.util.library.navigation.navigate
 import timber.log.Timber
 
 fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostController) {
@@ -29,13 +27,9 @@ fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostControll
                         val firstOffer = action.offers.firstOrNull()
                         when {
                             action.offers.size > 1 -> {
-                                val args = SizeSelectorGraph.HeightSelector.Args(
+                                navController.navigateToHeightSelectorScreen(
                                     product = action.product,
                                     offers = action.offers,
-                                )
-                                navController.navigate(
-                                    route = SizeSelectorGraph.HeightSelector.routeSchema,
-                                    args = SizeSelectorGraph.HeightSelector.createArgsBundle(args),
                                 )
                             }
 
@@ -55,18 +49,14 @@ fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostControll
                             }
 
                             firstOffer != null && !firstOffer.isAvailable -> {
-                                val args = UnscopedDestinations.ProductSubscription.Args(
-                                    product = action.product,
-                                    offer = firstOffer,
-                                )
                                 val navOptions = navOptions {
                                     popUpTo(SizeSelectorGraph.routeSchema) {
                                         inclusive = true
-                                    }
+                                    } 
                                 }
-                                navController.navigate(
-                                    route = UnscopedDestinations.ProductSubscription.routeSchema,
-                                    args = UnscopedDestinations.ProductSubscription.createArgsBundle(args),
+                                navController.navigateToProductSubscriptionScreen(
+                                    product = action.product,
+                                    offer = firstOffer,
                                     navOptions = navOptions,
                                 )
                             }
