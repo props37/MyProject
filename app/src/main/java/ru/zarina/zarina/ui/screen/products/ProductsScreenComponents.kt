@@ -8,7 +8,6 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,14 +32,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.category.Category
+import ru.zarina.zarina.ui.base.rememberErrorState
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaIconButton
+import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.tag.ZarinaTag
@@ -208,32 +208,18 @@ object ProductsScreenComponents {
     fun ProductsNotFoundPlaceholder(
         modifier: Modifier = Modifier,
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+        val state = rememberErrorState(
+            iconResId = R.drawable.ic_search_64,
+            title = stringResource(R.string.could_not_find_products),
+            body = stringResource(R.string.try_select_another_category),
+            isButtonVisible = false,
+        )
+
+        ZarinaErrorScreen(
+            state = state,
+            onButtonClicked = {},
             modifier = modifier,
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_search_24),
-                contentDescription = null,
-                tint = UiKitTheme.colors.icon.regular.disabled,
-                modifier = Modifier.size(64.dp),
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = stringResource(R.string.could_not_find_products),
-                style = UiKitTheme.typography.primary.bold,
-                color = UiKitTheme.colors.text.general.regular.default,
-                textAlign = TextAlign.Center,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(R.string.try_select_another_category),
-                style = UiKitTheme.typography.secondary.light,
-                color = UiKitTheme.colors.text.general.regular.default,
-                textAlign = TextAlign.Center,
-            )
-        }
+        )
     }
 
     @Composable
