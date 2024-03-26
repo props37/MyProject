@@ -27,4 +27,8 @@ class FavoriteRemoteDataSource @Inject constructor(
     suspend fun removeProductFromFavorites(productId: Product.Id) {
         api.removeProductFromFavorites(productId)
     }
+
+    suspend fun clearFavoriteProducts() {
+        api.clearFavoriteProducts()
+    }
 }

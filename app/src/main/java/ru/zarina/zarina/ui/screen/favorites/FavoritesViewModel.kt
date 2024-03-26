@@ -10,10 +10,15 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.R
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
@@ -31,6 +36,7 @@ import ru.zarina.zarina.ui.screen.favorites.FavoritesViewModel.SideEffect
 import ru.zarina.zarina.usecase.cart.AddProductToCartUseCase
 import ru.zarina.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
+import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
 import timber.log.Timber
 
 @HiltViewModel(assistedFactory = FavoritesViewModel.Factory::class)
@@ -48,7 +54,20 @@ class FavoritesViewModel @AssistedInject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
+    private var clearFavoriteProductsJob: Job? = null
+
     private val favoriteProductFetchRequests = Channel<Unit>(Channel.CONFLATED)
+
+    val isClearFavoritesButtonVisible: StateFlow<Boolean> = interactor.getFavoriteProductIdsFlow()
+        .map { result ->
+            val favoriteProductIds = result.getOrNull()
+            !favoriteProductIds.isNullOrEmpty()
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = false,
+        )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val productPagingDataFlow: Flow<PagingData<Product>> = favoriteProductFetchRequests.receiveAsFlow()
@@ -121,7 +140,18 @@ class FavoritesViewModel @AssistedInject constructor(
     }
 
     fun onClearFavoritesClicked() {
-        // TODO: [High] Implement
+        if (clearFavoriteProductsJob?.isActive == true) return
+
+        clearFavoriteProductsJob = viewModelScope.launch {
+            interactor.clearFavoriteProducts()
+                .onSuccess {
+                    favoriteProductFetchRequests.trySend(Unit)
+                }
+                .onFailure {
+                    val message = Text.Resource(R.string.favorites_clearing_error)
+                    emitSideEffect(SideEffect.ShowToast(message))
+                }
+        }
     }
 
     fun onGoToCatalogClicked() {

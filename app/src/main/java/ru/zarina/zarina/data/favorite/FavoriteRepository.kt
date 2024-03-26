@@ -38,6 +38,12 @@ class FavoriteRepository @Inject constructor(
         localDataSource.removeProductFromFavorites(productId)
     }
 
+    suspend fun clearFavoriteProducts() {
+        remoteDataSource.clearFavoriteProducts()
+        localDataSource.setFavoriteProductIds(emptySet())
+        localDataSource.setAreFavoriteProductIdsFetched(true)
+    }
+
     fun clear() {
         localDataSource.clear()
     }

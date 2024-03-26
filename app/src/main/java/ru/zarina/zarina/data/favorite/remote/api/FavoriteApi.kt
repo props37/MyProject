@@ -2,6 +2,7 @@ package ru.zarina.zarina.data.favorite.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
@@ -31,5 +32,9 @@ class FavoriteApi @Inject constructor(
 
     suspend fun removeProductFromFavorites(productId: Product.Id) {
         httpClient.get("/api/favorites/product/${productId.value}/remove")
+    }
+
+    suspend fun clearFavoriteProducts() {
+        httpClient.delete("/api/v1/favorites")
     }
 }

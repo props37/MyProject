@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.domain.product.Product
@@ -35,12 +37,15 @@ fun FavoritesScreen(
     navigate: (FavoritesScreenAction) -> Unit,
     viewModel: FavoritesViewModel = hiltViewModel(),
 ) {
+    val isClearFavoritesButtonVisible by viewModel.isClearFavoritesButtonVisible.collectAsStateWithLifecycle()
+
     ScreenContent(
         productPagingDataFlow = viewModel.productPagingDataFlow,
         onProductClicked = viewModel::onProductClicked,
         onAddProductToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
         onAddProductToCartClicked = viewModel::onAddProductToCartClicked,
         onSubscribeToProductClicked = viewModel::onSubscribeToProductClicked,
+        isClearFavoritesButtonVisible = isClearFavoritesButtonVisible,
         onClearFavoritesClicked = viewModel::onClearFavoritesClicked,
         onGoToCatalogClicked = viewModel::onGoToCatalogClicked,
         onScreenCreated = viewModel::onScreenCreated,
@@ -56,6 +61,7 @@ private fun ScreenContent(
     onAddProductToFavoritesClicked: (Product) -> Unit,
     onAddProductToCartClicked: (Product) -> Unit,
     onSubscribeToProductClicked: (Product) -> Unit,
+    isClearFavoritesButtonVisible: Boolean,
     onClearFavoritesClicked: () -> Unit,
     onGoToCatalogClicked: () -> Unit,
     onScreenCreated: () -> Unit,
@@ -79,7 +85,7 @@ private fun ScreenContent(
             .bottomNavBarPadding(),
     ) {
         TopBar(
-            isClearButtonVisible = true, // TODO: [High] Implement
+            isClearButtonVisible = isClearFavoritesButtonVisible,
             onClearClicked = onClearFavoritesClicked,
             modifier = Modifier.fillMaxWidth(),
         )
