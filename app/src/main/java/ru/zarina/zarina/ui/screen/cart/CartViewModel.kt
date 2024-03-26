@@ -13,6 +13,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -65,6 +66,8 @@ class CartViewModel @AssistedInject constructor(
         backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
         savedStateHandle = savedStateHandle,
     )
+
+    private var clearCartJob: Job? = null
 
     val cartSize: StateFlow<CartSize> = interactor.getCartSizeFlow()
         .map { result ->
@@ -139,7 +142,9 @@ class CartViewModel @AssistedInject constructor(
     }
 
     fun onClearCartClicked() {
-        viewModelScope.launch {
+        if (clearCartJob?.isActive == true) return
+
+        clearCartJob = viewModelScope.launch {
             interactor.clearCart()
                 .onSuccess {
                     cartFetchRequests.trySend(Unit)
