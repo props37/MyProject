@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screen.favorites
 
+import ru.zarina.zarina.usecase.cart.AddProductToCartUseCase
 import ru.zarina.zarina.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.zarina.zarina.usecase.favorite.GetFavoriteProductIdsFlowUseCase
 import ru.zarina.zarina.usecase.favorite.GetFavoriteProductPagingDataFlowUseCase
@@ -11,4 +12,5 @@ class FavoritesInteractor @Inject constructor(
     val getFavoriteProductIdsFlow: GetFavoriteProductIdsFlowUseCase,
     val getCartProductIdsFlow: GetCartProductIdsFlowUseCase,
     val toggleProductPresenceInFavorites: ToggleProductPresenceInFavoritesUseCase,
+    val addProductToCart: AddProductToCartUseCase,
 )

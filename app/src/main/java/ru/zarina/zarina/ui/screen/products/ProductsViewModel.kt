@@ -247,7 +247,6 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     fun onAddProductToFavoritesClicked(product: Product) {
-        // TODO: [High] Extract
         viewModelScope.launch {
             val params = ToggleProductPresenceInFavoritesUseCase.Params(product.id)
             interactor.toggleProductPresenceInFavorites(params)
