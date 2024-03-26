@@ -117,11 +117,10 @@ fun ProductGrid(
         Crossfade(
             targetState = productPagingItems.loadState.refresh,
             label = "Products content",
-            modifier = Modifier.matchParentSize(),
         ) { loadState ->
             when (loadState) {
                 is LoadState.NotLoading -> {
-                    Box(modifier = Modifier.fillMaxSize()) {
+                    Box {
                         ProductGridImpl(
                             productPagingItems = productPagingItems,
                             gridState = gridState,
@@ -131,7 +130,7 @@ fun ProductGrid(
                             onSubscribeClicked = onSubscribeClicked,
                             noProductsPlaceholder = noProductsPlaceholder,
                             modifier = Modifier
-                                .matchParentSize()
+                                .fillMaxSize()
                                 .pullRefresh(pullRefreshState),
                         )
 
@@ -211,6 +210,7 @@ private fun ProductGridImpl(
                 state = gridState,
                 verticalArrangement = ProductGridArrangement,
                 horizontalArrangement = ProductGridArrangement,
+                modifier = Modifier.fillMaxSize(),
             ) {
                 items(
                     count = productPagingItems.itemCount,
