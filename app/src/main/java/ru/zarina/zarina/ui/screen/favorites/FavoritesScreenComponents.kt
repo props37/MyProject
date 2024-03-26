@@ -59,8 +59,8 @@ object FavoritesScreenComponents {
     ) {
         val state = rememberErrorState(
             iconResId = R.drawable.ic_heart_outline_64,
-            title = stringResource(R.string.favorites_screen_no_favorites_placeholder_title),
-            body = stringResource(R.string.favorites_screen_no_favorites_placeholder_body),
+            title = stringResource(R.string.favorites_no_favorites_placeholder_title),
+            body = stringResource(R.string.favorites_no_favorites_placeholder_body),
             buttonText = stringResource(R.string.go_to_catalog)
         )
 

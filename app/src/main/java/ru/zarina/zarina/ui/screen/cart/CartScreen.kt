@@ -141,8 +141,8 @@ private fun ScreenContent(
             } else {
                 val errorState = rememberErrorState(
                     iconResId = R.drawable.ic_cart_outline_64,
-                    title = stringResource(R.string.cart_screen_empty_cart_placeholder_title),
-                    body = stringResource(R.string.cart_screen_empty_cart_placeholder_description),
+                    title = stringResource(R.string.cart_empty_cart_placeholder_title),
+                    body = stringResource(R.string.cart_empty_cart_placeholder_description),
                     buttonText = stringResource(R.string.go_to_catalog),
                 )
                 ZarinaErrorScreen(
