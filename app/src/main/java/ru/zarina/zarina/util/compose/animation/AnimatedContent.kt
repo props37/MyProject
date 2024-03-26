@@ -28,3 +28,10 @@ val AnimatedContentDefaultTransitionSpec: () -> ContentTransform
     get() = {
         AnimatedContentDefaultEnterTransition togetherWith AnimatedContentDefaultExitTransition
     }
+
+@Stable
+val AnimatedContentCrossfadeTransitionSpec: () -> ContentTransform
+    get() = {
+        val animationSpec = tween<Float>()
+        fadeIn(animationSpec) togetherWith fadeOut(animationSpec)
+    }
