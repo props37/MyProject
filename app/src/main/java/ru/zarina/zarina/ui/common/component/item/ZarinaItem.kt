@@ -47,6 +47,7 @@ fun ZarinaItem(
         ) {
             startContent()
             endContent?.let { content ->
+                Spacer(modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(16.dp))
                 content()
             }
