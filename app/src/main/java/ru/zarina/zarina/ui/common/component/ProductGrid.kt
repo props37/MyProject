@@ -204,43 +204,44 @@ private fun ProductGridImpl(
     val placeholderShimmer = rememberZarinaSkeletonShimmer()
     val itemModifier = Modifier.fillMaxWidth()
 
-    if (productPagingItems.itemCount > 0) {
-        LazyVerticalGrid(
-            columns = remember { GridCells.Fixed(ProductGridCellInRowCount) },
-            state = gridState,
-            verticalArrangement = ProductGridArrangement,
-            horizontalArrangement = ProductGridArrangement,
-            modifier = modifier,
-        ) {
-            items(
-                count = productPagingItems.itemCount,
-                span = { index -> getProductGridItemSpan(index) },
-                key = productPagingItems.itemKey { it.id.value },
-                contentType = { index ->
-                    getProductGridItemContentType(index, productPagingItems)
-                },
-            ) { index ->
-                val product = productPagingItems[index]
-                if (product != null) {
-                    ProductCard(
-                        product = product,
-                        onClick = { onProductClicked(product) },
-                        onAddToFavoritesClicked = { onAddToFavoritesClicked(product) },
-                        onAddToCartClicked = { onAddToCartClicked(product) },
-                        onSubscribeClicked = { onSubscribeClicked(product) },
-                        shimmer = placeholderShimmer,
-                        modifier = itemModifier,
-                    )
-                } else {
-                    ProductCardSkeleton(
-                        shimmer = placeholderShimmer,
-                        modifier = itemModifier,
-                    )
+    Box(modifier = modifier) {
+        if (productPagingItems.itemCount > 0) {
+            LazyVerticalGrid(
+                columns = remember { GridCells.Fixed(ProductGridCellInRowCount) },
+                state = gridState,
+                verticalArrangement = ProductGridArrangement,
+                horizontalArrangement = ProductGridArrangement,
+            ) {
+                items(
+                    count = productPagingItems.itemCount,
+                    span = { index -> getProductGridItemSpan(index) },
+                    key = productPagingItems.itemKey { it.id.value },
+                    contentType = { index ->
+                        getProductGridItemContentType(index, productPagingItems)
+                    },
+                ) { index ->
+                    val product = productPagingItems[index]
+                    if (product != null) {
+                        ProductCard(
+                            product = product,
+                            onClick = { onProductClicked(product) },
+                            onAddToFavoritesClicked = { onAddToFavoritesClicked(product) },
+                            onAddToCartClicked = { onAddToCartClicked(product) },
+                            onSubscribeClicked = { onSubscribeClicked(product) },
+                            shimmer = placeholderShimmer,
+                            modifier = itemModifier,
+                        )
+                    } else {
+                        ProductCardSkeleton(
+                            shimmer = placeholderShimmer,
+                            modifier = itemModifier,
+                        )
+                    }
                 }
             }
+        } else {
+            noProductsPlaceholder()
         }
-    } else {
-        noProductsPlaceholder()
     }
 }
 

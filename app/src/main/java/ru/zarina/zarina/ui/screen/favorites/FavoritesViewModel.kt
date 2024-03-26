@@ -5,14 +5,23 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
+import ru.zarina.zarina.R
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.base.throttler.Throttler
 import ru.zarina.zarina.domain.product.Product
+import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.common.util.library.paging.mapProducts
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.zarina.zarina.ui.screen.favorites.FavoritesViewModel.SideEffect
+import ru.zarina.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
 import javax.inject.Inject
 
@@ -23,7 +32,13 @@ class FavoritesViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    val productPagingDataFlow: Flow<PagingData<Product>> = interactor.getFavoriteProductPagingDataFlow()
+    private val favoriteProductFetchRequests = Channel<Unit>(Channel.CONFLATED)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val productPagingDataFlow: Flow<PagingData<Product>> = favoriteProductFetchRequests.receiveAsFlow()
+        .flatMapLatest {
+            interactor.getFavoriteProductPagingDataFlow()
+        }
         .cachedIn(viewModelScope)
         .mapProducts(
             favoriteProductIdsResultFlow = interactor.getFavoriteProductIdsFlow(),
@@ -31,12 +46,37 @@ class FavoritesViewModel @Inject constructor(
         )
         .cachedIn(viewModelScope)
 
+    fun onScreenCreated() {
+        favoriteProductFetchRequests.trySend(Unit)
+    } 
+
     fun onProductClicked(product: Product) {
         // TODO: [High] Implement
     }
 
     fun onAddProductToFavoritesClicked(product: Product) {
-        // TODO: [High] Implement
+        // TODO: [High] Extract
+        viewModelScope.launch {
+            val params = ToggleProductPresenceInFavoritesUseCase.Params(product.id)
+            interactor.toggleProductPresenceInFavorites(params)
+                .onSuccess {
+                    if (!product.isInFavorites) {
+                        val messageText =
+                            Text.Resource(R.string.product_adding_to_favorites_completed)
+                        val message = ZarinaToastMessage(messageText)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
+                    }
+                }
+                .onFailure {
+                    val messageResId = if (product.isInFavorites) {
+                        R.string.product_removing_from_favorites_error
+                    } else {
+                        R.string.product_adding_to_favorites_error
+                    }
+                    val message = Text.Resource(messageResId)
+                    emitSideEffect(SideEffect.ShowToast(message))
+                }
+        }
     }
 
     fun onAddProductToCartClicked(product: Product) {
@@ -60,5 +100,9 @@ class FavoritesViewModel @Inject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: FavoritesScreenAction) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
+
+        data class ShowToast(val message: Text) : SideEffect
     }
 }

@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,6 +43,7 @@ fun FavoritesScreen(
         onSubscribeToProductClicked = viewModel::onSubscribeToProductClicked,
         onClearFavoritesClicked = viewModel::onClearFavoritesClicked,
         onGoToCatalogClicked = viewModel::onGoToCatalogClicked,
+        onScreenCreated = viewModel::onScreenCreated,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -55,10 +58,12 @@ private fun ScreenContent(
     onSubscribeToProductClicked: (Product) -> Unit,
     onClearFavoritesClicked: () -> Unit,
     onGoToCatalogClicked: () -> Unit,
+    onScreenCreated: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (FavoritesScreenAction) -> Unit,
 ) {
     FavoritesScreenBehavior(
+        onScreenCreated = onScreenCreated,
         sideEffects = sideEffects,
         navigate = navigate,
     )
@@ -92,6 +97,7 @@ private fun ScreenContent(
                     onGoToCatalogClicked = onGoToCatalogClicked,
                     modifier = Modifier
                         .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
                         .padding(16.dp),
                 )
             },
