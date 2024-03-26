@@ -13,7 +13,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
+import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.geography.City
+import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.screen.profile.ProfileViewModel.SideEffect
 import ru.zarina.zarina.util.base.usecase.invoke
 import ru.zarina.zarina.util.library.coroutines.WhileUiSubscribed
@@ -23,6 +26,8 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val interactor: ProfileInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val navigationThrottler = Throttler.getNavigationThrottler()
 
     // TODO: [High] Display MyOrders only to authorized users
     val infoItems: StateFlow<ImmutableList<InfoItem>> =
@@ -39,10 +44,32 @@ class ProfileViewModel @Inject constructor(
         )
 
     fun onInfoItemClicked(item: InfoItem) {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            when (item) {
+                InfoItem.MyOrders -> Unit // TODO: [High] Implement
+                InfoItem.City -> Unit // TODO: [High] Implement
+                InfoItem.Shops -> Unit // TODO: [High] Implement
+                InfoItem.Help -> {
+                    val url = Url(HELP_URL)
+                    emitSideEffect(SideEffect.OpenUrl(url))
+                }
+
+                InfoItem.AboutCompany -> {
+                    val url = Url(ABOUT_COMPANY_URL)
+                    emitSideEffect(SideEffect.OpenUrl(url))
+                }
+            }
+        }
     }
 
-    sealed interface SideEffect : SideEffectSource.SideEffect
+    sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class OpenUrl(val url: Url) : SideEffect
+    }
 
     enum class InfoItem { MyOrders, City, Shops, Help, AboutCompany }
+
+    companion object {
+        private const val HELP_URL = "https://pwa.zarina.ru/help/"
+        private const val ABOUT_COMPANY_URL = "https://pwa.zarina.ru/about/"
+    }
 }

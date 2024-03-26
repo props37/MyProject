@@ -1,6 +1,10 @@
 package ru.zarina.zarina.ui.screen.profile
 
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
@@ -9,18 +13,28 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.zarina.zarina.ui.screen.profile.ProfileViewModel.SideEffect
+import ru.zarina.zarina.util.domain.common.toUri
 
 @Composable
 fun ProfileScreenBehavior(
     sideEffects: Flow<SideEffect>,
 ) {
+    val updatedContext by rememberUpdatedState(LocalContext.current)
+
     ForcedBottomNavBarBehavior(isVisible = true)
 
     LifecycleStartEffect(sideEffects) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sideEffects.collect { sideEffect ->
-
+                    when (sideEffect) {
+                        is SideEffect.OpenUrl -> {
+                            val intent = CustomTabsIntent.Builder()
+                                .setShowTitle(true)
+                                .build()
+                            intent.launchUrl(updatedContext, sideEffect.url.toUri())
+                        }
+                    }
                 }
             }
         }
