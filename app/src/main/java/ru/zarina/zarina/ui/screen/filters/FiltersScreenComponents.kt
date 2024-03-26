@@ -162,7 +162,7 @@ object FiltersScreenComponents {
                 is FilterListState.Error -> {
                     ZarinaErrorScreen(
                         state = state.errorState,
-                        onRefreshClicked = onFilterListErrorRefreshClicked,
+                        onButtonClicked = onFilterListErrorRefreshClicked,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(16.dp),

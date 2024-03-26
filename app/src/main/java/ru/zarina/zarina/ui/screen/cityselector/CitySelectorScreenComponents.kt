@@ -233,7 +233,7 @@ object CitySelectorScreenComponents {
                     is CityListState.Error -> {
                         ZarinaErrorScreen(
                             state = listState.errorState,
-                            onRefreshClicked = onErrorRefreshClicked,
+                            onButtonClicked = onErrorRefreshClicked,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(horizontal = 16.dp)

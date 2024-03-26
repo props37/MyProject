@@ -233,7 +233,7 @@ object CatalogScreenComponents {
                 is CategoryListState.Error -> {
                     ZarinaErrorScreen(
                         state = state.state,
-                        onRefreshClicked = onErrorRefreshClicked,
+                        onButtonClicked = onErrorRefreshClicked,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(16.dp),

@@ -147,7 +147,7 @@ private fun ScreenContent(
                 )
                 ZarinaErrorScreen(
                     state = errorState,
-                    onRefreshClicked = onGoToCatalogClicked,
+                    onButtonClicked = onGoToCatalogClicked,
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())

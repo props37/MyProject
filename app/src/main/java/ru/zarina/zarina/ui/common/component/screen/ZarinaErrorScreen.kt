@@ -31,7 +31,7 @@ import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionS
 @Composable
 fun ZarinaErrorScreen(
     state: ErrorState,
-    onRefreshClicked: () -> Unit,
+    onButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -75,7 +75,7 @@ fun ZarinaErrorScreen(
         ) { isVisible ->
             if (isVisible) {
                 ZarinaButton(
-                    onClick = onRefreshClicked,
+                    onClick = onButtonClicked,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(text = textString(state.buttonText).uppercase())
@@ -93,7 +93,7 @@ private fun NetworkErrorPreview() {
     ZarinaTheme {
         ZarinaErrorScreen(
             state = ErrorState.NETWORK,
-            onRefreshClicked = {},
+            onButtonClicked = {},
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp),
@@ -109,7 +109,7 @@ private fun GenericErrorPreview() {
     ZarinaTheme {
         ZarinaErrorScreen(
             state = ErrorState.GENERIC,
-            onRefreshClicked = {},
+            onButtonClicked = {},
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp),

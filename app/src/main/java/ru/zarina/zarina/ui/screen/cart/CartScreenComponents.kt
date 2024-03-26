@@ -392,7 +392,7 @@ object CartScreenComponents {
                         )
                         ZarinaErrorScreen(
                             state = errorState,
-                            onRefreshClicked = onGoToCatalogClicked,
+                            onButtonClicked = onGoToCatalogClicked,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .verticalScroll(rememberScrollState())
@@ -403,7 +403,7 @@ object CartScreenComponents {
                     is CartState.Error -> {
                         ZarinaErrorScreen(
                             state = state.state,
-                            onRefreshClicked = { /*TODO*/ },
+                            onButtonClicked = { /*TODO*/ },
                             modifier = Modifier.padding(16.dp),
                         )
                     }

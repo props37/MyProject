@@ -176,7 +176,7 @@ fun ProductGrid(
 
                     ZarinaErrorScreen(
                         state = state,
-                        onRefreshClicked = {
+                        onButtonClicked = {
                             productPagingItems.retry()
                             onProductsErrorRefreshClicked()
                         },

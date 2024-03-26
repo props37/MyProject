@@ -183,7 +183,7 @@ private fun ScreenContent(
                 is ContentState.Error -> {
                     ZarinaErrorScreen(
                         state = contentState.errorState,
-                        onRefreshClicked = onContentErrorRefreshClicked,
+                        onButtonClicked = onContentErrorRefreshClicked,
                         modifier = Modifier
                             .fillMaxSize()
                             .windowInsetsPadding(
