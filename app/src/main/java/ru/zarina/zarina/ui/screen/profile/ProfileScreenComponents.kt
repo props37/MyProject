@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -40,10 +39,7 @@ object ProfileScreenComponents {
         onSignUpClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        Column(
-            modifier = modifier
-                .padding(horizontal = 16.dp),
-        ) {
+        Column(modifier = modifier) {
             Text(
                 text = stringResource(R.string.sign_in_or_sign_up),
                 style = UiKitTheme.typography.secondary.bold,
@@ -73,5 +69,18 @@ object ProfileScreenComponents {
                 Text(text = stringResource(R.string.sign_up).uppercase())
             }
         }
+    }
+
+    @Composable
+    fun AppVersion(
+        version: String,
+        modifier: Modifier = Modifier,
+    ) {
+        Text(
+            text = stringResource(R.string.app_version_s, version),
+            style = UiKitTheme.typography.footnote.regular,
+            color = UiKitTheme.colors.text.general.regular.muted,
+            modifier = modifier,
+        )
     }
 }
