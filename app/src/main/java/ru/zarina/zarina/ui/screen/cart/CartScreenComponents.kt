@@ -201,6 +201,7 @@ object CartScreenComponents {
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        @Suppress("NAME_SHADOWING")
         Crossfade(
             targetState = city,
             modifier = modifier.clickable(
@@ -635,6 +636,7 @@ object CartScreenComponents {
                         textRedId = R.string.to_favorites
                     }
 
+                    @Suppress("NAME_SHADOWING")
                     Crossfade(
                         targetState = iconResId,
                         label = "Add To Favorites button icon",
@@ -646,6 +648,8 @@ object CartScreenComponents {
                         )
                     }
                     Spacer(modifier = Modifier.height(6.dp))
+
+                    @Suppress("NAME_SHADOWING")
                     Crossfade(
                         targetState = textRedId,
                         label = "Add To Favorites button text",
