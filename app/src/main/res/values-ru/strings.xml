@@ -129,6 +129,9 @@
     <string name="cart_screen_empty_pick_up_from_shop_cart_placeholder_title">Нет товаров для получения в магазине</string>
     <string name="cart_screen_empty_pick_up_from_shop_cart_placeholder_body">Попробуй найти товары через фильтры в Каталоге, либо выбери другой способ получения</string>
 
+    <string name="favorites_screen_no_favorites_placeholder_title">В избранном пока что пусто</string>
+    <string name="favorites_screen_no_favorites_placeholder_body">Товары можно добавить через Каталог. Не теряй их, если временно откладываешь покупку</string>
+
     <plurals name="show_products">
         <item quantity="zero">Показать %1$d товаров</item>
         <item quantity="one">Показать %1$d товар</item>
