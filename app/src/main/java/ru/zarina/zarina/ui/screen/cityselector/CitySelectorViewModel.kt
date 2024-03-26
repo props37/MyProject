@@ -57,7 +57,7 @@ class CitySelectorViewModel @Inject constructor(
 
     private val initialCity: StateFlow<City?> = savedStateHandle
         .getStateFlow<CityParcelable?>(
-            key = UnscopedDestinations.CitySelector.ARG_KEY_CITY,
+            key = UnscopedDestinations.CitySelector.ARG_KEY_CURRENT_CITY,
             initialValue = null,
         )
         .mapState(

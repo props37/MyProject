@@ -72,10 +72,10 @@ fun NavGraphBuilder.citySelectorBottomSheetScreen(navController: NavHostControll
 }
 
 fun NavHostController.navigateToCitySelectorScreen(
-    city: City? = null,
+    currentCity: City? = null,
     title: Text? = null,
 ) {
-    val args = UnscopedDestinations.CitySelector.Args(city = city, title = title)
+    val args = UnscopedDestinations.CitySelector.Args(currentCity = currentCity, title = title)
     this.navigate(
         route = UnscopedDestinations.CitySelector.routeSchema,
         args = UnscopedDestinations.CitySelector.createArgsBundle(args),
