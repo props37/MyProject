@@ -301,7 +301,7 @@ private fun AddToCartIconButton(
             label = "AddToCartIconButton",
         ) { isAdded ->
             val iconResId =
-                if (isAdded) R.drawable.ic_cart_added_outline_24 else R.drawable.ic_cart_outline_24
+                if (isAdded) R.drawable.ic_shopper_checkmark_outline_24 else R.drawable.ic_shopper_outline_24
             val contentDescriptionResId =
                 if (isAdded) R.string.remove_from_cart else R.string.add_to_cart
 

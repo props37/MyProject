@@ -108,7 +108,7 @@ object ProductsScreenComponents {
                 indication = rememberRipple(bounded = false, radius = TopBarIconSize),
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_search_24),
+                    painter = painterResource(R.drawable.ic_magnifying_glass_24),
                     contentDescription = stringResource(R.string.search),
                     tint = UiKitTheme.colors.icon.regular.default,
                     modifier = Modifier.size(TopBarIconSize),
@@ -122,7 +122,7 @@ object ProductsScreenComponents {
                     modifier = Modifier.padding(end = 2.dp),
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_filters_24),
+                        painter = painterResource(R.drawable.ic_settings_menu_24),
                         contentDescription = stringResource(R.string.filters),
                         tint = UiKitTheme.colors.icon.regular.default,
                         modifier = Modifier.size(TopBarIconSize),
@@ -209,7 +209,7 @@ object ProductsScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         val state = rememberErrorState(
-            iconResId = R.drawable.ic_search_64,
+            iconResId = R.drawable.ic_magnifying_glass_64,
             title = stringResource(R.string.could_not_find_products),
             body = stringResource(R.string.try_select_another_category),
             isButtonVisible = false,

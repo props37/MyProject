@@ -90,7 +90,7 @@ object CatalogScreenComponents {
                 },
                 leadingContent = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_search_24),
+                        painter = painterResource(R.drawable.ic_magnifying_glass_24),
                         contentDescription = null,
                         modifier = Modifier.size(20.dp),
                     )

@@ -18,7 +18,7 @@ sealed class BottomNavBarItem(
 ) {
     data object Catalog : BottomNavBarItem(
         titleResId = R.string.catalog,
-        iconResId = R.drawable.ic_catalog_24,
+        iconResId = R.drawable.ic_menu_24,
         baseRoute = BaseRoute.CATALOG_GRAPH,
     )
 
@@ -30,7 +30,7 @@ sealed class BottomNavBarItem(
 
     data object Home : BottomNavBarItem(
         titleResId = R.string.home,
-        iconResId = R.drawable.ic_home_outline_24,
+        iconResId = R.drawable.ic_building_outline_24,
         baseRoute = BaseRoute.HOME_GRAPH,
     )
 
@@ -42,7 +42,7 @@ sealed class BottomNavBarItem(
 
     data object Cart : BottomNavBarItem(
         titleResId = R.string.cart,
-        iconResId = R.drawable.ic_cart_outline_24,
+        iconResId = R.drawable.ic_shopper_outline_24,
         baseRoute = BaseRoute.CART_GRAPH,
     )
 

@@ -93,7 +93,7 @@ private fun SearchBar(
             ),
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_search_24),
+            painter = painterResource(id = R.drawable.ic_magnifying_glass_24),
             contentDescription = stringResource(id = R.string.search),
             modifier = Modifier
                 .minimumInteractiveComponentSize()
