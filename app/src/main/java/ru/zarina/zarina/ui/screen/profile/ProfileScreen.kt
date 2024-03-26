@@ -2,21 +2,28 @@ package ru.zarina.zarina.ui.screen.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.zarina.zarina.ui.screen.profile.ProfileScreenComponents.AuthorizationSuggestion
 import ru.zarina.zarina.ui.screen.profile.ProfileScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.profile.ProfileViewModel.SideEffect
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -26,12 +33,16 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     ScreenContent(
+        onSignInClicked = { /* TODO */ },
+        onSignUpClicked = { /* TODO */ },
         sideEffects = viewModel.sideEffects,
     )
 }
 
 @Composable
 private fun ScreenContent(
+    onSignInClicked: () -> Unit,
+    onSignUpClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
 ) {
     ProfileScreenBehavior(sideEffects = sideEffects)
@@ -44,9 +55,20 @@ private fun ScreenContent(
                 WindowInsets.statusBars
                     .union(WindowInsets.displayCutout),
             )
-            .bottomNavBarPadding(),
+            .bottomNavBarPadding()
+            .verticalScroll(rememberScrollState()),
     ) {
         TopBar()
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        AuthorizationSuggestion(
+            onSignInClicked = onSignInClicked,
+            onSignUpClicked = onSignUpClicked,
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
