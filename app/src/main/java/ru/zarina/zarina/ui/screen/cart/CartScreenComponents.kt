@@ -368,31 +368,9 @@ object CartScreenComponents {
                     }
 
                     CartState.EmptyCart -> {
-                        val iconResId: Int
-                        val titleResId: Int
-                        val bodyResId: Int
-                        when (deliveryType) {
-                            DeliveryType.DELIVERY -> {
-                                iconResId = R.drawable.ic_delivery_24
-                                titleResId = R.string.cart_screen_empty_delivery_cart_placeholder_title
-                                bodyResId = R.string.cart_screen_empty_delivery_cart_placeholder_body
-                            }
-
-                            DeliveryType.PICK_UP_FROM_SHOP -> {
-                                iconResId = R.drawable.ic_shop_24
-                                titleResId = R.string.cart_screen_empty_pick_up_from_shop_cart_placeholder_title
-                                bodyResId = R.string.cart_screen_empty_pick_up_from_shop_cart_placeholder_body
-                            }
-                        }
-                        val errorState = rememberErrorState(
-                            iconResId = iconResId,
-                            title = stringResource(titleResId),
-                            body = stringResource(bodyResId),
-                            buttonText = stringResource(R.string.go_to_catalog),
-                        )
-                        ZarinaErrorScreen(
-                            state = errorState,
-                            onButtonClicked = onGoToCatalogClicked,
+                        EmptyCartPlaceholder(
+                            deliveryType = deliveryType,
+                            onGoToCatalogClicked = onGoToCatalogClicked,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .verticalScroll(rememberScrollState())
@@ -470,6 +448,42 @@ object CartScreenComponents {
                 }
             }
         }
+    }
+
+    @Composable
+    private fun EmptyCartPlaceholder(
+        deliveryType: DeliveryType,
+        onGoToCatalogClicked: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        val iconResId: Int
+        val titleResId: Int
+        val bodyResId: Int
+        when (deliveryType) {
+            DeliveryType.DELIVERY -> {
+                iconResId = R.drawable.ic_delivery_24
+                titleResId = R.string.cart_screen_empty_delivery_cart_placeholder_title
+                bodyResId = R.string.cart_screen_empty_delivery_cart_placeholder_body
+            }
+
+            DeliveryType.PICK_UP_FROM_SHOP -> {
+                iconResId = R.drawable.ic_shop_24
+                titleResId = R.string.cart_screen_empty_pick_up_from_shop_cart_placeholder_title
+                bodyResId = R.string.cart_screen_empty_pick_up_from_shop_cart_placeholder_body
+            }
+        }
+        val errorState = rememberErrorState(
+            iconResId = iconResId,
+            title = stringResource(titleResId),
+            body = stringResource(bodyResId),
+            buttonText = stringResource(R.string.go_to_catalog),
+        )
+
+        ZarinaErrorScreen(
+            state = errorState,
+            onButtonClicked = onGoToCatalogClicked,
+            modifier = modifier,
+        )
     }
 
     @OptIn(ExperimentalFoundationApi::class)
