@@ -12,14 +12,18 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
+import ru.zarina.zarina.ui.common.toastcontroller.LocalToastController
 import ru.zarina.zarina.ui.screen.profile.ProfileViewModel.SideEffect
 import ru.zarina.zarina.util.domain.common.toUri
 
 @Composable
 fun ProfileScreenBehavior(
     sideEffects: Flow<SideEffect>,
+    navigate: (ProfileScreenAction) -> Unit,
 ) {
     val updatedContext by rememberUpdatedState(LocalContext.current)
+    val updatedToastController by rememberUpdatedState(LocalToastController.current)
+    val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = true)
 
@@ -28,12 +32,15 @@ fun ProfileScreenBehavior(
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
+                        is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
                         is SideEffect.OpenUrl -> {
                             val intent = CustomTabsIntent.Builder()
                                 .setShowTitle(true)
                                 .build()
                             intent.launchUrl(updatedContext, sideEffect.url.toUri())
                         }
+
+                        is SideEffect.ShowToast -> updatedToastController.show(sideEffect.message)
                     }
                 }
             }

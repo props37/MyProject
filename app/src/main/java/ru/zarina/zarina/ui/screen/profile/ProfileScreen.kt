@@ -38,6 +38,7 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun ProfileScreen(
+    navigate: (ProfileScreenAction) -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val infoItems by viewModel.infoItems.collectAsStateWithLifecycle()
@@ -50,6 +51,7 @@ fun ProfileScreen(
         onSignInClicked = { /* TODO */ },
         onSignUpClicked = { /* TODO */ },
         sideEffects = viewModel.sideEffects,
+        navigate = navigate,
     )
 }
 
@@ -61,8 +63,12 @@ private fun ScreenContent(
     onSignInClicked: () -> Unit,
     onSignUpClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
+    navigate: (ProfileScreenAction) -> Unit,
 ) {
-    ProfileScreenBehavior(sideEffects = sideEffects)
+    ProfileScreenBehavior(
+        sideEffects = sideEffects,
+        navigate = navigate,
+    )
 
     Column(
         modifier = Modifier
