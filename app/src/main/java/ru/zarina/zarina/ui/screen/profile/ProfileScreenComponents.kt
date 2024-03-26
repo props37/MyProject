@@ -12,12 +12,14 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
@@ -25,6 +27,7 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.item.ZarinaItem
 import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
+import ru.zarina.zarina.ui.screen.profile.ProfileViewModel.InfoItem
 import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.animation.AnimatedContentCrossfadeTransitionSpec
 
@@ -86,31 +89,23 @@ object ProfileScreenComponents {
 
     @Composable
     fun Info(
-        isMyOrdersItemVisible: Boolean,
+        infoItems: ImmutableList<InfoItem>,
         city: City?,
-        onMyOrdersClicked: () -> Unit,
-        onCityClicked: () -> Unit,
-        onShopsClicked: () -> Unit,
-        onHelpClicked: () -> Unit,
-        onAboutCompanyClicked: () -> Unit,
+        onInfoItemClicked: (InfoItem) -> Unit,
         appVersion: String,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
-            InfoItem.entries.forEachIndexed { index, item ->
-                if (item != InfoItem.MyOrders || isMyOrdersItemVisible) {
+            infoItems.forEachIndexed { index, item ->
+                key(item) {
                     InfoItem(
                         item = item,
                         city = city,
-                        onMyOrdersClicked = onMyOrdersClicked,
-                        onCityClicked = onCityClicked,
-                        onShopsClicked = onShopsClicked,
-                        onHelpClicked = onHelpClicked,
-                        onAboutCompanyClicked = onAboutCompanyClicked,
+                        onInfoItemClicked = onInfoItemClicked,
                         modifier = Modifier.fillMaxWidth(),
                     )
 
-                    if (index < InfoItem.entries.lastIndex) {
+                    if (index < infoItems.lastIndex) {
                         Divider(
                             color = UiKitTheme.colors.border.general.default,
                             modifier = Modifier
@@ -136,40 +131,19 @@ object ProfileScreenComponents {
     private fun InfoItem(
         item: InfoItem,
         city: City?,
-        onMyOrdersClicked: () -> Unit,
-        onCityClicked: () -> Unit,
-        onShopsClicked: () -> Unit,
-        onHelpClicked: () -> Unit,
-        onAboutCompanyClicked: () -> Unit,
+        onInfoItemClicked: (InfoItem) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val onClick: () -> Unit
-        val itemNameResId: Int
-        when (item) {
-            InfoItem.MyOrders -> {
-                onClick = onMyOrdersClicked
-                itemNameResId = R.string.my_orders
-            }
-            InfoItem.City -> {
-                onClick = onCityClicked
-                itemNameResId = R.string.city
-            }
-            InfoItem.Shops -> {
-                onClick = onShopsClicked
-                itemNameResId = R.string.shops
-            }
-            InfoItem.Help -> {
-                onClick = onHelpClicked
-                itemNameResId = R.string.help
-            }
-            InfoItem.AboutCompany -> {
-                onClick = onAboutCompanyClicked
-                itemNameResId = R.string.about_company
-            }
+        val itemNameResId = when (item) {
+            InfoItem.MyOrders -> R.string.my_orders
+            InfoItem.City -> R.string.city
+            InfoItem.Shops -> R.string.shops
+            InfoItem.Help -> R.string.help
+            InfoItem.AboutCompany -> R.string.about_company
         }
 
         ZarinaItem(
-            onClick = onClick,
+            onClick = { onInfoItemClicked(item) },
             startContent = {
                 val textStyle = UiKitTheme.typography.secondary.light
                 Text(
@@ -230,6 +204,4 @@ object ProfileScreenComponents {
             modifier = modifier,
         )
     }
-
-    private enum class InfoItem { MyOrders, City, Shops, Help, AboutCompany }
 }

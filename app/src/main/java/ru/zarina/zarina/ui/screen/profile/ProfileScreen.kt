@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.BuildConfig
 import ru.zarina.zarina.domain.geography.City
@@ -31,6 +32,7 @@ import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.screen.profile.ProfileScreenComponents.AuthorizationSuggestion
 import ru.zarina.zarina.ui.screen.profile.ProfileScreenComponents.Info
 import ru.zarina.zarina.ui.screen.profile.ProfileScreenComponents.TopBar
+import ru.zarina.zarina.ui.screen.profile.ProfileViewModel.InfoItem
 import ru.zarina.zarina.ui.screen.profile.ProfileViewModel.SideEffect
 import ru.zarina.zarina.ui.theme.UiKitTheme
 
@@ -38,15 +40,13 @@ import ru.zarina.zarina.ui.theme.UiKitTheme
 fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
+    val infoItems by viewModel.infoItems.collectAsStateWithLifecycle()
     val city by viewModel.city.collectAsStateWithLifecycle()
 
     ScreenContent(
+        infoItems = infoItems,
         city = city,
-        onMyOrdersClicked = { /* TODO */ },
-        onCityClicked = { /* TODO */ },
-        onShopsClicked = { /* TODO */ },
-        onHelpClicked = { /* TODO */ },
-        onAboutCompanyClicked = { /* TODO */ },
+        onInfoItemClicked = viewModel::onInfoItemClicked,
         onSignInClicked = { /* TODO */ },
         onSignUpClicked = { /* TODO */ },
         sideEffects = viewModel.sideEffects,
@@ -55,12 +55,9 @@ fun ProfileScreen(
 
 @Composable
 private fun ScreenContent(
+    infoItems: ImmutableList<InfoItem>,
     city: City?,
-    onMyOrdersClicked: () -> Unit,
-    onCityClicked: () -> Unit,
-    onShopsClicked: () -> Unit,
-    onHelpClicked: () -> Unit,
-    onAboutCompanyClicked: () -> Unit,
+    onInfoItemClicked: (InfoItem) -> Unit,
     onSignInClicked: () -> Unit,
     onSignUpClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -75,33 +72,30 @@ private fun ScreenContent(
                 WindowInsets.statusBars
                     .union(WindowInsets.displayCutout),
             )
-            .bottomNavBarPadding()
-            .verticalScroll(rememberScrollState()),
+            .bottomNavBarPadding(),
     ) {
         TopBar()
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            Spacer(modifier = Modifier.height(24.dp))
 
-        AuthorizationSuggestion(
-            onSignInClicked = onSignInClicked,
-            onSignUpClicked = onSignUpClicked,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-        )
+            AuthorizationSuggestion(
+                onSignInClicked = onSignInClicked,
+                onSignUpClicked = onSignUpClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
 
-        Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-        Info(
-            isMyOrdersItemVisible = true, // TODO: [High] Implement
-            city = city,
-            onMyOrdersClicked = onMyOrdersClicked,
-            onCityClicked = onCityClicked,
-            onShopsClicked = onShopsClicked,
-            onHelpClicked = onHelpClicked,
-            onAboutCompanyClicked = onAboutCompanyClicked,
-            appVersion = BuildConfig.VERSION_NAME,
-        )
+            Info(
+                infoItems = infoItems,
+                city = city,
+                onInfoItemClicked = onInfoItemClicked,
+                appVersion = BuildConfig.VERSION_NAME,
+            )
+        }
     }
 }
 
