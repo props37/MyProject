@@ -83,6 +83,7 @@ import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.zarina.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.zarina.zarina.ui.common.component.tab.ZarinaTabRow
+import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.screen.cart.CartViewModel.CartState
 import ru.zarina.zarina.ui.theme.UiKitTheme
@@ -124,11 +125,13 @@ object CartScreenComponents {
                         size = ZarinaButtonSize.Small,
                         colors = ZarinaButtonDefaults.backlessColors(),
                         textStyle = UiKitTheme.typography.caption1.regular,
+                        modifier = Modifier.padding(end = 8.dp),
                     ) {
                         Text(text = stringResource(R.string.clear).uppercase())
                     }
                 }
             },
+            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
             modifier = modifier,
         )
     }
@@ -198,13 +201,13 @@ object CartScreenComponents {
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        @Suppress("NAME_SHADOWING")
         Crossfade(
             targetState = city,
-            modifier = modifier
-                .clickable(
-                    enabled = city != null,
-                    onClick = onClick,
-                ),
+            modifier = modifier.clickable(
+                enabled = city != null,
+                onClick = onClick,
+            ),
         ) { city ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -633,6 +636,7 @@ object CartScreenComponents {
                         textRedId = R.string.to_favorites
                     }
 
+                    @Suppress("NAME_SHADOWING")
                     Crossfade(
                         targetState = iconResId,
                         label = "Add To Favorites button icon",
@@ -644,6 +648,8 @@ object CartScreenComponents {
                         )
                     }
                     Spacer(modifier = Modifier.height(6.dp))
+
+                    @Suppress("NAME_SHADOWING")
                     Crossfade(
                         targetState = textRedId,
                         label = "Add To Favorites button text",

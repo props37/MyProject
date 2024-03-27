@@ -94,6 +94,7 @@ sealed class BottomNavigationTab(
     }
 }
 
+@Deprecated("Use bottomNavBarPadding instead.")
 fun Modifier.bottomNavigationPadding(): Modifier = composed {
     this.padding(bottomNavigationPaddingValues())
 }

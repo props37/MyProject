@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,9 +22,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.zarina.zarina.ui.common.component.ProductGrid
+import ru.zarina.zarina.ui.common.tooling.FakeDataGenerator
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -118,6 +122,20 @@ private fun ScreenContent(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        ScreenContent(
+            productPagingDataFlow = remember {
+                flowOf(PagingData.from(FakeDataGenerator.getProducts()))
+            },
+            onProductClicked = {},
+            onAddProductToFavoritesClicked = {},
+            onAddProductToCartClicked = {},
+            onSubscribeToProductClicked = {},
+            isClearFavoritesButtonVisible = true,
+            onClearFavoritesClicked = {},
+            onGoToCatalogClicked = {},
+            onScreenCreated = {},
+            sideEffects = remember { emptyFlow() },
+            navigate = {},
+        )
     }
 }

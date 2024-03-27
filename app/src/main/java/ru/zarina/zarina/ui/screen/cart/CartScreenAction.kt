@@ -8,7 +8,7 @@ import ru.zarina.zarina.domain.product.Product
 sealed class CartScreenAction {
     data object GoToCatalogClicked : CartScreenAction()
 
-    data class CityClicked(val city: City?) : CartScreenAction()
+    data class CityClicked(val currentCity: City?) : CartScreenAction()
 
     data class ProductCountClicked(
         val productId: Product.Id,

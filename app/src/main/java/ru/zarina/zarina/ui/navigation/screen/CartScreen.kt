@@ -42,7 +42,7 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
                     CartScreenAction.GoToCatalogClicked -> navController.navigateToCatalogScreen()
                     is CartScreenAction.CityClicked -> {
                         navController.navigateToCitySelectorScreen(
-                            city = action.city,
+                            currentCity = action.currentCity,
                             title = Text.Resource(R.string.city_change),
                         )
                     }

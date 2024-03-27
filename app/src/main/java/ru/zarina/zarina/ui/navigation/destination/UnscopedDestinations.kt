@@ -39,7 +39,7 @@ object UnscopedDestinations {
     data object Onboarding : SimpleDestination(BaseRoute.ONBOARDING)
 
     data object CitySelector : Destination<CitySelector.Args>() {
-        const val ARG_KEY_CITY = "arg_city"
+        const val ARG_KEY_CURRENT_CITY = "arg_current_city"
         const val ARG_KEY_TITLE = "arg_title"
 
         const val RESULT_KEY = "city_selector_result"
@@ -50,11 +50,11 @@ object UnscopedDestinations {
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(
                 routeBase = routeBase,
-                optionalArgNames = arrayOf(ARG_KEY_CITY, ARG_KEY_TITLE),
+                optionalArgNames = arrayOf(ARG_KEY_CURRENT_CITY, ARG_KEY_TITLE),
             )
 
         override fun createRoute(args: Args): String {
-            val cityParcelable = args.city?.let { CityParcelable.from(it) }
+            val cityParcelable = args.currentCity?.let { CityParcelable.from(it) }
             val cityParcelableString = cityParcelable?.let {
                 Uri.encode(Json.encodeToString(cityParcelable))
             }
@@ -62,7 +62,7 @@ object UnscopedDestinations {
                 Uri.encode(Json.encodeToString(it))
             }
             val optionalArgs = arrayOf(
-                OptionalNavArg(ARG_KEY_CITY, cityParcelableString),
+                OptionalNavArg(ARG_KEY_CURRENT_CITY, cityParcelableString),
                 OptionalNavArg(ARG_KEY_TITLE, titleString),
             )
             return RouteUtils.generateRoute(
@@ -73,7 +73,7 @@ object UnscopedDestinations {
 
         override val arguments: List<NamedNavArgument>
             get() = listOf(
-                navArgument(ARG_KEY_CITY) {
+                navArgument(ARG_KEY_CURRENT_CITY) {
                     type = NavType.CityParcelableType
                     nullable = true
                 },
@@ -84,13 +84,13 @@ object UnscopedDestinations {
             )
 
         override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
-            val cityParcelable = args.city?.let { CityParcelable.from(it) }
-            putParcelable(ARG_KEY_CITY, cityParcelable)
+            val cityParcelable = args.currentCity?.let { CityParcelable.from(it) }
+            putParcelable(ARG_KEY_CURRENT_CITY, cityParcelable)
             putParcelable(ARG_KEY_TITLE, args.title)
         }
 
         data class Args(
-            val city: City? = null,
+            val currentCity: City? = null,
             val title: Text? = null,
         )
 

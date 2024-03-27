@@ -2,9 +2,6 @@ package ru.zarina.zarina.ui.screen.products
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,6 +45,7 @@ import ru.zarina.zarina.ui.common.component.tag.ZarinaTagSkeleton
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.screen.products.ProductsViewModel.TagListState
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.animation.AnimatedContentCrossfadeTransitionSpec
 import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.text.unscalable
 
@@ -76,9 +74,7 @@ object ProductsScreenComponents {
 
             AnimatedContent(
                 targetState = title,
-                transitionSpec = {
-                    fadeIn() togetherWith fadeOut()
-                },
+                transitionSpec = { AnimatedContentCrossfadeTransitionSpec() },
                 contentAlignment = Alignment.CenterStart,
                 label = "TopBar title",
                 modifier = Modifier.weight(1f),
@@ -148,7 +144,7 @@ object ProductsScreenComponents {
             targetState = state,
             transitionSpec = {
                 if (initialState != null && targetState != null) {
-                    fadeIn() togetherWith fadeOut()
+                    AnimatedContentCrossfadeTransitionSpec()
                 } else {
                     AnimatedContentDefaultTransitionSpec()
                 }.using(SizeTransform(clip = false))
