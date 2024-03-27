@@ -1,22 +1,6 @@
 package ru.zarina.zarina.ui.navigation
 
 enum class BaseRoute {
-    // Unscoped destinations
-    ONBOARDING,
-    CITY_SELECTOR,
-    DEFAULT_CITY_DIALOG,
-
-    // TODO: [High] Extract to nested graph
-    PRODUCTS,
-    FILTERS,
-    LIST_FILTER,
-
-    SIZE_SELECTOR_GRAPH,
-    SIZE_SELECTOR,
-    HEIGHT_SELECTOR,
-
-    PRODUCT_SUBSCRIPTION,
-
     // Catalog graph
     CATALOG_GRAPH,
     CATALOG,
@@ -36,7 +20,25 @@ enum class BaseRoute {
     // Cart graph
     CART_GRAPH,
     CART,
-    PRODUCT_COUNT_SELECTOR;
+    PRODUCT_COUNT_SELECTOR,
+
+    // Sign up graph
+    SIGN_UP_GRAPH,
+    SIGN_UP,
+
+    // Size selector graph
+    SIZE_SELECTOR_GRAPH,
+    SIZE_SELECTOR,
+    HEIGHT_SELECTOR,
+
+    // Unscoped destinations
+    ONBOARDING,
+    CITY_SELECTOR,
+    DEFAULT_CITY_DIALOG,
+    PRODUCTS,
+    FILTERS,
+    LIST_FILTER,
+    PRODUCT_SUBSCRIPTION;
 
     val route: String get() = name.lowercase()
 }
