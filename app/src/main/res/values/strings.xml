@@ -114,6 +114,9 @@
     <string name="shops">Магазины</string>
     <string name="help">Помощь</string>
     <string name="about_company">О компании</string>
+    <string name="registration">Регистрация</string>
+    <string name="phone">Телефон</string>
+    <string name="password">Пароль</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -203,8 +206,6 @@
     <string name="product_not_available_in_city">Выбранного товара нет в наличии в магазинах вашего города</string>
     <string name="recipient_information">Информация о получателе</string>
     <string name="surname">Фамилия</string>
-    <string name="name">Имя</string>
-    <string name="phone">Телефон</string>
     <string name="order_information">Информация о заказе</string>
     <string name="shop">Магазин</string>
     <string name="reservation_period">Срок резерва</string>
