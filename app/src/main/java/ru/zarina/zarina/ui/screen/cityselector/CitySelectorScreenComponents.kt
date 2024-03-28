@@ -117,13 +117,10 @@ object CitySelectorScreenComponents {
                 )
             },
             innerTrailingContent = {
-                AnimatedVisibility(
-                    visible = cityNameQuery.isNotEmpty(),
-                    enter = remember { AnimatedContentDefaultEnterTransition },
-                    exit = remember { AnimatedContentDefaultExitTransition },
-                ) {
-                    ZarinaTextFieldDefaults.ClearButton(onClick = onClearClicked)
-                }
+                ZarinaTextFieldDefaults.ClearButton(
+                    isVisible = cityNameQuery.isNotEmpty(),
+                    onClick = onClearClicked,
+                )
             },
             outerTrailingContent = {
                 val isCancelButtonVisible = focusState.value?.isFocused == true

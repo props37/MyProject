@@ -1,6 +1,5 @@
 package ru.zarina.zarina.ui.common.component
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,8 +47,6 @@ import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
-import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 import kotlin.math.min
 
 // TODO: [High] Add visual transformations to text
@@ -206,17 +203,12 @@ private fun TextField(
             )
         },
         innerTrailingContent = {
-            AnimatedVisibility(
-                visible = valueString.isNotEmpty(),
-                enter = remember { AnimatedContentDefaultEnterTransition },
-                exit = remember { AnimatedContentDefaultExitTransition },
-            ) {
-                ZarinaTextFieldDefaults.ClearButton(
-                    onClick = onClearClicked,
-                    iconSize = 16.dp,
-                    indication = rememberRipple(bounded = false, radius = 6.dp),
-                )
-            }
+            ZarinaTextFieldDefaults.ClearButton(
+                isVisible = valueString.isNotEmpty(),
+                onClick = onClearClicked,
+                iconSize = 16.dp,
+                indication = rememberRipple(bounded = false, radius = 6.dp),
+            )
         },
         keyboardOptions = remember {
             KeyboardOptions(

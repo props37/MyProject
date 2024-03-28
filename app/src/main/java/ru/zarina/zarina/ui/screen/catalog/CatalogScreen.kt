@@ -64,7 +64,6 @@ fun CatalogScreen(
     ScreenContent(
         searchQuery = searchQuery,
         onSearchQueryChanged = viewModel::onSearchQueryChanged,
-        onSearchBarClearClicked = viewModel::onSearchBarClearClicked,
         onSearchBarCancelClicked = viewModel::onSearchBarCancelClicked,
         genderTabs = genderTabs,
         currentGenderTab = currentGenderTab,
@@ -83,7 +82,6 @@ fun CatalogScreen(
 private fun ScreenContent(
     searchQuery: String,
     onSearchQueryChanged: (String) -> Unit,
-    onSearchBarClearClicked: () -> Unit,
     onSearchBarCancelClicked: () -> Unit,
     genderTabs: ImmutableList<GenderTab>,
     currentGenderTab: GenderTab,
@@ -106,7 +104,6 @@ private fun ScreenContent(
             SearchBar(
                 searchQuery = searchQuery,
                 onSearchQueryChanged = onSearchQueryChanged,
-                onClearClicked = onSearchBarClearClicked,
                 onCancelClicked = onSearchBarCancelClicked,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -177,7 +174,6 @@ private fun Preview(
         ScreenContent(
             searchQuery = "",
             onSearchQueryChanged = {},
-            onSearchBarClearClicked = {},
             onSearchBarCancelClicked = {},
             genderTabs = remember { GenderTab.entries.toImmutableList() },
             currentGenderTab = GenderTab.WOMEN,

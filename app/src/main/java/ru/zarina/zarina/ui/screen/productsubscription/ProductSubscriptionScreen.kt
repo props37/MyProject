@@ -1,6 +1,5 @@
 package ru.zarina.zarina.ui.screen.productsubscription
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -50,8 +50,6 @@ import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionScreenC
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.productsubscription.ProductSubscriptionViewModel.SideEffect
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
-import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 
 @Composable
 fun ProductSubscriptionScreen(
@@ -164,16 +162,12 @@ private fun ScreenContent(
                 label = { Text(text = stringResource(R.string.how_should_i_contact_you)) },
                 placeholder = { Text(text = stringResource(R.string.first_name)) },
                 innerTrailingContent = {
-                    AnimatedVisibility(
-                        visible = firstName.isNotBlank(),
-                        enter = remember { AnimatedContentDefaultEnterTransition },
-                        exit = remember { AnimatedContentDefaultExitTransition },
-                    ) {
-                        ZarinaTextFieldDefaults.ClearButton(
-                            onClick = { onFirstNameChanged("") },
-                            iconSize = 16.dp,
-                        )
-                    }
+                    ZarinaTextFieldDefaults.ClearButton(
+                        isVisible = firstName.isNotEmpty(),
+                        onClick = { onFirstNameChanged("") },
+                        iconSize = 16.dp,
+                        indication = rememberRipple(bounded = false, radius = 6.dp),
+                    )
                 },
                 singleLine = true,
                 keyboardOptions = remember {
@@ -196,16 +190,12 @@ private fun ScreenContent(
                 label = { Text(text = stringResource(R.string.email)) },
                 placeholder = { Text(text = stringResource(R.string.email_address)) },
                 innerTrailingContent = {
-                    AnimatedVisibility(
-                        visible = email.isNotBlank(),
-                        enter = remember { AnimatedContentDefaultEnterTransition },
-                        exit = remember { AnimatedContentDefaultExitTransition },
-                    ) {
-                        ZarinaTextFieldDefaults.ClearButton(
-                            onClick = { onEmailChanged("") },
-                            iconSize = 16.dp,
-                        )
-                    }
+                    ZarinaTextFieldDefaults.ClearButton(
+                        isVisible = email.isNotEmpty(),
+                        onClick = { onEmailChanged("") },
+                        iconSize = 16.dp,
+                        indication = rememberRipple(bounded = false, radius = 6.dp),
+                    )
                 },
                 singleLine = true,
                 keyboardOptions = remember {

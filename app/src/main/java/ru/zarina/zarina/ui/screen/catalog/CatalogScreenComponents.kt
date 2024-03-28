@@ -1,7 +1,6 @@
 package ru.zarina.zarina.ui.screen.catalog
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -61,8 +60,6 @@ import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListItemsStat
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.CategoryListState
 import ru.zarina.zarina.ui.screen.catalog.CatalogViewModel.GenderTab
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
-import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.zarina.zarina.util.compose.animation.Crossfade
 
@@ -72,7 +69,6 @@ object CatalogScreenComponents {
     fun SearchBar(
         searchQuery: String,
         onSearchQueryChanged: (String) -> Unit,
-        onClearClicked: () -> Unit,
         onCancelClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -96,13 +92,10 @@ object CatalogScreenComponents {
                     )
                 },
                 innerTrailingContent = {
-                    AnimatedVisibility(
-                        visible = searchQuery.isNotEmpty(),
-                        enter = remember { AnimatedContentDefaultEnterTransition },
-                        exit = remember { AnimatedContentDefaultExitTransition },
-                    ) {
-                        ZarinaTextFieldDefaults.ClearButton(onClick = onClearClicked)
-                    }
+                    ZarinaTextFieldDefaults.ClearButton(
+                        isVisible = searchQuery.isNotEmpty(),
+                        onClick = { onSearchQueryChanged("") },
+                    )
                 },
                 outerTrailingContent = {
                     val isCancelButtonVisible = focusState.value?.isFocused == true

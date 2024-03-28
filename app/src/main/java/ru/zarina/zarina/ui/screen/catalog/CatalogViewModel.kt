@@ -151,10 +151,6 @@ class CatalogViewModel @Inject constructor(
         savedStateHandle[KEY_SEARCH_QUERY] = query
     }
 
-    fun onSearchBarClearClicked() {
-        savedStateHandle[KEY_SEARCH_QUERY] = ""
-    }
-
     fun onSearchBarCancelClicked() {
         emitSideEffect(SideEffect.FreeSearchBarFocus)
     }

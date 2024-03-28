@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.common.component.textfield
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
@@ -56,6 +57,8 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.zarina.zarina.ui.common.component.button.ZarinaIconButton
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
+import ru.zarina.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 
 // TODO: [High] Apply error color to description
 // TODO: [Low] Migrate to BasicTextField2
@@ -396,9 +399,31 @@ object ZarinaTextFieldDefaults {
     val IconSizeLarge: Dp get() = 20.dp
     val IconSizeSmall: Dp get() = 16.dp
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun ClearButton(
+        isVisible: Boolean,
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+        iconSize: Dp = IconSizeLarge,
+        indication: Indication? = rememberRipple(bounded = false, radius = 8.dp),
+    ) {
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = remember { AnimatedContentDefaultEnterTransition },
+            exit = remember { AnimatedContentDefaultExitTransition },
+            modifier = modifier,
+        ) {
+            ClearButtonImpl(
+                onClick = onClick,
+                iconSize = iconSize,
+                indication = indication,
+            )
+        }
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    private fun ClearButtonImpl(
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
         iconSize: Dp = IconSizeLarge,
