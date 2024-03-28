@@ -77,6 +77,7 @@ fun ZarinaPasswordTextField(
                 }
             }
         },
+        singleLine = true,
         visualTransformation = visualTransformation,
         modifier = modifier,
     )
