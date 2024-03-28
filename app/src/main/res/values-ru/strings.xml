@@ -118,6 +118,8 @@
     <string name="password">Пароль</string>
     <string name="show_password">Показать пароль</string>
     <string name="hide_password">Спрятать пароль</string>
+    <string name="receive_news_by_email">Получать новости на почту</string>
+    <string name="receive_sms_notifications">Получать СМС-уведомления</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>

@@ -4,9 +4,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destination.graph.ProfileGraph
+import ru.zarina.zarina.ui.navigation.destination.graph.SignUpGraph
 import ru.zarina.zarina.ui.navigation.util.slideEnterTransition
 import ru.zarina.zarina.ui.navigation.util.slidePopExitTransition
 import ru.zarina.zarina.ui.screen.signup.SignUpScreen
+import ru.zarina.zarina.ui.screen.signup.SignUpScreenAction
 
 fun NavGraphBuilder.signUpScreen(navController: NavHostController) {
     composableDestination(
@@ -24,6 +26,17 @@ fun NavGraphBuilder.signUpScreen(navController: NavHostController) {
             }
         },
     ) {
-        SignUpScreen()
+        SignUpScreen(
+            navigate = { action ->
+                when (action) {
+                    SignUpScreenAction.ScreenClosed -> {
+                        navController.popBackStack(
+                            route = SignUpGraph.SignUp.routeSchema,
+                            inclusive = true,
+                        )
+                    }
+                }
+            },
+        )
     }
 }
