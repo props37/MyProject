@@ -86,13 +86,16 @@ fun ZarinaTextField(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
+    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
 ) {
     var focusState by remember { mutableStateOf<FocusState?>(null) }
 
     BasicTextField(
         value = textFieldValue,
         onValueChange = onValueChanged,
-        modifier = modifier.onFocusChanged { focusState = it },
+        modifier = modifier
+            .background(backgroundColor)
+            .onFocusChanged { focusState = it },
         enabled = isEnabled,
         readOnly = readOnly,
         textStyle = textStyle,
@@ -152,13 +155,16 @@ fun ZarinaTextField(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
+    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
 ) {
     var focusState by remember { mutableStateOf<FocusState?>(null) }
 
     BasicTextField(
         value = value,
         onValueChange = onValueChanged,
-        modifier = modifier.onFocusChanged { focusState = it },
+        modifier = modifier
+            .background(backgroundColor)
+            .onFocusChanged { focusState = it },
         enabled = isEnabled,
         readOnly = readOnly,
         textStyle = textStyle,
