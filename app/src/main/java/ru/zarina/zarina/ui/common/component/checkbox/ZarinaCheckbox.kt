@@ -1,6 +1,7 @@
 package ru.zarina.zarina.ui.common.component.checkbox
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -36,12 +37,21 @@ fun ZarinaCheckbox(
     isChecked: Boolean,
     onCheckedChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    isError: Boolean = false,
     size: ZarinaCheckboxSize = ZarinaCheckboxSize.Large,
 ) {
     val sizeDp = when (size) {
         ZarinaCheckboxSize.Large -> 20.dp
         ZarinaCheckboxSize.Small -> 16.dp
     }
+    val borderColor by animateColorAsState(
+        targetValue = if (!isError || isChecked) {
+            UiKitTheme.colors.border.general.active
+        } else {
+            UiKitTheme.colors.border.general.error
+        },
+        label = "ZarinaCheckbox border color",
+    )
     val shape = RoundedCornerShape(2.dp)
 
     Box(
@@ -50,7 +60,7 @@ fun ZarinaCheckbox(
             .size(sizeDp)
             .border(
                 width = 0.5.dp,
-                color = UiKitTheme.colors.background.general.inversed.default,
+                color = borderColor,
                 shape = shape,
             )
             .toggleable(
@@ -83,13 +93,30 @@ enum class ZarinaCheckboxSize { Large, Small }
 
 @Preview
 @Composable
-private fun Preview() {
+private fun PreviewDefault() {
     ZarinaPreview {
         var isChecked by remember { mutableStateOf(false) }
 
         ZarinaCheckbox(
             isChecked = isChecked,
             onCheckedChanged = { isChecked = it },
+            modifier = Modifier
+                .background(Color.White)
+                .padding(16.dp),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewError() {
+    ZarinaPreview {
+        var isChecked by remember { mutableStateOf(false) }
+
+        ZarinaCheckbox(
+            isChecked = isChecked,
+            onCheckedChanged = { isChecked = it },
+            isError = true,
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp),
