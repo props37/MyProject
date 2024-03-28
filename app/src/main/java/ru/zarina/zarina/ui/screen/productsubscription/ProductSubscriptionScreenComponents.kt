@@ -57,6 +57,7 @@ object ProductSubscriptionScreenComponents {
     fun Policies(
         areAccepted: Boolean,
         onAcceptedChanged: (Boolean) -> Unit,
+        isError: Boolean,
         onUrlClicked: (Url) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -69,6 +70,7 @@ object ProductSubscriptionScreenComponents {
             ZarinaCheckbox(
                 isChecked = areAccepted,
                 onCheckedChanged = onAcceptedChanged,
+                isError = isError,
             )
         }
     }

@@ -39,7 +39,7 @@ fun ZarinaToast(
     backgroundColor: Color = message.style.backgroundColor,
     contentColor: Color = message.style.contentColor,
     shape: Shape = RoundedCornerShape(bottomStart = 2.dp, bottomEnd = 2.dp),
-    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
     windowInsets: WindowInsets = WindowInsets.safeDrawing
         .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
 ) {

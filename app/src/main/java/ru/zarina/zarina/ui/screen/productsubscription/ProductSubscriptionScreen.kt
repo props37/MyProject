@@ -65,7 +65,7 @@ fun ProductSubscriptionScreen(
     val email by viewModel.email.collectAsStateWithLifecycle()
     val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
     val arePoliciesAccepted by viewModel.arePoliciesAccepted.collectAsStateWithLifecycle()
-    val isSubscribeButtonEnabled by viewModel.isSubscribeButtonEnabled.collectAsStateWithLifecycle()
+    val isPoliciesErrorVisible by viewModel.isPoliciesErrorVisible.collectAsStateWithLifecycle()
     val isSubscribeButtonLoading by viewModel.isSubscribeButtonLoading.collectAsStateWithLifecycle()
 
     ScreenContent(
@@ -79,7 +79,7 @@ fun ProductSubscriptionScreen(
         onEmailChanged = viewModel::onEmailChanged,
         isEmailInvalid = isEmailInvalid,
         arePoliciesAccepted = arePoliciesAccepted,
-        isSubscribeButtonEnabled = isSubscribeButtonEnabled,
+        isPoliciesErrorVisible = isPoliciesErrorVisible,
         isSubscribeButtonLoading = isSubscribeButtonLoading,
         onUrlClicked = viewModel::onUrlClicked,
         onPoliciesAcceptedChanged = viewModel::onPoliciesAcceptedChanged,
@@ -101,7 +101,7 @@ private fun ScreenContent(
     onEmailChanged: (String) -> Unit,
     isEmailInvalid: Boolean,
     arePoliciesAccepted: Boolean,
-    isSubscribeButtonEnabled: Boolean,
+    isPoliciesErrorVisible: Boolean,
     isSubscribeButtonLoading: Boolean,
     onUrlClicked: (Url) -> Unit,
     onPoliciesAcceptedChanged: (Boolean) -> Unit,
@@ -223,6 +223,7 @@ private fun ScreenContent(
             Policies(
                 areAccepted = arePoliciesAccepted,
                 onAcceptedChanged = onPoliciesAcceptedChanged,
+                isError = isPoliciesErrorVisible,
                 onUrlClicked = onUrlClicked,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -232,7 +233,6 @@ private fun ScreenContent(
 
             ZarinaButton(
                 onClick = onSubscribeClicked,
-                isEnabled = isSubscribeButtonEnabled,
                 isLoading = isSubscribeButtonLoading,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -262,7 +262,7 @@ private fun Preview() {
             onEmailChanged = {},
             isEmailInvalid = false,
             arePoliciesAccepted = false,
-            isSubscribeButtonEnabled = true,
+            isPoliciesErrorVisible = false,
             isSubscribeButtonLoading = false,
             onUrlClicked = {},
             onPoliciesAcceptedChanged = {},

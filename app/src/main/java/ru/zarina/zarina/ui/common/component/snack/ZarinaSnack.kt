@@ -36,7 +36,7 @@ fun ZarinaSnack(
     backgroundColor: Color = message.style.backgroundColor,
     contentColor: Color = message.style.contentColor,
     shape: Shape = RoundedCornerShape(topStart = 2.dp, topEnd = 2.dp),
-    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
 ) {
     val rippleTheme = when (message.style) {
         ZarinaSnackMessageStyle.DEFAULT -> LightRippleTheme

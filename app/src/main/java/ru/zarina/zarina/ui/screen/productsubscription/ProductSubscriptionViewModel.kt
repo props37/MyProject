@@ -26,6 +26,7 @@ import ru.zarina.zarina.domain.product.ProductOffer
 import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessageStyle
 import ru.zarina.zarina.ui.model.product.ProductOfferParcelable
 import ru.zarina.zarina.ui.model.product.ProductParcelable
 import ru.zarina.zarina.ui.navigation.destination.UnscopedDestinations
@@ -88,7 +89,10 @@ class ProductSubscriptionViewModel @Inject constructor(
         initialValue = false,
     )
 
-    val isSubscribeButtonEnabled: StateFlow<Boolean> = arePoliciesAccepted
+    val isPoliciesErrorVisible: StateFlow<Boolean> = savedStateHandle.getStateFlow(
+        key = KEY_IS_POLICIES_ERROR_VISIBLE,
+        initialValue = false,
+    )
 
     val isSubscribeButtonLoading: StateFlow<Boolean> = operationTracker
         .isOperationOngoing(Operation.SUBSCRIBE_TO_PRODUCT)
@@ -133,6 +137,18 @@ class ProductSubscriptionViewModel @Inject constructor(
 
     fun onSubscribeClicked() {
         if (subscribeToProductJob?.isActive == true) return
+
+        if (!arePoliciesAccepted.value) {
+            savedStateHandle[KEY_IS_POLICIES_ERROR_VISIBLE] = true
+            val messageText = Text.Resource(R.string.product_subscription_agreement_error)
+            val message = ZarinaToastMessage(
+                text = messageText,
+                style = ZarinaToastMessageStyle.ERROR,
+            )
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
+            return
+        }
+
         subscribeToProductJob = viewModelScope.launch {
             operationTracker.track(Operation.SUBSCRIBE_TO_PRODUCT) {
                 val params = SubscribeToProductUseCase.Params(
@@ -151,8 +167,12 @@ class ProductSubscriptionViewModel @Inject constructor(
                     }
                     .onFailure { e ->
                         if (e is ValidationException) {
-                            val message = Text.Resource(R.string.incorrect_data)
-                            emitSideEffect(SideEffect.ShowToast(message))
+                            val messageText = Text.Resource(R.string.incorrect_data)
+                            val message = ZarinaToastMessage(
+                                text = messageText,
+                                style = ZarinaToastMessageStyle.ERROR,
+                            )
+                            emitSideEffect(SideEffect.ShowZarinaToast(message))
 
                             val exceptions = listOf(e) + e.suppressedExceptions
                             if (exceptions.any { it is InvalidFirstNameException }) {
@@ -186,5 +206,6 @@ class ProductSubscriptionViewModel @Inject constructor(
         private const val KEY_FIRST_NAME = "first_name"
         private const val KEY_EMAIL = "email"
         private const val KEY_ARE_POLICIES_ACCEPTED = "are_policies_accepted"
+        private const val KEY_IS_POLICIES_ERROR_VISIBLE = "is_policies_error_visible"
     }
 }
