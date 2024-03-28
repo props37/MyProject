@@ -45,9 +45,12 @@ fun ZarinaItem(
                 )
                 .padding(contentPadding),
         ) {
-            startContent()
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                content = startContent,
+                modifier = Modifier.weight(1f),
+            )
             endContent?.let { content ->
-                Spacer(modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(16.dp))
                 content()
             }
