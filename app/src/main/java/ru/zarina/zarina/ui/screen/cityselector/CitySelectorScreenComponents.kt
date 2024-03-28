@@ -3,12 +3,10 @@ package ru.zarina.zarina.ui.screen.cityselector
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -47,6 +45,7 @@ import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.zarina.zarina.ui.common.component.icon.ZarinaCheckmarkAnimatedIcon
+import ru.zarina.zarina.ui.common.component.item.ZarinaItem
 import ru.zarina.zarina.ui.common.component.loader.ZarinaCircularLoader
 import ru.zarina.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
@@ -208,6 +207,13 @@ object CitySelectorScreenComponents {
                                                 isSelected = item.city.kladrId == selectedCity?.kladrId,
                                                 modifier = Modifier.fillMaxWidth(),
                                             )
+
+                                            Divider(
+                                                color = UiKitTheme.colors.border.general.default,
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(horizontal = 16.dp),
+                                            )
                                         }
 
                                         is CityListItem.CityFirstLetterHeaderItem -> {
@@ -217,7 +223,6 @@ object CitySelectorScreenComponents {
                                 }
                             }
                         } else {
-                            // TODO: [Low] Implement as CityListState.Error?
                             CityNotFound(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -269,51 +274,35 @@ object CitySelectorScreenComponents {
         isSelected: Boolean,
         modifier: Modifier = Modifier,
     ) {
-        Column(modifier = modifier) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onClick(city) }
-                    .padding(horizontal = 16.dp),
-            ) {
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = city.name,
-                            style = UiKitTheme.typography.secondary.light,
-                            color = UiKitTheme.colors.text.general.regular.default,
-                        )
-
-                        if (showFullName) {
-                            Spacer(modifier = Modifier.height(2.dp))
-                            Text(
-                                text = city.fullName,
-                                style = UiKitTheme.typography.footnote.light,
-                                color = UiKitTheme.colors.text.general.regular.muted,
-                            )
-                        }
-                    }
-
-                    ZarinaCheckmarkAnimatedIcon(
-                        isVisible = isSelected,
-                        iconSize = 16.dp,
-                        modifier = Modifier.padding(start = if (isSelected) 16.dp else 0.dp),
+        ZarinaItem(
+            onClick = { onClick(city) },
+            startContent = {
+                Column {
+                    Text(
+                        text = city.name,
+                        style = UiKitTheme.typography.secondary.light,
+                        color = UiKitTheme.colors.text.general.regular.default,
                     )
+
+                    if (showFullName) {
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = city.fullName,
+                            style = UiKitTheme.typography.footnote.light,
+                            color = UiKitTheme.colors.text.general.regular.muted,
+                        )
+                    }
                 }
-
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-
-            Divider(
-                color = UiKitTheme.colors.border.general.default,
-                thickness = 1.dp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-            )
-        }
+            },
+            endContent = {
+                ZarinaCheckmarkAnimatedIcon(
+                    isVisible = isSelected,
+                    iconSize = 16.dp,
+                    modifier = Modifier.padding(start = if (isSelected) 16.dp else 0.dp),
+                )
+            },
+            modifier = modifier,
+        )
     }
 
     @Composable
