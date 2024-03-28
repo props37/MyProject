@@ -107,7 +107,7 @@ fun SubscribeScreenContent(
             Input(
                 value = name,
                 onValueChange = onNameChange,
-                hint = stringResource(R.string.name),
+                hint = stringResource(R.string.first_name),
                 isError = nameError != null,
                 error = nameError?.let { textString(it) },
                 isEnabled = isInputEnabled,

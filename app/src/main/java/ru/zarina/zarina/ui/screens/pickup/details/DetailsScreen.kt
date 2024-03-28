@@ -198,7 +198,7 @@ private fun ColumnScope.RecipientInformation(
     Input(
         value = name,
         onValueChange = onNameChange,
-        hint = stringResource(id = R.string.name),
+        hint = stringResource(id = R.string.first_name),
         isError = nameError != null,
         error = nameError?.let { textString(it) },
         keyboardOptions = KeyboardOptions(
