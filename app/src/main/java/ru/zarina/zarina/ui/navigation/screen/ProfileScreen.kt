@@ -7,13 +7,31 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.navigation.base.composableDestination
 import ru.zarina.zarina.ui.navigation.destination.graph.ProfileGraph
+import ru.zarina.zarina.ui.navigation.destination.graph.SignUpGraph
+import ru.zarina.zarina.ui.navigation.screen.graph.navigateToSignUpGraph
 import ru.zarina.zarina.ui.navigation.util.BottomNavBarItemSecondaryStartDestinationBackHandler
+import ru.zarina.zarina.ui.navigation.util.slideExitTransition
+import ru.zarina.zarina.ui.navigation.util.slidePopEnterTransition
 import ru.zarina.zarina.ui.screen.profile.ProfileScreen
 import ru.zarina.zarina.ui.screen.profile.ProfileScreenAction
 import ru.zarina.zarina.ui.screen.profile.ProfileViewModel
 
 fun NavGraphBuilder.profileScreen(navController: NavHostController) {
-    composableDestination(ProfileGraph.Profile) {
+    composableDestination(
+        destination = ProfileGraph.Profile,
+        exitTransition = {
+            when (targetState.destination.route) {
+                SignUpGraph.SignUp.routeSchema -> slideExitTransition()
+                else -> null
+            }
+        },
+        popEnterTransition = {
+            when (initialState.destination.route) {
+                SignUpGraph.SignUp.routeSchema -> slidePopEnterTransition()
+                else -> null
+            }
+        },
+    ) {
         BottomNavBarItemSecondaryStartDestinationBackHandler(navController)
 
         ProfileScreen(
@@ -22,6 +40,7 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
             },
             navigate = { action ->
                 when (action) {
+                    ProfileScreenAction.SignUpClicked -> navController.navigateToSignUpGraph()
                     is ProfileScreenAction.CityClicked -> {
                         navController.navigateToCitySelectorScreen(
                             currentCity = action.currentCity,

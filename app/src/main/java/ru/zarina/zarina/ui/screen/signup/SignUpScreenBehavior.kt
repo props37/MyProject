@@ -14,7 +14,7 @@ import ru.zarina.zarina.ui.screen.signup.SignUpViewModel.SideEffect
 fun SignUpScreenBehavior(
     sideEffects: Flow<SideEffect>,
 ) {
-    ForcedBottomNavBarBehavior(isVisible = true)
+    ForcedBottomNavBarBehavior(isVisible = false)
 
     LifecycleStartEffect(sideEffects) {
         lifecycleScope.launch {

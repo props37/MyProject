@@ -79,6 +79,13 @@ class ProfileViewModel @AssistedInject constructor(
         }
     }
 
+    fun onSignUpClicked() {
+        navigationThrottler.throttle {
+            val action = ProfileScreenAction.SignUpClicked
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
     fun onInfoItemClicked(item: InfoItem) {
         navigationThrottler.throttle {
             when (item) {

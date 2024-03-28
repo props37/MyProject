@@ -11,3 +11,7 @@ fun NavGraphBuilder.signUpGraph(navController: NavHostController) {
         signUpScreen(navController)
     }
 }
+
+fun NavHostController.navigateToSignUpGraph() {
+    this.navigate(SignUpGraph.route)
+}

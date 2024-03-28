@@ -18,6 +18,7 @@ import ru.zarina.zarina.ui.navigation.screen.graph.catalogGraph
 import ru.zarina.zarina.ui.navigation.screen.graph.favoritesGraph
 import ru.zarina.zarina.ui.navigation.screen.graph.homeGraph
 import ru.zarina.zarina.ui.navigation.screen.graph.profileGraph
+import ru.zarina.zarina.ui.navigation.screen.graph.signUpGraph
 import ru.zarina.zarina.ui.navigation.screen.graph.sizeSelectorGraph
 import ru.zarina.zarina.ui.navigation.screen.listFilterScreen
 import ru.zarina.zarina.ui.navigation.screen.onboardingScreen
@@ -47,6 +48,7 @@ fun ZarinaNavigation(
         profileGraph(updatedNavController)
         cartGraph(updatedNavController)
 
+        signUpGraph(updatedNavController)
         sizeSelectorGraph(updatedNavController)
 
         onboardingScreen(updatedNavController)
