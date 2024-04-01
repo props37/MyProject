@@ -46,6 +46,8 @@ accompanist = "0.34.0"
 coil = "2.6.0"
 composeShimmer = "1.2.0"
 
+libphonenumber = "8.13.28"
+
 timber = "5.0.1"
 leakCanary = "2.13"
 
@@ -125,6 +127,8 @@ accompanist-webview = { group = "com.google.accompanist", name = "accompanist-we
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
 composeShimmer = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version.ref = "composeShimmer" }
+
+libphonenumber = { group = "io.michaelrocks", name = "libphonenumber-android", version.ref = "libphonenumber" }
 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 leakCanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakCanary" }

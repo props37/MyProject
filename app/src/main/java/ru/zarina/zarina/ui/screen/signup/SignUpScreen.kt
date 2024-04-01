@@ -35,6 +35,7 @@ import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.component.item.ZarinaItem
 import ru.zarina.zarina.ui.common.component.switchh.ZarinaSwitch
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaPasswordTextField
+import ru.zarina.zarina.ui.common.component.textfield.ZarinaPhoneNumberTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
@@ -152,13 +153,9 @@ private fun ScreenContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            ZarinaTextField(
-                value = phone,
-                onValueChanged = onPhoneChanged,
-                label = { Text(text = stringResource(R.string.phone)) }, // TODO: [High] Update
-                placeholder = { Text(text = stringResource(R.string.phone)) }, // TODO: [High] Update
-                keyboardOptions = remember { KeyboardOptions(keyboardType = KeyboardType.Phone) },
-                singleLine = true,
+            ZarinaPhoneNumberTextField(
+                phoneNumber = phone,
+                onPhoneNumberChanged = onPhoneChanged,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),

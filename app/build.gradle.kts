@@ -203,6 +203,8 @@ dependencies {
     implementation(libs.coil.gif)
     implementation(libs.composeShimmer)
 
+    implementation(libs.libphonenumber)
+
     implementation(libs.timber)
 
     implementation(libs.googlePlayServices.location)

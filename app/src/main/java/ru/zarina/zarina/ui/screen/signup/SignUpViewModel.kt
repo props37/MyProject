@@ -1,5 +1,6 @@
 package ru.zarina.zarina.ui.screen.signup
 
+import android.telephony.PhoneNumberUtils
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -65,7 +66,8 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun onPhoneChanged(phone: String) {
-        savedStateHandle[KEY_PHONE] = phone
+        val normalizedPhone = PhoneNumberUtils.normalizeNumber(phone)
+        savedStateHandle[KEY_PHONE] = normalizedPhone
     }
 
     fun onPasswordChanged(password: String) {
