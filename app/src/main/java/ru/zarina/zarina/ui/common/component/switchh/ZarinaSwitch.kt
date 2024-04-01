@@ -2,9 +2,9 @@ package ru.zarina.zarina.ui.common.component.switchh
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchColors
-import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material.Switch
+import androidx.compose.material.SwitchColors
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,12 +42,10 @@ object ZarinaSwitchDefaults {
     ): SwitchColors = SwitchDefaults.colors(
         checkedThumbColor = checkedThumbColor,
         checkedTrackColor = checkedTrackColor,
-        checkedBorderColor = Color.Transparent,
-        checkedIconColor = Color.Transparent,
+        checkedTrackAlpha = 1f,
         uncheckedThumbColor = uncheckedThumbColor,
         uncheckedTrackColor = uncheckedTrackColor,
-        uncheckedBorderColor = Color.Transparent,
-        uncheckedIconColor = Color.Transparent,
+        uncheckedTrackAlpha = 1f,
     )
 }
 
