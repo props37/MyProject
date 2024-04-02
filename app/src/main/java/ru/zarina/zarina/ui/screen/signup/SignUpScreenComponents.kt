@@ -75,11 +75,11 @@ object SignUpScreenComponents {
         onUrlClicked: (Url) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val privacy = stringResource(R.string.sign_up_recaptch_policies_privacy)
-        val terms = stringResource(R.string.sign_up_recaptch_policies_terms)
+        val privacy = stringResource(R.string.sign_up_recaptcha_policies_privacy)
+        val terms = stringResource(R.string.sign_up_recaptcha_policies_terms)
 
-        val privacyUrl = stringResource(R.string.sign_up_recaptch_policies_privacy_url)
-        val termsUrl = stringResource(R.string.sign_up_recaptch_policies_terms_url)
+        val privacyUrl = stringResource(R.string.sign_up_recaptcha_policies_privacy_url)
+        val termsUrl = stringResource(R.string.sign_up_recaptcha_policies_terms_url)
 
         val clickableTextToUrl = remember(privacy, terms, privacyUrl, termsUrl) {
             mapOf(
@@ -89,7 +89,7 @@ object SignUpScreenComponents {
         }
 
         ZarinaClickableText(
-            baseText = stringResource(R.string.sign_up_recaptch_policies),
+            baseText = stringResource(R.string.sign_up_recaptcha_policies),
             clickableTextToUrl = clickableTextToUrl,
             onUrlClicked = onUrlClicked,
             baseTextStyle = UiKitTheme.typography.footnote.light.copy(
