@@ -38,7 +38,7 @@ class UserApi @Inject constructor(
             password = password,
             receiveNewsByEmail = receiveNewsByEmail,
             receiveSmsNotifications = receiveSmsNotifications,
-            reCaptchaKey = "", // TODO: [High] Implement
+            recaptchaKey = "", // TODO: [High] Implement
         )
         httpClient.post("/api/register") {
             setJsonBody(body)

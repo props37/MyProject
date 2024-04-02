@@ -5,24 +5,24 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SignUpRequestBody(
-    @SerialName("first_name") 
+    @SerialName("first_name")
     val firstName: String,
-    
-    @SerialName("email") 
+
+    @SerialName("email")
     val email: String,
-    
+
     @SerialName("phone")
     val phone: String,
 
-    @SerialName("password") 
+    @SerialName("password")
     val password: String,
-    
-    @SerialName("subscribe_email") 
+
+    @SerialName("subscribe_email")
     val receiveNewsByEmail: Boolean,
-    
-    @SerialName("subscribe_sms") 
+
+    @SerialName("subscribe_sms")
     val receiveSmsNotifications: Boolean,
-    
+
     @SerialName("reCaptchaKey")
-    val reCaptchaKey: String,
+    val recaptchaKey: String,
 )
