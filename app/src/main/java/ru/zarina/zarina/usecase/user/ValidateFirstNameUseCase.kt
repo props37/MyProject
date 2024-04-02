@@ -3,8 +3,8 @@ package ru.zarina.zarina.usecase.user
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.base.usecase.UseCase
 import ru.zarina.zarina.di.Qualifiers
-import ru.zarina.zarina.domain.exception.EmptyFirstNameException
-import ru.zarina.zarina.domain.exception.InvalidFirstNameException
+import ru.zarina.zarina.domain.user.exception.EmptyFirstNameException
+import ru.zarina.zarina.domain.user.exception.InvalidFirstNameException
 import javax.inject.Inject
 
 class ValidateFirstNameUseCase @Inject constructor(

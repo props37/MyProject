@@ -1,4 +1,4 @@
-package ru.zarina.zarina.domain.exception
+package ru.zarina.zarina.domain.user.exception
 
 import ru.zarina.zarina.domain.common.exception.ValidationException
 

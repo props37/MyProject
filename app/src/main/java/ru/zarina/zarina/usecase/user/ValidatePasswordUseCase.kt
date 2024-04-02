@@ -3,8 +3,8 @@ package ru.zarina.zarina.usecase.user
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.base.usecase.UseCase
 import ru.zarina.zarina.di.Qualifiers
-import ru.zarina.zarina.domain.exception.EmptyPasswordException
-import ru.zarina.zarina.domain.exception.PasswordTooShortException
+import ru.zarina.zarina.domain.user.exception.EmptyPasswordException
+import ru.zarina.zarina.domain.user.exception.PasswordTooShortException
 import javax.inject.Inject
 
 class ValidatePasswordUseCase @Inject constructor(

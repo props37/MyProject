@@ -20,12 +20,12 @@ import ru.zarina.zarina.base.throttler.Throttler
 import ru.zarina.zarina.domain.common.Email
 import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.common.exception.ValidationException
-import ru.zarina.zarina.domain.exception.EmptyEmailException
-import ru.zarina.zarina.domain.exception.EmptyFirstNameException
-import ru.zarina.zarina.domain.exception.InvalidEmailException
-import ru.zarina.zarina.domain.exception.InvalidFirstNameException
 import ru.zarina.zarina.domain.product.Product
 import ru.zarina.zarina.domain.product.ProductOffer
+import ru.zarina.zarina.domain.user.exception.EmptyEmailException
+import ru.zarina.zarina.domain.user.exception.EmptyFirstNameException
+import ru.zarina.zarina.domain.user.exception.InvalidEmailException
+import ru.zarina.zarina.domain.user.exception.InvalidFirstNameException
 import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage

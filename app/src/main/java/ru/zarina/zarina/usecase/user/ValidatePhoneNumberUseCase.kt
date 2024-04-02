@@ -5,8 +5,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.zarina.zarina.base.usecase.UseCase
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.common.PhoneNumber
-import ru.zarina.zarina.domain.exception.EmptyPhoneNumberException
-import ru.zarina.zarina.domain.exception.InvalidPhoneNumberException
+import ru.zarina.zarina.domain.user.exception.EmptyPhoneNumberException
+import ru.zarina.zarina.domain.user.exception.InvalidPhoneNumberException
 import javax.inject.Inject
 
 class ValidatePhoneNumberUseCase @Inject constructor(
