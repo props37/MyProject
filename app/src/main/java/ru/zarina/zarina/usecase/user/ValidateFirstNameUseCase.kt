@@ -13,7 +13,7 @@ class ValidateFirstNameUseCase @Inject constructor(
 ) : UseCase<ValidateFirstNameUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
-        val name = params.name
+        val name = params.name.trim()
         when {
             name.isEmpty() -> throw EmptyFirstNameException()
             !name.matches(FIRST_NAME_REGEX_PATTERN.toRegex()) -> throw InvalidFirstNameException()
