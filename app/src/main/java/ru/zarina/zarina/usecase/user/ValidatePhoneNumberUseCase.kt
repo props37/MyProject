@@ -17,7 +17,7 @@ class ValidatePhoneNumberUseCase @Inject constructor(
     override suspend fun execute(params: Params) {
         val phone = params.phoneNumber.value.trim()
         when {
-            phone.isEmpty() -> throw EmptyPhoneNumberException()
+            phone.isBlank() -> throw EmptyPhoneNumberException()
             !PhoneNumberUtils.isGlobalPhoneNumber(phone) -> throw InvalidPhoneNumberException()
         }
     }

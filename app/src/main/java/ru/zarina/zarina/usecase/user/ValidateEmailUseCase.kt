@@ -16,7 +16,7 @@ class ValidateEmailUseCase @Inject constructor(
     override suspend fun execute(params: Params) {
         val email = params.email.value.trim()
         when {
-            email.isEmpty() -> throw EmptyEmailException()
+            email.isBlank() -> throw EmptyEmailException()
             !email.matches(EMAIL_REGEX_PATTERN.toRegex()) -> throw InvalidEmailException()
         }
     }
