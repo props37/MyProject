@@ -5,6 +5,7 @@ import ru.zarina.zarina.base.usecase.UseCase
 import ru.zarina.zarina.data.product.ProductRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.common.Barcode
+import ru.zarina.zarina.domain.common.Email
 import ru.zarina.zarina.domain.common.exception.ValidationException
 import ru.zarina.zarina.usecase.user.ValidateEmailUseCase
 import ru.zarina.zarina.usecase.user.ValidateFirstNameUseCase
@@ -20,7 +21,7 @@ class SubscribeToProductUseCase @Inject constructor(
 
     override suspend fun execute(params: Params) {
         val barcode = params.barcode
-        val email = params.email.trim()
+        val email = params.email
 
         val firstName = params.name.split(' ').firstOrNull()?.trim().orEmpty()
 
@@ -41,6 +42,6 @@ class SubscribeToProductUseCase @Inject constructor(
     data class Params(
         val barcode: Barcode,
         val name: String,
-        val email: String,
+        val email: Email,
     )
 }

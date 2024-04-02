@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.flow
 import ru.zarina.zarina.data.product.remote.api.ProductApi
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.common.Barcode
+import ru.zarina.zarina.domain.common.Email
 import ru.zarina.zarina.domain.common.Page
 import ru.zarina.zarina.domain.common.Sorting
 import ru.zarina.zarina.domain.filter.Filters
@@ -41,7 +42,7 @@ class ProductRemoteDataSource @Inject constructor(
         emit(categoryProductInfo)
     }
 
-    suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: String) {
+    suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email) {
         api.subscribeToProduct(barcode, firstName, email)
     }
 }

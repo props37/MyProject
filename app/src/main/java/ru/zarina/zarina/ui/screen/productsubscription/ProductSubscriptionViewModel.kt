@@ -17,6 +17,7 @@ import ru.zarina.zarina.base.operationtracker.OperationTracker
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.domain.common.Email
 import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.common.exception.ValidationException
 import ru.zarina.zarina.domain.exception.EmptyEmailException
@@ -156,7 +157,7 @@ class ProductSubscriptionViewModel @Inject constructor(
                 val params = SubscribeToProductUseCase.Params(
                     barcode = productOffer.value.barcode,
                     name = firstName.value,
-                    email = email.value,
+                    email = Email.create(email.value),
                 )
                 interactor.subscribeToProduct(params)
                     .onSuccess {

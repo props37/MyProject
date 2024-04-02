@@ -12,6 +12,7 @@ import ru.zarina.zarina.data.product.remote.api.dto.SubscribeToProductRequestBod
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.common.Barcode
+import ru.zarina.zarina.domain.common.Email
 import ru.zarina.zarina.domain.common.Sorting
 import ru.zarina.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
@@ -54,10 +55,10 @@ class ProductApi @Inject constructor(
         }.body()
     }
 
-    suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: String) {
+    suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email) {
         val body = SubscribeToProductRequestBody(
             barcodes = listOf(barcode.value),
-            email = email,
+            email = email.value,
             firstName = firstName,
         )
         apiExceptionConverter {
