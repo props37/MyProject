@@ -1,6 +1,6 @@
 package ru.zarina.zarina.ui.screen.onboarding
 
-import ru.zarina.zarina.data.permissionmanager.PermissionManager
+import ru.zarina.zarina.ui.common.permissionmanager.PermissionManager
 import ru.zarina.zarina.usecase.content.GetOnboardingBannerUrlUseCase
 import ru.zarina.zarina.usecase.device.SetIsOnboardingCompletedUseCase
 import ru.zarina.zarina.usecase.geography.GetCurrentCityFlowUseCase

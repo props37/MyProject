@@ -1,4 +1,4 @@
-package ru.zarina.zarina.data.permissionmanager
+package ru.zarina.zarina.ui.common.permissionmanager
 
 import androidx.activity.ComponentActivity
 import kotlinx.coroutines.flow.Flow

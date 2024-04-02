@@ -2,8 +2,8 @@ package ru.zarina.zarina.ui.activity.lifecycleobserver
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import ru.zarina.zarina.data.permissionmanager.PermissionManager
 import ru.zarina.zarina.ui.base.activity.lifecycleobserver.ActivityLifecycleObserver
+import ru.zarina.zarina.ui.common.permissionmanager.PermissionManager
 import javax.inject.Inject
 
 class PermissionManagerActivityLifecycleObserver @Inject constructor(
