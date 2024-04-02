@@ -47,9 +47,9 @@ class AppViewModel @Inject constructor(
         )
 
     @OptIn(UnstableApi::class)
-    val exoPlayerCache: Cache = interactor.getExoPlayerCache()
+    val exoPlayerCache: Cache = interactor.exoPlayerCache
 
     @OptIn(UnstableApi::class)
     val exoPlayerCacheDataSourceFactory: CacheDataSource.Factory =
-        interactor.getExoPlayerCacheDataSourceFactory()
+        interactor.exoPlayerCacheDataSourceFactory
 }
