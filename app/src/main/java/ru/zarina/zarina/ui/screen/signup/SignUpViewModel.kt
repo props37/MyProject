@@ -3,13 +3,22 @@ package ru.zarina.zarina.ui.screen.signup
 import android.telephony.PhoneNumberUtils
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import ru.zarina.zarina.R
+import ru.zarina.zarina.base.operationtracker.OperationKey
+import ru.zarina.zarina.base.operationtracker.OperationTracker
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.base.throttler.Throttler
 import ru.zarina.zarina.domain.common.Url
+import ru.zarina.zarina.ui.base.text.Text
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessage
+import ru.zarina.zarina.ui.common.zarinatoast.ZarinaToastMessageStyle
 import ru.zarina.zarina.ui.screen.signup.SignUpViewModel.SideEffect
 import javax.inject.Inject
 
@@ -20,6 +29,10 @@ class SignUpViewModel @Inject constructor(
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val operationTracker = OperationTracker()
+
+    private var signUpJob: Job? = null
 
     val name: StateFlow<String> = savedStateHandle.getStateFlow(
         key = KEY_NAME,
@@ -98,15 +111,36 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun onContinueClicked() {
-        // TODO: [High] Implement
+    fun onSignUpClicked() {
+        if (signUpJob?.isActive == true) return
+
+        if (!arePoliciesAccepted.value) {
+            savedStateHandle[KEY_IS_POLICIES_ERROR_VISIBLE] = true
+            val messageText = Text.Resource(R.string.sign_up_agreement_error)
+            val message = ZarinaToastMessage(
+                text = messageText,
+                style = ZarinaToastMessageStyle.ERROR,
+            )
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
+            return
+        }
+
+        signUpJob = viewModelScope.launch {
+            operationTracker.track(Operation.SIGN_UP) {
+                // TODO: [High] Implement
+            }
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: SignUpScreenAction) : SideEffect
 
         data class OpenUrl(val url: Url) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
+
+    private enum class Operation : OperationKey { SIGN_UP }
 
     companion object {
         private const val KEY_NAME = "name"
@@ -116,5 +150,6 @@ class SignUpViewModel @Inject constructor(
         private const val KEY_RECEIVE_NEWS_BE_EMAIL = "receive_new_by_email"
         private const val KEY_RECEIVE_SMS_NOTIFICATIONS = "receive_sms_notifications"
         private const val KEY_ARE_POLICIES_ACCEPTED = "are_policies_accepted"
+        private const val KEY_IS_POLICIES_ERROR_VISIBLE = "is_policies_error_visible"
     }
 }

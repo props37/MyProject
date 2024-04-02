@@ -166,6 +166,7 @@
     <string name="sign_up_recaptcha_policies_terms">условия использования</string>
     <string name="sign_up_recaptcha_policies_privacy_url">https://policies.google.com/privacy</string>
     <string name="sign_up_recaptcha_policies_terms_url">https://policies.google.com/terms</string>
+    <string name="sign_up_agreement_error">Ознакомься с политикой конфиденциальности и правилами работы интернет-магазина и подтверди согласие с правилами бонусной программы</string>
 
     <plurals name="show_products">
         <item quantity="zero">Показать %1$d товаров</item>

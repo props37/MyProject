@@ -78,7 +78,7 @@ fun SignUpScreen(
         arePoliciesAccepted = arePoliciesAccepted,
         onPoliciesAcceptedChanged = viewModel::onPoliciesAcceptedChanged,
         onUrlClicked = viewModel::onUrlClicked,
-        onContinueClicked = viewModel::onContinueClicked,
+        onSignUpClicked = viewModel::onSignUpClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -102,7 +102,7 @@ private fun ScreenContent(
     arePoliciesAccepted: Boolean,
     onPoliciesAcceptedChanged: (Boolean) -> Unit,
     onUrlClicked: (Url) -> Unit,
-    onContinueClicked: () -> Unit,
+    onSignUpClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (SignUpScreenAction) -> Unit,
 ) {
@@ -239,7 +239,7 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.height(36.dp))
 
             ZarinaButton(
-                onClick = onContinueClicked,
+                onClick = onSignUpClicked,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),

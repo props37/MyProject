@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.zarina.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
+import ru.zarina.zarina.ui.common.zarinatoast.controller.LocalZarinaToastController
 import ru.zarina.zarina.ui.screen.signup.SignUpViewModel.SideEffect
 import ru.zarina.zarina.util.domain.common.toUri
 
@@ -21,6 +22,7 @@ fun SignUpScreenBehavior(
     navigate: (SignUpScreenAction) -> Unit,
 ) {
     val updatedContext by rememberUpdatedState(LocalContext.current)
+    val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = false)
@@ -36,6 +38,10 @@ fun SignUpScreenBehavior(
                                 .setShowTitle(true)
                                 .build()
                             intent.launchUrl(updatedContext, sideEffect.url.toUri())
+                        }
+
+                        is SideEffect.ShowZarinaToast -> {
+                            updatedZarinaToastController.show(sideEffect.message)
                         }
                     }
                 }
