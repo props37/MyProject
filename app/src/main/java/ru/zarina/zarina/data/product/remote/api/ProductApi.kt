@@ -2,9 +2,11 @@ package ru.zarina.zarina.data.product.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.post
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpStatusCode
 import ru.zarina.zarina.data.common.remote.api.dto.SortingDto
-import ru.zarina.zarina.data.common.remote.api.exception.apiExceptionConverter
 import ru.zarina.zarina.data.product.remote.api.dto.FiltersRequestDto
 import ru.zarina.zarina.data.product.remote.api.dto.GetProductsRequestBody
 import ru.zarina.zarina.data.product.remote.api.dto.ProductsDto
@@ -14,6 +16,8 @@ import ru.zarina.zarina.domain.category.Category
 import ru.zarina.zarina.domain.common.Barcode
 import ru.zarina.zarina.domain.common.Email
 import ru.zarina.zarina.domain.common.Sorting
+import ru.zarina.zarina.domain.user.exception.InvalidEmailException
+import ru.zarina.zarina.domain.user.exception.InvalidFirstNameException
 import ru.zarina.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
 import ru.zarina.zarina.domain.filter.Filters as DomainFilters
@@ -61,9 +65,26 @@ class ProductApi @Inject constructor(
             email = email.value,
             firstName = firstName,
         )
-        apiExceptionConverter {
+        subscribeToProductApiExceptionConverter {
             httpClient.post("/api/subscriptions/subscribe/") {
                 setJsonBody(body)
+            }
+        }
+    }
+
+    private suspend inline fun <T> subscribeToProductApiExceptionConverter(block: () -> T): T {
+        return try {
+            block()
+        } catch (e: ClientRequestException) {
+            if (e.response.status == HttpStatusCode.UnprocessableEntity) {
+                val responseText = e.response.bodyAsText()
+                when {
+                    responseText.contains("email") -> throw InvalidEmailException()
+                    responseText.contains("first_name") -> throw InvalidFirstNameException()
+                    else -> throw e
+                }
+            } else {
+                throw e
             }
         }
     }
