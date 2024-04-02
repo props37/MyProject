@@ -7,3 +7,6 @@ open class InvalidPasswordException(message: String = "Invalid password") :
 
 class EmptyPasswordException(message: String = "Password can not be empty") :
     InvalidPasswordException(message)
+
+class PasswordTooShortException(message: String = "Password is too short") :
+    InvalidPasswordException(message)
