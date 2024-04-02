@@ -120,6 +120,7 @@
     <string name="hide_password">Спрятать пароль</string>
     <string name="receive_news_by_email">Получать новости на почту</string>
     <string name="receive_sms_notifications">Получать СМС-уведомления</string>
+    <string name="incorrect_data_entered">Введены некорректные данные</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -137,6 +138,7 @@
     <string name="product_subscription_policies_online_store">правилами работы интернет-магазина</string>
     <string name="product_subscription_policies_personal_data">обработку персональных данных</string>
     <string name="product_subscription_agreement_error">Ознакомься с политикой конфиденциальности и правилами работы интернет-магазина и подтверди согласие на обработку персональных данных</string>
+    <string name="product_subscription_empty_fields_error">Поля ввода пусты. Для подписки на товар введи имя и адрес электронной почты</string>
 
     <string name="cart_empty_cart_placeholder_title">Корзина пока что пуста</string>
     <string name="cart_empty_cart_placeholder_description">В каталоге ты найдёшь много товаров</string>

@@ -19,6 +19,8 @@ import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.base.throttler.Throttler
 import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.domain.common.exception.ValidationException
+import ru.zarina.zarina.domain.exception.EmptyEmailException
+import ru.zarina.zarina.domain.exception.EmptyFirstNameException
 import ru.zarina.zarina.domain.exception.InvalidEmailException
 import ru.zarina.zarina.domain.exception.InvalidFirstNameException
 import ru.zarina.zarina.domain.product.Product
@@ -167,14 +169,23 @@ class ProductSubscriptionViewModel @Inject constructor(
                     }
                     .onFailure { e ->
                         if (e is ValidationException) {
-                            val messageText = Text.Resource(R.string.incorrect_data)
+                            val exceptions = listOf(e) + e.suppressedExceptions
+
+                            val isFirstNameEmpty = exceptions.any { it is EmptyFirstNameException }
+                            val isEmailEmpty = exceptions.any { it is EmptyEmailException }
+                            val messageText = when {
+                                isFirstNameEmpty && isEmailEmpty -> {
+                                    Text.Resource(R.string.product_subscription_empty_fields_error)
+                                }
+
+                                else -> Text.Resource(R.string.incorrect_data_entered)
+                            }
                             val message = ZarinaToastMessage(
                                 text = messageText,
                                 style = ZarinaToastMessageStyle.ERROR,
                             )
                             emitSideEffect(SideEffect.ShowZarinaToast(message))
 
-                            val exceptions = listOf(e) + e.suppressedExceptions
                             if (exceptions.any { it is InvalidFirstNameException }) {
                                 _isFirstNameInvalid.value = true
                             }
