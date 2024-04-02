@@ -92,6 +92,7 @@ android {
                 buildConfigStringField(Keys.BACKEND_URL, buildType.backendUrl)
                 buildConfigStringField(Keys.MINDBOX_ENDPOINT, buildType.mindboxEndpoint)
                 buildConfigStringField(Keys.MINDBOX_KEY, buildType.mindboxKey)
+                buildConfigStringField(Keys.RECAPTCHA_KEY, buildType.recaptchaKey)
                 buildConfigStringField(Keys.ANY_QUERY_KEY, buildType.anyQueryKey)
                 manifestPlaceholders[Keys.GOOGLE_MAPS_KEY] = buildType.googleMapsKey
             }
@@ -210,6 +211,8 @@ dependencies {
     implementation(libs.googlePlayServices.location)
     implementation(libs.googlePlayServices.maps)
     implementation(libs.googlePlayServices.maps.compose)
+
+    implementation(libs.recaptcha)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)

@@ -55,6 +55,8 @@ googlePlayServices-location = "21.2.0"
 googlePlayServices-maps = "18.2.0"
 googlePlayServices-maps-compose = "4.3.3"
 
+recaptcha = "18.5.0-beta02"
+
 firebase-bom = "32.8.0"
 
 firebase-performance = "1.4.2"
@@ -136,6 +138,8 @@ leakCanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", v
 googlePlayServices-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "googlePlayServices-location" }
 googlePlayServices-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "googlePlayServices-maps" }
 googlePlayServices-maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "googlePlayServices-maps-compose" }
+
+recaptcha = { group = "com.google.android.recaptcha", name = "recaptcha", version.ref = "recaptcha" }
 
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
