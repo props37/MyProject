@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
@@ -32,6 +30,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.zarina.zarina.R
+import ru.zarina.zarina.domain.common.Url
+import ru.zarina.zarina.ui.common.component.button.ZarinaButton
 import ru.zarina.zarina.ui.common.component.item.ZarinaItem
 import ru.zarina.zarina.ui.common.component.switchh.ZarinaSwitch
 import ru.zarina.zarina.ui.common.component.textfield.ZarinaPasswordTextField
@@ -41,9 +41,12 @@ import ru.zarina.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.zarina.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.zarina.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.zarina.zarina.ui.screen.signup.SignUpScreenComponents.Policies
+import ru.zarina.zarina.ui.screen.signup.SignUpScreenComponents.RecaptchaPolicies
 import ru.zarina.zarina.ui.screen.signup.SignUpScreenComponents.TopBar
 import ru.zarina.zarina.ui.screen.signup.SignUpViewModel.SideEffect
 import ru.zarina.zarina.ui.theme.UiKitTheme
+import ru.zarina.zarina.util.compose.navigationBarsOrIme
 
 @Composable
 fun SignUpScreen(
@@ -56,6 +59,7 @@ fun SignUpScreen(
     val password by viewModel.password.collectAsStateWithLifecycle()
     val receiveNewsNyEmail by viewModel.receiveNewsByEmail.collectAsStateWithLifecycle()
     val receiveSmsNotifications by viewModel.receiveSmsNotifications.collectAsStateWithLifecycle()
+    val arePoliciesAccepted by viewModel.arePoliciesAccepted.collectAsStateWithLifecycle()
 
     ScreenContent(
         onBackClicked = viewModel::onBackClicked,
@@ -71,6 +75,10 @@ fun SignUpScreen(
         onReceiveNewsNyEmailChanged = viewModel::onReceiveNewsNyEmailChanged,
         receiveSmsNotifications = receiveSmsNotifications,
         onReceiveSmsNotificationsChanged = viewModel::onReceiveSmsNotificationsChanged,
+        arePoliciesAccepted = arePoliciesAccepted,
+        onPoliciesAcceptedChanged = viewModel::onPoliciesAcceptedChanged,
+        onUrlClicked = viewModel::onUrlClicked,
+        onContinueClicked = viewModel::onContinueClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -91,6 +99,10 @@ private fun ScreenContent(
     onReceiveNewsNyEmailChanged: (Boolean) -> Unit,
     receiveSmsNotifications: Boolean,
     onReceiveSmsNotificationsChanged: (Boolean) -> Unit,
+    arePoliciesAccepted: Boolean,
+    onPoliciesAcceptedChanged: (Boolean) -> Unit,
+    onUrlClicked: (Url) -> Unit,
+    onContinueClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (SignUpScreenAction) -> Unit,
 ) {
@@ -105,8 +117,7 @@ private fun ScreenContent(
             .background(UiKitTheme.colors.background.general.regular.default)
             .windowInsetsPadding(
                 WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout)
-                    .union(WindowInsets.ime),
+                    .union(WindowInsets.displayCutout),
             ),
     ) {
         TopBar(onBackClicked = onBackClicked)
@@ -117,8 +128,8 @@ private fun ScreenContent(
             ZarinaTextField(
                 value = name,
                 onValueChanged = onNameChanged,
-                label = { Text(text = stringResource(R.string.first_name)) }, // TODO: [High] Update
-                placeholder = { Text(text = stringResource(R.string.first_name)) }, // TODO: [High] Update
+                label = { Text(text = stringResource(R.string.first_name)) },
+                placeholder = { Text(text = stringResource(R.string.first_name)) },
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = name.isNotEmpty(),
@@ -136,8 +147,8 @@ private fun ScreenContent(
             ZarinaTextField(
                 value = email,
                 onValueChanged = onEmailChanged,
-                label = { Text(text = stringResource(R.string.email)) }, // TODO: [High] Update
-                placeholder = { Text(text = stringResource(R.string.email)) }, // TODO: [High] Update
+                label = { Text(text = stringResource(R.string.email)) },
+                placeholder = { Text(text = stringResource(R.string.email)) },
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = email.isNotEmpty(),
@@ -214,9 +225,41 @@ private fun ScreenContent(
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-            val navigationBarsHeight =
-                WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-            Spacer(modifier = Modifier.height(navigationBarsHeight))
+
+            Policies(
+                areAccepted = arePoliciesAccepted,
+                onAcceptedChanged = onPoliciesAcceptedChanged,
+                isError = false, // TODO: [High] Implement
+                onUrlClicked = onUrlClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
+
+            Spacer(modifier = Modifier.height(36.dp))
+
+            ZarinaButton(
+                onClick = onContinueClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            ) {
+                Text(text = stringResource(R.string.continue_).uppercase())
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            RecaptchaPolicies(
+                onUrlClicked = onUrlClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+            val navigationBarsOrImeBottomPadding =
+                WindowInsets.navigationBarsOrIme.asPaddingValues().calculateBottomPadding()
+            Spacer(modifier = Modifier.height(navigationBarsOrImeBottomPadding))
         }
     }
 }

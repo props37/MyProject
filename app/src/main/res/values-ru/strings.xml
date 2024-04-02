@@ -150,6 +150,16 @@
 
     <string name="profile_authorization_description">Тебя ждут преимущества бонусной программы и персональные предложения</string>
 
+    <string name="sign_up_policies">Я ознакомлен(а) с политикой конфиденциальности и правилами работы интернет-магазина. Также подтверждаю согласие с правилами бонусной программы</string>
+    <string name="sign_up_policies_privacy">политикой конфиденциальности</string>
+    <string name="sign_up_policies_online_store">правилами работы интернет-магазина</string>
+    <string name="sign_up_policies_loyalty">правилами бонусной программы</string>
+    <string name="sign_up_recaptch_policies">Защита от спама reCAPTCHA: конфиденциальность и условия использования</string>
+    <string name="sign_up_recaptch_policies_privacy">конфиденциальность</string>
+    <string name="sign_up_recaptch_policies_terms">условия использования</string>
+    <string name="sign_up_recaptch_policies_privacy_url">https://policies.google.com/privacy?hl=ru</string>
+    <string name="sign_up_recaptch_policies_terms_url">https://policies.google.com/terms?hl=ru</string>
+
     <plurals name="show_products">
         <item quantity="zero">Показать %1$d товаров</item>
         <item quantity="one">Показать %1$d товар</item>

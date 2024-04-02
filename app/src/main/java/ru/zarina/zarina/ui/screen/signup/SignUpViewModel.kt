@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSource
 import ru.zarina.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.zarina.zarina.base.throttler.Throttler
+import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.ui.common.util.getNavigationThrottler
 import ru.zarina.zarina.ui.screen.signup.SignUpViewModel.SideEffect
 import javax.inject.Inject
@@ -50,6 +51,11 @@ class SignUpViewModel @Inject constructor(
         initialValue = false,
     )
 
+    val arePoliciesAccepted: StateFlow<Boolean> = savedStateHandle.getStateFlow(
+        key = KEY_ARE_POLICIES_ACCEPTED,
+        initialValue = false,
+    )
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = SignUpScreenAction.ScreenClosed
@@ -82,8 +88,24 @@ class SignUpViewModel @Inject constructor(
         savedStateHandle[KEY_RECEIVE_SMS_NOTIFICATIONS] = value
     }
 
+    fun onPoliciesAcceptedChanged(areAccepted: Boolean) {
+        savedStateHandle[KEY_ARE_POLICIES_ACCEPTED] = areAccepted
+    }
+
+    fun onUrlClicked(url: Url) {
+        navigationThrottler.throttle {
+            emitSideEffect(SideEffect.OpenUrl(url))
+        }
+    }
+
+    fun onContinueClicked() {
+        // TODO: [High] Implement
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: SignUpScreenAction) : SideEffect
+
+        data class OpenUrl(val url: Url) : SideEffect
     }
 
     companion object {
@@ -93,5 +115,6 @@ class SignUpViewModel @Inject constructor(
         private const val KEY_PASSWORD = "password"
         private const val KEY_RECEIVE_NEWS_BE_EMAIL = "receive_new_by_email"
         private const val KEY_RECEIVE_SMS_NOTIFICATIONS = "receive_sms_notifications"
+        private const val KEY_ARE_POLICIES_ACCEPTED = "are_policies_accepted"
     }
 }

@@ -5,26 +5,20 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.UrlAnnotation
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.domain.common.Url
 import ru.zarina.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.zarina.zarina.ui.common.component.checkbox.ZarinaCheckbox
+import ru.zarina.zarina.ui.common.component.text.ZarinaClickableText
 import ru.zarina.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.zarina.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.zarina.zarina.ui.theme.UiKitTheme
-import ru.zarina.zarina.util.compose.text.addStyles
-import ru.zarina.zarina.util.compose.text.addUrlAnnotations
 
 object ProductSubscriptionScreenComponents {
 
@@ -66,7 +60,9 @@ object ProductSubscriptionScreenComponents {
                 onUrlClicked = onUrlClicked,
                 modifier = Modifier.weight(1f),
             )
+
             Spacer(modifier = Modifier.width(16.dp))
+
             ZarinaCheckbox(
                 isChecked = areAccepted,
                 onCheckedChanged = onAcceptedChanged,
@@ -75,73 +71,38 @@ object ProductSubscriptionScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalTextApi::class)
     @Composable
-    fun PoliciesText(
+    private fun PoliciesText(
         onUrlClicked: (Url) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val baseTextStyle = UiKitTheme.typography.footnote.light.copy(
-            color = UiKitTheme.colors.text.general.regular.default,
-        )
-        val boldTextStyle = UiKitTheme.typography.footnote.bold.copy(
-            color = UiKitTheme.colors.text.general.regular.default,
-        )
+        val privacy = stringResource(R.string.product_subscription_policies_privacy)
+        val onlineStore = stringResource(R.string.product_subscription_policies_online_store)
+        val personalData = stringResource(R.string.product_subscription_policies_personal_data)
 
-        val baseText = stringResource(R.string.product_subscription_policies)
-        val privacyPolicyText = stringResource(R.string.product_subscription_policies_privacy)
-        val onlineStorePolicyText =
-            stringResource(R.string.product_subscription_policies_online_store)
-        val personalDataPolicyText =
-            stringResource(R.string.product_subscription_policies_personal_data)
+        val privacyUrl = stringResource(R.string.privacy_policy_url)
+        val onlineStoreUrl = stringResource(R.string.online_store_policy_url)
+        val personalDataUrl = stringResource(R.string.personal_data_policy_url)
 
-        val privacyPolicyUrl = stringResource(R.string.product_subscription_policies_privacy_url)
-        val onlineStorePolicyUrl =
-            stringResource(R.string.product_subscription_policies_online_store_url)
-        val personalDataPolicyUrl =
-            stringResource(R.string.product_subscription_policies_personal_data_url)
-
-        val text = remember(
-            baseTextStyle,
-            boldTextStyle,
-            baseText,
-            privacyPolicyText,
-            onlineStorePolicyText,
-            personalDataPolicyText,
-            privacyPolicyUrl,
-            onlineStorePolicyUrl,
-            personalDataPolicyUrl,
+        val clickableTextToUrl = remember(
+            privacy,
+            onlineStore,
+            personalData,
+            privacyUrl,
+            onlineStoreUrl,
+            personalDataUrl,
         ) {
-            val clickableTextStyle = boldTextStyle.toSpanStyle()
-            val substringToStyles = mapOf(
-                privacyPolicyText to listOf(clickableTextStyle),
-                onlineStorePolicyText to listOf(clickableTextStyle),
-                personalDataPolicyText to listOf(clickableTextStyle),
+            mapOf(
+                privacy to privacyUrl,
+                onlineStore to onlineStoreUrl,
+                personalData to personalDataUrl,
             )
-            val substringToUrlAnnotations = mapOf(
-                privacyPolicyText to listOf(UrlAnnotation(privacyPolicyUrl)),
-                onlineStorePolicyText to listOf(UrlAnnotation(onlineStorePolicyUrl)),
-                personalDataPolicyText to listOf(UrlAnnotation(personalDataPolicyUrl)),
-            )
-
-            buildAnnotatedString {
-                withStyle(baseTextStyle.toSpanStyle()) {
-                    append(baseText)
-                }
-                addStyles(substringToStyles)
-                addUrlAnnotations(substringToUrlAnnotations)
-            }
         }
 
-        ClickableText(
-            text = text,
-            onClick = { offset ->
-                val annotation = text.getUrlAnnotations(offset, offset).firstOrNull()
-                if (annotation != null) {
-                    val url = Url(annotation.item.url)
-                    onUrlClicked(url)
-                }
-            },
+        ZarinaClickableText(
+            baseText = stringResource(R.string.product_subscription_policies),
+            clickableTextToUrl = clickableTextToUrl,
+            onUrlClicked = onUrlClicked,
             modifier = modifier,
         )
     }

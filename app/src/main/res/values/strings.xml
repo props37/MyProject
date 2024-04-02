@@ -121,6 +121,10 @@
     <string name="hide_password">Спрятать пароль</string>
     <string name="receive_news_by_email">Получать новости на почту</string>
     <string name="receive_sms_notifications">Получать СМС-уведомления</string>
+    <string name="privacy_policy_url" translatable="false">https://zarina.ru/help/privacy-policy/</string>
+    <string name="online_store_policy_url" translatable="false">https://zarina.ru/help/conditions/</string>
+    <string name="personal_data_policy_url" translatable="false">https://zarina.ru/help/privacy-policy/</string>
+    <string name="loyalty_policy_url" translatable="false">https://zarina.ru/help/loyalty/</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -138,9 +142,6 @@
     <string name="product_subscription_policies_online_store">правилами работы интернет-магазина</string>
     <string name="product_subscription_policies_personal_data">обработку персональных данных</string>
     <string name="product_subscription_agreement_error">Ознакомься с политикой конфиденциальности и правилами работы интернет-магазина и подтверди согласие на обработку персональных данных</string>
-    <string name="product_subscription_policies_privacy_url" translatable="false">https://google.com</string>
-    <string name="product_subscription_policies_online_store_url" translatable="false">https://google.com</string>
-    <string name="product_subscription_policies_personal_data_url" translatable="false">https://google.com</string>
 
     <string name="cart_empty_cart_placeholder_title">Корзина пока что пуста</string>
     <string name="cart_empty_cart_placeholder_description">В каталоге ты найдёшь много товаров</string>
@@ -153,6 +154,16 @@
     <string name="favorites_no_favorites_placeholder_body">Товары можно добавить через Каталог. Не теряй их, если временно откладываешь покупку</string>
     
     <string name="profile_authorization_description">Тебя ждут преимущества бонусной программы и персональные предложения</string>
+
+    <string name="sign_up_policies">Я ознакомлен(а) с политикой конфиденциальности и правилами работы интернет-магазина. Также подтверждаю согласие с правилами бонусной программы</string>
+    <string name="sign_up_policies_privacy">политикой конфиденциальности</string>
+    <string name="sign_up_policies_online_store">правилами работы интернет-магазина</string>
+    <string name="sign_up_policies_loyalty">правилами бонусной программы</string>
+    <string name="sign_up_recaptch_policies">Защита от спама reCAPTCHA: конфиденциальность и условия использования</string>
+    <string name="sign_up_recaptch_policies_privacy">конфиденциальность</string>
+    <string name="sign_up_recaptch_policies_terms">условия использования</string>
+    <string name="sign_up_recaptch_policies_privacy_url">https://policies.google.com/privacy</string>
+    <string name="sign_up_recaptch_policies_terms_url">https://policies.google.com/terms</string>
 
     <plurals name="show_products">
         <item quantity="zero">Показать %1$d товаров</item>
