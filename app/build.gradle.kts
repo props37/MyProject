@@ -28,7 +28,7 @@ kapt {
 }
 
 android {
-    val appId = "ru.zarina.zarina"
+    val appId = "ru.livetyping.zarina"
 
     namespace = appId
     compileSdk = 34

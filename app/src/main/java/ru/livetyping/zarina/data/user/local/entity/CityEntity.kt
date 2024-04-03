@@ -1,0 +1,29 @@
+package ru.livetyping.zarina.data.user.local.entity
+
+import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.geography.KladrId
+
+@Serializable
+data class CityEntity(
+    val name: String,
+    val fullName: String,
+    val region: String,
+    val kladrId: String,
+) {
+    fun toCity(): City = City(
+        name = name,
+        fullName = fullName,
+        region = region,
+        kladrId = KladrId(kladrId),
+    )
+
+    companion object {
+        fun from(city: City): CityEntity = CityEntity(
+            name = city.name,
+            fullName = city.fullName,
+            region = city.region,
+            kladrId = city.kladrId.value,
+        )
+    }
+}

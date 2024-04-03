@@ -1,0 +1,27 @@
+package ru.livetyping.zarina.usecase.old.shop
+
+import kotlinx.coroutines.CoroutineDispatcher
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Named
+import ru.livetyping.zarina.base.usecase.UseCase
+import ru.livetyping.zarina.data.old.shop.IShopRepository
+import ru.livetyping.zarina.di.old.Qualifiers
+import ru.livetyping.zarina.domain.old.City
+import timber.log.Timber
+
+/**
+ * Returns a list of cities that have a Zarina shop supporting pickup.
+ */
+@Factory
+class GetPickupCitiesUseCase(
+    @Named(Qualifiers.Dispatcher.IO) dispatcher: CoroutineDispatcher,
+    private val shopRepository: IShopRepository,
+) : UseCase<Unit, List<City>>(dispatcher) {
+    override suspend fun execute(params: Unit): List<City> {
+        val cities = shopRepository.getCountries()
+            .filter { it.isPickupSupported }
+            .flatMap { it.cities }
+        Timber.v("Got ${cities.size} cities with Zarina shop supporting pickup")
+        return cities
+    }
+}

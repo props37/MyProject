@@ -1,0 +1,47 @@
+package ru.livetyping.zarina.ui.screens.product.components.sections
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
+import ru.livetyping.zarina.R
+import ru.livetyping.zarina.ui.common.components.CollapsibleContainer
+import ru.livetyping.zarina.ui.theme.UiKitTheme
+
+@Composable
+fun DetailsSection(
+    description: ImmutableList<Pair<String, String>>,
+    modifier: Modifier = Modifier,
+) {
+    CollapsibleContainer(
+        header = {
+            Text(
+                text = stringResource(id = R.string.details),
+                style = UiKitTheme.typographyOld.circle1718,
+                color = UiKitTheme.colorsOld.primaryContentColor,
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
+        },
+        modifier = modifier.padding(horizontal = 16.dp),
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.padding(bottom = 16.dp)
+        ) {
+            description.forEach {
+                Text(
+                    text = stringResource(R.string.key_value, it.first, it.second),
+                    style = UiKitTheme.typographyOld.circle1518,
+                    color = UiKitTheme.colorsOld.primaryContentColor,
+                    textAlign = TextAlign.Start,
+                )
+            }
+        }
+    }
+}

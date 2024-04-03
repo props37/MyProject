@@ -1,0 +1,349 @@
+package ru.livetyping.zarina.ui.screens.pickup
+
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
+import ru.livetyping.zarina.R
+import ru.livetyping.zarina.base.operationtracker.OperationKey
+import ru.livetyping.zarina.base.operationtracker.OperationTracker
+import ru.livetyping.zarina.domain.old.City
+import ru.livetyping.zarina.domain.old.Offer
+import ru.livetyping.zarina.domain.old.Product
+import ru.livetyping.zarina.domain.old.Stock
+import ru.livetyping.zarina.domain.old.exception.NotFoundException
+import ru.livetyping.zarina.domain.old.exception.validation.EmptyException
+import ru.livetyping.zarina.domain.old.exception.validation.FormatException
+import ru.livetyping.zarina.domain.old.exception.validation.IllegalContentsException
+import ru.livetyping.zarina.domain.old.exception.validation.TooLongException
+import ru.livetyping.zarina.ui.base.text.Text
+import ru.livetyping.zarina.ui.common.base.FocusState
+import ru.livetyping.zarina.ui.common.base.ISideEffectSource
+import ru.livetyping.zarina.ui.common.base.SideEffectQueue
+import ru.livetyping.zarina.ui.navigation.old.destinations.Pickup
+import ru.livetyping.zarina.utils.coroutine.mapState
+import ru.livetyping.zarina.utils.isNetworkException
+
+@OptIn(ExperimentalCoroutinesApi::class)
+@KoinViewModel
+class PickupViewModel(
+    private val savedStateHandle: SavedStateHandle,
+    private val interactor: PickupInteractor,
+) : ViewModel(),
+    ISideEffectSource<PickupViewModel.SideEffect> by SideEffectQueue() {
+
+    private val operationTracker = OperationTracker()
+
+    private val productId = savedStateHandle.getStateFlow(
+        key = Pickup.ARGUMENT_PRODUCT_ID,
+        initialValue = ""
+    ).mapState(viewModelScope) { Product.Id(it) }
+
+    val city = savedStateHandle.getStateFlow<City?>(KEY_SELECTED_CITY, null)
+
+    private val productReloadTrigger = MutableSharedFlow<Unit>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+        .apply { tryEmit(Unit) }
+    private val productResult = combine(productId, productReloadTrigger) { id, _ -> id }
+        .flatMapLatest { id ->
+            operationTracker.track(Operation.LOADING_PRODUCT) {
+                interactor.getProduct(id)
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val product = productResult
+        .mapState(viewModelScope) { it?.getOrNull() }
+
+    private val offersReloadTrigger = MutableSharedFlow<Unit>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+        .apply { tryEmit(Unit) }
+    private val _offers = MutableStateFlow<Result<List<Offer>>?>(null)
+    val offers = _offers
+        .mapState(viewModelScope) {
+            it?.getOrNull()?.toPersistentList() ?: persistentListOf()
+        }
+
+    private val stockReloadTrigger = MutableSharedFlow<Unit>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+        .apply { tryEmit(Unit) }
+    private val _stocks = MutableStateFlow<Result<List<Stock>>?>(null)
+    val stocks = _stocks
+        .map { it?.getOrNull()?.toPersistentList() }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    val isStocksLoaderVisible = operationTracker
+        .isOperationOngoing(
+            Operation.LOADING_CITY,
+            Operation.LOADING_PRODUCT,
+            Operation.LOADING_SIZES,
+            Operation.LOADING_STOCKS,
+        )
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    val errorType = combine(
+        productResult,
+        _offers,
+        _stocks,
+    ) { product, offers, stocks ->
+
+        val exception = listOf(product, offers, stocks)
+            .firstNotNullOfOrNull { it?.exceptionOrNull() }
+
+        when {
+            exception == null -> null
+            exception.isNetworkException() -> ErrorType.NETWORK
+            else -> ErrorType.GENERIC
+        }
+    }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    val selectedOffer = savedStateHandle.getStateFlow<Offer?>(KEY_SELECTED_OFFER, null)
+    val selectedShop = savedStateHandle.getStateFlow<Stock?>(KEY_SELECTED_SHOP, null)
+
+    val surname = savedStateHandle.getStateFlow(KEY_SURNAME, "")
+    private val surnameFocusState = MutableStateFlow(FocusState())
+    private val surnameValidation = surname
+        .map { interactor.validateName(it) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val surnameError: StateFlow<Text?> =
+        combine(surnameValidation, surnameFocusState) { surnameValidation, focusState ->
+            val exception = surnameValidation?.exceptionOrNull()
+            when {
+                exception is TooLongException ->
+                    Text.Resource(R.string.max_length_symbols, exception.maxLength)
+
+                exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+                exception is IllegalContentsException -> Text.Resource(R.string.allowed_symbols)
+                else -> null
+            }
+        }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val name = savedStateHandle.getStateFlow(KEY_NAME, "")
+    private val nameFocusState = MutableStateFlow(FocusState())
+    private val nameValidation = name
+        .map { interactor.validateName(it) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val nameError: StateFlow<Text?> =
+        combine(nameValidation, nameFocusState) { nameValidation, focusState ->
+            val exception = nameValidation?.exceptionOrNull()
+            when {
+                exception is TooLongException -> Text.Resource(
+                    R.string.max_length_symbols,
+                    exception.maxLength
+                )
+
+                exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+                exception is IllegalContentsException -> Text.Resource(R.string.allowed_symbols)
+                else -> null
+            }
+        }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val phone = savedStateHandle.getStateFlow(KEY_PHONE, "+7")
+    private val phoneFocusState = MutableStateFlow(FocusState())
+    private val phoneValidation = phone
+        .map { interactor.validatePhone(it) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val phoneError: StateFlow<Text?> =
+        combine(phoneValidation, phoneFocusState) { phoneValidation, focusState ->
+            val exception = phoneValidation?.exceptionOrNull()
+            when {
+                exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+                exception is FormatException && focusState.everLostFocus -> Text.Resource(R.string.illegal_phone_format)
+                else -> null
+            }
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val email = savedStateHandle.getStateFlow(KEY_EMAIL, "")
+    private val emailFocusState = MutableStateFlow(FocusState())
+    private val emailValidation = email
+        .map { interactor.validateEmail(it) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val emailError: StateFlow<Text?> =
+        combine(emailValidation, emailFocusState) { emailValidation, focusState ->
+            val exception = emailValidation?.exceptionOrNull()
+            when {
+                exception is EmptyException && focusState.everLostFocus -> Text.Resource(R.string.field_should_be_filled)
+                exception is FormatException && focusState.everLostFocus -> Text.Resource(R.string.illegal_email_format)
+                else -> null
+            }
+        }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    val isReserveButtonEnabled = combine(
+        nameValidation,
+        surnameValidation,
+        emailValidation,
+        phoneValidation
+    ) { validations -> validations.all { it?.isSuccess == true } }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    val isReservationLoaderVisible = operationTracker.isOperationOngoing(Operation.RESERVING)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    init {
+        loadUserCity()
+        setupStockLoading()
+        setupSizeUpdates()
+    }
+
+    fun onOfferClick(offer: Offer) {
+        if (offer.isAvailable) savedStateHandle[KEY_SELECTED_OFFER] = offer
+    }
+
+    fun onStockPickupClick(stock: Stock) {
+        savedStateHandle[KEY_SELECTED_SHOP] = stock
+    }
+
+    fun onRefreshClick() {
+        when {
+            productResult.value?.isFailure == true -> productReloadTrigger.tryEmit(Unit)
+            _offers.value?.isFailure == true -> offersReloadTrigger.tryEmit(Unit)
+            _stocks.value?.isFailure == true -> stockReloadTrigger.tryEmit(Unit)
+        }
+    }
+
+    fun onCityClick(city: City) {
+        savedStateHandle[KEY_SELECTED_CITY] = city
+    }
+
+    fun onSurnameChange(surname: String) {
+        savedStateHandle[KEY_SURNAME] = surname
+    }
+
+    fun onSurnameFocusChange(isFocused: Boolean) {
+        surnameFocusState.update { it.updated(isFocused) }
+    }
+
+    fun onNameChange(name: String) {
+        savedStateHandle[KEY_NAME] = name
+    }
+
+    fun onNameFocusChange(isFocused: Boolean) {
+        nameFocusState.update { it.updated(isFocused) }
+    }
+
+    fun onPhoneChange(phone: String) {
+        savedStateHandle[KEY_PHONE] = phone
+    }
+
+    fun onPhoneFocusChange(isFocused: Boolean) {
+        phoneFocusState.update { it.updated(isFocused) }
+    }
+
+    fun onEmailChange(email: String) {
+        if (isReservationLoaderVisible.value) return
+        savedStateHandle[KEY_EMAIL] = email
+    }
+
+    fun onEmailFocusChange(isFocused: Boolean) {
+        emailFocusState.update { it.updated(isFocused) }
+    }
+
+    fun onReserveClick() {
+        viewModelScope.launch {
+            operationTracker.track(Operation.RESERVING) {
+                interactor.reserve(
+                    offer = selectedOffer.value ?: return@track,
+                    shop = selectedShop.value?.shop ?: return@track,
+                    surname = surname.value,
+                    name = name.value,
+                    email = email.value,
+                    phone = phone.value,
+                )
+                    .onSuccess { sideEffect(SideEffect.ShowSuccess) }
+                    .onFailure { sideEffect(SideEffect.ShowError(Text.Resource(R.string.unable_to_reserve))) }
+            }
+        }
+    }
+
+    private fun loadUserCity() {
+        if (city.value == null)
+            viewModelScope.launch {
+                operationTracker.track(Operation.LOADING_CITY) {
+                    savedStateHandle[KEY_SELECTED_CITY] = interactor.getCity().getOrNull()
+                }
+            }
+    }
+
+    private fun setupStockLoading() {
+        combine(selectedOffer, city, stockReloadTrigger) { offer, city, _ ->
+            if (offer == null || city == null) return@combine
+            operationTracker.track(Operation.LOADING_STOCKS) {
+                _stocks.value = interactor.getStocks(offer, city)
+                    .recoverCatching { throwable ->
+                        when (throwable) {
+                            is NotFoundException -> persistentListOf()
+                            else -> throw throwable
+                        }
+                    }
+            }
+        }
+            .launchIn(viewModelScope)
+    }
+
+    private fun setupSizeUpdates() {
+        combine(productResult, city, offersReloadTrigger) { productResult, city, _ ->
+            val product = productResult?.getOrNull()
+            if (product == null || city == null) return@combine
+            operationTracker.track(Operation.LOADING_SIZES) {
+                _offers.value = interactor.getOffers(product, city)
+            }
+        }
+            .launchIn(viewModelScope)
+
+        _offers
+            .onEach { offersResult ->
+                val offers = offersResult?.getOrNull() ?: return@onEach
+                val selectedOffer = selectedOffer.value
+                if (selectedOffer !in offers || selectedOffer == null) {
+                    val availableOffer = offers.find { it.isAvailable }
+                    val firstOffer = offers.firstOrNull()
+                    savedStateHandle[KEY_SELECTED_OFFER] = availableOffer ?: firstOffer
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    enum class ErrorType { NETWORK, GENERIC }
+
+    enum class Operation : OperationKey {
+        LOADING_CITY, LOADING_PRODUCT, LOADING_SIZES, LOADING_STOCKS, RESERVING
+    }
+
+    sealed interface SideEffect : ISideEffectSource.ISideEffect {
+        object ShowSuccess : SideEffect
+        data class ShowError(val message: Text) : SideEffect
+    }
+
+    companion object {
+        private const val KEY_SELECTED_CITY = "selected_city"
+        private const val KEY_SELECTED_OFFER = "selected_offer"
+        private const val KEY_SELECTED_SHOP = "selected_shop"
+        private const val KEY_SURNAME = "surname"
+        private const val KEY_NAME = "name"
+        private const val KEY_PHONE = "phone"
+        private const val KEY_EMAIL = "email"
+    }
+
+}
