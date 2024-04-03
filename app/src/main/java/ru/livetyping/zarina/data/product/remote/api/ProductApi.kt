@@ -5,10 +5,14 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.post
 import io.ktor.client.statement.bodyAsText
+import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.data.common.remote.api.dto.SortingDto
 import ru.livetyping.zarina.data.product.remote.api.dto.FiltersRequestDto
 import ru.livetyping.zarina.data.product.remote.api.dto.GetProductsRequestBody
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductsDto
+import ru.livetyping.zarina.data.product.remote.api.dto.SubscribeToProductEmailErrorDto
+import ru.livetyping.zarina.data.product.remote.api.dto.SubscribeToProductErrorDtoSerializer
+import ru.livetyping.zarina.data.product.remote.api.dto.SubscribeToProductFirstNameErrorDto
 import ru.livetyping.zarina.data.product.remote.api.dto.SubscribeToProductRequestBody
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.category.Category
@@ -76,10 +80,11 @@ class ProductApi @Inject constructor(
             block()
         } catch (e: ClientRequestException) {
             val responseText = e.response.bodyAsText()
-            when {
-                responseText.contains("email") -> throw InvalidEmailException()
-                responseText.contains("first_name") -> throw InvalidFirstNameException()
-                else -> throw e
+            val errorDto =
+                Json.decodeFromString(SubscribeToProductErrorDtoSerializer(), responseText)
+            when (errorDto) {
+                is SubscribeToProductEmailErrorDto -> throw InvalidEmailException()
+                is SubscribeToProductFirstNameErrorDto -> throw InvalidFirstNameException()
             }
         }
     }
