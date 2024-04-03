@@ -1,8 +1,10 @@
 package ru.zarina.zarina.ui.common.component.textfield
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -11,13 +13,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.zarina.zarina.R
 import ru.zarina.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.zarina.zarina.ui.theme.UiKitTheme
 import ru.zarina.zarina.util.compose.text.rememberPhoneNumberVisualTransformation
 
 @Composable
@@ -25,17 +33,56 @@ fun ZarinaPhoneNumberTextField(
     phoneNumber: String,
     onPhoneNumberChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
+    isEnabled: Boolean = true,
+    isError: Boolean = false,
+    readOnly: Boolean = false,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Large,
+    textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: String = stringResource(R.string.phone),
     placeholder: String = stringResource(R.string.phone),
+    leadingContent: (@Composable () -> Unit)? = null,
+    innerTrailingContent: (@Composable () -> Unit)? = null,
+    outerTrailingContent: (@Composable () -> Unit)? = null,
+    description: (@Composable () -> Unit)? = null,
+    colors: ZarinaTextFieldColors = ZarinaTextFieldDefaults.colors(),
+    keyboardOptions: KeyboardOptions = remember {
+        KeyboardOptions(keyboardType = KeyboardType.Phone)
+    },
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    singleLine: Boolean = true,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    minLines: Int = 1,
+    visualTransformation: VisualTransformation = rememberPhoneNumberVisualTransformation(),
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
+    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
 ) {
     ZarinaTextField(
         value = phoneNumber,
         onValueChanged = onPhoneNumberChanged,
+        isEnabled = isEnabled,
+        isError = isError,
+        readOnly = readOnly,
+        size = size,
+        textStyle = textStyle,
         label = { Text(text = label) },
         placeholder = { Text(text = placeholder) },
-        keyboardOptions = remember { KeyboardOptions(keyboardType = KeyboardType.Phone) },
-        singleLine = true,
-        visualTransformation = rememberPhoneNumberVisualTransformation(),
+        leadingContent = leadingContent,
+        innerTrailingContent = innerTrailingContent,
+        outerTrailingContent = outerTrailingContent,
+        description = description,
+        colors = colors,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
+        singleLine = singleLine,
+        maxLines = maxLines,
+        minLines = minLines,
+        visualTransformation = visualTransformation,
+        onTextLayout = onTextLayout,
+        interactionSource = interactionSource,
+        cursorBrush = cursorBrush,
+        backgroundColor = backgroundColor,
         modifier = modifier,
     )
 }

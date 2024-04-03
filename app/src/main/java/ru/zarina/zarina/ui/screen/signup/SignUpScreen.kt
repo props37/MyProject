@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,18 +54,20 @@ fun SignUpScreen(
     navigate: (SignUpScreenAction) -> Unit,
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
-    val name by viewModel.name.collectAsStateWithLifecycle()
+    val firstName by viewModel.firstName.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
     val phone by viewModel.phone.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
     val receiveNewsNyEmail by viewModel.receiveNewsByEmail.collectAsStateWithLifecycle()
     val receiveSmsNotifications by viewModel.receiveSmsNotifications.collectAsStateWithLifecycle()
     val arePoliciesAccepted by viewModel.arePoliciesAccepted.collectAsStateWithLifecycle()
+    val isPoliciesErrorVisible by viewModel.isPoliciesErrorVisible.collectAsStateWithLifecycle()
+    val isSignUpButtonLoading by viewModel.isSignUpButtonLoading.collectAsStateWithLifecycle()
 
     ScreenContent(
         onBackClicked = viewModel::onBackClicked,
-        name = name,
-        onNameChanged = viewModel::onNameChanged,
+        firstName = firstName,
+        onFirstNameChanged = viewModel::onFirstNameChanged,
         email = email,
         onEmailChanged = viewModel::onEmailChanged,
         phone = phone,
@@ -77,8 +80,10 @@ fun SignUpScreen(
         onReceiveSmsNotificationsChanged = viewModel::onReceiveSmsNotificationsChanged,
         arePoliciesAccepted = arePoliciesAccepted,
         onPoliciesAcceptedChanged = viewModel::onPoliciesAcceptedChanged,
+        isPoliciesErrorVisible = isPoliciesErrorVisible,
         onUrlClicked = viewModel::onUrlClicked,
         onSignUpClicked = viewModel::onSignUpClicked,
+        isSignUpButtonLoading = isSignUpButtonLoading,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -87,8 +92,8 @@ fun SignUpScreen(
 @Composable
 private fun ScreenContent(
     onBackClicked: () -> Unit,
-    name: String,
-    onNameChanged: (String) -> Unit,
+    firstName: String,
+    onFirstNameChanged: (String) -> Unit,
     email: String,
     onEmailChanged: (String) -> Unit,
     phone: String,
@@ -101,8 +106,10 @@ private fun ScreenContent(
     onReceiveSmsNotificationsChanged: (Boolean) -> Unit,
     arePoliciesAccepted: Boolean,
     onPoliciesAcceptedChanged: (Boolean) -> Unit,
+    isPoliciesErrorVisible: Boolean,
     onUrlClicked: (Url) -> Unit,
     onSignUpClicked: () -> Unit,
+    isSignUpButtonLoading: Boolean,
     sideEffects: Flow<SideEffect>,
     navigate: (SignUpScreenAction) -> Unit,
 ) {
@@ -126,16 +133,17 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             ZarinaTextField(
-                value = name,
-                onValueChanged = onNameChanged,
+                value = firstName,
+                onValueChanged = onFirstNameChanged,
                 label = { Text(text = stringResource(R.string.first_name)) },
                 placeholder = { Text(text = stringResource(R.string.first_name)) },
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
-                        isVisible = name.isNotEmpty(),
-                        onClick = { onNameChanged("") },
+                        isVisible = firstName.isNotEmpty(),
+                        onClick = { onFirstNameChanged("") },
                     )
                 },
+                keyboardOptions = remember { KeyboardOptions(imeAction = ImeAction.Next) },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -155,7 +163,12 @@ private fun ScreenContent(
                         onClick = { onEmailChanged("") },
                     )
                 },
-                keyboardOptions = remember { KeyboardOptions(keyboardType = KeyboardType.Email) },
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next,
+                    )
+                },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -167,6 +180,12 @@ private fun ScreenContent(
             ZarinaPhoneNumberTextField(
                 phoneNumber = phone,
                 onPhoneNumberChanged = onPhoneChanged,
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Phone,
+                        imeAction = ImeAction.Next,
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
@@ -177,6 +196,12 @@ private fun ScreenContent(
             ZarinaPasswordTextField(
                 password = password,
                 onPasswordChanged = onPasswordChanged,
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done,
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
@@ -229,7 +254,7 @@ private fun ScreenContent(
             Policies(
                 areAccepted = arePoliciesAccepted,
                 onAcceptedChanged = onPoliciesAcceptedChanged,
-                isError = false, // TODO: [High] Implement
+                isError = isPoliciesErrorVisible,
                 onUrlClicked = onUrlClicked,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -240,6 +265,7 @@ private fun ScreenContent(
 
             ZarinaButton(
                 onClick = onSignUpClicked,
+                isLoading = isSignUpButtonLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
