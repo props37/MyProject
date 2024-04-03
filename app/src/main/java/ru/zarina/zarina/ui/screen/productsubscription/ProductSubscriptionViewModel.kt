@@ -183,7 +183,7 @@ class ProductSubscriptionViewModel @Inject constructor(
             val isFirstNameEmpty = exceptions.any { it is EmptyFirstNameException }
             val isEmailEmpty = exceptions.any { it is EmptyEmailException }
             val messageText = when {
-                isFirstNameEmpty && isEmailEmpty -> {
+                isFirstNameEmpty || isEmailEmpty -> {
                     Text.Resource(R.string.product_subscription_empty_fields_error)
                 }
 
