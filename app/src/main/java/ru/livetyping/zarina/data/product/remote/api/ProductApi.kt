@@ -5,7 +5,6 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.post
 import io.ktor.client.statement.bodyAsText
-import io.ktor.http.HttpStatusCode
 import ru.livetyping.zarina.data.common.remote.api.dto.SortingDto
 import ru.livetyping.zarina.data.product.remote.api.dto.FiltersRequestDto
 import ru.livetyping.zarina.data.product.remote.api.dto.GetProductsRequestBody
@@ -76,15 +75,11 @@ class ProductApi @Inject constructor(
         return try {
             block()
         } catch (e: ClientRequestException) {
-            if (e.response.status == HttpStatusCode.UnprocessableEntity) {
-                val responseText = e.response.bodyAsText()
-                when {
-                    responseText.contains("email") -> throw InvalidEmailException()
-                    responseText.contains("first_name") -> throw InvalidFirstNameException()
-                    else -> throw e
-                }
-            } else {
-                throw e
+            val responseText = e.response.bodyAsText()
+            when {
+                responseText.contains("email") -> throw InvalidEmailException()
+                responseText.contains("first_name") -> throw InvalidFirstNameException()
+                else -> throw e
             }
         }
     }
