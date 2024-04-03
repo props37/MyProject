@@ -28,6 +28,7 @@ import ru.livetyping.zarina.domain.filter.Filters as DomainFilters
 class ProductApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
     private val httpClient: HttpClient,
+    private val json: Json,
 ) {
     suspend fun getProducts(
         categoryId: Category.Id,
@@ -81,7 +82,7 @@ class ProductApi @Inject constructor(
         } catch (e: ClientRequestException) {
             val responseText = e.response.bodyAsText()
             val errorDto =
-                Json.decodeFromString(SubscribeToProductErrorDtoSerializer(), responseText)
+                json.decodeFromString(SubscribeToProductErrorDtoSerializer(), responseText)
             when (errorDto) {
                 is SubscribeToProductEmailErrorDto -> throw InvalidEmailException()
                 is SubscribeToProductFirstNameErrorDto -> throw InvalidFirstNameException()

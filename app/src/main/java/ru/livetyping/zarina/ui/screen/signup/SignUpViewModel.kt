@@ -22,14 +22,16 @@ import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.common.exception.ValidationException
+import ru.livetyping.zarina.domain.user.exception.CaptchaException
+import ru.livetyping.zarina.domain.user.exception.EmailAlreadyInUseException
+import ru.livetyping.zarina.domain.user.exception.EmailException
 import ru.livetyping.zarina.domain.user.exception.EmptyEmailException
 import ru.livetyping.zarina.domain.user.exception.EmptyFirstNameException
 import ru.livetyping.zarina.domain.user.exception.EmptyPasswordException
 import ru.livetyping.zarina.domain.user.exception.EmptyPhoneNumberException
-import ru.livetyping.zarina.domain.user.exception.InvalidEmailException
-import ru.livetyping.zarina.domain.user.exception.InvalidFirstNameException
-import ru.livetyping.zarina.domain.user.exception.InvalidPasswordException
-import ru.livetyping.zarina.domain.user.exception.InvalidPhoneNumberException
+import ru.livetyping.zarina.domain.user.exception.FirstNameException
+import ru.livetyping.zarina.domain.user.exception.PasswordException
+import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
 import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
@@ -194,43 +196,58 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun onSignUpFailure(e: Throwable) {
-        if (e is ValidationException) {
-            val exceptions = listOf(e) + e.suppressedExceptions
+        when (e) {
+            is ValidationException -> handleSignUpValidationException(e)
+            is CaptchaException -> {
+                // TODO: [High] Implement
+                val message = Text.Resource(R.string.something_went_wrong)
+                emitSideEffect(SideEffect.ShowToast(message))
+            }
 
-            val isFirstNameEmpty = exceptions.any { it is EmptyFirstNameException }
-            val isEmailEmpty = exceptions.any { it is EmptyEmailException }
-            val isPhoneEmpty = exceptions.any { it is EmptyPhoneNumberException }
-            val isPasswordEmpty = exceptions.any { it is EmptyPasswordException }
+            else -> {
+                val message = Text.Resource(R.string.something_went_wrong)
+                emitSideEffect(SideEffect.ShowToast(message))
+            }
+        }
+    }
 
-            // TODO: [High] Complete
-            val messageText = when {
-                isFirstNameEmpty || isEmailEmpty || isPhoneEmpty || isPasswordEmpty -> {
-                    Text.Resource(R.string.sign_up_empty_fields_error)
-                }
+    private fun handleSignUpValidationException(e: ValidationException) {
+        val exceptions = listOf(e) + e.suppressedExceptions
 
-                else -> Text.Resource(R.string.incorrect_data_entered)
-            }
-            val message = ZarinaToastMessage(
-                text = messageText,
-                style = ZarinaToastMessageStyle.ERROR,
-            )
-            emitSideEffect(SideEffect.ShowZarinaToast(message))
+        val isFirstNameEmpty = exceptions.any { it is EmptyFirstNameException }
+        val isEmailEmpty = exceptions.any { it is EmptyEmailException }
+        val isPhoneEmpty = exceptions.any { it is EmptyPhoneNumberException }
+        val isPasswordEmpty = exceptions.any { it is EmptyPasswordException }
 
-            if (exceptions.any { it is InvalidFirstNameException }) {
-                _isFirstNameInvalid.value = true
+        // TODO: [High] Handle phone is already in use exception
+        val messageText = when {
+            isFirstNameEmpty || isEmailEmpty || isPhoneEmpty || isPasswordEmpty -> {
+                Text.Resource(R.string.sign_up_empty_fields_error)
             }
-            if (exceptions.any { it is InvalidEmailException }) {
-                _isEmailInvalid.value = true
+
+            exceptions.any { it is EmailAlreadyInUseException } -> {
+                Text.Resource(R.string.sign_up_email_already_in_use_error)
             }
-            if (exceptions.any { it is InvalidPhoneNumberException }) {
-                _isPhoneInvalid.value = true
-            }
-            if (exceptions.any { it is InvalidPasswordException }) {
-                _isPasswordInvalid.value = true
-            }
-        } else {
-            val message = Text.Resource(R.string.something_went_wrong)
-            emitSideEffect(SideEffect.ShowToast(message))
+
+            else -> Text.Resource(R.string.incorrect_data_entered)
+        }
+        val message = ZarinaToastMessage(
+            text = messageText,
+            style = ZarinaToastMessageStyle.ERROR,
+        )
+        emitSideEffect(SideEffect.ShowZarinaToast(message))
+
+        if (exceptions.any { it is FirstNameException }) {
+            _isFirstNameInvalid.value = true
+        }
+        if (exceptions.any { it is EmailException }) {
+            _isEmailInvalid.value = true
+        }
+        if (exceptions.any { it is PhoneNumberException }) {
+            _isPhoneInvalid.value = true
+        }
+        if (exceptions.any { it is PasswordException }) {
+            _isPasswordInvalid.value = true
         }
     }
 

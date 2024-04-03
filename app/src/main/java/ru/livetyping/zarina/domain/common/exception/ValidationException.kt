@@ -6,7 +6,13 @@ open class ValidationException(message: String = "Validation failed") : Exceptio
          * Returns [ValidationException] with suppressed [exceptions] if they are present or
          * `null` otherwise.
          */
-        fun from(vararg exceptions: Throwable?): ValidationException? {
+        fun from(vararg exceptions: Throwable?): ValidationException? = from(exceptions.toList())
+
+        /**
+         * Returns [ValidationException] with suppressed [exceptions] if they are present or
+         * `null` otherwise.
+         */
+        fun from(exceptions: List<Throwable?>): ValidationException? {
             val exception = ValidationException()
             for (e in exceptions) {
                 if (e != null) exception.addSuppressed(e)

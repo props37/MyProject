@@ -22,10 +22,10 @@ import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.common.exception.ValidationException
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductOffer
+import ru.livetyping.zarina.domain.user.exception.EmailException
 import ru.livetyping.zarina.domain.user.exception.EmptyEmailException
 import ru.livetyping.zarina.domain.user.exception.EmptyFirstNameException
-import ru.livetyping.zarina.domain.user.exception.InvalidEmailException
-import ru.livetyping.zarina.domain.user.exception.InvalidFirstNameException
+import ru.livetyping.zarina.domain.user.exception.FirstNameException
 import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
@@ -195,10 +195,10 @@ class ProductSubscriptionViewModel @Inject constructor(
             )
             emitSideEffect(SideEffect.ShowZarinaToast(message))
 
-            if (exceptions.any { it is InvalidFirstNameException }) {
+            if (exceptions.any { it is FirstNameException }) {
                 _isFirstNameInvalid.value = true
             }
-            if (exceptions.any { it is InvalidEmailException }) {
+            if (exceptions.any { it is EmailException }) {
                 _isEmailInvalid.value = true
             }
         } else {
