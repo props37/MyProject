@@ -3,6 +3,7 @@ package ru.zarina.zarina.data.user.remote
 import ru.zarina.zarina.data.user.remote.api.UserApi
 import ru.zarina.zarina.domain.common.Email
 import ru.zarina.zarina.domain.common.PhoneNumber
+import ru.zarina.zarina.domain.common.Token
 import ru.zarina.zarina.domain.geography.City
 import javax.inject.Inject
 
@@ -20,6 +21,7 @@ class UserRemoteDataSource @Inject constructor(
         password: String,
         receiveNewsByEmail: Boolean,
         receiveSmsNotifications: Boolean,
+        recaptchaToken: Token,
     ) {
         api.signUp(
             firstName = firstName,
@@ -28,6 +30,7 @@ class UserRemoteDataSource @Inject constructor(
             password = password,
             receiveNewsByEmail = receiveNewsByEmail,
             receiveSmsNotifications = receiveSmsNotifications,
+            recaptchaToken = recaptchaToken,
         )
     }
 }

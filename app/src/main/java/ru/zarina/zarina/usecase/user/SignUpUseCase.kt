@@ -1,0 +1,77 @@
+package ru.zarina.zarina.usecase.user
+
+import com.google.android.recaptcha.RecaptchaAction
+import kotlinx.coroutines.CoroutineDispatcher
+import ru.zarina.zarina.base.usecase.UseCase
+import ru.zarina.zarina.data.recaptcha.RecaptchaManager
+import ru.zarina.zarina.data.user.UserRepository
+import ru.zarina.zarina.di.Qualifiers
+import ru.zarina.zarina.domain.common.Email
+import ru.zarina.zarina.domain.common.PhoneNumber
+import ru.zarina.zarina.domain.common.exception.ValidationException
+import timber.log.Timber
+import javax.inject.Inject
+
+class SignUpUseCase @Inject constructor(
+    @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
+    dispatcher: CoroutineDispatcher,
+    private val userRepository: UserRepository,
+    private val validateFirstNameUseCase: ValidateFirstNameUseCase,
+    private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validatePhoneNumberUseCase: ValidatePhoneNumberUseCase,
+    private val validatePasswordUseCase: ValidatePasswordUseCase,
+    private val recaptchaManager: RecaptchaManager,
+) : UseCase<SignUpUseCase.Params, Unit>(dispatcher) {
+
+    override suspend fun execute(params: Params) {
+        val firstName = params.firstName.split(' ').firstOrNull()?.trim().orEmpty()
+        val email = params.email
+        val phone = params.phone
+        val password = params.password
+        val receiveNewsByEmail = params.receiveNewsByEmail
+        val receiveSmsNotifications = params.receiveSmsNotifications
+        Timber.v(
+            "Sign up. First name: $firstName, email: $email, phone: $phone, " +
+                    "password: $password, receive news by email: $receiveNewsByEmail, " +
+                    "receive SMS notifications: $receiveSmsNotifications"
+        )
+
+        val firstNameValidationException =
+            validateFirstNameUseCase(ValidateFirstNameUseCase.Params(firstName)).exceptionOrNull()
+        val emailValidationException =
+            validateEmailUseCase(ValidateEmailUseCase.Params(email)).exceptionOrNull()
+        val phoneValidationException =
+            validatePhoneNumberUseCase(ValidatePhoneNumberUseCase.Params(phone)).exceptionOrNull()
+        val passwordValidationException =
+            validatePasswordUseCase(ValidatePasswordUseCase.Params(password)).exceptionOrNull()
+
+        val validationException = ValidationException.from(
+            firstNameValidationException,
+            emailValidationException,
+            phoneValidationException,
+            passwordValidationException,
+        )
+        if (validationException != null) throw validationException
+
+        val recaptchaToken = recaptchaManager.execute(RecaptchaAction.SIGNUP)
+
+        userRepository.signUp(
+            firstName = firstName,
+            email = email,
+            phone = phone,
+            password = password,
+            receiveNewsByEmail = receiveNewsByEmail,
+            receiveSmsNotifications = receiveSmsNotifications,
+            recaptchaToken = recaptchaToken,
+        )
+    }
+
+    data class Params(
+        val firstName: String,
+        val email: Email,
+        val phone: PhoneNumber,
+        val password: String,
+        val receiveNewsByEmail: Boolean,
+        val receiveSmsNotifications: Boolean,
+    )
+}

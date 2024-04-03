@@ -24,5 +24,5 @@ data class SignUpRequestBody(
     val receiveSmsNotifications: Boolean,
 
     @SerialName("reCaptchaKey")
-    val recaptchaKey: String,
+    val recaptchaToken: String,
 )

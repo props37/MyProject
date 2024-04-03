@@ -8,6 +8,7 @@ import ru.zarina.zarina.data.geography.remote.api.dto.SignUpRequestBody
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.common.Email
 import ru.zarina.zarina.domain.common.PhoneNumber
+import ru.zarina.zarina.domain.common.Token
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
@@ -30,6 +31,7 @@ class UserApi @Inject constructor(
         password: String,
         receiveNewsByEmail: Boolean,
         receiveSmsNotifications: Boolean,
+        recaptchaToken: Token,
     ) {
         val body = SignUpRequestBody(
             firstName = firstName,
@@ -38,7 +40,7 @@ class UserApi @Inject constructor(
             password = password,
             receiveNewsByEmail = receiveNewsByEmail,
             receiveSmsNotifications = receiveSmsNotifications,
-            recaptchaKey = "", // TODO: [High] Implement
+            recaptchaToken = recaptchaToken.value,
         )
         httpClient.post("/api/register") {
             setJsonBody(body)

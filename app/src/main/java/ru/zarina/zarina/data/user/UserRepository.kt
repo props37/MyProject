@@ -6,6 +6,7 @@ import ru.zarina.zarina.data.user.remote.UserRemoteDataSource
 import ru.zarina.zarina.domain.common.Email
 import ru.zarina.zarina.domain.common.Gender
 import ru.zarina.zarina.domain.common.PhoneNumber
+import ru.zarina.zarina.domain.common.Token
 import ru.zarina.zarina.domain.geography.City
 import javax.inject.Inject
 
@@ -41,6 +42,7 @@ class UserRepository @Inject constructor(
         password: String,
         receiveNewsByEmail: Boolean,
         receiveSmsNotifications: Boolean,
+        recaptchaToken: Token,
     ) {
         remoteDataSource.signUp(
             firstName = firstName,
@@ -49,6 +51,7 @@ class UserRepository @Inject constructor(
             password = password,
             receiveNewsByEmail = receiveNewsByEmail,
             receiveSmsNotifications = receiveSmsNotifications,
+            recaptchaToken = recaptchaToken,
         )
     }
 
