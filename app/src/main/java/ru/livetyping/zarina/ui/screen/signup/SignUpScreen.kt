@@ -55,9 +55,13 @@ fun SignUpScreen(
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val firstName by viewModel.firstName.collectAsStateWithLifecycle()
+    val isFirstNameInvalid by viewModel.isFirstNameInvalid.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
+    val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
     val phone by viewModel.phone.collectAsStateWithLifecycle()
+    val isPhoneInvalid by viewModel.isPhoneInvalid.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
+    val isPasswordInvalid by viewModel.isPasswordInvalid.collectAsStateWithLifecycle()
     val receiveNewsNyEmail by viewModel.receiveNewsByEmail.collectAsStateWithLifecycle()
     val receiveSmsNotifications by viewModel.receiveSmsNotifications.collectAsStateWithLifecycle()
     val arePoliciesAccepted by viewModel.arePoliciesAccepted.collectAsStateWithLifecycle()
@@ -68,12 +72,16 @@ fun SignUpScreen(
         onBackClicked = viewModel::onBackClicked,
         firstName = firstName,
         onFirstNameChanged = viewModel::onFirstNameChanged,
+        isFirstNameInvalid = isFirstNameInvalid,
         email = email,
         onEmailChanged = viewModel::onEmailChanged,
+        isEmailInvalid = isEmailInvalid,
         phone = phone,
         onPhoneChanged = viewModel::onPhoneChanged,
+        isPhoneInvalid = isPhoneInvalid,
         password = password,
         onPasswordChanged = viewModel::onPasswordChanged,
+        isPasswordInvalid = isPasswordInvalid,
         receiveNewsNyEmail = receiveNewsNyEmail,
         onReceiveNewsNyEmailChanged = viewModel::onReceiveNewsNyEmailChanged,
         receiveSmsNotifications = receiveSmsNotifications,
@@ -94,12 +102,16 @@ private fun ScreenContent(
     onBackClicked: () -> Unit,
     firstName: String,
     onFirstNameChanged: (String) -> Unit,
+    isFirstNameInvalid: Boolean,
     email: String,
     onEmailChanged: (String) -> Unit,
+    isEmailInvalid: Boolean,
     phone: String,
     onPhoneChanged: (String) -> Unit,
+    isPhoneInvalid: Boolean,
     password: String,
     onPasswordChanged: (String) -> Unit,
+    isPasswordInvalid: Boolean,
     receiveNewsNyEmail: Boolean,
     onReceiveNewsNyEmailChanged: (Boolean) -> Unit,
     receiveSmsNotifications: Boolean,
@@ -135,6 +147,7 @@ private fun ScreenContent(
             ZarinaTextField(
                 value = firstName,
                 onValueChanged = onFirstNameChanged,
+                isError = isFirstNameInvalid,
                 label = { Text(text = stringResource(R.string.first_name)) },
                 placeholder = { Text(text = stringResource(R.string.first_name)) },
                 innerTrailingContent = {
@@ -155,6 +168,7 @@ private fun ScreenContent(
             ZarinaTextField(
                 value = email,
                 onValueChanged = onEmailChanged,
+                isError = isEmailInvalid,
                 label = { Text(text = stringResource(R.string.email)) },
                 placeholder = { Text(text = stringResource(R.string.email)) },
                 innerTrailingContent = {
@@ -180,6 +194,7 @@ private fun ScreenContent(
             ZarinaPhoneNumberTextField(
                 phoneNumber = phone,
                 onPhoneNumberChanged = onPhoneChanged,
+                isError = isPhoneInvalid,
                 keyboardOptions = remember {
                     KeyboardOptions(
                         keyboardType = KeyboardType.Phone,
@@ -196,6 +211,7 @@ private fun ScreenContent(
             ZarinaPasswordTextField(
                 password = password,
                 onPasswordChanged = onPasswordChanged,
+                isError = isPasswordInvalid,
                 keyboardOptions = remember {
                     KeyboardOptions(
                         keyboardType = KeyboardType.Password,

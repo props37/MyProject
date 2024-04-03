@@ -120,19 +120,23 @@ class SignUpViewModel @Inject constructor(
 
     fun onFirstNameChanged(name: String) {
         savedStateHandle[KEY_FIRST_NAME] = name
+        _isFirstNameInvalid.value = false
     }
 
     fun onEmailChanged(email: String) {
         savedStateHandle[KEY_EMAIL] = email
+        _isEmailInvalid.value = false
     }
 
     fun onPhoneChanged(phone: String) {
         val normalizedPhone = PhoneNumberUtils.normalizeNumber(phone)
         savedStateHandle[KEY_PHONE] = normalizedPhone
+        _isPhoneInvalid.value = false
     }
 
     fun onPasswordChanged(password: String) {
         savedStateHandle[KEY_PASSWORD] = password
+        _isPasswordInvalid.value = false
     }
 
     fun onReceiveNewsNyEmailChanged(value: Boolean) {
