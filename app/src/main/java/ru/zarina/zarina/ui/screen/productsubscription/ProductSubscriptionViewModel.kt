@@ -171,37 +171,39 @@ class ProductSubscriptionViewModel @Inject constructor(
                         val action = ProductSubscriptionScreenAction.SubscriptionCompleted
                         emitSideEffect(SideEffect.Navigate(action))
                     }
-                    .onFailure { e ->
-                        if (e is ValidationException) {
-                            val exceptions = listOf(e) + e.suppressedExceptions
-
-                            val isFirstNameEmpty = exceptions.any { it is EmptyFirstNameException }
-                            val isEmailEmpty = exceptions.any { it is EmptyEmailException }
-                            val messageText = when {
-                                isFirstNameEmpty && isEmailEmpty -> {
-                                    Text.Resource(R.string.product_subscription_empty_fields_error)
-                                }
-
-                                else -> Text.Resource(R.string.incorrect_data_entered)
-                            }
-                            val message = ZarinaToastMessage(
-                                text = messageText,
-                                style = ZarinaToastMessageStyle.ERROR,
-                            )
-                            emitSideEffect(SideEffect.ShowZarinaToast(message))
-
-                            if (exceptions.any { it is InvalidFirstNameException }) {
-                                _isFirstNameInvalid.value = true
-                            }
-                            if (exceptions.any { it is InvalidEmailException }) {
-                                _isEmailInvalid.value = true
-                            }
-                        } else {
-                            val message = Text.Resource(R.string.something_went_wrong)
-                            emitSideEffect(SideEffect.ShowToast(message))
-                        }
-                    }
+                    .onFailure(::onSubscribeFailure)
             }
+        }
+    }
+
+    private fun onSubscribeFailure(e: Throwable) {
+        if (e is ValidationException) {
+            val exceptions = listOf(e) + e.suppressedExceptions
+
+            val isFirstNameEmpty = exceptions.any { it is EmptyFirstNameException }
+            val isEmailEmpty = exceptions.any { it is EmptyEmailException }
+            val messageText = when {
+                isFirstNameEmpty && isEmailEmpty -> {
+                    Text.Resource(R.string.product_subscription_empty_fields_error)
+                }
+
+                else -> Text.Resource(R.string.incorrect_data_entered)
+            }
+            val message = ZarinaToastMessage(
+                text = messageText,
+                style = ZarinaToastMessageStyle.ERROR,
+            )
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
+
+            if (exceptions.any { it is InvalidFirstNameException }) {
+                _isFirstNameInvalid.value = true
+            }
+            if (exceptions.any { it is InvalidEmailException }) {
+                _isEmailInvalid.value = true
+            }
+        } else {
+            val message = Text.Resource(R.string.something_went_wrong)
+            emitSideEffect(SideEffect.ShowToast(message))
         }
     }
 
