@@ -7,6 +7,7 @@ import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.geography.City
 import ru.zarina.zarina.usecase.cart.FetchCartProductIdsUseCase
 import ru.zarina.zarina.util.base.usecase.invoke
+import timber.log.Timber
 import javax.inject.Inject
 
 class SetUserCityUseCase @Inject constructor(
@@ -18,6 +19,7 @@ class SetUserCityUseCase @Inject constructor(
 
     override suspend fun execute(params: Params) {
         val city = params.city
+        Timber.v("Set user city: $city")
         userRepository.setUserCity(city)
         fetchCartProductIdsUseCase()
     }

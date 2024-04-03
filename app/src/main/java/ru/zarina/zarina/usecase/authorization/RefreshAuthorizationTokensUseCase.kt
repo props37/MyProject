@@ -19,6 +19,7 @@ class RefreshAuthorizationTokensUseCase @Inject constructor(
 ) : UseCase<Unit, Unit>(dispatcher) {
 
     override suspend fun execute(params: Unit) {
+        Timber.v("Refresh authorization tokens")
         val currentTokens = authorizationRepository.getAuthorizationTokensFlow().firstOrNull()
         if (currentTokens != null) {
             val newTokens = authorizationRepository.refreshAuthorizationTokens(currentTokens)

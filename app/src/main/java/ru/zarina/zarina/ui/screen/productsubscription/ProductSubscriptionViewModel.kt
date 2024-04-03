@@ -156,7 +156,7 @@ class ProductSubscriptionViewModel @Inject constructor(
             operationTracker.track(Operation.SUBSCRIBE_TO_PRODUCT) {
                 val params = SubscribeToProductUseCase.Params(
                     barcode = productOffer.value.barcode,
-                    name = firstName.value,
+                    firstName = firstName.value,
                     email = Email.create(email.value),
                 )
                 interactor.subscribeToProduct(params)

@@ -13,14 +13,16 @@ class ValidateFirstNameUseCase @Inject constructor(
 ) : UseCase<ValidateFirstNameUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
-        val name = params.name.trim()
+        val firstName = params.firstName.trim()
         when {
-            name.isBlank() -> throw EmptyFirstNameException()
-            !name.matches(FIRST_NAME_REGEX_PATTERN.toRegex()) -> throw InvalidFirstNameException()
+            firstName.isBlank() -> throw EmptyFirstNameException()
+            !firstName.matches(FIRST_NAME_REGEX_PATTERN.toRegex()) -> {
+                throw InvalidFirstNameException()
+            }
         }
     }
 
-    data class Params(val name: String)
+    data class Params(val firstName: String)
 
     companion object {
         private const val FIRST_NAME_REGEX_PATTERN = "^[А-Яа-яЁё-]*\$"

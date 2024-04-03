@@ -5,6 +5,7 @@ import ru.zarina.zarina.base.usecase.UseCase
 import ru.zarina.zarina.data.user.UserRepository
 import ru.zarina.zarina.di.Qualifiers
 import ru.zarina.zarina.domain.common.Gender
+import timber.log.Timber
 import javax.inject.Inject
 
 class SetUserContentGenderUseCase @Inject constructor(
@@ -14,7 +15,9 @@ class SetUserContentGenderUseCase @Inject constructor(
 ) : UseCase<SetUserContentGenderUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
-        userRepository.setUserContentGender(params.gender)
+        val gender = params.gender
+        Timber.v("Set user content gender: $gender")
+        userRepository.setUserContentGender(gender)
     }
 
     data class Params(val gender: Gender)

@@ -9,6 +9,7 @@ import ru.zarina.zarina.domain.common.Email
 import ru.zarina.zarina.domain.common.exception.ValidationException
 import ru.zarina.zarina.usecase.user.ValidateEmailUseCase
 import ru.zarina.zarina.usecase.user.ValidateFirstNameUseCase
+import timber.log.Timber
 import javax.inject.Inject
 
 class SubscribeToProductUseCase @Inject constructor(
@@ -21,9 +22,9 @@ class SubscribeToProductUseCase @Inject constructor(
 
     override suspend fun execute(params: Params) {
         val barcode = params.barcode
+        val firstName = params.firstName.split(' ').firstOrNull()?.trim().orEmpty()
         val email = params.email
-
-        val firstName = params.name.split(' ').firstOrNull()?.trim().orEmpty()
+        Timber.v("Subscribe to product $barcode. First name: $firstName, email: $email")
 
         val firstNameValidationException =
             validateFirstNameUseCase(ValidateFirstNameUseCase.Params(firstName)).exceptionOrNull()
@@ -41,7 +42,7 @@ class SubscribeToProductUseCase @Inject constructor(
 
     data class Params(
         val barcode: Barcode,
-        val name: String,
+        val firstName: String,
         val email: Email,
     )
 }

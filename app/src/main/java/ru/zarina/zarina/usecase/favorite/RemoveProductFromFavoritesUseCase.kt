@@ -17,7 +17,9 @@ class RemoveProductFromFavoritesUseCase @Inject constructor(
 ) : UseCase<RemoveProductFromFavoritesUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
-        favoriteRepository.removeProductFromFavorites(params.productId)
+        val productId = params.productId
+        Timber.v("Remove product $productId from favorites")
+        favoriteRepository.removeProductFromFavorites(productId)
         if (!favoriteRepository.areFavoriteProductIdsFetched.value) {
             Timber.w("Favorite product IDs are not fetched. Trying to fetch")
             fetchFavoriteProductIdsUseCase()

@@ -17,7 +17,9 @@ class AddProductToFavoritesUseCase @Inject constructor(
 ) : UseCase<AddProductToFavoritesUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
-        favoriteRepository.addProductToFavorites(params.productId)
+        val productId = params.productId
+        Timber.v("Add product $productId to favorites")
+        favoriteRepository.addProductToFavorites(productId)
         if (!favoriteRepository.areFavoriteProductIdsFetched.value) {
             Timber.w("Favorite product IDs are not fetched. Trying to fetch")
             fetchFavoriteProductIdsUseCase()
