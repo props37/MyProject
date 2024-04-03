@@ -136,6 +136,9 @@ class ProductSubscriptionViewModel @Inject constructor(
 
     fun onPoliciesAcceptedChanged(areAccepted: Boolean) {
         savedStateHandle[KEY_ARE_POLICIES_ACCEPTED] = areAccepted
+        if (areAccepted) {
+            savedStateHandle[KEY_IS_POLICIES_ERROR_VISIBLE] = false
+        }
     }
 
     fun onSubscribeClicked() {
