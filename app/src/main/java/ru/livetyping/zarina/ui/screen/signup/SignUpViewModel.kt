@@ -31,6 +31,7 @@ import ru.livetyping.zarina.domain.user.exception.EmptyPasswordException
 import ru.livetyping.zarina.domain.user.exception.EmptyPhoneNumberException
 import ru.livetyping.zarina.domain.user.exception.FirstNameException
 import ru.livetyping.zarina.domain.user.exception.PasswordException
+import ru.livetyping.zarina.domain.user.exception.PhoneNumberAlreadyInUseException
 import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
 import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
@@ -195,8 +196,7 @@ class SignUpViewModel @Inject constructor(
         when (e) {
             is ValidationException -> handleSignUpValidationException(e)
             is CaptchaException -> {
-                // TODO: [High] Implement
-                val text = Text.Resource(R.string.something_went_wrong)
+                val text = Text.Resource(R.string.something_went_wrong_try_again)
                 val message = ZarinaToastMessage.error(text)
                 emitSideEffect(SideEffect.ShowZarinaToast(message))
             }
@@ -217,7 +217,6 @@ class SignUpViewModel @Inject constructor(
         val isPhoneEmpty = exceptions.any { it is EmptyPhoneNumberException }
         val isPasswordEmpty = exceptions.any { it is EmptyPasswordException }
 
-        // TODO: [High] Handle phone is already in use exception
         val messageText = when {
             isFirstNameEmpty || isEmailEmpty || isPhoneEmpty || isPasswordEmpty -> {
                 Text.Resource(R.string.sign_up_empty_fields_error)
@@ -225,6 +224,10 @@ class SignUpViewModel @Inject constructor(
 
             exceptions.any { it is EmailAlreadyInUseException } -> {
                 Text.Resource(R.string.sign_up_email_already_in_use_error)
+            }
+
+            exceptions.any { it is PhoneNumberAlreadyInUseException } -> {
+                Text.Resource(R.string.sign_up_phone_number_already_in_use_error)
             }
 
             else -> Text.Resource(R.string.incorrect_data_entered)

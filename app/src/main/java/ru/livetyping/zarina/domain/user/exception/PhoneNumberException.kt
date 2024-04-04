@@ -9,3 +9,6 @@ open class InvalidPhoneNumberException(message: String = "Invalid phone number")
 
 class EmptyPhoneNumberException(message: String = "Phone number can not be empty") :
     InvalidPhoneNumberException(message)
+
+class PhoneNumberAlreadyInUseException(message: String = "Phone number is already in use") :
+    PhoneNumberException(message)
