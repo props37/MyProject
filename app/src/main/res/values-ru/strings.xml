@@ -122,6 +122,10 @@
     <string name="receive_news_by_email">Получать новости на почту</string>
     <string name="receive_sms_notifications">Получать СМС-уведомления</string>
     <string name="incorrect_data_entered">Введены некорректные данные</string>
+    <string name="enter_sms_code_from_message">Введи СМС-код из сообщения</string>
+    <string name="we_sent_sms_code_to_phone_number">Мы отправили СМС-код на номер %1$s</string>
+    <string name="resend">Отправить повторно</string>
+    <string name="code_can_be_sent_again_after">Повторно отправить код можно через %1$s</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
