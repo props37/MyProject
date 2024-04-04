@@ -12,7 +12,7 @@ import ru.livetyping.zarina.ui.screen.signup.SignUpScreenAction
 
 fun NavGraphBuilder.signUpScreen(navController: NavHostController) {
     composableDestination(
-        destination = ProfileGraph.SignUp,
+        destination = SignUpGraph.SignUp,
         enterTransition = {
             when (initialState.destination.route) {
                 ProfileGraph.Profile.routeSchema -> slideEnterTransition()

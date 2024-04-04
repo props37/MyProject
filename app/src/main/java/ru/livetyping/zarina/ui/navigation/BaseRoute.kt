@@ -25,6 +25,7 @@ enum class BaseRoute {
     // Sign up graph
     SIGN_UP_GRAPH,
     SIGN_UP,
+    SIGN_UP_OTP,
 
     // Size selector graph
     SIZE_SELECTOR_GRAPH,

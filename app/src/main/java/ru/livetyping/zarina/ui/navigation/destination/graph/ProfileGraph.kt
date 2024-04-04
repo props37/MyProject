@@ -9,6 +9,4 @@ data object ProfileGraph : SimpleGraph(
     startDestination = Profile,
 ) {
     data object Profile : SimpleDestination(BaseRoute.PROFILE)
-
-    data object SignUp : SimpleDestination(BaseRoute.SIGN_UP)
 }
