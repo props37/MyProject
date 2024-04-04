@@ -15,5 +15,16 @@ data class ZarinaToastMessage(
         // According to Android toast lengths
         val DURATION_SHORT: Duration get() = 2.seconds
         val DURATION_LONG: Duration get() = 3.5.seconds
+
+        fun error(
+            text: Text,
+            duration: Duration = DURATION_SHORT,
+            isRemovable: Boolean = true,
+        ): ZarinaToastMessage = ZarinaToastMessage(
+            text = text,
+            style = ZarinaToastMessageStyle.ERROR,
+            duration = duration,
+            isRemovable = isRemovable,
+        )
     }
 }

@@ -150,8 +150,9 @@ class CartViewModel @AssistedInject constructor(
                     cartFetchRequests.trySend(Unit)
                 }
                 .onFailure {
-                    val message = Text.Resource(R.string.cart_clearing_error)
-                    emitSideEffect(SideEffect.ShowToast(message))
+                    val text = Text.Resource(R.string.cart_clearing_error)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
         }
     }
@@ -190,8 +191,8 @@ class CartViewModel @AssistedInject constructor(
             interactor.toggleProductPresenceInFavorites(params)
                 .onSuccess {
                     if (!product.isInFavorites) {
-                        val messageText = Text.Resource(R.string.product_adding_to_favorites_completed)
-                        val message = ZarinaToastMessage(messageText)
+                        val text = Text.Resource(R.string.product_adding_to_favorites_completed)
+                        val message = ZarinaToastMessage(text)
                         emitSideEffect(SideEffect.ShowZarinaToast(message))
                     }
                 }
@@ -201,8 +202,8 @@ class CartViewModel @AssistedInject constructor(
                     } else {
                         R.string.product_adding_to_favorites_error
                     }
-                    val message = Text.Resource(messageResId)
-                    emitSideEffect(SideEffect.ShowToast(message))
+                    val message = ZarinaToastMessage.error(Text.Resource(messageResId))
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
         }
     }
@@ -216,8 +217,9 @@ class CartViewModel @AssistedInject constructor(
                     // TODO: [High] Display temp card that user can use to undo the deletion
                 }
                 .onFailure {
-                    val message = Text.Resource(R.string.product_removing_from_cart_error)
-                    emitSideEffect(SideEffect.ShowToast(message))
+                    val text = Text.Resource(R.string.product_removing_from_cart_error)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
         }
     }
@@ -240,8 +242,9 @@ class CartViewModel @AssistedInject constructor(
                     val params = SetUserCityUseCase.Params(newCity)
                     interactor.setUserCity(params)
                         .onFailure {
-                            val message = Text.Resource(R.string.city_changing_error)
-                            emitSideEffect(SideEffect.ShowToast(message))
+                            val text = Text.Resource(R.string.city_changing_error)
+                            val message = ZarinaToastMessage.error(text)
+                            emitSideEffect(SideEffect.ShowZarinaToast(message))
                         }
                 }
             }
@@ -316,8 +319,6 @@ class CartViewModel @AssistedInject constructor(
         data class Navigate(val action: CartScreenAction) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
-
-        data class ShowToast(val message: Text) : SideEffect
     }
 
     @Stable

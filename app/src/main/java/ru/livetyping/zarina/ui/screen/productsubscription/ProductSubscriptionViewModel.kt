@@ -29,7 +29,6 @@ import ru.livetyping.zarina.domain.user.exception.FirstNameException
 import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
-import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessageStyle
 import ru.livetyping.zarina.ui.model.product.ProductOfferParcelable
 import ru.livetyping.zarina.ui.model.product.ProductParcelable
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations
@@ -146,11 +145,8 @@ class ProductSubscriptionViewModel @Inject constructor(
 
         if (!arePoliciesAccepted.value) {
             savedStateHandle[KEY_IS_POLICIES_ERROR_VISIBLE] = true
-            val messageText = Text.Resource(R.string.product_subscription_agreement_error)
-            val message = ZarinaToastMessage(
-                text = messageText,
-                style = ZarinaToastMessageStyle.ERROR,
-            )
+            val text = Text.Resource(R.string.product_subscription_agreement_error)
+            val message = ZarinaToastMessage.error(text)
             emitSideEffect(SideEffect.ShowZarinaToast(message))
             return
         }
@@ -164,8 +160,8 @@ class ProductSubscriptionViewModel @Inject constructor(
                 )
                 interactor.subscribeToProduct(params)
                     .onSuccess {
-                        val messageText = Text.Resource(R.string.product_subscription_completed)
-                        val message = ZarinaToastMessage(messageText)
+                        val text = Text.Resource(R.string.product_subscription_completed)
+                        val message = ZarinaToastMessage(text)
                         emitSideEffect(SideEffect.ShowZarinaToast(message))
 
                         val action = ProductSubscriptionScreenAction.SubscriptionCompleted
@@ -189,10 +185,7 @@ class ProductSubscriptionViewModel @Inject constructor(
 
                 else -> Text.Resource(R.string.incorrect_data_entered)
             }
-            val message = ZarinaToastMessage(
-                text = messageText,
-                style = ZarinaToastMessageStyle.ERROR,
-            )
+            val message = ZarinaToastMessage.error(messageText)
             emitSideEffect(SideEffect.ShowZarinaToast(message))
 
             if (exceptions.any { it is FirstNameException }) {
@@ -202,8 +195,9 @@ class ProductSubscriptionViewModel @Inject constructor(
                 _isEmailInvalid.value = true
             }
         } else {
-            val message = Text.Resource(R.string.something_went_wrong)
-            emitSideEffect(SideEffect.ShowToast(message))
+            val text = Text.Resource(R.string.something_went_wrong)
+            val message = ZarinaToastMessage.error(text)
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
         }
     }
 
@@ -213,8 +207,6 @@ class ProductSubscriptionViewModel @Inject constructor(
         data class OpenUrl(val url: Url) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
-
-        data class ShowToast(val message: Text) : SideEffect
     }
 
     private enum class Operation : OperationKey { SUBSCRIBE_TO_PRODUCT }

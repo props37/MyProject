@@ -99,9 +99,8 @@ class FavoritesViewModel @AssistedInject constructor(
             interactor.toggleProductPresenceInFavorites(params)
                 .onSuccess {
                     if (!product.isInFavorites) {
-                        val messageText =
-                            Text.Resource(R.string.product_adding_to_favorites_completed)
-                        val message = ZarinaToastMessage(messageText)
+                        val text = Text.Resource(R.string.product_adding_to_favorites_completed)
+                        val message = ZarinaToastMessage(text)
                         emitSideEffect(SideEffect.ShowZarinaToast(message))
                     }
                 }
@@ -111,8 +110,8 @@ class FavoritesViewModel @AssistedInject constructor(
                     } else {
                         R.string.product_adding_to_favorites_error
                     }
-                    val message = Text.Resource(messageResId)
-                    emitSideEffect(SideEffect.ShowToast(message))
+                    val message = ZarinaToastMessage.error(Text.Resource(messageResId))
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
         }
     }
@@ -148,8 +147,9 @@ class FavoritesViewModel @AssistedInject constructor(
                     favoriteProductFetchRequests.trySend(Unit)
                 }
                 .onFailure {
-                    val message = Text.Resource(R.string.favorites_clearing_error)
-                    emitSideEffect(SideEffect.ShowToast(message))
+                    val text = Text.Resource(R.string.favorites_clearing_error)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
         }
     }
@@ -170,13 +170,14 @@ class FavoritesViewModel @AssistedInject constructor(
             )
             interactor.addProductToCart(params)
                 .onSuccess {
-                    val messageText = Text.Resource(R.string.product_adding_to_cart_completed)
-                    val message = ZarinaToastMessage(messageText)
+                    val text = Text.Resource(R.string.product_adding_to_cart_completed)
+                    val message = ZarinaToastMessage(text)
                     emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
                 .onFailure {
-                    val message = Text.Resource(R.string.product_adding_to_cart_error)
-                    emitSideEffect(SideEffect.ShowToast(message))
+                    val text = Text.Resource(R.string.product_adding_to_cart_error)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
         }
     }
@@ -198,8 +199,6 @@ class FavoritesViewModel @AssistedInject constructor(
         data class Navigate(val action: FavoritesScreenAction) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
-
-        data class ShowToast(val message: Text) : SideEffect
     }
 
     @AssistedFactory

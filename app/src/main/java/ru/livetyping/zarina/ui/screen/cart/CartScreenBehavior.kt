@@ -10,7 +10,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
-import ru.livetyping.zarina.ui.common.toastcontroller.LocalToastController
 import ru.livetyping.zarina.ui.common.zarinatoast.controller.LocalZarinaToastController
 import ru.livetyping.zarina.ui.screen.cart.CartViewModel.SideEffect
 
@@ -21,7 +20,6 @@ fun CartScreenBehavior(
     navigate: (CartScreenAction) -> Unit,
 ) {
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
-    val updatedToastController by rememberUpdatedState(LocalToastController.current)
     val updatedOnScreenOpened by rememberUpdatedState(onScreenOpened)
     val updatedNavigate by rememberUpdatedState(navigate)
 
@@ -42,8 +40,6 @@ fun CartScreenBehavior(
                         is SideEffect.ShowZarinaToast -> {
                             updatedZarinaToastController.show(sideEffect.message)
                         }
-
-                        is SideEffect.ShowToast -> updatedToastController.show(sideEffect.message)
                     }
                 }
             }

@@ -12,7 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
-import ru.livetyping.zarina.ui.common.toastcontroller.LocalToastController
+import ru.livetyping.zarina.ui.common.zarinatoast.controller.LocalZarinaToastController
 import ru.livetyping.zarina.ui.screen.profile.ProfileViewModel.SideEffect
 import ru.livetyping.zarina.util.domain.common.toUri
 
@@ -22,7 +22,7 @@ fun ProfileScreenBehavior(
     navigate: (ProfileScreenAction) -> Unit,
 ) {
     val updatedContext by rememberUpdatedState(LocalContext.current)
-    val updatedToastController by rememberUpdatedState(LocalToastController.current)
+    val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = true)
@@ -40,7 +40,9 @@ fun ProfileScreenBehavior(
                             intent.launchUrl(updatedContext, sideEffect.url.toUri())
                         }
 
-                        is SideEffect.ShowToast -> updatedToastController.show(sideEffect.message)
+                        is SideEffect.ShowZarinaToast -> {
+                            updatedZarinaToastController.show(sideEffect.message)
+                        }
                     }
                 }
             }

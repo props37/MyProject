@@ -25,6 +25,7 @@ import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.util.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
+import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.ui.screen.profile.ProfileViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.SetUserCityUseCase
@@ -71,8 +72,9 @@ class ProfileViewModel @AssistedInject constructor(
                     val params = SetUserCityUseCase.Params(newCity)
                     interactor.setUserCity(params)
                         .onFailure {
-                            val message = Text.Resource(R.string.city_changing_error)
-                            emitSideEffect(SideEffect.ShowToast(message))
+                            val text = Text.Resource(R.string.city_changing_error)
+                            val message = ZarinaToastMessage.error(text)
+                            emitSideEffect(SideEffect.ShowZarinaToast(message))
                         }
                 }
             }
@@ -114,7 +116,7 @@ class ProfileViewModel @AssistedInject constructor(
 
         data class OpenUrl(val url: Url) : SideEffect
 
-        data class ShowToast(val message: Text) : SideEffect
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 
     enum class InfoItem { MyOrders, City, Shops, Help, AboutCompany }

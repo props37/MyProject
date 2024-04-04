@@ -3,7 +3,6 @@ package ru.livetyping.zarina.ui.screen.onboarding
 import android.Manifest
 import android.os.Build
 import android.os.Parcelable
-import android.widget.Toast
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -38,6 +37,7 @@ import ru.livetyping.zarina.ui.common.permissionmanager.isGranted
 import ru.livetyping.zarina.ui.common.permissionmanager.shouldShowRequestRationale
 import ru.livetyping.zarina.ui.common.util.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
+import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.ui.model.geography.CityParcelable
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
@@ -229,8 +229,10 @@ class OnboardingViewModel @AssistedInject constructor(
                     emitSideEffect(SideEffect.NavigateForward(action))
                 }
                 .onFailure {
-                    val message = Text.Resource(R.string.something_went_wrong)
-                    emitSideEffect(SideEffect.ShowToast(message, Toast.LENGTH_SHORT))
+                    val text = Text.Resource(R.string.something_went_wrong)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+
                     val action = OnboardingScreenAction.OnboardingCompleted(userCity = null)
                     emitSideEffect(SideEffect.NavigateForward(action))
                 }
@@ -331,8 +333,9 @@ class OnboardingViewModel @AssistedInject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class ShowToast(val message: Text, val duration: Int = Toast.LENGTH_SHORT) : SideEffect
         data class NavigateForward(val action: OnboardingScreenAction) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 
     @Parcelize

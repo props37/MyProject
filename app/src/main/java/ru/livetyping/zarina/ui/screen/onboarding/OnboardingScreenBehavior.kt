@@ -13,7 +13,7 @@ import ru.livetyping.zarina.ui.common.behavior.bottomnavbar.BottomNavBarBehavior
 import ru.livetyping.zarina.ui.common.behavior.bottomnavbar.BottomNavBarBehaviorController
 import ru.livetyping.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.livetyping.zarina.ui.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
-import ru.livetyping.zarina.ui.common.toastcontroller.LocalToastController
+import ru.livetyping.zarina.ui.common.zarinatoast.controller.LocalZarinaToastController
 import ru.livetyping.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
 
 @Composable
@@ -21,7 +21,7 @@ fun OnboardingScreenBehavior(
     sideEffects: Flow<SideEffect>,
     navigateForward: (OnboardingScreenAction) -> Unit,
 ) {
-    val updatedToastController by rememberUpdatedState(LocalToastController.current)
+    val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedBottomNavBarController by rememberUpdatedState(LocalBottomNavBarBehaviorController.current)
     val updatedNavigateForward by rememberUpdatedState(navigateForward)
 
@@ -32,13 +32,16 @@ fun OnboardingScreenBehavior(
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
-                        is SideEffect.ShowToast -> updatedToastController.show(sideEffect.message)
                         is SideEffect.NavigateForward -> {
                             if (sideEffect.action is OnboardingScreenAction.OnboardingCompleted) {
                                 makeBottomNavBarVisibleByDefault(updatedBottomNavBarController)
                             }
 
                             updatedNavigateForward(sideEffect.action)
+                        }
+
+                        is SideEffect.ShowZarinaToast -> {
+                            updatedZarinaToastController.show(sideEffect.message)
                         }
                     }
                 }

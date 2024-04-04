@@ -252,9 +252,8 @@ class ProductsViewModel @AssistedInject constructor(
             interactor.toggleProductPresenceInFavorites(params)
                 .onSuccess {
                     if (!product.isInFavorites) {
-                        val messageText =
-                            Text.Resource(R.string.product_adding_to_favorites_completed)
-                        val message = ZarinaToastMessage(messageText)
+                        val text = Text.Resource(R.string.product_adding_to_favorites_completed)
+                        val message = ZarinaToastMessage(text)
                         emitSideEffect(SideEffect.ShowZarinaToast(message))
                     }
                 }
@@ -264,8 +263,9 @@ class ProductsViewModel @AssistedInject constructor(
                     } else {
                         R.string.product_adding_to_favorites_error
                     }
-                    val message = Text.Resource(messageResId)
-                    emitSideEffect(SideEffect.ShowToast(message))
+                    val text = Text.Resource(messageResId)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
         }
     }
@@ -317,13 +317,14 @@ class ProductsViewModel @AssistedInject constructor(
             )
             interactor.addProductToCart(params)
                 .onSuccess {
-                    val messageText = Text.Resource(R.string.product_adding_to_cart_completed)
-                    val message = ZarinaToastMessage(messageText)
+                    val text = Text.Resource(R.string.product_adding_to_cart_completed)
+                    val message = ZarinaToastMessage(text)
                     emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
                 .onFailure {
-                    val message = Text.Resource(R.string.product_adding_to_cart_error)
-                    emitSideEffect(SideEffect.ShowToast(message))
+                    val text = Text.Resource(R.string.product_adding_to_cart_error)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
         }
     }
@@ -357,8 +358,6 @@ class ProductsViewModel @AssistedInject constructor(
         data class Navigate(val action: ProductsScreenAction) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
-
-        data class ShowToast(val message: Text) : SideEffect
     }
 
     @Stable

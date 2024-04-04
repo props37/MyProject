@@ -169,16 +169,17 @@ class ProductCountSelectorViewModel @Inject constructor(
                     when (throwable) {
                         is CancellationException -> return@onFailure
                         is ClientRequestException -> {
-                            val messageText =
-                                Text.Resource(R.string.product_changing_count_in_cart_count_not_enough_product_error)
-                            val message = ZarinaToastMessage(messageText)
+                            val text = Text.Resource(
+                                R.string.product_changing_count_in_cart_count_not_enough_product_error,
+                            )
+                            val message = ZarinaToastMessage(text)
                             emitSideEffect(SideEffect.ShowZarinaToast(message))
                         }
 
                         else -> {
-                            val message =
-                                Text.Resource(R.string.product_changing_count_in_cart_error)
-                            emitSideEffect(SideEffect.ShowToast(message))
+                            val text = Text.Resource(R.string.product_changing_count_in_cart_error)
+                            val message = ZarinaToastMessage.error(text)
+                            emitSideEffect(SideEffect.ShowZarinaToast(message))
                         }
                     }
                 }
@@ -191,8 +192,6 @@ class ProductCountSelectorViewModel @Inject constructor(
         data class Navigate(val action: ProductCountSelectorScreenAction) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
-
-        data class ShowToast(val message: Text) : SideEffect
     }
 
     @Immutable
