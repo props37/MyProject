@@ -37,7 +37,6 @@ import ru.livetyping.zarina.ui.common.permissionmanager.isGranted
 import ru.livetyping.zarina.ui.common.permissionmanager.shouldShowRequestRationale
 import ru.livetyping.zarina.ui.common.util.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
-import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.ui.model.geography.CityParcelable
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.ui.screen.onboarding.OnboardingViewModel.SideEffect
@@ -230,8 +229,7 @@ class OnboardingViewModel @AssistedInject constructor(
                 }
                 .onFailure {
                     val text = Text.Resource(R.string.something_went_wrong)
-                    val message = ZarinaToastMessage.error(text)
-                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                    emitSideEffect(SideEffect.ShowToast(text))
 
                     val action = OnboardingScreenAction.OnboardingCompleted(userCity = null)
                     emitSideEffect(SideEffect.NavigateForward(action))
@@ -335,7 +333,7 @@ class OnboardingViewModel @AssistedInject constructor(
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class NavigateForward(val action: OnboardingScreenAction) : SideEffect
 
-        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
+        data class ShowToast(val message: Text) : SideEffect
     }
 
     @Parcelize
