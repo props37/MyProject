@@ -9,10 +9,10 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
-import ru.livetyping.zarina.data.geography.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpErrorDtoSerializer
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpFieldValidationErrorDto
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpMessageErrorDto
+import ru.livetyping.zarina.data.user.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
