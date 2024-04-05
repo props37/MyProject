@@ -20,6 +20,7 @@ import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Token
+import ru.livetyping.zarina.domain.common.exception.OtpTimeoutException
 import ru.livetyping.zarina.domain.common.exception.ValidationException
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.exception.EmailAlreadyInUseException
@@ -108,6 +109,7 @@ class UserApi @Inject constructor(
                                 throw EmailAlreadyInUseException()
                             }
 
+                            SIGN_UP_ERROR_MESSAGE_OTP_TIMEOUT -> throw OtpTimeoutException()
                             else -> throw e
                         }
                     }
@@ -119,5 +121,6 @@ class UserApi @Inject constructor(
     companion object {
         private const val SIGN_UP_ERROR_MESSAGE_RECAPTCHA_INVALID = "Recaptcha not valid"
         private const val SIGN_UP_ERROR_MESSAGE_EMAIL_ALREADY_IN_USE = "Пользователь с таким Email уже зарегистрирован"
+        private const val SIGN_UP_ERROR_MESSAGE_OTP_TIMEOUT = "Запрос на повторную отправку смс сделан слишком рано"
     }
 }

@@ -21,6 +21,7 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Url
+import ru.livetyping.zarina.domain.common.exception.OtpTimeoutException
 import ru.livetyping.zarina.domain.common.exception.ValidationException
 import ru.livetyping.zarina.domain.user.exception.CaptchaException
 import ru.livetyping.zarina.domain.user.exception.EmailAlreadyInUseException
@@ -197,6 +198,13 @@ class SignUpViewModel @Inject constructor(
     private fun onSignUpFailure(e: Throwable) {
         when (e) {
             is ValidationException -> handleSignUpValidationException(e)
+            is OtpTimeoutException -> {
+                // TODO: [High] Change text!!!
+                val text = Text.Resource(R.string.sign_up_otp_timeout_error)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+
             is CaptchaException -> {
                 val text = Text.Resource(R.string.something_went_wrong_try_again)
                 val message = ZarinaToastMessage.error(text)
