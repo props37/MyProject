@@ -163,11 +163,6 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun onSignUpClicked() {
-        // TODO: [High] Remove!!!
-        val action = SignUpScreenAction.UserCreated(PhoneNumber.create("+78005553535"))
-        emitSideEffect(SideEffect.Navigate(action))
-        return
-
         if (signUpJob?.isActive == true) return
 
         if (!arePoliciesAccepted.value) {
@@ -180,17 +175,19 @@ class SignUpViewModel @Inject constructor(
 
         signUpJob = viewModelScope.launch {
             operationTracker.track(Operation.SIGN_UP) {
+                val phone = PhoneNumber.create(phone.value)
                 val params = SignUpUseCase.Params(
                     firstName = firstName.value,
                     email = Email.create(email.value),
-                    phone = PhoneNumber.create(phone.value),
+                    phone = phone,
                     password = password.value,
                     receiveNewsByEmail = receiveNewsByEmail.value,
                     receiveSmsNotifications = receiveSmsNotifications.value,
                 )
                 interactor.signUp(params)
                     .onSuccess {
-                        // TODO: [High] Implement
+                        val action = SignUpScreenAction.UserCreated(phone)
+                        emitSideEffect(SideEffect.Navigate(action))
                     }
                     .onFailure(::onSignUpFailure)
             }
