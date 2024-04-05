@@ -185,6 +185,7 @@ private fun PreviewResendAvailable() {
     }
 }
 
+// TODO: [High] Extract and rename
 sealed class SmsOtpResendState {
     data object ResendAvailable : SmsOtpResendState()
 
