@@ -5,6 +5,7 @@ import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,12 +35,15 @@ import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.ui.common.component.textfield.ZarinaOtpTextField
 import ru.livetyping.zarina.ui.common.otp.OtpResendState
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.ui.common.util.rememberFormattedPhoneNumber
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+
+// TODO: [High] Move and rename
 
 @Composable
 fun SmsOtp(
@@ -53,18 +57,25 @@ fun SmsOtp(
     otpLength: Int = Length,
     isOtpEnabled: Boolean = true,
     isOtpError: Boolean = false,
+    isOtpReadOnly: Boolean = false,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
-    Column(modifier = modifier.background(backgroundColor)) {
+    Column(
+        modifier = modifier
+            .background(backgroundColor)
+            .padding(contentPadding),
+    ) {
         Text(
             text = stringResource(R.string.enter_sms_code_from_message),
             style = UiKitTheme.typography.secondary.bold,
             color = UiKitTheme.colors.text.general.regular.default,
         )
         Spacer(modifier = Modifier.height(8.dp))
+        val formattedPhone = rememberFormattedPhoneNumber(phone)
         Text(
-            text = stringResource(R.string.we_sent_sms_code_to_phone_number, phone.value),
+            text = stringResource(R.string.we_sent_sms_code_to_phone_number, formattedPhone),
             style = UiKitTheme.typography.tertiary.regular,
             color = UiKitTheme.colors.text.general.regular.default,
         )
@@ -78,6 +89,7 @@ fun SmsOtp(
             length = otpLength,
             isEnabled = isOtpEnabled,
             isError = isOtpError,
+            isReadOnly = isOtpReadOnly,
             backgroundColor = backgroundColor,
             keyboardActions = keyboardActions,
             modifier = Modifier.align(Alignment.CenterHorizontally),
