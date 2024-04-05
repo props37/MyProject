@@ -63,17 +63,16 @@ fun ZarinaOtpTextField(
     BasicTextField(
         value = value,
         onValueChange = { newValue ->
-            val processedValue = if (areNonDigitSymbolsAllowed) {
-                newValue
-            } else {
-                newValue.filter { it.isDigit() }
+            var processed = newValue
+            if (!areNonDigitSymbolsAllowed) {
+                processed = processed.filter { it.isDigit() }
             }
-            if (processedValue.length <= length) {
-                onValueChanged(processedValue)
+            if (processed.length <= length) {
+                onValueChanged(processed)
             }
 
-            if (processedValue.length == length) {
-                onFilled?.invoke(processedValue)
+            if (processed.length == length) {
+                onFilled?.invoke(processed)
             }
         },
         enabled = isEnabled,
