@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.category.Category
-import ru.livetyping.zarina.ui.base.rememberErrorState
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
@@ -43,6 +42,7 @@ import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonS
 import ru.livetyping.zarina.ui.common.component.tag.ZarinaTag
 import ru.livetyping.zarina.ui.common.component.tag.ZarinaTagSkeleton
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
+import ru.livetyping.zarina.ui.common.error.rememberErrorState
 import ru.livetyping.zarina.ui.screen.products.ProductsViewModel.TagListState
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentCrossfadeTransitionSpec

@@ -34,12 +34,12 @@ import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.domain.product.Product
-import ru.livetyping.zarina.ui.base.ErrorState
-import ru.livetyping.zarina.ui.base.from
 import ru.livetyping.zarina.ui.common.component.button.ZarinaScrollToTopButton
 import ru.livetyping.zarina.ui.common.component.pullrefresh.ZarinaPullRefreshIndicator
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
+import ru.livetyping.zarina.ui.common.error.ErrorState
+import ru.livetyping.zarina.ui.common.error.from
 import ru.livetyping.zarina.ui.common.util.library.paging.retryAppendPrependErrors
 import ru.livetyping.zarina.util.compose.animateFastScrollToItem
 import ru.livetyping.zarina.util.compose.animation.Crossfade

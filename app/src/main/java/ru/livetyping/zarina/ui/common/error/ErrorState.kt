@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.ui.base
+package ru.livetyping.zarina.ui.common.error
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable

@@ -71,7 +71,6 @@ import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.domain.cart.DeliveryType
 import ru.livetyping.zarina.domain.geography.City
-import ru.livetyping.zarina.ui.base.rememberErrorState
 import ru.livetyping.zarina.ui.common.component.ProductOrderCard
 import ru.livetyping.zarina.ui.common.component.ProductOrderCardCountStyle
 import ru.livetyping.zarina.ui.common.component.ProductOrderCardSkeleton
@@ -85,6 +84,7 @@ import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonS
 import ru.livetyping.zarina.ui.common.component.tab.ZarinaTabRow
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
+import ru.livetyping.zarina.ui.common.error.rememberErrorState
 import ru.livetyping.zarina.ui.screen.cart.CartViewModel.CartState
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition

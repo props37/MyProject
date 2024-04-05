@@ -31,9 +31,9 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.domain.cart.DeliveryType
 import ru.livetyping.zarina.domain.geography.City
-import ru.livetyping.zarina.ui.base.rememberErrorState
 import ru.livetyping.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
+import ru.livetyping.zarina.ui.common.error.rememberErrorState
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.screen.cart.CartScreenComponents.CartContent
 import ru.livetyping.zarina.ui.screen.cart.CartScreenComponents.ProductCardActions

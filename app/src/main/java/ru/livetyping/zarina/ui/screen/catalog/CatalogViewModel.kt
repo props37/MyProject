@@ -37,8 +37,8 @@ import ru.livetyping.zarina.domain.category.Categories
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.category.withFlattenedChildren
 import ru.livetyping.zarina.domain.common.Gender
-import ru.livetyping.zarina.ui.base.ErrorState
-import ru.livetyping.zarina.ui.base.from
+import ru.livetyping.zarina.ui.common.error.ErrorState
+import ru.livetyping.zarina.ui.common.error.from
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.usecase.user.SetUserContentGenderUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke

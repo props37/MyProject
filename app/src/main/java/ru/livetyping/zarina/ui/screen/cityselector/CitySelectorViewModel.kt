@@ -21,9 +21,9 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.geography.KladrId
-import ru.livetyping.zarina.ui.base.ErrorState
-import ru.livetyping.zarina.ui.base.from
 import ru.livetyping.zarina.ui.base.text.Text
+import ru.livetyping.zarina.ui.common.error.ErrorState
+import ru.livetyping.zarina.ui.common.error.from
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.model.geography.CityParcelable
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations

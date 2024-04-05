@@ -5,7 +5,7 @@ import ru.livetyping.zarina.domain.common.Media
 import ru.livetyping.zarina.domain.common.MediaType
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.content.HomeContent
-import ru.livetyping.zarina.ui.base.ErrorState
+import ru.livetyping.zarina.ui.common.error.ErrorState
 import ru.livetyping.zarina.ui.screen.home.HomeViewModel
 import kotlin.random.Random
 

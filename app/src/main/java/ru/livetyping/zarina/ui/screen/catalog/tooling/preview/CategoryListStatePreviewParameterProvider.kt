@@ -5,7 +5,7 @@ import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentSet
 import ru.livetyping.zarina.domain.category.Category
-import ru.livetyping.zarina.ui.base.ErrorState
+import ru.livetyping.zarina.ui.common.error.ErrorState
 import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.ui.screen.catalog.CatalogViewModel
 
