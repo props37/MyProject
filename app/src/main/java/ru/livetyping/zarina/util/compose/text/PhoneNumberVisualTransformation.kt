@@ -10,7 +10,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import ru.livetyping.zarina.ui.common.phone.PhoneNumberUtilProvider
 import ru.livetyping.zarina.util.platform.locale
 
 // Source: https://medium.com/google-developer-experts/hands-on-jetpack-compose-visualtransformation-to-create-a-phone-number-formatter-99b0347fc4f6
@@ -20,7 +20,7 @@ class PhoneNumberVisualTransformation(
     countryCode: String = context.locale.country,
 ) : VisualTransformation {
     private val phoneNumberFormatter =
-        PhoneNumberUtil.createInstance(context).getAsYouTypeFormatter(countryCode)
+        PhoneNumberUtilProvider.provide(context).getAsYouTypeFormatter(countryCode)
 
     override fun filter(text: AnnotatedString): TransformedText {
         val transformation = reformat(text, Selection.getSelectionEnd(text))
