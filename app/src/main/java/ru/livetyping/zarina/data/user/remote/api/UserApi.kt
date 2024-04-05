@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.data.user.remote.api
 
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.post
 import io.ktor.client.request.put
@@ -9,6 +10,7 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
+import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpErrorDtoSerializer
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpFieldValidationErrorDto
@@ -63,11 +65,11 @@ class UserApi @Inject constructor(
     }
 
     // TODO: [High] Handle exceptions
-    suspend fun confirmSignUp(phone: PhoneNumber, otp: String) {
+    suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthorizationDto {
         val body = ConfirmSignUpRequestBody(phone.value, otp)
-        httpClient.post("/api/register/phone/sms/confirmation") {
+        return httpClient.post("/api/register/phone/sms/confirmation") {
             setJsonBody(body)
-        }
+        }.body()
     }
 
     // TODO: [Low] Extract?

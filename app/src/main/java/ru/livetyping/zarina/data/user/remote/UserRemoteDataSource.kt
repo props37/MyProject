@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.data.user.remote
 
 import ru.livetyping.zarina.data.user.remote.api.UserApi
+import ru.livetyping.zarina.domain.authorization.AuthorizationResult
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Token
@@ -34,7 +35,7 @@ class UserRemoteDataSource @Inject constructor(
         )
     }
 
-    suspend fun confirmSignUp(phone: PhoneNumber, otp: String) {
-        api.confirmSignUp(phone, otp)
+    suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthorizationResult {
+        return api.confirmSignUp(phone, otp).toAuthorizationResult()
     }
 }

@@ -3,6 +3,7 @@ package ru.livetyping.zarina.data.user
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.data.user.local.UserLocalDataSource
 import ru.livetyping.zarina.data.user.remote.UserRemoteDataSource
+import ru.livetyping.zarina.domain.authorization.AuthorizationResult
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.PhoneNumber
@@ -55,8 +56,8 @@ class UserRepository @Inject constructor(
         )
     }
 
-    suspend fun confirmSignUp(phone: PhoneNumber, otp: String) {
-        remoteDataSource.confirmSignUp(phone, otp)
+    suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthorizationResult {
+        return remoteDataSource.confirmSignUp(phone, otp)
     }
 
     suspend fun clear() {
