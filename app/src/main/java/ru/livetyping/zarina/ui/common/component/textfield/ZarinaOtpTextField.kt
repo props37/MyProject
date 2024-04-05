@@ -32,9 +32,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
+import ru.livetyping.zarina.ui.common.component.shimmer.rememberZarinaTextShimmer
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.text.FontFeatureSettings
+import ru.livetyping.zarina.util.library.shimmer.shimmerToggleable
 
 @Composable
 fun ZarinaOtpTextField(
@@ -47,6 +51,7 @@ fun ZarinaOtpTextField(
     cellSpacedBy: Dp = CellSpacedBy,
     areNonDigitSymbolsAllowed: Boolean = false,
     isEnabled: Boolean = true,
+    isLoading: Boolean = false,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
     textStyle: TextStyle = TextStyleDefault,
@@ -85,12 +90,19 @@ fun ZarinaOtpTextField(
                 horizontalArrangement = Arrangement.spacedBy(cellSpacedBy),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
+                val shimmer = rememberZarinaTextShimmer(
+                    bounds = ShimmerBounds.Window,
+                    targetColorAlpha = 0.2f,
+                )
+
                 repeat(length) { index ->
                     Cell(
                         char = value.getOrNull(index),
                         isFocused = isTextFieldFocused && (index == value.lastIndex + 1),
+                        isLoading = isLoading,
                         isError = isError,
                         textStyle = textStyle,
+                        shimmer = shimmer,
                         modifier = Modifier.widthIn(min = cellMinWidth),
                     )
                 }
@@ -106,8 +118,10 @@ fun ZarinaOtpTextField(
 private fun Cell(
     char: Char?,
     isFocused: Boolean,
+    isLoading: Boolean,
     isError: Boolean,
     textStyle: TextStyle,
+    shimmer: Shimmer,
     modifier: Modifier = Modifier,
 ) {
     val textColor by animateColorAsState(
@@ -138,7 +152,9 @@ private fun Cell(
             text = char?.toString() ?: CharPlaceholder,
             style = textStyle,
             color = textColor,
-            modifier = Modifier.padding(horizontal = 4.dp),
+            modifier = Modifier
+                .padding(horizontal = 4.dp)
+                .shimmerToggleable(shimmer = shimmer, isEnabled = isLoading),
         )
 
         Divider(color = dividerColor)
@@ -156,7 +172,8 @@ private fun Preview() {
         ZarinaOtpTextField(
             value = value,
             onValueChanged = { value = it },
-            isError = value == "0000",
+            isLoading = value == "0000",
+            isError = value == "9999",
             onFilled = { focusManager.clearFocus() },
             modifier = Modifier
                 .background(Color.White)
