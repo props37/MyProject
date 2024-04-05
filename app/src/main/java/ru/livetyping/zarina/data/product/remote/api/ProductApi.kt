@@ -76,6 +76,7 @@ class ProductApi @Inject constructor(
         }
     }
 
+    // TODO: [Low] Extract?
     private suspend inline fun <T> subscribeToProductApiExceptionConverter(block: () -> T): T {
         return try {
             block()

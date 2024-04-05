@@ -55,6 +55,10 @@ class UserRepository @Inject constructor(
         )
     }
 
+    suspend fun confirmSignUp(phone: PhoneNumber, otp: String) {
+        remoteDataSource.confirmSignUp(phone, otp)
+    }
+
     suspend fun clear() {
         localDataSource.clear()
     }

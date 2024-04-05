@@ -33,4 +33,8 @@ class UserRemoteDataSource @Inject constructor(
             recaptchaToken = recaptchaToken,
         )
     }
+
+    suspend fun confirmSignUp(phone: PhoneNumber, otp: String) {
+        api.confirmSignUp(phone, otp)
+    }
 }

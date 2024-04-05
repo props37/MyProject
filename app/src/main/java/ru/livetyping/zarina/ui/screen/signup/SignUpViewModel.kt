@@ -163,6 +163,11 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun onSignUpClicked() {
+        // TODO: [High] Remove!!!
+        val action = SignUpScreenAction.UserCreated(PhoneNumber.create("+78005553535"))
+        emitSideEffect(SideEffect.Navigate(action))
+        return
+
         if (signUpJob?.isActive == true) return
 
         if (!arePoliciesAccepted.value) {

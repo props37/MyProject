@@ -9,6 +9,7 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
+import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpErrorDtoSerializer
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpFieldValidationErrorDto
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpMessageErrorDto
@@ -61,6 +62,15 @@ class UserApi @Inject constructor(
         }
     }
 
+    // TODO: [High] Handle exceptions
+    suspend fun confirmSignUp(phone: PhoneNumber, otp: String) {
+        val body = ConfirmSignUpRequestBody(phone.value, otp)
+        httpClient.post("/api/register/phone/sms/confirmation") {
+            setJsonBody(body)
+        }
+    }
+
+    // TODO: [Low] Extract?
     private suspend inline fun <T> signUpApiExceptionConverter(block: () -> T): T {
         return try {
             block()
