@@ -127,7 +127,7 @@ class ProfileViewModel @AssistedInject constructor(
     }
 
     companion object {
-        private const val HELP_URL = "https://pwa.zarina.ru/help/"
-        private const val ABOUT_COMPANY_URL = "https://pwa.zarina.ru/about/"
+        private const val HELP_URL = "https://zarina.ru/help/"
+        private const val ABOUT_COMPANY_URL = "https://zarina.ru/about/"
     }
 }
