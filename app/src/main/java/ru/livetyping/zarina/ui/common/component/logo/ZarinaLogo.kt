@@ -63,7 +63,7 @@ private fun getShimmerTheme(): ShimmerTheme {
         rotation = 0f,
         shaderColors = listOf(
             Color.Unspecified.copy(alpha = 1f),
-            Color.Unspecified.copy(alpha = 0.4f),
+            Color.Unspecified.copy(alpha = 0.3f),
             Color.Unspecified.copy(alpha = 1f),
         ),
         shaderColorStops = listOf(0f, 0.5f, 1f),
