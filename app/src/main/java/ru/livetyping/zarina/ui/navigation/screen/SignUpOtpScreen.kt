@@ -7,6 +7,7 @@ import ru.livetyping.zarina.ui.navigation.base.composableDestination
 import ru.livetyping.zarina.ui.navigation.destination.graph.SignUpGraph
 import ru.livetyping.zarina.ui.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.ui.navigation.util.slidePopExitTransition
+import ru.livetyping.zarina.ui.screen.signupotp.SignUpOtpScreen
 import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.signUpOtpScreen(navController: NavHostController) {
@@ -25,7 +26,7 @@ fun NavGraphBuilder.signUpOtpScreen(navController: NavHostController) {
             }
         },
     ) {
-        // TODO: [High] Implement
+        SignUpOtpScreen()
     }
 }
 
