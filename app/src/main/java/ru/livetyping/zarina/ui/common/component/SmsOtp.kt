@@ -43,19 +43,18 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-// TODO: [High] Move and rename
-
 @Composable
 fun SmsOtp(
     phone: PhoneNumber,
     otp: String,
     onOtpChanged: (String) -> Unit,
-    onOtpFilled: (String) -> Unit,
+    onOtpEntered: (String) -> Unit,
     resendState: OtpResendState,
     onResendClicked: () -> Unit,
     modifier: Modifier = Modifier,
     otpLength: Int = Length,
     isOtpEnabled: Boolean = true,
+    isOtpLoading: Boolean = false,
     isOtpError: Boolean = false,
     isOtpReadOnly: Boolean = false,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -85,9 +84,10 @@ fun SmsOtp(
         ZarinaOtpTextField(
             value = otp,
             onValueChanged = onOtpChanged,
-            onFilled = onOtpFilled,
+            onFilled = onOtpEntered,
             length = otpLength,
             isEnabled = isOtpEnabled,
+            isLoading = isOtpLoading,
             isError = isOtpError,
             isReadOnly = isOtpReadOnly,
             backgroundColor = backgroundColor,
@@ -170,7 +170,7 @@ private fun PreviewResendTimeout() {
             phone = remember { PhoneNumber.create("+78005553535") },
             otp = "",
             onOtpChanged = {},
-            onOtpFilled = {},
+            onOtpEntered = {},
             resendState = resendState,
             onResendClicked = {},
             modifier = Modifier
@@ -188,7 +188,7 @@ private fun PreviewResendAvailable() {
             phone = remember { PhoneNumber.create("+78005553535") },
             otp = "12",
             onOtpChanged = {},
-            onOtpFilled = {},
+            onOtpEntered = {},
             resendState = remember { OtpResendState.ResendAvailable },
             onResendClicked = {},
             modifier = Modifier
