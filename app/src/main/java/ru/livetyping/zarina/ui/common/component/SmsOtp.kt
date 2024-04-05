@@ -32,6 +32,7 @@ import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.ui.common.component.textfield.ZarinaOtpTextField
+import ru.livetyping.zarina.ui.common.otp.OtpResendState
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
@@ -46,7 +47,7 @@ fun SmsOtp(
     otp: String,
     onOtpChanged: (String) -> Unit,
     onOtpFilled: (String) -> Unit,
-    resendState: SmsOtpResendState,
+    resendState: OtpResendState,
     onResendClicked: () -> Unit,
     modifier: Modifier = Modifier,
     otpLength: Int = Length,
@@ -92,15 +93,15 @@ fun SmsOtp(
             contentAlignment = Alignment.BottomCenter,
             contentKey = {
                 when (it) {
-                    SmsOtpResendState.ResendAvailable -> it
-                    is SmsOtpResendState.ResendTimeout -> ContentKeyResendTimeout
+                    OtpResendState.ResendAvailable -> it
+                    is OtpResendState.Timeout -> ContentKeyResendTimeout
                 }
             },
             label = "Resend content",
             modifier = Modifier.align(Alignment.CenterHorizontally),
         ) { resendState ->
             when (resendState) {
-                SmsOtpResendState.ResendAvailable -> {
+                OtpResendState.ResendAvailable -> {
                     ZarinaButton(
                         onClick = onResendClicked,
                         size = ZarinaButtonSize.Medium,
@@ -110,7 +111,7 @@ fun SmsOtp(
                     }
                 }
 
-                is SmsOtpResendState.ResendTimeout -> {
+                is OtpResendState.Timeout -> {
                     val remainingTime = resendState.remainingTime.toComponents { minutes, seconds, _ ->
                         RemainingTimeFormat.format(minutes, seconds)
                     }
@@ -137,18 +138,18 @@ fun SmsOtp(
 private fun PreviewResendTimeout() {
     ZarinaPreview {
         var remainingTime by remember { mutableStateOf(1.minutes) }
-        var resendState: SmsOtpResendState by remember {
-            mutableStateOf(SmsOtpResendState.ResendTimeout(remainingTime))
+        var resendState by remember {
+            mutableStateOf<OtpResendState>(OtpResendState.Timeout(remainingTime))
         }
         LaunchedEffect(Unit) {
-            while (resendState != SmsOtpResendState.ResendAvailable) {
+            while (resendState != OtpResendState.ResendAvailable) {
                 delay(100.milliseconds)
                 remainingTime -= 1.seconds
 
                 resendState = if (remainingTime > Duration.ZERO) {
-                    SmsOtpResendState.ResendTimeout(remainingTime)
+                    OtpResendState.Timeout(remainingTime)
                 } else {
-                    SmsOtpResendState.ResendAvailable
+                    OtpResendState.ResendAvailable
                 }
             }
         }
@@ -176,20 +177,13 @@ private fun PreviewResendAvailable() {
             otp = "12",
             onOtpChanged = {},
             onOtpFilled = {},
-            resendState = remember { SmsOtpResendState.ResendAvailable },
+            resendState = remember { OtpResendState.ResendAvailable },
             onResendClicked = {},
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
         )
     }
-}
-
-// TODO: [High] Extract and rename
-sealed class SmsOtpResendState {
-    data object ResendAvailable : SmsOtpResendState()
-
-    data class ResendTimeout(val remainingTime: Duration) : SmsOtpResendState()
 }
 
 private const val Length = 4
