@@ -8,7 +8,7 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
-// TODO: [Medium] Remove when the compose.animation version will have contentKey parameter
+// TODO: [Low] Remove when the compose.animation version will have contentKey parameter
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun <T> Crossfade(

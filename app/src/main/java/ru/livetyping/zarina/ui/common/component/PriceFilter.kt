@@ -50,7 +50,7 @@ import ru.livetyping.zarina.ui.theme.UiKitTheme
 import kotlin.math.min
 
 // TODO: [High] Add visual transformations to text
-// TODO: [High] Refactor
+// TODO: [Low] Refactor
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable

@@ -60,8 +60,9 @@ import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 
+// TODO: [High] Add label animation
 // TODO: [High] Apply error color to description
-// TODO: [Low] Migrate to BasicTextField2
+// TODO: [High] Migrate to BasicTextField2
 
 @Composable
 fun ZarinaTextField(
@@ -218,7 +219,6 @@ private fun DecorationBox(
     description: (@Composable () -> Unit)?,
     colors: ZarinaTextFieldColors,
 ) {
-    // TODO: [Low] Migrate to Layout?
     Column {
         label?.let { label ->
             val labelTextStyle = ZarinaTextFieldDefaults.labelTextStyleFromSize(size)

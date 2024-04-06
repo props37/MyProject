@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
@@ -312,6 +313,32 @@ private fun ScreenContent(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        ScreenContent(
+            onBackClicked = {},
+            firstName = "",
+            onFirstNameChanged = {},
+            isFirstNameInvalid = false,
+            email = "",
+            onEmailChanged = {},
+            isEmailInvalid = false,
+            phone = "",
+            onPhoneChanged = {},
+            isPhoneInvalid = false,
+            password = "",
+            onPasswordChanged = {},
+            isPasswordInvalid = false,
+            receiveNewsNyEmail = false,
+            onReceiveNewsNyEmailChanged = {},
+            receiveSmsNotifications = false,
+            onReceiveSmsNotificationsChanged = {},
+            arePoliciesAccepted = false,
+            onPoliciesAcceptedChanged = {},
+            isPoliciesErrorVisible = false,
+            onUrlClicked = {},
+            onSignUpClicked = {},
+            isSignUpButtonLoading = false,
+            sideEffects = remember { emptyFlow() },
+            navigate = {},
+        )
     }
 }

@@ -109,7 +109,6 @@ object HeightSelectorScreenComponents {
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             Text(
-                // TODO: [High] Is okay?
                 text = if (offer.height != null) {
                     stringResource(R.string.height_cm, offer.height)
                 } else "",
