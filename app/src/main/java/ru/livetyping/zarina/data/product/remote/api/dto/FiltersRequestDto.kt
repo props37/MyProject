@@ -2,7 +2,7 @@ package ru.livetyping.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.livetyping.zarina.data.common.remote.api.dto.PriceFilterDto
+import ru.livetyping.zarina.data.common.remote.api.zarina.dto.PriceFilterDto
 import ru.livetyping.zarina.domain.filter.Filters
 
 @Serializable

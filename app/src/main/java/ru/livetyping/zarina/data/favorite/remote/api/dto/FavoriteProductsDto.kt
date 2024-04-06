@@ -2,8 +2,8 @@ package ru.livetyping.zarina.data.favorite.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.livetyping.zarina.data.common.remote.api.dto.PaginationInfoDto
-import ru.livetyping.zarina.data.common.remote.api.dto.ProductDto
+import ru.livetyping.zarina.data.common.remote.api.zarina.dto.PaginationInfoDto
+import ru.livetyping.zarina.data.common.remote.api.zarina.dto.ProductDto
 import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.product.Product
 

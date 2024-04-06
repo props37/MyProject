@@ -19,7 +19,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.BuildConfig
-import ru.livetyping.zarina.data.common.remote.headerprovider.ZarinaApiHeaderProvider
+import ru.livetyping.zarina.data.common.remote.api.zarina.ZarinaApiHeaderProvider
 import ru.livetyping.zarina.data.common.remote.ktor.plugin.ZarinaAuth
 import ru.livetyping.zarina.data.common.remote.ktor.plugin.bearer
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens

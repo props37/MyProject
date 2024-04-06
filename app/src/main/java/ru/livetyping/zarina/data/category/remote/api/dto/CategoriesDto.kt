@@ -2,7 +2,7 @@ package ru.livetyping.zarina.data.category.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.livetyping.zarina.data.common.remote.api.dto.CategoryDto
+import ru.livetyping.zarina.data.common.remote.api.zarina.dto.CategoryDto
 import ru.livetyping.zarina.domain.category.Categories
 
 @Serializable

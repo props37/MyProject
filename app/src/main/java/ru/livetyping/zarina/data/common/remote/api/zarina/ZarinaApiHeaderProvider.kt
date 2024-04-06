@@ -1,5 +1,6 @@
-package ru.livetyping.zarina.data.common.remote.headerprovider
+package ru.livetyping.zarina.data.common.remote.api.zarina
 
+import ru.livetyping.zarina.data.common.remote.api.headerprovider.HeaderProvider
 import javax.inject.Inject
 
 class ZarinaApiHeaderProvider @Inject constructor() : HeaderProvider {

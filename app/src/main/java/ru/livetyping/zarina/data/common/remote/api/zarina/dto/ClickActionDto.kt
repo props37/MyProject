@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.common.remote.api.dto
+package ru.livetyping.zarina.data.common.remote.api.zarina.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

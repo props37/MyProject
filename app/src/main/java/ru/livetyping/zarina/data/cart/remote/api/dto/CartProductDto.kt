@@ -2,7 +2,7 @@ package ru.livetyping.zarina.data.cart.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.livetyping.zarina.data.common.remote.api.dto.PriceDto
+import ru.livetyping.zarina.data.common.remote.api.zarina.dto.PriceDto
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.common.Url

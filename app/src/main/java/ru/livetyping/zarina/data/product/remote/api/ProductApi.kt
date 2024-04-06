@@ -3,7 +3,7 @@ package ru.livetyping.zarina.data.product.remote.api
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.post
-import ru.livetyping.zarina.data.common.remote.api.dto.SortingDto
+import ru.livetyping.zarina.data.common.remote.api.zarina.dto.SortingDto
 import ru.livetyping.zarina.data.product.remote.api.dto.FiltersRequestDto
 import ru.livetyping.zarina.data.product.remote.api.dto.GetProductsRequestBody
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductsDto

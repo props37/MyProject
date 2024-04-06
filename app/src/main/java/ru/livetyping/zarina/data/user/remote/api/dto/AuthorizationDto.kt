@@ -3,7 +3,7 @@ package ru.livetyping.zarina.data.user.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.data.authorization.remote.api.dto.AuthorizationTokensDto
-import ru.livetyping.zarina.data.common.remote.api.dto.UserDto
+import ru.livetyping.zarina.data.common.remote.api.zarina.dto.UserDto
 import ru.livetyping.zarina.domain.authorization.AuthorizationResult
 
 @Serializable
