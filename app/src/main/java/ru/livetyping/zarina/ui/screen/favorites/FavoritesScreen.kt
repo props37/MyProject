@@ -100,8 +100,6 @@ private fun ScreenContent(
             onAddToFavoritesClicked = onAddProductToFavoritesClicked,
             onAddToCartClicked = onAddProductToCartClicked,
             onSubscribeClicked = onSubscribeToProductClicked,
-            onRefreshProducts = {}, // No need for additional logic
-            onProductsErrorRefreshClicked = {}, // No need for additional logic
             noProductsPlaceholder = {
                 FavoriteProductsNotFoundPlaceholder(
                     onGoToCatalogClicked = onGoToCatalogClicked,

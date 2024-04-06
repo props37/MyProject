@@ -54,10 +54,20 @@ fun ProductGrid(
     onAddToFavoritesClicked: (Product) -> Unit,
     onAddToCartClicked: (Product) -> Unit,
     onSubscribeClicked: (Product) -> Unit,
-    onRefreshProducts: () -> Unit,
-    onProductsErrorRefreshClicked: () -> Unit,
     noProductsPlaceholder: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+
+    /**
+     * Callback that will be called when products are refreshed. Since the refresh is done
+     * under the hood, the additional logic can be invoked using this callback.
+     */
+    onProductsRefreshed: (() -> Unit)? = null,
+
+    /**
+     * Callback that will be called when error retry button is clicked. Since the retry
+     * is done under the hood, the additional logic can be invoked using this callback.
+     */
+    onProductsErrorRefreshClicked: (() -> Unit)? = null,
 ) {
     val gridState = rememberLazyGridState()
     val productPagingItems = productPagingDataFlow.collectAsLazyPagingItems()
@@ -102,7 +112,7 @@ fun ProductGrid(
             onRefresh = {
                 isPullRefreshTriggered.value = true
                 productPagingItems.refresh()
-                onRefreshProducts()
+                onProductsRefreshed?.invoke()
             },
         )
 
@@ -177,7 +187,7 @@ fun ProductGrid(
                         state = state,
                         onButtonClicked = {
                             productPagingItems.retry()
-                            onProductsErrorRefreshClicked()
+                            onProductsErrorRefreshClicked?.invoke()
                         },
                         modifier = Modifier
                             .fillMaxSize()

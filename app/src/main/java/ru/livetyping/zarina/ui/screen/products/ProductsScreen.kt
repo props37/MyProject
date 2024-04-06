@@ -145,7 +145,7 @@ private fun ScreenContent(
                 onAddToFavoritesClicked = onAddProductToFavoritesClicked,
                 onAddToCartClicked = onAddProductToCartClicked,
                 onSubscribeClicked = onSubscribeToProductClicked,
-                onRefreshProducts = onRefreshProducts,
+                onProductsRefreshed = onRefreshProducts,
                 onProductsErrorRefreshClicked = onProductsErrorRefreshClicked,
                 noProductsPlaceholder = {
                     ProductsNotFoundPlaceholder(
