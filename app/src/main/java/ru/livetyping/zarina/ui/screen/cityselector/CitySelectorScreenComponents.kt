@@ -60,7 +60,7 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTra
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.navigationBarsOrIme
-import ru.livetyping.zarina.utils.compose.plus
+import ru.livetyping.zarina.util.compose.plus
 
 object CitySelectorScreenComponents {
 

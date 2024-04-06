@@ -191,11 +191,6 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigationCompose)
 
-    implementation(libs.koin.annotations)
-    implementation(libs.koin.android)
-    implementation(libs.koin.compose)
-    ksp(libs.koin.compiler)
-
     implementation(libs.accompanist.systemUi)
     implementation(libs.accompanist.permissions)
     implementation(libs.accompanist.navigationMaterial)
@@ -225,7 +220,6 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlin.coroutines.test)
-    testImplementation(libs.koin.test)
     androidTestImplementation(libs.jetpack.test.junit)
     androidTestImplementation(libs.jetpack.espresso)
     androidTestImplementation(platform(libs.jetpack.compose.bom))

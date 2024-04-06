@@ -50,8 +50,8 @@ import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.common.util.rememberFormattedPrice
 import ru.livetyping.zarina.ui.theme.UiKitTheme
+import ru.livetyping.zarina.util.kotlin.capitalize
 import ru.livetyping.zarina.util.library.shimmer.shimmerToggleable
-import ru.livetyping.zarina.utils.kotlin.capitalize
 
 // TODO: [High] Refactor
 

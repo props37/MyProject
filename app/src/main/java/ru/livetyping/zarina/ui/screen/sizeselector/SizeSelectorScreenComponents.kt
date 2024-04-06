@@ -44,7 +44,7 @@ import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.ui.screen.sizeselector.SizeSelectorViewModel.Size
 import ru.livetyping.zarina.ui.theme.UiKitTheme
-import ru.livetyping.zarina.utils.kotlin.capitalize
+import ru.livetyping.zarina.util.kotlin.capitalize
 
 object SizeSelectorScreenComponents {
 

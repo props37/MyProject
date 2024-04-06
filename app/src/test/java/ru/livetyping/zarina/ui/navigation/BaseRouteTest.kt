@@ -1,7 +1,7 @@
 package ru.livetyping.zarina.ui.navigation
 
+import junit.framework.TestCase.assertEquals
 import org.junit.Test
-import kotlin.test.assertEquals
 
 class BaseRouteTest {
     @Test

@@ -3,7 +3,6 @@ package ru.livetyping.zarina.ui.navigation.base.parameterless
 import androidx.navigation.NamedNavArgument
 import ru.livetyping.zarina.ui.navigation.BaseRoute
 import ru.livetyping.zarina.ui.navigation.base.Destination
-import ru.livetyping.zarina.ui.navigation.old.destinations.BaseRouteOld
 
 /**
  * An abstraction for a Compose Navigation destination that encapsulates destination's
@@ -14,8 +13,6 @@ import ru.livetyping.zarina.ui.navigation.old.destinations.BaseRouteOld
  * @see [Destination].
  */
 abstract class SimpleDestination(override val routeSchema: String) : Destination<Unit>() {
-
-    constructor(baseRoute: BaseRouteOld) : this(baseRoute.route)
 
     constructor(baseRoute: BaseRoute) : this(baseRoute.route)
 
