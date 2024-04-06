@@ -29,7 +29,7 @@ data class FiltersDto(
     val colors: List<ColorItem>? = null,
 
     @SerialName("available_for_shipping")
-    val availableForDelivery: Boolean? = null,
+    val availableForDelivery: DeliveryAvailability? = null,
 
     @SerialName("available_for_store_pickup")
     val availableForStorePickup: StorePickupAvailability? = null,
@@ -64,10 +64,12 @@ data class FiltersDto(
             )
         } else null
         val deliveryAvailability = availableForDelivery?.let {
-            ToggleFilter(
-                isEnabled = availableForDelivery,
-                type = Filter.Type.DELIVERY_AVAILABILITY,
-            )
+            if (it.available != false) {
+                ToggleFilter(
+                    isEnabled = availableForDelivery.isApplied ?: false,
+                    type = Filter.Type.DELIVERY_AVAILABILITY,
+                )
+            } else null
         }
         val storePickupAvailability = availableForStorePickup?.let {
             if (it.available != false) {
@@ -163,6 +165,15 @@ data class FiltersDto(
             }
         }
     }
+    
+    @Serializable
+    data class DeliveryAvailability(
+        @SerialName("is_applied")
+        val isApplied: Boolean? = null,
+
+        @SerialName("available")
+        val available: Boolean? = null,
+    )
 
     @Serializable
     data class StorePickupAvailability(
