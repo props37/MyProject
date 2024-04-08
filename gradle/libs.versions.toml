@@ -31,7 +31,7 @@ jetpack-benchmark = "1.2.3"
 jetpack-compose-bom = "2024.04.00"
 jetpack-compose-compiler = "1.5.11"
 
-ktor = "2.3.9"
+ktor = "2.3.10"
 
 hilt = "2.51.1"
 hilt-navigationCompose = "1.2.0"
