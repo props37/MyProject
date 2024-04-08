@@ -26,6 +26,7 @@ abstract class UserDao {
             SELECT *
             FROM ${UserEntity.TABLE_NAME}
             WHERE ${UserEntity.FIELD_ID} = :userId
+            LIMIT 1
         """
     )
     protected abstract fun getUserFlowImpl(userId: String): Flow<UserEntity?>
