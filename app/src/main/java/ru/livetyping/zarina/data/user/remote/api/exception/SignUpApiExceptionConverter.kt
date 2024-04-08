@@ -54,15 +54,15 @@ class SignUpApiExceptionConverter @Inject constructor(
             is SignUpMessageErrorDto -> {
                 val message = checkNotNull(errorDto.message) { "message is null" }
                 when (message) {
-                    SIGN_UP_ERROR_MESSAGE_RECAPTCHA_INVALID -> {
+                    MESSAGE_INVALID_RECAPTCHA -> {
                         throw InvalidCaptchaException()
                     }
 
-                    SIGN_UP_ERROR_MESSAGE_EMAIL_ALREADY_IN_USE -> {
+                    MESSAGE_EMAIL_ALREADY_IN_USE -> {
                         throw EmailAlreadyInUseException()
                     }
 
-                    SIGN_UP_ERROR_MESSAGE_OTP_TIMEOUT -> throw OtpTimeoutException()
+                    MESSAGE_OTP_TIMEOUT -> throw OtpTimeoutException()
                     else -> throw originalException
                 }
             }
@@ -70,10 +70,10 @@ class SignUpApiExceptionConverter @Inject constructor(
     }
 
     companion object {
-        private const val SIGN_UP_ERROR_MESSAGE_RECAPTCHA_INVALID = "Recaptcha not valid"
-        private const val SIGN_UP_ERROR_MESSAGE_EMAIL_ALREADY_IN_USE =
+        private const val MESSAGE_INVALID_RECAPTCHA = "Recaptcha not valid"
+        private const val MESSAGE_EMAIL_ALREADY_IN_USE =
             "Пользователь с таким Email уже зарегистрирован"
-        private const val SIGN_UP_ERROR_MESSAGE_OTP_TIMEOUT =
+        private const val MESSAGE_OTP_TIMEOUT =
             "Запрос на повторную отправку смс сделан слишком рано"
     }
 }

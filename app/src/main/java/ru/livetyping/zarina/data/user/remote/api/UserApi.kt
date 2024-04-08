@@ -8,6 +8,7 @@ import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpRequestBody
+import ru.livetyping.zarina.data.user.remote.api.exception.ConfirmSignUpApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.SignUpApiExceptionConverter
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.common.Email
@@ -21,6 +22,7 @@ class UserApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
     private val httpClient: HttpClient,
     private val signUpApiExceptionConverter: SignUpApiExceptionConverter,
+    private val confirmSignUpApiExceptionConverter: ConfirmSignUpApiExceptionConverter,
 ) {
     suspend fun setUserCity(city: City) {
         val body = SetUserCityRequestBody(city.kladrId.value)
@@ -54,11 +56,12 @@ class UserApi @Inject constructor(
         }
     }
 
-    // TODO: [High] Handle exceptions
     suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthorizationDto {
         val body = ConfirmSignUpRequestBody(phone.value, otp)
-        return httpClient.post("/api/register/phone/sms/confirmation") {
-            setJsonBody(body)
-        }.body()
+        return confirmSignUpApiExceptionConverter {
+            httpClient.post("/api/register/phone/sms/confirmation") {
+                setJsonBody(body)
+            }.body()
+        }
     }
 }
