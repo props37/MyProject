@@ -47,6 +47,7 @@ class NetworkModule {
         install(ZarinaAuth) {
             bearer {
                 loadTokens {
+                    Timber.tag(HTTP_CLIENT_TAG).v("Load authorization tokens")
                     val tokens = getAuthorizationTokensFlow().firstOrNull()?.getOrNull()
                     tokens?.toBearerTokens()
                 }
