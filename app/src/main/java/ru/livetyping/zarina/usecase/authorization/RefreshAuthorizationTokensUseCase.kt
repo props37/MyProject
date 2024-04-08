@@ -16,6 +16,7 @@ class RefreshAuthorizationTokensUseCase @Inject constructor(
     dispatcher: CoroutineDispatcher,
     private val authorizationRepository: AuthorizationRepository,
     private val fetchUnauthorizedUserAuthorizationTokensUseCase: FetchUnauthorizedUserAuthorizationTokensUseCase,
+    private val setAuthorizationTokensUseCase: SetAuthorizationTokensUseCase,
 ) : UseCase<Unit, Unit>(dispatcher) {
 
     override suspend fun execute(params: Unit) {
@@ -23,7 +24,8 @@ class RefreshAuthorizationTokensUseCase @Inject constructor(
         val currentTokens = authorizationRepository.getAuthorizationTokensFlow().firstOrNull()
         if (currentTokens != null) {
             val newTokens = authorizationRepository.refreshAuthorizationTokens(currentTokens)
-            authorizationRepository.setAuthorizationTokens(newTokens)
+            val setAuthorizationTokensParams = SetAuthorizationTokensUseCase.Params(newTokens)
+            setAuthorizationTokensUseCase(setAuthorizationTokensParams)
             Timber.v("Authorization tokens refreshed")
         } else {
             fetchUnauthorizedUserAuthorizationTokensUseCase()

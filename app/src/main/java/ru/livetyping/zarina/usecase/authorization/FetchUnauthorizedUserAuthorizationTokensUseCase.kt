@@ -12,6 +12,7 @@ class FetchUnauthorizedUserAuthorizationTokensUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val authorizationRepository: AuthorizationRepository,
+    private val setAuthorizationTokensUseCase: SetAuthorizationTokensUseCase,
 ) : UseCase<Unit, Unit>(dispatcher) {
 
     override suspend fun execute(params: Unit) {
@@ -19,7 +20,8 @@ class FetchUnauthorizedUserAuthorizationTokensUseCase @Inject constructor(
         val currentTokens = authorizationRepository.getAuthorizationTokensFlow().firstOrNull()
         if (currentTokens == null) {
             val tokens = authorizationRepository.getNewUnauthorizedUserAuthorizationTokens()
-            authorizationRepository.setAuthorizationTokens(tokens)
+            val setAuthorizationTokensParams = SetAuthorizationTokensUseCase.Params(tokens)
+            setAuthorizationTokensUseCase(setAuthorizationTokensParams)
             Timber.v("Unauthorized user authorization tokens fetched")
         } else {
             Timber.v("No need to fetch authorization tokens since the tokens are present")
