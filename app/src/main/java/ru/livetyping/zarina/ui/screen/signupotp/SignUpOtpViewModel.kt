@@ -100,6 +100,7 @@ class SignUpOtpViewModel @Inject constructor(
     private fun onOtpFailure(e: Throwable) {
         if (e is OtpException) {
             _isOtpError.value = true
+            savedStateHandle[KEY_OTP] = ""
         }
 
         when (e) {
