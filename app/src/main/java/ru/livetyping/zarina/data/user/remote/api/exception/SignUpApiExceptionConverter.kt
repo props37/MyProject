@@ -8,7 +8,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import ru.livetyping.zarina.data.common.remote.api.exception.ApiExceptionConverter
+import ru.livetyping.zarina.data.common.remote.api.exception.KtorApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpErrorDtoSerializer
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpFieldValidationErrorDto
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpMessageErrorDto
@@ -20,20 +20,16 @@ import javax.inject.Inject
 
 class SignUpApiExceptionConverter @Inject constructor(
     private val json: Json,
-) : ApiExceptionConverter {
+) : KtorApiExceptionConverter() {
 
-    override suspend fun <T> invoke(block: suspend () -> T): T {
-        return try {
-            block()
-        } catch (e: ClientRequestException) {
-            val responseText = e.response.bodyAsText()
-            val element = json.parseToJsonElement(responseText)
-            when (element) {
-                is JsonArray -> handleJsonArray(element, e)
-                is JsonObject -> handleJsonObject(element, e)
-                is JsonPrimitive -> throw e
-                JsonNull -> throw e
-            }
+    override suspend fun handle(e: ClientRequestException): Nothing {
+        val responseText = e.response.bodyAsText()
+        val element = json.parseToJsonElement(responseText)
+        when (element) {
+            is JsonArray -> handleJsonArray(element, e)
+            is JsonObject -> handleJsonObject(element, e)
+            is JsonPrimitive -> throw e
+            JsonNull -> throw e
         }
     }
 
