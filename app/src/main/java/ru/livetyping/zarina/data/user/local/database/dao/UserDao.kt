@@ -14,8 +14,8 @@ abstract class UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun saveUser(user: UserEntity)
 
-    fun getUserFlow(userId: String): Flow<UserEntity?> {
-        return getUserFlowImpl(userId).distinctUntilChanged()
+    fun getUserFlow(): Flow<UserEntity?> {
+        return getUserFlowImpl().distinctUntilChanged()
     }
 
     @Query("DELETE FROM ${UserEntity.TABLE_NAME}")
@@ -25,9 +25,8 @@ abstract class UserDao {
         """
             SELECT *
             FROM ${UserEntity.TABLE_NAME}
-            WHERE ${UserEntity.FIELD_ID} = :userId
             LIMIT 1
         """
     )
-    protected abstract fun getUserFlowImpl(userId: String): Flow<UserEntity?>
+    protected abstract fun getUserFlowImpl(): Flow<UserEntity?>
 }
