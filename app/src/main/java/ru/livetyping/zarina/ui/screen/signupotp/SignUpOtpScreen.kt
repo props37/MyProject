@@ -44,13 +44,15 @@ fun SignUpOtpScreen(
     val phone by viewModel.phone.collectAsStateWithLifecycle()
     val otp by viewModel.otp.collectAsStateWithLifecycle()
     val isOtpLoading by viewModel.isOtpLoading.collectAsStateWithLifecycle()
+    val isOtpError by viewModel.isOtpError.collectAsStateWithLifecycle()
 
     ScreenContent(
         phone = phone,
         otp = otp,
-        isOtpLoading = isOtpLoading,
         onOtpChanged = viewModel::onOtpChanged,
         onOtpEntered = viewModel::onOtpEntered,
+        isOtpLoading = isOtpLoading,
+        isOtpError = isOtpError,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
     )
@@ -60,9 +62,10 @@ fun SignUpOtpScreen(
 private fun ScreenContent(
     phone: PhoneNumber,
     otp: String,
-    isOtpLoading: Boolean,
     onOtpChanged: (String) -> Unit,
     onOtpEntered: () -> Unit,
+    isOtpLoading: Boolean,
+    isOtpError: Boolean,
     onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
 ) {
@@ -95,6 +98,7 @@ private fun ScreenContent(
                 otp = otp,
                 onOtpChanged = onOtpChanged,
                 onOtpEntered = { onOtpEntered() },
+                isOtpError = isOtpError,
                 isOtpLoading = isOtpLoading,
                 resendState = OtpResendState.ResendAvailable,
                 onResendClicked = {}, // TODO: [High] Implement
