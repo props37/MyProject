@@ -11,13 +11,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.operationtracker.OperationKey
 import ru.livetyping.zarina.base.operationtracker.OperationTracker
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.PhoneNumber
+import ru.livetyping.zarina.domain.common.exception.InvalidOtpException
+import ru.livetyping.zarina.domain.common.exception.OtpException
+import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
+import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.ui.navigation.destination.graph.SignUpGraph
 import ru.livetyping.zarina.ui.screen.signupotp.SignUpOtpViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.ConfirmSignUpUseCase
@@ -74,6 +79,7 @@ class SignUpOtpViewModel @Inject constructor(
 
     fun onOtpChanged(otp: String) {
         savedStateHandle[KEY_OTP] = otp
+        _isOtpError.value = false
     }
 
     fun onOtpEntered() {
@@ -86,14 +92,36 @@ class SignUpOtpViewModel @Inject constructor(
                     .onSuccess {
                         // TODO: [High] Implement
                     }
-                    .onFailure {
-                        // TODO: [High] Implement
-                    }
+                    .onFailure(::onOtpFailure)
             }
         }
     }
 
-    sealed interface SideEffect : SideEffectSource.SideEffect
+    private fun onOtpFailure(e: Throwable) {
+        if (e is OtpException) {
+            _isOtpError.value = true
+        }
+
+        when (e) {
+            is InvalidOtpException -> {
+                val message = ZarinaToastMessage.error(
+                    text = Text.Resource(R.string.sign_up_otp_invalid_otp_error),
+                )
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+
+            else -> {
+                val message = ZarinaToastMessage.error(
+                    text = Text.Resource(R.string.something_went_wrong),
+                )
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+        }
+    }
+
+    sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
+    }
 
     private enum class Operation : OperationKey { CONFIRM_SIGN_UP }
 
