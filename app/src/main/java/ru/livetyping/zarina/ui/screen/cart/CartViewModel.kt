@@ -36,9 +36,9 @@ import ru.livetyping.zarina.domain.cart.DeliveryType
 import ru.livetyping.zarina.domain.cart.getAvailableCountForDeliveryType
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.ui.base.text.Text
+import ru.livetyping.zarina.ui.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.error.ErrorState
 import ru.livetyping.zarina.ui.common.error.from
-import ru.livetyping.zarina.ui.common.util.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations

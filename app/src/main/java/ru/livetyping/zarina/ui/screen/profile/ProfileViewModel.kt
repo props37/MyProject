@@ -23,7 +23,7 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.ui.base.text.Text
-import ru.livetyping.zarina.ui.common.util.ScreenResultHandler
+import ru.livetyping.zarina.ui.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations

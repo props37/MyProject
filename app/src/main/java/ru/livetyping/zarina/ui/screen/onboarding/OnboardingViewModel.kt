@@ -32,10 +32,10 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.ui.base.text.Text
+import ru.livetyping.zarina.ui.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.permissionmanager.isDenied
 import ru.livetyping.zarina.ui.common.permissionmanager.isGranted
 import ru.livetyping.zarina.ui.common.permissionmanager.shouldShowRequestRationale
-import ru.livetyping.zarina.ui.common.util.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.model.geography.CityParcelable
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations

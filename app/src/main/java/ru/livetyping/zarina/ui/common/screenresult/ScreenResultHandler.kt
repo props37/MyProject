@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.ui.common.util
+package ru.livetyping.zarina.ui.common.screenresult
 
 import androidx.lifecycle.SavedStateHandle
 import ru.livetyping.zarina.ui.navigation.base.ScreenResult

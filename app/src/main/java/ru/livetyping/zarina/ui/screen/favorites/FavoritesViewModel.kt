@@ -27,7 +27,7 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.ui.base.text.Text
-import ru.livetyping.zarina.ui.common.util.ScreenResultHandler
+import ru.livetyping.zarina.ui.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.common.util.library.paging.mapProducts
 import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
