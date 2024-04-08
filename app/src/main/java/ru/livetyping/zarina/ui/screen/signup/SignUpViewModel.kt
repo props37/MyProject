@@ -72,7 +72,7 @@ class SignUpViewModel @Inject constructor(
 
     val phone: StateFlow<String> = savedStateHandle.getStateFlow(
         key = KEY_PHONE,
-        initialValue = "",
+        initialValue = PHONE_NUMBER_INITIAL_VALUE,
     )
 
     private val _isPhoneInvalid = MutableStateFlow(false)
@@ -278,5 +278,7 @@ class SignUpViewModel @Inject constructor(
         private const val KEY_RECEIVE_SMS_NOTIFICATIONS = "receive_sms_notifications"
         private const val KEY_ARE_POLICIES_ACCEPTED = "are_policies_accepted"
         private const val KEY_IS_POLICIES_ERROR_VISIBLE = "is_policies_error_visible"
+
+        private const val PHONE_NUMBER_INITIAL_VALUE = "+7"
     }
 }
