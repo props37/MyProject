@@ -9,12 +9,21 @@ import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.user.User
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
     private val localDataSource: UserLocalDataSource,
     private val remoteDataSource: UserRemoteDataSource,
 ) {
+    fun getUserFlow(): Flow<User?> {
+        return localDataSource.getUserFlow()
+    }
+
+    suspend fun setUser(user: User) {
+        localDataSource.setUser(user)
+    }
+
     fun getUserCityFlow(): Flow<City?> {
         return localDataSource.getUserCityFlow()
     }
