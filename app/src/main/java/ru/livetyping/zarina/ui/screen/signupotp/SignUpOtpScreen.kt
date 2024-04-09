@@ -46,6 +46,7 @@ fun SignUpOtpScreen(
     val otp by viewModel.otp.collectAsStateWithLifecycle()
     val isOtpLoading by viewModel.isOtpLoading.collectAsStateWithLifecycle()
     val isOtpError by viewModel.isOtpError.collectAsStateWithLifecycle()
+    val otpResendState by viewModel.otpResendState.collectAsStateWithLifecycle()
 
     ScreenContent(
         phone = phone,
@@ -54,6 +55,8 @@ fun SignUpOtpScreen(
         onOtpEntered = viewModel::onOtpEntered,
         isOtpLoading = isOtpLoading,
         isOtpError = isOtpError,
+        otpResendState = otpResendState,
+        onResendOtpClicked = viewModel::onResendOtpClicked,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
@@ -68,6 +71,8 @@ private fun ScreenContent(
     onOtpEntered: () -> Unit,
     isOtpLoading: Boolean,
     isOtpError: Boolean,
+    otpResendState: OtpResendState,
+    onResendOtpClicked: () -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (SignUpOtpScreenAction) -> Unit,
@@ -106,8 +111,8 @@ private fun ScreenContent(
                 onOtpEntered = { onOtpEntered() },
                 isOtpError = isOtpError,
                 isOtpLoading = isOtpLoading,
-                resendState = OtpResendState.ResendAvailable,
-                onResendClicked = {}, // TODO: [High] Implement
+                resendState = otpResendState,
+                onResendClicked = onResendOtpClicked,
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 modifier = Modifier.focusRequester(otpFocusRequester),
             )

@@ -21,15 +21,20 @@ import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.exception.InvalidOtpException
 import ru.livetyping.zarina.domain.common.exception.OtpException
 import ru.livetyping.zarina.ui.base.text.Text
+import ru.livetyping.zarina.ui.common.countdowntimer.CountdownTimer
+import ru.livetyping.zarina.ui.common.otp.OtpResendState
 import ru.livetyping.zarina.ui.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.ui.navigation.destination.graph.SignUpGraph
 import ru.livetyping.zarina.ui.screen.signupotp.SignUpOtpViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.ConfirmSignUpUseCase
+import ru.livetyping.zarina.usecase.user.RequestResendSmsOtpUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 
 @HiltViewModel
 class SignUpOtpViewModel @Inject constructor(
@@ -41,7 +46,10 @@ class SignUpOtpViewModel @Inject constructor(
 
     private val operationTracker = OperationTracker()
 
+    private val countdownTimer = CountdownTimer()
+
     private var confirmSignUpJob: Job? = null
+    private var resendOtpJob: Job? = null
 
     private val otpValueHolder = savedStateHandle.createValueHolder(
         key = KEY_OTP,
@@ -74,6 +82,14 @@ class SignUpOtpViewModel @Inject constructor(
     private val _isOtpError = MutableStateFlow(false)
     val isOtpError: StateFlow<Boolean> = _isOtpError.asStateFlow()
 
+    private val _otpResendState =
+        MutableStateFlow<OtpResendState>(OtpResendState.TimeoutCountdown(OTP_RESEND_INITIAL_TIMEOUT))
+    val otpResendState: StateFlow<OtpResendState> = _otpResendState.asStateFlow()
+
+    init {
+        startOtpResendCountdownTimer()
+    }
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = SignUpOtpScreenAction.ScreenClosed
@@ -102,6 +118,22 @@ class SignUpOtpViewModel @Inject constructor(
         }
     }
 
+    fun onResendOtpClicked() {
+        if (resendOtpJob?.isActive == true) return
+        resendOtpJob = viewModelScope.launch {
+            val params = RequestResendSmsOtpUseCase.Params(phone.value)
+            interactor.requestResendSmsOtp(params)
+                .onSuccess {
+                    startOtpResendCountdownTimer()
+                }
+                .onFailure {
+                    val text = Text.Resource(R.string.code_resend_error)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                }
+        }
+    }
+
     private fun onOtpFailure(e: Throwable) {
         if (e is OtpException) {
             _isOtpError.value = true
@@ -125,6 +157,18 @@ class SignUpOtpViewModel @Inject constructor(
         }
     }
 
+    private fun startOtpResendCountdownTimer() {
+        countdownTimer.start(
+            duration = OTP_RESEND_INITIAL_TIMEOUT,
+            onTick = { remainingTime ->
+                _otpResendState.value = OtpResendState.TimeoutCountdown(remainingTime)
+            },
+            onFinish = {
+                _otpResendState.value = OtpResendState.ResendAvailable
+            },
+        )
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: SignUpOtpScreenAction) : SideEffect
 
@@ -135,5 +179,7 @@ class SignUpOtpViewModel @Inject constructor(
 
     companion object {
         private const val KEY_OTP = "otp"
+
+        private val OTP_RESEND_INITIAL_TIMEOUT: Duration get() = 1.minutes
     }
 }
