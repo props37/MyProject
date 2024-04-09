@@ -5,5 +5,5 @@ import kotlin.time.Duration
 sealed class OtpResendState {
     data object ResendAvailable : OtpResendState()
 
-    data class Timeout(val remainingTime: Duration) : OtpResendState()
+    data class TimeoutCountdown(val remainingTime: Duration) : OtpResendState()
 }

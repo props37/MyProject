@@ -106,7 +106,7 @@ fun SmsOtp(
             contentKey = {
                 when (it) {
                     OtpResendState.ResendAvailable -> it
-                    is OtpResendState.Timeout -> ContentKeyResendTimeout
+                    is OtpResendState.TimeoutCountdown -> ContentKeyResendTimeoutCountdown
                 }
             },
             label = "Resend content",
@@ -123,7 +123,7 @@ fun SmsOtp(
                     }
                 }
 
-                is OtpResendState.Timeout -> {
+                is OtpResendState.TimeoutCountdown -> {
                     val remainingTime = resendState.remainingTime.toComponents { minutes, seconds, _ ->
                         RemainingTimeFormat.format(minutes, seconds)
                     }
@@ -151,7 +151,7 @@ private fun PreviewResendTimeout() {
     ZarinaPreview {
         var remainingTime by remember { mutableStateOf(1.minutes) }
         var resendState by remember {
-            mutableStateOf<OtpResendState>(OtpResendState.Timeout(remainingTime))
+            mutableStateOf<OtpResendState>(OtpResendState.TimeoutCountdown(remainingTime))
         }
         LaunchedEffect(Unit) {
             while (resendState != OtpResendState.ResendAvailable) {
@@ -159,7 +159,7 @@ private fun PreviewResendTimeout() {
                 remainingTime -= 1.seconds
 
                 resendState = if (remainingTime > Duration.ZERO) {
-                    OtpResendState.Timeout(remainingTime)
+                    OtpResendState.TimeoutCountdown(remainingTime)
                 } else {
                     OtpResendState.ResendAvailable
                 }
@@ -200,6 +200,6 @@ private fun PreviewResendAvailable() {
 
 private const val Length = 4
 
-private const val ContentKeyResendTimeout = "ContentKeyResendTimeout"
+private const val ContentKeyResendTimeoutCountdown = "ContentKeyResendTimeoutCountdown"
 
 private const val RemainingTimeFormat = "%d:%02d"
