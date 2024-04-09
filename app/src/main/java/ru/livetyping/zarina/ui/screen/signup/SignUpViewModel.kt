@@ -35,6 +35,7 @@ import ru.livetyping.zarina.domain.user.exception.PasswordException
 import ru.livetyping.zarina.domain.user.exception.PhoneNumberAlreadyInUseException
 import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
 import ru.livetyping.zarina.ui.base.text.Text
+import ru.livetyping.zarina.ui.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.ui.screen.signup.SignUpViewModel.SideEffect
@@ -44,7 +45,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val interactor: SignUpInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
@@ -54,57 +55,73 @@ class SignUpViewModel @Inject constructor(
 
     private var signUpJob: Job? = null
 
-    val firstName: StateFlow<String> = savedStateHandle.getStateFlow(
+    private val firstNameValueHolder = savedStateHandle.createValueHolder(
         key = KEY_FIRST_NAME,
         initialValue = "",
     )
 
-    private val _isFirstNameInvalid = MutableStateFlow(false)
-    val isFirstNameInvalid = _isFirstNameInvalid.asStateFlow()
-
-    val email: StateFlow<String> = savedStateHandle.getStateFlow(
+    private val emailValueHolder = savedStateHandle.createValueHolder(
         key = KEY_EMAIL,
         initialValue = "",
     )
 
-    private val _isEmailInvalid = MutableStateFlow(false)
-    val isEmailInvalid = _isEmailInvalid.asStateFlow()
-
-    val phone: StateFlow<String> = savedStateHandle.getStateFlow(
+    private val phoneValueHolder = savedStateHandle.createValueHolder(
         key = KEY_PHONE,
         initialValue = PHONE_NUMBER_INITIAL_VALUE,
     )
 
-    private val _isPhoneInvalid = MutableStateFlow(false)
-    val isPhoneInvalid = _isPhoneInvalid.asStateFlow()
-
-    val password: StateFlow<String> = savedStateHandle.getStateFlow(
+    private val passwordValueHolder = savedStateHandle.createValueHolder(
         key = KEY_PASSWORD,
         initialValue = "",
     )
 
-    private val _isPasswordInvalid = MutableStateFlow(false)
-    val isPasswordInvalid = _isPasswordInvalid.asStateFlow()
-
-    val receiveNewsByEmail: StateFlow<Boolean> = savedStateHandle.getStateFlow(
+    private val receiveNewsByEmailValueHolder = savedStateHandle.createValueHolder(
         key = KEY_RECEIVE_NEWS_BE_EMAIL,
         initialValue = false,
     )
 
-    val receiveSmsNotifications: StateFlow<Boolean> = savedStateHandle.getStateFlow(
+    private val receiveSmsNotificationsValueHolder = savedStateHandle.createValueHolder(
         key = KEY_RECEIVE_SMS_NOTIFICATIONS,
         initialValue = false,
     )
 
-    val arePoliciesAccepted: StateFlow<Boolean> = savedStateHandle.getStateFlow(
+    private val arePoliciesAcceptedValueHolder = savedStateHandle.createValueHolder(
         key = KEY_ARE_POLICIES_ACCEPTED,
         initialValue = false,
     )
 
-    val isPoliciesErrorVisible: StateFlow<Boolean> = savedStateHandle.getStateFlow(
+    private val isPoliciesErrorVisibleValueHolder = savedStateHandle.createValueHolder(
         key = KEY_IS_POLICIES_ERROR_VISIBLE,
         initialValue = false,
     )
+
+    val firstName: StateFlow<String> = firstNameValueHolder.stateFlow
+
+    private val _isFirstNameInvalid = MutableStateFlow(false)
+    val isFirstNameInvalid = _isFirstNameInvalid.asStateFlow()
+
+    val email: StateFlow<String> = emailValueHolder.stateFlow
+
+    private val _isEmailInvalid = MutableStateFlow(false)
+    val isEmailInvalid = _isEmailInvalid.asStateFlow()
+
+    val phone: StateFlow<String> = phoneValueHolder.stateFlow
+
+    private val _isPhoneInvalid = MutableStateFlow(false)
+    val isPhoneInvalid = _isPhoneInvalid.asStateFlow()
+
+    val password: StateFlow<String> = passwordValueHolder.stateFlow
+
+    private val _isPasswordInvalid = MutableStateFlow(false)
+    val isPasswordInvalid = _isPasswordInvalid.asStateFlow()
+
+    val receiveNewsByEmail: StateFlow<Boolean> = receiveNewsByEmailValueHolder.stateFlow
+
+    val receiveSmsNotifications: StateFlow<Boolean> = receiveSmsNotificationsValueHolder.stateFlow
+
+    val arePoliciesAccepted: StateFlow<Boolean> = arePoliciesAcceptedValueHolder.stateFlow
+
+    val isPoliciesErrorVisible: StateFlow<Boolean> = isPoliciesErrorVisibleValueHolder.stateFlow
 
     val isSignUpButtonLoading: StateFlow<Boolean> = operationTracker
         .isOperationOngoing(Operation.SIGN_UP)
@@ -122,38 +139,38 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun onFirstNameChanged(name: String) {
-        savedStateHandle[KEY_FIRST_NAME] = name
+        firstNameValueHolder.set(name)
         _isFirstNameInvalid.value = false
     }
 
     fun onEmailChanged(email: String) {
-        savedStateHandle[KEY_EMAIL] = email
+        emailValueHolder.set(email)
         _isEmailInvalid.value = false
     }
 
     fun onPhoneChanged(phone: String) {
         val normalizedPhone = PhoneNumberUtils.normalizeNumber(phone)
-        savedStateHandle[KEY_PHONE] = normalizedPhone
+        phoneValueHolder.set(normalizedPhone)
         _isPhoneInvalid.value = false
     }
 
     fun onPasswordChanged(password: String) {
-        savedStateHandle[KEY_PASSWORD] = password
+        passwordValueHolder.set(password)
         _isPasswordInvalid.value = false
     }
 
     fun onReceiveNewsNyEmailChanged(value: Boolean) {
-        savedStateHandle[KEY_RECEIVE_NEWS_BE_EMAIL] = value
+        receiveNewsByEmailValueHolder.set(value)
     }
 
     fun onReceiveSmsNotificationsChanged(value: Boolean) {
-        savedStateHandle[KEY_RECEIVE_SMS_NOTIFICATIONS] = value
+        receiveSmsNotificationsValueHolder.set(value)
     }
 
     fun onPoliciesAcceptedChanged(areAccepted: Boolean) {
-        savedStateHandle[KEY_ARE_POLICIES_ACCEPTED] = areAccepted
+        arePoliciesAcceptedValueHolder.set(areAccepted)
         if (areAccepted) {
-            savedStateHandle[KEY_IS_POLICIES_ERROR_VISIBLE] = false
+            isPoliciesErrorVisibleValueHolder.set(false)
         }
     }
 
@@ -167,7 +184,7 @@ class SignUpViewModel @Inject constructor(
         if (signUpJob?.isActive == true) return
 
         if (!arePoliciesAccepted.value) {
-            savedStateHandle[KEY_IS_POLICIES_ERROR_VISIBLE] = true
+            isPoliciesErrorVisibleValueHolder.set(true)
             val text = Text.Resource(R.string.sign_up_agreement_error)
             val message = ZarinaToastMessage.error(text)
             emitSideEffect(SideEffect.ShowZarinaToast(message))

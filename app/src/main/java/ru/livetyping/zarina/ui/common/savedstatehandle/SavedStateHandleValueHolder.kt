@@ -19,9 +19,9 @@ class SavedStateHandleValueHolder<T>(
 ) {
     val stateFlow: StateFlow<T> = savedStateHandle.getStateFlow(key, initialValue)
 
-    fun getValue(): T? = savedStateHandle[key]
+    fun get(): T? = savedStateHandle[key]
 
-    fun setValue(value: T) {
+    fun set(value: T) {
         savedStateHandle[key] = value
     }
 }
