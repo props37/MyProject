@@ -8,11 +8,11 @@ import ru.livetyping.zarina.domain.common.PhoneNumber
 import timber.log.Timber
 import javax.inject.Inject
 
-class RequestResendSmsUseCase @Inject constructor(
+class RequestResendSmsOtpUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val userRepository: UserRepository,
-) : UseCase<RequestResendSmsUseCase.Params, Unit>(dispatcher) {
+) : UseCase<RequestResendSmsOtpUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
         val phone = params.phone
