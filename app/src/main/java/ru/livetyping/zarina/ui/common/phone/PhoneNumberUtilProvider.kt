@@ -5,20 +5,34 @@ import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import timber.log.Timber
 
 object PhoneNumberUtilProvider {
-    private const val TAG = "PhoneNumberUtilProvider"
 
+    @Volatile
     private var phoneNumberUtil: PhoneNumberUtil? = null
 
-    @Synchronized
-    fun provide(context: Context): PhoneNumberUtil {
-        phoneNumberUtil?.let {
-            Timber.tag(TAG).v("PhoneNumberUtil is already initialized, return it")
-            return it
-        }
+    private val lock = Any()
 
-        Timber.tag(TAG).v("Initialize PhoneNumberUtil")
-        val instance = PhoneNumberUtil.createInstance(context)
-        phoneNumberUtil = instance
-        return instance
+    fun provide(context: Context): PhoneNumberUtil {
+        val currentPhoneNumberUtil = phoneNumberUtil
+        return if (currentPhoneNumberUtil != null) {
+            Timber.tag(TAG).v(MESSAGE_ALREADY_INITIALIZED)
+            currentPhoneNumberUtil
+        } else {
+            synchronized(lock) {
+                phoneNumberUtil?.let {
+                    Timber.tag(TAG).v(MESSAGE_ALREADY_INITIALIZED)
+                    return it
+                }
+
+                Timber.tag(TAG).v("Initialize PhoneNumberUtil")
+                val instance = PhoneNumberUtil.createInstance(context)
+                phoneNumberUtil = instance
+                instance
+            }
+        }
     }
+
+    private const val TAG = "PhoneNumberUtilProvider"
+
+    private const val MESSAGE_ALREADY_INITIALIZED =
+        "PhoneNumberUtil is already initialized, return it"
 }

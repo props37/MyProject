@@ -16,8 +16,11 @@ import javax.inject.Singleton
 
 @Singleton
 class RecaptchaManager @Inject constructor() {
-    private var applicationRef: WeakReference<Application>? = null
+
+    @Volatile
     private var client: RecaptchaClient? = null
+
+    private var applicationRef: WeakReference<Application>? = null
     private val initMutex = Mutex()
 
     suspend fun init(application: Application) {
@@ -37,28 +40,37 @@ class RecaptchaManager @Inject constructor() {
     }
 
     private suspend fun getClient(application: Application): RecaptchaClient? {
-        return initMutex.withLock {
-            client?.let {
-                Timber.tag(TAG).v("Recaptcha client is already initialized, return it")
-                return@withLock it
-            }
-
-            Timber.tag(TAG).v("Initialize Recaptcha client")
-            val result = Recaptcha.getClient(application, BuildConfig.RECAPTCHA_KEY)
-                .onSuccess { client = it }
-                .onFailure { e ->
-                    val message = if (e is RecaptchaException) {
-                        "Recaptcha client initialization failed. Code: ${e.errorCode}, message: ${e.errorMessage}"
-                    } else {
-                        "Recaptcha client initialization failed"
-                    }
-                    Timber.tag(TAG).e(e, message)
+        val currentClient = client
+        return if (currentClient != null) {
+            Timber.tag(TAG).v(MESSAGE_ALREADY_INITIALIZED)
+            currentClient
+        } else {
+            initMutex.withLock {
+                client?.let {
+                    Timber.tag(TAG).v(MESSAGE_ALREADY_INITIALIZED)
+                    return@withLock it
                 }
-            result.getOrNull()
+
+                Timber.tag(TAG).v("Initialize Recaptcha client")
+                val result = Recaptcha.getClient(application, BuildConfig.RECAPTCHA_KEY)
+                    .onSuccess { client = it }
+                    .onFailure { e ->
+                        val message = if (e is RecaptchaException) {
+                            "Recaptcha client initialization failed. Code: ${e.errorCode}, message: ${e.errorMessage}"
+                        } else {
+                            "Recaptcha client initialization failed"
+                        }
+                        Timber.tag(TAG).e(e, message)
+                    }
+                result.getOrNull()
+            }
         }
     }
 
     companion object {
         private const val TAG = "RecaptchaManager"
+
+        private const val MESSAGE_ALREADY_INITIALIZED =
+            "Recaptcha client is already initialized, return it"
     }
 }
