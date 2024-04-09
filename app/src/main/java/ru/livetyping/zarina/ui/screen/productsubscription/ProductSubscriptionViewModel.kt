@@ -212,7 +212,7 @@ class ProductSubscriptionViewModel @Inject constructor(
             val userResult = interactor.getUserFlow().firstOrNull()
             val user = userResult?.getOrNull()
             if (user != null) {
-                savedStateHandle[KEY_FIRST_NAME] = user.firstName
+                savedStateHandle[KEY_FIRST_NAME] = user.firstName.orEmpty()
                 savedStateHandle[KEY_EMAIL] = user.email.value
             }
         }
