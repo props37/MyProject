@@ -160,7 +160,9 @@ private fun ScreenContent(
                 isError = isFirstNameInvalid,
                 size = ZarinaTextFieldSize.Small,
                 label = { Text(text = stringResource(R.string.first_name)) },
-                placeholder = { Text(text = stringResource(R.string.first_name)) },
+                placeholder = {
+                    Text(text = stringResource(R.string.first_name_text_field_placeholder))
+                },
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = firstName.isNotEmpty(),
@@ -188,7 +190,7 @@ private fun ScreenContent(
                 isError = isEmailInvalid,
                 size = ZarinaTextFieldSize.Small,
                 label = { Text(text = stringResource(R.string.email)) },
-                placeholder = { Text(text = stringResource(R.string.email)) },
+                placeholder = { Text(text = stringResource(R.string.email_text_field_placeholder)) },
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = email.isNotEmpty(),

@@ -39,7 +39,7 @@ fun ZarinaPhoneNumberTextField(
     size: ZarinaTextFieldSize = ZarinaTextFieldSize.Large,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: String = stringResource(R.string.phone),
-    placeholder: String = stringResource(R.string.phone),
+    placeholder: String = stringResource(R.string.phone_text_field_placeholder),
     leadingContent: (@Composable () -> Unit)? = null,
     innerTrailingContent: (@Composable () -> Unit)? = null,
     outerTrailingContent: (@Composable () -> Unit)? = null,

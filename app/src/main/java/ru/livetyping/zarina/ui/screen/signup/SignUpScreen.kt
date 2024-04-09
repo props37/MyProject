@@ -150,7 +150,9 @@ private fun ScreenContent(
                 onValueChanged = onFirstNameChanged,
                 isError = isFirstNameInvalid,
                 label = { Text(text = stringResource(R.string.first_name)) },
-                placeholder = { Text(text = stringResource(R.string.first_name)) },
+                placeholder = {
+                    Text(text = stringResource(R.string.first_name_text_field_placeholder))
+                },
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = firstName.isNotEmpty(),
@@ -171,7 +173,7 @@ private fun ScreenContent(
                 onValueChanged = onEmailChanged,
                 isError = isEmailInvalid,
                 label = { Text(text = stringResource(R.string.email)) },
-                placeholder = { Text(text = stringResource(R.string.email)) },
+                placeholder = { Text(text = stringResource(R.string.email_text_field_placeholder)) },
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = email.isNotEmpty(),

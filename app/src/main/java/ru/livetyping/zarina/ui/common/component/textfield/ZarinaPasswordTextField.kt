@@ -47,7 +47,7 @@ fun ZarinaPasswordTextField(
     size: ZarinaTextFieldSize = ZarinaTextFieldSize.Large,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: String = stringResource(R.string.password),
-    placeholder: String = stringResource(R.string.password),
+    placeholder: String = stringResource(R.string.password_text_field_placeholder_eight_symbolds),
     leadingContent: (@Composable () -> Unit)? = null,
     outerTrailingContent: (@Composable () -> Unit)? = null,
     description: (@Composable () -> Unit)? = null,
