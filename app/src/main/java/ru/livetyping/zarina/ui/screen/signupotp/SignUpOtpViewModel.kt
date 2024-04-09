@@ -73,7 +73,8 @@ class SignUpOtpViewModel @Inject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            // TODO: [High] Implement
+            val action = SignUpOtpScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -90,7 +91,8 @@ class SignUpOtpViewModel @Inject constructor(
                 val params = ConfirmSignUpUseCase.Params(phone.value, otp.value)
                 interactor.confirmSignUp(params)
                     .onSuccess {
-                        // TODO: [High] Implement
+                        val action = SignUpOtpScreenAction.SignUpConfirmed
+                        emitSideEffect(SideEffect.Navigate(action))
                     }
                     .onFailure(::onOtpFailure)
             }
@@ -121,6 +123,8 @@ class SignUpOtpViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class Navigate(val action: SignUpOtpScreenAction) : SideEffect
+
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 

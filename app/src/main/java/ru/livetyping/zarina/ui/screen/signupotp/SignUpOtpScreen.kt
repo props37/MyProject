@@ -39,6 +39,7 @@ import ru.livetyping.zarina.util.compose.tryRequestFocus
 
 @Composable
 fun SignUpOtpScreen(
+    navigate: (SignUpOtpScreenAction) -> Unit,
     viewModel: SignUpOtpViewModel = hiltViewModel(),
 ) {
     val phone by viewModel.phone.collectAsStateWithLifecycle()
@@ -55,6 +56,7 @@ fun SignUpOtpScreen(
         isOtpError = isOtpError,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
+        navigate = navigate,
     )
 }
 
@@ -68,8 +70,12 @@ private fun ScreenContent(
     isOtpError: Boolean,
     onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
+    navigate: (SignUpOtpScreenAction) -> Unit,
 ) {
-    SignUpOtpScreenBehavior(sideEffects = sideEffects)
+    SignUpOtpScreenBehavior(
+        sideEffects = sideEffects,
+        navigate = navigate,
+    )
 
     val otpFocusRequester = remember { FocusRequester() }
 

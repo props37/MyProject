@@ -16,8 +16,10 @@ import ru.livetyping.zarina.ui.screen.signupotp.SignUpOtpViewModel.SideEffect
 @Composable
 fun SignUpOtpScreenBehavior(
     sideEffects: Flow<SideEffect>,
+    navigate: (SignUpOtpScreenAction) -> Unit,
 ) {
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+    val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = false)
 
@@ -26,6 +28,8 @@ fun SignUpOtpScreenBehavior(
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
+                        is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
+
                         is SideEffect.ShowZarinaToast -> {
                             updatedZarinaToastController.show(sideEffect.message)
                         }
