@@ -21,6 +21,7 @@ import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.exception.InvalidOtpException
 import ru.livetyping.zarina.domain.common.exception.OtpException
 import ru.livetyping.zarina.ui.base.text.Text
+import ru.livetyping.zarina.ui.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.ui.navigation.destination.graph.SignUpGraph
@@ -32,7 +33,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpOtpViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val interactor: SignUpOtpInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
@@ -41,6 +42,11 @@ class SignUpOtpViewModel @Inject constructor(
     private val operationTracker = OperationTracker()
 
     private var confirmSignUpJob: Job? = null
+
+    private val otpValueHolder = savedStateHandle.createValueHolder(
+        key = KEY_OTP,
+        initialValue = "",
+    )
 
     val phone: StateFlow<PhoneNumber> = savedStateHandle
         .getStateFlow<String?>(
@@ -55,10 +61,7 @@ class SignUpOtpViewModel @Inject constructor(
             PhoneNumber.create(string)
         }
 
-    val otp: StateFlow<String> = savedStateHandle.getStateFlow(
-        key = KEY_OTP,
-        initialValue = "",
-    )
+    val otp: StateFlow<String> = otpValueHolder.stateFlow
 
     val isOtpLoading: StateFlow<Boolean> = operationTracker
         .isOperationOngoing(Operation.CONFIRM_SIGN_UP)
@@ -79,7 +82,7 @@ class SignUpOtpViewModel @Inject constructor(
     }
 
     fun onOtpChanged(otp: String) {
-        savedStateHandle[KEY_OTP] = otp
+        otpValueHolder.set(otp)
         _isOtpError.value = false
     }
 
@@ -102,7 +105,7 @@ class SignUpOtpViewModel @Inject constructor(
     private fun onOtpFailure(e: Throwable) {
         if (e is OtpException) {
             _isOtpError.value = true
-            savedStateHandle[KEY_OTP] = ""
+            otpValueHolder.set("")
         }
 
         when (e) {
