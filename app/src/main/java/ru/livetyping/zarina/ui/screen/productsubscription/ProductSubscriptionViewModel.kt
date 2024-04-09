@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
@@ -34,6 +35,7 @@ import ru.livetyping.zarina.ui.model.product.ProductParcelable
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.ui.screen.productsubscription.ProductSubscriptionViewModel.SideEffect
 import ru.livetyping.zarina.usecase.product.SubscribeToProductUseCase
+import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
@@ -109,6 +111,10 @@ class ProductSubscriptionViewModel @Inject constructor(
 
     private val _isEmailInvalid = MutableStateFlow(false)
     val isEmailInvalid: StateFlow<Boolean> = _isEmailInvalid.asStateFlow()
+
+    init {
+        fillFieldsWithUser()
+    }
 
     fun onBackClicked() {
         navigationThrottler.throttle {
@@ -198,6 +204,17 @@ class ProductSubscriptionViewModel @Inject constructor(
             val text = Text.Resource(R.string.something_went_wrong)
             val message = ZarinaToastMessage.error(text)
             emitSideEffect(SideEffect.ShowZarinaToast(message))
+        }
+    }
+
+    private fun fillFieldsWithUser() {
+        viewModelScope.launch {
+            val userResult = interactor.getUserFlow().firstOrNull()
+            val user = userResult?.getOrNull()
+            if (user != null) {
+                savedStateHandle[KEY_FIRST_NAME] = user.firstName
+                savedStateHandle[KEY_EMAIL] = user.email.value
+            }
         }
     }
 
