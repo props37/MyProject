@@ -127,7 +127,7 @@
     <string name="email_text_field_placeholder">email@example.ru</string>
     <string name="password_text_field_placeholder_eight_symbolds">Минимум 8 символов</string>
     <string name="password_text_field_placeholder_nine_symbolds">Минимум 8 символов</string>
-    <string name="promocode_text_field_placeholder">Вставь или введи промокод</string>
+    <string name="promotional_code_text_field_placeholder">Вставь или введи промокод</string>
     <string name="birth_date_text_field_placeholder">ДД.ММ.ГГГГ</string>
     <string name="payment_placeholder">Один из предложенных вариантов</string>
     <string name="street_text_field_placeholder">Название улицы</string>
