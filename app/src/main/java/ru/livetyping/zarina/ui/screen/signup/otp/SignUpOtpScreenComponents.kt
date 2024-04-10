@@ -6,6 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
@@ -32,6 +33,8 @@ object SignUpOtpScreenComponents {
                 Text(
                     text = stringResource(R.string.registration),
                     style = UiKitTheme.typography.primary.regular,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             },
             contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),

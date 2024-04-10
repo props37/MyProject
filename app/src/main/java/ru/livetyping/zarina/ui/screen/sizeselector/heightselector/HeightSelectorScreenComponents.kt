@@ -18,6 +18,7 @@ import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -50,7 +51,8 @@ object HeightSelectorScreenComponents {
                 Text(
                     text = stringResource(R.string.choose_height),
                     style = UiKitTheme.typography.primary.bold,
-                    color = UiKitTheme.colors.text.general.regular.default,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             },
             endContent = {

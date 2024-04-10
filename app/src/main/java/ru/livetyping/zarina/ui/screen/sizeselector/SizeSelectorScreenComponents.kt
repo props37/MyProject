@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
@@ -112,7 +113,8 @@ object SizeSelectorScreenComponents {
                 Text(
                     text = stringResource(R.string.choose_size),
                     style = UiKitTheme.typography.primary.bold,
-                    color = UiKitTheme.colors.text.general.regular.default,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             },
             endContent = {
