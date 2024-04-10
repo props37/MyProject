@@ -22,6 +22,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.user.User
 import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
@@ -46,6 +47,14 @@ class ProfileViewModel @AssistedInject constructor(
     )
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    val user: StateFlow<User?> = interactor.getUserFlow()
+        .map { it.getOrNull() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = null,
+        )
 
     // TODO: [High] Display MyOrders only to authorized users
     val infoItems: StateFlow<ImmutableList<InfoItem>> =
