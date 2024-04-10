@@ -9,10 +9,8 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -56,9 +54,15 @@ class ProfileViewModel @AssistedInject constructor(
             initialValue = null,
         )
 
-    // TODO: [High] Display MyOrders only to authorized users
-    val infoItems: StateFlow<ImmutableList<InfoItem>> =
-        MutableStateFlow(InfoItem.entries.toImmutableList()).asStateFlow()
+    val infoItems: StateFlow<ImmutableList<InfoItem>> = user
+        .map { user ->
+            getInfoItems(isUserAuthorized = user != null).toImmutableList()
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = getInfoItems(isUserAuthorized = false).toImmutableList(),
+        )
 
     val city: StateFlow<City?> = interactor.getUserCityFlow()
         .map { result ->
@@ -117,6 +121,14 @@ class ProfileViewModel @AssistedInject constructor(
                     emitSideEffect(SideEffect.OpenUrl(url))
                 }
             }
+        }
+    }
+
+    private fun getInfoItems(isUserAuthorized: Boolean): List<InfoItem> {
+        return if (isUserAuthorized) {
+            InfoItem.entries
+        } else {
+            InfoItem.entries.filter { it != InfoItem.MyOrders }
         }
     }
 
