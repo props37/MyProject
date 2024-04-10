@@ -13,6 +13,7 @@ import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.ui.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.screen.signin.SignInViewModel.SideEffect
@@ -79,7 +80,23 @@ class SignInViewModel @Inject constructor(
         phoneValueHolder.set(phone)
     }
 
-    sealed interface SideEffect : SideEffectSource.SideEffect
+    fun onSignInClicked() {
+        // TODO: [High] Implement
+    }
+
+    fun onSignUpClicked() {
+        // TODO: [High] Implement
+    }
+
+    fun onUrlClicked(url: Url) {
+        navigationThrottler.throttle {
+            emitSideEffect(SideEffect.OpenUrl(url))
+        }
+    }
+
+    sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class OpenUrl(val url: Url) : SideEffect
+    }
 
     @Parcelize
     enum class SignInType : Parcelable { EMAIL, PHONE }

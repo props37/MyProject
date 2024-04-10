@@ -137,6 +137,9 @@
     <string name="by_email">По почте</string>
     <string name="by_phone">По телефону</string>
     <string name="forgot_password_question">Не помнишь пароль?</string>
+    <string name="recaptcha_policies_privacy_url">https://policies.google.com/privacy?hl=ru</string>
+    <string name="recaptcha_policies_terms_url">https://policies.google.com/terms?hl=ru</string>
+    <string name="do_not_have_account_yet_question">У тебя ещё нет аккаунта?</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -175,14 +178,17 @@
     <string name="sign_up_recaptcha_policies">Защита от спама reCAPTCHA: конфиденциальность и условия использования</string>
     <string name="sign_up_recaptcha_policies_privacy">конфиденциальность</string>
     <string name="sign_up_recaptcha_policies_terms">условия использования</string>
-    <string name="sign_up_recaptcha_policies_privacy_url">https://policies.google.com/privacy?hl=ru</string>
-    <string name="sign_up_recaptcha_policies_terms_url">https://policies.google.com/terms?hl=ru</string>
     <string name="sign_up_agreement_error">Ознакомься с политикой конфиденциальности и правилами работы интернет-магазина и подтверди согласие с правилами бонусной программы</string>
     <string name="sign_up_empty_fields_error">Поля ввода пусты. Для регистрации введи имя, адрес электронной почты, номер телефона и пароль</string>
     <string name="sign_up_email_already_in_use_error">Пользователь с таким адресом электронной почты уже существует. Повтори попытку</string>
     <string name="sign_up_phone_number_already_in_use_error">Пользователь с таким номером телефона уже существует. Повтори попытку</string>
     <string name="sign_up_otp_timeout_error">Прошло недостаточно времени с предыдущей попытки получить код на номер телефона. Повтори попытку позже</string>
     <string name="sign_up_otp_invalid_otp_error">Неправильный код. Повтори попытку</string>
+
+    <string name="sign_in_policies">Нажимая на кнопку «Войти», ты подтверждаешь, что ознакомлен(а) с политикой конфиденциальности. Защита от спама reCAPTCHA: конфиденциальность и условия использования</string>
+    <string name="sign_in_policies_privacy_policy">политикой конфиденциальности</string>
+    <string name="sign_in_recaptcha_policies_privacy">конфиденциальность</string>
+    <string name="sign_in_recaptcha_policies_terms">условия использования</string>
 
     <plurals name="show_products">
         <item quantity="zero">Показать %1$d товаров</item>

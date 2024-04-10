@@ -20,10 +20,16 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -34,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonSize
@@ -46,11 +53,13 @@ import ru.livetyping.zarina.ui.common.component.textfield.ZarinaTextFieldDefault
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.ui.screen.signin.SignInScreenComponents.SignInBlock
 import ru.livetyping.zarina.ui.screen.signin.SignInScreenComponents.TopBar
 import ru.livetyping.zarina.ui.screen.signin.SignInViewModel.SideEffect
 import ru.livetyping.zarina.ui.screen.signin.SignInViewModel.SignInType
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.pager.PagerTabRowIntegration
+import ru.livetyping.zarina.util.compose.tryRequestFocus
 
 @Composable
 fun SignInScreen(
@@ -72,6 +81,9 @@ fun SignInScreen(
         onPasswordChanged = viewModel::onPasswordChanged,
         phone = phone,
         onPhoneChanged = viewModel::onPhoneChanged,
+        onSignInClicked = viewModel::onSignInClicked,
+        onSignUpClicked = viewModel::onSignUpClicked,
+        onUrlClicked = viewModel::onUrlClicked,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
     )
@@ -89,6 +101,9 @@ private fun ScreenContent(
     onPasswordChanged: (String) -> Unit,
     phone: String,
     onPhoneChanged: (String) -> Unit,
+    onSignInClicked: () -> Unit,
+    onSignUpClicked: () -> Unit,
+    onUrlClicked: (Url) -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
 ) {
@@ -133,6 +148,19 @@ private fun ScreenContent(
             }
         }
 
+        val updatedKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
+        LaunchedEffect(signInTypePagerState) {
+            snapshotFlow { signInTypePagerState.currentPage }.collect {
+                updatedKeyboardController?.hide()
+            }
+        }
+
+        // TODO: [High] Extract
+        val emailFocusRequester = remember { FocusRequester() }
+        LaunchedEffect(Unit) {
+            emailFocusRequester.tryRequestFocus()
+        }
+
         // TODO: [High] Extract
         HorizontalPager(
             state = signInTypePagerState,
@@ -143,7 +171,7 @@ private fun ScreenContent(
             when (signInType) {
                 SignInType.EMAIL -> {
                     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                        Spacer(modifier = Modifier.height(32.dp))
+                        Spacer(modifier = Modifier.height(SignInScreenComponents.TopPadding))
 
                         ZarinaTextField(
                             value = email,
@@ -167,7 +195,8 @@ private fun ScreenContent(
                             singleLine = true,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
+                                .padding(horizontal = 16.dp)
+                                .focusRequester(emailFocusRequester),
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -187,7 +216,8 @@ private fun ScreenContent(
                         )
 
                         Spacer(modifier = Modifier.height(4.dp))
-                        
+
+                        // TODO: [High] Replace with TextButton
                         ZarinaButton(
                             onClick = { /*TODO*/ },
                             size = ZarinaButtonSize.Medium,
@@ -202,14 +232,12 @@ private fun ScreenContent(
 
                         Spacer(modifier = Modifier.height(32.dp))
 
-                        ZarinaButton(
-                            onClick = { /*TODO*/ },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                        ) {
-                            Text(text = stringResource(R.string.sign_in).uppercase())
-                        }
+                        SignInBlock(
+                            onSignInClicked = onSignInClicked,
+                            onSignUpClicked = onSignUpClicked,
+                            onUrlClicked = onUrlClicked,
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                        )
                     }
                 }
 
@@ -229,6 +257,15 @@ private fun ScreenContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
+                        )
+
+                        Spacer(modifier = Modifier.height(32.dp))
+
+                        SignInBlock(
+                            onSignInClicked = onSignInClicked,
+                            onSignUpClicked = onSignUpClicked,
+                            onUrlClicked = onUrlClicked,
+                            modifier = Modifier.padding(horizontal = 16.dp),
                         )
                     }
                 }
