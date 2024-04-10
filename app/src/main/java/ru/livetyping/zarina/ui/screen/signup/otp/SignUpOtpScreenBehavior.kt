@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.ui.screen.signupotp
+package ru.livetyping.zarina.ui.screen.signup.otp
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.livetyping.zarina.ui.common.zarinatoast.controller.LocalZarinaToastController
-import ru.livetyping.zarina.ui.screen.signupotp.SignUpOtpViewModel.SideEffect
+import ru.livetyping.zarina.ui.screen.signup.otp.SignUpOtpViewModel.SideEffect
 
 @Composable
 fun SignUpOtpScreenBehavior(

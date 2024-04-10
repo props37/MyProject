@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.ui.screen.signupotp
+package ru.livetyping.zarina.ui.screen.signup.otp
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding

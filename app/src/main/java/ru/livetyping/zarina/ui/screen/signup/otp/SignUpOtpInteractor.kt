@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.ui.screen.signupotp
+package ru.livetyping.zarina.ui.screen.signup.otp
 
 import ru.livetyping.zarina.usecase.user.ConfirmSignUpUseCase
 import ru.livetyping.zarina.usecase.user.RequestResendSmsOtpUseCase

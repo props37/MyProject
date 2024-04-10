@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.ui.screen.signupotp
+package ru.livetyping.zarina.ui.screen.signup.otp
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -27,7 +27,7 @@ import ru.livetyping.zarina.ui.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.ui.navigation.destination.graph.SignUpGraph
-import ru.livetyping.zarina.ui.screen.signupotp.SignUpOtpViewModel.SideEffect
+import ru.livetyping.zarina.ui.screen.signup.otp.SignUpOtpViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.ConfirmSignUpUseCase
 import ru.livetyping.zarina.usecase.user.RequestResendSmsOtpUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed

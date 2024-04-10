@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.ui.screen.defaultcitydialog
+package ru.livetyping.zarina.ui.screen.onboarding.defaultcitydialog
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

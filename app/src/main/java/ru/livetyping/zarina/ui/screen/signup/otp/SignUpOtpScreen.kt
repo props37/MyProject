@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.ui.screen.signupotp
+package ru.livetyping.zarina.ui.screen.signup.otp
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -32,8 +32,8 @@ import ru.livetyping.zarina.ui.common.otp.OtpResendState
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.ui.screen.signupotp.SignUpOtpScreenComponents.TopBar
-import ru.livetyping.zarina.ui.screen.signupotp.SignUpOtpViewModel.SideEffect
+import ru.livetyping.zarina.ui.screen.signup.otp.SignUpOtpScreenComponents.TopBar
+import ru.livetyping.zarina.ui.screen.signup.otp.SignUpOtpViewModel.SideEffect
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.tryRequestFocus
 
