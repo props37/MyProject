@@ -20,7 +20,7 @@ import ru.livetyping.zarina.ui.app.ZarinaApp
 import ru.livetyping.zarina.ui.common.behavior.systembars.LocalSystemBarsBehaviorController
 import ru.livetyping.zarina.ui.common.behavior.systembars.SystemBarsBehavior
 import ru.livetyping.zarina.ui.common.behavior.systembars.SystemBarsBehaviorController
-import ru.livetyping.zarina.ui.theme.old.ZarinaTheme
+import ru.livetyping.zarina.ui.theme.ZarinaTheme
 import ru.livetyping.zarina.util.library.activity.DefaultDarkScrim
 import ru.livetyping.zarina.util.library.activity.DefaultLightScrim
 import ru.livetyping.zarina.util.platform.getSizeInBytes
