@@ -216,8 +216,6 @@ private fun ScreenContent(
                                 .padding(horizontal = 16.dp),
                         )
 
-                        Spacer(modifier = Modifier.height(4.dp))
-
                         ZarinaButton(
                             onClick = { /*TODO*/ },
                             size = ZarinaButtonSize.Medium,
