@@ -21,7 +21,7 @@ fun SignInScreenBehavior(
 ) {
     val updatedContext by rememberUpdatedState(LocalContext.current)
 
-    ForcedBottomNavBarBehavior(isVisible = true)
+    ForcedBottomNavBarBehavior(isVisible = false)
 
     LifecycleStartEffect(sideEffects) {
         lifecycleScope.launch {
