@@ -1,0 +1,28 @@
+package ru.livetyping.zarina.data.user.remote.api.dto
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class SignUpRequestBody(
+    @SerialName("first_name")
+    val firstName: String,
+
+    @SerialName("email")
+    val email: String,
+
+    @SerialName("phone")
+    val phone: String,
+
+    @SerialName("password")
+    val password: String,
+
+    @SerialName("subscribe_email")
+    val receiveNewsByEmail: Boolean,
+
+    @SerialName("subscribe_sms")
+    val receiveSmsNotifications: Boolean,
+
+    @SerialName("reCaptchaKey")
+    val recaptchaToken: String,
+)

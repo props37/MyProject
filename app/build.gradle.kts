@@ -28,7 +28,7 @@ kapt {
 }
 
 android {
-    val appId = "ru.zarina.zarina"
+    val appId = "ru.livetyping.zarina"
 
     namespace = appId
     compileSdk = 34
@@ -92,6 +92,7 @@ android {
                 buildConfigStringField(Keys.BACKEND_URL, buildType.backendUrl)
                 buildConfigStringField(Keys.MINDBOX_ENDPOINT, buildType.mindboxEndpoint)
                 buildConfigStringField(Keys.MINDBOX_KEY, buildType.mindboxKey)
+                buildConfigStringField(Keys.RECAPTCHA_KEY, buildType.recaptchaKey)
                 buildConfigStringField(Keys.ANY_QUERY_KEY, buildType.anyQueryKey)
                 manifestPlaceholders[Keys.GOOGLE_MAPS_KEY] = buildType.googleMapsKey
             }
@@ -99,6 +100,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -189,11 +191,6 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigationCompose)
 
-    implementation(libs.koin.annotations)
-    implementation(libs.koin.android)
-    implementation(libs.koin.compose)
-    ksp(libs.koin.compiler)
-
     implementation(libs.accompanist.systemUi)
     implementation(libs.accompanist.permissions)
     implementation(libs.accompanist.navigationMaterial)
@@ -203,11 +200,15 @@ dependencies {
     implementation(libs.coil.gif)
     implementation(libs.composeShimmer)
 
+    implementation(libs.libphonenumber)
+
     implementation(libs.timber)
 
     implementation(libs.googlePlayServices.location)
     implementation(libs.googlePlayServices.maps)
     implementation(libs.googlePlayServices.maps.compose)
+
+    implementation(libs.recaptcha)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
@@ -219,13 +220,14 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlin.coroutines.test)
-    testImplementation(libs.koin.test)
     androidTestImplementation(libs.jetpack.test.junit)
     androidTestImplementation(libs.jetpack.espresso)
     androidTestImplementation(platform(libs.jetpack.compose.bom))
     androidTestImplementation(libs.jetpack.compose.junit4)
 
     lintChecks(libs.lint.composeChecks)
+
+    coreLibraryDesugaring(libs.coreLibraryDesugaring)
 }
 
 fun VariantDimension.buildConfigStringField(name: String, value: String) {

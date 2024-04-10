@@ -1,0 +1,111 @@
+package ru.livetyping.zarina.di
+
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.auth.providers.BearerTokens
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.headers
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.serialization.json.Json
+import ru.livetyping.zarina.BuildConfig
+import ru.livetyping.zarina.data.common.remote.api.zarina.ZarinaApiHeaderProvider
+import ru.livetyping.zarina.data.common.remote.ktor.plugin.ZarinaAuth
+import ru.livetyping.zarina.data.common.remote.ktor.plugin.bearer
+import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
+import ru.livetyping.zarina.usecase.authorization.GetAuthorizationTokensFlowUseCase
+import ru.livetyping.zarina.usecase.authorization.RefreshAuthorizationTokensUseCase
+import ru.livetyping.zarina.util.base.usecase.invoke
+import timber.log.Timber
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+class NetworkModule {
+
+    @Provides
+    @Singleton
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
+    fun provideAuthorizedZarinaHttpClient(
+        json: Json,
+        zarinaApiHeaderProvider: ZarinaApiHeaderProvider,
+        getAuthorizationTokensFlow: GetAuthorizationTokensFlowUseCase,
+        refreshAuthorizationTokens: RefreshAuthorizationTokensUseCase,
+    ): HttpClient = HttpClient(OkHttp) {
+        baseConfig(json)
+        baseZarinaConfig(zarinaApiHeaderProvider)
+        install(ZarinaAuth) {
+            bearer {
+                loadTokens {
+                    Timber.tag(HTTP_CLIENT_TAG).v("Load authorization tokens")
+                    val tokens = getAuthorizationTokensFlow().firstOrNull()?.getOrNull()
+                    tokens?.toBearerTokens()
+                }
+
+                refreshTokens {
+                    refreshAuthorizationTokens()
+                    val tokens = getAuthorizationTokensFlow().firstOrNull()?.getOrNull()
+                    tokens?.toBearerTokens()
+                }
+            }
+        }
+    }
+
+    @Provides
+    @Singleton
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.UNAUTHORIZED)
+    fun provideUnauthorizedZarinaHttpClient(
+        json: Json,
+        zarinaApiHeaderProvider: ZarinaApiHeaderProvider,
+    ): HttpClient = HttpClient(OkHttp) {
+        baseConfig(json)
+        baseZarinaConfig(zarinaApiHeaderProvider)
+    }
+
+    private fun HttpClientConfig<*>.baseConfig(json: Json) {
+        expectSuccess = true
+        install(ContentNegotiation) {
+            json(json)
+        }
+        install(Logging) {
+            level = LogLevel.ALL
+            logger = object : Logger {
+                override fun log(message: String) {
+                    Timber.tag(HTTP_CLIENT_TAG).v(message)
+                }
+            }
+        }
+        install(HttpTimeout)
+    }
+
+    private fun HttpClientConfig<*>.baseZarinaConfig(
+        zarinaApiHeaderProvider: ZarinaApiHeaderProvider,
+    ) {
+        install(DefaultRequest) {
+            url(BuildConfig.BACKEND_URL)
+            headers {
+                zarinaApiHeaderProvider.provide().forEach { (key, value) ->
+                    append(key, value)
+                }
+            }
+        }
+    }
+
+    private fun AuthorizationTokens.toBearerTokens(): BearerTokens {
+        return BearerTokens(accessToken.value, refreshToken.value)
+    }
+
+    companion object {
+        private const val HTTP_CLIENT_TAG = "HttpClient"
+    }
+}

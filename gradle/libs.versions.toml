@@ -7,7 +7,7 @@ androidGitVersion = "0.4.14"
 checkDependencyUpdates = "1.5.0"
 
 kotlin = "1.9.23"
-kotlin-ksp = "1.9.23-1.0.19"
+kotlin-ksp = "1.9.23-1.0.20"
 kotlin-coroutines = "1.8.0"
 kotlin-serialization = "1.6.3"
 kotlin-immutableCollections = "0.3.7"
@@ -28,23 +28,20 @@ jetpack-uiAutomator = "2.3.0"
 jetpack-espresso = "3.5.1"
 jetpack-benchmark = "1.2.3"
 
-jetpack-compose-bom = "2024.03.00"
+jetpack-compose-bom = "2024.04.00"
 jetpack-compose-compiler = "1.5.11"
 
-ktor = "2.3.9"
+ktor = "2.3.10"
 
-hilt = "2.51"
+hilt = "2.51.1"
 hilt-navigationCompose = "1.2.0"
-
-koin-annotations = "1.3.1"
-koin-core = "3.4.2"
-koin-compose = "3.4.5"
-koin-test = "3.4.1"
 
 accompanist = "0.34.0"
 
 coil = "2.6.0"
-composeShimmer = "1.2.0"
+composeShimmer = "1.3.0"
+
+libphonenumber = "8.13.28"
 
 timber = "5.0.1"
 leakCanary = "2.13"
@@ -52,6 +49,8 @@ leakCanary = "2.13"
 googlePlayServices-location = "21.2.0"
 googlePlayServices-maps = "18.2.0"
 googlePlayServices-maps-compose = "4.3.3"
+
+recaptcha = "18.5.0-beta02"
 
 firebase-bom = "32.8.0"
 
@@ -61,6 +60,8 @@ mindbox = "2.8.5"
 junit = "4.13.2"
 
 lint-composeChecks = "1.3.1"
+
+coreLibraryDesugaring = "2.0.4"
 
 
 [libraries]
@@ -111,12 +112,6 @@ hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-navigationCompose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigationCompose" }
 
-koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-annotations" }
-koin-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-annotations" }
-koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin-core" }
-koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin-compose" }
-koin-test = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin-test" }
-
 accompanist-systemUi = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 accompanist-navigationMaterial = { group = "com.google.accompanist", name = "accompanist-navigation-material", version.ref = "accompanist" }
@@ -126,12 +121,16 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
 composeShimmer = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version.ref = "composeShimmer" }
 
+libphonenumber = { group = "io.michaelrocks", name = "libphonenumber-android", version.ref = "libphonenumber" }
+
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 leakCanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakCanary" }
 
 googlePlayServices-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "googlePlayServices-location" }
 googlePlayServices-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "googlePlayServices-maps" }
 googlePlayServices-maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "googlePlayServices-maps-compose" }
+
+recaptcha = { group = "com.google.android.recaptcha", name = "recaptcha", version.ref = "recaptcha" }
 
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
@@ -142,6 +141,8 @@ mindbox = { group = "cloud.mindbox", name = "mobile-sdk", version.ref = "mindbox
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 lint-composeChecks = { group = "com.slack.lint.compose", name = "compose-lint-checks", version.ref = "lint-composeChecks" }
+
+coreLibraryDesugaring = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "coreLibraryDesugaring" }
 
 
 [plugins]

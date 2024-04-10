@@ -1,0 +1,29 @@
+package ru.livetyping.zarina.data.user.local
+
+import androidx.datastore.core.DataStore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import ru.livetyping.zarina.data.user.local.entity.CityEntity
+import ru.livetyping.zarina.domain.geography.City
+import timber.log.Timber
+import javax.inject.Inject
+
+class UserCityDataHolder @Inject constructor(
+    private val dataStore: DataStore<CityEntity?>,
+) {
+    fun getUserCityFlow(): Flow<City?> {
+        return dataStore.data.map { it?.toCity() }
+    }
+
+    suspend fun setUserCity(city: City?) {
+        Timber.v("Set user city: $city")
+        dataStore.updateData {
+            city?.let { CityEntity.from(it) }
+        }
+    }
+
+    suspend fun clear() {
+        Timber.v("Clear user city")
+        setUserCity(null)
+    }
+}

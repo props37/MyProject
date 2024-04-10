@@ -1,0 +1,27 @@
+package ru.livetyping.zarina.data.product.remote.api.exception
+
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.statement.bodyAsText
+import kotlinx.serialization.json.Json
+import ru.livetyping.zarina.data.common.remote.api.exception.KtorApiExceptionConverter
+import ru.livetyping.zarina.data.product.remote.api.dto.SubscribeToProductEmailErrorDto
+import ru.livetyping.zarina.data.product.remote.api.dto.SubscribeToProductErrorDtoSerializer
+import ru.livetyping.zarina.data.product.remote.api.dto.SubscribeToProductFirstNameErrorDto
+import ru.livetyping.zarina.domain.user.exception.InvalidEmailException
+import ru.livetyping.zarina.domain.user.exception.InvalidFirstNameException
+import javax.inject.Inject
+
+class SubscribeToProductApiExceptionConverter @Inject constructor(
+    private val json: Json,
+) : KtorApiExceptionConverter() {
+
+    override suspend fun handle(e: ClientRequestException): Nothing {
+        val responseText = e.response.bodyAsText()
+        val errorDto =
+            json.decodeFromString(SubscribeToProductErrorDtoSerializer(), responseText)
+        when (errorDto) {
+            is SubscribeToProductEmailErrorDto -> throw InvalidEmailException()
+            is SubscribeToProductFirstNameErrorDto -> throw InvalidFirstNameException()
+        }
+    }
+}
