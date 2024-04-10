@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,33 +45,37 @@ fun ZarinaIconButton(
     indication: Indication? = rememberRipple(bounded = false, radius = 24.dp),
     content: @Composable () -> Unit,
 ) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .clickable(
-                onClick = onClick,
-                enabled = isEnabled,
-                role = Role.Button,
-                interactionSource = interactionSource,
-                indication = indication,
-            )
-            .minimumInteractiveComponentSize(),
+    CompositionLocalProvider(
+        LocalContentColor provides UiKitTheme.colors.icon.regular.default,
     ) {
-        AnimatedContent(
-            targetState = isLoading,
-            transitionSpec = {
-                AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
-            },
+        Box(
             contentAlignment = Alignment.Center,
-            label = "ZarinaIconButton content",
-        ) { isLoading ->
-            if (!isLoading) {
-                content()
-            } else {
-                ZarinaCircularLoader(
-                    color = loaderColor,
-                    modifier = Modifier.size(loaderSize),
+            modifier = modifier
+                .clickable(
+                    onClick = onClick,
+                    enabled = isEnabled,
+                    role = Role.Button,
+                    interactionSource = interactionSource,
+                    indication = indication,
                 )
+                .minimumInteractiveComponentSize(),
+        ) {
+            AnimatedContent(
+                targetState = isLoading,
+                transitionSpec = {
+                    AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                },
+                contentAlignment = Alignment.Center,
+                label = "ZarinaIconButton content",
+            ) { isLoading ->
+                if (!isLoading) {
+                    content()
+                } else {
+                    ZarinaCircularLoader(
+                        color = loaderColor,
+                        modifier = Modifier.size(loaderSize),
+                    )
+                }
             }
         }
     }
