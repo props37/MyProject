@@ -52,7 +52,7 @@ fun ProfileScreen(
         infoItems = infoItems,
         city = city,
         onInfoItemClicked = viewModel::onInfoItemClicked,
-        onSignInClicked = { /* TODO */ },
+        onSignInClicked = viewModel::onSignInClicked,
         onSignUpClicked = viewModel::onSignUpClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,

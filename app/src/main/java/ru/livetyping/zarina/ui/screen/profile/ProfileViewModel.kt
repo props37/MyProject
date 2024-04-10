@@ -75,22 +75,13 @@ class ProfileViewModel @AssistedInject constructor(
         )
 
     init {
-        viewModelScope.launch {
-            screenResultHandler.handle<UnscopedDestinations.CitySelector.Result>(
-                key = UnscopedDestinations.CitySelector.RESULT_KEY,
-            ) { result ->
-                val newCity = result.city.toCity()
-                val currentCity = city.value
-                if (newCity.kladrId != currentCity?.kladrId) {
-                    val params = SetUserCityUseCase.Params(newCity)
-                    interactor.setUserCity(params)
-                        .onFailure {
-                            val text = Text.Resource(R.string.city_changing_error)
-                            val message = ZarinaToastMessage.error(text)
-                            emitSideEffect(SideEffect.ShowZarinaToast(message))
-                        }
-                }
-            }
+        handleCitySelectorResult()
+    }
+
+    fun onSignInClicked() {
+        navigationThrottler.throttle {
+            val action = ProfileScreenAction.SignInClicked
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -129,6 +120,26 @@ class ProfileViewModel @AssistedInject constructor(
             InfoItem.entries
         } else {
             InfoItem.entries.filter { it != InfoItem.MyOrders }
+        }
+    }
+
+    private fun handleCitySelectorResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<UnscopedDestinations.CitySelector.Result>(
+                key = UnscopedDestinations.CitySelector.RESULT_KEY,
+            ) { result ->
+                val newCity = result.city.toCity()
+                val currentCity = city.value
+                if (newCity.kladrId != currentCity?.kladrId) {
+                    val params = SetUserCityUseCase.Params(newCity)
+                    interactor.setUserCity(params)
+                        .onFailure {
+                            val text = Text.Resource(R.string.city_changing_error)
+                            val message = ZarinaToastMessage.error(text)
+                            emitSideEffect(SideEffect.ShowZarinaToast(message))
+                        }
+                }
+            }
         }
     }
 

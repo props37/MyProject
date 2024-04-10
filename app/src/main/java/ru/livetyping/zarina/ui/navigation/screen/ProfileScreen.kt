@@ -7,7 +7,9 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.navigation.base.composableDestination
 import ru.livetyping.zarina.ui.navigation.destination.graph.ProfileGraph
+import ru.livetyping.zarina.ui.navigation.destination.graph.SignInGraph
 import ru.livetyping.zarina.ui.navigation.destination.graph.SignUpGraph
+import ru.livetyping.zarina.ui.navigation.screen.graph.navigateToSignInGraph
 import ru.livetyping.zarina.ui.navigation.screen.graph.navigateToSignUpGraph
 import ru.livetyping.zarina.ui.navigation.util.BottomNavBarItemSecondaryStartDestinationBackHandler
 import ru.livetyping.zarina.ui.navigation.util.slideExitTransition
@@ -21,13 +23,17 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
         destination = ProfileGraph.Profile,
         exitTransition = {
             when (targetState.destination.route) {
+                SignInGraph.SignIn.routeSchema,
                 SignUpGraph.SignUp.routeSchema -> slideExitTransition()
+
                 else -> null
             }
         },
         popEnterTransition = {
             when (initialState.destination.route) {
+                SignInGraph.SignIn.routeSchema,
                 SignUpGraph.SignUp.routeSchema -> slidePopEnterTransition()
+
                 else -> null
             }
         },
@@ -40,6 +46,7 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
             },
             navigate = { action ->
                 when (action) {
+                    ProfileScreenAction.SignInClicked -> navController.navigateToSignInGraph()
                     ProfileScreenAction.SignUpClicked -> navController.navigateToSignUpGraph()
                     is ProfileScreenAction.CityClicked -> {
                         navController.navigateToCitySelectorScreen(
