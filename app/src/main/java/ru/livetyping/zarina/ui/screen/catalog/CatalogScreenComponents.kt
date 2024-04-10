@@ -136,6 +136,7 @@ object CatalogScreenComponents {
             selectedTabIndex = pagerState.currentPage,
             modifier = modifier,
         ) {
+            // TODO: [Low] Migrate to ZarinaTab
             genders.forEach { gender ->
                 ZarinaButton(
                     onClick = { onGenderСhanged(gender) },

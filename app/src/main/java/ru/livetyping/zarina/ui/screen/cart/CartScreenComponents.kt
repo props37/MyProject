@@ -268,6 +268,7 @@ object CartScreenComponents {
             selectedTabIndex = selectedTabIndex,
             modifier = modifier,
         ) {
+            // TODO: [Low] Migrate to ZarinaTab
             types.forEach { type ->
                 val productCount = when (type) {
                     DeliveryType.DELIVERY -> cartSize.deliveryProductCount
