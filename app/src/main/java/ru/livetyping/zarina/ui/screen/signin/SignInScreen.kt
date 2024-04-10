@@ -3,6 +3,7 @@ package ru.livetyping.zarina.ui.screen.signin
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
@@ -217,13 +218,13 @@ private fun ScreenContent(
 
                         Spacer(modifier = Modifier.height(4.dp))
 
-                        // TODO: [High] Replace with TextButton
                         ZarinaButton(
                             onClick = { /*TODO*/ },
                             size = ZarinaButtonSize.Medium,
                             colors = ZarinaButtonDefaults.backlessColors(),
-                            contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
-                            modifier = Modifier.padding(start = 8.dp),
+                            contentPadding = PaddingValues(vertical = 8.dp),
+                            indication = null,
+                            modifier = Modifier.padding(horizontal = 16.dp),
                         ) {
                             Text(
                                 text = stringResource(R.string.forgot_password_question).uppercase(),
