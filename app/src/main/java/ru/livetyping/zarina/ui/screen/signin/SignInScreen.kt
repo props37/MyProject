@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.ui.screen.signin.SignInScreenComponents.TopBar
 import ru.livetyping.zarina.ui.screen.signin.SignInViewModel.SideEffect
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 
@@ -24,12 +25,14 @@ fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel(),
 ) {
     ScreenContent(
+        onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
     )
 }
 
 @Composable
 private fun ScreenContent(
+    onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
 ) {
     SignInScreenBehavior(sideEffects = sideEffects)
@@ -43,7 +46,7 @@ private fun ScreenContent(
                     .union(WindowInsets.displayCutout),
             ),
     ) {
-
+        TopBar(onBackClicked = onBackClicked)
     }
 }
 
