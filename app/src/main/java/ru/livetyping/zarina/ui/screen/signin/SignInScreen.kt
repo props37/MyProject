@@ -64,6 +64,7 @@ import ru.livetyping.zarina.util.compose.tryRequestFocus
 
 @Composable
 fun SignInScreen(
+    navigate: (SignInScreenAction) -> Unit,
     viewModel: SignInViewModel = hiltViewModel(),
 ) {
     val signInTypes by viewModel.signInTypes.collectAsStateWithLifecycle()
@@ -89,6 +90,7 @@ fun SignInScreen(
         onUrlClicked = viewModel::onUrlClicked,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
+        navigate = navigate,
     )
 }
 
@@ -110,8 +112,12 @@ private fun ScreenContent(
     onUrlClicked: (Url) -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
+    navigate: (SignInScreenAction) -> Unit,
 ) {
-    SignInScreenBehavior(sideEffects = sideEffects)
+    SignInScreenBehavior(
+        sideEffects = sideEffects,
+        navigate = navigate,
+    )
 
     Column(
         modifier = Modifier

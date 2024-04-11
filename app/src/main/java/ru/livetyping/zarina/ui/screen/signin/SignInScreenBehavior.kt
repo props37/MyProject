@@ -18,8 +18,10 @@ import ru.livetyping.zarina.util.domain.common.toUri
 @Composable
 fun SignInScreenBehavior(
     sideEffects: Flow<SideEffect>,
+    navigate: (SignInScreenAction) -> Unit,
 ) {
     val updatedContext by rememberUpdatedState(LocalContext.current)
+    val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = false)
 
@@ -28,6 +30,7 @@ fun SignInScreenBehavior(
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
+                        is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
                         is SideEffect.OpenUrl -> {
                             val intent = CustomTabsIntent.Builder()
                                 .setShowTitle(true)

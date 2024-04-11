@@ -82,7 +82,8 @@ class SignInViewModel @Inject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            // TODO: [High] Implement
+            val action = SignInScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -115,7 +116,10 @@ class SignInViewModel @Inject constructor(
     }
 
     fun onSignUpClicked() {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val action = SignInScreenAction.SignUpClicked
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     fun onUrlClicked(url: Url) {
@@ -136,6 +140,8 @@ class SignInViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class Navigate(val action: SignInScreenAction) : SideEffect
+
         data class OpenUrl(val url: Url) : SideEffect
     }
 
