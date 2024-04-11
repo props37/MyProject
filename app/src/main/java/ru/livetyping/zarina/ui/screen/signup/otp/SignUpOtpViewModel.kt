@@ -79,8 +79,8 @@ class SignUpOtpViewModel @Inject constructor(
             initialValue = false,
         )
 
-    private val _isOtpError = MutableStateFlow(false)
-    val isOtpError: StateFlow<Boolean> = _isOtpError.asStateFlow()
+    private val _isOtpInvalid = MutableStateFlow(false)
+    val isOtpInvalid: StateFlow<Boolean> = _isOtpInvalid.asStateFlow()
 
     private val _otpResendState =
         MutableStateFlow<OtpResendState>(OtpResendState.TimeoutCountdown(OTP_RESEND_INITIAL_TIMEOUT))
@@ -99,7 +99,7 @@ class SignUpOtpViewModel @Inject constructor(
 
     fun onOtpChanged(otp: String) {
         otpValueHolder.set(otp)
-        _isOtpError.value = false
+        _isOtpInvalid.value = false
     }
 
     fun onOtpEntered() {
@@ -136,7 +136,7 @@ class SignUpOtpViewModel @Inject constructor(
 
     private fun onOtpFailure(e: Throwable) {
         if (e is OtpException) {
-            _isOtpError.value = true
+            _isOtpInvalid.value = true
             otpValueHolder.set("")
         }
 

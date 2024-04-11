@@ -45,7 +45,7 @@ fun SignUpOtpScreen(
     val phone by viewModel.phone.collectAsStateWithLifecycle()
     val otp by viewModel.otp.collectAsStateWithLifecycle()
     val isOtpLoading by viewModel.isOtpLoading.collectAsStateWithLifecycle()
-    val isOtpError by viewModel.isOtpError.collectAsStateWithLifecycle()
+    val isOtpInvalid by viewModel.isOtpInvalid.collectAsStateWithLifecycle()
     val otpResendState by viewModel.otpResendState.collectAsStateWithLifecycle()
 
     ScreenContent(
@@ -54,7 +54,7 @@ fun SignUpOtpScreen(
         onOtpChanged = viewModel::onOtpChanged,
         onOtpEntered = viewModel::onOtpEntered,
         isOtpLoading = isOtpLoading,
-        isOtpError = isOtpError,
+        isOtpInvalid = isOtpInvalid,
         otpResendState = otpResendState,
         onResendOtpClicked = viewModel::onResendOtpClicked,
         onBackClicked = viewModel::onBackClicked,
@@ -70,7 +70,7 @@ private fun ScreenContent(
     onOtpChanged: (String) -> Unit,
     onOtpEntered: () -> Unit,
     isOtpLoading: Boolean,
-    isOtpError: Boolean,
+    isOtpInvalid: Boolean,
     otpResendState: OtpResendState,
     onResendOtpClicked: () -> Unit,
     onBackClicked: () -> Unit,
@@ -109,7 +109,7 @@ private fun ScreenContent(
                 otp = otp,
                 onOtpChanged = onOtpChanged,
                 onOtpEntered = { onOtpEntered() },
-                isOtpError = isOtpError,
+                isOtpInvalid = isOtpInvalid,
                 isOtpLoading = isOtpLoading,
                 resendState = otpResendState,
                 onResendClicked = onResendOtpClicked,
