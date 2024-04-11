@@ -9,4 +9,6 @@ data object SignInGraph : SimpleGraph(
     startDestination = SignIn,
 ) {
     data object SignIn : SimpleDestination(BaseRoute.SIGN_IN)
+
+    data object PasswordRecovery : SimpleDestination(BaseRoute.PASSWORD_RECOVERY)
 }
