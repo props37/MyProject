@@ -8,6 +8,8 @@ import ru.livetyping.zarina.ui.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.ui.navigation.destination.graph.SignInGraph
 import ru.livetyping.zarina.ui.navigation.screen.graph.navigateToSignUpGraph
 import ru.livetyping.zarina.ui.navigation.util.slideEnterTransition
+import ru.livetyping.zarina.ui.navigation.util.slideExitTransition
+import ru.livetyping.zarina.ui.navigation.util.slidePopEnterTransition
 import ru.livetyping.zarina.ui.navigation.util.slidePopExitTransition
 import ru.livetyping.zarina.ui.screen.signin.SignInScreen
 import ru.livetyping.zarina.ui.screen.signin.SignInScreenAction
@@ -18,6 +20,18 @@ fun NavGraphBuilder.signInScreen(navController: NavHostController) {
         enterTransition = {
             when (initialState.destination.route) {
                 ProfileGraph.Profile.routeSchema -> slideEnterTransition()
+                else -> null
+            }
+        },
+        exitTransition = {
+            when (targetState.destination.route) {
+                SignInGraph.PasswordRecovery.routeSchema -> slideExitTransition()
+                else -> null
+            }
+        },
+        popEnterTransition = {
+            when (initialState.destination.route) {
+                SignInGraph.PasswordRecovery.routeSchema -> slidePopEnterTransition()
                 else -> null
             }
         },
