@@ -5,5 +5,7 @@ sealed class SignInScreenAction {
 
     data object SignUpClicked : SignInScreenAction()
 
+    data object ForgotPasswordClicked : SignInScreenAction()
+
     data object UserSignedIn : SignInScreenAction()
 }

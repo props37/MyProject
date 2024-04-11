@@ -86,6 +86,7 @@ fun SignInScreen(
         isSignInButtonLoading = isSignInButtonLoading,
         onPhoneChanged = viewModel::onPhoneChanged,
         onSignInClicked = viewModel::onSignInClicked,
+        onForgotPasswordClicked = viewModel::onForgotPasswordClicked,
         onSignUpClicked = viewModel::onSignUpClicked,
         onUrlClicked = viewModel::onUrlClicked,
         onBackClicked = viewModel::onBackClicked,
@@ -108,6 +109,7 @@ private fun ScreenContent(
     isSignInButtonLoading: Boolean,
     onPhoneChanged: (String) -> Unit,
     onSignInClicked: () -> Unit,
+    onForgotPasswordClicked: () -> Unit,
     onSignUpClicked: () -> Unit,
     onUrlClicked: (Url) -> Unit,
     onBackClicked: () -> Unit,
@@ -226,7 +228,7 @@ private fun ScreenContent(
                         )
 
                         ZarinaButton(
-                            onClick = { /*TODO*/ },
+                            onClick = onForgotPasswordClicked,
                             size = ZarinaButtonSize.Medium,
                             colors = ZarinaButtonDefaults.backlessColors(),
                             contentPadding = PaddingValues(vertical = 8.dp),

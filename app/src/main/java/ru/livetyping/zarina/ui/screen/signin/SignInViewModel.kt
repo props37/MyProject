@@ -140,6 +140,13 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+    fun onForgotPasswordClicked() {
+        navigationThrottler.throttle {
+            val action = SignInScreenAction.ForgotPasswordClicked
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
     fun onSignUpClicked() {
         navigationThrottler.throttle {
             val action = SignInScreenAction.SignUpClicked

@@ -45,6 +45,10 @@ fun NavGraphBuilder.signInScreen(navController: NavHostController) {
                         navController.navigateToSignUpGraph(navOptions)
                     }
 
+                    SignInScreenAction.ForgotPasswordClicked -> {
+                        navController.navigateToPasswordRecoveryScreen()
+                    }
+
                     SignInScreenAction.UserSignedIn -> {
                         navController.popBackStack(
                             route = SignInGraph.routeSchema,
