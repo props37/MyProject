@@ -44,6 +44,7 @@ import ru.livetyping.zarina.util.compose.navigationBarsOrIme
 
 @Composable
 fun PasswordRecoveryScreen(
+    navigate: (PasswordRecoveryScreenAction) -> Unit,
     viewModel: PasswordRecoveryViewModel = hiltViewModel(),
 ) {
     val email by viewModel.email.collectAsStateWithLifecycle()
@@ -58,6 +59,7 @@ fun PasswordRecoveryScreen(
         isSendButtonLoading = isSendButtonLoading,
         onBackClicked = {},
         sideEffects = viewModel.sideEffects,
+        navigate = navigate,
     )
 }
 
@@ -70,8 +72,12 @@ private fun ScreenContent(
     isSendButtonLoading: Boolean,
     onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
+    navigate: (PasswordRecoveryScreenAction) -> Unit,
 ) {
-    PasswordRecoveryScreenBehavior(sideEffects = sideEffects)
+    PasswordRecoveryScreenBehavior(
+        sideEffects = sideEffects,
+        navigate = navigate,
+    )
 
     Column(
         modifier = Modifier
@@ -167,6 +173,7 @@ private fun Preview() {
             isSendButtonLoading = false,
             onBackClicked = {},
             sideEffects = remember { emptyFlow() },
+            navigate = {},
         )
     }
 }

@@ -50,7 +50,8 @@ class PasswordRecoveryViewModel @Inject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            // TODO: [High] Implement
+            val action = PasswordRecoveryScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -62,7 +63,9 @@ class PasswordRecoveryViewModel @Inject constructor(
         // TODO: [High] Implement
     }
 
-    sealed interface SideEffect : SideEffectSource.SideEffect
+    sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class Navigate(val action: PasswordRecoveryScreenAction) : SideEffect
+    }
 
     private enum class Operation : OperationKey { SEND }
 

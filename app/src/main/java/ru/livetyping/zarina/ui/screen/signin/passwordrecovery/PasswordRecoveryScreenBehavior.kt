@@ -1,6 +1,8 @@
 package ru.livetyping.zarina.ui.screen.signin.passwordrecovery
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
@@ -13,14 +15,19 @@ import ru.livetyping.zarina.ui.screen.signin.passwordrecovery.PasswordRecoveryVi
 @Composable
 fun PasswordRecoveryScreenBehavior(
     sideEffects: Flow<SideEffect>,
+    navigate: (PasswordRecoveryScreenAction) -> Unit,
 ) {
+    val updatedNavigate by rememberUpdatedState(navigate)
+
     ForcedBottomNavBarBehavior(isVisible = false)
 
     LifecycleStartEffect(sideEffects) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sideEffects.collect { sideEffect ->
-
+                    when (sideEffect) {
+                        is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
+                    }
                 }
             }
         }

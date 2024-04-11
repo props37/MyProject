@@ -7,6 +7,7 @@ import ru.livetyping.zarina.ui.navigation.destination.graph.SignInGraph
 import ru.livetyping.zarina.ui.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.ui.navigation.util.slidePopExitTransition
 import ru.livetyping.zarina.ui.screen.signin.passwordrecovery.PasswordRecoveryScreen
+import ru.livetyping.zarina.ui.screen.signin.passwordrecovery.PasswordRecoveryScreenAction
 
 fun NavGraphBuilder.passwordRecoveryScreen(navController: NavHostController) {
     composableDestination(
@@ -24,7 +25,18 @@ fun NavGraphBuilder.passwordRecoveryScreen(navController: NavHostController) {
             }
         },
     ) {
-        PasswordRecoveryScreen()
+        PasswordRecoveryScreen(
+            navigate = { action ->
+                when (action) {
+                    PasswordRecoveryScreenAction.ScreenClosed -> {
+                        navController.popBackStack(
+                            route = SignInGraph.PasswordRecovery.routeSchema,
+                            inclusive = true,
+                        )
+                    }
+                }
+            },
+        )
     }
 }
 
