@@ -13,5 +13,8 @@ sealed class SignInRequestBody {
 
         @SerialName("password")
         val password: String,
+
+        @SerialName("reCaptchaKey")
+        val recaptchaToken: String,
     ) : SignInRequestBody()
 }

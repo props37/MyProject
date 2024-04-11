@@ -67,8 +67,8 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun signIn(email: Email, password: String): AuthorizationDto {
-        val body = SignInRequestBody.Email(email.value, password)
+    suspend fun signIn(email: Email, password: String, recaptchaToken: Token): AuthorizationDto {
+        val body = SignInRequestBody.Email(email.value, password, recaptchaToken.value)
         // TODO: [High] Handle errors
         return httpClient.post("/api/auth/email") {
             setJsonBody(body)
