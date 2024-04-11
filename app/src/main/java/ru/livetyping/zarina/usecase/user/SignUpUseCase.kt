@@ -53,7 +53,7 @@ class SignUpUseCase @Inject constructor(
         )
         if (validationException != null) throw validationException
 
-        val recaptchaToken = recaptchaManager.execute(RecaptchaAction.SIGNUP)
+        val recaptchaToken = recaptchaManager.execute(RecaptchaManager.ACTION_SIGN_UP)
 
         userRepository.signUp(
             firstName = firstName,

@@ -73,6 +73,15 @@ class RecaptchaManager @Inject constructor() {
     }
 
     companion object {
+        val ACTION_SIGN_UP: RecaptchaAction
+            get() = RecaptchaAction.custom("register_android")
+
+        val ACTION_SIGN_IN_BY_EMAIL: RecaptchaAction
+            get() = RecaptchaAction.custom("auth_email_android")
+
+        val ACTION_SIGN_IN_BY_PHONE: RecaptchaAction
+            get() = RecaptchaAction.custom("auth_phone_android")
+
         private const val TAG = "RecaptchaManager"
 
         private val TIMEOUT = 10.seconds
