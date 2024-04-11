@@ -8,6 +8,7 @@ import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendSmsOtpRequestBody
+import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.exception.ConfirmSignUpApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.SignUpApiExceptionConverter
@@ -64,6 +65,14 @@ class UserApi @Inject constructor(
                 setJsonBody(body)
             }.body()
         }
+    }
+
+    suspend fun signIn(email: Email, password: String): AuthorizationDto {
+        val body = SignInRequestBody.Email(email.value, password)
+        // TODO: [High] Handle errors
+        return httpClient.post("/api/auth/email") {
+            setJsonBody(body)
+        }.body()
     }
 
     suspend fun requestResendSmsOtp(phone: PhoneNumber) {
