@@ -4,11 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.base.operationtracker.OperationKey
 import ru.livetyping.zarina.base.operationtracker.OperationTracker
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
@@ -29,6 +31,8 @@ class PasswordRecoveryViewModel @Inject constructor(
     private val operationTracker = OperationTracker()
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private var sendJob: Job? = null
 
     private val emailValueHolder = savedStateHandle.createValueHolder(
         key = KEY_EMAIL,
@@ -60,7 +64,12 @@ class PasswordRecoveryViewModel @Inject constructor(
     }
 
     fun onSendClicked() {
-        // TODO: [High] Implement
+        if (sendJob?.isActive == true) return
+        sendJob = viewModelScope.launch {
+            operationTracker.track(Operation.SEND) {
+                // TODO: [High] Implement
+            }
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
