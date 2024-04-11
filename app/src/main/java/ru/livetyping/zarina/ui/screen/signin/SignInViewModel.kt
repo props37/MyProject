@@ -115,14 +115,17 @@ class SignInViewModel @Inject constructor(
 
     fun onEmailChanged(email: String) {
         emailValueHolder.set(email)
+        _isEmailInvalid.value = false
     }
 
     fun onPasswordChanged(password: String) {
         passwordValueHolder.set(password)
+        _isPasswordInvalid.value = false
     }
 
     fun onPhoneChanged(phone: String) {
         phoneValueHolder.set(phone)
+        _isPhoneInvalid.value = false
     }
 
     fun onSignInClicked() {
