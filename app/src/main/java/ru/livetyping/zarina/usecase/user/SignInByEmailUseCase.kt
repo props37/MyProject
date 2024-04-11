@@ -7,6 +7,7 @@ import ru.livetyping.zarina.data.user.UserRepository
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.exception.ValidationException
+import ru.livetyping.zarina.usecase.authorization.SetAuthorizationTokensUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -17,6 +18,8 @@ class SignInByEmailUseCase @Inject constructor(
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val recaptchaManager: RecaptchaManager,
+    private val setAuthorizationTokensUseCase: SetAuthorizationTokensUseCase,
+    private val setUserUseCase: SetUserUseCase,
 ) : UseCase<SignInByEmailUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
@@ -37,7 +40,15 @@ class SignInByEmailUseCase @Inject constructor(
 
         val recaptchaToken = recaptchaManager.execute(RecaptchaManager.ACTION_SIGN_IN_BY_EMAIL)
 
-        userRepository.signIn(email, password, recaptchaToken)
+        val authorizationResult = userRepository.signIn(email, password, recaptchaToken)
+        val authTokens = authorizationResult.tokens
+        val user = authorizationResult.user
+
+        val setAuthorizationTokensParams = SetAuthorizationTokensUseCase.Params(authTokens)
+        setAuthorizationTokensUseCase(setAuthorizationTokensParams).getOrThrow()
+
+        val setUserParams = SetUserUseCase.Params(user)
+        setUserUseCase(setUserParams).getOrThrow()
     }
 
     data class Params(
