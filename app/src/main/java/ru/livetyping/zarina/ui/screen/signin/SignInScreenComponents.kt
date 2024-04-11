@@ -57,6 +57,7 @@ object SignInScreenComponents {
 
     @Composable
     fun SignInBlock(
+        isSignInButtonLoading: Boolean,
         onSignInClicked: () -> Unit,
         onSignUpClicked: () -> Unit,
         onUrlClicked: (Url) -> Unit,
@@ -65,6 +66,7 @@ object SignInScreenComponents {
         Column(modifier = modifier) {
             ZarinaButton(
                 onClick = onSignInClicked,
+                isLoading = isSignInButtonLoading,
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(text = stringResource(R.string.sign_in).uppercase())

@@ -9,8 +9,10 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.base.operationtracker.OperationKey
@@ -24,6 +26,7 @@ import ru.livetyping.zarina.ui.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.screen.signin.SignInViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.SignInByEmailUseCase
+import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
 
 @HiltViewModel
@@ -68,6 +71,14 @@ class SignInViewModel @Inject constructor(
     val password: StateFlow<String> = passwordValueHolder.stateFlow
 
     val phone: StateFlow<String> = phoneValueHolder.stateFlow
+
+    val isSignInButtonLoading: StateFlow<Boolean> = operationTracker
+        .isOperationOngoing(Operation.SIGN_IN)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = false,
+        )
 
     fun onBackClicked() {
         navigationThrottler.throttle {

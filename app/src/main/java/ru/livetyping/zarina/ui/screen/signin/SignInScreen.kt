@@ -71,6 +71,7 @@ fun SignInScreen(
     val email by viewModel.email.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
     val phone by viewModel.phone.collectAsStateWithLifecycle()
+    val isSignInButtonLoading by viewModel.isSignInButtonLoading.collectAsStateWithLifecycle()
 
     ScreenContent(
         signInTypes = signInTypes,
@@ -81,6 +82,7 @@ fun SignInScreen(
         password = password,
         onPasswordChanged = viewModel::onPasswordChanged,
         phone = phone,
+        isSignInButtonLoading = isSignInButtonLoading,
         onPhoneChanged = viewModel::onPhoneChanged,
         onSignInClicked = viewModel::onSignInClicked,
         onSignUpClicked = viewModel::onSignUpClicked,
@@ -101,6 +103,7 @@ private fun ScreenContent(
     password: String,
     onPasswordChanged: (String) -> Unit,
     phone: String,
+    isSignInButtonLoading: Boolean,
     onPhoneChanged: (String) -> Unit,
     onSignInClicked: () -> Unit,
     onSignUpClicked: () -> Unit,
@@ -232,6 +235,7 @@ private fun ScreenContent(
                         Spacer(modifier = Modifier.height(32.dp))
 
                         SignInBlock(
+                            isSignInButtonLoading = isSignInButtonLoading,
                             onSignInClicked = onSignInClicked,
                             onSignUpClicked = onSignUpClicked,
                             onUrlClicked = onUrlClicked,
@@ -261,6 +265,7 @@ private fun ScreenContent(
                         Spacer(modifier = Modifier.height(32.dp))
 
                         SignInBlock(
+                            isSignInButtonLoading = isSignInButtonLoading,
                             onSignInClicked = onSignInClicked,
                             onSignUpClicked = onSignUpClicked,
                             onUrlClicked = onUrlClicked,
