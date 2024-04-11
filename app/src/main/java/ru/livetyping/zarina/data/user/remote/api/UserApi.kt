@@ -11,6 +11,7 @@ import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendSmsOtpRequestB
 import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.exception.ConfirmSignUpApiExceptionConverter
+import ru.livetyping.zarina.data.user.remote.api.exception.SignInApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.SignUpApiExceptionConverter
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.common.Email
@@ -25,6 +26,7 @@ class UserApi @Inject constructor(
     private val httpClient: HttpClient,
     private val signUpApiExceptionConverter: SignUpApiExceptionConverter,
     private val confirmSignUpApiExceptionConverter: ConfirmSignUpApiExceptionConverter,
+    private val signInApiExceptionConverter: SignInApiExceptionConverter,
 ) {
     suspend fun setUserCity(city: City) {
         val body = SetUserCityRequestBody(city.kladrId.value)
@@ -69,10 +71,11 @@ class UserApi @Inject constructor(
 
     suspend fun signIn(email: Email, password: String, recaptchaToken: Token): AuthorizationDto {
         val body = SignInRequestBody.Email(email.value, password, recaptchaToken.value)
-        // TODO: [High] Handle errors
-        return httpClient.post("/api/auth/email") {
-            setJsonBody(body)
-        }.body()
+        return signInApiExceptionConverter {
+            httpClient.post("/api/auth/email") {
+                setJsonBody(body)
+            }.body()
+        }
     }
 
     suspend fun requestResendSmsOtp(phone: PhoneNumber) {

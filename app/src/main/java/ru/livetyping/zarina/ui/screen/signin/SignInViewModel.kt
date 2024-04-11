@@ -28,6 +28,7 @@ import ru.livetyping.zarina.domain.user.exception.CaptchaException
 import ru.livetyping.zarina.domain.user.exception.EmailException
 import ru.livetyping.zarina.domain.user.exception.EmptyEmailException
 import ru.livetyping.zarina.domain.user.exception.EmptyPasswordException
+import ru.livetyping.zarina.domain.user.exception.InvalidEmailOrPasswordException
 import ru.livetyping.zarina.domain.user.exception.PasswordException
 import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
 import ru.livetyping.zarina.ui.base.text.Text
@@ -167,6 +168,12 @@ class SignInViewModel @Inject constructor(
     private fun onSignInFailure(e: Throwable) {
         when (e) {
             is ValidationException -> handleSignInValidationException(e)
+            is InvalidEmailOrPasswordException -> {
+                val text = Text.Resource(R.string.invalid_email_or_password_try_again)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+
             is CaptchaException -> {
                 val text = Text.Resource(R.string.something_went_wrong_try_again)
                 val message = ZarinaToastMessage.error(text)

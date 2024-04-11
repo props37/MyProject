@@ -140,6 +140,7 @@
     <string name="recaptcha_policies_privacy_url">https://policies.google.com/privacy?hl=ru</string>
     <string name="recaptcha_policies_terms_url">https://policies.google.com/terms?hl=ru</string>
     <string name="do_not_have_account_yet_question">У тебя ещё нет аккаунта?</string>
+    <string name="invalid_email_or_password_try_again">Неправильный адрес электронной почты или пароль. Повтори попытку</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
