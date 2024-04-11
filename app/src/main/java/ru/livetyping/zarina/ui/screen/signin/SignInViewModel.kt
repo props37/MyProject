@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.operationtracker.OperationKey
 import ru.livetyping.zarina.base.operationtracker.OperationTracker
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
@@ -22,8 +23,17 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Url
+import ru.livetyping.zarina.domain.common.exception.ValidationException
+import ru.livetyping.zarina.domain.user.exception.CaptchaException
+import ru.livetyping.zarina.domain.user.exception.EmailException
+import ru.livetyping.zarina.domain.user.exception.EmptyEmailException
+import ru.livetyping.zarina.domain.user.exception.EmptyPasswordException
+import ru.livetyping.zarina.domain.user.exception.PasswordException
+import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
+import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
+import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.ui.screen.signin.SignInViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
@@ -68,9 +78,18 @@ class SignInViewModel @Inject constructor(
 
     val email: StateFlow<String> = emailValueHolder.stateFlow
 
+    private val _isEmailInvalid = MutableStateFlow(false)
+    val isEmailInvalid: StateFlow<Boolean> = _isEmailInvalid.asStateFlow()
+
     val password: StateFlow<String> = passwordValueHolder.stateFlow
 
+    private val _isPasswordInvalid = MutableStateFlow(false)
+    val isPasswordInvalid: StateFlow<Boolean> = _isPasswordInvalid.asStateFlow()
+
     val phone: StateFlow<String> = phoneValueHolder.stateFlow
+
+    private val _isPhoneInvalid = MutableStateFlow(false)
+    val isPhoneInvalid: StateFlow<Boolean> = _isPhoneInvalid.asStateFlow()
 
     val isSignInButtonLoading: StateFlow<Boolean> = operationTracker
         .isOperationOngoing(Operation.SIGN_IN)
@@ -111,6 +130,12 @@ class SignInViewModel @Inject constructor(
                     SignInType.EMAIL -> signInByEmail()
                     SignInType.PHONE -> signInByPhone()
                 }
+                result
+                    .onSuccess {
+                        val action = SignInScreenAction.UserSignedIn
+                        emitSideEffect(SideEffect.Navigate(action))
+                    }
+                    .onFailure(::onSignInFailure)
             }
         }
     }
@@ -139,10 +164,58 @@ class SignInViewModel @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    private fun onSignInFailure(e: Throwable) {
+        when (e) {
+            is ValidationException -> handleSignInValidationException(e)
+            is CaptchaException -> {
+                val text = Text.Resource(R.string.something_went_wrong_try_again)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+
+            else -> {
+                val text = Text.Resource(R.string.something_went_wrong)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+        }
+    }
+
+    private fun handleSignInValidationException(e: ValidationException) {
+        val exceptions = listOf(e) + e.suppressedExceptions
+
+        val isEmailEmpty = exceptions.any { it is EmptyEmailException }
+        val isPasswordEmpty = exceptions.any { it is EmptyPasswordException }
+
+        // TODO: [High] Handle Invalid email or password exception
+        // TODO: [High] Handle Invalid phone exception
+        val messageText = when {
+            isEmailEmpty || isPasswordEmpty -> {
+                Text.Resource(R.string.sign_in_empty_fields_error)
+            }
+
+            else -> Text.Resource(R.string.incorrect_data_entered)
+        }
+        val message = ZarinaToastMessage.error(messageText)
+        emitSideEffect(SideEffect.ShowZarinaToast(message))
+
+        if (exceptions.any { it is EmailException }) {
+            _isEmailInvalid.value = true
+        }
+        if (exceptions.any { it is PasswordException }) {
+            _isPasswordInvalid.value = true
+        }
+        if (exceptions.any { it is PhoneNumberException }) {
+            _isPhoneInvalid.value = true
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: SignInScreenAction) : SideEffect
 
         data class OpenUrl(val url: Url) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 
     @Parcelize

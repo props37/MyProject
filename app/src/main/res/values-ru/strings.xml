@@ -189,6 +189,7 @@
     <string name="sign_in_policies_privacy_policy">политикой конфиденциальности</string>
     <string name="sign_in_recaptcha_policies_privacy">конфиденциальность</string>
     <string name="sign_in_recaptcha_policies_terms">условия использования</string>
+    <string name="sign_in_empty_fields_error">Поля ввода пусты. Для входа в аккаунт введи адрес электронной почты и пароль</string>
 
     <plurals name="show_products">
         <item quantity="zero">Показать %1$d товаров</item>

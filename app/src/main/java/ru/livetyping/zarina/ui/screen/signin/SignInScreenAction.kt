@@ -4,4 +4,6 @@ sealed class SignInScreenAction {
     data object ScreenClosed : SignInScreenAction()
 
     data object SignUpClicked : SignInScreenAction()
+
+    data object UserSignedIn : SignInScreenAction()
 }

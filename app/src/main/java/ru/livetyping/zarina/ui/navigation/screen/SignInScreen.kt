@@ -44,6 +44,13 @@ fun NavGraphBuilder.signInScreen(navController: NavHostController) {
                         }
                         navController.navigateToSignUpGraph(navOptions)
                     }
+
+                    SignInScreenAction.UserSignedIn -> {
+                        navController.popBackStack(
+                            route = SignInGraph.routeSchema,
+                            inclusive = true,
+                        )
+                    }
                 }
             },
         )
