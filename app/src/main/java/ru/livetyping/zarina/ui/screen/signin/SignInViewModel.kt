@@ -22,6 +22,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Email
+import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.common.exception.ValidationException
 import ru.livetyping.zarina.domain.user.exception.CaptchaException
@@ -37,6 +38,7 @@ import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.ui.screen.signin.SignInViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.SignInByEmailUseCase
+import ru.livetyping.zarina.usecase.user.SignInByPhoneUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
 
@@ -127,16 +129,10 @@ class SignInViewModel @Inject constructor(
         if (signInJob?.isActive == true) return
         signInJob = viewModelScope.launch {
             operationTracker.track(Operation.SIGN_IN) {
-                val result = when (currentSignInType.value) {
+                when (currentSignInType.value) {
                     SignInType.EMAIL -> signInByEmail()
                     SignInType.PHONE -> signInByPhone()
                 }
-                result
-                    .onSuccess {
-                        val action = SignInScreenAction.UserSignedIn
-                        emitSideEffect(SideEffect.Navigate(action))
-                    }
-                    .onFailure(::onSignInFailure)
             }
         }
     }
@@ -154,18 +150,31 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    private suspend fun signInByEmail(): Result<Unit> {
+    private suspend fun signInByEmail() {
         val email = Email.create(email.value)
         val password = password.value
         val params = SignInByEmailUseCase.Params(email, password)
-        return interactor.signInByEmail(params)
+        interactor.signInByEmail(params)
+            .onSuccess {
+                val action = SignInScreenAction.UserSignedIn
+                emitSideEffect(SideEffect.Navigate(action))
+            }
+            .onFailure(::onSignInByEmailFailure)
     }
 
-    private suspend fun signInByPhone(): Result<Unit> {
-        TODO("Not yet implemented")
+    private suspend fun signInByPhone() {
+        val phone = PhoneNumber.create(phone.value)
+        val params = SignInByPhoneUseCase.Params(phone)
+        interactor.signInByPhone(params)
+            .onSuccess {
+                // TODO: [High] Implement
+            }
+            .onFailure {
+                // TODO: [High] Implement
+            }
     }
 
-    private fun onSignInFailure(e: Throwable) {
+    private fun onSignInByEmailFailure(e: Throwable) {
         when (e) {
             is ValidationException -> handleSignInValidationException(e)
             is InvalidEmailOrPasswordException -> {
