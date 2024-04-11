@@ -78,6 +78,15 @@ class UserApi @Inject constructor(
         }
     }
 
+    suspend fun signIn(phone: PhoneNumber, recaptchaToken: Token): AuthorizationDto {
+        val body = SignInRequestBody.Phone(phone.value, recaptchaToken.value)
+        return signInApiExceptionConverter {
+            httpClient.post("/api/auth/phone") {
+                setJsonBody(body)
+            }.body()
+        }
+    }
+
     suspend fun requestResendSmsOtp(phone: PhoneNumber) {
         val body = RequestResendSmsOtpRequestBody(phone.value)
         httpClient.post("/api/auth/phone/sms") {

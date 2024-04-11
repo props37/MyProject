@@ -17,4 +17,13 @@ sealed class SignInRequestBody {
         @SerialName("reCaptchaKey")
         val recaptchaToken: String,
     ) : SignInRequestBody()
+
+    @Serializable
+    data class Phone(
+        @SerialName("phone")
+        val phone: String,
+
+        @SerialName("reCaptchaKey")
+        val recaptchaToken: String,
+    ) : SignInRequestBody()
 }
