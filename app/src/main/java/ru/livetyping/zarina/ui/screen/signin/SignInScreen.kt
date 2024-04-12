@@ -3,58 +3,37 @@ package ru.livetyping.zarina.ui.screen.signin
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.R
+import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.domain.common.Url
-import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
-import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonDefaults
-import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonSize
-import ru.livetyping.zarina.ui.common.component.tab.ZarinaTab
-import ru.livetyping.zarina.ui.common.component.tab.ZarinaTabRow
-import ru.livetyping.zarina.ui.common.component.textfield.ZarinaPasswordTextField
-import ru.livetyping.zarina.ui.common.component.textfield.ZarinaPhoneNumberTextField
-import ru.livetyping.zarina.ui.common.component.textfield.ZarinaTextField
-import ru.livetyping.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.ui.screen.signin.SignInScreenComponents.SignInBlock
+import ru.livetyping.zarina.ui.screen.signin.SignInScreenComponents.SignInTypePager
+import ru.livetyping.zarina.ui.screen.signin.SignInScreenComponents.SignInTypeTabRow
 import ru.livetyping.zarina.ui.screen.signin.SignInScreenComponents.TopBar
 import ru.livetyping.zarina.ui.screen.signin.SignInViewModel.SideEffect
 import ru.livetyping.zarina.ui.screen.signin.SignInViewModel.SignInType
@@ -83,9 +62,9 @@ fun SignInScreen(
         password = password,
         onPasswordChanged = viewModel::onPasswordChanged,
         phone = phone,
-        isSignInButtonLoading = isSignInButtonLoading,
         onPhoneChanged = viewModel::onPhoneChanged,
         onSignInClicked = viewModel::onSignInClicked,
+        isSignInButtonLoading = isSignInButtonLoading,
         onForgotPasswordClicked = viewModel::onForgotPasswordClicked,
         onSignUpClicked = viewModel::onSignUpClicked,
         onUrlClicked = viewModel::onUrlClicked,
@@ -106,9 +85,9 @@ private fun ScreenContent(
     password: String,
     onPasswordChanged: (String) -> Unit,
     phone: String,
-    isSignInButtonLoading: Boolean,
     onPhoneChanged: (String) -> Unit,
     onSignInClicked: () -> Unit,
+    isSignInButtonLoading: Boolean,
     onForgotPasswordClicked: () -> Unit,
     onSignUpClicked: () -> Unit,
     onUrlClicked: (Url) -> Unit,
@@ -116,6 +95,13 @@ private fun ScreenContent(
     sideEffects: Flow<SideEffect>,
     navigate: (SignInScreenAction) -> Unit,
 ) {
+    val updatedKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
+    val emailFocusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        emailFocusRequester.tryRequestFocus()
+    }
+
     SignInScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
@@ -132,7 +118,16 @@ private fun ScreenContent(
     ) {
         TopBar(onBackClicked = onBackClicked)
 
-        val signInTypePagerState = rememberPagerState { signInTypes.size }
+        val signInTypePagerState = rememberPagerState(
+            initialPage = signInTypes.indexOf(currentSignInType),
+            pageCount = { signInTypes.size },
+        )
+
+        LaunchedEffect(signInTypePagerState) {
+            snapshotFlow { signInTypePagerState.currentPage }.collect {
+                updatedKeyboardController?.hide()
+            }
+        }
 
         PagerTabRowIntegration(
             pagerState = signInTypePagerState,
@@ -141,148 +136,31 @@ private fun ScreenContent(
             onCurrentTabChanged = onSignInTypeChanged,
         )
 
-        // TODO: [High] Extract
-        ZarinaTabRow(
-            selectedTabIndex = signInTypePagerState.currentPage,
+        SignInTypeTabRow(
+            signInTypes = signInTypes,
+            currentSignInType = currentSignInType,
+            onSignInTypeChanged = onSignInTypeChanged,
+            signInTypePagerState = signInTypePagerState,
             modifier = Modifier.padding(horizontal = 16.dp),
-        ) {
-            signInTypes.forEach { type ->
-                val textResId = when (type) {
-                    SignInType.EMAIL -> R.string.by_email
-                    SignInType.PHONE -> R.string.by_phone
-                }
+        )
 
-                ZarinaTab(
-                    text = stringResource(textResId),
-                    onClick = { onSignInTypeChanged(type) },
-                    isSelected = type == currentSignInType,
-                )
-            }
-        }
-
-        val updatedKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
-        LaunchedEffect(signInTypePagerState) {
-            snapshotFlow { signInTypePagerState.currentPage }.collect {
-                updatedKeyboardController?.hide()
-            }
-        }
-
-        // TODO: [High] Extract
-        val emailFocusRequester = remember { FocusRequester() }
-        LaunchedEffect(Unit) {
-            emailFocusRequester.tryRequestFocus()
-        }
-
-        // TODO: [High] Extract
-        HorizontalPager(
-            state = signInTypePagerState,
-            verticalAlignment = Alignment.Top,
+        SignInTypePager(
+            signInTypes = signInTypes,
+            signInTypePagerState = signInTypePagerState,
+            email = email,
+            onEmailChanged = onEmailChanged,
+            password = password,
+            onPasswordChanged = onPasswordChanged,
+            phone = phone,
+            onPhoneChanged = onPhoneChanged,
+            onSignInClicked = onSignInClicked,
+            isSignInButtonLoading = isSignInButtonLoading,
+            onForgotPasswordClicked = onForgotPasswordClicked,
+            onSignUpClicked = onSignUpClicked,
+            onUrlClicked = onUrlClicked,
+            emailFocusRequester = emailFocusRequester,
             modifier = Modifier.fillMaxSize(),
-        ) { page ->
-            val signInType = signInTypes[page]
-            when (signInType) {
-                SignInType.EMAIL -> {
-                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                        Spacer(modifier = Modifier.height(SignInScreenComponents.TopPadding))
-
-                        ZarinaTextField(
-                            value = email,
-                            onValueChanged = onEmailChanged,
-                            label = { Text(text = stringResource(R.string.email)) },
-                            placeholder = {
-                                Text(text = stringResource(R.string.email_text_field_placeholder))
-                            },
-                            innerTrailingContent = {
-                                ZarinaTextFieldDefaults.ClearButton(
-                                    isVisible = email.isNotEmpty(),
-                                    onClick = { onEmailChanged("") },
-                                )
-                            },
-                            keyboardOptions = remember {
-                                KeyboardOptions(
-                                    keyboardType = KeyboardType.Email,
-                                    imeAction = ImeAction.Next,
-                                )
-                            },
-                            singleLine = true,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                                .focusRequester(emailFocusRequester),
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        ZarinaPasswordTextField(
-                            password = password,
-                            onPasswordChanged = onPasswordChanged,
-                            keyboardOptions = remember {
-                                KeyboardOptions(
-                                    keyboardType = KeyboardType.Password,
-                                    imeAction = ImeAction.Done,
-                                )
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                        )
-
-                        ZarinaButton(
-                            onClick = onForgotPasswordClicked,
-                            size = ZarinaButtonSize.Medium,
-                            colors = ZarinaButtonDefaults.backlessColors(),
-                            contentPadding = PaddingValues(vertical = 8.dp),
-                            indication = null,
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                        ) {
-                            Text(
-                                text = stringResource(R.string.forgot_password_question).uppercase(),
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(32.dp))
-
-                        SignInBlock(
-                            isSignInButtonLoading = isSignInButtonLoading,
-                            onSignInClicked = onSignInClicked,
-                            onSignUpClicked = onSignUpClicked,
-                            onUrlClicked = onUrlClicked,
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                        )
-                    }
-                }
-
-                SignInType.PHONE -> {
-                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                        Spacer(modifier = Modifier.height(32.dp))
-
-                        ZarinaPhoneNumberTextField(
-                            phoneNumber = phone,
-                            onPhoneNumberChanged = onPhoneChanged,
-                            keyboardOptions = remember {
-                                KeyboardOptions(
-                                    keyboardType = KeyboardType.Phone,
-                                    imeAction = ImeAction.Done,
-                                )
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                        )
-
-                        Spacer(modifier = Modifier.height(32.dp))
-
-                        SignInBlock(
-                            isSignInButtonLoading = isSignInButtonLoading,
-                            onSignInClicked = onSignInClicked,
-                            onSignUpClicked = onSignUpClicked,
-                            onUrlClicked = onUrlClicked,
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                        )
-                    }
-                }
-            }
-        }
+        )
     }
 }
 
@@ -292,6 +170,52 @@ private fun ScreenContent(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        ScreenContent(
+            signInTypes = remember { SignInType.entries.toImmutableList() },
+            currentSignInType = SignInType.EMAIL,
+            onSignInTypeChanged = {},
+            email = "",
+            onEmailChanged = {},
+            password = "",
+            onPasswordChanged = {},
+            phone = "+7",
+            onPhoneChanged = {},
+            onSignInClicked = {},
+            isSignInButtonLoading = false,
+            onForgotPasswordClicked = {},
+            onSignUpClicked = {},
+            onUrlClicked = {},
+            onBackClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigate = {},
+        )
+    }
+}
+
+@Preview
+@FontScalePreviews
+@DensityPreviews
+@Composable
+private fun PreviewPhone() {
+    ZarinaPreview {
+        ScreenContent(
+            signInTypes = remember { SignInType.entries.toImmutableList() },
+            currentSignInType = SignInType.PHONE,
+            onSignInTypeChanged = {},
+            email = "",
+            onEmailChanged = {},
+            password = "",
+            onPasswordChanged = {},
+            phone = "+7",
+            onPhoneChanged = {},
+            onSignInClicked = {},
+            isSignInButtonLoading = false,
+            onForgotPasswordClicked = {},
+            onSignUpClicked = {},
+            onUrlClicked = {},
+            onBackClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigate = {},
+        )
     }
 }

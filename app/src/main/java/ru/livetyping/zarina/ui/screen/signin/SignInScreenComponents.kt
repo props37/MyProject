@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.ui.screen.signin
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -8,22 +9,41 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonSize
+import ru.livetyping.zarina.ui.common.component.tab.ZarinaTab
+import ru.livetyping.zarina.ui.common.component.tab.ZarinaTabRow
 import ru.livetyping.zarina.ui.common.component.text.ZarinaClickableText
+import ru.livetyping.zarina.ui.common.component.textfield.ZarinaPasswordTextField
+import ru.livetyping.zarina.ui.common.component.textfield.ZarinaPhoneNumberTextField
+import ru.livetyping.zarina.ui.common.component.textfield.ZarinaTextField
+import ru.livetyping.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
+import ru.livetyping.zarina.ui.screen.signin.SignInViewModel.SignInType
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.navigationBarsOrIme
 
@@ -55,8 +75,214 @@ object SignInScreenComponents {
         )
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun SignInBlock(
+    fun SignInTypeTabRow(
+        signInTypes: ImmutableList<SignInType>,
+        currentSignInType: SignInType,
+        onSignInTypeChanged: (SignInType) -> Unit,
+        signInTypePagerState: PagerState,
+        modifier: Modifier = Modifier,
+    ) {
+        ZarinaTabRow(
+            selectedTabIndex = signInTypePagerState.currentPage,
+            modifier = modifier,
+        ) {
+            signInTypes.forEach { type ->
+                val textResId = when (type) {
+                    SignInType.EMAIL -> R.string.by_email
+                    SignInType.PHONE -> R.string.by_phone
+                }
+
+                ZarinaTab(
+                    text = stringResource(textResId),
+                    onClick = { onSignInTypeChanged(type) },
+                    isSelected = type == currentSignInType,
+                )
+            }
+        }
+    }
+
+    @OptIn(ExperimentalFoundationApi::class)
+    @Composable
+    fun SignInTypePager(
+        signInTypes: ImmutableList<SignInType>,
+        signInTypePagerState: PagerState,
+        email: String,
+        onEmailChanged: (String) -> Unit,
+        password: String,
+        onPasswordChanged: (String) -> Unit,
+        phone: String,
+        onPhoneChanged: (String) -> Unit,
+        onSignInClicked: () -> Unit,
+        isSignInButtonLoading: Boolean,
+        onForgotPasswordClicked: () -> Unit,
+        onSignUpClicked: () -> Unit,
+        onUrlClicked: (Url) -> Unit,
+        emailFocusRequester: FocusRequester,
+        modifier: Modifier = Modifier,
+    ) {
+        HorizontalPager(
+            state = signInTypePagerState,
+            verticalAlignment = Alignment.Top,
+            modifier = modifier,
+        ) { page ->
+            val signInType = signInTypes[page]
+            when (signInType) {
+                SignInType.EMAIL -> {
+                    SignInByEmail(
+                        email = email,
+                        onEmailChanged = onEmailChanged,
+                        password = password,
+                        onPasswordChanged = onPasswordChanged,
+                        onSignInClicked = onSignInClicked,
+                        isSignInButtonLoading = isSignInButtonLoading,
+                        onForgotPasswordClicked = onForgotPasswordClicked,
+                        onSignUpClicked = onSignUpClicked,
+                        onUrlClicked = onUrlClicked,
+                        emailFocusRequester = emailFocusRequester,
+                    )
+                }
+
+                SignInType.PHONE -> {
+                    SignInByPhone(
+                        phone = phone,
+                        onPhoneChanged = onPhoneChanged,
+                        onSignInClicked = onSignInClicked,
+                        isSignInButtonLoading = isSignInButtonLoading,
+                        onSignUpClicked = onSignUpClicked,
+                        onUrlClicked = onUrlClicked,
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun SignInByEmail(
+        email: String,
+        onEmailChanged: (String) -> Unit,
+        password: String,
+        onPasswordChanged: (String) -> Unit,
+        onSignInClicked: () -> Unit,
+        isSignInButtonLoading: Boolean,
+        onForgotPasswordClicked: () -> Unit,
+        onSignUpClicked: () -> Unit,
+        onUrlClicked: (Url) -> Unit,
+        emailFocusRequester: FocusRequester,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+            Spacer(modifier = Modifier.height(TopPadding))
+
+            ZarinaTextField(
+                value = email,
+                onValueChanged = onEmailChanged,
+                label = { Text(text = stringResource(R.string.email)) },
+                placeholder = {
+                    Text(text = stringResource(R.string.email_text_field_placeholder))
+                },
+                innerTrailingContent = {
+                    ZarinaTextFieldDefaults.ClearButton(
+                        isVisible = email.isNotEmpty(),
+                        onClick = { onEmailChanged("") },
+                    )
+                },
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next,
+                    )
+                },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .focusRequester(emailFocusRequester),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ZarinaPasswordTextField(
+                password = password,
+                onPasswordChanged = onPasswordChanged,
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done,
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
+
+            ZarinaButton(
+                onClick = onForgotPasswordClicked,
+                size = ZarinaButtonSize.Medium,
+                colors = ZarinaButtonDefaults.backlessColors(),
+                contentPadding = PaddingValues(vertical = 8.dp),
+                indication = null,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.forgot_password_question).uppercase(),
+                )
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            SignInBlock(
+                isSignInButtonLoading = isSignInButtonLoading,
+                onSignInClicked = onSignInClicked,
+                onSignUpClicked = onSignUpClicked,
+                onUrlClicked = onUrlClicked,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+        }
+    }
+
+    @Composable
+    private fun SignInByPhone(
+        phone: String,
+        onPhoneChanged: (String) -> Unit,
+        onSignInClicked: () -> Unit,
+        isSignInButtonLoading: Boolean,
+        onSignUpClicked: () -> Unit,
+        onUrlClicked: (Url) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+            Spacer(modifier = Modifier.height(32.dp))
+
+            ZarinaPhoneNumberTextField(
+                phoneNumber = phone,
+                onPhoneNumberChanged = onPhoneChanged,
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Phone,
+                        imeAction = ImeAction.Done,
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            SignInBlock(
+                isSignInButtonLoading = isSignInButtonLoading,
+                onSignInClicked = onSignInClicked,
+                onSignUpClicked = onSignUpClicked,
+                onUrlClicked = onUrlClicked,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+        }
+    }
+
+    @Composable
+    private fun SignInBlock(
         isSignInButtonLoading: Boolean,
         onSignInClicked: () -> Unit,
         onSignUpClicked: () -> Unit,
