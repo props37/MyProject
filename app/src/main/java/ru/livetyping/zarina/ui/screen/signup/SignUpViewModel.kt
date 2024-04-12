@@ -216,7 +216,6 @@ class SignUpViewModel @Inject constructor(
         when (e) {
             is ValidationException -> handleSignUpValidationException(e)
             is OtpTimeoutException -> {
-                // TODO: [High] Change text!!!
                 val text = Text.Resource(R.string.sign_up_otp_timeout_error)
                 val message = ZarinaToastMessage.error(text)
                 emitSideEffect(SideEffect.ShowZarinaToast(message))

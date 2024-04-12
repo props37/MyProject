@@ -110,10 +110,13 @@ object SignInScreenComponents {
         signInTypePagerState: PagerState,
         email: String,
         onEmailChanged: (String) -> Unit,
+        isEmailInvalid: Boolean,
         password: String,
         onPasswordChanged: (String) -> Unit,
+        isPasswordInvalid: Boolean,
         phone: String,
         onPhoneChanged: (String) -> Unit,
+        isPhoneInvalid: Boolean,
         onSignInClicked: () -> Unit,
         isSignInButtonLoading: Boolean,
         onForgotPasswordClicked: () -> Unit,
@@ -133,8 +136,10 @@ object SignInScreenComponents {
                     SignInByEmail(
                         email = email,
                         onEmailChanged = onEmailChanged,
+                        isEmailInvalid = isEmailInvalid,
                         password = password,
                         onPasswordChanged = onPasswordChanged,
+                        isPasswordInvalid = isPasswordInvalid,
                         onSignInClicked = onSignInClicked,
                         isSignInButtonLoading = isSignInButtonLoading,
                         onForgotPasswordClicked = onForgotPasswordClicked,
@@ -148,6 +153,7 @@ object SignInScreenComponents {
                     SignInByPhone(
                         phone = phone,
                         onPhoneChanged = onPhoneChanged,
+                        isPhoneInvalid = isPhoneInvalid,
                         onSignInClicked = onSignInClicked,
                         isSignInButtonLoading = isSignInButtonLoading,
                         onSignUpClicked = onSignUpClicked,
@@ -162,8 +168,10 @@ object SignInScreenComponents {
     private fun SignInByEmail(
         email: String,
         onEmailChanged: (String) -> Unit,
+        isEmailInvalid: Boolean,
         password: String,
         onPasswordChanged: (String) -> Unit,
+        isPasswordInvalid: Boolean,
         onSignInClicked: () -> Unit,
         isSignInButtonLoading: Boolean,
         onForgotPasswordClicked: () -> Unit,
@@ -178,6 +186,7 @@ object SignInScreenComponents {
             ZarinaTextField(
                 value = email,
                 onValueChanged = onEmailChanged,
+                isError = isEmailInvalid,
                 label = { Text(text = stringResource(R.string.email)) },
                 placeholder = {
                     Text(text = stringResource(R.string.email_text_field_placeholder))
@@ -206,6 +215,7 @@ object SignInScreenComponents {
             ZarinaPasswordTextField(
                 password = password,
                 onPasswordChanged = onPasswordChanged,
+                isError = isPasswordInvalid,
                 keyboardOptions = remember {
                     KeyboardOptions(
                         keyboardType = KeyboardType.Password,
@@ -246,6 +256,7 @@ object SignInScreenComponents {
     private fun SignInByPhone(
         phone: String,
         onPhoneChanged: (String) -> Unit,
+        isPhoneInvalid: Boolean,
         onSignInClicked: () -> Unit,
         isSignInButtonLoading: Boolean,
         onSignUpClicked: () -> Unit,
@@ -258,6 +269,7 @@ object SignInScreenComponents {
             ZarinaPhoneNumberTextField(
                 phoneNumber = phone,
                 onPhoneNumberChanged = onPhoneChanged,
+                isError = isPhoneInvalid,
                 keyboardOptions = remember {
                     KeyboardOptions(
                         keyboardType = KeyboardType.Phone,

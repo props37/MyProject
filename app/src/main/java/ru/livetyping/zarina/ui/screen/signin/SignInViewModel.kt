@@ -29,6 +29,7 @@ import ru.livetyping.zarina.domain.user.exception.CaptchaException
 import ru.livetyping.zarina.domain.user.exception.EmailException
 import ru.livetyping.zarina.domain.user.exception.EmptyEmailException
 import ru.livetyping.zarina.domain.user.exception.EmptyPasswordException
+import ru.livetyping.zarina.domain.user.exception.EmptyPhoneNumberException
 import ru.livetyping.zarina.domain.user.exception.PasswordException
 import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
 import ru.livetyping.zarina.domain.user.exception.UserNotFoundException
@@ -180,16 +181,12 @@ class SignInViewModel @Inject constructor(
                 val action = SignInScreenAction.SignInByPhoneRequested(phone)
                 emitSideEffect(SideEffect.Navigate(action))
             }
-            .onFailure {
-                val text = Text.Resource(R.string.something_went_wrong)
-                val message = ZarinaToastMessage.error(text)
-                emitSideEffect(SideEffect.ShowZarinaToast(message))
-            }
+            .onFailure(::onSignInByPhoneFailure)
     }
 
     private fun onSignInByEmailFailure(e: Throwable) {
         when (e) {
-            is ValidationException -> handleSignInValidationException(e)
+            is ValidationException -> handleSignInByEmailValidationException(e)
             is UserNotFoundException -> {
                 val text = Text.Resource(R.string.invalid_email_or_password_try_again)
                 val message = ZarinaToastMessage.error(text)
@@ -210,17 +207,15 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    private fun handleSignInValidationException(e: ValidationException) {
+    private fun handleSignInByEmailValidationException(e: ValidationException) {
         val exceptions = listOf(e) + e.suppressedExceptions
 
         val isEmailEmpty = exceptions.any { it is EmptyEmailException }
         val isPasswordEmpty = exceptions.any { it is EmptyPasswordException }
 
-        // TODO: [High] Handle Invalid email or password exception
-        // TODO: [High] Handle Invalid phone exception
         val messageText = when {
             isEmailEmpty || isPasswordEmpty -> {
-                Text.Resource(R.string.sign_in_empty_fields_error)
+                Text.Resource(R.string.sign_in_by_email_empty_fields_error)
             }
 
             else -> Text.Resource(R.string.incorrect_data_entered)
@@ -234,6 +229,38 @@ class SignInViewModel @Inject constructor(
         if (exceptions.any { it is PasswordException }) {
             _isPasswordInvalid.value = true
         }
+    }
+
+    private fun onSignInByPhoneFailure(e: Throwable) {
+        when (e) {
+            is ValidationException -> handleSignInByPhoneValidationException(e)
+            is CaptchaException -> {
+                val text = Text.Resource(R.string.something_went_wrong_try_again)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+
+            else -> {
+                val text = Text.Resource(R.string.something_went_wrong)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+        }
+    }
+
+    private fun handleSignInByPhoneValidationException(e: ValidationException) {
+        val exceptions = listOf(e) + e.suppressedExceptions
+
+        val messageText = when {
+            exceptions.any { it is EmptyPhoneNumberException } -> {
+                Text.Resource(R.string.sign_in_by_phone_empty_fields_error)
+            }
+
+            else -> Text.Resource(R.string.incorrect_data_entered)
+        }
+        val message = ZarinaToastMessage.error(messageText)
+        emitSideEffect(SideEffect.ShowZarinaToast(message))
+
         if (exceptions.any { it is PhoneNumberException }) {
             _isPhoneInvalid.value = true
         }

@@ -49,8 +49,11 @@ fun SignInScreen(
     val signInTypes by viewModel.signInTypes.collectAsStateWithLifecycle()
     val currentSignInType by viewModel.currentSignInType.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
+    val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
+    val isPasswordInvalid by viewModel.isPasswordInvalid.collectAsStateWithLifecycle()
     val phone by viewModel.phone.collectAsStateWithLifecycle()
+    val isPhoneInvalid by viewModel.isPhoneInvalid.collectAsStateWithLifecycle()
     val isSignInButtonLoading by viewModel.isSignInButtonLoading.collectAsStateWithLifecycle()
 
     ScreenContent(
@@ -59,10 +62,13 @@ fun SignInScreen(
         onSignInTypeChanged = viewModel::onSignInTypeChanged,
         email = email,
         onEmailChanged = viewModel::onEmailChanged,
+        isEmailInvalid = isEmailInvalid,
         password = password,
         onPasswordChanged = viewModel::onPasswordChanged,
+        isPasswordInvalid = isPasswordInvalid,
         phone = phone,
         onPhoneChanged = viewModel::onPhoneChanged,
+        isPhoneInvalid = isPhoneInvalid,
         onSignInClicked = viewModel::onSignInClicked,
         isSignInButtonLoading = isSignInButtonLoading,
         onForgotPasswordClicked = viewModel::onForgotPasswordClicked,
@@ -82,10 +88,13 @@ private fun ScreenContent(
     onSignInTypeChanged: (SignInType) -> Unit,
     email: String,
     onEmailChanged: (String) -> Unit,
+    isEmailInvalid: Boolean,
     password: String,
     onPasswordChanged: (String) -> Unit,
+    isPasswordInvalid: Boolean,
     phone: String,
     onPhoneChanged: (String) -> Unit,
+    isPhoneInvalid: Boolean,
     onSignInClicked: () -> Unit,
     isSignInButtonLoading: Boolean,
     onForgotPasswordClicked: () -> Unit,
@@ -149,10 +158,13 @@ private fun ScreenContent(
             signInTypePagerState = signInTypePagerState,
             email = email,
             onEmailChanged = onEmailChanged,
+            isEmailInvalid = isEmailInvalid,
             password = password,
             onPasswordChanged = onPasswordChanged,
+            isPasswordInvalid = isPasswordInvalid,
             phone = phone,
             onPhoneChanged = onPhoneChanged,
+            isPhoneInvalid = isPhoneInvalid,
             onSignInClicked = onSignInClicked,
             isSignInButtonLoading = isSignInButtonLoading,
             onForgotPasswordClicked = onForgotPasswordClicked,
@@ -176,10 +188,13 @@ private fun Preview() {
             onSignInTypeChanged = {},
             email = "",
             onEmailChanged = {},
+            isEmailInvalid = false,
             password = "",
             onPasswordChanged = {},
+            isPasswordInvalid = false,
             phone = "+7",
             onPhoneChanged = {},
+            isPhoneInvalid = false,
             onSignInClicked = {},
             isSignInButtonLoading = false,
             onForgotPasswordClicked = {},
@@ -204,10 +219,13 @@ private fun PreviewPhone() {
             onSignInTypeChanged = {},
             email = "",
             onEmailChanged = {},
+            isEmailInvalid = false,
             password = "",
             onPasswordChanged = {},
+            isPasswordInvalid = false,
             phone = "+7",
             onPhoneChanged = {},
+            isPhoneInvalid = false,
             onSignInClicked = {},
             isSignInButtonLoading = false,
             onForgotPasswordClicked = {},
