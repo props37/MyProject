@@ -145,6 +145,7 @@
     <string name="enter_email_specified_during_registration">Введи адрес электронной почты, указанный при регистрации</string>
     <string name="we_will_send_link_to_reset_password_to_specified_email">Мы отправим ссылку для восстановления пароля на указанный адрес</string>
     <string name="send">Отправить</string>
+    <string name="user_with_this_email_not_found">Пользователь с таким адресом электронной почты не найден</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>

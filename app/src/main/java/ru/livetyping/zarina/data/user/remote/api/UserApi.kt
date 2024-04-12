@@ -12,6 +12,7 @@ import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendSmsOtpRequestB
 import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.exception.ConfirmSignUpApiExceptionConverter
+import ru.livetyping.zarina.data.user.remote.api.exception.RequestPasswordResetApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.SignInApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.SignUpApiExceptionConverter
 import ru.livetyping.zarina.di.Qualifiers
@@ -28,6 +29,7 @@ class UserApi @Inject constructor(
     private val signUpApiExceptionConverter: SignUpApiExceptionConverter,
     private val confirmSignUpApiExceptionConverter: ConfirmSignUpApiExceptionConverter,
     private val signInApiExceptionConverter: SignInApiExceptionConverter,
+    private val requestPasswordResetApiExceptionConverter: RequestPasswordResetApiExceptionConverter,
 ) {
     suspend fun setUserCity(city: City) {
         val body = SetUserCityRequestBody(city.kladrId.value)
@@ -97,8 +99,10 @@ class UserApi @Inject constructor(
 
     suspend fun requestPasswordReset(email: Email) {
         val body = RequestPasswordResetRequestBody(email.value)
-        httpClient.post("/api/auth/password") {
-            setJsonBody(body)
+        requestPasswordResetApiExceptionConverter {
+            httpClient.post("/api/auth/password") {
+                setJsonBody(body)
+            }
         }
     }
 }

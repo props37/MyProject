@@ -20,6 +20,7 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.user.exception.EmailException
 import ru.livetyping.zarina.domain.user.exception.EmptyEmailException
+import ru.livetyping.zarina.domain.user.exception.UserNotFoundException
 import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
@@ -101,6 +102,12 @@ class PasswordRecoveryViewModel @Inject constructor(
 
             is EmailException -> {
                 val text = Text.Resource(R.string.incorrect_data_entered)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+
+            is UserNotFoundException -> {
+                val text = Text.Resource(R.string.user_with_this_email_not_found)
                 val message = ZarinaToastMessage.error(text)
                 emitSideEffect(SideEffect.ShowZarinaToast(message))
             }
