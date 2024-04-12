@@ -63,6 +63,10 @@ fun NavGraphBuilder.signInScreen(navController: NavHostController) {
                         navController.navigateToPasswordRecoveryScreen()
                     }
 
+                    is SignInScreenAction.SignInByPhoneRequested -> {
+                        navController.navigateToSignInOtpScreen(action.phone)
+                    }
+
                     SignInScreenAction.UserSignedIn -> {
                         navController.popBackStack(
                             route = SignInGraph.routeSchema,

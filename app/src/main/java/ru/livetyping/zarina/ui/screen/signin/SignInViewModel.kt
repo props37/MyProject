@@ -177,7 +177,8 @@ class SignInViewModel @Inject constructor(
         val params = SignInByPhoneUseCase.Params(phone)
         interactor.signInByPhone(params)
             .onSuccess {
-                // TODO: [High] Implement
+                val action = SignInScreenAction.SignInByPhoneRequested(phone)
+                emitSideEffect(SideEffect.Navigate(action))
             }
             .onFailure {
                 // TODO: [High] Implement

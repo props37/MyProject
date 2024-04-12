@@ -31,6 +31,7 @@ enum class BaseRoute {
     SIGN_IN_GRAPH,
     SIGN_IN,
     PASSWORD_RECOVERY,
+    SIGN_IN_OTP,
 
     // Size selector graph
     SIZE_SELECTOR_GRAPH,

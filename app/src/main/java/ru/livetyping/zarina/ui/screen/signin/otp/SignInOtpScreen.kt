@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.ui.screen.signup.otp
+package ru.livetyping.zarina.ui.screen.signin.otp
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -16,13 +16,13 @@ import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.screen.common.otp.SmsOtpScreenContent
-import ru.livetyping.zarina.ui.screen.signup.otp.SignUpOtpViewModel.SideEffect
+import ru.livetyping.zarina.ui.screen.signin.otp.SignInOtpViewModel.SideEffect
 import kotlin.time.Duration.Companion.minutes
 
 @Composable
-fun SignUpOtpScreen(
-    navigate: (SignUpOtpScreenAction) -> Unit,
-    viewModel: SignUpOtpViewModel = hiltViewModel(),
+fun SignInOtpScreen(
+    navigate: (SignInOtpScreenAction) -> Unit,
+    viewModel: SignInOtpViewModel = hiltViewModel(),
 ) {
     val phone by viewModel.phone.collectAsStateWithLifecycle()
     val otp by viewModel.otp.collectAsStateWithLifecycle()
@@ -57,16 +57,16 @@ private fun ScreenContent(
     onResendOtpClicked: () -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigate: (SignUpOtpScreenAction) -> Unit,
+    navigate: (SignInOtpScreenAction) -> Unit,
 ) {
-    SignUpOtpScreenBehavior(
+    SignInOtpScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
     )
 
     SmsOtpScreenContent(
         onBackClicked = onBackClicked,
-        topBarTitle = stringResource(R.string.registration),
+        topBarTitle = stringResource(R.string.sign_in_to_account),
         phone = phone,
         otp = otp,
         onOtpChanged = onOtpChanged,

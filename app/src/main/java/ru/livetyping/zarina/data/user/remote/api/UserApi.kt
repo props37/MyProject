@@ -6,6 +6,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.put
 import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
+import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignInByPhoneRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestPasswordResetRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendSmsOtpRequestBody
@@ -81,10 +82,19 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun signIn(phone: PhoneNumber, recaptchaToken: Token): AuthorizationDto {
+    suspend fun signIn(phone: PhoneNumber, recaptchaToken: Token) {
         val body = SignInRequestBody.Phone(phone.value, recaptchaToken.value)
-        return signInApiExceptionConverter {
+        signInApiExceptionConverter {
             httpClient.post("/api/auth/phone") {
+                setJsonBody(body)
+            }
+        }
+    }
+
+    suspend fun confirmSignInByPhone(phone: PhoneNumber, otp: String): AuthorizationDto {
+        val body = ConfirmSignInByPhoneRequestBody(phone.value, otp)
+        return confirmSignUpApiExceptionConverter {
+            httpClient.post("/api/auth/phone/sms/confirmation") {
                 setJsonBody(body)
             }.body()
         }

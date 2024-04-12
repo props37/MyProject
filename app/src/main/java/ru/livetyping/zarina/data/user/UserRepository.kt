@@ -73,8 +73,12 @@ class UserRepository @Inject constructor(
         return remoteDataSource.signIn(email, password, recaptchaToken)
     }
 
-    suspend fun signIn(phone: PhoneNumber, recaptchaToken: Token): AuthorizationResult {
-        return remoteDataSource.signIn(phone, recaptchaToken)
+    suspend fun signIn(phone: PhoneNumber, recaptchaToken: Token) {
+        remoteDataSource.signIn(phone, recaptchaToken)
+    }
+
+    suspend fun confirmSignInByPhone(phone: PhoneNumber, otp: String): AuthorizationResult {
+        return remoteDataSource.confirmSignInByPhone(phone, otp)
     }
 
     suspend fun requestResendSmsOtp(phone: PhoneNumber) {
