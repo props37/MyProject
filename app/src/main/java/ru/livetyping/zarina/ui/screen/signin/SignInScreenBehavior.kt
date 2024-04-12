@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +24,7 @@ fun SignInScreenBehavior(
 ) {
     val updatedContext by rememberUpdatedState(LocalContext.current)
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+    val updatedKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
     val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = false)
@@ -32,7 +34,11 @@ fun SignInScreenBehavior(
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
-                        is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
+                        is SideEffect.Navigate -> {
+                            updatedNavigate(sideEffect.action)
+                            updatedKeyboardController?.hide()
+                        }
+
                         is SideEffect.OpenUrl -> {
                             val intent = CustomTabsIntent.Builder()
                                 .setShowTitle(true)
