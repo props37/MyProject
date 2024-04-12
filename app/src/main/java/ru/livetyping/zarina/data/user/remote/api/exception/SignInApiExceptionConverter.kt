@@ -6,7 +6,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import ru.livetyping.zarina.data.common.remote.api.exception.KtorApiExceptionConverter
-import ru.livetyping.zarina.domain.user.exception.InvalidEmailOrPasswordException
+import ru.livetyping.zarina.domain.user.exception.UserNotFoundException
 import javax.inject.Inject
 
 class SignInApiExceptionConverter @Inject constructor(
@@ -25,7 +25,7 @@ class SignInApiExceptionConverter @Inject constructor(
     private fun handleJsonObject(element: JsonObject, originalException: Exception): Nothing {
         val message = element["message"]
         if (message is JsonPrimitive && message.content == MESSAGE_INVALID_CODE) {
-            throw InvalidEmailOrPasswordException()
+            throw UserNotFoundException()
         } else {
             throw originalException
         }
