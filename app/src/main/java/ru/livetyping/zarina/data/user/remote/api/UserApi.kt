@@ -7,6 +7,7 @@ import io.ktor.client.request.put
 import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignUpRequestBody
+import ru.livetyping.zarina.data.user.remote.api.dto.RequestPasswordResetRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendSmsOtpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpRequestBody
@@ -90,6 +91,13 @@ class UserApi @Inject constructor(
     suspend fun requestResendSmsOtp(phone: PhoneNumber) {
         val body = RequestResendSmsOtpRequestBody(phone.value)
         httpClient.post("/api/auth/phone/sms") {
+            setJsonBody(body)
+        }
+    }
+
+    suspend fun requestPasswordReset(email: Email) {
+        val body = RequestPasswordResetRequestBody(email.value)
+        httpClient.post("/api/auth/password") {
             setJsonBody(body)
         }
     }

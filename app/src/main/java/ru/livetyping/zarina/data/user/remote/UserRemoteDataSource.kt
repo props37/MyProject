@@ -50,4 +50,8 @@ class UserRemoteDataSource @Inject constructor(
     suspend fun requestResendSmsOtp(phone: PhoneNumber) {
         api.requestResendSmsOtp(phone)
     }
+
+    suspend fun requestPasswordReset(email: Email) {
+        api.requestPasswordReset(email)
+    }
 }

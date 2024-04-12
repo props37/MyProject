@@ -81,6 +81,10 @@ class UserRepository @Inject constructor(
         remoteDataSource.requestResendSmsOtp(phone)
     }
 
+    suspend fun requestPasswordReset(email: Email) {
+        remoteDataSource.requestPasswordReset(email)
+    }
+
     suspend fun clear() {
         localDataSource.clear()
     }
