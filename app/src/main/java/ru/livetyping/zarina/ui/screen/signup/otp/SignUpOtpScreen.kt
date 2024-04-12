@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.systemBars
@@ -26,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.ui.common.component.SmsOtp
 import ru.livetyping.zarina.ui.common.otp.OtpResendState
@@ -36,6 +38,7 @@ import ru.livetyping.zarina.ui.screen.signup.otp.SignUpOtpScreenComponents.TopBa
 import ru.livetyping.zarina.ui.screen.signup.otp.SignUpOtpViewModel.SideEffect
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.tryRequestFocus
+import kotlin.time.Duration.Companion.minutes
 
 @Composable
 fun SignUpOtpScreen(
@@ -114,7 +117,9 @@ private fun ScreenContent(
                 resendState = otpResendState,
                 onResendClicked = onResendOtpClicked,
                 contentPadding = PaddingValues(horizontal = 16.dp),
-                modifier = Modifier.focusRequester(otpFocusRequester),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(otpFocusRequester),
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -128,6 +133,18 @@ private fun ScreenContent(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        ScreenContent(
+            phone = remember { PhoneNumber.create("+78005553535") },
+            otp = "",
+            onOtpChanged = {},
+            onOtpEntered = {},
+            isOtpLoading = false,
+            isOtpInvalid = false,
+            otpResendState = remember { OtpResendState.TimeoutCountdown(1.minutes) },
+            onResendOtpClicked = {},
+            onBackClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigate = {},
+        )
     }
 }
