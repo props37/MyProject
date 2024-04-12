@@ -61,7 +61,7 @@ fun PasswordRecoveryScreen(
         isEmailInvalid = isEmailInvalid,
         onSendClicked = viewModel::onSendClicked,
         isSendButtonLoading = isSendButtonLoading,
-        onBackClicked = {},
+        onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
