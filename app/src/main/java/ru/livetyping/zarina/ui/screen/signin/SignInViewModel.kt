@@ -181,7 +181,9 @@ class SignInViewModel @Inject constructor(
                 emitSideEffect(SideEffect.Navigate(action))
             }
             .onFailure {
-                // TODO: [High] Implement
+                val text = Text.Resource(R.string.something_went_wrong)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
             }
     }
 
