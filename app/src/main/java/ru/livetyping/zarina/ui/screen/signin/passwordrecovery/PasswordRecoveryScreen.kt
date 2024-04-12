@@ -18,9 +18,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,6 +44,7 @@ import ru.livetyping.zarina.ui.screen.signin.passwordrecovery.PasswordRecoverySc
 import ru.livetyping.zarina.ui.screen.signin.passwordrecovery.PasswordRecoveryViewModel.SideEffect
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.navigationBarsOrIme
+import ru.livetyping.zarina.util.compose.tryRequestFocus
 
 @Composable
 fun PasswordRecoveryScreen(
@@ -74,6 +78,12 @@ private fun ScreenContent(
     sideEffects: Flow<SideEffect>,
     navigate: (PasswordRecoveryScreenAction) -> Unit,
 ) {
+    val emailFocusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        emailFocusRequester.tryRequestFocus()
+    }
+
     PasswordRecoveryScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
@@ -136,7 +146,8 @@ private fun ScreenContent(
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .focusRequester(emailFocusRequester),
             )
 
             Spacer(modifier = Modifier.height(48.dp))
