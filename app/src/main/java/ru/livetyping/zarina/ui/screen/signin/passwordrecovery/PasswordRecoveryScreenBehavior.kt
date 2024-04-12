@@ -10,6 +10,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
+import ru.livetyping.zarina.ui.common.zarinatoast.controller.LocalZarinaToastController
 import ru.livetyping.zarina.ui.screen.signin.passwordrecovery.PasswordRecoveryViewModel.SideEffect
 
 @Composable
@@ -18,6 +19,7 @@ fun PasswordRecoveryScreenBehavior(
     navigate: (PasswordRecoveryScreenAction) -> Unit,
 ) {
     val updatedNavigate by rememberUpdatedState(navigate)
+    val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
 
     ForcedBottomNavBarBehavior(isVisible = false)
 
@@ -27,6 +29,9 @@ fun PasswordRecoveryScreenBehavior(
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
                         is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
+                        is SideEffect.ShowZarinaToast -> {
+                            updatedZarinaToastController.show(sideEffect.message)
+                        }
                     }
                 }
             }

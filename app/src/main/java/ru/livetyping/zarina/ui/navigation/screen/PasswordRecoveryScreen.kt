@@ -34,6 +34,13 @@ fun NavGraphBuilder.passwordRecoveryScreen(navController: NavHostController) {
                             inclusive = true,
                         )
                     }
+
+                    PasswordRecoveryScreenAction.PasswordResetRequested -> {
+                        navController.popBackStack(
+                            route = SignInGraph.PasswordRecovery.routeSchema,
+                            inclusive = true,
+                        )
+                    }
                 }
             },
         )
