@@ -3,17 +3,37 @@ package ru.livetyping.zarina.ui.common.tooling
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.common.Color
+import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Media
 import ru.livetyping.zarina.domain.common.MediaType
+import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Price
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.domain.product.ProductOffer
+import ru.livetyping.zarina.domain.user.User
+import java.time.LocalDate
 import java.util.UUID
 import kotlin.random.Random
 
 object FakeDataGenerator {
+    fun getUser(
+        id: User.Id = User.Id(getRandomString()),
+        email: Email = getEmail(),
+        phone: PhoneNumber = getPhoneNumber(),
+        firstName: String = "Артём",
+        lastName: String = "Сидоров",
+        birthDate: LocalDate = LocalDate.of(1998, 2, 26),
+    ): User = User(
+        id = id,
+        email = email,
+        phone = phone,
+        firstName = firstName,
+        lastName = lastName,
+        birthDate = birthDate,
+    )
+
     fun getCategories(
         count: Int = 10,
         generator: (Int) -> Category = { getCategory() },
@@ -130,6 +150,10 @@ object FakeDataGenerator {
         discountPrice = discountPrice,
         discountPercent = discountPercent,
     )
+
+    fun getPhoneNumber(value: String = "+78005553535"): PhoneNumber = PhoneNumber.create(value)
+
+    fun getEmail(value: String = "example@mail.com"): Email = Email.create(value)
 
     fun getLoremIpsum(words: Int): String {
         val wordList = LOREM_IPSUM.split(" ")

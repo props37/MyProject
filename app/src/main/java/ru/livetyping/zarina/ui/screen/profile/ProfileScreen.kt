@@ -16,17 +16,21 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.BuildConfig
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.User
 import ru.livetyping.zarina.ui.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -119,8 +123,38 @@ private fun ScreenContent(
 @FontScalePreviews
 @DensityPreviews
 @Composable
-private fun Preview() {
+private fun PreviewUnauthorized() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        ScreenContent(
+            user = null,
+            onEditProfileClicked = {},
+            infoItems = remember { InfoItem.entries.toImmutableList() },
+            city = remember { City.DEFAULT },
+            onInfoItemClicked = {},
+            onSignInClicked = {},
+            onSignUpClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigate = {},
+        )
+    }
+}
+
+@Preview
+@FontScalePreviews
+@DensityPreviews
+@Composable
+private fun PreviewAuthorized() {
+    ZarinaPreview {
+        ScreenContent(
+            user = remember { FakeDataGenerator.getUser() },
+            onEditProfileClicked = {},
+            infoItems = remember { InfoItem.entries.toImmutableList() },
+            city = remember { City.DEFAULT },
+            onInfoItemClicked = {},
+            onSignInClicked = {},
+            onSignUpClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigate = {},
+        )
     }
 }
