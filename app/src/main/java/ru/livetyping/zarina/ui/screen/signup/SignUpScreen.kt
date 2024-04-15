@@ -131,7 +131,6 @@ private fun ScreenContent(
     navigate: (SignUpScreenAction) -> Unit,
 ) {
     val firstNameFocusRequester = remember { FocusRequester() }
-
     LaunchedEffect(Unit) {
         firstNameFocusRequester.tryRequestFocus()
     }

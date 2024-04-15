@@ -12,14 +12,9 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,7 +34,8 @@ import ru.livetyping.zarina.ui.screen.signin.SignInViewModel.SideEffect
 import ru.livetyping.zarina.ui.screen.signin.SignInViewModel.SignInType
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.pager.PagerTabRowIntegration
-import ru.livetyping.zarina.util.compose.tryRequestFocus
+
+// TODO: [High] Request TextField focus automatically
 
 @Composable
 fun SignInScreen(
@@ -104,13 +100,6 @@ private fun ScreenContent(
     sideEffects: Flow<SideEffect>,
     navigate: (SignInScreenAction) -> Unit,
 ) {
-    val updatedKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
-    val emailFocusRequester = remember { FocusRequester() }
-
-    LaunchedEffect(Unit) {
-        emailFocusRequester.tryRequestFocus()
-    }
-
     SignInScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
@@ -131,12 +120,6 @@ private fun ScreenContent(
             initialPage = signInTypes.indexOf(currentSignInType),
             pageCount = { signInTypes.size },
         )
-
-        LaunchedEffect(signInTypePagerState) {
-            snapshotFlow { signInTypePagerState.currentPage }.collect {
-                updatedKeyboardController?.hide()
-            }
-        }
 
         PagerTabRowIntegration(
             pagerState = signInTypePagerState,
@@ -170,7 +153,6 @@ private fun ScreenContent(
             onForgotPasswordClicked = onForgotPasswordClicked,
             onSignUpClicked = onSignUpClicked,
             onUrlClicked = onUrlClicked,
-            emailFocusRequester = emailFocusRequester,
             modifier = Modifier.fillMaxSize(),
         )
     }

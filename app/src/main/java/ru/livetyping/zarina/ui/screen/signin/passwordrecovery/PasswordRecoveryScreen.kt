@@ -79,7 +79,6 @@ private fun ScreenContent(
     navigate: (PasswordRecoveryScreenAction) -> Unit,
 ) {
     val emailFocusRequester = remember { FocusRequester() }
-
     LaunchedEffect(Unit) {
         emailFocusRequester.tryRequestFocus()
     }
