@@ -11,11 +11,11 @@ class AuthorizationLocalDataSource @Inject constructor(
         return authorizationEncryptedStorage.getAuthorizationTokensFlow()
     }
 
-    suspend fun setAuthorizationTokens(tokens: AuthorizationTokens?) {
+    fun setAuthorizationTokens(tokens: AuthorizationTokens?) {
         authorizationEncryptedStorage.setAuthorizationTokens(tokens)
     }
 
-    suspend fun clear() {
+    fun clear() {
         authorizationEncryptedStorage.clear()
     }
 }
