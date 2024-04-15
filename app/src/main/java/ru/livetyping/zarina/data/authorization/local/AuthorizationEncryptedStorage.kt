@@ -12,7 +12,11 @@ import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
 import ru.livetyping.zarina.domain.common.Token
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+// TODO: [Medium] Find a way to remove @Singleton annotation
+// Marked as singleton to get rid of unknown ConcurrentModificationException
+@Singleton
 class AuthorizationEncryptedStorage @Inject constructor(
     @Qualifiers.SharedPreferences(Qualifiers.ShapredPreferencesType.ENCRYPTED)
     private val encryptedSharedPreferences: SharedPreferences,
