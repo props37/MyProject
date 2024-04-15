@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.ui.common.component.button.ZarinaCloseIconButton
@@ -36,7 +37,8 @@ object ProductCountSelectorScreenComponents {
                 Text(
                     text = stringResource(R.string.select_count),
                     style = UiKitTheme.typography.primary.bold,
-                    color = UiKitTheme.colors.text.general.regular.default,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             },
             endContent = {

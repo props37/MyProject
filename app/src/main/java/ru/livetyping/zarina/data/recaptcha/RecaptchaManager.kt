@@ -13,6 +13,7 @@ import timber.log.Timber
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.seconds
 
 @Singleton
 class RecaptchaManager @Inject constructor() {
@@ -35,7 +36,7 @@ class RecaptchaManager @Inject constructor() {
         val client = getClient(application)
         checkNotNull(client) { "RecaptchaClient is not initialized" }
 
-        val token = client.execute(action).getOrThrow()
+        val token = client.execute(action, TIMEOUT.inWholeMilliseconds).getOrThrow()
         return Token(token)
     }
 
@@ -52,7 +53,11 @@ class RecaptchaManager @Inject constructor() {
                 }
 
                 Timber.tag(TAG).v("Initialize Recaptcha client")
-                val result = Recaptcha.getClient(application, BuildConfig.RECAPTCHA_KEY)
+                val result = Recaptcha.getClient(
+                    application = application,
+                    siteKey = BuildConfig.RECAPTCHA_KEY,
+                    timeout = TIMEOUT.inWholeMilliseconds,
+                )
                     .onSuccess { client = it }
                     .onFailure { e ->
                         val message = if (e is RecaptchaException) {
@@ -68,7 +73,18 @@ class RecaptchaManager @Inject constructor() {
     }
 
     companion object {
+        val ACTION_SIGN_UP: RecaptchaAction
+            get() = RecaptchaAction.custom("register_android")
+
+        val ACTION_SIGN_IN_BY_EMAIL: RecaptchaAction
+            get() = RecaptchaAction.custom("auth_email_android")
+
+        val ACTION_SIGN_IN_BY_PHONE: RecaptchaAction
+            get() = RecaptchaAction.custom("auth_phone_android")
+
         private const val TAG = "RecaptchaManager"
+
+        private val TIMEOUT = 10.seconds
 
         private const val MESSAGE_ALREADY_INITIALIZED =
             "Recaptcha client is already initialized, return it"

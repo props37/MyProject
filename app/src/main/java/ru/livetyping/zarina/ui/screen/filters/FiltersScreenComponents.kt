@@ -94,7 +94,6 @@ object FiltersScreenComponents {
                 Text(
                     text = stringResource(R.string.filters),
                     style = UiKitTheme.typography.primary.regular,
-                    color = UiKitTheme.colors.text.general.regular.default,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

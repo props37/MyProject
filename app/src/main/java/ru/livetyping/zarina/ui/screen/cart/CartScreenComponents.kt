@@ -111,7 +111,8 @@ object CartScreenComponents {
                 Text(
                     text = stringResource(R.string.cart),
                     style = UiKitTheme.typography.primary.regular,
-                    color = UiKitTheme.colors.text.general.regular.default,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             },
             endContent = {
@@ -267,6 +268,7 @@ object CartScreenComponents {
             selectedTabIndex = selectedTabIndex,
             modifier = modifier,
         ) {
+            // TODO: [Low] Migrate to ZarinaTab
             types.forEach { type ->
                 val productCount = when (type) {
                     DeliveryType.DELIVERY -> cartSize.deliveryProductCount

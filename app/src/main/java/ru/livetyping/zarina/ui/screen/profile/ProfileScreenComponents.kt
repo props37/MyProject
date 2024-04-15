@@ -1,7 +1,10 @@
 package ru.livetyping.zarina.ui.screen.profile
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
@@ -18,33 +22,85 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonDefaults
+import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.ui.common.component.item.ZarinaItem
 import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.ui.screen.profile.ProfileViewModel.InfoItem
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentCrossfadeTransitionSpec
+import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
+import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
+import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 
 object ProfileScreenComponents {
 
     @Composable
     fun TopBar(
+        userFirstName: String?,
+        isEditProfileButtonVisible: Boolean,
+        onEditProfileClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         ZarinaTopBar(
             centerContent = {
-                Text(
-                    text = stringResource(R.string.profile),
-                    style = UiKitTheme.typography.primary.regular,
-                    color = UiKitTheme.colors.text.general.regular.default,
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = stringResource(R.string.profile),
+                        style = UiKitTheme.typography.primary.regular,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+
+                    AnimatedContent(
+                        targetState = userFirstName,
+                        transitionSpec = {
+                            AnimatedContentDefaultTransitionSpec()
+                                .using(SizeTransform(clip = false))
+                        },
+                        contentAlignment = Alignment.Center,
+                        label = "User first name",
+                    ) { firstName ->
+                        if (firstName != null) {
+                            Text(
+                                text = firstName,
+                                style = UiKitTheme.typography.tertiary.regular,
+                                color = UiKitTheme.colors.text.general.regular.muted,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+                    }
+                }
             },
+            endContent = {
+                AnimatedVisibility(
+                    visible = isEditProfileButtonVisible,
+                    enter = AnimatedContentDefaultEnterTransition,
+                    exit = AnimatedContentDefaultExitTransition,
+                ) {
+                    ZarinaIconButton(
+                        onClick = onEditProfileClicked,
+                        indication = rememberRipple(bounded = false, radius = 20.dp),
+                        modifier = Modifier.padding(end = 2.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_pencil_24),
+                            contentDescription = stringResource(R.string.edit_profile),
+                            modifier = Modifier.size(20.dp),
+                        )
+                    }
+                }
+            },
+            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
             modifier = modifier,
         )
     }

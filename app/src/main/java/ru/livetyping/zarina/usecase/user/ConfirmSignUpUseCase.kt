@@ -27,10 +27,10 @@ class ConfirmSignUpUseCase @Inject constructor(
         val user = authorizationResult.user
 
         val setAuthorizationTokensParams = SetAuthorizationTokensUseCase.Params(authTokens)
-        setAuthorizationTokensUseCase(setAuthorizationTokensParams)
+        setAuthorizationTokensUseCase(setAuthorizationTokensParams).getOrThrow()
 
         val setUserParams = SetUserUseCase.Params(user)
-        setUserUseCase(setUserParams)
+        setUserUseCase(setUserParams).getOrThrow()
     }
 
     data class Params(val phone: PhoneNumber, val otp: String)

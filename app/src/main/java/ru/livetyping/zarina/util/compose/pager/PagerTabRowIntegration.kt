@@ -10,6 +10,8 @@ import androidx.compose.runtime.snapshotFlow
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 
+// TODO: [Low] Rewrite to state class?
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun <T> PagerTabRowIntegration(

@@ -19,8 +19,8 @@ class SetAuthorizationTokensUseCase @Inject constructor(
     override suspend fun execute(params: Params) {
         val tokens = params.tokens
         Timber.v("Set authorization tokens: $tokens")
-        authorizationRepository.setAuthorizationTokens(tokens)
         httpClientAuthorizationTokensCleaner.clearAuthorizationTokens()
+        authorizationRepository.setAuthorizationTokens(tokens)
     }
 
     data class Params(val tokens: AuthorizationTokens)

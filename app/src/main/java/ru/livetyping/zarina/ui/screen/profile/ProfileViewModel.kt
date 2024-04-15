@@ -9,10 +9,8 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -22,6 +20,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.user.User
 import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
@@ -47,9 +46,23 @@ class ProfileViewModel @AssistedInject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    // TODO: [High] Display MyOrders only to authorized users
-    val infoItems: StateFlow<ImmutableList<InfoItem>> =
-        MutableStateFlow(InfoItem.entries.toImmutableList()).asStateFlow()
+    val user: StateFlow<User?> = interactor.getUserFlow()
+        .map { it.getOrNull() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = null,
+        )
+
+    val infoItems: StateFlow<ImmutableList<InfoItem>> = user
+        .map { user ->
+            getInfoItems(isUserAuthorized = user != null).toImmutableList()
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = getInfoItems(isUserAuthorized = false).toImmutableList(),
+        )
 
     val city: StateFlow<City?> = interactor.getUserCityFlow()
         .map { result ->
@@ -62,22 +75,13 @@ class ProfileViewModel @AssistedInject constructor(
         )
 
     init {
-        viewModelScope.launch {
-            screenResultHandler.handle<UnscopedDestinations.CitySelector.Result>(
-                key = UnscopedDestinations.CitySelector.RESULT_KEY,
-            ) { result ->
-                val newCity = result.city.toCity()
-                val currentCity = city.value
-                if (newCity.kladrId != currentCity?.kladrId) {
-                    val params = SetUserCityUseCase.Params(newCity)
-                    interactor.setUserCity(params)
-                        .onFailure {
-                            val text = Text.Resource(R.string.city_changing_error)
-                            val message = ZarinaToastMessage.error(text)
-                            emitSideEffect(SideEffect.ShowZarinaToast(message))
-                        }
-                }
-            }
+        handleCitySelectorResult()
+    }
+
+    fun onSignInClicked() {
+        navigationThrottler.throttle {
+            val action = ProfileScreenAction.SignInClicked
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -106,6 +110,34 @@ class ProfileViewModel @AssistedInject constructor(
                 InfoItem.AboutCompany -> {
                     val url = Url(ABOUT_COMPANY_URL)
                     emitSideEffect(SideEffect.OpenUrl(url))
+                }
+            }
+        }
+    }
+
+    private fun getInfoItems(isUserAuthorized: Boolean): List<InfoItem> {
+        return if (isUserAuthorized) {
+            InfoItem.entries
+        } else {
+            InfoItem.entries.filter { it != InfoItem.MyOrders }
+        }
+    }
+
+    private fun handleCitySelectorResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<UnscopedDestinations.CitySelector.Result>(
+                key = UnscopedDestinations.CitySelector.RESULT_KEY,
+            ) { result ->
+                val newCity = result.city.toCity()
+                val currentCity = city.value
+                if (newCity.kladrId != currentCity?.kladrId) {
+                    val params = SetUserCityUseCase.Params(newCity)
+                    interactor.setUserCity(params)
+                        .onFailure {
+                            val text = Text.Resource(R.string.city_changing_error)
+                            val message = ZarinaToastMessage.error(text)
+                            emitSideEffect(SideEffect.ShowZarinaToast(message))
+                        }
                 }
             }
         }

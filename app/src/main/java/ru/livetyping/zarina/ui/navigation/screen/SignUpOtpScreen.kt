@@ -4,11 +4,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.ui.navigation.base.composableDestination
+import ru.livetyping.zarina.ui.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.ui.navigation.destination.graph.SignUpGraph
 import ru.livetyping.zarina.ui.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.ui.navigation.util.slidePopExitTransition
-import ru.livetyping.zarina.ui.screen.signupotp.SignUpOtpScreen
-import ru.livetyping.zarina.ui.screen.signupotp.SignUpOtpScreenAction
+import ru.livetyping.zarina.ui.screen.signup.otp.SignUpOtpScreen
+import ru.livetyping.zarina.ui.screen.signup.otp.SignUpOtpScreenAction
 import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.signUpOtpScreen(navController: NavHostController) {
@@ -22,7 +23,9 @@ fun NavGraphBuilder.signUpOtpScreen(navController: NavHostController) {
         },
         popExitTransition = {
             when (targetState.destination.route) {
-                SignUpGraph.SignUp.routeSchema -> slidePopExitTransition()
+                SignUpGraph.SignUp.routeSchema,
+                ProfileGraph.Profile.routeSchema -> slidePopExitTransition()
+
                 else -> null
             }
         },

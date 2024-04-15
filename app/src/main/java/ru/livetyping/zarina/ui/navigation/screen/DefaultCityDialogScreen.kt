@@ -5,8 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.ui.navigation.base.dialogDestination
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations
-import ru.livetyping.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreen
-import ru.livetyping.zarina.ui.screen.defaultcitydialog.DefaultCityDialogScreenAction
+import ru.livetyping.zarina.ui.screen.onboarding.defaultcitydialog.DefaultCityDialogScreen
+import ru.livetyping.zarina.ui.screen.onboarding.defaultcitydialog.DefaultCityDialogScreenAction
 
 fun NavGraphBuilder.defaultCityDialogScreen(navController: NavHostController) {
     dialogDestination(

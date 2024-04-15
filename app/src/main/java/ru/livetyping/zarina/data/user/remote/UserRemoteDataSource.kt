@@ -39,7 +39,23 @@ class UserRemoteDataSource @Inject constructor(
         return api.confirmSignUp(phone, otp).toAuthorizationResult()
     }
 
+    suspend fun signIn(email: Email, password: String, recaptchaToken: Token): AuthorizationResult {
+        return api.signIn(email, password, recaptchaToken).toAuthorizationResult()
+    }
+
+    suspend fun signIn(phone: PhoneNumber, recaptchaToken: Token) {
+        return api.signIn(phone, recaptchaToken)
+    }
+
+    suspend fun confirmSignInByPhone(phone: PhoneNumber, otp: String): AuthorizationResult {
+        return api.confirmSignInByPhone(phone, otp).toAuthorizationResult()
+    }
+
     suspend fun requestResendSmsOtp(phone: PhoneNumber) {
         api.requestResendSmsOtp(phone)
+    }
+
+    suspend fun requestPasswordReset(email: Email) {
+        api.requestPasswordReset(email)
     }
 }

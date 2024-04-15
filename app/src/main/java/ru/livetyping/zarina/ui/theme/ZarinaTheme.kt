@@ -9,11 +9,15 @@ import androidx.compose.runtime.remember
 
 @Composable
 fun ZarinaTheme(
-    isDarkTheme: Boolean = false,
+    inDarkTheme: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    val materialColors = remember(isDarkTheme) {
-        if (isDarkTheme) darkColors() else lightColors()
+    val materialColors = remember(inDarkTheme) {
+        if (inDarkTheme) {
+            darkColors(primary = Colors.MineShaftDark)
+        } else {
+            lightColors(primary = Colors.MineShaftDark)
+        }
     }
 
     CompositionLocalProvider(

@@ -25,6 +25,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.BuildConfig
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.user.User
 import ru.livetyping.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -41,14 +42,17 @@ fun ProfileScreen(
     navigate: (ProfileScreenAction) -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
+    val user by viewModel.user.collectAsStateWithLifecycle()
     val infoItems by viewModel.infoItems.collectAsStateWithLifecycle()
     val city by viewModel.city.collectAsStateWithLifecycle()
 
     ScreenContent(
+        user = user,
+        onEditProfileClicked = { /* TODO */ },
         infoItems = infoItems,
         city = city,
         onInfoItemClicked = viewModel::onInfoItemClicked,
-        onSignInClicked = { /* TODO */ },
+        onSignInClicked = viewModel::onSignInClicked,
         onSignUpClicked = viewModel::onSignUpClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
@@ -57,6 +61,8 @@ fun ProfileScreen(
 
 @Composable
 private fun ScreenContent(
+    user: User?,
+    onEditProfileClicked: () -> Unit,
     infoItems: ImmutableList<InfoItem>,
     city: City?,
     onInfoItemClicked: (InfoItem) -> Unit,
@@ -80,7 +86,11 @@ private fun ScreenContent(
             )
             .bottomNavBarPadding(),
     ) {
-        TopBar()
+        TopBar(
+            userFirstName = user?.firstName,
+            isEditProfileButtonVisible = user != null,
+            onEditProfileClicked = onEditProfileClicked,
+        )
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(24.dp))

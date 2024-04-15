@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Url
@@ -39,6 +40,8 @@ object SignUpScreenComponents {
                 Text(
                     text = stringResource(R.string.registration),
                     style = UiKitTheme.typography.primary.regular,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             },
             contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
@@ -78,8 +81,8 @@ object SignUpScreenComponents {
         val privacy = stringResource(R.string.sign_up_recaptcha_policies_privacy)
         val terms = stringResource(R.string.sign_up_recaptcha_policies_terms)
 
-        val privacyUrl = stringResource(R.string.sign_up_recaptcha_policies_privacy_url)
-        val termsUrl = stringResource(R.string.sign_up_recaptcha_policies_terms_url)
+        val privacyUrl = stringResource(R.string.recaptcha_policies_privacy_url)
+        val termsUrl = stringResource(R.string.recaptcha_policies_terms_url)
 
         val clickableTextToUrl = remember(privacy, terms, privacyUrl, termsUrl) {
             mapOf(
