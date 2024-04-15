@@ -21,14 +21,14 @@ class AuthorizationEncryptedStorage @Inject constructor(
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { sf, key ->
             if (key == KEY_ACCESS_TOKEN || key == KEY_REFRESH_TOKEN) {
                 val tokens = sf.getAuthorizationTokens()
-                Timber.v("Authorization tokens: $tokens")
+                Timber.v("Authorization tokens changed: $tokens")
                 trySend(tokens)
             }
         }
         encryptedSharedPreferences.registerOnSharedPreferenceChangeListener(listener)
 
         val initialTokens = encryptedSharedPreferences.getAuthorizationTokens()
-        Timber.v("Authorization tokens: $initialTokens")
+        Timber.v("Initial authorization tokens: $initialTokens")
         trySend(initialTokens)
 
         awaitClose {
