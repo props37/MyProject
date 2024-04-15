@@ -1,22 +1,18 @@
-package ru.livetyping.zarina.usecase.favorite
+package ru.livetyping.zarina.ui.screen.favorites.paging
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.base.usecase.BasicUseCase
 import ru.livetyping.zarina.data.favorite.FavoriteRepository
 import ru.livetyping.zarina.data.favorite.pagination.FavoriteProductPagingSource
 import ru.livetyping.zarina.domain.product.Product
 import javax.inject.Inject
 
-// TODO: [Medium] Move logic to repository
-
-class GetFavoriteProductPagingDataFlowUseCase @Inject constructor(
+class FavoriteProductPager @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
-) : BasicUseCase<Unit, Flow<PagingData<Product>>> {
-
-    override fun invoke(params: Unit): Flow<PagingData<Product>> {
+) {
+    fun getFavoriteProductPagingDataFlow(): Flow<PagingData<Product>> {
         return Pager(
             config = getPagingConfig(),
             pagingSourceFactory = {
