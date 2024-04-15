@@ -33,6 +33,7 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
         popEnterTransition = {
             when (initialState.destination.route) {
                 SignInGraph.SignIn.routeSchema,
+                SignInGraph.Otp.routeSchema,
                 SignUpGraph.SignUp.routeSchema,
                 SignUpGraph.Otp.routeSchema,
                 ProfileGraph.MyOrders.routeSchema -> slidePopEnterTransition()
