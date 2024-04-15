@@ -14,7 +14,7 @@ class AuthorizationRepository @Inject constructor(
         return localDataSource.getAuthorizationTokensFlow()
     }
 
-    fun setAuthorizationTokens(tokens: AuthorizationTokens?) {
+    suspend fun setAuthorizationTokens(tokens: AuthorizationTokens?) {
         localDataSource.setAuthorizationTokens(tokens)
     }
 
@@ -26,7 +26,7 @@ class AuthorizationRepository @Inject constructor(
         return remoteDataSource.refreshAuthorizationTokens(tokens)
     }
 
-    fun clear() {
+    suspend fun clear() {
         localDataSource.clear()
     }
 }

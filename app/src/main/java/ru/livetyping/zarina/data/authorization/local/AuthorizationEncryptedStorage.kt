@@ -2,21 +2,20 @@ package ru.livetyping.zarina.data.authorization.local
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
 import ru.livetyping.zarina.domain.common.Token
 import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Singleton
 
-// TODO: [Medium] Find a way to remove @Singleton annotation
-// Marked as singleton to get rid of unknown ConcurrentModificationException
-@Singleton
 class AuthorizationEncryptedStorage @Inject constructor(
     @Qualifiers.SharedPreferences(Qualifiers.ShapredPreferencesType.ENCRYPTED)
     private val encryptedSharedPreferences: SharedPreferences,
@@ -40,16 +39,19 @@ class AuthorizationEncryptedStorage @Inject constructor(
         }
     }
         .buffer(capacity = Channel.CONFLATED)
+        .flowOn(Dispatchers.Main)
 
-    fun setAuthorizationTokens(tokens: AuthorizationTokens?) {
+    suspend fun setAuthorizationTokens(tokens: AuthorizationTokens?) {
         Timber.v("Set authorization tokens: $tokens")
-        encryptedSharedPreferences.edit {
-            putString(KEY_ACCESS_TOKEN, tokens?.accessToken?.value)
-            putString(KEY_REFRESH_TOKEN, tokens?.refreshToken?.value)
+        withContext(Dispatchers.Main) {
+            encryptedSharedPreferences.edit {
+                putString(KEY_ACCESS_TOKEN, tokens?.accessToken?.value)
+                putString(KEY_REFRESH_TOKEN, tokens?.refreshToken?.value)
+            } 
         }
     }
 
-    fun clear() {
+    suspend fun clear() {
         Timber.v("Clear authorization tokens")
         setAuthorizationTokens(null)
     }
