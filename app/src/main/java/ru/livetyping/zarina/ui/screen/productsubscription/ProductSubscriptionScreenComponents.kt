@@ -19,7 +19,6 @@ import ru.livetyping.zarina.ui.common.component.checkbox.ZarinaCheckbox
 import ru.livetyping.zarina.ui.common.component.text.ZarinaClickableText
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
-import ru.livetyping.zarina.ui.theme.UiKitTheme
 
 object ProductSubscriptionScreenComponents {
 
@@ -39,7 +38,6 @@ object ProductSubscriptionScreenComponents {
             centerContent = {
                 Text(
                     text = stringResource(R.string.product_subscription),
-                    style = UiKitTheme.typography.primary.regular,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

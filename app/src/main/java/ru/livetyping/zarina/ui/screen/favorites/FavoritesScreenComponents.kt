@@ -33,7 +33,6 @@ object FavoritesScreenComponents {
             centerContent = {
                 Text(
                     text = stringResource(R.string.favorites),
-                    style = UiKitTheme.typography.primary.regular,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

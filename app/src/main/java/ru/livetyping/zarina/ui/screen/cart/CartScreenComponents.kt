@@ -110,7 +110,6 @@ object CartScreenComponents {
             centerContent = {
                 Text(
                     text = stringResource(R.string.cart),
-                    style = UiKitTheme.typography.primary.regular,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

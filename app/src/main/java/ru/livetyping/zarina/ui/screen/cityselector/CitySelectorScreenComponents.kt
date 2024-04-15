@@ -81,7 +81,6 @@ object CitySelectorScreenComponents {
             centerContent = {
                 Text(
                     text = textString(title),
-                    style = UiKitTheme.typography.primary.regular,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

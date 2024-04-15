@@ -66,7 +66,6 @@ object SignInScreenComponents {
             centerContent = {
                 Text(
                     text = stringResource(R.string.sign_in_to_account),
-                    style = UiKitTheme.typography.primary.regular,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

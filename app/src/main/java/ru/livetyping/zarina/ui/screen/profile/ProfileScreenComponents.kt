@@ -55,7 +55,6 @@ object ProfileScreenComponents {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = stringResource(R.string.profile),
-                        style = UiKitTheme.typography.primary.regular,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
