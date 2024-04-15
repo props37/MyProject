@@ -25,6 +25,8 @@ import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 
+// TODO: [Medium] Add spacers between contents
+
 @Composable
 fun ZarinaTopBar(
     modifier: Modifier = Modifier,

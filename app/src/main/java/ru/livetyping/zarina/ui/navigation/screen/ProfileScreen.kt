@@ -24,7 +24,8 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
         exitTransition = {
             when (targetState.destination.route) {
                 SignInGraph.SignIn.routeSchema,
-                SignUpGraph.SignUp.routeSchema -> slideExitTransition()
+                SignUpGraph.SignUp.routeSchema,
+                ProfileGraph.MyOrders.routeSchema -> slideExitTransition()
 
                 else -> null
             }
@@ -33,7 +34,8 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
             when (initialState.destination.route) {
                 SignInGraph.SignIn.routeSchema,
                 SignUpGraph.SignUp.routeSchema,
-                SignUpGraph.Otp.routeSchema -> slidePopEnterTransition()
+                SignUpGraph.Otp.routeSchema,
+                ProfileGraph.MyOrders.routeSchema -> slidePopEnterTransition()
 
                 else -> null
             }
@@ -55,6 +57,8 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
                             title = Text.Resource(R.string.city_change),
                         )
                     }
+
+                    ProfileScreenAction.MyOrdersClicked -> navController.navigateToMyOrdersScreen()
                 }
             }
         )

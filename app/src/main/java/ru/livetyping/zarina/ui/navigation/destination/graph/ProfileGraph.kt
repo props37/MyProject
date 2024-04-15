@@ -9,4 +9,6 @@ data object ProfileGraph : SimpleGraph(
     startDestination = Profile,
 ) {
     data object Profile : SimpleDestination(BaseRoute.PROFILE)
+
+    data object MyOrders : SimpleDestination(BaseRoute.MY_ORDERS)
 }
