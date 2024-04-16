@@ -22,6 +22,13 @@ fun NavGraphBuilder.signOutConfirmationDialog(navController: NavHostController) 
                             inclusive = true,
                         )
                     }
+
+                    SignOutConfirmationScreenAction.UserSignedOut -> {
+                        navController.popBackStack(
+                            route = ProfileGraph.Profile.routeSchema,
+                            inclusive = false,
+                        )
+                    }
                 }
             },
         )

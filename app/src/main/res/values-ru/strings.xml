@@ -154,6 +154,7 @@
     <string name="sign_out_question">Выйти из аккаунта?</string>
     <string name="stay">Остаться</string>
     <string name="go_out">Выйти</string>
+    <string name="sign_out_error">Не удалось выйти из аккаунта</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
