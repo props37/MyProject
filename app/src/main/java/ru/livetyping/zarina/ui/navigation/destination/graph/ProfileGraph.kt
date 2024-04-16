@@ -12,5 +12,8 @@ data object ProfileGraph : SimpleGraph(
 
     data object ProfileDetails : SimpleDestination(BaseRoute.PROFILE_DETAILS)
 
+    data object SignOutConfirmationDialog :
+        SimpleDestination(BaseRoute.SIGN_OUT_CONFIRMATION_DIALOG)
+
     data object MyOrders : SimpleDestination(BaseRoute.MY_ORDERS)
 }

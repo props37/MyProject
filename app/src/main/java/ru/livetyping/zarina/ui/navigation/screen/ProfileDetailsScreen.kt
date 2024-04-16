@@ -34,6 +34,10 @@ fun NavGraphBuilder.profileDetailsScreen(navController: NavHostController) {
                             inclusive = true,
                         )
                     }
+
+                    ProfileDetailsScreenAction.SignOutClicked -> {
+                        navController.navigateToSignOutConfirmationDialog()
+                    }
                 }
             },
         )

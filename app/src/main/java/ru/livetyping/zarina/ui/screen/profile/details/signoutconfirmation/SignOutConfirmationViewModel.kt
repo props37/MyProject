@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.ui.screen.profile.details
+package ru.livetyping.zarina.ui.screen.profile.details.signoutconfirmation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -7,36 +7,30 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
-import ru.livetyping.zarina.ui.screen.profile.details.ProfileDetailsViewModel.SideEffect
+import ru.livetyping.zarina.ui.screen.profile.details.signoutconfirmation.SignOutConfirmationViewModel.SideEffect
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileDetailsViewModel @Inject constructor(
+class SignOutConfirmationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val interactor: ProfileDetailsInteractor,
+    private val interactor: SignOutConfirmationInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    fun onBackClicked() {
+    fun onStayClicked() {
         navigationThrottler.throttle {
-            val action = ProfileDetailsScreenAction.ScreenClosed
+            val action = SignOutConfirmationScreenAction.ScreenClosed
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
     fun onSignOutClicked() {
-        navigationThrottler.throttle {
-            val action = ProfileDetailsScreenAction.SignOutClicked
-            emitSideEffect(SideEffect.Navigate(action))
-        }
-    }
-
-    fun onDeleteAccountClicked() {
         // TODO: [High] Implement
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class Navigate(val action: ProfileDetailsScreenAction) : SideEffect
+        data class Navigate(val action: SignOutConfirmationScreenAction) : SideEffect
     }
 }
+

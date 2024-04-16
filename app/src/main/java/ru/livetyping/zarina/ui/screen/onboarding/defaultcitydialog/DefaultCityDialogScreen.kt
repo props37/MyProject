@@ -53,6 +53,7 @@ private fun ScreenContent(
         navigate = navigate,
     )
 
+    // TODO: [High] Migrate to Slot version
     ZarinaDialogContainer {
         Text(
             text = stringResource(R.string.default_city_dialog_title),

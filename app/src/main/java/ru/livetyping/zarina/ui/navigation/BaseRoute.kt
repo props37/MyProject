@@ -17,6 +17,7 @@ enum class BaseRoute {
     PROFILE_GRAPH,
     PROFILE,
     PROFILE_DETAILS,
+    SIGN_OUT_CONFIRMATION_DIALOG,
     MY_ORDERS,
 
     // Cart graph
