@@ -3,7 +3,6 @@ package ru.livetyping.zarina.ui.common.component.button
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -59,7 +58,7 @@ fun ZarinaButton(
     shape: Shape = ZarinaButtonDefaults.Shape,
     contentPadding: PaddingValues = ZarinaButtonDefaults.contentPaddingFromSize(size),
     textStyle: TextStyle = ZarinaButtonDefaults.textStyleFromSize(size),
-    indication: Indication? = LocalIndication.current,
+    isIndicationEnabled: Boolean = true,
     useProvidedRippleTheme: Boolean = false,
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -117,7 +116,7 @@ fun ZarinaButton(
                 .border(width = 1.dp, color = borderColor.value, shape = shape)
                 .clickable(
                     interactionSource = interactionSource,
-                    indication = indication,
+                    indication = if (isIndicationEnabled) LocalIndication.current else null,
                     enabled = isEnabled,
                     role = Role.Button,
                     onClick = onClick,

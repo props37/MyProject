@@ -225,7 +225,7 @@ object SignInScreenComponents {
                 size = ZarinaButtonSize.Medium,
                 colors = ZarinaButtonDefaults.backlessColors(),
                 contentPadding = PaddingValues(vertical = 8.dp),
-                indication = null,
+                isIndicationEnabled = false,
                 modifier = Modifier.padding(horizontal = 16.dp),
             ) {
                 Text(
