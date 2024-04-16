@@ -10,7 +10,7 @@ import ru.livetyping.zarina.ui.screen.profile.details.signoutconfirmation.SignOu
 
 fun NavGraphBuilder.signOutConfirmationDialog(navController: NavHostController) {
     dialogDestination(
-        destination = ProfileGraph.SignOutConfirmationDialog,
+        destination = ProfileGraph.SignOutConfirmation,
         dialogProperties = DialogProperties(usePlatformDefaultWidth = false),
     ) {
         SignOutConfirmationDialogScreen(
@@ -18,7 +18,7 @@ fun NavGraphBuilder.signOutConfirmationDialog(navController: NavHostController) 
                 when (action) {
                     SignOutConfirmationScreenAction.ScreenClosed -> {
                         navController.popBackStack(
-                            route = ProfileGraph.SignOutConfirmationDialog.routeSchema,
+                            route = ProfileGraph.SignOutConfirmation.routeSchema,
                             inclusive = true,
                         )
                     }
@@ -36,5 +36,5 @@ fun NavGraphBuilder.signOutConfirmationDialog(navController: NavHostController) 
 }
 
 fun NavHostController.navigateToSignOutConfirmationDialog() {
-    this.navigate(ProfileGraph.SignOutConfirmationDialog.route)
+    this.navigate(ProfileGraph.SignOutConfirmation.route)
 }

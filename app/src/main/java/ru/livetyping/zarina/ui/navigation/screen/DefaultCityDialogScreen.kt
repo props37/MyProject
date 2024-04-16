@@ -10,7 +10,7 @@ import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityScreenAc
 
 fun NavGraphBuilder.defaultCityDialog(navController: NavHostController) {
     dialogDestination(
-        destination = UnscopedDestinations.DefaultCityDialog,
+        destination = UnscopedDestinations.DefaultCity,
         dialogProperties = DialogProperties(
             dismissOnClickOutside = false,
             usePlatformDefaultWidth = false,
@@ -21,7 +21,7 @@ fun NavGraphBuilder.defaultCityDialog(navController: NavHostController) {
                 when (action) {
                     DefaultCityScreenAction.ScreenClosed -> {
                         navController.popBackStack(
-                            route = UnscopedDestinations.DefaultCityDialog.routeSchema,
+                            route = UnscopedDestinations.DefaultCity.routeSchema,
                             inclusive = true,
                         )
                     }
@@ -32,5 +32,5 @@ fun NavGraphBuilder.defaultCityDialog(navController: NavHostController) {
 }
 
 fun NavHostController.navigateToDefaultCityDialog() {
-    this.navigate(UnscopedDestinations.DefaultCityDialog.route)
+    this.navigate(UnscopedDestinations.DefaultCity.route)
 }

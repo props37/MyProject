@@ -17,7 +17,7 @@ enum class BaseRoute {
     PROFILE_GRAPH,
     PROFILE,
     PROFILE_DETAILS,
-    SIGN_OUT_CONFIRMATION_DIALOG,
+    SIGN_OUT_CONFIRMATION,
     MY_ORDERS,
 
     // Cart graph
@@ -44,7 +44,7 @@ enum class BaseRoute {
     // Unscoped destinations
     ONBOARDING,
     CITY_SELECTOR,
-    DEFAULT_CITY_DIALOG,
+    DEFAULT_CITY,
     PRODUCTS,
     FILTERS,
     LIST_FILTER,

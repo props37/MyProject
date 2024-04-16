@@ -101,7 +101,7 @@ object UnscopedDestinations {
         ) : ScreenResult, Parcelable
     }
 
-    data object DefaultCityDialog : SimpleDestination(BaseRoute.DEFAULT_CITY_DIALOG)
+    data object DefaultCity : SimpleDestination(BaseRoute.DEFAULT_CITY)
 
     data object Products : Destination<Products.Args>() {
         const val ARG_KEY_CATEGORY_ID = "arg_category_id"
