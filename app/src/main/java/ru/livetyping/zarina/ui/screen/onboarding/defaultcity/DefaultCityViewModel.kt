@@ -9,11 +9,11 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
-import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityDialogViewModel.SideEffect
+import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityViewModel.SideEffect
 import javax.inject.Inject
 
 @HiltViewModel
-class DefaultCityDialogViewModel @Inject constructor() : ViewModel(),
+class DefaultCityViewModel @Inject constructor() : ViewModel(),
     SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -22,12 +22,12 @@ class DefaultCityDialogViewModel @Inject constructor() : ViewModel(),
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
-            val action = DefaultCityDialogScreenAction.ScreenClosed
+            val action = DefaultCityScreenAction.ScreenClosed
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class Navigate(val action: DefaultCityDialogScreenAction) : SideEffect
+        data class Navigate(val action: DefaultCityScreenAction) : SideEffect
     }
 }

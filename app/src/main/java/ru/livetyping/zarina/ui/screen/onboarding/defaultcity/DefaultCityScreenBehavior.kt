@@ -9,12 +9,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityDialogViewModel.SideEffect
+import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityViewModel.SideEffect
 
 @Composable
-fun DefaultCityDialogScreenBehavior(
+fun DefaultCityScreenBehavior(
     sideEffects: Flow<SideEffect>,
-    navigate: (DefaultCityDialogScreenAction) -> Unit,
+    navigate: (DefaultCityScreenAction) -> Unit,
 ) {
     val updatedNavigate by rememberUpdatedState(navigate)
 

@@ -10,7 +10,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 
-object DefaultCityDialogScreenComponents {
+object DefaultCityScreenComponents {
 
     @Composable
     fun bodyText(defaultCity: City): AnnotatedString {

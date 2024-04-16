@@ -6,9 +6,9 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.ui.navigation.base.dialogDestination
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityDialogScreen
-import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityDialogScreenAction
+import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityScreenAction
 
-fun NavGraphBuilder.defaultCityDialogScreen(navController: NavHostController) {
+fun NavGraphBuilder.defaultCityDialog(navController: NavHostController) {
     dialogDestination(
         destination = UnscopedDestinations.DefaultCityDialog,
         dialogProperties = DialogProperties(
@@ -19,7 +19,7 @@ fun NavGraphBuilder.defaultCityDialogScreen(navController: NavHostController) {
         DefaultCityDialogScreen(
             navigate = { action ->
                 when (action) {
-                    DefaultCityDialogScreenAction.ScreenClosed -> {
+                    DefaultCityScreenAction.ScreenClosed -> {
                         navController.popBackStack(
                             route = UnscopedDestinations.DefaultCityDialog.routeSchema,
                             inclusive = true,

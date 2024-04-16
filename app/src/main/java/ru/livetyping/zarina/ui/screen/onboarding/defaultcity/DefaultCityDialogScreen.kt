@@ -22,14 +22,14 @@ import ru.livetyping.zarina.ui.common.component.dialog.ZarinaDialogContainer
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityDialogScreenComponents.bodyText
-import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityDialogViewModel.SideEffect
+import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityScreenComponents.bodyText
+import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityViewModel.SideEffect
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 
 @Composable
 fun DefaultCityDialogScreen(
-    navigate: (DefaultCityDialogScreenAction) -> Unit,
-    viewModel: DefaultCityDialogViewModel = hiltViewModel(),
+    navigate: (DefaultCityScreenAction) -> Unit,
+    viewModel: DefaultCityViewModel = hiltViewModel(),
 ) {
     val defaultCity by viewModel.defaultCity.collectAsStateWithLifecycle()
 
@@ -46,9 +46,9 @@ private fun ScreenContent(
     defaultCity: City,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigate: (DefaultCityDialogScreenAction) -> Unit,
+    navigate: (DefaultCityScreenAction) -> Unit,
 ) {
-    DefaultCityDialogScreenBehavior(
+    DefaultCityScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
     )
