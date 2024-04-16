@@ -68,7 +68,7 @@ fun ProductOrderCard(
     countStyle: ProductOrderCardCountStyle = ProductOrderCardCountStyle.None,
     price: Price? = null,
     showOriginalPrice: Boolean = true,
-    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
+    backgroundColor: Color = BackgroundColor,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     SideEffect {
@@ -457,6 +457,10 @@ sealed class ProductOrderCardCountStyle {
         val onClick: () -> Unit,
     ) : ProductOrderCardCountStyle()
 }
+
+private val BackgroundColor: Color
+    @Composable
+    get() = UiKitTheme.colors.background.general.regular.default
 
 private val ImageHeight: Dp get() = 128.dp
 private const val ImageAspectRatio = 0.72f
