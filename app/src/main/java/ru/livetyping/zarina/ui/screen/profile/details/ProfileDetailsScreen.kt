@@ -91,7 +91,7 @@ private fun ScreenContent(
             ZarinaButton(
                 onClick = onSignOutClicked,
                 isLoading = false, // TODO: [High] Implement
-                colors = ZarinaButtonDefaults.outlineColors(), // TODO: [High] Change colors
+                colors = ZarinaButtonDefaults.backlessErrorColors(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
