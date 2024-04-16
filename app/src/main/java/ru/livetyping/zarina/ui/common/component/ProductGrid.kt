@@ -222,6 +222,8 @@ private fun ProductGridImpl(
                 horizontalArrangement = ProductGridArrangement,
                 modifier = Modifier.fillMaxSize(),
             ) {
+                // No need to add append and prepend loaders since item placeholders are used
+                // in case of loading
                 items(
                     count = productPagingItems.itemCount,
                     span = { index -> getProductGridItemSpan(index) },
