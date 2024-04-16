@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.ui.navigation.base.dialogDestination
 import ru.livetyping.zarina.ui.navigation.destination.graph.ProfileGraph
-import ru.livetyping.zarina.ui.screen.profile.details.signoutconfirmation.SignOutConfirmationDialog
+import ru.livetyping.zarina.ui.screen.profile.details.signoutconfirmation.SignOutConfirmationDialogScreen
 import ru.livetyping.zarina.ui.screen.profile.details.signoutconfirmation.SignOutConfirmationScreenAction
 
 fun NavGraphBuilder.signOutConfirmationDialog(navController: NavHostController) {
@@ -13,7 +13,7 @@ fun NavGraphBuilder.signOutConfirmationDialog(navController: NavHostController) 
         destination = ProfileGraph.SignOutConfirmationDialog,
         dialogProperties = DialogProperties(usePlatformDefaultWidth = false),
     ) {
-        SignOutConfirmationDialog(
+        SignOutConfirmationDialogScreen(
             navigate = { action ->
                 when (action) {
                     SignOutConfirmationScreenAction.ScreenClosed -> {

@@ -21,7 +21,7 @@ import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 
 @Composable
-fun SignOutConfirmationDialog(
+fun SignOutConfirmationDialogScreen(
     navigate: (SignOutConfirmationScreenAction) -> Unit,
     viewModel: SignOutConfirmationViewModel = hiltViewModel(),
 ) {
