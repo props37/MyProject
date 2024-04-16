@@ -163,10 +163,7 @@ object CitySelectorScreenComponents {
                                 .fillMaxSize()
                                 .windowInsetsPadding(WindowInsets.navigationBarsOrIme),
                         ) {
-                            ZarinaCircularLoader(
-                                color = UiKitTheme.colors.icon.regular.default,
-                                modifier = Modifier.size(40.dp),
-                            )
+                            ZarinaCircularLoader(modifier = Modifier.size(40.dp))
                         }
                     }
 

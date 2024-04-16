@@ -136,7 +136,10 @@ fun ZarinaButton(
                     if (!isLoading) {
                         content()
                     } else {
-                        ZarinaCircularLoader(modifier = Modifier.size(24.dp))
+                        ZarinaCircularLoader(
+                            color = contentColor.value,
+                            modifier = Modifier.size(24.dp),
+                        )
                     }
                 }
             }

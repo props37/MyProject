@@ -98,7 +98,6 @@ object ProductCountSelectorScreenComponents {
 
                     CountItemState.Loading -> {
                         ZarinaCircularLoader(
-                            color = UiKitTheme.colors.icon.regular.default,
                             strokeWidth = 1.dp,
                             modifier = Modifier.size(16.dp),
                         )
