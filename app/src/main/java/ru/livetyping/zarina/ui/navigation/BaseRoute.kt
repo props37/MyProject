@@ -16,6 +16,7 @@ enum class BaseRoute {
     // Profile graph
     PROFILE_GRAPH,
     PROFILE,
+    PROFILE_DETAILS,
     MY_ORDERS,
 
     // Cart graph

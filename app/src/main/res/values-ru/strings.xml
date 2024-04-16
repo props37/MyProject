@@ -148,6 +148,9 @@
     <string name="user_with_this_email_not_found">Пользователь с таким адресом электронной почты не найден</string>
     <string name="number_symbol">№ %1$s</string>
     <string name="order_from">Заказ от %1$s</string>
+    <string name="account_details">Данные аккаунта</string>
+    <string name="sign_out">Выйти из аккаунта</string>
+    <string name="delete_account">Удалить аккаунт</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>

@@ -47,7 +47,7 @@ object ProfileScreenComponents {
     fun TopBar(
         userFirstName: String?,
         isEditProfileButtonVisible: Boolean,
-        onEditProfileClicked: () -> Unit,
+        onProfileDetailsClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         ZarinaTopBar(
@@ -87,7 +87,7 @@ object ProfileScreenComponents {
                     exit = AnimatedContentDefaultExitTransition,
                 ) {
                     ZarinaIconButton(
-                        onClick = onEditProfileClicked,
+                        onClick = onProfileDetailsClicked,
                         indication = rememberRipple(bounded = false, radius = 20.dp),
                         modifier = Modifier.padding(end = 2.dp),
                     ) {

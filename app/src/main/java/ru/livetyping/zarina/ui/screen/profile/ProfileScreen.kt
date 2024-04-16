@@ -52,7 +52,7 @@ fun ProfileScreen(
 
     ScreenContent(
         user = user,
-        onEditProfileClicked = { /* TODO */ },
+        onProfileDetailsClicked = viewModel::onProfileDetailsClicked,
         infoItems = infoItems,
         city = city,
         onInfoItemClicked = viewModel::onInfoItemClicked,
@@ -66,7 +66,7 @@ fun ProfileScreen(
 @Composable
 private fun ScreenContent(
     user: User?,
-    onEditProfileClicked: () -> Unit,
+    onProfileDetailsClicked: () -> Unit,
     infoItems: ImmutableList<InfoItem>,
     city: City?,
     onInfoItemClicked: (InfoItem) -> Unit,
@@ -93,7 +93,7 @@ private fun ScreenContent(
         TopBar(
             userFirstName = user?.firstName,
             isEditProfileButtonVisible = user != null,
-            onEditProfileClicked = onEditProfileClicked,
+            onProfileDetailsClicked = onProfileDetailsClicked,
         )
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
@@ -127,7 +127,7 @@ private fun PreviewUnauthorized() {
     ZarinaPreview {
         ScreenContent(
             user = null,
-            onEditProfileClicked = {},
+            onProfileDetailsClicked = {},
             infoItems = remember { InfoItem.entries.toImmutableList() },
             city = remember { City.DEFAULT },
             onInfoItemClicked = {},
@@ -147,7 +147,7 @@ private fun PreviewAuthorized() {
     ZarinaPreview {
         ScreenContent(
             user = remember { FakeDataGenerator.getUser() },
-            onEditProfileClicked = {},
+            onProfileDetailsClicked = {},
             infoItems = remember { InfoItem.entries.toImmutableList() },
             city = remember { City.DEFAULT },
             onInfoItemClicked = {},

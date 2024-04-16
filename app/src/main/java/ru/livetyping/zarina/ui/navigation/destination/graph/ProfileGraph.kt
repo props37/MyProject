@@ -10,5 +10,7 @@ data object ProfileGraph : SimpleGraph(
 ) {
     data object Profile : SimpleDestination(BaseRoute.PROFILE)
 
+    data object ProfileDetails : SimpleDestination(BaseRoute.PROFILE_DETAILS)
+
     data object MyOrders : SimpleDestination(BaseRoute.MY_ORDERS)
 }
