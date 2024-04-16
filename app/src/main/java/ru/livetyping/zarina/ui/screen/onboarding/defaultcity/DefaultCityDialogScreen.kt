@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.ui.screen.onboarding.defaultcitydialog
+package ru.livetyping.zarina.ui.screen.onboarding.defaultcity
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,8 +22,8 @@ import ru.livetyping.zarina.ui.common.component.dialog.ZarinaDialogContainer
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.ui.screen.onboarding.defaultcitydialog.DefaultCityDialogScreenComponents.bodyText
-import ru.livetyping.zarina.ui.screen.onboarding.defaultcitydialog.DefaultCityDialogViewModel.SideEffect
+import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityDialogScreenComponents.bodyText
+import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityDialogViewModel.SideEffect
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 
 @Composable

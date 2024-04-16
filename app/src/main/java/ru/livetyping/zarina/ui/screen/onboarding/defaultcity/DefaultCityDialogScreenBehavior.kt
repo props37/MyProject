@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.ui.screen.onboarding.defaultcitydialog
+package ru.livetyping.zarina.ui.screen.onboarding.defaultcity
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import ru.livetyping.zarina.ui.screen.onboarding.defaultcitydialog.DefaultCityDialogViewModel.SideEffect
+import ru.livetyping.zarina.ui.screen.onboarding.defaultcity.DefaultCityDialogViewModel.SideEffect
 
 @Composable
 fun DefaultCityDialogScreenBehavior(
