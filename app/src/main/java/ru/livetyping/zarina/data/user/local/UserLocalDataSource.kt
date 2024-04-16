@@ -45,6 +45,7 @@ class UserLocalDataSource @Inject constructor(
     }
 
     suspend fun clear() {
+        userDao.clear()
         userCityDataHolder.clear()
     }
 }
