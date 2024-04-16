@@ -89,6 +89,10 @@ class UserRepository @Inject constructor(
         remoteDataSource.requestPasswordReset(email)
     }
 
+    suspend fun signOut() {
+        remoteDataSource.signOut()
+    }
+
     suspend fun clear() {
         localDataSource.clear()
     }

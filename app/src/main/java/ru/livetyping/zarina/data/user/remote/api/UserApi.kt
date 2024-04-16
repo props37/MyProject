@@ -2,6 +2,7 @@ package ru.livetyping.zarina.data.user.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
@@ -114,5 +115,9 @@ class UserApi @Inject constructor(
                 setJsonBody(body)
             }
         }
+    }
+
+    suspend fun signOut() {
+        httpClient.delete("/api/auth")
     }
 }
