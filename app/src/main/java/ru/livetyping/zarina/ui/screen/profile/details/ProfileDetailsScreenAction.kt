@@ -4,4 +4,6 @@ sealed class ProfileDetailsScreenAction {
     data object ScreenClosed : ProfileDetailsScreenAction()
 
     data object SignOutClicked : ProfileDetailsScreenAction()
+
+    data object DeleteAccountClicked : ProfileDetailsScreenAction()
 }

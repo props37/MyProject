@@ -38,6 +38,10 @@ fun NavGraphBuilder.profileDetailsScreen(navController: NavHostController) {
                     ProfileDetailsScreenAction.SignOutClicked -> {
                         navController.navigateToSignOutConfirmationDialog()
                     }
+
+                    ProfileDetailsScreenAction.DeleteAccountClicked -> {
+                        navController.navigateToAccountDeletionConfirmationDialog()
+                    }
                 }
             },
         )

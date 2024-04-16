@@ -33,7 +33,10 @@ class ProfileDetailsViewModel @Inject constructor(
     }
 
     fun onDeleteAccountClicked() {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val action = ProfileDetailsScreenAction.DeleteAccountClicked
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.ui.screen.profile.details.signoutconfirmation
+package ru.livetyping.zarina.ui.screen.profile.details.accountdeletionconfirmation
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
@@ -21,18 +21,19 @@ import ru.livetyping.zarina.ui.common.component.dialog.ZarinaDialogContainer
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.ui.screen.profile.details.accountdeletionconfirmation.AccountDeletionConfirmationViewModel.SideEffect
 
 @Composable
-fun SignOutConfirmationDialogScreen(
-    navigate: (SignOutConfirmationScreenAction) -> Unit,
-    viewModel: SignOutConfirmationViewModel = hiltViewModel(),
+fun AccountDeletionConfirmationDialogScreen(
+    navigate: (AccountDeletionConfirmationScreenAction) -> Unit,
+    viewModel: AccountDeletionConfirmationViewModel = hiltViewModel(),
 ) {
-    val isSignOutButtonLoading by viewModel.isSignOutButtonLoading.collectAsStateWithLifecycle()
+    val isDeleteButtonLoading by viewModel.isDeleteButtonLoading.collectAsStateWithLifecycle()
 
     ScreenContent(
-        isSignOutButtonLoading = isSignOutButtonLoading,
-        onStayClicked = viewModel::onStayClicked,
-        onSignOutClicked = viewModel::onSignOutClicked,
+        isDeleteButtonLoading = isDeleteButtonLoading,
+        onKeepClicked = viewModel::onKeepClicked,
+        onDeleteClicked = viewModel::onDeleteClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -40,47 +41,42 @@ fun SignOutConfirmationDialogScreen(
 
 @Composable
 private fun ScreenContent(
-    isSignOutButtonLoading: Boolean,
-    onStayClicked: () -> Unit,
-    onSignOutClicked: () -> Unit,
-    sideEffects: Flow<SignOutConfirmationViewModel.SideEffect>,
-    navigate: (SignOutConfirmationScreenAction) -> Unit,
+    isDeleteButtonLoading: Boolean,
+    onKeepClicked: () -> Unit,
+    onDeleteClicked: () -> Unit,
+    sideEffects: Flow<SideEffect>,
+    navigate: (AccountDeletionConfirmationScreenAction) -> Unit,
 ) {
-    SignOutConfirmationScreenBehavior(
+    AccountDeletionConfirmationScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
     )
 
     ZarinaDialogContainer(
         title = {
-            Text(text = stringResource(R.string.sign_out_question))
+            Text(text = stringResource(R.string.delete_account_question))
         },
         body = {
-            Text(text = stringResource(R.string.sign_out_confirmation_body))
+            Text(text = stringResource(R.string.account_deletion_confirmation_body))
         },
         buttons = {
             ZarinaButton(
-                onClick = onStayClicked,
-                colors = ZarinaButtonDefaults.outlineColors(),
+                onClick = onKeepClicked,
+                colors = ZarinaButtonDefaults.tertiaryColors(),
                 modifier = Modifier.weight(1f),
             ) {
-                Text(
-                    text = stringResource(R.string.stay).uppercase(),
-                    maxLines = 1,
-                )
+                Text(text = stringResource(R.string.keep).uppercase())
             }
 
             Spacer(modifier = Modifier.width(8.dp))
 
             ZarinaButton(
-                onClick = onSignOutClicked,
-                isLoading = isSignOutButtonLoading,
+                onClick = onDeleteClicked,
+                isLoading = isDeleteButtonLoading,
+                colors = ZarinaButtonDefaults.outlineErrorColors(),
                 modifier = Modifier.weight(1f),
             ) {
-                Text(
-                    text = stringResource(R.string.go_out).uppercase(),
-                    maxLines = 1,
-                )
+                Text(text = stringResource(R.string.delete).uppercase())
             }
         },
     )
@@ -93,11 +89,11 @@ private fun ScreenContent(
 private fun Preview() {
     ZarinaPreview {
         ScreenContent(
-            isSignOutButtonLoading = false,
-            onStayClicked = {},
-            onSignOutClicked = {},
+            isDeleteButtonLoading = false,
+            onKeepClicked = {},
+            onDeleteClicked = {},
             sideEffects = remember { emptyFlow() },
-            navigate = {},
+            navigate = {}
         )
     }
 }

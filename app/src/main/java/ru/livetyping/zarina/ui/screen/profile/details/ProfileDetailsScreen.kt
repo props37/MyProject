@@ -16,12 +16,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
@@ -77,7 +79,6 @@ private fun ScreenContent(
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             ZarinaButton(
                 onClick = onSignOutClicked,
-                isLoading = false, // TODO: [High] Implement
                 colors = ZarinaButtonDefaults.outlineColors(),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -89,8 +90,7 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.height(8.dp))
 
             ZarinaButton(
-                onClick = onSignOutClicked,
-                isLoading = false, // TODO: [High] Implement
+                onClick = onDeleteAccountClicked,
                 colors = ZarinaButtonDefaults.backlessErrorColors(),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -110,6 +110,12 @@ private fun ScreenContent(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        ScreenContent(
+            onSignOutClicked = {},
+            onDeleteAccountClicked = {},
+            onBackClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigate = {}
+        )
     }
 }

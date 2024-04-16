@@ -62,4 +62,8 @@ class UserRemoteDataSource @Inject constructor(
     suspend fun signOut() {
         api.signOut()
     }
+
+    suspend fun deleteAccount() {
+        api.deleteAccount()
+    }
 }

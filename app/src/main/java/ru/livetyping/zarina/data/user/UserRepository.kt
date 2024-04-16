@@ -93,6 +93,10 @@ class UserRepository @Inject constructor(
         remoteDataSource.signOut()
     }
 
+    suspend fun deleteAccount() {
+        remoteDataSource.deleteAccount()
+    }
+
     suspend fun clear() {
         localDataSource.clear()
     }

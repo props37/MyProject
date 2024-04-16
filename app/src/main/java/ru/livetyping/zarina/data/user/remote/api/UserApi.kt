@@ -120,4 +120,8 @@ class UserApi @Inject constructor(
     suspend fun signOut() {
         httpClient.delete("/api/auth")
     }
+
+    suspend fun deleteAccount() {
+        httpClient.post("/api/profile/delete")
+    }
 }

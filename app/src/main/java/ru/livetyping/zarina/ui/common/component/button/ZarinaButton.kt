@@ -266,6 +266,23 @@ object ZarinaButtonDefaults {
     )
 
     @Composable
+    fun outlineErrorColors(
+        backgroundColor: Color = UiKitTheme.colors.background.button.outline.default,
+        contentColor: Color = UiKitTheme.colors.text.button.error.default,
+        disabledBackgroundColor: Color = UiKitTheme.colors.background.button.outline.disabled,
+        disabledContentColor: Color = UiKitTheme.colors.text.button.error.disabled,
+        borderColor: Color = UiKitTheme.colors.text.button.error.default,
+        disabledBorderColor: Color = UiKitTheme.colors.text.button.error.disabled,
+    ): ZarinaButtonColors = ZarinaButtonColors(
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        disabledBackgroundColor = disabledBackgroundColor,
+        disabledContentColor = disabledContentColor,
+        borderColor = borderColor,
+        disabledBorderColor = disabledBorderColor,
+    )
+
+    @Composable
     fun backlessErrorColors(
         backgroundColor: Color = Color.Unspecified,
         contentColor: Color = UiKitTheme.colors.text.button.error.default,

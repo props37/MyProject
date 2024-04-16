@@ -12,8 +12,10 @@ data object ProfileGraph : SimpleGraph(
 
     data object ProfileDetails : SimpleDestination(BaseRoute.PROFILE_DETAILS)
 
-    data object SignOutConfirmation :
-        SimpleDestination(BaseRoute.SIGN_OUT_CONFIRMATION)
+    data object SignOutConfirmation : SimpleDestination(BaseRoute.SIGN_OUT_CONFIRMATION)
+
+    data object AccountDeletionConfirmation :
+        SimpleDestination(BaseRoute.ACCOUNT_DELETION_CONFIRMATION)
 
     data object MyOrders : SimpleDestination(BaseRoute.MY_ORDERS)
 }

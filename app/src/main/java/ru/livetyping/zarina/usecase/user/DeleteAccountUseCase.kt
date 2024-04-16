@@ -8,7 +8,7 @@ import ru.livetyping.zarina.util.base.usecase.invoke
 import timber.log.Timber
 import javax.inject.Inject
 
-class SignOutUseCase @Inject constructor(
+class DeleteAccountUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val userRepository: UserRepository,
@@ -16,8 +16,8 @@ class SignOutUseCase @Inject constructor(
 ) : UseCase<Unit, Unit>(dispatcher) {
 
     override suspend fun execute(params: Unit) {
-        Timber.v("Sign out")
-        userRepository.signOut()
+        Timber.v("Delete account")
+        userRepository.deleteAccount()
         signOutCleanupUseCase().getOrThrow()
     }
 }
