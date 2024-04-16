@@ -234,10 +234,10 @@ private fun ProductGridImpl(
                     if (product != null) {
                         ProductCard(
                             product = product,
-                            onClick = { onProductClicked(product) },
-                            onAddToFavoritesClicked = { onAddToFavoritesClicked(product) },
-                            onAddToCartClicked = { onAddToCartClicked(product) },
-                            onSubscribeClicked = { onSubscribeClicked(product) },
+                            onClick = onProductClicked,
+                            onAddToFavoritesClicked = onAddToFavoritesClicked,
+                            onAddToCartClicked = onAddToCartClicked,
+                            onSubscribeClicked = onSubscribeClicked,
                             shimmer = placeholderShimmer,
                             modifier = itemModifier,
                         )

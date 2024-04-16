@@ -62,18 +62,18 @@ import ru.livetyping.zarina.util.compose.pager.rememberEndlessPagerState
 @Composable
 fun ProductCard(
     product: Product,
-    onClick: () -> Unit,
-    onAddToFavoritesClicked: () -> Unit,
-    onAddToCartClicked: () -> Unit,
-    onSubscribeClicked: () -> Unit,
+    onClick: (Product) -> Unit,
+    onAddToFavoritesClicked: (Product) -> Unit,
+    onAddToCartClicked: (Product) -> Unit,
+    onSubscribeClicked: (Product) -> Unit,
     modifier: Modifier = Modifier,
     shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
-    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
+    backgroundColor: Color = BackgroundColor,
 ) {
     Column(
         modifier = modifier
             .background(backgroundColor)
-            .clickable(onClick = onClick),
+            .clickable { onClick(product) },
     ) {
         Box(
             modifier = Modifier
@@ -90,7 +90,7 @@ fun ProductCard(
             )
             ZarinaLikeIconButton(
                 isLiked = product.isInFavorites,
-                onClick = onAddToFavoritesClicked,
+                onClick = { onAddToFavoritesClicked(product) },
                 iconSize = IconSize,
                 indication = rememberRipple(bounded = false, radius = IconSize),
                 modifier = Modifier.align(Alignment.TopEnd),
@@ -129,12 +129,12 @@ fun ProductCard(
                 if (product.isAvailable) {
                     AddToCartIconButton(
                         isAdded = product.isInCart,
-                        onClick = onAddToCartClicked,
+                        onClick = { onAddToCartClicked(product) },
                         modifier = buttonModifier,
                     )
                 } else {
                     SubscribeIconButton(
-                        onClick = onSubscribeClicked,
+                        onClick = { onSubscribeClicked(product) },
                         modifier = buttonModifier,
                     )
                 }
@@ -403,6 +403,10 @@ private fun ProductCardPreview() {
         ProductCardSkeleton(modifier = Modifier.background(Color.White))
     }
 }
+
+private val BackgroundColor: Color
+    @Composable
+    get() = UiKitTheme.colors.background.general.regular.default
 
 private const val MediaAspectRatio = 0.68f
 
