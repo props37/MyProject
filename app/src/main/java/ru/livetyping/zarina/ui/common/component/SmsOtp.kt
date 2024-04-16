@@ -58,7 +58,7 @@ fun SmsOtp(
     isOtpInvalid: Boolean = false,
     isOtpReadOnly: Boolean = false,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
+    backgroundColor: Color = BackgroundColor,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     Column(
@@ -199,6 +199,10 @@ private fun PreviewResendAvailable() {
 }
 
 private const val Length = 4
+
+private val BackgroundColor: Color
+    @Composable
+    get() = UiKitTheme.colors.background.general.regular.default
 
 private const val ContentKeyResendTimeoutCountdown = "ContentKeyResendTimeoutCountdown"
 
