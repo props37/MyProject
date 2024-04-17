@@ -5,11 +5,10 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import ru.livetyping.zarina.data.authorization.remote.api.dto.AuthorizationTokensDto
-import ru.livetyping.zarina.data.authorization.remote.api.dto.RefreshAuthorizationTokensRequestBody
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
-import ru.livetyping.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
 
 class AuthorizationApi @Inject constructor(
@@ -21,14 +20,17 @@ class AuthorizationApi @Inject constructor(
     }
 
     suspend fun refreshAuthorizationTokens(tokens: AuthorizationTokens): AuthorizationTokensDto {
-        val body = RefreshAuthorizationTokensRequestBody(tokens.refreshToken.value)
         return httpClient.get("/api/auth/jwt") {
-            setJsonBody(body)
+            header(HEADER_REFRESH_TOKEN, tokens.refreshToken.value)
             markAsRefreshTokenRequest()
         }.body()
     }
 
     private fun HttpRequestBuilder.markAsRefreshTokenRequest() {
         attributes.put(Auth.AuthCircuitBreaker, Unit)
+    }
+
+    companion object {
+        private const val HEADER_REFRESH_TOKEN = "x-refresh-token"
     }
 }
