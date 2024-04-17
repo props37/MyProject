@@ -24,7 +24,7 @@ class RefreshAuthorizationTokensUseCase @Inject constructor(
         if (currentTokens != null) {
             val newTokens = authorizationRepository.refreshAuthorizationTokens(currentTokens)
             authorizationRepository.setAuthorizationTokens(newTokens)
-            Timber.v("Authorization tokens refreshed")
+            Timber.v("Authorization tokens refreshed. New tokens: $newTokens")
         } else {
             fetchUnauthorizedUserAuthorizationTokensUseCase()
         }
