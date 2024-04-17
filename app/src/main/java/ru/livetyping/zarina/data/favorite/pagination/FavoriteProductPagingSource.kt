@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import kotlinx.coroutines.flow.first
 import ru.livetyping.zarina.data.favorite.FavoriteRepository
 import ru.livetyping.zarina.domain.product.Product
+import timber.log.Timber
 
 class FavoriteProductPagingSource(
     private val favoriteRepository: FavoriteRepository,
@@ -31,6 +32,7 @@ class FavoriteProductPagingSource(
                 itemsAfter = itemsAfter,
             )
         } catch (e: Exception) {
+            Timber.e(e)
             LoadResult.Error(e)
         }
     }

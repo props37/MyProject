@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import kotlinx.coroutines.flow.first
 import ru.livetyping.zarina.data.order.OrderRepository
 import ru.livetyping.zarina.domain.order.OrderItem
+import timber.log.Timber
 
 class OrderPagingSource(
     private val orderRepository: OrderRepository,
@@ -27,6 +28,7 @@ class OrderPagingSource(
                 nextKey = nextKey,
             )
         } catch (e: Exception) {
+            Timber.e(e)
             return LoadResult.Error(e)
         }
     }
