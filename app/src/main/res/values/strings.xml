@@ -164,6 +164,7 @@
     <string name="keep">Оставить</string>
     <string name="account_deletion_error">Не удалось удалить аккаунт</string>
     <string name="user_with_this_phone_number_not_found_error">Пользователя с таким номером телефона у нас нет. Повтори попытку</string>
+    <string name="no_orders_yet">Заказов пока что нет</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -222,6 +223,8 @@
     <string name="sign_out_confirmation_body">После выхода из аккаунта ты не сможешь отслеживать статус своих заказов и воспользоваться бонусной картой</string>
 
     <string name="account_deletion_confirmation_body">Данные, связанные с аккаунтом, нельзя будет восстановить. Также ты не сможешь пользоваться бонусной программой</string>
+
+    <string name="my_orders_no_orders_body">После оформления заказа ты найдёшь здесь информацию о статусе и способе доставки</string>
 
     <plurals name="show_products">
         <item quantity="zero">Показать %1$d товаров</item>

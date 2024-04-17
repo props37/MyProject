@@ -46,6 +46,8 @@ import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.collectIsScrollingBackwardAsState
 import ru.livetyping.zarina.util.library.paging3.PagingErrorTimberLogger
 
+// TODO: [Medium] Migrate to ZarinaPagingPullRefreshContainer
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProductGrid(

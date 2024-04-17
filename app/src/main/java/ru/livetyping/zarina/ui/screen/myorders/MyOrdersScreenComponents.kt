@@ -1,17 +1,39 @@
 package ru.livetyping.zarina.ui.screen.myorders
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
+import com.valentinilk.shimmer.ShimmerBounds
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.order.OrderItem
+import ru.livetyping.zarina.ui.common.component.OrderCard
+import ru.livetyping.zarina.ui.common.component.OrderCardSkeleton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.ui.common.component.paging.ZarinaPagingPullRefreshContainer
+import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
+import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
+import ru.livetyping.zarina.ui.common.error.ErrorState
+import ru.livetyping.zarina.ui.common.error.from
+import ru.livetyping.zarina.ui.common.error.rememberErrorState
+import ru.livetyping.zarina.ui.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.animation.Crossfade
 
 object MyOrdersScreenComponents {
     
@@ -39,4 +61,135 @@ object MyOrdersScreenComponents {
             modifier = modifier,
         )
     }
+
+    @Composable
+    fun OrderList(
+        orderPagingItems: LazyPagingItems<OrderItem>,
+        onOrderClicked: (OrderItem) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        ZarinaPagingPullRefreshContainer(
+            loadState = orderPagingItems.loadState,
+            onPullRefreshTriggered = orderPagingItems::refresh,
+            modifier = modifier,
+        ) {
+            Crossfade(
+                targetState = orderPagingItems.loadState.refresh,
+                label = "Orders content",
+            ) { loadState ->
+                when (loadState) {
+                    is LoadState.NotLoading -> {
+                        OrderListImpl(
+                            orderPagingItems = orderPagingItems,
+                            onOrderClicked = onOrderClicked,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+
+                    LoadState.Loading -> {
+                        OrderListSkeleton()
+                    }
+
+                    is LoadState.Error -> {
+                        val state = remember(loadState.error) {
+                            ErrorState.from(loadState.error)
+                        }
+
+                        ZarinaErrorScreen(
+                            state = state,
+                            onButtonClicked = orderPagingItems::retry,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    // TODO: [High] Add loaders and errors
+    @Composable
+    private fun OrderListImpl(
+        orderPagingItems: LazyPagingItems<OrderItem>,
+        onOrderClicked: (OrderItem) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Box(modifier = modifier) {
+            if (orderPagingItems.itemCount > 0) {
+                val itemModifier = Modifier.fillMaxWidth()
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(
+                        count = orderPagingItems.itemCount,
+                        key = orderPagingItems.itemKey { it.id.value },
+                        contentType = orderPagingItems.itemContentType {
+                            OrderListContentTypeOrderCard
+                        },
+                    ) { index ->
+                        val order = orderPagingItems[index]
+                        if (order != null) {
+                            OrderCard(
+                                order = order,
+                                onClick = onOrderClicked,
+                                modifier = itemModifier,
+                            )
+                        } else {
+                            OrderCardSkeleton(modifier = itemModifier)
+                        }
+
+                        if (index < orderPagingItems.itemCount - 1) {
+                            Divider(
+                                color = UiKitTheme.colors.background.skeleton,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                            )
+                        }
+                    }
+                }
+            } else {
+                val errorState = rememberErrorState(
+                    iconResId = R.drawable.ic_tablet_64,
+                    title = stringResource(R.string.no_orders_yet),
+                    body = stringResource(R.string.my_orders_no_orders_body),
+                    isButtonVisible = false,
+                )
+                ZarinaErrorScreen(
+                    state = errorState,
+                    onButtonClicked = {},
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun OrderListSkeleton(
+        modifier: Modifier = Modifier,
+    ) {
+        val placeholderShimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
+        LazyColumn(modifier = modifier.fillMaxSize()) {
+            items(count = OrderListSkeletonItemCount) { index ->
+                OrderCardSkeleton(
+                    shimmer = placeholderShimmer,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                if (index < OrderListSkeletonItemCount - 1) {
+                    Divider(
+                        color = UiKitTheme.colors.background.skeleton,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    )
+                }
+            }
+        }
+    }
+
+    private const val OrderListSkeletonItemCount = 20
+
+    private const val OrderListContentTypeOrderCard = "OrderListContentTypeOrderCard"
 }

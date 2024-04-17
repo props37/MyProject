@@ -12,11 +12,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.domain.order.OrderItem
 import ru.livetyping.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.ui.screen.myorders.MyOrdersScreenComponents.OrderList
 import ru.livetyping.zarina.ui.screen.myorders.MyOrdersScreenComponents.TopBar
 import ru.livetyping.zarina.ui.screen.myorders.MyOrdersViewModel.SideEffect
 import ru.livetyping.zarina.ui.theme.UiKitTheme
@@ -27,6 +31,8 @@ fun MyOrdersScreen(
     viewModel: MyOrdersViewModel = hiltViewModel(),
 ) {
     ScreenContent(
+        orderPagingDataFlow = viewModel.orderPagingDataFlow,
+        onOrderClicked = viewModel::onOrderClicked,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
@@ -35,6 +41,8 @@ fun MyOrdersScreen(
 
 @Composable
 private fun ScreenContent(
+    orderPagingDataFlow: Flow<PagingData<OrderItem>>,
+    onOrderClicked: (OrderItem) -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (MyOrdersScreenAction) -> Unit,
@@ -55,6 +63,14 @@ private fun ScreenContent(
             .bottomNavBarPadding(),
     ) {
         TopBar(onBackClicked = onBackClicked)
+
+        val orderPagingItems = orderPagingDataFlow.collectAsLazyPagingItems()
+
+        OrderList(
+            orderPagingItems = orderPagingItems,
+            onOrderClicked = onOrderClicked,
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }
 
