@@ -55,6 +55,6 @@ class ProductPager @Inject constructor(
         private const val INITIAL_LOAD_SIZE = PAGE_SIZE * 2
         private const val MAX_SIZE = 300
 
-        private const val TAG = "ProductsPager"
+        private const val TAG = "ProductPager"
     }
 }
