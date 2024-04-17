@@ -110,7 +110,6 @@ object MyOrdersScreenComponents {
         }
     }
 
-    // TODO: [High] Add loaders and errors
     @Composable
     private fun OrderListImpl(
         orderPagingItems: LazyPagingItems<OrderItem>,
