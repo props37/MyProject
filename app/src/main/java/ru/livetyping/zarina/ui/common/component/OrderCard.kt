@@ -23,16 +23,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.order.OrderItem
+import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
+import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
+import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.common.util.rememberFormattedLocalDate
 import ru.livetyping.zarina.ui.common.util.rememberFormattedPrice
 import ru.livetyping.zarina.ui.theme.UiKitTheme
@@ -109,6 +116,60 @@ fun OrderCard(
 }
 
 @Composable
+fun OrderCardSkeleton(
+    modifier: Modifier = Modifier,
+    shimmer: Shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window),
+) {
+    Column(modifier = modifier) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            ZarinaSkeleton(
+                shimmer = shimmer,
+                modifier = Modifier.size(width = 72.dp, height = 16.dp),
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            ZarinaSkeleton(
+                shimmer = shimmer,
+                modifier = Modifier.size(width = 48.dp, height = 12.dp),
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            ZarinaSkeleton(
+                shimmer = shimmer,
+                modifier = Modifier.size(width = 56.dp, height = 16.dp),
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            ZarinaSkeleton(
+                shimmer = shimmer,
+                modifier = Modifier.size(width = 128.dp, height = 16.dp),
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            ZarinaSkeleton(
+                shimmer = shimmer,
+                modifier = Modifier.size(width = 72.dp, height = 16.dp),
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(ProductImageSpaceBetween),
+        ) {
+            repeat(times = 6) {
+                ZarinaSkeleton(
+                    shimmer = shimmer,
+                    shape = RectangleShape,
+                    modifier = Modifier.size(ProductImageSize),
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun Products(
     products: List<OrderItem.Product>,
     modifier: Modifier = Modifier,
@@ -140,6 +201,19 @@ private fun Products(
                 }
             }
         }
+    }
+}
+
+@Preview
+@DensityPreviews
+@Composable
+private fun PreviewSkeleton() {
+    ZarinaPreview {
+        OrderCardSkeleton(
+            modifier = Modifier
+                .background(Color.White)
+                .padding(16.dp),
+        )
     }
 }
 
