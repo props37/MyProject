@@ -64,7 +64,7 @@ fun OrderCard(
             val color = UiKitTheme.colors.text.general.regular.default
 
             Text(
-                text = stringResource(R.string.number_symbol),
+                text = stringResource(R.string.number_symbol, order.number.value),
                 style = textStyle,
                 color = color,
             )
@@ -100,7 +100,7 @@ fun OrderCard(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = pluralStringResource(R.plurals.products, order.productCount),
+                text = pluralStringResource(R.plurals.products, order.productCount, order.productCount),
                 style = textStyle,
                 color = color,
             )
@@ -119,8 +119,9 @@ fun OrderCard(
 fun OrderCardSkeleton(
     modifier: Modifier = Modifier,
     shimmer: Shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window),
+    contentPadding: PaddingValues = ContentPadding,
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.padding(contentPadding)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             ZarinaSkeleton(
                 shimmer = shimmer,
@@ -129,7 +130,7 @@ fun OrderCardSkeleton(
             Spacer(modifier = Modifier.width(8.dp))
             ZarinaSkeleton(
                 shimmer = shimmer,
-                modifier = Modifier.size(width = 48.dp, height = 12.dp),
+                modifier = Modifier.size(width = 48.dp, height = 10.dp),
             )
             Spacer(modifier = Modifier.weight(1f))
             ZarinaSkeleton(
@@ -143,12 +144,12 @@ fun OrderCardSkeleton(
         Row(verticalAlignment = Alignment.CenterVertically) {
             ZarinaSkeleton(
                 shimmer = shimmer,
-                modifier = Modifier.size(width = 128.dp, height = 16.dp),
+                modifier = Modifier.size(width = 128.dp, height = 12.dp),
             )
             Spacer(modifier = Modifier.weight(1f))
             ZarinaSkeleton(
                 shimmer = shimmer,
-                modifier = Modifier.size(width = 72.dp, height = 16.dp),
+                modifier = Modifier.size(width = 72.dp, height = 12.dp),
             )
         }
 
