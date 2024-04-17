@@ -69,7 +69,7 @@ fun ProductOrderCard(
     price: Price? = null,
     showOriginalPrice: Boolean = true,
     backgroundColor: Color = BackgroundColor,
-    contentPadding: PaddingValues = PaddingValues(),
+    contentPadding: PaddingValues = ContentPadding,
 ) {
     SideEffect {
         if (count != null) {
@@ -148,7 +148,7 @@ fun ProductOrderCard(
 fun ProductOrderCardSkeleton(
     modifier: Modifier = Modifier,
     shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
-    contentPadding: PaddingValues = PaddingValues(),
+    contentPadding: PaddingValues = ContentPadding,
 ) {
     Row(
         modifier = modifier
@@ -461,6 +461,8 @@ sealed class ProductOrderCardCountStyle {
 private val BackgroundColor: Color
     @Composable
     get() = UiKitTheme.colors.background.general.regular.default
+
+private val ContentPadding: PaddingValues get() = PaddingValues()
 
 private val ImageHeight: Dp get() = 128.dp
 private const val ImageAspectRatio = 0.72f
