@@ -25,7 +25,7 @@ class OrderPager @Inject constructor(
         return PagingConfig(
             pageSize = PAGE_SIZE,
             prefetchDistance = PREFETCH_DISTANCE,
-            enablePlaceholders = true,
+            enablePlaceholders = false,
             initialLoadSize = INITIAL_LOAD_SIZE,
             maxSize = MAX_SIZE,
         )
@@ -36,7 +36,5 @@ class OrderPager @Inject constructor(
         private const val PREFETCH_DISTANCE = PAGE_SIZE
         private const val INITIAL_LOAD_SIZE = PAGE_SIZE * 2
         private const val MAX_SIZE = 100
-
-        private const val TAG = "OrderPager"
     }
 }
