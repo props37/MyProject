@@ -16,5 +16,17 @@ sealed class Order(
     @JvmInline
     value class Number(val value: String)
 
-    enum class Status
+    enum class Status {
+        OPENED,
+        APPROVED,
+        PAID,
+        IN_TRANSIT,
+        DELIVERED,
+        READY_FOR_PICKUP,
+        CANCELLED,
+        REFUNDING,
+        APPROVED_TO_REFUND,
+        REFUNDED,
+        NOT_REFUNDABLE,
+    }
 }
