@@ -165,6 +165,8 @@
     <string name="account_deletion_error">Не удалось удалить аккаунт</string>
     <string name="user_with_this_phone_number_not_found_error">Пользователя с таким номером телефона у нас нет. Повтори попытку</string>
     <string name="no_orders_yet">Заказов пока что нет</string>
+    <string name="repeat">Повторить</string>
+    <string name="loading_error">Ошибка загрузки</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>

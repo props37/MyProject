@@ -25,6 +25,8 @@ import ru.livetyping.zarina.ui.common.component.OrderCard
 import ru.livetyping.zarina.ui.common.component.OrderCardSkeleton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.ui.common.component.paging.ZarinaPagingPullRefreshContainer
+import ru.livetyping.zarina.ui.common.component.paging.zarinaPagingAppendItem
+import ru.livetyping.zarina.ui.common.component.paging.zarinaPagingPrependItem
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
@@ -119,6 +121,11 @@ object MyOrdersScreenComponents {
             if (orderPagingItems.itemCount > 0) {
                 val itemModifier = Modifier.fillMaxWidth()
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    zarinaPagingPrependItem(
+                        prependLoadState = orderPagingItems.loadState.prepend,
+                        onRetryClicked = orderPagingItems::retry,
+                    )
+
                     items(
                         count = orderPagingItems.itemCount,
                         key = orderPagingItems.itemKey { it.id.value },
@@ -146,6 +153,11 @@ object MyOrdersScreenComponents {
                             )
                         }
                     }
+
+                    zarinaPagingAppendItem(
+                        appendLoadState = orderPagingItems.loadState.append,
+                        onRetryClicked = orderPagingItems::retry,
+                    )
                 }
             } else {
                 val errorState = rememberErrorState(
