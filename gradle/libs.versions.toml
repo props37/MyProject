@@ -44,7 +44,7 @@ composeShimmer = "1.3.0"
 libphonenumber = "8.13.28"
 
 timber = "5.0.1"
-leakCanary = "2.13"
+leakCanary = "2.14"
 
 googlePlayServices-location = "21.2.0"
 googlePlayServices-maps = "18.2.0"
