@@ -47,8 +47,8 @@ class PermissionManagerImpl @Inject constructor(
             }
 
             launcher = activity.activityResultRegistry.register(
-                UUID.randomUUID().toString(),
-                ActivityResultContracts.RequestPermission(),
+                key = UUID.randomUUID().toString(),
+                contract = ActivityResultContracts.RequestPermission(),
             ) {
                 continuation.resume(Unit)
             }
@@ -74,8 +74,8 @@ class PermissionManagerImpl @Inject constructor(
             }
 
             launcher = activity.activityResultRegistry.register(
-                UUID.randomUUID().toString(),
-                ActivityResultContracts.RequestMultiplePermissions(),
+                key = UUID.randomUUID().toString(),
+                contract = ActivityResultContracts.RequestMultiplePermissions(),
             ) {
                 continuation.resume(Unit)
             }
