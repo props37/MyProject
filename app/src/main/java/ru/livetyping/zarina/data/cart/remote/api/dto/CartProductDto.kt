@@ -3,13 +3,12 @@ package ru.livetyping.zarina.data.cart.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.PriceDto
+import ru.livetyping.zarina.data.common.remote.api.zarina.dto.ProductColorDto
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
-import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.domain.product.ProductOffer
-import ru.livetyping.zarina.domain.common.Color as DomainColor
 
 @Serializable
 data class CartProductDto(
@@ -25,6 +24,7 @@ data class CartProductDto(
     fun toCartProduct(): CartProduct {
         checkNotNull(id) { "id is null" }
         checkNotNull(offer) { "offer is null" }
+        val color = offer.color?.toProductColor()
         checkNotNull(offer.productId) { "id is null" }
         checkNotNull(offer.id) { "id is null" }
         checkNotNull(offer.name) { "name is null" }
@@ -34,6 +34,7 @@ data class CartProductDto(
         checkNotNull(offer.imageUrl) { "imageUrl is null" }
         checkNotNull(offer.size) { "size is null" }
         checkNotNull(count) { "count is null" }
+        checkNotNull(color) { "color is null" }
         return CartProduct(
             id = CartProduct.Id(id),
             productId = Product.Id(offer.productId),
@@ -41,7 +42,7 @@ data class CartProductDto(
             name = offer.name,
             price = offer.price.toPrice(),
             barcode = Barcode(offer.barcode),
-            color = offer.color.toProductColor(),
+            color = color,
             imageUrl = Url(offer.imageUrl),
             size = offer.size,
             height = offer.height?.takeIf { it.isNotBlank() },
@@ -69,7 +70,7 @@ data class CartProductDto(
         val name: String? = null,
 
         @SerialName("color")
-        val color: Color? = null,
+        val color: ProductColorDto? = null,
 
         @SerialName("cover_picture")
         val imageUrl: String? = null,
@@ -91,33 +92,5 @@ data class CartProductDto(
 
         @SerialName("retail_amount")
         val pickUpFromShopAvailableCount: Int? = null,
-    ) {
-        @Serializable
-        data class Color(
-            @SerialName("id") 
-            val id: String? = null,
-            
-            @SerialName("title") 
-            val name: String? = null,
-            
-            @SerialName("code")
-            val code: String? = null,
-
-            @SerialName("product_id")
-            val productId: String? = null,
-        ) {
-            fun toProductColor(): ProductColor {
-                checkNotNull(id) { "id is null" }
-                checkNotNull(name) { "name is null" }
-                checkNotNull(code) { "code is null" }
-                checkNotNull(productId) { "productId is null" }
-                return ProductColor(
-                    id = ProductColor.Id(id),
-                    name = name,
-                    color = DomainColor(code),
-                    productId = Product.Id(productId),
-                )
-            }
-        }
-    }
+    )
 }
