@@ -46,7 +46,10 @@ class MyOrdersViewModel @Inject constructor(
     }
 
     fun onOrderClicked(order: OrderItem) {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val action = MyOrdersScreenAction.OrderClicked(order.id)
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

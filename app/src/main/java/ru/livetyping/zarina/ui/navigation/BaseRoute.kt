@@ -20,6 +20,7 @@ enum class BaseRoute {
     SIGN_OUT_CONFIRMATION,
     ACCOUNT_DELETION_CONFIRMATION,
     MY_ORDERS,
+    ORDER,
 
     // Cart graph
     CART_GRAPH,

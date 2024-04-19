@@ -6,6 +6,7 @@ import ru.livetyping.zarina.ui.navigation.base.navigationGraph
 import ru.livetyping.zarina.ui.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.ui.navigation.screen.accountDeletionConfirmationDialog
 import ru.livetyping.zarina.ui.navigation.screen.myOrdersScreen
+import ru.livetyping.zarina.ui.navigation.screen.orderScreen
 import ru.livetyping.zarina.ui.navigation.screen.profileDetailsScreen
 import ru.livetyping.zarina.ui.navigation.screen.profileScreen
 import ru.livetyping.zarina.ui.navigation.screen.signOutConfirmationDialog
@@ -17,5 +18,6 @@ fun NavGraphBuilder.profileGraph(navController: NavHostController) {
         signOutConfirmationDialog(navController)
         accountDeletionConfirmationDialog(navController)
         myOrdersScreen(navController)
+        orderScreen(navController)
     }
 }
