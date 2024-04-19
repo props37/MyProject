@@ -1,0 +1,118 @@
+package ru.livetyping.zarina.data.order.remote.api.dto
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.domain.common.Url
+import ru.livetyping.zarina.domain.order.Order
+import ru.livetyping.zarina.domain.order.OrderDetails
+import ru.livetyping.zarina.domain.product.ProductColor
+import java.time.LocalDate
+import ru.livetyping.zarina.domain.common.Color as DomainColor
+import ru.livetyping.zarina.domain.product.Product as DomainProduct
+
+@Serializable
+data class OrderDto(
+    @SerialName("id")
+    val id: Long? = null,
+
+    @SerialName("number")
+    val number: String? = null,
+
+    @SerialName("products_count")
+    val productCount: Int? = null,
+
+    @SerialName("date")
+    val date: String? = null,
+
+    @SerialName("status")
+    val status: OrderStatusDto? = null,
+
+    @SerialName("total_sum")
+    val totalPrice: Long? = null,
+
+    @SerialName("products")
+    val products: List<Product>? = null,
+) {
+    fun toOrderDetails(): OrderDetails {
+        checkNotNull(id) { "id is null" }
+        checkNotNull(number) { "number is null" }
+        checkNotNull(productCount) { "productCount is null" }
+        checkNotNull(date) { "date is null" }
+        checkNotNull(status) { "status is null" }
+        checkNotNull(totalPrice) { "totalPrice is null" }
+        checkNotNull(products) { "products is null" }
+        return OrderDetails(
+            id = Order.Id(id),
+            number = Order.Number(number),
+            productCount = productCount,
+            date = LocalDate.parse(date),
+            status = status.toOrderStatus(),
+            totalPrice = totalPrice,
+        )
+    }
+
+    @Serializable
+    data class Product(
+        @SerialName("vendor_code")
+        val id: String? = null,
+        
+        @SerialName("name")
+        val name: String? = null,
+
+        @SerialName("size")
+        val size: String? = null,
+
+        @SerialName("color")
+        val color: Color? = null,
+
+        @SerialName("cover_picture")
+        val imageUrl: String? = null,
+
+        @SerialName("price")
+        val price: Long? = null,
+
+        @SerialName("quantity")
+        val count: Int? = null,
+    ) {
+        fun toOrderProduct(): OrderDetails.Product {
+            checkNotNull(id) { "id is null" }
+            checkNotNull(name) { "name is null" }
+            checkNotNull(size) { "size is null" }
+            checkNotNull(color) { "color is null" }
+            checkNotNull(imageUrl) { "imageUrl is null" }
+            checkNotNull(price) { "price is null" }
+            checkNotNull(count) { "count is null" }
+            return OrderDetails.Product(
+                id = DomainProduct.Id(id),
+                name = name,
+                size = size,
+                color = getProductColor(),
+                imageUrl = Url(imageUrl),
+                price = price,
+                count = count,
+            )
+        }
+
+        private fun getProductColor(): ProductColor {
+            checkNotNull(color) { "color is null" }
+            checkNotNull(color.code) { "code is null" }
+            checkNotNull(color.name) { "name is null" }
+            checkNotNull(id) { "id is null" }
+            return ProductColor(
+                id = ProductColor.Id(color.code),
+                name = color.name,
+                color = DomainColor(color.code),
+                productId = DomainProduct.Id(id),
+            )
+        }
+
+        @Serializable
+        data class Color(
+            @SerialName("title")
+            val name: String? = null,
+
+            @SerialName("code")
+            val code: String? = null,
+        )
+    }
+}
