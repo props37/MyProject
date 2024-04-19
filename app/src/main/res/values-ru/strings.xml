@@ -163,6 +163,15 @@
     <string name="repeat">Повторить</string>
     <string name="loading_error">Ошибка загрузки</string>
 
+    <string name="order_status_accepted">Принят</string>
+    <string name="order_status_confirmed">Подтверждён</string>
+    <string name="order_status_on_the_way">В пути</string>
+    <string name="order_status_delivered">Доставлен</string>
+    <string name="order_status_ready_for_pickup">Готов к выдаче</string>
+    <string name="order_status_cancelled">Отменён</string>
+    <string name="order_status_refund">Возврат</string>
+    <string name="order_status_not_refundable">Не подлежит возврату</string>
+
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
     <string name="onboarding_city_selection_title">Определяем твой город</string>

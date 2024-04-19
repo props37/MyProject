@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
@@ -36,10 +37,17 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.order.OrderItem
+import ru.livetyping.zarina.ui.common.component.label.ZarinaLabel
+import ru.livetyping.zarina.ui.common.component.label.ZarinaLabelDefaults
+import ru.livetyping.zarina.ui.common.component.label.ZarinaLabelSize
 import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
+import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
+import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.ui.common.util.domain.color
+import ru.livetyping.zarina.ui.common.util.domain.nameResId
 import ru.livetyping.zarina.ui.common.util.rememberFormattedLocalDate
 import ru.livetyping.zarina.ui.common.util.rememberFormattedPrice
 import ru.livetyping.zarina.ui.theme.UiKitTheme
@@ -68,8 +76,18 @@ fun OrderCard(
                 style = textStyle,
                 color = color,
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            // TODO: [High] Add status
+
+            Spacer(modifier = Modifier.width(10.dp))
+            ZarinaLabel(
+                size = ZarinaLabelSize.Small,
+                colors = ZarinaLabelDefaults.successColors(indicatorColor = order.status.color),
+            ) {
+                Text(
+                    text = stringResource(order.status.nameResId).uppercase(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
 
             Spacer(modifier = Modifier.width(8.dp))
             Spacer(modifier = Modifier.weight(1f))
@@ -202,6 +220,19 @@ private fun Products(
                 }
             }
         }
+    }
+}
+
+@Preview
+@FontScalePreviews
+@DensityPreviews
+@Composable
+private fun Preview() {
+    ZarinaPreview {
+        OrderCard(
+            order = remember { FakeDataGenerator.getOrderItem() },
+            onClick = {},
+        )
     }
 }
 

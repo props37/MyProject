@@ -8,6 +8,8 @@ import ru.livetyping.zarina.domain.common.Media
 import ru.livetyping.zarina.domain.common.MediaType
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Url
+import ru.livetyping.zarina.domain.order.Order
+import ru.livetyping.zarina.domain.order.OrderItem
 import ru.livetyping.zarina.domain.product.Price
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
@@ -18,6 +20,32 @@ import java.util.UUID
 import kotlin.random.Random
 
 object FakeDataGenerator {
+    fun getOrderItem(
+        id: Order.Id = Order.Id(Random.nextLong(from = 0, until = Long.MAX_VALUE)),
+        number: Order.Number = Order.Number(Random.nextLong(from = 123456, until = 987654).toString()),
+        productCount: Int = Random.nextInt(from = 1, until = 10),
+        date: LocalDate = getLocalDate(),
+        status: Order.Status = Order.Status.entries.random(),
+        totalPrice: Long = 7999,
+        products: List<OrderItem.Product> = List(productCount) { getOrderItemProduct() },
+    ): OrderItem = OrderItem(
+        id = id,
+        number = number,
+        productCount = productCount,
+        date = date,
+        status = status,
+        totalPrice = totalPrice,
+        products = products,
+    )
+
+    fun getOrderItemProduct(
+        imageUrl: Url = Url.EMPTY,
+        count: Int = Random.nextInt(from = 1, until = 10)
+    ): OrderItem.Product = OrderItem.Product(
+        imageUrl = imageUrl,
+        count = count,
+    )
+
     fun getUser(
         id: User.Id = User.Id(getRandomString()),
         email: Email = getEmail(),
@@ -150,6 +178,12 @@ object FakeDataGenerator {
         discountPrice = discountPrice,
         discountPercent = discountPercent,
     )
+
+    fun getLocalDate(
+        year: Int = LocalDate.now().year,
+        month: Int = LocalDate.now().monthValue,
+        dayOfMonth: Int = LocalDate.now().dayOfMonth,
+    ): LocalDate = LocalDate.of(year, month, dayOfMonth)
 
     fun getPhoneNumber(value: String = "+78005553535"): PhoneNumber = PhoneNumber.create(value)
 

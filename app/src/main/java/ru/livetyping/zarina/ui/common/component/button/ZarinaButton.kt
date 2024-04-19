@@ -149,9 +149,9 @@ fun ZarinaButton(
 data class ZarinaButtonColors(
     val backgroundColor: Color,
     val contentColor: Color,
+    val borderColor: Color,
     val disabledBackgroundColor: Color,
     val disabledContentColor: Color,
-    val borderColor: Color,
     val disabledBorderColor: Color,
 )
 
