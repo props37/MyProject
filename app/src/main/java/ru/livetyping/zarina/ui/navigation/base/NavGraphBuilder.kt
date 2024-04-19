@@ -12,6 +12,7 @@ import androidx.navigation.NavGraph
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
+import androidx.navigation.compose.navigation
 import androidx.navigation.navigation
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.bottomSheet
@@ -103,6 +104,35 @@ inline fun NavGraphBuilder.navigationGraph(
     navigation(
         route = graph.routeSchema,
         startDestination = graph.startDestination.routeSchema,
+        builder = builder,
+    )
+}
+
+/**
+ * Constructors a nested [NavGraph] based on the given [Graph].
+ *
+ * @param enterTransition callback to define enter transitions for destination in this NavGraph
+ * @param exitTransition callback to define exit transitions for destination in this NavGraph
+ * @param popEnterTransition callback to define pop enter transitions for destination in this
+ * NavGraph
+ * @param popExitTransition callback to define pop exit transitions for destination in this NavGraph
+ * @param builder the builder used to construct the graph.
+ */
+fun NavGraphBuilder.navigationGraph(
+    graph: Graph<*>,
+    enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? = null,
+    exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? = null,
+    popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? = enterTransition,
+    popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? = exitTransition,
+    builder: NavGraphBuilder.() -> Unit,
+) {
+    navigation(
+        route = graph.routeSchema,
+        startDestination = graph.startDestination.routeSchema,
+        enterTransition = enterTransition,
+        exitTransition = exitTransition,
+        popEnterTransition = popEnterTransition,
+        popExitTransition = popExitTransition,
         builder = builder,
     )
 }
