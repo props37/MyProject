@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import com.valentinilk.shimmer.Shimmer
-import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.library.shimmer.shimmerToggleable
 
 @Composable
@@ -18,8 +17,8 @@ fun ZarinaTextSkeleton(
     textStyle: TextStyle,
     modifier: Modifier = Modifier,
     shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
-    color: Color = UiKitTheme.colors.background.skeleton,
-    shape: Shape = ZarinaSkeletonTextShape,
+    color: Color = ZarinaSkeletonDefaults.Color,
+    shape: Shape = ZarinaSkeletonDefaults.Shape,
 ) {
     Box(
         modifier = modifier
