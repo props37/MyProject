@@ -8,7 +8,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import com.valentinilk.shimmer.Shimmer
-import com.valentinilk.shimmer.shimmer
+import ru.livetyping.zarina.util.library.shimmer.shimmerToggleable
 
 @Composable
 fun ZarinaSkeleton(
@@ -17,11 +17,10 @@ fun ZarinaSkeleton(
     color: Color = ZarinaSkeletonDefaults.Color,
     shape: Shape = ZarinaSkeletonDefaults.Shape,
 ) {
-    val shimmerModifier = if (shimmer != null) Modifier.shimmer(shimmer) else Modifier
     Box(
         modifier = modifier
             .clip(shape)
-            .then(shimmerModifier)
+            .shimmerToggleable(shimmer = shimmer, isEnabled = shimmer != null)
             .background(color),
     )
 }

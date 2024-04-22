@@ -9,6 +9,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.util.library.shimmer.shimmerToggleable
 
@@ -26,9 +27,10 @@ fun ZarinaTextSkeleton(
             .shimmerToggleable(shimmer = shimmer, isEnabled = shimmer != null)
             .background(color),
     ) {
+        // Use default font family as theme font family has huge top and bottom paddings
         Text(
             text = "",
-            style = textStyle,
+            style = textStyle.copy(fontFamily = FontFamily.Default),
         )
     }
 }
