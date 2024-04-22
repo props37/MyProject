@@ -329,7 +329,7 @@ private fun Price(
             val textStyle = UiKitTheme.typography.secondary.regular
             val totalOriginalPrice = rememberFormattedPrice(price.originalPrice * count)
             val totalCurrentPrice = rememberFormattedPrice(price.currentPrice * count)
-            if (showOriginalPrice) {
+            if (showOriginalPrice && price.currentPrice != price.originalPrice) {
                 Text(
                     text = stringResource(R.string.price_in_rubles_string, totalOriginalPrice),
                     style = textStyle,
