@@ -48,7 +48,7 @@ import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
-import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeletonTextShape
+import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeletonDefaults
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.component.tab.ZarinaTabRow
 import ru.livetyping.zarina.ui.common.component.textfield.ZarinaTextField
@@ -434,7 +434,7 @@ object CatalogScreenComponents {
                 else -> 0.4f
             }
             val height = 16.dp
-            val shape = remember { ZarinaSkeletonTextShape }
+            val shape = remember { ZarinaSkeletonDefaults.Shape }
 
             ZarinaSkeleton(
                 shimmer = shimmer,
