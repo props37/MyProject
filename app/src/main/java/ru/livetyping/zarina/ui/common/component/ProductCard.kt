@@ -48,6 +48,7 @@ import ru.livetyping.zarina.ui.common.component.color.ZarinaColorIcon
 import ru.livetyping.zarina.ui.common.component.pager.ZarinaHorizontalPagerIndicator
 import ru.livetyping.zarina.ui.common.component.pager.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -224,59 +225,53 @@ fun ProductCardSkeleton(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-            val height = 16.dp
-            ZarinaSkeleton(
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.caption1.regular,
                 shimmer = shimmer,
-                modifier = Modifier
-                    .weight(1f)
-                    .height(height),
+                modifier = Modifier.weight(1f),
             )
             Spacer(modifier = Modifier.width(24.dp))
             ZarinaSkeleton(
                 shimmer = shimmer,
-                modifier = Modifier.size(height),
+                modifier = Modifier.size(16.dp),
             )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-            val height = 10.dp
-            ZarinaSkeleton(
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.caption1.regular,
                 shimmer = shimmer,
-                modifier = Modifier
-                    .width(44.dp)
-                    .height(height),
+                modifier = Modifier.width(44.dp),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            ZarinaSkeleton(
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.caption1.regular,
                 shimmer = shimmer,
-                modifier = Modifier
-                    .width(48.dp)
-                    .height(height),
+                modifier = Modifier.width(48.dp),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            ZarinaSkeleton(
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.caption2.regular,
                 shimmer = shimmer,
-                modifier = Modifier
-                    .width(28.dp)
-                    .height(height),
+                modifier = Modifier.width(28.dp),
             )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        ZarinaSkeleton(
-            shimmer = shimmer,
-            modifier = Modifier
-                .padding(start = 16.dp)
-                .width(40.dp)
-                .height(8.dp),
-        )
+        Box(modifier = Modifier.padding(start = 16.dp)) {
+            ZarinaSkeleton(
+                shimmer = shimmer,
+                modifier = Modifier.size(width = 42.dp, height = 8.dp),
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
     }
@@ -380,7 +375,7 @@ private fun Colors(
 @FontScalePreviews
 @DensityPreviews
 @Composable
-private fun ProductCardPreview(
+private fun Preview(
     @PreviewParameter(ProductPreviewParameterProvider::class, 1)
     product: Product,
 ) {
@@ -398,7 +393,7 @@ private fun ProductCardPreview(
 
 @Preview
 @Composable
-private fun ProductCardPreview() {
+private fun PreviewSkeleton() {
     ZarinaPreview {
         ProductCardSkeleton(modifier = Modifier.background(Color.White))
     }
