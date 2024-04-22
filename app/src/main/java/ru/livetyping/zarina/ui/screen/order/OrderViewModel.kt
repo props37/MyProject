@@ -7,20 +7,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderDetails
+import ru.livetyping.zarina.ui.common.datafetchinginfo.DataFetchingInfoHolder
 import ru.livetyping.zarina.ui.common.error.ErrorState
 import ru.livetyping.zarina.ui.common.error.from
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
@@ -52,20 +50,19 @@ class OrderViewModel @Inject constructor(
             Order.Id(value)
         }
 
-    private val orderFetchRequests = Channel<Unit>(Channel.CONFLATED)
-    private val orderFetchingType = MutableStateFlow(OrderFetchingType.NONE)
+    private val orderFetchingInfoHolder = DataFetchingInfoHolder<OrderFetchingType>()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val orderResult: StateFlow<Result<OrderDetails>?> = combine(
         orderId,
-        orderFetchRequests.receiveAsFlow(),
+        orderFetchingInfoHolder.fetchingRequests,
     ) { orderId, _ ->
         GetOrderFlowUseCase.Params(orderId)
     }
         .flatMapLatest { params ->
             interactor.getOrderFlow(params)
         }
-        .onEach { orderFetchingType.value = OrderFetchingType.NONE }
+        .onEach { orderFetchingInfoHolder.completeFetching() }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileUiSubscribed,
@@ -73,7 +70,7 @@ class OrderViewModel @Inject constructor(
         )
 
     val orderState: StateFlow<OrderState> = combine(
-        orderFetchingType,
+        orderFetchingInfoHolder.fetchingType,
         orderResult,
     ) { orderFetchingType, orderResult ->
         if (orderFetchingType == OrderFetchingType.LOADING || orderResult == null) {
@@ -95,13 +92,13 @@ class OrderViewModel @Inject constructor(
         initialValue = OrderState.Loading,
     )
 
-    val isRefreshing: StateFlow<Boolean> = orderFetchingType.mapState(
+    val isRefreshing: StateFlow<Boolean> = orderFetchingInfoHolder.fetchingType.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
     ) { it == OrderFetchingType.REFRESHING }
 
     init {
-        fetchOrder(OrderFetchingType.LOADING)
+        orderFetchingInfoHolder.requestFetching(OrderFetchingType.LOADING)
     }
 
     fun onBackClicked() {
@@ -112,16 +109,11 @@ class OrderViewModel @Inject constructor(
     }
 
     fun onRefreshTriggered() {
-        fetchOrder(OrderFetchingType.REFRESHING)
+        orderFetchingInfoHolder.requestFetching(OrderFetchingType.REFRESHING)
     }
 
     fun onOrderErrorRefreshClicked() {
-        fetchOrder(OrderFetchingType.LOADING)
-    }
-
-    private fun fetchOrder(type: OrderFetchingType) {
-        orderFetchRequests.trySend(Unit)
-        orderFetchingType.value = type
+        orderFetchingInfoHolder.requestFetching(OrderFetchingType.LOADING)
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -139,5 +131,5 @@ class OrderViewModel @Inject constructor(
         data class Error(val state: ErrorState) : OrderState()
     }
 
-    private enum class OrderFetchingType { NONE, LOADING, REFRESHING }
+    private enum class OrderFetchingType : DataFetchingInfoHolder.FetchingType { LOADING, REFRESHING }
 }
