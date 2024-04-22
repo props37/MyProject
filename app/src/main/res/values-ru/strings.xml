@@ -163,6 +163,8 @@
     <string name="repeat">Повторить</string>
     <string name="loading_error">Ошибка загрузки</string>
     <string name="order_number">Заказ №%1$s</string>
+    <string name="order_contents">Состав заказа</string>
+    <string name="items_short">%1$s шт</string>
 
     <string name="order_status_accepted">Принят</string>
     <string name="order_status_confirmed">Подтверждён</string>

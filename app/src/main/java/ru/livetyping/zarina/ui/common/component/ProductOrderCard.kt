@@ -297,7 +297,7 @@ private fun CountInfoText(
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = count.toString(),
+            text = stringResource(R.string.items_short, count.toString()),
             style = InfoTextStyle,
             color = UiKitTheme.colors.text.general.regular.default,
         )
