@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeGestures
@@ -61,6 +60,7 @@ import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.ui.common.component.counter.ZarinaCounter
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.component.switchh.ZarinaSwitch
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
@@ -296,20 +296,19 @@ object FiltersScreenComponents {
                         .heightIn(min = FilterItemMinHeight)
                         .padding(horizontal = 16.dp),
                 ) {
-                    val height = 16.dp
-                    ZarinaSkeleton(
+                    ZarinaTextSkeleton(
+                        textStyle = FilterTitleTextStyle,
                         shimmer = shimmer,
                         modifier = Modifier
                             .align(Alignment.CenterStart)
-                            .fillMaxWidth(fraction = 0.55f)
-                            .height(height),
+                            .fillMaxWidth(fraction = 0.55f),
                     )
 
                     ZarinaSkeleton(
                         shimmer = shimmer,
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
-                            .size(height),
+                            .size(16.dp),
                     )
                 }
 

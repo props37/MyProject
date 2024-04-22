@@ -31,7 +31,7 @@ import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.ui.common.component.item.ZarinaItem
-import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.ui.screen.profile.ProfileViewModel.InfoItem
@@ -224,10 +224,9 @@ object ProfileScreenComponents {
                                 color = UiKitTheme.colors.text.general.regular.muted,
                             )
                         } else {
-                            ZarinaSkeleton(
-                                modifier = Modifier
-                                    .height(16.dp)
-                                    .fillMaxWidth(fraction = 0.35f),
+                            ZarinaTextSkeleton(
+                                textStyle = textStyle,
+                                modifier = Modifier.fillMaxWidth(fraction = 0.35f),
                             )
                         }
                     }

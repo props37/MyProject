@@ -80,6 +80,7 @@ import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.ui.common.component.counter.ZarinaCounter
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.component.tab.ZarinaTabRow
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
@@ -222,9 +223,9 @@ object CartScreenComponents {
                         color = UiKitTheme.colors.text.general.regular.default,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f),
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                    Spacer(modifier = Modifier.weight(1f))
                     Icon(
                         painter = painterResource(R.drawable.ic_small_arrow_up_24),
                         contentDescription = stringResource(R.string.change_city),
@@ -235,11 +236,10 @@ object CartScreenComponents {
                     )
                 } else {
                     val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
-                    ZarinaSkeleton(
+                    ZarinaTextSkeleton(
+                        textStyle = UiKitTheme.typography.secondary.light,
                         shimmer = shimmer,
-                        modifier = Modifier
-                            .fillMaxWidth(fraction = 0.55f)
-                            .height(16.dp),
+                        modifier = Modifier.fillMaxWidth(fraction = 0.55f),
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     ZarinaSkeleton(

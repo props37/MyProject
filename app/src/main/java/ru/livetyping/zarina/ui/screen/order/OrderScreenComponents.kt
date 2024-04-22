@@ -5,11 +5,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -24,7 +25,7 @@ import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.ui.common.component.pullrefresh.ZarinaPullRefreshIndicator
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
-import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.ui.screen.order.OrderViewModel.OrderState
@@ -63,7 +64,10 @@ object OrderScreenComponents {
                             overflow = TextOverflow.Ellipsis,
                         )
                     } else {
-                        ZarinaSkeleton(modifier = Modifier.size(120.dp, 16.dp))
+                        ZarinaTextSkeleton(
+                            textStyle = LocalTextStyle.current,
+                            modifier = Modifier.width(120.dp),
+                        )
                     }
                 }
             },
