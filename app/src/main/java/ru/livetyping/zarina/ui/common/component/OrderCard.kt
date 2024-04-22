@@ -41,6 +41,7 @@ import ru.livetyping.zarina.ui.common.component.label.ZarinaLabel
 import ru.livetyping.zarina.ui.common.component.label.ZarinaLabelDefaults
 import ru.livetyping.zarina.ui.common.component.label.ZarinaLabelSize
 import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
@@ -141,37 +142,42 @@ fun OrderCardSkeleton(
 ) {
     Column(modifier = modifier.padding(contentPadding)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            ZarinaSkeleton(
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.secondary.regular,
                 shimmer = shimmer,
-                modifier = Modifier.size(width = 72.dp, height = 16.dp),
+                modifier = Modifier.width(72.dp),
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            ZarinaSkeleton(
+            Spacer(modifier = Modifier.width(10.dp))
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.caption2.bold,
                 shimmer = shimmer,
-                modifier = Modifier.size(width = 48.dp, height = 10.dp),
+                modifier = Modifier.width(48.dp),
             )
             Spacer(modifier = Modifier.weight(1f))
-            ZarinaSkeleton(
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.secondary.regular,
                 shimmer = shimmer,
-                modifier = Modifier.size(width = 56.dp, height = 16.dp),
+                modifier = Modifier.width(56.dp),
+            )
+        }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.tertiary.light,
+                shimmer = shimmer,
+                modifier = Modifier.width(128.dp),
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.tertiary.light,
+                shimmer = shimmer,
+                modifier = Modifier.width(72.dp),
             )
         }
 
         Spacer(modifier = Modifier.height(12.dp))
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            ZarinaSkeleton(
-                shimmer = shimmer,
-                modifier = Modifier.size(width = 128.dp, height = 12.dp),
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            ZarinaSkeleton(
-                shimmer = shimmer,
-                modifier = Modifier.size(width = 72.dp, height = 12.dp),
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -237,7 +243,6 @@ private fun Preview() {
 }
 
 @Preview
-@DensityPreviews
 @Composable
 private fun PreviewSkeleton() {
     ZarinaPreview {
