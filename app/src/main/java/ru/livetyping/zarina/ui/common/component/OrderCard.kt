@@ -81,6 +81,7 @@ fun OrderCard(
             ZarinaLabel(
                 size = ZarinaLabelSize.Small,
                 colors = ZarinaLabelDefaults.successColors(indicatorColor = order.status.color),
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = stringResource(order.status.nameResId).uppercase(),
@@ -89,8 +90,7 @@ fun OrderCard(
                 )
             }
 
-            Spacer(modifier = Modifier.width(8.dp))
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(12.dp))
 
             val formattedPrice = rememberFormattedPrice(order.totalPrice)
             Text(
