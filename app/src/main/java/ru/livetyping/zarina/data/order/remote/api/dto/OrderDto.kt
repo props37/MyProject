@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderDetails
+import ru.livetyping.zarina.domain.product.Price
 import ru.livetyping.zarina.domain.product.ProductColor
 import java.time.LocalDate
 import ru.livetyping.zarina.domain.common.Color as DomainColor
@@ -89,7 +90,7 @@ data class OrderDto(
                 size = size,
                 color = getProductColor(),
                 imageUrl = Url(imageUrl),
-                price = price,
+                price = Price(price),
                 count = count,
             )
         }

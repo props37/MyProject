@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.domain.order
 
 import ru.livetyping.zarina.domain.common.Url
+import ru.livetyping.zarina.domain.product.Price
 import ru.livetyping.zarina.domain.product.ProductColor
 import java.time.LocalDate
 import ru.livetyping.zarina.domain.product.Product as DomainProduct
@@ -27,7 +28,7 @@ data class OrderDetails(
         val size: String,
         val color: ProductColor,
         val imageUrl: Url,
-        val price: Long,
+        val price: Price,
         val count: Int,
     )
 }
