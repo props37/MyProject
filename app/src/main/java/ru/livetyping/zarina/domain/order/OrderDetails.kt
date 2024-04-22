@@ -12,6 +12,7 @@ data class OrderDetails(
     override val date: LocalDate,
     override val status: Status,
     override val totalPrice: Long,
+    val products: List<Product>,
 ) : Order(
     id = id,
     number = number,

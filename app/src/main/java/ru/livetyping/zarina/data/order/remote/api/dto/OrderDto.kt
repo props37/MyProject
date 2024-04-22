@@ -48,6 +48,7 @@ data class OrderDto(
             date = LocalDate.parse(date),
             status = status.toOrderStatus(),
             totalPrice = totalPrice,
+            products = products.map { it.toOrderProduct() },
         )
     }
 
