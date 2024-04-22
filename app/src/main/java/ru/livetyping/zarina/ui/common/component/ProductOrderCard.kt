@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +44,7 @@ import ru.livetyping.zarina.domain.product.currentPrice
 import ru.livetyping.zarina.ui.common.component.selector.ZarinaButtonSelector
 import ru.livetyping.zarina.ui.common.component.selector.ZarinaButtonSelectorSize
 import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
@@ -168,25 +170,22 @@ fun ProductOrderCardSkeleton(
         Column(modifier = Modifier.weight(1f)) {
             val height = 10.dp
 
-            ZarinaSkeleton(
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.caption1.regular,
                 shimmer = shimmer,
-                modifier = Modifier
-                    .fillMaxWidth(fraction = 0.5f)
-                    .height(height),
+                modifier = Modifier.fillMaxWidth(fraction = 0.5f),
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            ZarinaSkeleton(
+            Spacer(modifier = Modifier.height(8.dp))
+            ZarinaTextSkeleton(
+                textStyle = InfoTextStyle,
                 shimmer = shimmer,
-                modifier = Modifier
-                    .fillMaxWidth(fraction = 0.7f)
-                    .height(height),
+                modifier = Modifier.fillMaxWidth(fraction = 0.7f),
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            ZarinaSkeleton(
+            Spacer(modifier = Modifier.height(8.dp))
+            ZarinaTextSkeleton(
+                textStyle = InfoTextStyle,
                 shimmer = shimmer,
-                modifier = Modifier
-                    .fillMaxWidth(fraction = 0.35f)
-                    .height(height),
+                modifier = Modifier.fillMaxWidth(fraction = 0.35f),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -194,9 +193,7 @@ fun ProductOrderCardSkeleton(
 
             ZarinaSkeleton(
                 shimmer = shimmer,
-                modifier = Modifier
-                    .width(56.dp)
-                    .height(24.dp),
+                modifier = Modifier.size(width = 56.dp, height = 24.dp),
             )
         }
 
@@ -207,18 +204,16 @@ fun ProductOrderCardSkeleton(
             horizontalAlignment = Alignment.End,
             modifier = Modifier.fillMaxHeight(),
         ) {
-            ZarinaSkeleton(
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.footnote.light,
                 shimmer = shimmer,
-                modifier = Modifier
-                    .width(60.dp)
-                    .height(12.dp),
+                modifier = Modifier.width(60.dp),
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            ZarinaSkeleton(
+            Spacer(modifier = Modifier.height(6.dp))
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.secondary.regular,
                 shimmer = shimmer,
-                modifier = Modifier
-                    .width(48.dp)
-                    .height(14.dp),
+                modifier = Modifier.width(48.dp),
             )
         }
     }
