@@ -1,13 +1,34 @@
 package ru.livetyping.zarina.ui.screen.order
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.order.Order
+import ru.livetyping.zarina.domain.order.OrderDetails
+import ru.livetyping.zarina.ui.common.error.ErrorState
+import ru.livetyping.zarina.ui.common.error.from
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
+import ru.livetyping.zarina.ui.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.ui.screen.order.OrderViewModel.SideEffect
+import ru.livetyping.zarina.usecase.order.GetOrderFlowUseCase
+import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
+import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,6 +39,71 @@ class OrderViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
+    private val orderId: StateFlow<Order.Id> = savedStateHandle
+        .getStateFlow<Long?>(
+            key = ProfileGraph.Order.ARG_KEY_ORDER_ID,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { value ->
+            checkNotNull(value) { "orderId is null" }
+            Order.Id(value)
+        }
+
+    private val orderFetchRequests = Channel<Unit>(Channel.CONFLATED)
+    private val orderFetchingType = MutableStateFlow(OrderFetchingType.NONE)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val orderResult: StateFlow<Result<OrderDetails>?> = combine(
+        orderId,
+        orderFetchRequests.receiveAsFlow(),
+    ) { orderId, _ ->
+        GetOrderFlowUseCase.Params(orderId)
+    }
+        .flatMapLatest { params ->
+            interactor.getOrderFlow(params)
+        }
+        .onEach { orderFetchingType.value = OrderFetchingType.NONE }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = null,
+        )
+
+    val orderState: StateFlow<OrderState> = combine(
+        orderFetchingType,
+        orderResult,
+    ) { orderFetchingType, orderResult ->
+        if (orderFetchingType == OrderFetchingType.LOADING || orderResult == null) {
+            OrderState.Loading
+        } else {
+            orderResult.fold(
+                onSuccess = { order ->
+                    OrderState.Order(order)
+                },
+                onFailure = { throwable ->
+                    val errorState = ErrorState.from(throwable)
+                    OrderState.Error(errorState)
+                },
+            )
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = OrderState.Loading,
+    )
+
+    val isRefreshing: StateFlow<Boolean> = orderFetchingType.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { it == OrderFetchingType.REFRESHING }
+
+    init {
+        fetchOrder(OrderFetchingType.LOADING)
+    }
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = OrderScreenAction.ScreenClosed
@@ -25,7 +111,33 @@ class OrderViewModel @Inject constructor(
         }
     }
 
+    fun onRefreshTriggered() {
+        fetchOrder(OrderFetchingType.REFRESHING)
+    }
+
+    fun onOrderErrorRefreshClicked() {
+        fetchOrder(OrderFetchingType.LOADING)
+    }
+
+    private fun fetchOrder(type: OrderFetchingType) {
+        orderFetchRequests.trySend(Unit)
+        orderFetchingType.value = type
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: OrderScreenAction) : SideEffect
     }
+
+    @Stable
+    sealed class OrderState {
+        data object Loading : OrderState()
+
+        @Immutable
+        data class Order(val order: OrderDetails) : OrderState()
+
+        @Immutable
+        data class Error(val state: ErrorState) : OrderState()
+    }
+
+    private enum class OrderFetchingType { NONE, LOADING, REFRESHING }
 }
