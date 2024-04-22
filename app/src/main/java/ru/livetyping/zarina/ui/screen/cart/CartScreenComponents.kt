@@ -437,10 +437,7 @@ object CartScreenComponents {
             val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
 
             repeat(CartProductSkeletonCount) { index ->
-                ProductOrderCardSkeleton(
-                    shimmer = shimmer,
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
-                )
+                ProductOrderCardSkeleton(shimmer = shimmer)
 
                 if (index < CartProductSkeletonCount - 1) {
                     Divider(
@@ -572,7 +569,6 @@ object CartScreenComponents {
                     count = product.count,
                     countStyle = countStyle,
                     price = product.price,
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                     modifier = Modifier.fillMaxWidth(),
                 )
 

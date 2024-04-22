@@ -2,6 +2,7 @@ package ru.livetyping.zarina.ui.screen.productsubscription
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -140,9 +141,8 @@ private fun ScreenContent(
                 color = remember(product) { product.colors.find { it.productId == product.id } },
                 price = product.price,
                 showOriginalPrice = false,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                modifier = Modifier.fillMaxWidth(),
             )
             Spacer(modifier = Modifier.height(36.dp))
 

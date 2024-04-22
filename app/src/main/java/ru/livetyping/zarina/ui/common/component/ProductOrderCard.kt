@@ -2,7 +2,6 @@ package ru.livetyping.zarina.ui.common.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
@@ -354,22 +353,16 @@ private fun Price(
 @Composable
 private fun PreviewNoCount() {
     ZarinaPreview {
-        Box(
-            modifier = Modifier
-                .background(Color.White)
-                .padding(16.dp),
-        ) {
-            ProductOrderCard(
-                name = "Плащ с поясом",
-                imageUrl = remember { Url.EMPTY },
-                size = "M",
-                sizeRu = "48",
-                height = "170",
-                color = remember { FakeDataGenerator.getProductColor() },
-                price = remember { FakeDataGenerator.getPrice() },
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+        ProductOrderCard(
+            name = "Плащ с поясом",
+            imageUrl = remember { Url.EMPTY },
+            size = "M",
+            sizeRu = "48",
+            height = "170",
+            color = remember { FakeDataGenerator.getProductColor() },
+            price = remember { FakeDataGenerator.getPrice() },
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
@@ -379,24 +372,18 @@ private fun PreviewNoCount() {
 @Composable
 private fun PreviewInfoCount() {
     ZarinaPreview {
-        Box(
-            modifier = Modifier
-                .background(Color.White)
-                .padding(16.dp),
-        ) {
-            ProductOrderCard(
-                name = "Плащ с поясом",
-                imageUrl = remember { Url.EMPTY },
-                size = "M",
-                sizeRu = "48",
-                height = "170",
-                color = remember { FakeDataGenerator.getProductColor() },
-                count = 3,
-                countStyle = ProductOrderCardCountStyle.Info,
-                price = remember { FakeDataGenerator.getPrice() },
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+        ProductOrderCard(
+            name = "Плащ с поясом",
+            imageUrl = remember { Url.EMPTY },
+            size = "M",
+            sizeRu = "48",
+            height = "170",
+            color = remember { FakeDataGenerator.getProductColor() },
+            count = 3,
+            countStyle = ProductOrderCardCountStyle.Info,
+            price = remember { FakeDataGenerator.getPrice() },
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
@@ -406,24 +393,18 @@ private fun PreviewInfoCount() {
 @Composable
 private fun PreviewSelectorCount() {
     ZarinaPreview {
-        Box(
-            modifier = Modifier
-                .background(Color.White)
-                .padding(16.dp),
-        ) {
-            ProductOrderCard(
-                name = "Плащ с поясом",
-                imageUrl = remember { Url.EMPTY },
-                size = "M",
-                sizeRu = "48",
-                height = "170",
-                color = remember { FakeDataGenerator.getProductColor() },
-                count = 3,
-                countStyle = remember { ProductOrderCardCountStyle.Selector(onClick = {}) },
-                price = remember { FakeDataGenerator.getPrice() },
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+        ProductOrderCard(
+            name = "Плащ с поясом",
+            imageUrl = remember { Url.EMPTY },
+            size = "M",
+            sizeRu = "48",
+            height = "170",
+            color = remember { FakeDataGenerator.getProductColor() },
+            count = 3,
+            countStyle = remember { ProductOrderCardCountStyle.Selector(onClick = {}) },
+            price = remember { FakeDataGenerator.getPrice() },
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
@@ -431,13 +412,11 @@ private fun PreviewSelectorCount() {
 @Composable
 private fun PreviewSkeleton() {
     ZarinaPreview {
-        Box(
+        ProductOrderCardSkeleton(
             modifier = Modifier
                 .background(Color.White)
-                .padding(16.dp),
-        ) {
-            ProductOrderCardSkeleton(modifier = Modifier.fillMaxWidth())
-        }
+                .fillMaxWidth(),
+        )
     }
 }
 
@@ -457,7 +436,8 @@ private val BackgroundColor: Color
     @Composable
     get() = UiKitTheme.colors.background.general.regular.default
 
-private val ContentPadding: PaddingValues get() = PaddingValues()
+private val ContentPadding: PaddingValues
+    get() = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
 
 private val ImageHeight: Dp get() = 128.dp
 private const val ImageAspectRatio = 0.72f
