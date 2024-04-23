@@ -56,7 +56,7 @@ recaptcha = "18.5.0-beta02"
 firebase-bom = "32.8.1"
 
 firebase-performance = "1.4.2"
-mindbox = "2.8.6"
+mindbox = "2.9.0"
 
 junit = "4.13.2"
 
