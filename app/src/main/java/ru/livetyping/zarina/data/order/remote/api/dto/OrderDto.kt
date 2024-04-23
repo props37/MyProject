@@ -47,6 +47,9 @@ data class OrderDto(
 
     @SerialName("contact_info")
     val contactInfo: ContactInfo? = null,
+
+    @SerialName("address")
+    val address: String? = null,
 ) {
     fun toOrderDetails(): OrderDetails {
         checkNotNull(id) { "id is null" }
@@ -61,6 +64,7 @@ data class OrderDto(
         checkNotNull(paymentMethod) { "paymentMethod is null" }
         checkNotNull(paymentMethod.method) { "paymentMethod method is null" }
         checkNotNull(contactInfo) { "contactInfo is null" }
+        checkNotNull(address) { "address is null" }
         // TODO: [High] Migrate to separate field when it is available
         val deliveryPrice = deliveryInfo.method.price ?: 0
         val price = OrderPrice(
@@ -79,6 +83,7 @@ data class OrderDto(
             paymentMethod = paymentMethod.method.toOrderPaymentMethod(),
             deliveryInfo = deliveryInfo.toOrderDeliveryInfo(),
             contactInfo = contactInfo.toOrderContactInfo(),
+            address = address,
         )
     }
 
