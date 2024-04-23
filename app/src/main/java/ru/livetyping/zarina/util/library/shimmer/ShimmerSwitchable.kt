@@ -7,4 +7,4 @@ import com.valentinilk.shimmer.shimmer
 fun Modifier.shimmerToggleable(
     shimmer: Shimmer?,
     isEnabled: Boolean = true,
-): Modifier = if (isEnabled) then(shimmer(shimmer)) else this
+): Modifier = if (isEnabled) this.shimmer(shimmer) else this
