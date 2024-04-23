@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.domain.common.Url
@@ -44,11 +45,17 @@ fun SignInScreen(
 ) {
     val signInTypes by viewModel.signInTypes.collectAsStateWithLifecycle()
     val currentSignInType by viewModel.currentSignInType.collectAsStateWithLifecycle()
-    val email by viewModel.email.collectAsStateWithLifecycle()
+    val email by viewModel.email.collectAsStateWithLifecycle(
+        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+    )
     val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
-    val password by viewModel.password.collectAsStateWithLifecycle()
+    val password by viewModel.password.collectAsStateWithLifecycle(
+        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+    )
     val isPasswordInvalid by viewModel.isPasswordInvalid.collectAsStateWithLifecycle()
-    val phone by viewModel.phone.collectAsStateWithLifecycle()
+    val phone by viewModel.phone.collectAsStateWithLifecycle(
+        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+    )
     val isPhoneInvalid by viewModel.isPhoneInvalid.collectAsStateWithLifecycle()
     val isSignInButtonLoading by viewModel.isSignInButtonLoading.collectAsStateWithLifecycle()
 
