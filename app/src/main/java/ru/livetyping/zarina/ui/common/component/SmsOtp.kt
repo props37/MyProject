@@ -72,9 +72,10 @@ fun SmsOtp(
             color = UiKitTheme.colors.text.general.regular.default,
         )
         Spacer(modifier = Modifier.height(8.dp))
-        val formattedPhone = rememberFormattedPhoneNumber(phone)
+        val formattedPhone = rememberFormattedPhoneNumber(phone.value)
+        val phoneString = formattedPhone ?: phone.value
         Text(
-            text = stringResource(R.string.we_sent_sms_code_to_phone_number, formattedPhone),
+            text = stringResource(R.string.we_sent_sms_code_to_phone_number, phoneString),
             style = UiKitTheme.typography.tertiary.regular,
             color = UiKitTheme.colors.text.general.regular.default,
         )
