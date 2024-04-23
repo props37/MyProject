@@ -45,13 +45,15 @@ android {
         versionCode = generatedVersionCode
         versionName = generatedVersionName
 
-        resourceConfigurations.add("ru")
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables {
             useSupportLibrary = true
         }
+    }
+
+    androidResources {
+        generateLocaleConfig = true
     }
 
     signingConfigs {
