@@ -32,6 +32,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderContactInfo
@@ -39,9 +41,11 @@ import ru.livetyping.zarina.domain.order.OrderDeliveryMethod
 import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.order.OrderPaymentMethod
 import ru.livetyping.zarina.ui.common.component.OrderPrice
+import ru.livetyping.zarina.ui.common.component.OrderPriceSkeleton
 import ru.livetyping.zarina.ui.common.component.OrderStatusLabel
 import ru.livetyping.zarina.ui.common.component.ProductOrderCard
 import ru.livetyping.zarina.ui.common.component.ProductOrderCardCountStyle
+import ru.livetyping.zarina.ui.common.component.ProductOrderCardSkeleton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonDefaults
@@ -49,7 +53,9 @@ import ru.livetyping.zarina.ui.common.component.item.ZarinaItem
 import ru.livetyping.zarina.ui.common.component.label.ZarinaLabelSize
 import ru.livetyping.zarina.ui.common.component.pullrefresh.ZarinaPullRefreshIndicator
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
+import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaTextSkeleton
+import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.ui.common.util.domain.nameResId
@@ -93,7 +99,7 @@ object OrderScreenComponents {
                     } else {
                         ZarinaTextSkeleton(
                             textStyle = LocalTextStyle.current,
-                            modifier = Modifier.width(120.dp),
+                            modifier = Modifier.width(96.dp),
                         )
                     }
                 }
@@ -366,7 +372,118 @@ object OrderScreenComponents {
     private fun OrderSkeleton(
         modifier: Modifier = Modifier,
     ) {
-        // TODO: [High] Implement
+        val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
+        LazyColumn(modifier = modifier) {
+            item {
+                ZarinaItem(modifier = Modifier.heightIn(min = 40.dp)) {
+                    ZarinaTextSkeleton(
+                        textStyle = UiKitTheme.typography.footnote.bold,
+                        shimmer = shimmer,
+                        modifier = Modifier.fillMaxWidth(fraction = 0.08f),
+                    )
+                }
+            }
+
+            item {
+                ZarinaItem(
+                    startContent = {
+                        ZarinaTextSkeleton(
+                            textStyle = UiKitTheme.typography.secondary.bold,
+                            shimmer = shimmer,
+                            modifier = Modifier.fillMaxWidth(fraction = 0.2f),
+                        )
+                    },
+                    endContent = {
+                        ZarinaTextSkeleton(
+                            textStyle = UiKitTheme.typography.secondary.light,
+                            shimmer = shimmer,
+                            modifier = Modifier.fillMaxWidth(fraction = 0.16f),
+                        )
+                    },
+                    modifier = Modifier.heightIn(min = 40.dp),
+                )
+            }
+
+            items(OrderSkeletonProductCount) { index ->
+                ProductOrderCardSkeleton(
+                    shimmer = shimmer,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                if (index < OrderSkeletonProductCount - 1) {
+                    Divider(
+                        color = UiKitTheme.colors.background.skeleton,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                    )
+                }
+            }
+
+            item {
+                OrderPriceSkeleton(
+                    shimmer = shimmer,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            item {
+                OrderInfoSkeleton(shimmer = shimmer)
+            }
+
+            item {
+                ZarinaSkeleton(
+                    shimmer = shimmer,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .height(56.dp),
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun OrderInfoSkeleton(
+        shimmer: Shimmer,
+        modifier: Modifier = Modifier,
+        contentPadding: PaddingValues = OrderInfoContentPadding,
+    ) {
+        Column(modifier = modifier.padding(contentPadding)) {
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.secondary.bold,
+                shimmer = shimmer,
+                modifier = Modifier.fillMaxWidth(fraction = 0.2f),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OrderInfoItemSkeleton(shimmer = shimmer)
+            Spacer(modifier = Modifier.height(12.dp))
+            OrderInfoItemSkeleton(shimmer = shimmer)
+            Spacer(modifier = Modifier.height(12.dp))
+            OrderInfoItemSkeleton(shimmer = shimmer)
+            Spacer(modifier = Modifier.height(12.dp))
+            OrderInfoItemSkeleton(shimmer = shimmer)
+        }
+    }
+
+    @Composable
+    private fun OrderInfoItemSkeleton(
+        shimmer: Shimmer,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            ZarinaTextSkeleton(
+                textStyle = OrderInfoNameTextStyle,
+                shimmer = shimmer,
+                modifier = Modifier.fillMaxWidth(fraction = 0.25f),
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            ZarinaTextSkeleton(
+                textStyle = OrderInfoValueTextStyle,
+                shimmer = shimmer,
+                modifier = Modifier.fillMaxWidth(fraction = 0.42f),
+            )
+        }
     }
 
     private const val OrderContentKeyOrder = "OrderContentKeyOrder"
@@ -393,4 +510,6 @@ object OrderScreenComponents {
     private val OrderInfoValueTextStyle: TextStyle
         @Composable
         get() = UiKitTheme.typography.secondary.light
+
+    private const val OrderSkeletonProductCount = 5
 }
