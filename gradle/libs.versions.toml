@@ -13,6 +13,7 @@ kotlin-serialization = "1.6.3"
 kotlin-immutableCollections = "0.3.7"
 
 jetpack-core = "1.13.0"
+jetpack-appcompat = "1.6.1"
 jetpack-lifecycle = "2.7.0"
 jetpack-activity = "1.9.0"
 jetpack-navigation = "2.7.7"
@@ -67,6 +68,7 @@ coreLibraryDesugaring = "2.0.4"
 [libraries]
 # Jetpack
 jetpack-core = { group = "androidx.core", name = "core-ktx", version.ref = "jetpack-core" }
+jetpack-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "jetpack-appcompat" }
 jetpack-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "jetpack-activity" }
 jetpack-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "jetpack-lifecycle" }
 jetpack-lifecycle-viewModel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "jetpack-lifecycle" }

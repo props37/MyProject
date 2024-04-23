@@ -156,6 +156,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 
 dependencies {
     implementation(libs.jetpack.core)
+    implementation(libs.jetpack.appcompat)
     implementation(libs.jetpack.activity.compose)
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
