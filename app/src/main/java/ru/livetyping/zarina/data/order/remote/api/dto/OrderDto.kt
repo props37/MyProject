@@ -48,7 +48,7 @@ data class OrderDto(
             productCount = productCount,
             date = LocalDate.parse(date),
             status = status.toOrderStatus(),
-            totalPrice = totalPrice,
+            price = TODO(), // TODO: [High] Implement
             products = products.map { it.toOrderProduct() },
         )
     }

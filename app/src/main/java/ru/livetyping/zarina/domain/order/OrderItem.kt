@@ -8,7 +8,7 @@ data class OrderItem(
     override val number: Number,
     override val productCount: Int,
     override val date: LocalDate,
-    override val status: Status,
+    override val status: OrderStatus,
     override val totalPrice: Long,
     val products: List<Product>,
 ) : Order(

@@ -11,8 +11,8 @@ data class OrderDetails(
     override val number: Number,
     override val productCount: Int,
     override val date: LocalDate,
-    override val status: Status,
-    override val totalPrice: Long,
+    override val status: OrderStatus,
+    val price: OrderPrice,
     val products: List<Product>,
 ) : Order(
     id = id,
@@ -20,7 +20,7 @@ data class OrderDetails(
     productCount = productCount,
     date = date,
     status = status,
-    totalPrice = totalPrice,
+    totalPrice = price.totalPrice,
 ) {
     data class Product(
         val id: DomainProduct.Id,

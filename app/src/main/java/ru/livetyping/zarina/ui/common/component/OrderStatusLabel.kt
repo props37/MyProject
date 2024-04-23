@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import ru.livetyping.zarina.domain.order.Order
+import ru.livetyping.zarina.domain.order.OrderStatus
 import ru.livetyping.zarina.ui.common.component.label.ZarinaLabel
 import ru.livetyping.zarina.ui.common.component.label.ZarinaLabelDefaults
 import ru.livetyping.zarina.ui.common.component.label.ZarinaLabelSize
@@ -14,7 +14,7 @@ import ru.livetyping.zarina.ui.common.util.domain.nameResId
 
 @Composable
 fun OrderStatusLabel(
-    status: Order.Status,
+    status: OrderStatus,
     modifier: Modifier = Modifier,
     size: ZarinaLabelSize = ZarinaLabelSize.Large,
 ) {

@@ -10,6 +10,7 @@ import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderItem
+import ru.livetyping.zarina.domain.order.OrderStatus
 import ru.livetyping.zarina.domain.product.Price
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
@@ -25,7 +26,7 @@ object FakeDataGenerator {
         number: Order.Number = Order.Number(Random.nextLong(from = 123456, until = 987654).toString()),
         productCount: Int = Random.nextInt(from = 1, until = 10),
         date: LocalDate = getLocalDate(),
-        status: Order.Status = Order.Status.entries.random(),
+        status: OrderStatus = OrderStatus.entries.random(),
         totalPrice: Long = 7999,
         products: List<OrderItem.Product> = List(productCount) { getOrderItemProduct() },
     ): OrderItem = OrderItem(

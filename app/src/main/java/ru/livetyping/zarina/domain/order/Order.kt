@@ -7,7 +7,7 @@ sealed class Order(
     open val number: Number,
     open val productCount: Int,
     open val date: LocalDate,
-    open val status: Status,
+    open val status: OrderStatus,
     open val totalPrice: Long,
 ) {
     @JvmInline
@@ -15,18 +15,4 @@ sealed class Order(
 
     @JvmInline
     value class Number(val value: String)
-
-    enum class Status {
-        OPENED,
-        APPROVED,
-        PAID,
-        IN_TRANSIT,
-        DELIVERED,
-        READY_FOR_PICKUP,
-        CANCELLED,
-        REFUNDING,
-        APPROVED_TO_REFUND,
-        REFUNDED,
-        NOT_REFUNDABLE,
-    }
 }
