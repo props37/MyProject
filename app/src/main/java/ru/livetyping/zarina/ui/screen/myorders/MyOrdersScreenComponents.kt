@@ -200,7 +200,7 @@ object MyOrdersScreenComponents {
         }
     }
 
-    private const val OrderListSkeletonItemCount = 20
+    private const val OrderListSkeletonItemCount = 12
 
     private const val OrderListContentTypeOrderCard = "OrderListContentTypeOrderCard"
 }

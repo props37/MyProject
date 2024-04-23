@@ -167,6 +167,11 @@
     <string name="items_short">%1$s шт</string>
     <string name="order_price">Сумма заказа</string>
     <string name="total">Итого</string>
+    <string name="info_about_order">Информация о заказе</string>
+    <string name="delivery_method">Способ доставки</string>
+    <string name="delivery_address">Адрес доставки</string>
+    <string name="recipient">Получатель</string>
+    <string name="payment">Оплата</string>
 
     <string name="order_status_accepted">Принят</string>
     <string name="order_status_confirmed">Подтверждён</string>

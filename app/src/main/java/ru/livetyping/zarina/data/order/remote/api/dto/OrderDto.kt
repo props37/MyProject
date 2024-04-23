@@ -83,7 +83,7 @@ data class OrderDto(
             paymentMethod = paymentMethod.method.toOrderPaymentMethod(),
             deliveryInfo = deliveryInfo.toOrderDeliveryInfo(),
             contactInfo = contactInfo.toOrderContactInfo(),
-            address = address,
+            deliveryAddress = address,
         )
     }
 
