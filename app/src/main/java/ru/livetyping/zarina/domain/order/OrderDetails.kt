@@ -16,6 +16,7 @@ data class OrderDetails(
     val price: OrderPrice,
     val paymentMethod: OrderPaymentMethod,
     val deliveryInfo: OrderDeliveryInfo,
+    val contactInfo: OrderContactInfo,
 ) : Order(
     id = id,
     number = number,

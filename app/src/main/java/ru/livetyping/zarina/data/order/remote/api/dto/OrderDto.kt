@@ -2,8 +2,11 @@ package ru.livetyping.zarina.data.order.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.domain.common.Email
+import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.order.Order
+import ru.livetyping.zarina.domain.order.OrderContactInfo
 import ru.livetyping.zarina.domain.order.OrderDeliveryInfo
 import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.order.OrderPrice
@@ -41,6 +44,9 @@ data class OrderDto(
 
     @SerialName("payment_method")
     val paymentMethod: PaymentMethod? = null,
+
+    @SerialName("contact_info")
+    val contactInfo: ContactInfo? = null,
 ) {
     fun toOrderDetails(): OrderDetails {
         checkNotNull(id) { "id is null" }
@@ -54,6 +60,7 @@ data class OrderDto(
         checkNotNull(deliveryInfo.method) { "deliveryInfo method is null" }
         checkNotNull(paymentMethod) { "paymentMethod is null" }
         checkNotNull(paymentMethod.method) { "paymentMethod method is null" }
+        checkNotNull(contactInfo) { "contactInfo is null" }
         // TODO: [High] Migrate to separate field when it is available
         val deliveryPrice = deliveryInfo.method.price ?: 0
         val price = OrderPrice(
@@ -71,6 +78,7 @@ data class OrderDto(
             price = price,
             paymentMethod = paymentMethod.method.toOrderPaymentMethod(),
             deliveryInfo = deliveryInfo.toOrderDeliveryInfo(),
+            contactInfo = contactInfo.toOrderContactInfo(),
         )
     }
 
@@ -167,4 +175,30 @@ data class OrderDto(
         @SerialName("code")
         val method: OrderPaymentMethodDto? = null,
     )
+
+    @Serializable
+    data class ContactInfo(
+        @SerialName("first_name")
+        val firstName: String? = null,
+
+        @SerialName("last_name")
+        val lastName: String? = null,
+
+        @SerialName("email")
+        val email: String? = null,
+
+        @SerialName("phone")
+        val phone: String? = null,
+    ) {
+        fun toOrderContactInfo(): OrderContactInfo {
+            checkNotNull(firstName) { "firstName is null" }
+            checkNotNull(email) { "email is null" }
+            return OrderContactInfo(
+                firstName = firstName,
+                lastName = lastName,
+                email = Email.create(email),
+                phone = phone?.let { PhoneNumber.create(it) },
+            )
+        }
+    }
 }
