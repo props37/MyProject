@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderDetails
+import ru.livetyping.zarina.domain.order.OrderPrice
 import ru.livetyping.zarina.domain.product.Price
 import ru.livetyping.zarina.domain.product.ProductColor
 import java.time.LocalDate
@@ -33,6 +34,9 @@ data class OrderDto(
 
     @SerialName("products")
     val products: List<Product>? = null,
+
+    @SerialName("shipping")
+    val shippingInfo: ShippingInfo? = null,
 ) {
     fun toOrderDetails(): OrderDetails {
         checkNotNull(id) { "id is null" }
@@ -42,13 +46,22 @@ data class OrderDto(
         checkNotNull(status) { "status is null" }
         checkNotNull(totalPrice) { "totalPrice is null" }
         checkNotNull(products) { "products is null" }
+        checkNotNull(shippingInfo) { "shippingInfo is null" }
+        checkNotNull(shippingInfo.method) { "method is null" }
+        // TODO: [High] Migrate to separate field when it is available
+        val deliveryPrice = shippingInfo.method.price ?: 0
+        val price = OrderPrice(
+            orderPrice = totalPrice - deliveryPrice,
+            deliveryPrice = deliveryPrice,
+            totalPrice = totalPrice,
+        )
         return OrderDetails(
             id = Order.Id(id),
             number = Order.Number(number),
             productCount = productCount,
             date = LocalDate.parse(date),
             status = status.toOrderStatus(),
-            price = TODO(), // TODO: [High] Implement
+            price = price,
             products = products.map { it.toOrderProduct() },
         )
     }
@@ -115,6 +128,18 @@ data class OrderDto(
 
             @SerialName("code")
             val code: String? = null,
+        )
+    }
+
+    @Serializable
+    data class ShippingInfo(
+        @SerialName("shipping_method")
+        val method: Method? = null,
+    ) {
+        @Serializable
+        data class Method(
+            @SerialName("price")
+            val price: Long? = null,
         )
     }
 }
