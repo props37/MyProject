@@ -177,6 +177,18 @@
     <string name="order_status_refund">Возврат</string>
     <string name="order_status_not_refundable">Не подлежит возврату</string>
 
+    <string name="order_delivery_method_express_delivery">Курьерская доставка</string>
+    <string name="order_delivery_method_post">Почта России</string>
+    <string name="order_delivery_method_pick_up_point">Пункт самовывоза</string>
+    <string name="order_delivery_method_pick_up_from_shop">Забрать из магазина</string>
+    <string name="order_delivery_method_yandex_express">Яндекс Экспресс</string>
+
+    <string name="order_payment_method_upon_receipt">При получении</string>
+    <string name="order_payment_method_by_card_online">Картой онлайн</string>
+    <string name="order_payment_method_sbp">СБП</string>
+    <string name="order_payment_method_podeli">Подели</string>
+    <string name="order_payment_method_gift_certificate">Подарочный сертификат</string>
+
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
     <string name="onboarding_city_selection_title">Определяем твой город</string>

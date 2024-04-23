@@ -12,8 +12,10 @@ data class OrderDetails(
     override val productCount: Int,
     override val date: LocalDate,
     override val status: OrderStatus,
-    val price: OrderPrice,
     val products: List<Product>,
+    val price: OrderPrice,
+    val paymentMethod: OrderPaymentMethod,
+    val deliveryInfo: OrderDeliveryInfo,
 ) : Order(
     id = id,
     number = number,

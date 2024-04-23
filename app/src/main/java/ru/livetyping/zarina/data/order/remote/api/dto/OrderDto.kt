@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.order.Order
+import ru.livetyping.zarina.domain.order.OrderDeliveryInfo
 import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.order.OrderPrice
 import ru.livetyping.zarina.domain.product.Price
@@ -36,7 +37,10 @@ data class OrderDto(
     val products: List<Product>? = null,
 
     @SerialName("shipping")
-    val shippingInfo: ShippingInfo? = null,
+    val deliveryInfo: DeliveryInfo? = null,
+
+    @SerialName("payment_method")
+    val paymentMethod: PaymentMethod? = null,
 ) {
     fun toOrderDetails(): OrderDetails {
         checkNotNull(id) { "id is null" }
@@ -46,10 +50,12 @@ data class OrderDto(
         checkNotNull(status) { "status is null" }
         checkNotNull(totalPrice) { "totalPrice is null" }
         checkNotNull(products) { "products is null" }
-        checkNotNull(shippingInfo) { "shippingInfo is null" }
-        checkNotNull(shippingInfo.method) { "method is null" }
+        checkNotNull(deliveryInfo) { "deliveryInfo is null" }
+        checkNotNull(deliveryInfo.method) { "deliveryInfo method is null" }
+        checkNotNull(paymentMethod) { "paymentMethod is null" }
+        checkNotNull(paymentMethod.method) { "paymentMethod method is null" }
         // TODO: [High] Migrate to separate field when it is available
-        val deliveryPrice = shippingInfo.method.price ?: 0
+        val deliveryPrice = deliveryInfo.method.price ?: 0
         val price = OrderPrice(
             orderPrice = totalPrice - deliveryPrice,
             deliveryPrice = deliveryPrice,
@@ -61,8 +67,10 @@ data class OrderDto(
             productCount = productCount,
             date = LocalDate.parse(date),
             status = status.toOrderStatus(),
-            price = price,
             products = products.map { it.toOrderProduct() },
+            price = price,
+            paymentMethod = paymentMethod.method.toOrderPaymentMethod(),
+            deliveryInfo = deliveryInfo.toOrderDeliveryInfo(),
         )
     }
 
@@ -132,14 +140,31 @@ data class OrderDto(
     }
 
     @Serializable
-    data class ShippingInfo(
+    data class DeliveryInfo(
         @SerialName("shipping_method")
         val method: Method? = null,
     ) {
+        fun toOrderDeliveryInfo(): OrderDeliveryInfo {
+            checkNotNull(method) { "method is null" }
+            checkNotNull(method.method) { "method is null" }
+            return OrderDeliveryInfo(
+                method = method.method.toOrderDeliveryMethod(),
+            )
+        }
+
         @Serializable
         data class Method(
+            @SerialName("type")
+            val method: OrderDeliveryMethodDto? = null,
+
             @SerialName("price")
             val price: Long? = null,
         )
     }
+
+    @Serializable
+    data class PaymentMethod(
+        @SerialName("code")
+        val method: OrderPaymentMethodDto? = null,
+    )
 }
