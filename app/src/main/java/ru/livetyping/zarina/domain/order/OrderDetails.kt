@@ -18,6 +18,7 @@ data class OrderDetails(
     val deliveryInfo: OrderDeliveryInfo,
     val contactInfo: OrderContactInfo,
     val deliveryAddress: String,
+    val isCancellable: Boolean,
 ) : Order(
     id = id,
     number = number,

@@ -116,6 +116,10 @@ class OrderViewModel @Inject constructor(
         orderFetchingInfoHolder.requestFetching(OrderFetchingType.LOADING)
     }
 
+    fun onCancelOrderClicked() {
+        // TODO: [High] Implement
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: OrderScreenAction) : SideEffect
     }

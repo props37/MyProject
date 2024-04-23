@@ -35,6 +35,7 @@ fun OrderScreen(
 
     ScreenContent(
         orderState = orderState,
+        onCancelOrderClicked = viewModel::onCancelOrderClicked,
         isRefreshing = isRefreshing,
         onPullRefreshTriggered = viewModel::onRefreshTriggered,
         onOrderErrorRefreshClicked = viewModel::onOrderErrorRefreshClicked,
@@ -47,6 +48,7 @@ fun OrderScreen(
 @Composable
 private fun ScreenContent(
     orderState: OrderState,
+    onCancelOrderClicked: () -> Unit,
     isRefreshing: Boolean,
     onPullRefreshTriggered: () -> Unit,
     onOrderErrorRefreshClicked: () -> Unit,
@@ -76,6 +78,7 @@ private fun ScreenContent(
 
         Order(
             orderState = orderState,
+            onCancelOrderClicked = onCancelOrderClicked,
             isRefreshing = isRefreshing,
             onPullRefreshTriggered = onPullRefreshTriggered,
             onOrderErrorRefreshClicked = onOrderErrorRefreshClicked,

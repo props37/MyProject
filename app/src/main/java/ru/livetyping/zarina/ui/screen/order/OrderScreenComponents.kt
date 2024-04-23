@@ -43,6 +43,8 @@ import ru.livetyping.zarina.ui.common.component.OrderStatusLabel
 import ru.livetyping.zarina.ui.common.component.ProductOrderCard
 import ru.livetyping.zarina.ui.common.component.ProductOrderCardCountStyle
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
+import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.ui.common.component.item.ZarinaItem
 import ru.livetyping.zarina.ui.common.component.label.ZarinaLabelSize
 import ru.livetyping.zarina.ui.common.component.pullrefresh.ZarinaPullRefreshIndicator
@@ -105,6 +107,7 @@ object OrderScreenComponents {
     @Composable
     fun Order(
         orderState: OrderState,
+        onCancelOrderClicked: () -> Unit,
         isRefreshing: Boolean,
         onPullRefreshTriggered: () -> Unit,
         onOrderErrorRefreshClicked: () -> Unit,
@@ -138,6 +141,7 @@ object OrderScreenComponents {
                     is OrderState.Order -> {
                         OrderImpl(
                             order = state.order,
+                            onCancelOrderClicked = onCancelOrderClicked,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
@@ -164,6 +168,7 @@ object OrderScreenComponents {
     @Composable
     private fun OrderImpl(
         order: OrderDetails,
+        onCancelOrderClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         LazyColumn(modifier = modifier) {
@@ -236,7 +241,22 @@ object OrderScreenComponents {
                 )
             }
 
-            // TODO: [High] Add Cancel button
+            if (order.isCancellable) {
+                item(
+                    key = OrderListKeyCancelButton,
+                    contentType = OrderListContentTypeCancelButton,
+                ) {
+                    ZarinaButton(
+                        onClick = onCancelOrderClicked,
+                        colors = ZarinaButtonDefaults.backlessErrorColors(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                    ) {
+                        Text(text = stringResource(R.string.cancel_order).uppercase())
+                    }
+                }
+            }
         }
     }
 
@@ -355,12 +375,14 @@ object OrderScreenComponents {
     private const val OrderListKeyContents = "OrderListKeyContents"
     private const val OrderListKeyPrice = "OrderListKeyPrice"
     private const val OrderListKeyInfo = "OrderListKeyInfo"
+    private const val OrderListKeyCancelButton = "OrderListKeyCancelButton"
 
     private const val OrderListContentTypeStatus = "OrderListContentTypeStatus"
     private const val OrderListContentTypeContents = "OrderListContentTypeContents"
     private const val OrderListContentTypeProduct = "OrderListContentTypeProduct"
     private const val OrderListContentTypePrice = "OrderListContentTypePrice"
     private const val OrderListContentTypeInfo = "OrderListContentTypeInfo"
+    private const val OrderListContentTypeCancelButton = "OrderListContentTypeCancelButton"
 
     private val OrderInfoContentPadding: PaddingValues get() = PaddingValues(16.dp)
 

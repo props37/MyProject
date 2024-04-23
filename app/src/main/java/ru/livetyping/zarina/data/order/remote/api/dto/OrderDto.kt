@@ -50,6 +50,9 @@ data class OrderDto(
 
     @SerialName("address")
     val address: String? = null,
+    
+    @SerialName("is_cancelable")
+    val isCancelable: Boolean? = null,
 ) {
     fun toOrderDetails(): OrderDetails {
         checkNotNull(id) { "id is null" }
@@ -84,6 +87,7 @@ data class OrderDto(
             deliveryInfo = deliveryInfo.toOrderDeliveryInfo(),
             contactInfo = contactInfo.toOrderContactInfo(),
             deliveryAddress = address,
+            isCancellable = isCancelable ?: false,
         )
     }
 
