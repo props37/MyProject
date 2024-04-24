@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import ru.livetyping.zarina.R
@@ -128,7 +129,9 @@ object OrderScreenComponents {
             ZarinaPullRefreshIndicator(
                 refreshing = isRefreshing,
                 state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter),
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .zIndex(1f),
             )
 
             Crossfade(
@@ -139,16 +142,16 @@ object OrderScreenComponents {
                         is OrderState.Error, OrderState.Loading -> it
                     }
                 },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .pullRefresh(pullRefreshState),
+                modifier = Modifier.fillMaxSize(),
             ) { state ->
                 when (state) {
                     is OrderState.Order -> {
                         OrderImpl(
                             order = state.order,
                             onCancelOrderClicked = onCancelOrderClicked,
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .pullRefresh(pullRefreshState),
                         )
                     }
 
