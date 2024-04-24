@@ -3,7 +3,6 @@ package ru.livetyping.zarina.ui.common.component.button
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -59,7 +58,7 @@ fun ZarinaButton(
     shape: Shape = ZarinaButtonDefaults.Shape,
     contentPadding: PaddingValues = ZarinaButtonDefaults.contentPaddingFromSize(size),
     textStyle: TextStyle = ZarinaButtonDefaults.textStyleFromSize(size),
-    indication: Indication? = LocalIndication.current,
+    isIndicationEnabled: Boolean = true,
     useProvidedRippleTheme: Boolean = false,
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -117,7 +116,7 @@ fun ZarinaButton(
                 .border(width = 1.dp, color = borderColor.value, shape = shape)
                 .clickable(
                     interactionSource = interactionSource,
-                    indication = indication,
+                    indication = if (isIndicationEnabled) LocalIndication.current else null,
                     enabled = isEnabled,
                     role = Role.Button,
                     onClick = onClick,
@@ -136,7 +135,10 @@ fun ZarinaButton(
                     if (!isLoading) {
                         content()
                     } else {
-                        ZarinaCircularLoader(modifier = Modifier.size(24.dp))
+                        ZarinaCircularLoader(
+                            color = contentColor.value,
+                            modifier = Modifier.size(24.dp),
+                        )
                     }
                 }
             }
@@ -147,9 +149,9 @@ fun ZarinaButton(
 data class ZarinaButtonColors(
     val backgroundColor: Color,
     val contentColor: Color,
+    val borderColor: Color,
     val disabledBackgroundColor: Color,
     val disabledContentColor: Color,
-    val borderColor: Color,
     val disabledBorderColor: Color,
 )
 
@@ -252,6 +254,40 @@ object ZarinaButtonDefaults {
         contentColor: Color = UiKitTheme.colors.text.button.backless.default,
         disabledBackgroundColor: Color = Color.Unspecified,
         disabledContentColor: Color = UiKitTheme.colors.text.button.backless.disabled,
+        borderColor: Color = Color.Unspecified,
+        disabledBorderColor: Color = Color.Unspecified,
+    ): ZarinaButtonColors = ZarinaButtonColors(
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        disabledBackgroundColor = disabledBackgroundColor,
+        disabledContentColor = disabledContentColor,
+        borderColor = borderColor,
+        disabledBorderColor = disabledBorderColor,
+    )
+
+    @Composable
+    fun outlineErrorColors(
+        backgroundColor: Color = UiKitTheme.colors.background.button.outline.default,
+        contentColor: Color = UiKitTheme.colors.text.button.error.default,
+        disabledBackgroundColor: Color = UiKitTheme.colors.background.button.outline.disabled,
+        disabledContentColor: Color = UiKitTheme.colors.text.button.error.disabled,
+        borderColor: Color = UiKitTheme.colors.text.button.error.default,
+        disabledBorderColor: Color = UiKitTheme.colors.text.button.error.disabled,
+    ): ZarinaButtonColors = ZarinaButtonColors(
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        disabledBackgroundColor = disabledBackgroundColor,
+        disabledContentColor = disabledContentColor,
+        borderColor = borderColor,
+        disabledBorderColor = disabledBorderColor,
+    )
+
+    @Composable
+    fun backlessErrorColors(
+        backgroundColor: Color = Color.Unspecified,
+        contentColor: Color = UiKitTheme.colors.text.button.error.default,
+        disabledBackgroundColor: Color = Color.Unspecified,
+        disabledContentColor: Color = UiKitTheme.colors.text.button.error.disabled,
         borderColor: Color = Color.Unspecified,
         disabledBorderColor: Color = Color.Unspecified,
     ): ZarinaButtonColors = ZarinaButtonColors(

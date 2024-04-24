@@ -7,6 +7,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.R
@@ -25,7 +26,9 @@ fun SignUpOtpScreen(
     viewModel: SignUpOtpViewModel = hiltViewModel(),
 ) {
     val phone by viewModel.phone.collectAsStateWithLifecycle()
-    val otp by viewModel.otp.collectAsStateWithLifecycle()
+    val otp by viewModel.otp.collectAsStateWithLifecycle(
+        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+    )
     val isOtpLoading by viewModel.isOtpLoading.collectAsStateWithLifecycle()
     val isOtpInvalid by viewModel.isOtpInvalid.collectAsStateWithLifecycle()
     val otpResendState by viewModel.otpResendState.collectAsStateWithLifecycle()

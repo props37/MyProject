@@ -72,7 +72,7 @@ class FavoritesViewModel @AssistedInject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val productPagingDataFlow: Flow<PagingData<Product>> = favoriteProductFetchRequests.receiveAsFlow()
         .flatMapLatest {
-            interactor.getFavoriteProductPagingDataFlow()
+            interactor.favoriteProductPager.getFavoriteProductPagingDataFlow()
         }
         .cachedIn(viewModelScope)
         .mapProducts(

@@ -18,8 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,9 +60,17 @@ fun ZarinaPhoneNumberTextField(
     cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
     backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
 ) {
+    var selection by remember { mutableStateOf(TextRange(phoneNumber.length)) }
+    val textFieldValue by remember(phoneNumber, selection) {
+        mutableStateOf(TextFieldValue(phoneNumber, selection))
+    }
+
     ZarinaTextField(
-        value = phoneNumber,
-        onValueChanged = onPhoneNumberChanged,
+        textFieldValue = textFieldValue,
+        onValueChanged = {
+            onPhoneNumberChanged(it.text)
+            selection = it.selection
+        },
         isEnabled = isEnabled,
         isError = isError,
         isReadOnly = isReadOnly,

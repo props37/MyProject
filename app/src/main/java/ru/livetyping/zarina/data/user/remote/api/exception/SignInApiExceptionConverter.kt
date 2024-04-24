@@ -24,8 +24,11 @@ class SignInApiExceptionConverter @Inject constructor(
 
     private fun handleJsonObject(element: JsonObject, originalException: Exception): Nothing {
         val message = element["message"]
-        if (message is JsonPrimitive && message.content == MESSAGE_INVALID_CODE) {
-            throw UserNotFoundException()
+        if (message is JsonPrimitive) {
+            when (message.content) {
+                MESSAGE_INVALID_CODE, MESSAGE_USER_NOT_FOUND -> throw UserNotFoundException()
+                else -> throw originalException
+            }
         } else {
             throw originalException
         }
@@ -33,5 +36,6 @@ class SignInApiExceptionConverter @Inject constructor(
 
     companion object {
         private const val MESSAGE_INVALID_CODE = "Неверный email или пароль"
+        private const val MESSAGE_USER_NOT_FOUND = "Пользователь с таким номером телефона не зарегистрирован"
     }
 }

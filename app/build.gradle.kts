@@ -45,13 +45,15 @@ android {
         versionCode = generatedVersionCode
         versionName = generatedVersionName
 
-        resourceConfigurations.add("ru")
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables {
             useSupportLibrary = true
         }
+    }
+
+    androidResources {
+        generateLocaleConfig = true
     }
 
     signingConfigs {
@@ -154,6 +156,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 
 dependencies {
     implementation(libs.jetpack.core)
+    implementation(libs.jetpack.appcompat)
     implementation(libs.jetpack.activity.compose)
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
@@ -212,6 +215,7 @@ dependencies {
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
     implementation(libs.firebase.performance)
 
     implementation(libs.mindbox)

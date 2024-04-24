@@ -2,6 +2,7 @@ package ru.livetyping.zarina.ui.screen.productsubscription
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -31,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.R
@@ -59,9 +61,13 @@ fun ProductSubscriptionScreen(
 ) {
     val product by viewModel.product.collectAsStateWithLifecycle()
     val productOffer by viewModel.productOffer.collectAsStateWithLifecycle()
-    val firstName by viewModel.firstName.collectAsStateWithLifecycle()
+    val firstName by viewModel.firstName.collectAsStateWithLifecycle(
+        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+    )
     val isFirstNameInvalid by viewModel.isFirstNameInvalid.collectAsStateWithLifecycle()
-    val email by viewModel.email.collectAsStateWithLifecycle()
+    val email by viewModel.email.collectAsStateWithLifecycle(
+        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+    )
     val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
     val arePoliciesAccepted by viewModel.arePoliciesAccepted.collectAsStateWithLifecycle()
     val isPoliciesErrorVisible by viewModel.isPoliciesErrorVisible.collectAsStateWithLifecycle()
@@ -140,9 +146,8 @@ private fun ScreenContent(
                 color = remember(product) { product.colors.find { it.productId == product.id } },
                 price = product.price,
                 showOriginalPrice = false,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                modifier = Modifier.fillMaxWidth(),
             )
             Spacer(modifier = Modifier.height(36.dp))
 

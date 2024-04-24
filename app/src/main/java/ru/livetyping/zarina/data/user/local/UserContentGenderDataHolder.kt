@@ -29,6 +29,12 @@ class UserContentGenderDataHolder @Inject constructor(
         }
     }
 
+    suspend fun clear() {
+        preferencesDataStore.edit { data ->
+            data.remove(KEY_USER_CONTENT_GENDER)
+        }
+    }
+
     companion object {
         private val KEY_USER_CONTENT_GENDER = stringPreferencesKey("user_content_gender")
     }

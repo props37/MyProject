@@ -151,6 +151,58 @@
     <string name="we_will_send_link_to_reset_password_to_specified_email">Мы отправим ссылку для восстановления пароля на указанный адрес</string>
     <string name="send">Отправить</string>
     <string name="user_with_this_email_not_found">Пользователь с таким адресом электронной почты не найден</string>
+    <string name="number_symbol">№ %1$s</string>
+    <string name="order_from">Заказ от %1$s</string>
+    <string name="account_details">Данные аккаунта</string>
+    <string name="sign_out">Выйти из аккаунта</string>
+    <string name="delete_account">Удалить аккаунт</string>
+    <string name="sign_out_question">Выйти из аккаунта?</string>
+    <string name="stay">Остаться</string>
+    <string name="go_out">Выйти</string>
+    <string name="sign_out_error">Не удалось выйти из аккаунта</string>
+    <string name="delete_account_question">Удалить аккаунт?</string>
+    <string name="keep">Оставить</string>
+    <string name="account_deletion_error">Не удалось удалить аккаунт</string>
+    <string name="user_with_this_phone_number_not_found_error">Пользователя с таким номером телефона у нас нет. Повтори попытку</string>
+    <string name="no_orders_yet">Заказов пока что нет</string>
+    <string name="repeat">Повторить</string>
+    <string name="loading_error">Ошибка загрузки</string>
+    <string name="order_number">Заказ №%1$s</string>
+    <string name="order_contents">Состав заказа</string>
+    <string name="items_short">%1$s шт</string>
+    <string name="order_price">Сумма заказа</string>
+    <string name="total">Итого</string>
+    <string name="info_about_order">Информация о заказе</string>
+    <string name="delivery_method">Способ доставки</string>
+    <string name="delivery_address">Адрес доставки</string>
+    <string name="recipient">Получатель</string>
+    <string name="payment">Оплата</string>
+    <string name="cancel_order">Отменить заказ</string>
+    <string name="cancel_order_question">Отменить заказ?</string>
+    <string name="order_cancellation_consequences">При отмене заказа действие нельзя будет изменить</string>
+    <string name="return_">Вернуться</string>
+    <string name="order_cancellation_error">Не удалось отменить заказ</string>
+
+    <string name="order_status_accepted">Принят</string>
+    <string name="order_status_confirmed">Подтверждён</string>
+    <string name="order_status_on_the_way">В пути</string>
+    <string name="order_status_delivered">Доставлен</string>
+    <string name="order_status_ready_for_pickup">Готов к выдаче</string>
+    <string name="order_status_cancelled">Отменён</string>
+    <string name="order_status_refund">Возврат</string>
+    <string name="order_status_not_refundable">Не подлежит возврату</string>
+
+    <string name="order_delivery_method_express_delivery">Курьерская доставка</string>
+    <string name="order_delivery_method_post">Почта России</string>
+    <string name="order_delivery_method_pick_up_point">Пункт самовывоза</string>
+    <string name="order_delivery_method_pick_up_from_shop">Забрать из магазина</string>
+    <string name="order_delivery_method_yandex_express">Яндекс Экспресс</string>
+
+    <string name="order_payment_method_upon_receipt">При получении</string>
+    <string name="order_payment_method_by_card_online">Картой онлайн</string>
+    <string name="order_payment_method_sbp">СБП</string>
+    <string name="order_payment_method_podeli">Подели</string>
+    <string name="order_payment_method_gift_certificate">Подарочный сертификат</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
     <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
@@ -205,6 +257,12 @@
 
     <string name="password_recovery_password_reset_requested">Мы отправили ссылку для восстановления пароля на твою почту</string>
     <string name="password_recovery_empty_email_error">Напиши адрес электронной почты. Без него нам не удастся отправить ссылку</string>
+    
+    <string name="sign_out_confirmation_body">После выхода из аккаунта ты не сможешь отслеживать статус своих заказов и воспользоваться бонусной картой</string>
+
+    <string name="account_deletion_confirmation_body">Данные, связанные с аккаунтом, нельзя будет восстановить. Также ты не сможешь пользоваться бонусной программой</string>
+
+    <string name="my_orders_no_orders_body">После оформления заказа ты найдёшь здесь информацию о статусе и способе доставки</string>
 
     <plurals name="show_products">
         <item quantity="zero">Показать %1$d товаров</item>
@@ -213,6 +271,15 @@
         <item quantity="few">Показать %1$d товара</item>
         <item quantity="many">Показать %1$d товаров</item>
         <item quantity="other">Показать %1$d товаров</item>
+    </plurals>
+
+    <plurals name="products">
+        <item quantity="zero">%1$d товаров</item>
+        <item quantity="one">%1$d товар</item>
+        <item quantity="two">%1$d товара</item>
+        <item quantity="few">%1$d товара</item>
+        <item quantity="many">%1$d товаров</item>
+        <item quantity="other">%1$d товаров</item>
     </plurals>
 
 </resources>

@@ -24,7 +24,9 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
         exitTransition = {
             when (targetState.destination.route) {
                 SignInGraph.SignIn.routeSchema,
-                SignUpGraph.SignUp.routeSchema -> slideExitTransition()
+                SignUpGraph.SignUp.routeSchema,
+                ProfileGraph.MyOrders.routeSchema,
+                ProfileGraph.ProfileDetails.routeSchema -> slideExitTransition()
 
                 else -> null
             }
@@ -32,8 +34,11 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
         popEnterTransition = {
             when (initialState.destination.route) {
                 SignInGraph.SignIn.routeSchema,
+                SignInGraph.Otp.routeSchema,
                 SignUpGraph.SignUp.routeSchema,
-                SignUpGraph.Otp.routeSchema -> slidePopEnterTransition()
+                SignUpGraph.Otp.routeSchema,
+                ProfileGraph.MyOrders.routeSchema,
+                ProfileGraph.ProfileDetails.routeSchema -> slidePopEnterTransition()
 
                 else -> null
             }
@@ -47,6 +52,10 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
             },
             navigate = { action ->
                 when (action) {
+                    ProfileScreenAction.ProfileDetailsClicked -> {
+                        navController.navigateToProfileDetailsScreen()
+                    }
+
                     ProfileScreenAction.SignInClicked -> navController.navigateToSignInGraph()
                     ProfileScreenAction.SignUpClicked -> navController.navigateToSignUpGraph()
                     is ProfileScreenAction.CityClicked -> {
@@ -55,6 +64,8 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
                             title = Text.Resource(R.string.city_change),
                         )
                     }
+
+                    ProfileScreenAction.MyOrdersClicked -> navController.navigateToMyOrdersScreen()
                 }
             }
         )

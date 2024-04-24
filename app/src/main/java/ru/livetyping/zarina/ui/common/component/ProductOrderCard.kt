@@ -2,7 +2,6 @@ package ru.livetyping.zarina.ui.common.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +43,7 @@ import ru.livetyping.zarina.domain.product.currentPrice
 import ru.livetyping.zarina.ui.common.component.selector.ZarinaButtonSelector
 import ru.livetyping.zarina.ui.common.component.selector.ZarinaButtonSelectorSize
 import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
@@ -68,8 +69,8 @@ fun ProductOrderCard(
     countStyle: ProductOrderCardCountStyle = ProductOrderCardCountStyle.None,
     price: Price? = null,
     showOriginalPrice: Boolean = true,
-    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
-    contentPadding: PaddingValues = PaddingValues(),
+    backgroundColor: Color = BackgroundColor,
+    contentPadding: PaddingValues = ContentPadding,
 ) {
     SideEffect {
         if (count != null) {
@@ -148,7 +149,7 @@ fun ProductOrderCard(
 fun ProductOrderCardSkeleton(
     modifier: Modifier = Modifier,
     shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
-    contentPadding: PaddingValues = PaddingValues(),
+    contentPadding: PaddingValues = ContentPadding,
 ) {
     Row(
         modifier = modifier
@@ -168,25 +169,22 @@ fun ProductOrderCardSkeleton(
         Column(modifier = Modifier.weight(1f)) {
             val height = 10.dp
 
-            ZarinaSkeleton(
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.caption1.regular,
                 shimmer = shimmer,
-                modifier = Modifier
-                    .fillMaxWidth(fraction = 0.5f)
-                    .height(height),
+                modifier = Modifier.fillMaxWidth(fraction = 0.5f),
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            ZarinaSkeleton(
+            Spacer(modifier = Modifier.height(8.dp))
+            ZarinaTextSkeleton(
+                textStyle = InfoTextStyle,
                 shimmer = shimmer,
-                modifier = Modifier
-                    .fillMaxWidth(fraction = 0.7f)
-                    .height(height),
+                modifier = Modifier.fillMaxWidth(fraction = 0.7f),
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            ZarinaSkeleton(
+            Spacer(modifier = Modifier.height(8.dp))
+            ZarinaTextSkeleton(
+                textStyle = InfoTextStyle,
                 shimmer = shimmer,
-                modifier = Modifier
-                    .fillMaxWidth(fraction = 0.35f)
-                    .height(height),
+                modifier = Modifier.fillMaxWidth(fraction = 0.35f),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -194,9 +192,7 @@ fun ProductOrderCardSkeleton(
 
             ZarinaSkeleton(
                 shimmer = shimmer,
-                modifier = Modifier
-                    .width(56.dp)
-                    .height(24.dp),
+                modifier = Modifier.size(width = 56.dp, height = 24.dp),
             )
         }
 
@@ -207,18 +203,16 @@ fun ProductOrderCardSkeleton(
             horizontalAlignment = Alignment.End,
             modifier = Modifier.fillMaxHeight(),
         ) {
-            ZarinaSkeleton(
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.footnote.light,
                 shimmer = shimmer,
-                modifier = Modifier
-                    .width(60.dp)
-                    .height(12.dp),
+                modifier = Modifier.width(60.dp),
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            ZarinaSkeleton(
+            Spacer(modifier = Modifier.height(6.dp))
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.secondary.regular,
                 shimmer = shimmer,
-                modifier = Modifier
-                    .width(48.dp)
-                    .height(14.dp),
+                modifier = Modifier.width(48.dp),
             )
         }
     }
@@ -303,7 +297,7 @@ private fun CountInfoText(
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = count.toString(),
+            text = stringResource(R.string.items_short, count.toString()),
             style = InfoTextStyle,
             color = UiKitTheme.colors.text.general.regular.default,
         )
@@ -335,7 +329,7 @@ private fun Price(
             val textStyle = UiKitTheme.typography.secondary.regular
             val totalOriginalPrice = rememberFormattedPrice(price.originalPrice * count)
             val totalCurrentPrice = rememberFormattedPrice(price.currentPrice * count)
-            if (showOriginalPrice) {
+            if (showOriginalPrice && price.currentPrice != price.originalPrice) {
                 Text(
                     text = stringResource(R.string.price_in_rubles_string, totalOriginalPrice),
                     style = textStyle,
@@ -359,22 +353,16 @@ private fun Price(
 @Composable
 private fun PreviewNoCount() {
     ZarinaPreview {
-        Box(
-            modifier = Modifier
-                .background(Color.White)
-                .padding(16.dp),
-        ) {
-            ProductOrderCard(
-                name = "Плащ с поясом",
-                imageUrl = remember { Url.EMPTY },
-                size = "M",
-                sizeRu = "48",
-                height = "170",
-                color = remember { FakeDataGenerator.getProductColor() },
-                price = remember { FakeDataGenerator.getPrice() },
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+        ProductOrderCard(
+            name = "Плащ с поясом",
+            imageUrl = remember { Url.EMPTY },
+            size = "M",
+            sizeRu = "48",
+            height = "170",
+            color = remember { FakeDataGenerator.getProductColor() },
+            price = remember { FakeDataGenerator.getPrice() },
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
@@ -384,24 +372,18 @@ private fun PreviewNoCount() {
 @Composable
 private fun PreviewInfoCount() {
     ZarinaPreview {
-        Box(
-            modifier = Modifier
-                .background(Color.White)
-                .padding(16.dp),
-        ) {
-            ProductOrderCard(
-                name = "Плащ с поясом",
-                imageUrl = remember { Url.EMPTY },
-                size = "M",
-                sizeRu = "48",
-                height = "170",
-                color = remember { FakeDataGenerator.getProductColor() },
-                count = 3,
-                countStyle = ProductOrderCardCountStyle.Info,
-                price = remember { FakeDataGenerator.getPrice() },
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+        ProductOrderCard(
+            name = "Плащ с поясом",
+            imageUrl = remember { Url.EMPTY },
+            size = "M",
+            sizeRu = "48",
+            height = "170",
+            color = remember { FakeDataGenerator.getProductColor() },
+            count = 3,
+            countStyle = ProductOrderCardCountStyle.Info,
+            price = remember { FakeDataGenerator.getPrice() },
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
@@ -411,24 +393,18 @@ private fun PreviewInfoCount() {
 @Composable
 private fun PreviewSelectorCount() {
     ZarinaPreview {
-        Box(
-            modifier = Modifier
-                .background(Color.White)
-                .padding(16.dp),
-        ) {
-            ProductOrderCard(
-                name = "Плащ с поясом",
-                imageUrl = remember { Url.EMPTY },
-                size = "M",
-                sizeRu = "48",
-                height = "170",
-                color = remember { FakeDataGenerator.getProductColor() },
-                count = 3,
-                countStyle = remember { ProductOrderCardCountStyle.Selector(onClick = {}) },
-                price = remember { FakeDataGenerator.getPrice() },
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+        ProductOrderCard(
+            name = "Плащ с поясом",
+            imageUrl = remember { Url.EMPTY },
+            size = "M",
+            sizeRu = "48",
+            height = "170",
+            color = remember { FakeDataGenerator.getProductColor() },
+            count = 3,
+            countStyle = remember { ProductOrderCardCountStyle.Selector(onClick = {}) },
+            price = remember { FakeDataGenerator.getPrice() },
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
@@ -436,13 +412,11 @@ private fun PreviewSelectorCount() {
 @Composable
 private fun PreviewSkeleton() {
     ZarinaPreview {
-        Box(
+        ProductOrderCardSkeleton(
             modifier = Modifier
                 .background(Color.White)
-                .padding(16.dp),
-        ) {
-            ProductOrderCardSkeleton(modifier = Modifier.fillMaxWidth())
-        }
+                .fillMaxWidth(),
+        )
     }
 }
 
@@ -457,6 +431,13 @@ sealed class ProductOrderCardCountStyle {
         val onClick: () -> Unit,
     ) : ProductOrderCardCountStyle()
 }
+
+private val BackgroundColor: Color
+    @Composable
+    get() = UiKitTheme.colors.background.general.regular.default
+
+private val ContentPadding: PaddingValues
+    get() = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
 
 private val ImageHeight: Dp get() = 128.dp
 private const val ImageAspectRatio = 0.72f

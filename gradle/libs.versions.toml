@@ -12,11 +12,12 @@ kotlin-coroutines = "1.8.0"
 kotlin-serialization = "1.6.3"
 kotlin-immutableCollections = "0.3.7"
 
-jetpack-core = "1.12.0"
+jetpack-core = "1.13.0"
+jetpack-appcompat = "1.6.1"
 jetpack-lifecycle = "2.7.0"
-jetpack-activity = "1.8.2"
+jetpack-activity = "1.9.0"
 jetpack-navigation = "2.7.7"
-jetpack-datastore = "1.0.0"
+jetpack-datastore = "1.1.0"
 jetpack-room = "2.6.1"
 jetpack-splashScreen = "1.0.1"
 jetpack-media3 = "1.3.1"
@@ -28,8 +29,8 @@ jetpack-uiAutomator = "2.3.0"
 jetpack-espresso = "3.5.1"
 jetpack-benchmark = "1.2.3"
 
-jetpack-compose-bom = "2024.04.00"
-jetpack-compose-compiler = "1.5.11"
+jetpack-compose-bom = "2024.04.01"
+jetpack-compose-compiler = "1.5.12"
 
 ktor = "2.3.10"
 
@@ -41,10 +42,10 @@ accompanist = "0.34.0"
 coil = "2.6.0"
 composeShimmer = "1.3.0"
 
-libphonenumber = "8.13.28"
+libphonenumber = "8.13.35"
 
 timber = "5.0.1"
-leakCanary = "2.13"
+leakCanary = "2.14"
 
 googlePlayServices-location = "21.2.0"
 googlePlayServices-maps = "18.2.0"
@@ -55,7 +56,7 @@ recaptcha = "18.5.0-beta02"
 firebase-bom = "32.8.1"
 
 firebase-performance = "1.4.2"
-mindbox = "2.8.6"
+mindbox = "2.9.0"
 
 junit = "4.13.2"
 
@@ -67,6 +68,7 @@ coreLibraryDesugaring = "2.0.4"
 [libraries]
 # Jetpack
 jetpack-core = { group = "androidx.core", name = "core-ktx", version.ref = "jetpack-core" }
+jetpack-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "jetpack-appcompat" }
 jetpack-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "jetpack-activity" }
 jetpack-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "jetpack-lifecycle" }
 jetpack-lifecycle-viewModel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "jetpack-lifecycle" }
@@ -134,6 +136,7 @@ recaptcha = { group = "com.google.android.recaptcha", name = "recaptcha", versio
 
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
 
 mindbox = { group = "cloud.mindbox", name = "mobile-sdk", version.ref = "mindbox" }

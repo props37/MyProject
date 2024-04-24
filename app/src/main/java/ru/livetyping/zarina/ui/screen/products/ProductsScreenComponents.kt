@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,7 +36,7 @@ import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
-import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.component.tag.ZarinaTag
 import ru.livetyping.zarina.ui.common.component.tag.ZarinaTagSkeleton
@@ -79,20 +78,21 @@ object ProductsScreenComponents {
                 label = "TopBar title",
                 modifier = Modifier.weight(1f),
             ) { title ->
+                val textStyle = UiKitTheme.typography.primary.regular
                 if (title != null) {
                     Text(
                         text = title,
-                        style = UiKitTheme.typography.primary.regular,
+                        style = textStyle,
                         color = UiKitTheme.colors.text.general.regular.default,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
                 } else {
-                    ZarinaSkeleton(
+                    ZarinaTextSkeleton(
+                        textStyle = textStyle,
                         modifier = Modifier
                             .wrapContentWidth(align = Alignment.Start)
-                            .fillMaxWidth(fraction = 0.5f)
-                            .height(20.dp),
+                            .fillMaxWidth(fraction = 0.5f),
                     )
                 }
             }

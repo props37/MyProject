@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -24,6 +25,8 @@ import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 
+// TODO: [Medium] Add spacers between contents
+
 @Composable
 fun ZarinaTopBar(
     modifier: Modifier = Modifier,
@@ -36,7 +39,13 @@ fun ZarinaTopBar(
 ) {
     val content = @Composable {
         Box(modifier = Modifier.layoutId(LayoutId.StartContent)) { startContent?.invoke() }
-        Box(modifier = Modifier.layoutId(LayoutId.CenterContent)) { centerContent?.invoke() }
+        Box(modifier = Modifier.layoutId(LayoutId.CenterContent)) {
+            CompositionLocalProvider(
+                LocalTextStyle provides UiKitTheme.typography.primary.regular,
+            ) {
+                centerContent?.invoke()
+            }
+        }
         Box(modifier = Modifier.layoutId(LayoutId.EndContent)) { endContent?.invoke() }
     }
 

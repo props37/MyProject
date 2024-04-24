@@ -234,6 +234,12 @@ class SignInViewModel @Inject constructor(
     private fun onSignInByPhoneFailure(e: Throwable) {
         when (e) {
             is ValidationException -> handleSignInByPhoneValidationException(e)
+            is UserNotFoundException -> {
+                val text = Text.Resource(R.string.user_with_this_phone_number_not_found_error)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+
             is CaptchaException -> {
                 val text = Text.Resource(R.string.something_went_wrong_try_again)
                 val message = ZarinaToastMessage.error(text)

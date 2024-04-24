@@ -19,8 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -66,7 +64,6 @@ object SignInScreenComponents {
             centerContent = {
                 Text(
                     text = stringResource(R.string.sign_in_to_account),
-                    style = UiKitTheme.typography.primary.regular,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -122,7 +119,6 @@ object SignInScreenComponents {
         onForgotPasswordClicked: () -> Unit,
         onSignUpClicked: () -> Unit,
         onUrlClicked: (Url) -> Unit,
-        emailFocusRequester: FocusRequester,
         modifier: Modifier = Modifier,
     ) {
         HorizontalPager(
@@ -145,7 +141,6 @@ object SignInScreenComponents {
                         onForgotPasswordClicked = onForgotPasswordClicked,
                         onSignUpClicked = onSignUpClicked,
                         onUrlClicked = onUrlClicked,
-                        emailFocusRequester = emailFocusRequester,
                     )
                 }
 
@@ -177,7 +172,6 @@ object SignInScreenComponents {
         onForgotPasswordClicked: () -> Unit,
         onSignUpClicked: () -> Unit,
         onUrlClicked: (Url) -> Unit,
-        emailFocusRequester: FocusRequester,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier.verticalScroll(rememberScrollState())) {
@@ -206,8 +200,7 @@ object SignInScreenComponents {
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .focusRequester(emailFocusRequester),
+                    .padding(horizontal = 16.dp),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -232,7 +225,7 @@ object SignInScreenComponents {
                 size = ZarinaButtonSize.Medium,
                 colors = ZarinaButtonDefaults.backlessColors(),
                 contentPadding = PaddingValues(vertical = 8.dp),
-                indication = null,
+                isIndicationEnabled = false,
                 modifier = Modifier.padding(horizontal = 16.dp),
             ) {
                 Text(

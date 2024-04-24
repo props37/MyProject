@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.R
@@ -59,13 +60,21 @@ fun SignUpScreen(
     navigate: (SignUpScreenAction) -> Unit,
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
-    val firstName by viewModel.firstName.collectAsStateWithLifecycle()
+    val firstName by viewModel.firstName.collectAsStateWithLifecycle(
+        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+    )
     val isFirstNameInvalid by viewModel.isFirstNameInvalid.collectAsStateWithLifecycle()
-    val email by viewModel.email.collectAsStateWithLifecycle()
+    val email by viewModel.email.collectAsStateWithLifecycle(
+        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+    )
     val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
-    val phone by viewModel.phone.collectAsStateWithLifecycle()
+    val phone by viewModel.phone.collectAsStateWithLifecycle(
+        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+    )
     val isPhoneInvalid by viewModel.isPhoneInvalid.collectAsStateWithLifecycle()
-    val password by viewModel.password.collectAsStateWithLifecycle()
+    val password by viewModel.password.collectAsStateWithLifecycle(
+        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+    )
     val isPasswordInvalid by viewModel.isPasswordInvalid.collectAsStateWithLifecycle()
     val receiveNewsNyEmail by viewModel.receiveNewsByEmail.collectAsStateWithLifecycle()
     val receiveSmsNotifications by viewModel.receiveSmsNotifications.collectAsStateWithLifecycle()
@@ -131,7 +140,6 @@ private fun ScreenContent(
     navigate: (SignUpScreenAction) -> Unit,
 ) {
     val firstNameFocusRequester = remember { FocusRequester() }
-
     LaunchedEffect(Unit) {
         firstNameFocusRequester.tryRequestFocus()
     }

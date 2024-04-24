@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.R
@@ -51,7 +52,9 @@ fun PasswordRecoveryScreen(
     navigate: (PasswordRecoveryScreenAction) -> Unit,
     viewModel: PasswordRecoveryViewModel = hiltViewModel(),
 ) {
-    val email by viewModel.email.collectAsStateWithLifecycle()
+    val email by viewModel.email.collectAsStateWithLifecycle(
+        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+    )
     val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
     val isSendButtonLoading by viewModel.isSendButtonLoading.collectAsStateWithLifecycle()
 
@@ -79,7 +82,6 @@ private fun ScreenContent(
     navigate: (PasswordRecoveryScreenAction) -> Unit,
 ) {
     val emailFocusRequester = remember { FocusRequester() }
-
     LaunchedEffect(Unit) {
         emailFocusRequester.tryRequestFocus()
     }

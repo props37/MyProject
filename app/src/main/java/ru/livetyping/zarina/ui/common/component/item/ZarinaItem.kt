@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -33,7 +34,10 @@ fun ZarinaItem(
     endContent: (@Composable RowScope.() -> Unit)? = null,
     startContent: @Composable RowScope.() -> Unit,
 ) {
-    CompositionLocalProvider(LocalContentColor provides contentColor) {
+    CompositionLocalProvider(
+        LocalContentColor provides contentColor,
+        LocalTextStyle provides UiKitTheme.typography.primary.regular,
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier

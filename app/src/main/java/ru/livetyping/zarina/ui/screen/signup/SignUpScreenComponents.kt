@@ -39,7 +39,6 @@ object SignUpScreenComponents {
             centerContent = {
                 Text(
                     text = stringResource(R.string.registration),
-                    style = UiKitTheme.typography.primary.regular,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

@@ -12,7 +12,6 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
-import ru.livetyping.zarina.ui.theme.UiKitTheme
 
 object PasswordRecoveryScreenComponents {
 
@@ -32,7 +31,6 @@ object PasswordRecoveryScreenComponents {
             centerContent = {
                 Text(
                     text = stringResource(R.string.password_recovery),
-                    style = UiKitTheme.typography.primary.regular,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

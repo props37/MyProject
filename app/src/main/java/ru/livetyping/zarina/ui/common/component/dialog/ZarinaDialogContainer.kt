@@ -4,13 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -28,22 +33,70 @@ import ru.livetyping.zarina.ui.theme.ZarinaTheme
 @Composable
 fun ZarinaDialogContainer(
     modifier: Modifier = Modifier,
-    color: Color = UiKitTheme.colors.background.general.regular.default,
-    shape: Shape = RoundedCornerShape(4.dp),
-    elevation: Dp = 12.dp,
-    contentPadding: PaddingValues = PaddingValues(24.dp),
+    backgroundColor: Color = BackgroundColor,
+    contentColor: Color = ContentColor,
+    shape: Shape = Shape,
+    elevation: Dp = Elevation,
+    contentPadding: PaddingValues = ContentPadding,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    Column(
+    CompositionLocalProvider(LocalContentColor provides contentColor) {
+        Column(
+            horizontalAlignment = horizontalAlignment,
+            modifier = modifier
+                .padding(horizontal = 16.dp)
+                .shadow(elevation = elevation, shape = shape)
+                .background(color = backgroundColor, shape = shape)
+                .padding(contentPadding),
+            content = content,
+        )
+    }
+}
+
+@Composable
+fun ZarinaDialogContainer(
+    title: @Composable () -> Unit,
+    body: @Composable () -> Unit,
+    buttons: @Composable RowScope.() -> Unit,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = BackgroundColor,
+    contentColor: Color = ContentColor,
+    shape: Shape = Shape,
+    elevation: Dp = Elevation,
+    contentPadding: PaddingValues = ContentPadding,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+) {
+    ZarinaDialogContainer(
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        shape = shape,
+        elevation = elevation,
+        contentPadding = contentPadding,
         horizontalAlignment = horizontalAlignment,
-        modifier = modifier
-            .padding(horizontal = 16.dp)
-            .shadow(elevation = elevation, shape = shape)
-            .background(color = color, shape = shape)
-            .padding(contentPadding),
-        content = content,
-    )
+        modifier = modifier,
+    ) {
+        CompositionLocalProvider(
+            LocalTextStyle provides UiKitTheme.typography.primary.bold,
+        ) {
+            title()
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        CompositionLocalProvider(
+            LocalTextStyle provides UiKitTheme.typography.secondary.regular,
+        ) {
+            body()
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            content = buttons,
+        )
+    }
 }
 
 @Preview
@@ -78,3 +131,17 @@ private fun Preview() {
         }
     }
 }
+
+private val BackgroundColor: Color
+    @Composable
+    get() = UiKitTheme.colors.background.general.regular.default
+
+private val ContentColor: Color
+    @Composable
+    get() = UiKitTheme.colors.text.general.regular.default
+
+private val Shape: Shape get() = RoundedCornerShape(4.dp)
+private val Elevation: Dp get() = 12.dp
+
+private val ContentPadding: PaddingValues
+    get() = PaddingValues(24.dp)

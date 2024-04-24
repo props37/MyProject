@@ -60,7 +60,6 @@ object ListFilterScreenComponents {
             centerContent = {
                 Text(
                     text = title,
-                    style = UiKitTheme.typography.primary.regular,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

@@ -58,7 +58,7 @@ fun SmsOtp(
     isOtpInvalid: Boolean = false,
     isOtpReadOnly: Boolean = false,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
+    backgroundColor: Color = BackgroundColor,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     Column(
@@ -72,9 +72,10 @@ fun SmsOtp(
             color = UiKitTheme.colors.text.general.regular.default,
         )
         Spacer(modifier = Modifier.height(8.dp))
-        val formattedPhone = rememberFormattedPhoneNumber(phone)
+        val formattedPhone = rememberFormattedPhoneNumber(phone.value)
+        val phoneString = formattedPhone ?: phone.value
         Text(
-            text = stringResource(R.string.we_sent_sms_code_to_phone_number, formattedPhone),
+            text = stringResource(R.string.we_sent_sms_code_to_phone_number, phoneString),
             style = UiKitTheme.typography.tertiary.regular,
             color = UiKitTheme.colors.text.general.regular.default,
         )
@@ -199,6 +200,10 @@ private fun PreviewResendAvailable() {
 }
 
 private const val Length = 4
+
+private val BackgroundColor: Color
+    @Composable
+    get() = UiKitTheme.colors.background.general.regular.default
 
 private const val ContentKeyResendTimeoutCountdown = "ContentKeyResendTimeoutCountdown"
 

@@ -58,4 +58,12 @@ class UserRemoteDataSource @Inject constructor(
     suspend fun requestPasswordReset(email: Email) {
         api.requestPasswordReset(email)
     }
+
+    suspend fun signOut() {
+        api.signOut()
+    }
+
+    suspend fun deleteAccount() {
+        api.deleteAccount()
+    }
 }

@@ -8,6 +8,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
@@ -23,14 +24,14 @@ class AuthorizationEncryptedStorage @Inject constructor(
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { sf, key ->
             if (key == KEY_ACCESS_TOKEN || key == KEY_REFRESH_TOKEN) {
                 val tokens = sf.getAuthorizationTokens()
-                Timber.v("Authorization tokens: $tokens")
+                Timber.v("Authorization tokens changed: $tokens")
                 trySend(tokens)
             }
         }
         encryptedSharedPreferences.registerOnSharedPreferenceChangeListener(listener)
 
         val initialTokens = encryptedSharedPreferences.getAuthorizationTokens()
-        Timber.v("Authorization tokens: $initialTokens")
+        Timber.v("Initial authorization tokens: $initialTokens")
         trySend(initialTokens)
 
         awaitClose {
@@ -38,14 +39,15 @@ class AuthorizationEncryptedStorage @Inject constructor(
         }
     }
         .buffer(capacity = Channel.CONFLATED)
+        .flowOn(Dispatchers.Main)
 
     suspend fun setAuthorizationTokens(tokens: AuthorizationTokens?) {
         Timber.v("Set authorization tokens: $tokens")
-        withContext(Dispatchers.IO) {
-            encryptedSharedPreferences.edit(commit = true) {
+        withContext(Dispatchers.Main) {
+            encryptedSharedPreferences.edit {
                 putString(KEY_ACCESS_TOKEN, tokens?.accessToken?.value)
                 putString(KEY_REFRESH_TOKEN, tokens?.refreshToken?.value)
-            }
+            } 
         }
     }
 

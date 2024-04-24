@@ -5,7 +5,14 @@ data class Price(
     val hasDiscount: Boolean,
     val discountPrice: Long,
     val discountPercent: Int,
-)
+) {
+    constructor(originalPrice: Long) : this(
+        originalPrice = originalPrice,
+        hasDiscount = false,
+        discountPercent = 0,
+        discountPrice = 0,
+    )
+}
 
 val Price.currentPrice: Long
     get() = if (hasDiscount) discountPrice else originalPrice

@@ -8,6 +8,7 @@ import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.common.Sorting
 import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.domain.product.Product
+import timber.log.Timber
 
 class ProductPagingSource(
     private val categoryId: Category.Id,
@@ -41,6 +42,7 @@ class ProductPagingSource(
                 itemsAfter = itemsAfter,
             )
         } catch (e: Exception) {
+            Timber.e(e)
             return LoadResult.Error(e)
         }
     }

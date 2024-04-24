@@ -31,7 +31,7 @@ import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.ui.common.component.item.ZarinaItem
-import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
+import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.ui.screen.profile.ProfileViewModel.InfoItem
@@ -47,7 +47,7 @@ object ProfileScreenComponents {
     fun TopBar(
         userFirstName: String?,
         isEditProfileButtonVisible: Boolean,
-        onEditProfileClicked: () -> Unit,
+        onProfileDetailsClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         ZarinaTopBar(
@@ -55,7 +55,6 @@ object ProfileScreenComponents {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = stringResource(R.string.profile),
-                        style = UiKitTheme.typography.primary.regular,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -88,7 +87,7 @@ object ProfileScreenComponents {
                     exit = AnimatedContentDefaultExitTransition,
                 ) {
                     ZarinaIconButton(
-                        onClick = onEditProfileClicked,
+                        onClick = onProfileDetailsClicked,
                         indication = rememberRipple(bounded = false, radius = 20.dp),
                         modifier = Modifier.padding(end = 2.dp),
                     ) {
@@ -225,10 +224,9 @@ object ProfileScreenComponents {
                                 color = UiKitTheme.colors.text.general.regular.muted,
                             )
                         } else {
-                            ZarinaSkeleton(
-                                modifier = Modifier
-                                    .height(16.dp)
-                                    .fillMaxWidth(fraction = 0.35f),
+                            ZarinaTextSkeleton(
+                                textStyle = textStyle,
+                                modifier = Modifier.fillMaxWidth(fraction = 0.35f),
                             )
                         }
                     }

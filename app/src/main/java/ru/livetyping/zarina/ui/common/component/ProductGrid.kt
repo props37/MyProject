@@ -46,6 +46,8 @@ import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.collectIsScrollingBackwardAsState
 import ru.livetyping.zarina.util.library.paging3.PagingErrorTimberLogger
 
+// TODO: [Medium] Migrate to ZarinaPagingPullRefreshContainer
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProductGrid(
@@ -222,6 +224,8 @@ private fun ProductGridImpl(
                 horizontalArrangement = ProductGridArrangement,
                 modifier = Modifier.fillMaxSize(),
             ) {
+                // No need to add append and prepend loaders since item placeholders are used
+                // in case of loading
                 items(
                     count = productPagingItems.itemCount,
                     span = { index -> getProductGridItemSpan(index) },
@@ -234,10 +238,10 @@ private fun ProductGridImpl(
                     if (product != null) {
                         ProductCard(
                             product = product,
-                            onClick = { onProductClicked(product) },
-                            onAddToFavoritesClicked = { onAddToFavoritesClicked(product) },
-                            onAddToCartClicked = { onAddToCartClicked(product) },
-                            onSubscribeClicked = { onSubscribeClicked(product) },
+                            onClick = onProductClicked,
+                            onAddToFavoritesClicked = onAddToFavoritesClicked,
+                            onAddToCartClicked = onAddToCartClicked,
+                            onSubscribeClicked = onSubscribeClicked,
                             shimmer = placeholderShimmer,
                             modifier = itemModifier,
                         )

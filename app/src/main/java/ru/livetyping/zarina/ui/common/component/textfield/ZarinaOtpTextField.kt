@@ -27,8 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -63,12 +65,16 @@ fun ZarinaOtpTextField(
         require(length > 0) { "length $length should be greater than zero" }
     }
 
+    val textFieldValue by remember(value) {
+        mutableStateOf(TextFieldValue(value, TextRange(value.length)))
+    }
+
     var isTextFieldFocused by remember { mutableStateOf(false) }
 
     BasicTextField(
-        value = value,
+        value = textFieldValue,
         onValueChange = { newValue ->
-            var processed = newValue
+            var processed = newValue.text
             if (!areNonDigitSymbolsAllowed) {
                 processed = processed.filter { it.isDigit() }
             }

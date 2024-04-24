@@ -11,7 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import ru.livetyping.zarina.ui.navigation.base.Destination
 import ru.livetyping.zarina.ui.navigation.screen.citySelectorBottomSheetScreen
-import ru.livetyping.zarina.ui.navigation.screen.defaultCityDialogScreen
+import ru.livetyping.zarina.ui.navigation.screen.defaultCityDialog
 import ru.livetyping.zarina.ui.navigation.screen.filtersScreen
 import ru.livetyping.zarina.ui.navigation.screen.graph.cartGraph
 import ru.livetyping.zarina.ui.navigation.screen.graph.catalogGraph
@@ -55,7 +55,7 @@ fun ZarinaNavigation(
 
         onboardingScreen(updatedNavController)
         citySelectorBottomSheetScreen(updatedNavController)
-        defaultCityDialogScreen(updatedNavController)
+        defaultCityDialog(updatedNavController)
         productsScreen(updatedNavController)
         filtersScreen(updatedNavController)
         listFilterScreen(updatedNavController)

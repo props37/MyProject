@@ -78,6 +78,13 @@ class ProfileViewModel @AssistedInject constructor(
         handleCitySelectorResult()
     }
 
+    fun onProfileDetailsClicked() {
+        navigationThrottler.throttle {
+            val action = ProfileScreenAction.ProfileDetailsClicked
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
     fun onSignInClicked() {
         navigationThrottler.throttle {
             val action = ProfileScreenAction.SignInClicked
@@ -95,7 +102,11 @@ class ProfileViewModel @AssistedInject constructor(
     fun onInfoItemClicked(item: InfoItem) {
         navigationThrottler.throttle {
             when (item) {
-                InfoItem.MyOrders -> Unit // TODO: [High] Implement
+                InfoItem.MyOrders -> {
+                    val action = ProfileScreenAction.MyOrdersClicked
+                    emitSideEffect(SideEffect.Navigate(action))
+                }
+
                 InfoItem.City -> {
                     val action = ProfileScreenAction.CityClicked(city.value)
                     emitSideEffect(SideEffect.Navigate(action))

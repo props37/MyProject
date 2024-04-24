@@ -49,7 +49,6 @@ import ru.livetyping.zarina.ui.screen.products.ProductsViewModel.SideEffect
 import ru.livetyping.zarina.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.usecase.category.GetCategoryFlowUseCase
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
-import ru.livetyping.zarina.usecase.product.GetProductPagingDataFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
@@ -169,16 +168,14 @@ class ProductsViewModel @AssistedInject constructor(
         filters,
     ) { categoryId, selectedTagId, filters ->
         val sorting = filters.sorting?.selected ?: Sorting.getDefault()
-        GetProductPagingDataFlowUseCase.Params(
+        interactor.productPager.getProductPagingDataFlow(
             categoryId = selectedTagId ?: categoryId,
             filters = filters,
             sorting = sorting,
             onAvailableFiltersReceived = { availableFilters = it },
         )
     }
-        .flatMapLatest { params ->
-            interactor.getProductPagingDataFlow(params)
-        }
+        .flatMapLatest { it }
         .cachedIn(viewModelScope)
         .mapProducts(
             favoriteProductIdsResultFlow = interactor.getFavoriteProductIdsFlow(),
