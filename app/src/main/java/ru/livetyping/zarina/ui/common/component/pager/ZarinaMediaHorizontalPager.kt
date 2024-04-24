@@ -41,6 +41,7 @@ fun ZarinaMediaHorizontalPager(
     val placeholderEnterTransition = remember { fadeIn() }
     val placeholderExitTransition = remember { fadeOut() }
 
+    // TODO: [Low] Specify key
     HorizontalPager(
         state = pagerState,
         flingBehavior = PagerDefaults.flingBehavior(

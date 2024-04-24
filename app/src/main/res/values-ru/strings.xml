@@ -177,6 +177,8 @@
     <string name="order_cancellation_consequences">При отмене заказа действие нельзя будет изменить</string>
     <string name="return_">Вернуться</string>
     <string name="order_cancellation_error">Не удалось отменить заказ</string>
+    <string name="map">Карта</string>
+    <string name="list">Список</string>
 
     <string name="order_status_accepted">Принят</string>
     <string name="order_status_confirmed">Подтверждён</string>
