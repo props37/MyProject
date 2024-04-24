@@ -18,4 +18,8 @@ class OrderRepository @Inject constructor(
     fun getOrderFlow(orderId: Order.Id): Flow<OrderDetails> {
         return remoteDataSource.getOrderFlow(orderId)
     }
+
+    suspend fun cancelOrder(orderId: Order.Id) {
+        remoteDataSource.cancelOrder(orderId)
+    }
 }
