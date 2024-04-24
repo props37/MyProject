@@ -36,6 +36,10 @@ fun NavGraphBuilder.orderScreen(navController: NavHostController) {
                             inclusive = true,
                         )
                     }
+
+                    is OrderScreenAction.CancelOrderClicked -> {
+                        navController.navigateToOrderCancellationDialog(action.orderId)
+                    }
                 }
             },
         )

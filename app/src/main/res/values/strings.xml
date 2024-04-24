@@ -178,6 +178,9 @@
     <string name="recipient">Получатель</string>
     <string name="payment">Оплата</string>
     <string name="cancel_order">Отменить заказ</string>
+    <string name="cancel_order_question">Отменить заказ?</string>
+    <string name="order_cancellation_consequences">При отмене заказа действие нельзя будет изменить</string>
+    <string name="return_">Вернуться</string>
 
     <string name="order_status_accepted">Принят</string>
     <string name="order_status_confirmed">Подтверждён</string>

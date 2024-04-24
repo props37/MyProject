@@ -21,6 +21,7 @@ enum class BaseRoute {
     ACCOUNT_DELETION_CONFIRMATION,
     MY_ORDERS,
     ORDER,
+    ORDER_CANCELLATION,
 
     // Cart graph
     CART_GRAPH,

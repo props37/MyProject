@@ -56,4 +56,35 @@ data object ProfileGraph : SimpleGraph(
 
         data class Args(val orderId: DomainOrder.Id)
     }
+
+    data object OrderCancellation : Destination<OrderCancellation.Args>() {
+        const val ARG_KEY_ORDER_ID = "arg_order_id"
+
+        private val baseRoute: String
+            get() = BaseRoute.ORDER_CANCELLATION.route
+
+        override val routeSchema: String
+            get() = RouteUtils.generateRouteSchema(
+                routeBase = baseRoute,
+                argNames = arrayOf(ARG_KEY_ORDER_ID),
+            )
+
+        override fun createRoute(args: Args): String {
+            return RouteUtils.generateRoute(
+                routeBase = baseRoute,
+                args = arrayOf(args.orderId.value),
+            )
+        }
+
+        override val arguments: List<NamedNavArgument>
+            get() = listOf(
+                navArgument(ARG_KEY_ORDER_ID) { type = NavType.LongType },
+            )
+
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            putLong(ARG_KEY_ORDER_ID, args.orderId.value)
+        }
+
+        data class Args(val orderId: DomainOrder.Id)
+    }
 }

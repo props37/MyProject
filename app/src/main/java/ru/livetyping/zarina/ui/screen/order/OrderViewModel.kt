@@ -117,7 +117,10 @@ class OrderViewModel @Inject constructor(
     }
 
     fun onCancelOrderClicked() {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val action = OrderScreenAction.CancelOrderClicked(orderId.value)
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
