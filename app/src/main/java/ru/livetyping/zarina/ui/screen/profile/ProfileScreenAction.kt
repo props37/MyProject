@@ -12,4 +12,6 @@ sealed class ProfileScreenAction {
     data class CityClicked(val currentCity: City?) : ProfileScreenAction()
 
     data object MyOrdersClicked : ProfileScreenAction()
+
+    data object ShopsClicked : ProfileScreenAction()
 }

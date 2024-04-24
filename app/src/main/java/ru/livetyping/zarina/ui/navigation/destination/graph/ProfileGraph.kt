@@ -98,4 +98,6 @@ data object ProfileGraph : SimpleGraph(
             override val id: String = UUID.randomUUID().toString(),
         ) : ScreenResult, Parcelable
     }
+
+    data object Shops : SimpleDestination(BaseRoute.SHOPS)
 }

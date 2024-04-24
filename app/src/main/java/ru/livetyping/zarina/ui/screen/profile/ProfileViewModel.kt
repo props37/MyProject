@@ -112,7 +112,11 @@ class ProfileViewModel @AssistedInject constructor(
                     emitSideEffect(SideEffect.Navigate(action))
                 }
 
-                InfoItem.Shops -> Unit // TODO: [High] Implement
+                InfoItem.Shops -> {
+                    val action = ProfileScreenAction.ShopsClicked
+                    emitSideEffect(SideEffect.Navigate(action))
+                }
+
                 InfoItem.Help -> {
                     val url = Url(HELP_URL)
                     emitSideEffect(SideEffect.OpenUrl(url))

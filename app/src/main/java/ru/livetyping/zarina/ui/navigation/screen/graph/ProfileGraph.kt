@@ -10,6 +10,7 @@ import ru.livetyping.zarina.ui.navigation.screen.orderCancellationDialog
 import ru.livetyping.zarina.ui.navigation.screen.orderScreen
 import ru.livetyping.zarina.ui.navigation.screen.profileDetailsScreen
 import ru.livetyping.zarina.ui.navigation.screen.profileScreen
+import ru.livetyping.zarina.ui.navigation.screen.shopsScreen
 import ru.livetyping.zarina.ui.navigation.screen.signOutConfirmationDialog
 
 fun NavGraphBuilder.profileGraph(navController: NavHostController) {
@@ -21,5 +22,6 @@ fun NavGraphBuilder.profileGraph(navController: NavHostController) {
         myOrdersScreen(navController)
         orderScreen(navController)
         orderCancellationDialog(navController)
+        shopsScreen(navController)
     }
 }
