@@ -7,16 +7,20 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.operationtracker.OperationKey
 import ru.livetyping.zarina.base.operationtracker.OperationTracker
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.order.Order
+import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.usecase.order.CancelOrderUseCase
+import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
@@ -45,6 +49,14 @@ class OrderCancellationViewModel @Inject constructor(
             Order.Id(value)
         }
 
+    val isCancelButtonLoading: StateFlow<Boolean> = operationTracker
+        .isOperationOngoing(Operation.CANCEL_ORDER)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = false,
+        )
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = OrderCancellationScreenAction.ScreenClosed
@@ -59,10 +71,12 @@ class OrderCancellationViewModel @Inject constructor(
                 val params = CancelOrderUseCase.Params(orderId.value)
                 interactor.cancelOrder(params)
                     .onSuccess {
-                        // TODO: [High] Implement
+                        val action = OrderCancellationScreenAction.OrderCancelled
+                        emitSideEffect(SideEffect.Navigate(action))
                     }
                     .onFailure {
-                        // TODO: [High] Implement
+                        val message = Text.Resource(R.string.order_cancellation_error)
+                        emitSideEffect(SideEffect.ShowToast(message))
                     }
             }
         }
@@ -70,6 +84,8 @@ class OrderCancellationViewModel @Inject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: OrderCancellationScreenAction) : SideEffect
+
+        data class ShowToast(val message: Text) : SideEffect
     }
 
     private enum class Operation : OperationKey { CANCEL_ORDER }

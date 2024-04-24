@@ -10,6 +10,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.ui.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
+import ru.livetyping.zarina.ui.common.toastcontroller.LocalToastController
 import ru.livetyping.zarina.ui.screen.order.cancellation.OrderCancellationViewModel.SideEffect
 
 @Composable
@@ -18,6 +19,7 @@ fun OrderCancellationScreenBehavior(
     navigate: (OrderCancellationScreenAction) -> Unit,
 ) {
     val updatedNavigate by rememberUpdatedState(navigate)
+    val updateToastController by rememberUpdatedState(LocalToastController.current)
 
     ForcedBottomNavBarBehavior(isVisible = true)
 
@@ -27,6 +29,7 @@ fun OrderCancellationScreenBehavior(
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
                         is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
+                        is SideEffect.ShowToast -> updateToastController.show(sideEffect.message)
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.ui.navigation.screen
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.order.Order
@@ -9,6 +10,7 @@ import ru.livetyping.zarina.ui.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.ui.navigation.util.slidePopExitTransition
 import ru.livetyping.zarina.ui.screen.order.OrderScreen
 import ru.livetyping.zarina.ui.screen.order.OrderScreenAction
+import ru.livetyping.zarina.ui.screen.order.OrderViewModel
 import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.orderScreen(navController: NavHostController) {
@@ -28,6 +30,9 @@ fun NavGraphBuilder.orderScreen(navController: NavHostController) {
         }
     ) {
         OrderScreen(
+            viewModel = hiltViewModel { factory: OrderViewModel.Factory ->
+                factory.create(it.savedStateHandle)
+            },
             navigate = { action ->
                 when (action) {
                     OrderScreenAction.ScreenClosed -> {

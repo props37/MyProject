@@ -5,6 +5,9 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,6 +16,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
@@ -21,21 +25,28 @@ import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.ui.common.datafetchinginfo.DataFetchingInfoHolder
 import ru.livetyping.zarina.ui.common.error.ErrorState
 import ru.livetyping.zarina.ui.common.error.from
+import ru.livetyping.zarina.ui.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.ui.screen.order.OrderViewModel.SideEffect
 import ru.livetyping.zarina.usecase.order.GetOrderFlowUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
-import javax.inject.Inject
 
-@HiltViewModel
-class OrderViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = OrderViewModel.Factory::class)
+class OrderViewModel @AssistedInject constructor(
+    @Assisted
+    backStackEntrySavedStateHandle: SavedStateHandle,
     savedStateHandle: SavedStateHandle,
     private val interactor: OrderInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val screenResultHandler = ScreenResultHandler(
+        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
+        savedStateHandle = savedStateHandle,
+    )
 
     private val orderId: StateFlow<Order.Id> = savedStateHandle
         .getStateFlow<Long?>(
@@ -99,6 +110,8 @@ class OrderViewModel @Inject constructor(
 
     init {
         orderFetchingInfoHolder.requestFetching(OrderFetchingType.LOADING)
+
+        handleOrderCancellationResult()
     }
 
     fun onBackClicked() {
@@ -123,6 +136,16 @@ class OrderViewModel @Inject constructor(
         }
     }
 
+    private fun handleOrderCancellationResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<ProfileGraph.OrderCancellation.Result>(
+                key = ProfileGraph.OrderCancellation.RESULT_KEY,
+            ) {
+                orderFetchingInfoHolder.requestFetching(OrderFetchingType.LOADING)
+            }
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: OrderScreenAction) : SideEffect
     }
@@ -139,4 +162,9 @@ class OrderViewModel @Inject constructor(
     }
 
     private enum class OrderFetchingType : DataFetchingInfoHolder.FetchingType { LOADING, REFRESHING }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(backStackEntrySavedStateHandle: SavedStateHandle): OrderViewModel
+    }
 }

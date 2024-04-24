@@ -1,14 +1,18 @@
 package ru.livetyping.zarina.ui.navigation.destination.graph
 
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.ui.navigation.BaseRoute
 import ru.livetyping.zarina.ui.navigation.base.Destination
 import ru.livetyping.zarina.ui.navigation.base.RouteUtils
+import ru.livetyping.zarina.ui.navigation.base.ScreenResult
 import ru.livetyping.zarina.ui.navigation.base.parameterless.SimpleDestination
 import ru.livetyping.zarina.ui.navigation.base.parameterless.SimpleGraph
+import java.util.UUID
 import ru.livetyping.zarina.domain.order.Order as DomainOrder
 
 data object ProfileGraph : SimpleGraph(
@@ -60,6 +64,8 @@ data object ProfileGraph : SimpleGraph(
     data object OrderCancellation : Destination<OrderCancellation.Args>() {
         const val ARG_KEY_ORDER_ID = "arg_order_id"
 
+        const val RESULT_KEY = "result_order_cancellation"
+
         private val baseRoute: String
             get() = BaseRoute.ORDER_CANCELLATION.route
 
@@ -86,5 +92,10 @@ data object ProfileGraph : SimpleGraph(
         }
 
         data class Args(val orderId: DomainOrder.Id)
+
+        @Parcelize
+        data class Result(
+            override val id: String = UUID.randomUUID().toString(),
+        ) : ScreenResult, Parcelable
     }
 }

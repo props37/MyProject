@@ -24,6 +24,16 @@ fun NavGraphBuilder.orderCancellationDialog(navController: NavHostController) {
                             inclusive = true,
                         )
                     }
+
+                    OrderCancellationScreenAction.OrderCancelled -> {
+                        navController.popBackStack(
+                            route = ProfileGraph.OrderCancellation.routeSchema,
+                            inclusive = true,
+                        )
+                        val result = ProfileGraph.OrderCancellation.Result()
+                        navController.currentBackStackEntry?.savedStateHandle
+                            ?.set(ProfileGraph.OrderCancellation.RESULT_KEY, result)
+                    }
                 }
             }
         )

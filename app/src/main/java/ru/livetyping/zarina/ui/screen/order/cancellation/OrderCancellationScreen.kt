@@ -4,12 +4,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.R
@@ -26,7 +28,10 @@ fun OrderCancellationScreen(
     navigate: (OrderCancellationScreenAction) -> Unit,
     viewModel: OrderCancellationViewModel = hiltViewModel(),
 ) {
+    val isCancelButtonLoading by viewModel.isCancelButtonLoading.collectAsStateWithLifecycle()
+
     ScreenContent(
+        isCancelButtonLoading = isCancelButtonLoading,
         onBackClicked = viewModel::onBackClicked,
         onCancelClicked = viewModel::onCancelClicked,
         sideEffects = viewModel.sideEffects,
@@ -36,6 +41,7 @@ fun OrderCancellationScreen(
 
 @Composable
 private fun ScreenContent(
+    isCancelButtonLoading: Boolean,
     onBackClicked: () -> Unit,
     onCancelClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -55,7 +61,7 @@ private fun ScreenContent(
         },
         buttons = {
             ZarinaButton(
-                onClick = { /*TODO*/ },
+                onClick = onBackClicked,
                 colors = ZarinaButtonDefaults.tertiaryColors(),
                 modifier = Modifier.weight(1f),
             ) {
@@ -63,7 +69,8 @@ private fun ScreenContent(
             }
             Spacer(modifier = Modifier.width(8.dp))
             ZarinaButton(
-                onClick = { /*TODO*/ },
+                onClick = onCancelClicked,
+                isLoading = isCancelButtonLoading,
                 colors = ZarinaButtonDefaults.outlineErrorColors(),
                 modifier = Modifier.weight(1f),
             ) {
@@ -80,6 +87,7 @@ private fun ScreenContent(
 private fun Preview() {
     ZarinaPreview {
         ScreenContent(
+            isCancelButtonLoading = false,
             onBackClicked = {},
             onCancelClicked = {},
             sideEffects = remember { emptyFlow() },
