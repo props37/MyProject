@@ -6,7 +6,10 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +23,7 @@ import ru.livetyping.zarina.ui.app.ZarinaApp
 import ru.livetyping.zarina.ui.common.behavior.systembars.LocalSystemBarsBehaviorController
 import ru.livetyping.zarina.ui.common.behavior.systembars.SystemBarsBehavior
 import ru.livetyping.zarina.ui.common.behavior.systembars.SystemBarsBehaviorController
+import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.ui.theme.ZarinaTheme
 import ru.livetyping.zarina.util.library.activity.DefaultDarkScrim
 import ru.livetyping.zarina.util.library.activity.DefaultLightScrim
@@ -52,7 +56,11 @@ class MainActivity : AppCompatActivity() {
                 LocalSystemBarsBehaviorController provides systemBarsBehaviorController,
             ) {
                 ZarinaTheme {
-                    ZarinaApp()
+                    ZarinaApp(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(UiKitTheme.colors.background.general.regular.default),
+                    )
                 }
             }
         }
