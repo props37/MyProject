@@ -1,6 +1,8 @@
 package ru.livetyping.zarina.data.user
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.data.user.local.UserLocalDataSource
 import ru.livetyping.zarina.data.user.remote.UserRemoteDataSource
 import ru.livetyping.zarina.domain.authorization.AuthorizationResult
@@ -11,6 +13,7 @@ import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.domain.user.User
+import timber.log.Timber
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
@@ -25,8 +28,23 @@ class UserRepository @Inject constructor(
         localDataSource.setUser(user)
     }
 
-    fun getLoyaltyCardFlow(): Flow<LoyaltyCard> {
-        return remoteDataSource.getLoyaltyCardFlow()
+    fun getLoyaltyCardFlow(): Flow<LoyaltyCard> = flow {
+        val cached = localDataSource.getLoyaltyCardFlow().firstOrNull()
+        if (cached != null) {
+            Timber.v("Get cached loyalty card")
+            emit(cached)
+        } else {
+            val card = remoteDataSource.getLoyaltyCardFlow().firstOrNull()
+            checkNotNull(card) { "Failed to fetch loyalty card" }
+            localDataSource.setLoyaltyCard(card)
+            emit(card)
+        }
+    }
+
+    suspend fun fetchLoyaltyCard() {
+        val card = remoteDataSource.getLoyaltyCardFlow().firstOrNull()
+        checkNotNull(card) { "Failed to fetch loyalty card" }
+        localDataSource.setLoyaltyCard(card)
     }
 
     fun getUserCityFlow(): Flow<City?> {

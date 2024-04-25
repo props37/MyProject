@@ -8,6 +8,7 @@ import ru.livetyping.zarina.data.user.local.database.dao.UserDao
 import ru.livetyping.zarina.data.user.local.database.entity.UserEntity
 import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.domain.user.User
 import javax.inject.Inject
 
@@ -16,6 +17,7 @@ class UserLocalDataSource @Inject constructor(
     private val userDao: UserDao,
     private val userCityDataHolder: UserCityDataHolder,
     private val userContentGenderDataHolder: UserContentGenderDataHolder,
+    private val loyaltyCardDataHolder: LoyaltyCardDataHolder,
 ) {
     fun getUserFlow(): Flow<User?> {
         return userDao.getUserFlow().map { it?.toUser() }
@@ -26,6 +28,14 @@ class UserLocalDataSource @Inject constructor(
             userDao.clear()
             userDao.saveUser(UserEntity.from(user))
         }
+    }
+
+    fun getLoyaltyCardFlow(): Flow<LoyaltyCard?> {
+        return loyaltyCardDataHolder.getLoyaltyCardFlow()
+    }
+
+    fun setLoyaltyCard(card: LoyaltyCard) {
+        loyaltyCardDataHolder.setLoyaltyCard(card)
     }
 
     fun getUserCityFlow(): Flow<City?> {
@@ -47,5 +57,6 @@ class UserLocalDataSource @Inject constructor(
     suspend fun clear() {
         userDao.clear()
         userContentGenderDataHolder.clear()
+        loyaltyCardDataHolder.clear()
     }
 }
