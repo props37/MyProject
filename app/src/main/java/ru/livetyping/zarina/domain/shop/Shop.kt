@@ -2,6 +2,7 @@ package ru.livetyping.zarina.domain.shop
 
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.geography.KladrId
+import ru.livetyping.zarina.domain.location.Location
 
 data class Shop(
     val id: Id,
@@ -9,6 +10,7 @@ data class Shop(
     val address: String,
     val phone: PhoneNumber?,
     val schedule: String?,
+    val location: Location,
     val country: String,
     val cityKladrId: KladrId?,
     val cityName: String,

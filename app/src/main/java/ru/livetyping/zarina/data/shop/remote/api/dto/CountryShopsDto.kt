@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.geography.KladrId
+import ru.livetyping.zarina.domain.location.Location
 import ru.livetyping.zarina.domain.shop.Shop as DomainShop
 
 @Serializable
@@ -59,17 +60,26 @@ data class CountryShopsDto(
 
             @SerialName("schedule")
             val schedule: String? = null,
+
+            @SerialName("lat")
+            val latitude: Double? = null,
+
+            @SerialName("lon")
+            val longitude: Double? = null,
         ) {
             fun toShop(cityKladrId: KladrId?, cityName: String, country: String): DomainShop {
                 checkNotNull(id) { "id is null" }
                 checkNotNull(name) { "name is null" }
                 checkNotNull(address) { "address is null" }
+                checkNotNull(latitude) { "latitude is null" }
+                checkNotNull(longitude) { "longitude is null" }
                 return DomainShop(
                     id = DomainShop.Id(id),
                     name = name,
                     address = address,
                     phone = phone?.let { PhoneNumber.create(it) },
                     schedule = schedule,
+                    location = Location(latitude, longitude),
                     cityKladrId = cityKladrId,
                     cityName = cityName,
                     country = country,
