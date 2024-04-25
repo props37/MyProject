@@ -4,7 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.geography.KladrId
-import timber.log.Timber
 import ru.livetyping.zarina.domain.shop.Shop as DomainShop
 
 @Serializable
@@ -32,15 +31,15 @@ data class CountryShopsDto(
         @SerialName("shops")
         val shops: List<Shop>? = null,
     ) {
-        fun getShops(): List<DomainShop>? {
+        fun getShops(country: String): List<DomainShop> {
             checkNotNull(shops) { "shops is null" }
-            return if (kladrId != null) {
+            return shops.map {
                 checkNotNull(name) { "name is null" }
-                val kladrId = KladrId(kladrId)
-                shops.map { it.toShop(cityKladrId = kladrId, cityName = name) }
-            } else {
-                Timber.e("Dtop city shops because city kladrId is null")
-                null
+                it.toShop(
+                    cityKladrId = kladrId?.let { KladrId(it) },
+                    cityName = name,
+                    country = country,
+                )
             }
         }
 
@@ -61,7 +60,7 @@ data class CountryShopsDto(
             @SerialName("schedule")
             val schedule: String? = null,
         ) {
-            fun toShop(cityKladrId: KladrId, cityName: String): DomainShop {
+            fun toShop(cityKladrId: KladrId?, cityName: String, country: String): DomainShop {
                 checkNotNull(id) { "id is null" }
                 checkNotNull(name) { "name is null" }
                 checkNotNull(address) { "address is null" }
@@ -73,6 +72,7 @@ data class CountryShopsDto(
                     schedule = schedule,
                     cityKladrId = cityKladrId,
                     cityName = cityName,
+                    country = country,
                 )
             }
         }

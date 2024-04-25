@@ -13,13 +13,12 @@ class ShopRemoteDataSource @Inject constructor(
         val dto = api.getShops()
         val shops = dto
             .flatMap { country ->
+                checkNotNull(country.name) { "country name is null" }
                 val cities = country.cities
                 checkNotNull(cities) { "cities is null" }
-                cities
-                    .mapNotNull { city ->
-                        city.getShops()
-                    }
-                    .flatten()
+                cities.flatMap { city ->
+                    city.getShops(country.name)
+                }
             }
         emit(shops)
     }

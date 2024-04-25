@@ -9,7 +9,8 @@ data class Shop(
     val address: String,
     val phone: PhoneNumber?,
     val schedule: String?,
-    val cityKladrId: KladrId,
+    val country: String,
+    val cityKladrId: KladrId?,
     val cityName: String,
 ) {
     @JvmInline
