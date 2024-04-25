@@ -7,6 +7,7 @@ import com.google.android.recaptcha.RecaptchaClient
 import com.google.android.recaptcha.RecaptchaException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withTimeout
 import ru.livetyping.zarina.BuildConfig
 import ru.livetyping.zarina.domain.common.Token
 import timber.log.Timber
@@ -29,7 +30,7 @@ class RecaptchaManager @Inject constructor() {
         getClient(application)
     }
 
-    suspend fun execute(action: RecaptchaAction): Token {
+    suspend fun execute(action: RecaptchaAction): Token = withTimeout(TIMEOUT) {
         val application = applicationRef?.get()
         checkNotNull(application) { "Application is null. Did you forget to call RecaptchaManager.init()?" }
 
@@ -37,12 +38,12 @@ class RecaptchaManager @Inject constructor() {
         checkNotNull(client) { "RecaptchaClient is not initialized" }
 
         val token = client.execute(action, TIMEOUT.inWholeMilliseconds).getOrThrow()
-        return Token(token)
+        Token(token)
     }
 
-    private suspend fun getClient(application: Application): RecaptchaClient? {
+    private suspend fun getClient(application: Application): RecaptchaClient? = withTimeout(TIMEOUT) {
         val currentClient = client
-        return if (currentClient != null) {
+        if (currentClient != null) {
             Timber.tag(TAG).v(MESSAGE_ALREADY_INITIALIZED)
             currentClient
         } else {
