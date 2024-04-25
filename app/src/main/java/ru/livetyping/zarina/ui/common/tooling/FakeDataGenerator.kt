@@ -15,12 +15,36 @@ import ru.livetyping.zarina.domain.product.Price
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.domain.product.ProductOffer
+import ru.livetyping.zarina.domain.user.LoyaltyCard
+import ru.livetyping.zarina.domain.user.LoyaltyCardLevel
 import ru.livetyping.zarina.domain.user.User
 import java.time.LocalDate
 import java.util.UUID
 import kotlin.random.Random
 
 object FakeDataGenerator {
+    fun getLoyaltyCard(
+        number: LoyaltyCard.Number = LoyaltyCard.Number(getRandomString()),
+        level: LoyaltyCardLevel = LoyaltyCardLevel.PRIME,
+        nextLevel: LoyaltyCard.NextLevel = LoyaltyCard.NextLevel(
+            level = LoyaltyCardLevel.PRIORITY,
+            remainingPurchaseSum = 15000,
+        ),
+        bonuses: LoyaltyCard.Bonuses = LoyaltyCard.Bonuses(
+            bonusCount = 8000,
+            expectedBonusCount = 1200,
+        ),
+        discountPercent: Int = 7,
+        totalPurchaseSum: Int = 15000,
+    ): LoyaltyCard = LoyaltyCard(
+        number = number,
+        level = level,
+        nextLevel = nextLevel,
+        bonuses = bonuses,
+        discountPercent = discountPercent,
+        totalPurchaseSum = totalPurchaseSum,
+    )
+
     fun getOrderItem(
         id: Order.Id = Order.Id(Random.nextLong(from = 0, until = Long.MAX_VALUE)),
         number: Order.Number = Order.Number(Random.nextLong(from = 123456, until = 987654).toString()),
