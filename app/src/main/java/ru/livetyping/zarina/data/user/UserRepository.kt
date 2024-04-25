@@ -9,6 +9,7 @@ import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.domain.user.User
 import javax.inject.Inject
 
@@ -22,6 +23,10 @@ class UserRepository @Inject constructor(
 
     suspend fun setUser(user: User) {
         localDataSource.setUser(user)
+    }
+
+    fun getLoyaltyCardFlow(): Flow<LoyaltyCard> {
+        return remoteDataSource.getLoyaltyCardFlow()
     }
 
     fun getUserCityFlow(): Flow<City?> {

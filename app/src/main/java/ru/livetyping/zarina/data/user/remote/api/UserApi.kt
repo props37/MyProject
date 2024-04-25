@@ -3,12 +3,14 @@ package ru.livetyping.zarina.data.user.remote.api
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
+import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignInByPhoneRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignUpRequestBody
+import ru.livetyping.zarina.data.user.remote.api.dto.LoyaltyCardDto
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestPasswordResetRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendSmsOtpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
@@ -33,6 +35,10 @@ class UserApi @Inject constructor(
     private val signInApiExceptionConverter: SignInApiExceptionConverter,
     private val requestPasswordResetApiExceptionConverter: RequestPasswordResetApiExceptionConverter,
 ) {
+    suspend fun getLoyaltyCard(): LoyaltyCardDto {
+        return httpClient.get("/api/card").body()
+    }
+
     suspend fun setUserCity(city: City) {
         val body = SetUserCityRequestBody(city.kladrId.value)
         httpClient.put("/api/location/city") {
