@@ -1,23 +1,42 @@
 package ru.livetyping.zarina.ui.screen.shops
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.shop.Shop
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.ui.common.component.item.ZarinaItem
+import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
+import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaTextSkeleton
+import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.ui.common.component.tab.ZarinaTabRow
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
+import ru.livetyping.zarina.ui.screen.shops.ShopsViewModel.ShopListState
 import ru.livetyping.zarina.ui.screen.shops.ShopsViewModel.ViewMode
+import ru.livetyping.zarina.ui.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.animation.Crossfade
 
 object ShopsScreenComponents {
 
@@ -74,6 +93,8 @@ object ShopsScreenComponents {
     fun ViewModePager(
         viewModes: ImmutableList<ViewMode>,
         pagerState: PagerState,
+        shopListState: ShopListState,
+        onShopsErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         HorizontalPager(
@@ -82,8 +103,16 @@ object ShopsScreenComponents {
             modifier = modifier,
         ) { page ->
             when (viewModes[page]) {
-                ViewMode.MAP -> MapViewMode()
-                ViewMode.LIST -> ListViewMode()
+                ViewMode.MAP -> {
+                    MapViewMode()
+                }
+
+                ViewMode.LIST -> {
+                    ListViewMode(
+                        shopListState = shopListState,
+                        onShopsErrorRefreshClicked = onShopsErrorRefreshClicked,
+                    )
+                }
             }
         }
     }
@@ -97,8 +126,159 @@ object ShopsScreenComponents {
 
     @Composable
     private fun ListViewMode(
+        shopListState: ShopListState,
+        onShopsErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        // TODO: [High] Implement
+        Crossfade(
+            targetState = shopListState,
+            contentKey = {
+                when (it) {
+                    is ShopListState.Success -> ShopListContentKeySuccess
+                    ShopListState.Loading, is ShopListState.Error -> it
+                }
+            },
+            modifier = modifier,
+        ) { state ->
+            when (state) {
+                is ShopListState.Success -> {
+                    ShopList(
+                        shops = state.shops,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+
+                ShopListState.Loading -> {
+                    ShopListSkeleton(modifier = Modifier.fillMaxSize())
+                }
+
+                is ShopListState.Error -> {
+                    ZarinaErrorScreen(
+                        state = state.state,
+                        onButtonClicked = onShopsErrorRefreshClicked,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                    )
+                }
+            }
+        }
     }
+
+    @Composable
+    private fun ShopList(
+        shops: ImmutableList<Shop>,
+        modifier: Modifier = Modifier,
+    ) {
+        LazyColumn(modifier = modifier) {
+            itemsIndexed(
+                items = shops,
+                key = { _, shop -> shop.id.value },
+            ) { index, shop ->
+                ShopListItem(shop = shop)
+
+                if (index < shops.lastIndex) {
+                    Divider(
+                        color = UiKitTheme.colors.background.skeleton,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun ShopListSkeleton(
+        modifier: Modifier = Modifier,
+    ) {
+        val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
+
+        LazyColumn(modifier = modifier) {
+            items(count = ShopListSkeletonItemCount) { index ->
+                ShopListItemSkeleton(shimmer = shimmer)
+
+                if (index < ShopListSkeletonItemCount - 1) {
+                    Divider(
+                        color = UiKitTheme.colors.background.skeleton,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun ShopListItem(
+        shop: Shop,
+        modifier: Modifier = Modifier,
+    ) {
+        ZarinaItem(
+            contentPadding = ShopListItemContentPadding,
+            modifier = modifier,
+        ) {
+            Column {
+                Text(
+                    text = shop.name,
+                    style = ShopListItemNameTextStyle,
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text = shop.address,
+                    style = ShopListItemInfoTextStyle,
+                )
+                
+                if (shop.schedule != null) {
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    Text(
+                        text = shop.schedule,
+                        style = ShopListItemInfoTextStyle,
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun ShopListItemSkeleton(
+        shimmer: Shimmer,
+        modifier: Modifier = Modifier,
+    ) {
+        ZarinaItem(
+            contentPadding = ShopListItemContentPadding,
+            modifier = modifier,
+        ) {
+            Column {
+                ZarinaTextSkeleton(
+                    textStyle = ShopListItemNameTextStyle,
+                    shimmer = shimmer,
+                    modifier = Modifier.fillMaxWidth(fraction = 0.4f),
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                ZarinaTextSkeleton(
+                    textStyle = ShopListItemInfoTextStyle,
+                    shimmer = shimmer,
+                    modifier = Modifier.fillMaxWidth(fraction = 0.7f),
+                )
+            }
+        }
+    }
+
+    private const val ShopListContentKeySuccess = "ShopListContentKeySuccess"
+
+    private const val ShopListSkeletonItemCount = 12
+
+    private val ShopListItemContentPadding: PaddingValues get() = PaddingValues(16.dp)
+
+    private val ShopListItemNameTextStyle: TextStyle
+        @Composable
+        get() = UiKitTheme.typography.secondary.light
+
+    private val ShopListItemInfoTextStyle: TextStyle
+        @Composable
+        get() = UiKitTheme.typography.tertiary.light
 }

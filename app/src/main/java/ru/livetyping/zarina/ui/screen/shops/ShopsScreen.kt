@@ -25,6 +25,7 @@ import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.screen.shops.ShopsScreenComponents.TopBar
 import ru.livetyping.zarina.ui.screen.shops.ShopsScreenComponents.ViewModePager
 import ru.livetyping.zarina.ui.screen.shops.ShopsScreenComponents.ViewModeTabRow
+import ru.livetyping.zarina.ui.screen.shops.ShopsViewModel.ShopListState
 import ru.livetyping.zarina.ui.screen.shops.ShopsViewModel.ViewMode
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.pager.PagerTabRowIntegration
@@ -36,11 +37,14 @@ fun ShopsScreen(
 ) {
     val viewModes by viewModel.viewModes.collectAsStateWithLifecycle()
     val currentViewMode by viewModel.currentViewMode.collectAsStateWithLifecycle()
+    val shopListState by viewModel.shopListState.collectAsStateWithLifecycle()
 
     ScreenContent(
         viewModes = viewModes,
         currentViewMode = currentViewMode,
         onViewModeChanged = viewModel::onViewModeChanged,
+        shopListState = shopListState,
+        onShopsErrorRefreshClicked = viewModel::onShopsErrorRefreshClicked,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
@@ -53,6 +57,8 @@ private fun ScreenContent(
     viewModes: ImmutableList<ViewMode>,
     currentViewMode: ViewMode,
     onViewModeChanged: (ViewMode) -> Unit,
+    shopListState: ShopListState,
+    onShopsErrorRefreshClicked: () -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<ShopsViewModel.SideEffect>,
     navigate: (ShopsScreenAction) -> Unit,
@@ -93,6 +99,8 @@ private fun ScreenContent(
         ViewModePager(
             viewModes = viewModes,
             pagerState = viewModePagerState,
+            shopListState = shopListState,
+            onShopsErrorRefreshClicked = onShopsErrorRefreshClicked,
             modifier = Modifier.fillMaxSize(),
         )
     }
