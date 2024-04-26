@@ -51,14 +51,14 @@ fun ZarinaIconButton(
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
+                .minimumInteractiveComponentSize()
                 .clickable(
                     onClick = onClick,
                     enabled = isEnabled,
                     role = Role.Button,
                     interactionSource = interactionSource,
                     indication = indication,
-                )
-                .minimumInteractiveComponentSize(),
+                ),
         ) {
             AnimatedContent(
                 targetState = isLoading,
