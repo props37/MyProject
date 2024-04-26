@@ -57,6 +57,7 @@ fun ZarinaCheckbox(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
+            .minimumInteractiveComponentSize()
             .size(sizeDp)
             .border(
                 width = 0.5.dp,
@@ -71,8 +72,7 @@ fun ZarinaCheckbox(
                 role = Role.Checkbox,
                 onValueChange = onCheckedChanged,
             )
-            .clip(shape)
-            .minimumInteractiveComponentSize(),
+            .clip(shape),
     ) {
         AnimatedVisibility(
             visible = isChecked,

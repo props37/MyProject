@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -48,6 +51,7 @@ object SignUpScreenComponents {
         )
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun Policies(
         areAccepted: Boolean,
@@ -64,11 +68,13 @@ object SignUpScreenComponents {
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            ZarinaCheckbox(
-                isChecked = areAccepted,
-                onCheckedChanged = onAcceptedChanged,
-                isError = isError,
-            )
+            CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+                ZarinaCheckbox(
+                    isChecked = areAccepted,
+                    onCheckedChanged = onAcceptedChanged,
+                    isError = isError,
+                )
+            }
         }
     }
 
