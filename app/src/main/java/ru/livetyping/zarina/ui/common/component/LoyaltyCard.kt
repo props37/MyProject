@@ -33,12 +33,15 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -58,6 +61,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.flow.distinctUntilChanged
 import qrcode.QRCode
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.user.LoyaltyCard
@@ -70,6 +74,7 @@ import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.common.util.domain.nameResId
 import ru.livetyping.zarina.ui.common.util.rememberFormattedPrice
 import ru.livetyping.zarina.ui.theme.UiKitTheme
+import timber.log.Timber
 
 @Composable
 fun LoyaltyCard(
@@ -98,8 +103,15 @@ fun LoyaltyCard(
     )
     val visibleSide by remember {
         derivedStateOf {
-            if (rotation.value <= ROTATION_BACK_SIDE / 2) LoyaltyCardSide.FRONT else LoyaltyCardSide.BACK
+            if (rotation.value <= ROTATION_TURN_THRESHOLD) LoyaltyCardSide.FRONT else LoyaltyCardSide.BACK
         }
+    }
+
+    val updatedOnTurned by rememberUpdatedState(onTurned)
+    LaunchedEffect(Unit) {
+        snapshotFlow { visibleSide }
+            .distinctUntilChanged()
+            .collect { updatedOnTurned?.invoke(it) }
     }
 
     CompositionLocalProvider(LocalContentColor provides contentColor) {
@@ -162,6 +174,7 @@ private fun FrontSide(
                 style = UiKitTheme.typography.heading1.regular,
             )
             Spacer(modifier = Modifier.width(6.dp))
+
             val topPadding = with(density) { 6.sp.toDp() }
             Text(
                 text = pluralStringResource(
@@ -204,6 +217,8 @@ private fun FrontSide(
                         style = textStyle,
                     )
                     Spacer(modifier = Modifier.width(2.dp))
+
+                    @Suppress("MagicNumber")
                     val iconSize = with(density) { textStyle.fontSize.toDp() * 0.8f }
                     Icon(
                         painter = painterResource(R.drawable.ic_small_arrow_up_24),
@@ -316,12 +331,14 @@ private fun QrCode(
             .build(card.number.value)
             .render()
             .getBytes()
+        Timber.tag(Tag).v("QR code generated")
         BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
     }
 
     DisposableEffect(bitmap) {
         onDispose {
             bitmap?.recycle()
+            Timber.tag(Tag).v("QR code bitmap recycled")
         }
     }
     
@@ -471,7 +488,10 @@ private val LoyaltyCardLevel.contentColor: Color
 
 private const val ROTATION_FRONT_SIDE = 0f
 private const val ROTATION_BACK_SIDE = 180f
+private const val ROTATION_TURN_THRESHOLD = ROTATION_BACK_SIDE / 2
 
 private val ShapeDefault: Shape get() = RoundedCornerShape(12.dp)
 private val ContentPaddingFrontSide: PaddingValues get() = PaddingValues(30.dp)
 private val ContentPaddingBackSide: PaddingValues get() = PaddingValues(16.dp)
+
+private const val Tag = "LoyaltyCard"
