@@ -33,15 +33,15 @@ data class LoyaltyCardDto(
     fun toLoyaltyCard(): LoyaltyCard {
         checkNotNull(number) { "number is null" }
         checkNotNull(level) { "level is null" }
-        checkNotNull(nextLevel) { "nextLevel is null" }
-        checkNotNull(nextLevelRemainingPurchaseSum) { "nextLevelRemainingPurchaseSum is null" }
         checkNotNull(bonusCount) { "bonusCount is null" }
         checkNotNull(discountPercent) { "discountPercent is null" }
         checkNotNull(totalPurchaseSum) { "totalPurchaseSum is null" }
-        val nextLevel = LoyaltyCard.NextLevel(
-            level = nextLevel.toLoyaltyCardLevel(),
-            remainingPurchaseSum = nextLevelRemainingPurchaseSum,
-        )
+        val nextLevel = if (nextLevel != null && nextLevelRemainingPurchaseSum != null) {
+            LoyaltyCard.NextLevel(
+                level = nextLevel.toLoyaltyCardLevel(),
+                remainingPurchaseSum = nextLevelRemainingPurchaseSum,
+            )
+        } else null
         val bonuses = LoyaltyCard.Bonuses(
             bonusCount = bonusCount,
             expectedBonusCount = expectedBonusCount ?: 0,
