@@ -1,5 +1,7 @@
 package ru.livetyping.zarina.ui.common.component
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
@@ -11,9 +13,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,6 +32,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,16 +44,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import qrcode.QRCode
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.domain.user.LoyaltyCardLevel
@@ -69,14 +79,10 @@ fun LoyaltyCard(
     initialSide: LoyaltyCardSide = LoyaltyCardSide.FRONT,
     onTurned: ((LoyaltyCardSide) -> Unit)? = null,
 ) {
-    val contentColor by animateColorAsState(
-        targetValue = when (card.level) {
-            LoyaltyCardLevel.PRIME, LoyaltyCardLevel.PRIORITY -> {
-                UiKitTheme.colors.text.general.regular.default
-            }
+    val density = LocalDensity.current
 
-            LoyaltyCardLevel.STAR -> UiKitTheme.colors.text.general.inversed.default
-        },
+    val contentColor by animateColorAsState(
+        targetValue = card.level.contentColor,
         label = "contentColor",
     )
 
@@ -99,6 +105,7 @@ fun LoyaltyCard(
     CompositionLocalProvider(LocalContentColor provides contentColor) {
         Box(
             modifier = modifier
+                .height(IntrinsicSize.Min)
                 .graphicsLayer {
                     shape = ShapeDefault
                     clip = true
@@ -110,6 +117,8 @@ fun LoyaltyCard(
                 modifier = Modifier.matchParentSize(),
             )
 
+            var frontSideHeightDp by remember { mutableStateOf(0.dp) }
+
             FrontSide(
                 card = card,
                 onShowBackSideClicked = { side = LoyaltyCardSide.BACK },
@@ -117,6 +126,9 @@ fun LoyaltyCard(
                 modifier = Modifier
                     .graphicsLayer {
                         alpha = if (visibleSide == LoyaltyCardSide.FRONT) 1f else 0f
+                    }
+                    .onSizeChanged {
+                        frontSideHeightDp = with(density) { it.height.toDp() }
                     },
             )
 
@@ -124,6 +136,7 @@ fun LoyaltyCard(
                 card = card,
                 onShowFrontSideClicked = { side = LoyaltyCardSide.FRONT },
                 modifier = Modifier
+                    .height(frontSideHeightDp)
                     .graphicsLayer {
                         alpha = if (visibleSide == LoyaltyCardSide.BACK) 1f else 0f
                         rotationY = ROTATION_BACK_SIDE
@@ -243,14 +256,17 @@ private fun FrontSide(
     }
 }
 
-// TODO: [High] Add QR code
 @Composable
 private fun BackSide(
     card: LoyaltyCard,
     onShowFrontSideClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.padding(ContentPaddingBackSide)) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(ContentPaddingBackSide)
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = card.number.value,
@@ -275,6 +291,56 @@ private fun BackSide(
                     modifier = Modifier.size(iconSize),
                 )
             }
+        }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        QrCode(
+            card = card,
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+        )
+    }
+}
+
+@Composable
+private fun QrCode(
+    card: LoyaltyCard,
+    modifier: Modifier = Modifier,
+) {
+    val color = card.level.contentColor
+    val bitmap: Bitmap? = remember(card.number, color) {
+        val byteArray = QRCode.ofSquares()
+            .withBackgroundColor(Color.Transparent.toArgb())
+            .withColor(color.toArgb())
+            .withInnerSpacing(0)
+            .build(card.number.value)
+            .render()
+            .getBytes()
+        BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+    }
+
+    DisposableEffect(bitmap) {
+        onDispose {
+            bitmap?.recycle()
+        }
+    }
+    
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier.fillMaxHeight(),
+    ) {
+        if (bitmap != null) {
+            Image(
+                bitmap = bitmap.asImageBitmap(),
+                contentDescription = stringResource(R.string.qr_code),
+                contentScale = ContentScale.FillHeight,
+            )
+        } else {
+            Text(
+                text = stringResource(R.string.qr_code_generation_error),
+                style = UiKitTheme.typography.secondary.regular,
+                textAlign = TextAlign.Center,
+            )
         }
     }
 }
@@ -392,6 +458,16 @@ private fun PreviewBackSide() {
 }
 
 enum class LoyaltyCardSide { FRONT, BACK }
+
+private val LoyaltyCardLevel.contentColor: Color
+    @Composable
+    get() = when (this) {
+        LoyaltyCardLevel.PRIME, LoyaltyCardLevel.PRIORITY -> {
+            UiKitTheme.colors.text.general.regular.default
+        }
+
+        LoyaltyCardLevel.STAR -> UiKitTheme.colors.text.general.inversed.default
+    }
 
 private const val ROTATION_FRONT_SIDE = 0f
 private const val ROTATION_BACK_SIDE = 180f

@@ -202,6 +202,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
     implementation(libs.composeShimmer)
+    implementation(libs.qrcode)
 
     implementation(libs.libphonenumber)
 
