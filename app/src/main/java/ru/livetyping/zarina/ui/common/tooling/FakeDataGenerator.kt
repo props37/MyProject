@@ -24,7 +24,7 @@ import kotlin.random.Random
 
 object FakeDataGenerator {
     fun getLoyaltyCard(
-        number: LoyaltyCard.Number = LoyaltyCard.Number(getRandomString()),
+        number: LoyaltyCard.Number = LoyaltyCard.Number("7820103395338"),
         level: LoyaltyCardLevel = LoyaltyCardLevel.PRIME,
         nextLevel: LoyaltyCard.NextLevel = LoyaltyCard.NextLevel(
             level = LoyaltyCardLevel.PRIORITY,
