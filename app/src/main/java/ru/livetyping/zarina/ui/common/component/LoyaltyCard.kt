@@ -10,6 +10,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -193,19 +194,30 @@ private fun FrontSide(
 
             Spacer(modifier = Modifier.width(16.dp))
 
+            val interactionSource = remember { MutableInteractionSource() }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
+                        interactionSource = interactionSource,
                         indication = null,
                         onClick = onShowBackSideClicked,
                     ),
             ) {
+                val qrCodeIconSize = 24.dp
                 Icon(
                     painter = painterResource(R.drawable.ic_qr_24),
                     contentDescription = stringResource(R.string.qr_code),
+                    modifier = Modifier
+                        .size(qrCodeIconSize)
+                        .indication(
+                            interactionSource = interactionSource,
+                            indication = rememberRipple(
+                                bounded = false,
+                                radius = qrCodeIconSize - 6.dp,
+                            )
+                        ),
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
