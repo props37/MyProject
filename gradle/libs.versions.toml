@@ -41,6 +41,7 @@ accompanist = "0.34.0"
 
 coil = "2.6.0"
 composeShimmer = "1.3.0"
+qrcode = "4.1.1"
 
 libphonenumber = "8.13.35"
 
@@ -56,7 +57,7 @@ recaptcha = "18.5.0-beta02"
 firebase-bom = "32.8.1"
 
 firebase-performance = "1.4.2"
-mindbox = "2.9.0"
+mindbox = "2.9.1"
 
 junit = "4.13.2"
 
@@ -122,6 +123,7 @@ accompanist-webview = { group = "com.google.accompanist", name = "accompanist-we
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
 composeShimmer = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version.ref = "composeShimmer" }
+qrcode = { group = "io.github.g0dkar", name = "qrcode-kotlin", version.ref = "qrcode" }
 
 libphonenumber = { group = "io.michaelrocks", name = "libphonenumber-android", version.ref = "libphonenumber" }
 

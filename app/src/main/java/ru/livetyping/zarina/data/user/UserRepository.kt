@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.data.user
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.data.user.local.UserLocalDataSource
 import ru.livetyping.zarina.data.user.remote.UserRemoteDataSource
 import ru.livetyping.zarina.domain.authorization.AuthorizationResult
@@ -9,6 +10,7 @@ import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.domain.user.User
 import javax.inject.Inject
 
@@ -22,6 +24,16 @@ class UserRepository @Inject constructor(
 
     suspend fun setUser(user: User) {
         localDataSource.setUser(user)
+    }
+
+    fun getLoyaltyCardFlow(): Flow<LoyaltyCard?> {
+        return localDataSource.getLoyaltyCardFlow()
+    }
+
+    suspend fun fetchLoyaltyCard() {
+        val card = remoteDataSource.getLoyaltyCardFlow().firstOrNull()
+        checkNotNull(card) { "Failed to fetch loyalty card" }
+        localDataSource.setLoyaltyCard(card)
     }
 
     fun getUserCityFlow(): Flow<City?> {

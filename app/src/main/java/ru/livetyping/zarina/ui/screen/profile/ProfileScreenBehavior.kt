@@ -18,14 +18,21 @@ import ru.livetyping.zarina.util.domain.common.toUri
 
 @Composable
 fun ProfileScreenBehavior(
+    onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProfileScreenAction) -> Unit,
 ) {
     val updatedContext by rememberUpdatedState(LocalContext.current)
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+    val updatedOnScreenOpened by rememberUpdatedState(onScreenOpened)
     val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = true)
+
+    LifecycleStartEffect {
+        updatedOnScreenOpened()
+        onStopOrDispose {}
+    }
 
     LifecycleStartEffect(sideEffects) {
         lifecycleScope.launch {

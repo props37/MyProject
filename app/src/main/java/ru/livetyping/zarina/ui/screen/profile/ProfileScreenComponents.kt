@@ -16,6 +16,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +28,9 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.user.LoyaltyCard
+import ru.livetyping.zarina.ui.common.component.LoyaltyCardPlaceholder
+import ru.livetyping.zarina.ui.common.component.LoyaltyCardSide
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
@@ -40,6 +44,7 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentCrossfadeTrans
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
+import ru.livetyping.zarina.ui.common.component.LoyaltyCard as LoyaltyCardImpl
 
 object ProfileScreenComponents {
 
@@ -138,6 +143,35 @@ object ProfileScreenComponents {
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(text = stringResource(R.string.sign_up).uppercase())
+            }
+        }
+    }
+
+    @Composable
+    fun LoyaltyCard(
+        loyaltyCard: LoyaltyCard?,
+        onLevelInfoClicked: () -> Unit,
+        onSideChanged: (LoyaltyCardSide?) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        AnimatedContent(
+            targetState = loyaltyCard,
+            transitionSpec = {
+                AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+            },
+            contentKey = { it != null },
+            label = "LoyaltyCard",
+            modifier = modifier,
+        ) { card ->
+            if (card != null) {
+                LoyaltyCardImpl(
+                    card = card,
+                    onLevelInfoClicked = onLevelInfoClicked,
+                    onSideChanged = onSideChanged,
+                )
+            } else {
+                SideEffect { onSideChanged(null) }
+                LoyaltyCardPlaceholder()
             }
         }
     }

@@ -1,16 +1,24 @@
 package ru.livetyping.zarina.data.user.remote
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.data.user.remote.api.UserApi
 import ru.livetyping.zarina.domain.authorization.AuthorizationResult
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.user.LoyaltyCard
 import javax.inject.Inject
 
 class UserRemoteDataSource @Inject constructor(
     private val api: UserApi,
 ) {
+    fun getLoyaltyCardFlow(): Flow<LoyaltyCard> = flow {
+        val dto = api.getLoyaltyCard()
+        emit(dto.toLoyaltyCard())
+    }
+
     suspend fun setUserCity(city: City) {
         api.setUserCity(city)
     }

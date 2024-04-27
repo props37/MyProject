@@ -9,6 +9,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -20,6 +21,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.domain.user.User
 import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.screenresult.ScreenResultHandler
@@ -46,7 +48,17 @@ class ProfileViewModel @AssistedInject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
+    private var fetchLoyaltyCardJob: Job? = null
+
     val user: StateFlow<User?> = interactor.getUserFlow()
+        .map { it.getOrNull() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = null,
+        )
+
+    val loyaltyCard: StateFlow<LoyaltyCard?> = interactor.getLoyaltyCardFlow()
         .map { it.getOrNull() }
         .stateIn(
             scope = viewModelScope,
@@ -76,6 +88,10 @@ class ProfileViewModel @AssistedInject constructor(
 
     init {
         handleCitySelectorResult()
+    }
+
+    fun onScreenOpened() {
+        fetchLoyaltyCard()
     }
 
     fun onProfileDetailsClicked() {
@@ -112,7 +128,11 @@ class ProfileViewModel @AssistedInject constructor(
                     emitSideEffect(SideEffect.Navigate(action))
                 }
 
-                InfoItem.Shops -> Unit // TODO: [High] Implement
+                InfoItem.Shops -> {
+                    val action = ProfileScreenAction.ShopsClicked
+                    emitSideEffect(SideEffect.Navigate(action))
+                }
+
                 InfoItem.Help -> {
                     val url = Url(HELP_URL)
                     emitSideEffect(SideEffect.OpenUrl(url))
@@ -123,6 +143,13 @@ class ProfileViewModel @AssistedInject constructor(
                     emitSideEffect(SideEffect.OpenUrl(url))
                 }
             }
+        }
+    }
+
+    private fun fetchLoyaltyCard() {
+        if (fetchLoyaltyCardJob?.isActive == true) return
+        fetchLoyaltyCardJob = viewModelScope.launch {
+            interactor.fetchLoyaltyCard()
         }
     }
 

@@ -177,6 +177,19 @@
     <string name="order_cancellation_consequences">При отмене заказа действие нельзя будет изменить</string>
     <string name="return_">Вернуться</string>
     <string name="order_cancellation_error">Не удалось отменить заказ</string>
+    <string name="map">Карта</string>
+    <string name="list">Список</string>
+    <string name="qr_code">QR-код</string>
+    <string name="to_next_level">До следующего уровня %1$s</string>
+    <string name="show_loyalty_card_info">Показать информацию о карте лояльности</string>
+    <string name="turn_card">Перевернуть карту</string>
+    <string name="qr_code_generation_error">Не удалось сгенерировать QR-код</string>
+    <string name="creating_your_loyality_card">Создаём твою карту лояльности</string>
+    <string name="it_will_take_up_to_five_minutes">Это займёт до пяти минут</string>
+
+    <string name="loyalty_card_level_prime">Prime</string>
+    <string name="loyalty_card_level_priority">Priority</string>
+    <string name="loyalty_card_level_star">Star</string>
 
     <string name="order_status_accepted">Принят</string>
     <string name="order_status_confirmed">Подтверждён</string>
@@ -275,6 +288,15 @@
         <item quantity="few">%1$d товара</item>
         <item quantity="many">%1$d товаров</item>
         <item quantity="other">%1$d товаров</item>
+    </plurals>
+
+    <plurals name="bonuses">
+        <item quantity="zero">бонусов</item>
+        <item quantity="one">бонус</item>
+        <item quantity="two">бонуса</item>
+        <item quantity="few">бонуса</item>
+        <item quantity="many">бонусов</item>
+        <item quantity="other">бонусов</item>
     </plurals>
 
 </resources>
