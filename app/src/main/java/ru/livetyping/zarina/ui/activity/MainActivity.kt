@@ -2,6 +2,7 @@ package ru.livetyping.zarina.ui.activity
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -20,6 +21,9 @@ import ru.livetyping.zarina.BuildConfig
 import ru.livetyping.zarina.base.behavior.DefaultBehaviorController
 import ru.livetyping.zarina.ui.activity.lifecycleobserver.ActivityLifecycleObserverManager
 import ru.livetyping.zarina.ui.app.ZarinaApp
+import ru.livetyping.zarina.ui.common.behavior.screenbrightness.LocalScreenBrightnessBehaviorController
+import ru.livetyping.zarina.ui.common.behavior.screenbrightness.ScreenBrightnessBehavior
+import ru.livetyping.zarina.ui.common.behavior.screenbrightness.ScreenBrightnessBehaviorController
 import ru.livetyping.zarina.ui.common.behavior.systembars.LocalSystemBarsBehaviorController
 import ru.livetyping.zarina.ui.common.behavior.systembars.SystemBarsBehavior
 import ru.livetyping.zarina.ui.common.behavior.systembars.SystemBarsBehaviorController
@@ -48,12 +52,16 @@ class MainActivity : AppCompatActivity() {
             isNavigationBarContentLight = false,
         )
         val systemBarsBehaviorController = DefaultBehaviorController(defaultSystemBarsBehavior)
-
         applySystemBarsBehavior(systemBarsBehaviorController)
+
+        val defaultScreenBrightnessBehavior = ScreenBrightnessBehavior(brightness = null)
+        val screenBrightnessBehaviorController = DefaultBehaviorController(defaultScreenBrightnessBehavior)
+        applyScreenBrightnessBehavior(screenBrightnessBehaviorController)
 
         setContent {
             CompositionLocalProvider(
                 LocalSystemBarsBehaviorController provides systemBarsBehaviorController,
+                LocalScreenBrightnessBehaviorController provides screenBrightnessBehaviorController,
             ) {
                 ZarinaTheme {
                     ZarinaApp(
@@ -99,6 +107,21 @@ class MainActivity : AppCompatActivity() {
                         statusBarStyle = statusBarStyle,
                         navigationBarStyle = navigationBarStyle,
                     )
+                }
+            }
+        }
+    }
+
+    private fun applyScreenBrightnessBehavior(controller: ScreenBrightnessBehaviorController) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                controller.currentBehavior.collect {
+                    val window = this@MainActivity.window
+
+                    val brightness = it.brightness ?: WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+                    val layoutParams = window?.attributes
+                    layoutParams?.screenBrightness = brightness
+                    window?.attributes = layoutParams
                 }
             }
         }

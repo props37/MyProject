@@ -15,8 +15,11 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +35,8 @@ import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.domain.user.User
 import ru.livetyping.zarina.ui.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.ui.common.behavior.screenbrightness.ForcedScreenBrightnessBehavior
+import ru.livetyping.zarina.ui.common.component.LoyaltyCardSide
 import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
@@ -90,6 +95,9 @@ private fun ScreenContent(
         navigate = navigate,
     )
 
+    var screenBrightness by remember { mutableStateOf<Float?>(null) }
+    ForcedScreenBrightnessBehavior(brightness = screenBrightness)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -122,10 +130,13 @@ private fun ScreenContent(
                     LoyaltyCard(
                         loyaltyCard = loyaltyCard,
                         onLevelInfoClicked = { /*TODO*/ },
-                        onSideChanged = { /*TODO*/ },
+                        onSideChanged = {
+                            screenBrightness = if (it == LoyaltyCardSide.BACK) 1f else null
+                        },
                         modifier = Modifier.fillMaxWidth(),
                     )
                 } else {
+                    SideEffect { screenBrightness = null }
                     AuthorizationSuggestion(
                         onSignInClicked = onSignInClicked,
                         onSignUpClicked = onSignUpClicked,
