@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextRange
@@ -36,7 +37,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
-import ru.livetyping.zarina.ui.common.component.shimmer.rememberZarinaTextShimmer
+import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.text.FontFeatureSettings
@@ -96,9 +97,18 @@ fun ZarinaOtpTextField(
                 horizontalArrangement = Arrangement.spacedBy(cellSpacedBy),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                val shimmer = rememberZarinaTextShimmer(
+                val shimmer = rememberZarinaSkeletonShimmer(
                     bounds = ShimmerBounds.Window,
-                    targetColorAlpha = 0.2f,
+                    delayMillis = 0,
+                    blendMode = BlendMode.DstIn,
+                    shaderColors = remember {
+                        listOf(
+                            Color.Unspecified.copy(alpha = 1f),
+                            Color.Unspecified.copy(alpha = 0.2f),
+                            Color.Unspecified.copy(alpha = 1f),
+                        )
+                    },
+                    width = 600.dp,
                 )
 
                 repeat(length) { index ->
