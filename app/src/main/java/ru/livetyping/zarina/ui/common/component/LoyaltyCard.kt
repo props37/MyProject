@@ -121,7 +121,7 @@ fun LoyaltyCard(
             LoyaltyCardSide.FRONT -> RotationFrontSide
             LoyaltyCardSide.BACK -> RotationBackSide
         },
-        animationSpec = spring(stiffness = Spring.StiffnessVeryLow),
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
         label = "rotation",
     )
     val visibleSide by remember {
@@ -881,7 +881,7 @@ private const val RotationFrontSide = 0f
 private const val RotationBackSide = 180f
 private const val RotationTurnThreshold = RotationBackSide / 2
 
-private const val CameraDistance = 16f
+private const val CameraDistance = 20f
 
 private val ShapeDefault: Shape get() = RoundedCornerShape(12.dp)
 private val ContentPaddingFrontSide: PaddingValues get() = PaddingValues(30.dp)
