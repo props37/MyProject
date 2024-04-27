@@ -118,15 +118,15 @@ fun LoyaltyCard(
     var side by rememberSaveable { mutableStateOf(initialSide) }
     val rotation = animateFloatAsState(
         targetValue = when (side) {
-            LoyaltyCardSide.FRONT -> ROTATION_FRONT_SIDE
-            LoyaltyCardSide.BACK -> ROTATION_BACK_SIDE
+            LoyaltyCardSide.FRONT -> RotationFrontSide
+            LoyaltyCardSide.BACK -> RotationBackSide
         },
-        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        animationSpec = spring(stiffness = Spring.StiffnessVeryLow),
         label = "rotation",
     )
     val visibleSide by remember {
         derivedStateOf {
-            if (rotation.value <= ROTATION_TURN_THRESHOLD) LoyaltyCardSide.FRONT else LoyaltyCardSide.BACK
+            if (rotation.value <= RotationTurnThreshold) LoyaltyCardSide.FRONT else LoyaltyCardSide.BACK
         }
     }
 
@@ -144,6 +144,7 @@ fun LoyaltyCard(
                 .graphicsLayer {
                     shape = ShapeDefault
                     clip = true
+                    cameraDistance = CameraDistance
                     rotationY = rotation.value
                 },
         ) {
@@ -174,7 +175,7 @@ fun LoyaltyCard(
                     .height(frontSideHeightDp)
                     .graphicsLayer {
                         alpha = if (visibleSide == LoyaltyCardSide.BACK) 1f else 0f
-                        rotationY = ROTATION_BACK_SIDE
+                        rotationY = RotationBackSide
                     },
             )
         }
@@ -876,9 +877,11 @@ private val LoyaltyCardLevel.contentColor: Color
         LoyaltyCardLevel.STAR -> UiKitTheme.colors.text.general.inversed.default
     }
 
-private const val ROTATION_FRONT_SIDE = 0f
-private const val ROTATION_BACK_SIDE = 180f
-private const val ROTATION_TURN_THRESHOLD = ROTATION_BACK_SIDE / 2
+private const val RotationFrontSide = 0f
+private const val RotationBackSide = 180f
+private const val RotationTurnThreshold = RotationBackSide / 2
+
+private const val CameraDistance = 16f
 
 private val ShapeDefault: Shape get() = RoundedCornerShape(12.dp)
 private val ContentPaddingFrontSide: PaddingValues get() = PaddingValues(30.dp)
