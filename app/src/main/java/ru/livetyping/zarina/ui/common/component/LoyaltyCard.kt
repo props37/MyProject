@@ -78,6 +78,8 @@ import ru.livetyping.zarina.domain.user.contains
 import ru.livetyping.zarina.domain.user.requiredPurchaseSum
 import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
+import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
+import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.common.util.domain.nameResId
 import ru.livetyping.zarina.ui.common.util.rememberFormattedPrice
@@ -651,8 +653,8 @@ private fun DrawScope.drawDots(
 
 @Suppress("MagicNumber")
 @Preview
-//@FontScalePreviews
-//@DensityPreviews
+@FontScalePreviews
+@DensityPreviews
 @Composable
 private fun PreviewPrime() {
     ZarinaPreview {
