@@ -4,15 +4,20 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -47,10 +52,12 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
@@ -69,6 +76,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.ShimmerTheme
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.flow.distinctUntilChanged
 import qrcode.QRCode
 import ru.livetyping.zarina.R
@@ -165,6 +177,61 @@ fun LoyaltyCard(
                         rotationY = ROTATION_BACK_SIDE
                     },
             )
+        }
+    }
+}
+
+@Composable
+fun LoyaltyCardPlaceholder(
+    modifier: Modifier = Modifier,
+    shimmer: Shimmer = rememberPlaceholderShimmer(),
+) {
+    val placeholderCard = remember {
+        LoyaltyCard(
+            number = LoyaltyCard.Number(""),
+            level = LoyaltyCardLevel.PRIME,
+            nextLevelInfo = null,
+            bonuses = LoyaltyCard.Bonuses(0, 0),
+            totalPurchaseSum = 0,
+        )
+    }
+
+    Box(modifier = modifier) {
+        LoyaltyCard(
+            card = placeholderCard,
+            onLevelInfoClicked = {},
+            modifier = Modifier.alpha(0f),
+        )
+
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .clip(ShapeDefault),
+        ) {
+            Background(
+                level = LoyaltyCardLevel.PRIME,
+                modifier = Modifier
+                    .matchParentSize()
+                    .shimmer(shimmer),
+            )
+
+            Column(
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .matchParentSize()
+                    .padding(30.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.creating_your_loyality_card),
+                    style = UiKitTheme.typography.tertiary.regular,
+                    color = UiKitTheme.colors.text.general.regular.default,
+                )
+                Text(
+                    text = stringResource(R.string.it_will_take_up_to_five_minutes),
+                    style = UiKitTheme.typography.footnote.light,
+                    color = UiKitTheme.colors.text.general.regular.default,
+                )
+            }
         }
     }
 }
@@ -554,6 +621,35 @@ private fun Background(
     }
 }
 
+@Composable
+private fun rememberPlaceholderShimmer(): Shimmer {
+    val theme = remember {
+        ShimmerTheme(
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = 1200,
+                    delayMillis = 1000,
+                    easing = LinearEasing,
+                ),
+                repeatMode = RepeatMode.Restart,
+            ),
+            blendMode = BlendMode.Overlay,
+            rotation = 345f,
+            shaderColors = listOf(
+                Color.White.copy(alpha = 0.01f),
+                Color.White.copy(alpha = 0.4f),
+                Color.White.copy(alpha = 0.01f),
+            ),
+            shaderColorStops = null,
+            shimmerWidth = 400.dp,
+        )
+    }
+    return rememberShimmer(
+        shimmerBounds = ShimmerBounds.View,
+        theme = theme,
+    )
+}
+
 private fun DrawScope.drawTrack(
     trackWidth: Float,
     trackSize: Size,
@@ -754,6 +850,16 @@ private fun PreviewBackSide() {
                 .background(Color.White)
                 .padding(16.dp)
                 .fillMaxWidth(),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewSkeleton() {
+    ZarinaPreview {
+        LoyaltyCardPlaceholder(
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

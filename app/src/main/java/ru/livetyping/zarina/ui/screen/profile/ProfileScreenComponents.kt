@@ -23,13 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.LoyaltyCard
+import ru.livetyping.zarina.ui.common.component.LoyaltyCardPlaceholder
 import ru.livetyping.zarina.ui.common.component.LoyaltyCardSide
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonDefaults
@@ -171,13 +171,7 @@ object ProfileScreenComponents {
                 )
             } else {
                 SideEffect { onSideChanged(null) }
-                // TODO: [High] Implement
-                Text(
-                    text = "Здесь будет плейсхолдер карты",
-                    style = UiKitTheme.typography.primary.bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp),
-                )
+                LoyaltyCardPlaceholder()
             }
         }
     }
