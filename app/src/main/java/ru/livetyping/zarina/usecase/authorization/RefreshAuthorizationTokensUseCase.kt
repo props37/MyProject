@@ -4,9 +4,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.base.usecase.UseCase
 import ru.livetyping.zarina.data.authorization.AuthorizationRepository
+import ru.livetyping.zarina.data.signout.ForcedSignOutCoordinator
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
-import ru.livetyping.zarina.usecase.user.ForcedSignOutUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import timber.log.Timber
 import javax.inject.Inject
@@ -18,7 +18,7 @@ class RefreshAuthorizationTokensUseCase @Inject constructor(
     dispatcher: CoroutineDispatcher,
     private val authorizationRepository: AuthorizationRepository,
     private val fetchUnauthorizedUserAuthorizationTokensUseCase: FetchUnauthorizedUserAuthorizationTokensUseCase,
-    private val forcedSignOutUseCase: ForcedSignOutUseCase,
+    private val forcedSignOutCoordinator: ForcedSignOutCoordinator,
 ) : UseCase<Unit, Unit>(dispatcher) {
 
     override suspend fun execute(params: Unit) {
@@ -37,8 +37,8 @@ class RefreshAuthorizationTokensUseCase @Inject constructor(
             authorizationRepository.setAuthorizationTokens(newTokens)
             Timber.v("Authorization tokens refreshed. New tokens: $newTokens")
         } catch (e: Exception) {
-            Timber.e(e, "Failed to refresh authorization tokens. Perform forced sign out")
-            forcedSignOutUseCase().getOrThrow()
+            Timber.e(e, "Failed to refresh authorization tokens. Request forced sign out")
+            forcedSignOutCoordinator.requestForcedSignOut()
             throw e
         }
     }

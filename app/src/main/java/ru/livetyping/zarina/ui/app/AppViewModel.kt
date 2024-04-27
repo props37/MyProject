@@ -10,7 +10,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.runBlocking
 import ru.livetyping.zarina.domain.cart.CartSize
@@ -52,4 +54,17 @@ class AppViewModel @Inject constructor(
     @OptIn(UnstableApi::class)
     val exoPlayerCacheDataSourceFactory: CacheDataSource.Factory =
         interactor.exoPlayerCacheDataSourceFactory
+
+    init {
+        listenToForcedSignOutRequests()
+    }
+
+    // TODO: [High] Deal with navigation?
+    private fun listenToForcedSignOutRequests() {
+        interactor.getForcedSignOutRequestFlow()
+            .onEach {
+                interactor.forcedSignOut()
+            }
+            .launchIn(viewModelScope)
+    }
 }
