@@ -26,7 +26,7 @@ object FakeDataGenerator {
     fun getLoyaltyCard(
         number: LoyaltyCard.Number = LoyaltyCard.Number("7820103395338"),
         level: LoyaltyCardLevel = LoyaltyCardLevel.PRIME,
-        nextLevel: LoyaltyCard.NextLevel = LoyaltyCard.NextLevel(
+        nextLevelInfo: LoyaltyCard.NextLevelInfo? = LoyaltyCard.NextLevelInfo(
             level = LoyaltyCardLevel.PRIORITY,
             remainingPurchaseSum = 15000,
         ),
@@ -39,7 +39,7 @@ object FakeDataGenerator {
     ): LoyaltyCard = LoyaltyCard(
         number = number,
         level = level,
-        nextLevel = nextLevel,
+        nextLevelInfo = nextLevelInfo,
         bonuses = bonuses,
         discountPercent = discountPercent,
         totalPurchaseSum = totalPurchaseSum,

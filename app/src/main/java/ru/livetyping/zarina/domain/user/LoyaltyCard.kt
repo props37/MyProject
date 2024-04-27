@@ -3,7 +3,7 @@ package ru.livetyping.zarina.domain.user
 data class LoyaltyCard(
     val number: Number,
     val level: LoyaltyCardLevel,
-    val nextLevel: NextLevel?,
+    val nextLevelInfo: NextLevelInfo?,
     val bonuses: Bonuses,
     val discountPercent: Int,
     val totalPurchaseSum: Int,
@@ -11,7 +11,7 @@ data class LoyaltyCard(
     @JvmInline
     value class Number(val value: String)
 
-    data class NextLevel(
+    data class NextLevelInfo(
         val level: LoyaltyCardLevel,
         val remainingPurchaseSum: Int,
     )

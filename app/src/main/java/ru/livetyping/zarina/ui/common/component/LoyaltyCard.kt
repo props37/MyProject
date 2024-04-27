@@ -7,6 +7,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,10 +46,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
@@ -60,6 +66,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -67,23 +74,24 @@ import qrcode.QRCode
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.domain.user.LoyaltyCardLevel
+import ru.livetyping.zarina.domain.user.contains
+import ru.livetyping.zarina.domain.user.requiredPurchaseSum
 import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
-import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
-import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.common.util.domain.nameResId
 import ru.livetyping.zarina.ui.common.util.rememberFormattedPrice
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import timber.log.Timber
+import kotlin.enums.EnumEntries
 
 @Composable
 fun LoyaltyCard(
     card: LoyaltyCard,
-    onShowInfoClicked: () -> Unit,
+    onLevelInfoClicked: () -> Unit,
     modifier: Modifier = Modifier,
     initialSide: LoyaltyCardSide = LoyaltyCardSide.FRONT,
-    onTurned: ((LoyaltyCardSide) -> Unit)? = null,
+    onSideChanged: ((LoyaltyCardSide) -> Unit)? = null,
 ) {
     val density = LocalDensity.current
 
@@ -108,7 +116,7 @@ fun LoyaltyCard(
         }
     }
 
-    val updatedOnTurned by rememberUpdatedState(onTurned)
+    val updatedOnTurned by rememberUpdatedState(onSideChanged)
     LaunchedEffect(Unit) {
         snapshotFlow { visibleSide }
             .distinctUntilChanged()
@@ -135,7 +143,7 @@ fun LoyaltyCard(
             FrontSide(
                 card = card,
                 onShowBackSideClicked = { side = LoyaltyCardSide.BACK },
-                onShowInfoClicked = onShowInfoClicked,
+                onLevelInfoClicked = onLevelInfoClicked,
                 modifier = Modifier
                     .graphicsLayer {
                         alpha = if (visibleSide == LoyaltyCardSide.FRONT) 1f else 0f
@@ -159,127 +167,38 @@ fun LoyaltyCard(
     }
 }
 
-// TODO: [High] Add progress bar
 @Composable
 private fun FrontSide(
     card: LoyaltyCard,
     onShowBackSideClicked: () -> Unit,
-    onShowInfoClicked: () -> Unit,
+    onLevelInfoClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val density = LocalDensity.current
     Column(modifier = modifier.padding(ContentPaddingFrontSide)) {
         Row {
-            Text(
-                text = card.bonuses.bonusCount.toString(),
-                style = UiKitTheme.typography.heading1.regular,
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-
-            val topPadding = with(density) { 6.sp.toDp() }
-            Text(
-                text = pluralStringResource(
-                    id = R.plurals.bonuses,
-                    count = card.bonuses.bonusCount
-                ),
-                style = UiKitTheme.typography.tertiary.regular.copy(
-                    lineHeight = UiKitTheme.typography.heading1.regular.lineHeight,
-                ),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(top = topPadding),
+            FrontSideBonuses(
+                bonuses = card.bonuses,
+                modifier = Modifier.weight(1f),
             )
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            val interactionSource = remember { MutableInteractionSource() }
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(top = 4.dp)
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null,
-                        onClick = onShowBackSideClicked,
-                    ),
-            ) {
-                val qrCodeIconSize = 24.dp
-                Icon(
-                    painter = painterResource(R.drawable.ic_qr_24),
-                    contentDescription = stringResource(R.string.qr_code),
-                    modifier = Modifier
-                        .size(qrCodeIconSize)
-                        .indication(
-                            interactionSource = interactionSource,
-                            indication = rememberRipple(
-                                bounded = false,
-                                radius = qrCodeIconSize - 6.dp,
-                            )
-                        ),
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    val textStyle = UiKitTheme.typography.caption1.bold
-                    Text(
-                        text = stringResource(R.string.qr_code).uppercase(),
-                        style = textStyle,
-                    )
-                    Spacer(modifier = Modifier.width(2.dp))
-
-                    @Suppress("MagicNumber")
-                    val iconSize = with(density) { textStyle.fontSize.toDp() * 0.8f }
-                    Icon(
-                        painter = painterResource(R.drawable.ic_small_arrow_up_24),
-                        contentDescription = stringResource(R.string.qr_code),
-                        modifier = Modifier
-                            .padding(bottom = 2.dp) // Circe font padding
-                            .size(iconSize)
-                            .rotate(degrees = 90f),
-                    )
-                }
-            }
+            FrontSideQrCode(
+                onShowBackSideClicked = onShowBackSideClicked,
+                modifier = Modifier.padding(top = 4.dp),
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            text = stringResource(card.level.nameResId),
-            style = UiKitTheme.typography.primary.bold,
+        FrontSideLevelInfo(
+            card = card,
+            onLevelInfoClicked = onLevelInfoClicked,
         )
 
-        Spacer(modifier = Modifier.height(2.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            val formattedRemainingPurchaseSum =
-                rememberFormattedPrice(card.nextLevel.remainingPurchaseSum.toLong())
-            Text(
-                text = stringResource(R.string.to_next_level, formattedRemainingPurchaseSum),
-                style = UiKitTheme.typography.tertiary.light,
-                modifier = Modifier.weight(1f),
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-
-            val iconSize = 16.dp
-            val iconColor = LocalContentColor.current
-            ZarinaIconButton(
-                onClick = onShowInfoClicked,
-                indication = rememberRipple(bounded = false, radius = iconSize),
-                modifier = Modifier
-                    .size(iconSize)
-                    .wrapContentSize(unbounded = true),
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_exclamation_mark_shaped_24),
-                    tint = iconColor,
-                    contentDescription = stringResource(R.string.show_loyalty_card_info),
-                    modifier = Modifier.size(iconSize),
-                )
-            }
-        }
+        FrontSideProgressBar(card = card)
     }
 }
 
@@ -322,7 +241,7 @@ private fun BackSide(
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        QrCode(
+        BackSideQrCode(
             card = card,
             modifier = Modifier.align(Alignment.CenterHorizontally),
         )
@@ -330,7 +249,231 @@ private fun BackSide(
 }
 
 @Composable
-private fun QrCode(
+private fun FrontSideBonuses(
+    bonuses: LoyaltyCard.Bonuses,
+    modifier: Modifier = Modifier,
+) {
+    Row(modifier = modifier) {
+        Text(
+            text = bonuses.bonusCount.toString(),
+            style = UiKitTheme.typography.heading1.regular,
+        )
+        Spacer(modifier = Modifier.width(6.dp))
+
+        val topPadding = with(LocalDensity.current) { 6.sp.toDp() }
+        Text(
+            text = pluralStringResource(
+                id = R.plurals.bonuses,
+                count = bonuses.bonusCount,
+            ),
+            style = UiKitTheme.typography.tertiary.regular,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(top = topPadding),
+        )
+    }
+}
+
+@Composable
+private fun FrontSideQrCode(
+    onShowBackSideClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onShowBackSideClicked,
+            ),
+    ) {
+        val qrCodeIconSize = 24.dp
+        Icon(
+            painter = painterResource(R.drawable.ic_qr_24),
+            contentDescription = stringResource(R.string.qr_code),
+            modifier = Modifier
+                .size(qrCodeIconSize)
+                .indication(
+                    interactionSource = interactionSource,
+                    indication = rememberRipple(
+                        bounded = false,
+                        radius = qrCodeIconSize - 6.dp,
+                    )
+                ),
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            val textStyle = UiKitTheme.typography.caption1.bold
+            Text(
+                text = stringResource(R.string.qr_code).uppercase(),
+                style = textStyle,
+            )
+            Spacer(modifier = Modifier.width(2.dp))
+
+            @Suppress("MagicNumber")
+            val iconSize = with(LocalDensity.current) { textStyle.fontSize.toDp() * 0.8f }
+            Icon(
+                painter = painterResource(R.drawable.ic_small_arrow_up_24),
+                contentDescription = stringResource(R.string.qr_code),
+                modifier = Modifier
+                    .padding(bottom = 2.dp) // Circe font padding
+                    .size(iconSize)
+                    .rotate(degrees = 90f),
+            )
+        }
+    }
+}
+
+@Composable
+private fun FrontSideLevelInfo(
+    card: LoyaltyCard,
+    onLevelInfoClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val levelNameTextStyle = UiKitTheme.typography.primary.bold
+
+    val levelInfoButton = @Composable {
+        val iconSize = 16.dp
+        val iconColor = LocalContentColor.current
+        ZarinaIconButton(
+            onClick = onLevelInfoClicked,
+            indication = rememberRipple(bounded = false, radius = iconSize),
+            modifier = Modifier
+                .size(iconSize)
+                .wrapContentSize(unbounded = true),
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_exclamation_mark_shaped_24),
+                tint = iconColor,
+                contentDescription = stringResource(R.string.show_loyalty_card_info),
+                modifier = Modifier.size(iconSize),
+            )
+        }
+    }
+
+    // Display both full and short info anyway to keep the card height the same regardless of its level
+    Box(
+        contentAlignment = Alignment.BottomStart,
+        modifier = modifier,
+    ) {
+        val fullInfoAlpha = if (card.nextLevelInfo != null) 1f else 0f
+        Column(modifier = Modifier.alpha(fullInfoAlpha)) {
+            Text(
+                text = stringResource(card.level.nameResId),
+                style = levelNameTextStyle,
+            )
+
+            Spacer(modifier = Modifier.height(2.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                val remainingPurchaseSum = card.nextLevelInfo?.remainingPurchaseSum ?: 0
+                val formattedRemainingPurchaseSum = stringResource(
+                    id = R.string.price_in_rubles_string,
+                    rememberFormattedPrice(remainingPurchaseSum.toLong()),
+                )
+                Text(
+                    text = stringResource(R.string.to_next_level, formattedRemainingPurchaseSum),
+                    style = UiKitTheme.typography.tertiary.light,
+                    modifier = Modifier.weight(1f),
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                levelInfoButton()
+            }
+        }
+
+        val shortInfoAlpha = if (card.nextLevelInfo != null) 0f else 1f
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.alpha(shortInfoAlpha),
+        ) {
+            Text(
+                text = stringResource(card.level.nameResId),
+                style = levelNameTextStyle,
+                modifier = Modifier.weight(1f),
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            levelInfoButton()
+        }
+    }
+}
+
+@Composable
+private fun FrontSideProgressBar(
+    card: LoyaltyCard,
+    modifier: Modifier = Modifier,
+) {
+    val trackColor = animateColorAsState(
+        targetValue = when (card.level) {
+            LoyaltyCardLevel.PRIME, LoyaltyCardLevel.PRIORITY -> {
+                UiKitTheme.colors.text.general.inversed.default
+            }
+
+            LoyaltyCardLevel.STAR -> UiKitTheme.colors.text.general.regular.default
+        },
+        label = "trackColor",
+    )
+    val progressColor = LocalContentColor.current
+
+    Canvas(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(ProgressBarDotSize)
+            .clipToBounds(),
+    ) {
+        val trackWidth = ProgressBarTrackWidth.toPx()
+        val dotSize = ProgressBarDotSize.toPx()
+        val dotRadius = dotSize / 2
+
+        val levels = LoyaltyCardLevel.entries
+        val levelSegmentCount = levels.size - 1
+        val levelSegmentWidth = size.width / levelSegmentCount
+        val levelToDotCenterX = levels
+            .mapIndexed { index, level ->
+                val dotCenterX = when (index) {
+                    0 -> dotRadius
+                    levels.lastIndex -> size.width - dotRadius
+                    else -> index * levelSegmentWidth
+                }
+                level to dotCenterX
+            }
+            .toMap()
+
+        // Draw track
+        val trackSize = Size(width = size.width - dotSize, height = trackWidth)
+        drawTrack(
+            trackWidth = trackWidth,
+            trackSize = trackSize,
+            trackColor = trackColor.value,
+            dotSize = dotSize,
+        )
+
+        // Draw progress
+        drawProgress(
+            card = card,
+            levels = levels,
+            levelToDotCenterX = levelToDotCenterX,
+            trackWidth = trackWidth,
+            trackSize = trackSize,
+            progressColor = progressColor,
+        )
+
+        // Draw dots
+        drawDots(
+            cardLevel = card.level,
+            levelToDotCenterX = levelToDotCenterX,
+            dotRadius = dotRadius,
+            trackColor = trackColor.value,
+            progressColor = progressColor,
+        )
+    }
+}
+
+@Composable
+private fun BackSideQrCode(
     card: LoyaltyCard,
     modifier: Modifier = Modifier,
 ) {
@@ -407,19 +550,124 @@ private fun Background(
     }
 }
 
+private fun DrawScope.drawTrack(
+    trackWidth: Float,
+    trackSize: Size,
+    trackColor: Color,
+    dotSize: Float,
+) {
+    val trackTopLeft = Offset(x = dotSize / 2, y = (size.height - trackWidth) / 2)
+    drawRect(
+        color = trackColor,
+        topLeft = trackTopLeft,
+        size = trackSize,
+    )
+}
+
+private fun DrawScope.drawProgress(
+    card: LoyaltyCard,
+    levels: EnumEntries<LoyaltyCardLevel>,
+    levelToDotCenterX: Map<LoyaltyCardLevel, Float>,
+    trackWidth: Float,
+    trackSize: Size,
+    progressColor: Color,
+) {
+    levels
+        .windowed(size = 2)
+        .forEach { levelPair ->
+            val startLevel = levelPair[0]
+            val endLevel = levelPair[1]
+
+            when {
+                endLevel in card.level -> {
+                    val startLevelDotCenterX = levelToDotCenterX[startLevel] ?: 0f
+                    val endLevelDotCenterX = levelToDotCenterX[endLevel] ?: 0f
+                    val topLeft = Offset(
+                        x = startLevelDotCenterX,
+                        y = (size.height - trackWidth) / 2,
+                    )
+                    val size = Size(
+                        width = endLevelDotCenterX - startLevelDotCenterX,
+                        height = trackSize.height,
+                    )
+                    drawRect(
+                        color = progressColor,
+                        topLeft = topLeft,
+                        size = size,
+                    )
+                }
+
+                startLevel in card.level -> {
+                    val nextLevelInfo = card.nextLevelInfo
+                    if (nextLevelInfo != null) {
+                        val startLevelDotCenterX = levelToDotCenterX[startLevel] ?: 0f
+                        val endLevelDotCenterX = levelToDotCenterX[endLevel] ?: 0f
+                        val startLevelRequiredPurchaseSum = startLevel.requiredPurchaseSum
+                        val nextLevelRemainingPurchaseSum = nextLevelInfo.remainingPurchaseSum
+                        // Subtract start level required purchase to count from zero
+                        val nextLevelRequiredPurchaseSum =
+                            nextLevelInfo.level.requiredPurchaseSum - startLevelRequiredPurchaseSum
+                        val levelProgressFraction = 1f -
+                                (nextLevelRemainingPurchaseSum.toFloat() / nextLevelRequiredPurchaseSum)
+                        val topLeft = Offset(
+                            x = startLevelDotCenterX,
+                            y = (size.height - trackWidth) / 2,
+                        )
+                        val size = Size(
+                            width = (endLevelDotCenterX - startLevelDotCenterX) * levelProgressFraction,
+                            height = trackSize.height,
+                        )
+                        drawRect(
+                            color = progressColor,
+                            topLeft = topLeft,
+                            size = size,
+                        )
+                    }
+                }
+            }
+        }
+}
+
+private fun DrawScope.drawDots(
+    cardLevel: LoyaltyCardLevel,
+    levelToDotCenterX: Map<LoyaltyCardLevel, Float>,
+    dotRadius: Float,
+    trackColor: Color,
+    progressColor: Color,
+) {
+    levelToDotCenterX.forEach { (level, dotCenterX) ->
+        val color = if (level in cardLevel) progressColor else trackColor
+        val center = Offset(x = dotCenterX, y = size.height / 2)
+        drawCircle(
+            color = color,
+            radius = dotRadius,
+            center = center,
+        )
+    }
+}
+
+@Suppress("MagicNumber")
 @Preview
-@FontScalePreviews
-@DensityPreviews
+//@FontScalePreviews
+//@DensityPreviews
 @Composable
 private fun PreviewPrime() {
     ZarinaPreview {
         LoyaltyCard(
             card = remember {
+                val level = LoyaltyCardLevel.PRIME
+                val nextLevel = LoyaltyCardLevel.PRIORITY
+                val totalPurchaseSum = 2500
                 FakeDataGenerator.getLoyaltyCard(
-                    level = LoyaltyCardLevel.PRIME,
+                    level = level,
+                    nextLevelInfo = LoyaltyCard.NextLevelInfo(
+                        level = nextLevel,
+                        remainingPurchaseSum = nextLevel.requiredPurchaseSum - totalPurchaseSum,
+                    ),
+                    totalPurchaseSum = totalPurchaseSum,
                 )
             },
-            onShowInfoClicked = {},
+            onLevelInfoClicked = {},
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp)
@@ -428,17 +676,26 @@ private fun PreviewPrime() {
     }
 }
 
+@Suppress("MagicNumber")
 @Preview
 @Composable
 private fun PreviewPriority() {
     ZarinaPreview {
         LoyaltyCard(
             card = remember {
+                val level = LoyaltyCardLevel.PRIORITY
+                val nextLevel = LoyaltyCardLevel.STAR
+                val totalPurchaseSum = 10000
                 FakeDataGenerator.getLoyaltyCard(
-                    level = LoyaltyCardLevel.PRIORITY,
+                    level = level,
+                    nextLevelInfo = LoyaltyCard.NextLevelInfo(
+                        level = nextLevel,
+                        remainingPurchaseSum = nextLevel.requiredPurchaseSum - totalPurchaseSum,
+                    ),
+                    totalPurchaseSum = totalPurchaseSum,
                 )
             },
-            onShowInfoClicked = {},
+            onLevelInfoClicked = {},
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp)
@@ -447,17 +704,22 @@ private fun PreviewPriority() {
     }
 }
 
+@Suppress("MagicNumber")
 @Preview
 @Composable
 private fun PreviewStar() {
     ZarinaPreview {
         LoyaltyCard(
             card = remember {
+                val level = LoyaltyCardLevel.STAR
+                val totalPurchaseSum = 50000
                 FakeDataGenerator.getLoyaltyCard(
-                    level = LoyaltyCardLevel.STAR,
+                    level = level,
+                    totalPurchaseSum = totalPurchaseSum,
+                    nextLevelInfo = null,
                 )
             },
-            onShowInfoClicked = {},
+            onLevelInfoClicked = {},
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp)
@@ -466,18 +728,23 @@ private fun PreviewStar() {
     }
 }
 
+@Suppress("MagicNumber")
 @Preview
 @Composable
 private fun PreviewBackSide() {
     ZarinaPreview {
         LoyaltyCard(
             card = remember {
+                val level = LoyaltyCardLevel.STAR
+                val totalPurchaseSum = 50000
                 FakeDataGenerator.getLoyaltyCard(
-                    level = LoyaltyCardLevel.STAR,
+                    level = level,
+                    totalPurchaseSum = totalPurchaseSum,
+                    nextLevelInfo = null,
                 )
             },
             initialSide = LoyaltyCardSide.BACK,
-            onShowInfoClicked = {},
+            onLevelInfoClicked = {},
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp)
@@ -505,5 +772,8 @@ private const val ROTATION_TURN_THRESHOLD = ROTATION_BACK_SIDE / 2
 private val ShapeDefault: Shape get() = RoundedCornerShape(12.dp)
 private val ContentPaddingFrontSide: PaddingValues get() = PaddingValues(30.dp)
 private val ContentPaddingBackSide: PaddingValues get() = PaddingValues(16.dp)
+
+private val ProgressBarTrackWidth: Dp get() = 1.dp
+private val ProgressBarDotSize: Dp get() = 8.dp
 
 private const val Tag = "LoyaltyCard"
