@@ -23,6 +23,7 @@ import ru.livetyping.zarina.ui.navigation.screen.graph.signUpGraph
 import ru.livetyping.zarina.ui.navigation.screen.graph.sizeSelectorGraph
 import ru.livetyping.zarina.ui.navigation.screen.listFilterScreen
 import ru.livetyping.zarina.ui.navigation.screen.onboardingScreen
+import ru.livetyping.zarina.ui.navigation.screen.productScreen
 import ru.livetyping.zarina.ui.navigation.screen.productSubscriptionScreen
 import ru.livetyping.zarina.ui.navigation.screen.productsScreen
 import ru.livetyping.zarina.ui.navigation.util.NavigationTransitionDurationMillis
@@ -57,6 +58,7 @@ fun ZarinaNavigation(
         citySelectorBottomSheetScreen(updatedNavController)
         defaultCityDialog(updatedNavController)
         productsScreen(updatedNavController)
+        productScreen(updatedNavController)
         filtersScreen(updatedNavController)
         listFilterScreen(updatedNavController)
         productSubscriptionScreen(updatedNavController)

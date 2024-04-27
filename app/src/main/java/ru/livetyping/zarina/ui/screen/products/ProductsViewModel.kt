@@ -240,7 +240,10 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     fun onProductClicked(product: Product) {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val action = ProductsScreenAction.ProductClicked(product)
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     fun onAddProductToFavoritesClicked(product: Product) {

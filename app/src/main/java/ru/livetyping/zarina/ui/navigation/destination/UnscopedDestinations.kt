@@ -11,7 +11,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.geography.City
-import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductOffer
 import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.model.filter.FiltersParcelable
@@ -34,6 +33,7 @@ import ru.livetyping.zarina.ui.navigation.navtype.TextType
 import java.util.UUID
 import ru.livetyping.zarina.domain.filter.Filters as DomainFilters
 import ru.livetyping.zarina.domain.filter.ListFilter as DomainListFilter
+import ru.livetyping.zarina.domain.product.Product as DomainProduct
 
 object UnscopedDestinations {
     data object Onboarding : SimpleDestination(BaseRoute.ONBOARDING)
@@ -152,6 +152,39 @@ object UnscopedDestinations {
         data class Args(
             val categoryId: Category.Id,
             val filters: DomainFilters? = null,
+        )
+    }
+
+    data object Product : Destination<Product.Args>() {
+        const val ARG_KEY_PRODUCT_ID = "arg_product_id"
+
+        private val baseRoute: String
+            get() = BaseRoute.PRODUCT.route
+
+        override val routeSchema: String
+            get() = RouteUtils.generateRouteSchema(
+                routeBase = baseRoute,
+                argNames = arrayOf(ARG_KEY_PRODUCT_ID),
+            )
+
+        override fun createRoute(args: Args): String {
+            return RouteUtils.generateRoute(
+                routeBase = baseRoute,
+                args = arrayOf(args.productId.value),
+            )
+        }
+
+        override val arguments: List<NamedNavArgument>
+            get() = listOf(
+                navArgument(ARG_KEY_PRODUCT_ID) { type = NavType.StringType },
+            )
+
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            putString(ARG_KEY_PRODUCT_ID, args.productId.value)
+        }
+
+        data class Args(
+            val productId: DomainProduct.Id,
         )
     }
 
@@ -294,6 +327,6 @@ object UnscopedDestinations {
             putParcelable(ARG_KEY_OFFER, offerParcelable)
         }
 
-        data class Args(val product: Product, val offer: ProductOffer)
+        data class Args(val product: DomainProduct, val offer: ProductOffer)
     }
 }

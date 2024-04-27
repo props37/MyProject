@@ -21,7 +21,8 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
         exitTransition = {
             when (targetState.destination.route) {
                 UnscopedDestinations.Filters.routeSchema,
-                UnscopedDestinations.ProductSubscription.routeSchema -> slideExitTransition()
+                UnscopedDestinations.ProductSubscription.routeSchema,
+                UnscopedDestinations.Product.routeSchema -> slideExitTransition()
 
                 else -> null
             }
@@ -29,7 +30,8 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
         popEnterTransition = {
             when (initialState.destination.route) {
                 UnscopedDestinations.Filters.routeSchema,
-                UnscopedDestinations.ProductSubscription.routeSchema -> slidePopEnterTransition()
+                UnscopedDestinations.ProductSubscription.routeSchema,
+                UnscopedDestinations.Product.routeSchema -> slidePopEnterTransition()
 
                 else -> null
             }
@@ -73,6 +75,10 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                             val offer = action.product.offers.firstOrNull() ?: return@ProductsScreen
                             navController.navigateToProductSubscriptionScreen(action.product, offer)
                         }
+                    }
+
+                    is ProductsScreenAction.ProductClicked -> {
+                        navController.navigateToProductScreen(action.product.id)
                     }
                 }
             },
