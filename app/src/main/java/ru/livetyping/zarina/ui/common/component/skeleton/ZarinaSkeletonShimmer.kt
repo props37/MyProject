@@ -19,41 +19,62 @@ import com.valentinilk.shimmer.rememberShimmer
 fun rememberZarinaSkeletonShimmer(
     bounds: ShimmerBounds = ShimmerBounds.View,
     durationMillis: Int = DurationMillis,
+    delayMillis: Int = DelayMillis,
+    rotation: Float = 0f,
+    blendMode: BlendMode = BlendMode.Overlay,
+    shaderColors: List<Color> = remember { ShaderColors },
     width: Dp = Width,
 ): Shimmer {
-    val shimmerTheme = remember(durationMillis, width) {
-        getShimmerTheme(durationMillis, width)
-    }
+    val theme = rememberZarinaSkeletonShimmerTheme(
+        durationMillis = durationMillis,
+        delayMillis = delayMillis,
+        rotation = rotation,
+        blendMode = blendMode,
+        shaderColors = shaderColors,
+        width = width,
+    )
     return rememberShimmer(
         shimmerBounds = bounds,
-        theme = shimmerTheme,
+        theme = theme,
     )
 }
 
-private fun getShimmerTheme(
+@Composable
+fun rememberZarinaSkeletonShimmerTheme(
     durationMillis: Int,
+    delayMillis: Int,
+    rotation: Float,
+    blendMode: BlendMode,
+    shaderColors: List<Color>,
     width: Dp,
 ): ShimmerTheme {
-    return ShimmerTheme(
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = durationMillis,
-                delayMillis = 0,
-                easing = LinearEasing,
+    return remember(durationMillis, delayMillis, rotation, blendMode, shaderColors, width) {
+        ShimmerTheme(
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = durationMillis,
+                    delayMillis = delayMillis,
+                    easing = LinearEasing,
+                ),
+                repeatMode = RepeatMode.Restart,
             ),
-            repeatMode = RepeatMode.Restart,
-        ),
-        blendMode = BlendMode.DstIn,
-        rotation = 0f,
-        shaderColors = listOf(
-            Color.Unspecified.copy(alpha = 1f),
-            Color.Unspecified.copy(alpha = 0.4f),
-            Color.Unspecified.copy(alpha = 1f),
-        ),
-        shaderColorStops = listOf(0f, 0.5f, 1f),
-        shimmerWidth = width,
-    )
+            blendMode = blendMode,
+            rotation = rotation,
+            shaderColors = shaderColors,
+            shaderColorStops = null,
+            shimmerWidth = width,
+        )
+    }
 }
 
 private const val DurationMillis = 1500
+private const val DelayMillis = 500
+
+private val ShaderColors: List<Color>
+    get() = listOf(
+        Color.White.copy(alpha = 0.01f),
+        Color.White.copy(alpha = 0.6f),
+        Color.White.copy(alpha = 0.01f),
+    )
+
 private val Width: Dp get() = 200.dp
