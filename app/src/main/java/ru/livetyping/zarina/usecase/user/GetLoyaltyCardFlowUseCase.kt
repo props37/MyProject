@@ -12,9 +12,9 @@ class GetLoyaltyCardFlowUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val userRepository: UserRepository,
-) : FlowUseCase<Unit, LoyaltyCard>(dispatcher) {
+) : FlowUseCase<Unit, LoyaltyCard?>(dispatcher) {
 
-    override fun execute(params: Unit): Flow<LoyaltyCard> {
+    override fun execute(params: Unit): Flow<LoyaltyCard?> {
         return userRepository.getLoyaltyCardFlow()
     }
 }
