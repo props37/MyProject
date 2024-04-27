@@ -12,7 +12,7 @@ data class LoyaltyCard(
 
     data class NextLevelInfo(
         val level: LoyaltyCardLevel,
-        val remainingPurchaseSum: Int,
+        val requiredPurchaseSum: Int,
     )
 
     data class Bonuses(

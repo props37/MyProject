@@ -370,7 +370,9 @@ private fun FrontSideLevelInfo(
             Spacer(modifier = Modifier.height(2.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                val remainingPurchaseSum = card.nextLevelInfo?.remainingPurchaseSum ?: 0
+                val remainingPurchaseSum = if (card.nextLevelInfo != null) {
+                    card.nextLevelInfo.requiredPurchaseSum - card.totalPurchaseSum
+                } else 0
                 val formattedRemainingPurchaseSum = stringResource(
                     id = R.string.price_in_rubles_string,
                     rememberFormattedPrice(remainingPurchaseSum.toLong()),
@@ -603,10 +605,11 @@ private fun DrawScope.drawProgress(
                         val startLevelDotCenterX = levelToDotCenterX[startLevel] ?: 0f
                         val endLevelDotCenterX = levelToDotCenterX[endLevel] ?: 0f
                         val startLevelRequiredPurchaseSum = startLevel.requiredPurchaseSum
-                        val nextLevelRemainingPurchaseSum = nextLevelInfo.remainingPurchaseSum
+                        val nextLevelRemainingPurchaseSum =
+                            nextLevelInfo.requiredPurchaseSum - card.totalPurchaseSum
                         // Subtract start level required purchase to count from zero
                         val nextLevelRequiredPurchaseSum =
-                            nextLevelInfo.level.requiredPurchaseSum - startLevelRequiredPurchaseSum
+                            nextLevelInfo.requiredPurchaseSum - startLevelRequiredPurchaseSum
                         val levelProgressFraction = 1f -
                                 (nextLevelRemainingPurchaseSum.toFloat() / nextLevelRequiredPurchaseSum)
                         val topLeft = Offset(
@@ -662,7 +665,7 @@ private fun PreviewPrime() {
                     level = level,
                     nextLevelInfo = LoyaltyCard.NextLevelInfo(
                         level = nextLevel,
-                        remainingPurchaseSum = nextLevel.requiredPurchaseSum - totalPurchaseSum,
+                        requiredPurchaseSum = 10000,
                     ),
                     totalPurchaseSum = totalPurchaseSum,
                 )
@@ -685,12 +688,12 @@ private fun PreviewPriority() {
             card = remember {
                 val level = LoyaltyCardLevel.PRIORITY
                 val nextLevel = LoyaltyCardLevel.STAR
-                val totalPurchaseSum = 10000
+                val totalPurchaseSum = 25000
                 FakeDataGenerator.getLoyaltyCard(
                     level = level,
                     nextLevelInfo = LoyaltyCard.NextLevelInfo(
                         level = nextLevel,
-                        remainingPurchaseSum = nextLevel.requiredPurchaseSum - totalPurchaseSum,
+                        requiredPurchaseSum = 30000,
                     ),
                     totalPurchaseSum = totalPurchaseSum,
                 )
