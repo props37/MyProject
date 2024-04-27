@@ -28,20 +28,18 @@ object FakeDataGenerator {
         level: LoyaltyCardLevel = LoyaltyCardLevel.PRIME,
         nextLevelInfo: LoyaltyCard.NextLevelInfo? = LoyaltyCard.NextLevelInfo(
             level = LoyaltyCardLevel.PRIORITY,
-            remainingPurchaseSum = 15000,
+            remainingPurchaseSum = 7500,
         ),
         bonuses: LoyaltyCard.Bonuses = LoyaltyCard.Bonuses(
             bonusCount = 8000,
             expectedBonusCount = 1200,
         ),
-        discountPercent: Int = 7,
-        totalPurchaseSum: Int = 15000,
+        totalPurchaseSum: Int = 2500,
     ): LoyaltyCard = LoyaltyCard(
         number = number,
         level = level,
         nextLevelInfo = nextLevelInfo,
         bonuses = bonuses,
-        discountPercent = discountPercent,
         totalPurchaseSum = totalPurchaseSum,
     )
 

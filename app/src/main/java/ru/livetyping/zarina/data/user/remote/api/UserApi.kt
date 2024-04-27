@@ -10,7 +10,7 @@ import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignInByPhoneRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignUpRequestBody
-import ru.livetyping.zarina.data.user.remote.api.dto.LoyaltyCardDto
+import ru.livetyping.zarina.data.user.remote.api.dto.GetLoyaltyCardDto
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestPasswordResetRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendSmsOtpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
@@ -35,7 +35,7 @@ class UserApi @Inject constructor(
     private val signInApiExceptionConverter: SignInApiExceptionConverter,
     private val requestPasswordResetApiExceptionConverter: RequestPasswordResetApiExceptionConverter,
 ) {
-    suspend fun getLoyaltyCard(): LoyaltyCardDto {
+    suspend fun getLoyaltyCard(): GetLoyaltyCardDto {
         return httpClient.get("/api/card").body()
     }
 

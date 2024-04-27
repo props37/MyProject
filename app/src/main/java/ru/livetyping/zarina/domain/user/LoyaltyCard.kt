@@ -5,7 +5,6 @@ data class LoyaltyCard(
     val level: LoyaltyCardLevel,
     val nextLevelInfo: NextLevelInfo?,
     val bonuses: Bonuses,
-    val discountPercent: Int,
     val totalPurchaseSum: Int,
 ) {
     @JvmInline
