@@ -28,6 +28,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewFontScale
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -41,8 +43,6 @@ import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
-import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
-import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.common.util.rememberFormattedLocalDate
 import ru.livetyping.zarina.ui.common.util.rememberFormattedPrice
@@ -219,8 +219,8 @@ private fun Products(
 }
 
 @Preview
-@FontScalePreviews
-@DensityPreviews
+@PreviewFontScale
+@PreviewScreenSizes
 @Composable
 private fun Preview() {
     ZarinaPreview {

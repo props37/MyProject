@@ -22,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewFontScale
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -35,8 +37,6 @@ import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.ui.common.component.ProductGrid
 import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
-import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
-import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.screen.products.ProductsScreenComponents.ProductsNotFoundPlaceholder
 import ru.livetyping.zarina.ui.screen.products.ProductsScreenComponents.Tags
@@ -165,8 +165,8 @@ private fun ScreenContent(
 }
 
 @Preview
-@FontScalePreviews
-@DensityPreviews
+@PreviewFontScale
+@PreviewScreenSizes
 @Composable
 private fun Preview() {
     ZarinaPreview {

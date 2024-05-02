@@ -36,11 +36,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewFontScale
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
-import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
-import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 
@@ -156,8 +156,8 @@ object ZarinaButtonSelectorDefaults {
 }
 
 @Preview
-@FontScalePreviews
-@DensityPreviews
+@PreviewFontScale
+@PreviewScreenSizes
 @Composable
 private fun Preview() {
     ZarinaPreview {

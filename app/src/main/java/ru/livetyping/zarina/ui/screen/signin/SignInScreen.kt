@@ -16,6 +16,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewFontScale
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -25,8 +27,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.domain.common.Url
-import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
-import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.screen.signin.SignInScreenComponents.SignInTypePager
 import ru.livetyping.zarina.ui.screen.signin.SignInScreenComponents.SignInTypeTabRow
@@ -166,8 +166,8 @@ private fun ScreenContent(
 }
 
 @Preview
-@FontScalePreviews
-@DensityPreviews
+@PreviewFontScale
+@PreviewScreenSizes
 @Composable
 private fun Preview() {
     ZarinaPreview {
@@ -197,8 +197,8 @@ private fun Preview() {
 }
 
 @Preview
-@FontScalePreviews
-@DensityPreviews
+@PreviewFontScale
+@PreviewScreenSizes
 @Composable
 private fun PreviewPhone() {
     ZarinaPreview {

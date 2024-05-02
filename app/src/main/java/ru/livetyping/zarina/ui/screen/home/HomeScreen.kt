@@ -27,7 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,8 +44,6 @@ import ru.livetyping.zarina.ui.common.behavior.systembars.ForcedSystemBarsBehavi
 import ru.livetyping.zarina.ui.common.component.pullrefresh.ZarinaPullRefreshIndicator
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaLoadingScreen
-import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
-import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.screen.home.HomeScreenComponents.GenderContentPager
 import ru.livetyping.zarina.ui.screen.home.HomeScreenComponents.TopBar
@@ -201,8 +201,8 @@ private fun ScreenContent(
 }
 
 @Preview
-@FontScalePreviews
-@DensityPreviews
+@PreviewFontScale
+@PreviewScreenSizes
 @Composable
 private fun Preview(
     @PreviewParameter(ContentStatePreviewParameterProvider::class)

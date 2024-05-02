@@ -32,6 +32,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewFontScale
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.common.primitives.Longs.max
@@ -43,8 +45,6 @@ import ru.livetyping.zarina.ui.common.component.slider.ZarinaRangeSlider
 import ru.livetyping.zarina.ui.common.component.textfield.ZarinaTextField
 import ru.livetyping.zarina.ui.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.ui.common.component.textfield.ZarinaTextFieldSize
-import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
-import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import kotlin.math.min
@@ -248,8 +248,8 @@ private fun createSliderValue(
 }
 
 @Preview
-@FontScalePreviews
-@DensityPreviews
+@PreviewFontScale
+@PreviewScreenSizes
 @Composable
 private fun Preview() {
     ZarinaPreview {

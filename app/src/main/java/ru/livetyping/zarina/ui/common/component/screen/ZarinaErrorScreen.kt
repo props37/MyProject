@@ -18,12 +18,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewFontScale
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.ui.base.text.textString
 import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
 import ru.livetyping.zarina.ui.common.error.ErrorState
-import ru.livetyping.zarina.ui.common.tooling.preview.DensityPreviews
-import ru.livetyping.zarina.ui.common.tooling.preview.FontScalePreviews
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.ui.theme.ZarinaTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
@@ -86,8 +86,8 @@ fun ZarinaErrorScreen(
 }
 
 @Preview
-@DensityPreviews
-@FontScalePreviews
+@PreviewFontScale
+@PreviewScreenSizes
 @Composable
 private fun NetworkErrorPreview() {
     ZarinaTheme {
@@ -102,8 +102,8 @@ private fun NetworkErrorPreview() {
 }
 
 @Preview
-@DensityPreviews
-@FontScalePreviews
+@PreviewFontScale
+@PreviewScreenSizes
 @Composable
 private fun GenericErrorPreview() {
     ZarinaTheme {
