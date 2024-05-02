@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
@@ -94,6 +96,7 @@ private fun ScreenContent(
             currentViewMode = currentViewMode,
             onViewModeChanged = onViewModeChanged,
             viewModePagerState = viewModePagerState,
+            modifier = Modifier.padding(horizontal = 16.dp),
         )
 
         ViewModePager(
