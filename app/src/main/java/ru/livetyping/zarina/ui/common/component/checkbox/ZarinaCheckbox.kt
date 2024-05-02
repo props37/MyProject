@@ -72,6 +72,9 @@ fun ZarinaCheckbox(
                 role = Role.Checkbox,
                 onValueChange = onCheckedChanged,
             )
+            // Workaround as minimumInteractiveComponentSize() that placed before clickable()
+            // doesn't always works as intended
+            .minimumInteractiveComponentSize()
             .clip(shape),
     ) {
         AnimatedVisibility(

@@ -58,7 +58,10 @@ fun ZarinaIconButton(
                     role = Role.Button,
                     interactionSource = interactionSource,
                     indication = indication,
-                ),
+                )
+                // Workaround as minimumInteractiveComponentSize() that placed before clickable()
+                // doesn't always works as intended
+                .minimumInteractiveComponentSize(),
         ) {
             AnimatedContent(
                 targetState = isLoading,
