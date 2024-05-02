@@ -19,14 +19,16 @@ fun NavGraphBuilder.favoritesScreen(navController: NavHostController) {
         destination = FavoritesGraph.Favorites,
         exitTransition = {
             when (targetState.destination.route) {
-                UnscopedDestinations.ProductSubscription.routeSchema -> slideExitTransition()
+                UnscopedDestinations.ProductSubscription.routeSchema,
+                UnscopedDestinations.Product.routeSchema -> slideExitTransition()
 
                 else -> null
             }
         },
         popEnterTransition = {
             when (initialState.destination.route) {
-                UnscopedDestinations.ProductSubscription.routeSchema -> slidePopEnterTransition()
+                UnscopedDestinations.ProductSubscription.routeSchema,
+                UnscopedDestinations.Product.routeSchema -> slidePopEnterTransition()
 
                 else -> null
             }
@@ -55,6 +57,10 @@ fun NavGraphBuilder.favoritesScreen(navController: NavHostController) {
                             val offer = action.product.offers.firstOrNull() ?: return@FavoritesScreen
                             navController.navigateToProductSubscriptionScreen(action.product, offer)
                         }
+                    }
+
+                    is FavoritesScreenAction.ProductClicked -> {
+                        navController.navigateToProductScreen(action.product.id)
                     }
                 }
             },

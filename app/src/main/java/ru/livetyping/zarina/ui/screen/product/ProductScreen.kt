@@ -6,6 +6,7 @@ import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.ui.common.component.screen.ZarinaScreenPlaceholder
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.screen.product.ProductViewModel.SideEffect
 
@@ -30,7 +31,7 @@ private fun ScreenContent(
         navigate = navigate,
     )
 
-
+    ZarinaScreenPlaceholder(title = "Product")
 }
 
 @Preview

@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.ui.navigation.base.composableDestination
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations
+import ru.livetyping.zarina.ui.navigation.destination.graph.FavoritesGraph
 import ru.livetyping.zarina.ui.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.ui.navigation.util.slidePopExitTransition
 import ru.livetyping.zarina.ui.screen.product.ProductScreen
@@ -16,13 +17,17 @@ fun NavGraphBuilder.productScreen(navController: NavHostController) {
         destination = UnscopedDestinations.Product,
         enterTransition = {
             when (initialState.destination.route) {
-                UnscopedDestinations.Products.routeSchema -> slideEnterTransition()
+                UnscopedDestinations.Products.routeSchema,
+                FavoritesGraph.Favorites.routeSchema -> slideEnterTransition()
+
                 else -> null
             }
         },
         popExitTransition = {
             when (targetState.destination.route) {
-                UnscopedDestinations.Products.routeSchema -> slidePopExitTransition()
+                UnscopedDestinations.Products.routeSchema,
+                FavoritesGraph.Favorites.routeSchema -> slidePopExitTransition()
+
                 else -> null
             }
         },

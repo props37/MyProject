@@ -8,4 +8,6 @@ sealed class FavoritesScreenAction {
     data class AddProductToCartClicked(val product: Product) : FavoritesScreenAction()
 
     data class SubscribeToProductClicked(val product: Product) : FavoritesScreenAction()
+
+    data class ProductClicked(val product: Product) : FavoritesScreenAction()
 }
