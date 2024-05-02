@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.ui.common.component.pager
+package ru.livetyping.zarina.ui.common.component.media
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
@@ -24,7 +24,6 @@ import coil.compose.AsyncImage
 import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.domain.common.Media
 import ru.livetyping.zarina.domain.common.MediaType
-import ru.livetyping.zarina.ui.common.component.media.ZarinaVideoPlayer
 import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.theme.UiKitTheme

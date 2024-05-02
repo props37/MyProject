@@ -47,8 +47,8 @@ import ru.livetyping.zarina.domain.product.currentPrice
 import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaLikeIconButton
 import ru.livetyping.zarina.ui.common.component.color.ZarinaColorIcon
+import ru.livetyping.zarina.ui.common.component.media.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.ui.common.component.pager.ZarinaHorizontalPagerIndicator
-import ru.livetyping.zarina.ui.common.component.pager.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
