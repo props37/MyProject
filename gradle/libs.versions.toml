@@ -29,7 +29,7 @@ jetpack-uiAutomator = "2.3.0"
 jetpack-espresso = "3.5.1"
 jetpack-benchmark = "1.2.3"
 
-jetpack-compose-bom = "2024.04.01"
+jetpack-compose-bom = "2024.05.00"
 jetpack-compose-compiler = "1.5.12"
 
 ktor = "2.3.10"
