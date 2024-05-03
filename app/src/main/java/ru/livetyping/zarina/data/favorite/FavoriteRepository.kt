@@ -7,6 +7,7 @@ import ru.livetyping.zarina.data.favorite.local.FavoriteLocalDataSource
 import ru.livetyping.zarina.data.favorite.remote.FavoriteRemoteDataSource
 import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import javax.inject.Inject
 
 class FavoriteRepository @Inject constructor(
@@ -24,7 +25,7 @@ class FavoriteRepository @Inject constructor(
         return favoriteProductIds
     }
 
-    fun getFavoriteProductPageFlow(page: Int): Flow<Page<List<Product>>> {
+    fun getFavoriteProductPageFlow(page: Int): Flow<Page<List<ProductItem>>> {
         return remoteDataSource.getFavoriteProductPageFlow(page)
     }
 

@@ -34,6 +34,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.ui.common.component.ProductGrid
 import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
@@ -94,7 +95,7 @@ private fun ScreenContent(
     tagListState: TagListState?,
     selectedTagId: Category.Id?,
     onTagClicked: (Category) -> Unit,
-    productPagingDataFlow: Flow<PagingData<Product>>,
+    productPagingDataFlow: Flow<PagingData<ProductItem>>,
     onProductClicked: (Product) -> Unit,
     onAddProductToFavoritesClicked: (Product) -> Unit,
     onAddProductToCartClicked: (Product) -> Unit,
@@ -180,7 +181,7 @@ private fun Preview() {
             selectedTagId = null,
             onTagClicked = {},
             productPagingDataFlow = remember {
-                flowOf(PagingData.from(FakeDataGenerator.getProducts()))
+                flowOf(PagingData.from(FakeDataGenerator.getProductItems()))
             },
             onProductClicked = {},
             onAddProductToFavoritesClicked = {},

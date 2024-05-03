@@ -30,8 +30,8 @@ import ru.livetyping.zarina.domain.user.exception.FirstNameException
 import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
+import ru.livetyping.zarina.ui.model.product.ProductItemParcelable
 import ru.livetyping.zarina.ui.model.product.ProductOfferParcelable
-import ru.livetyping.zarina.ui.model.product.ProductParcelable
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.ui.screen.productsubscription.ProductSubscriptionViewModel.SideEffect
 import ru.livetyping.zarina.usecase.product.SubscribeToProductUseCase
@@ -53,7 +53,7 @@ class ProductSubscriptionViewModel @Inject constructor(
     private var subscribeToProductJob: Job? = null
 
     val product: StateFlow<Product> = savedStateHandle
-        .getStateFlow<ProductParcelable?>(
+        .getStateFlow<ProductItemParcelable?>(
             key = UnscopedDestinations.ProductSubscription.ARG_KEY_PRODUCT,
             initialValue = null,
         )
@@ -62,7 +62,7 @@ class ProductSubscriptionViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
         ) { parcelable ->
             checkNotNull(parcelable) { "product is null" }
-            parcelable.toProduct()
+            parcelable.toProductItem()
         }
 
     val productOffer: StateFlow<ProductOffer> = savedStateHandle

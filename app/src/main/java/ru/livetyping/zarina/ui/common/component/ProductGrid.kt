@@ -34,6 +34,7 @@ import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.ui.common.component.button.ZarinaScrollToTopButton
 import ru.livetyping.zarina.ui.common.component.pullrefresh.ZarinaPullRefreshIndicator
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
@@ -51,7 +52,7 @@ import ru.livetyping.zarina.util.library.paging3.PagingErrorTimberLogger
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProductGrid(
-    productPagingDataFlow: Flow<PagingData<Product>>,
+    productPagingDataFlow: Flow<PagingData<ProductItem>>,
     onProductClicked: (Product) -> Unit,
     onAddToFavoritesClicked: (Product) -> Unit,
     onAddToCartClicked: (Product) -> Unit,
@@ -203,7 +204,7 @@ fun ProductGrid(
 
 @Composable
 private fun ProductGridImpl(
-    productPagingItems: LazyPagingItems<Product>,
+    productPagingItems: LazyPagingItems<ProductItem>,
     gridState: LazyGridState,
     onProductClicked: (Product) -> Unit,
     onAddToFavoritesClicked: (Product) -> Unit,
@@ -300,7 +301,7 @@ private fun LazyGridItemSpanScope.getProductGridItemSpan(index: Int): GridItemSp
 
 private fun getProductGridItemContentType(
     index: Int,
-    productPagingItems: LazyPagingItems<Product>,
+    productPagingItems: LazyPagingItems<ProductItem>,
 ): String {
     val product = productPagingItems.peek(index)
     return if (product != null) {

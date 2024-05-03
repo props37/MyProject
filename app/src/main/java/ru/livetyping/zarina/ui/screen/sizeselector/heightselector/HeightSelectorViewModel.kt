@@ -14,8 +14,8 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductOffer
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
+import ru.livetyping.zarina.ui.model.product.ProductItemParcelable
 import ru.livetyping.zarina.ui.model.product.ProductOfferParcelable
-import ru.livetyping.zarina.ui.model.product.ProductParcelable
 import ru.livetyping.zarina.ui.navigation.destination.graph.SizeSelectorGraph
 import ru.livetyping.zarina.ui.screen.sizeselector.heightselector.HeightSelectorViewModel.SideEffect
 import ru.livetyping.zarina.util.library.coroutines.mapState
@@ -29,7 +29,7 @@ class HeightSelectorViewModel @Inject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     val product: StateFlow<Product> = savedStateHandle
-        .getStateFlow<ProductParcelable?>(
+        .getStateFlow<ProductItemParcelable?>(
             key = SizeSelectorGraph.HeightSelector.ARG_KEY_PRODUCT,
             initialValue = null,
         )
@@ -38,7 +38,7 @@ class HeightSelectorViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
         ) { parcelable ->
             checkNotNull(parcelable) { "product is null" }
-            parcelable.toProduct()
+            parcelable.toProductItem()
         }
 
     val offers: StateFlow<ImmutableList<ProductOffer>> = savedStateHandle

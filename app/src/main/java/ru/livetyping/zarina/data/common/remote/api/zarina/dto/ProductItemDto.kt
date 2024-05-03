@@ -4,11 +4,12 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.common.MediaType
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import timber.log.Timber
 
 // TODO: [High] Rename to ProductItemDto?
 @Serializable
-data class ProductDto(
+data class ProductItemDto(
     @SerialName("id")
     val id: String? = null,
 
@@ -27,7 +28,7 @@ data class ProductDto(
     @SerialName("media")
     val media: List<MediaDto>? = null,
 ) {
-    fun toProduct(): Product? {
+    fun toProductItem(): ProductItem? {
         val offers = offers?.mapNotNull { it.toProductOffer() }
         val colors = colors?.mapNotNull { it.toProductColor() }
         val media = media
@@ -43,7 +44,7 @@ data class ProductDto(
             && !colors.isNullOrEmpty()
             && !media.isNullOrEmpty()
         ) {
-            Product(
+            ProductItem(
                 id = Product.Id(id),
                 name = name,
                 price = price.toPrice(),

@@ -14,6 +14,7 @@ import ru.livetyping.zarina.domain.order.OrderStatus
 import ru.livetyping.zarina.domain.product.Price
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
+import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.domain.product.ProductOffer
 import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.domain.user.LoyaltyCardLevel
@@ -106,12 +107,12 @@ object FakeDataGenerator {
         children = children,
     )
 
-    fun getProducts(
+    fun getProductItems(
         count: Int = 10,
-        generator: (Int) -> Product = { getProduct() },
-    ): List<Product> = List(count) { generator(it) }
+        generator: (Int) -> ProductItem = { getProductItem() },
+    ): List<ProductItem> = List(count) { generator(it) }
 
-    fun getProduct(
+    fun getProductItem(
         id: Product.Id = Product.Id(getRandomString()),
         name: String = getProductNames().random(),
         price: Price = getPrice(),
@@ -120,7 +121,7 @@ object FakeDataGenerator {
         media: List<Media> = getMediaList(),
         isInFavorites: Boolean = Random.nextBoolean(),
         isInCart: Boolean = Random.nextBoolean(),
-    ): Product = Product(
+    ): ProductItem = ProductItem(
         id = id,
         name = name,
         price = price,

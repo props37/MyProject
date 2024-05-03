@@ -6,5 +6,5 @@ import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
 
 class ProductPreviewParameterProvider : PreviewParameterProvider<Product> {
     override val values: Sequence<Product>
-        get() = FakeDataGenerator.getProducts().asSequence()
+        get() = FakeDataGenerator.getProductItems().asSequence()
 }

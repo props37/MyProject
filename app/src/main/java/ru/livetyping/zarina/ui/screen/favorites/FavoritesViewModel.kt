@@ -26,6 +26,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
@@ -70,7 +71,7 @@ class FavoritesViewModel @AssistedInject constructor(
         )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val productPagingDataFlow: Flow<PagingData<Product>> = favoriteProductFetchRequests.receiveAsFlow()
+    val productPagingDataFlow: Flow<PagingData<ProductItem>> = favoriteProductFetchRequests.receiveAsFlow()
         .flatMapLatest {
             interactor.favoriteProductPager.getFavoriteProductPagingDataFlow()
         }
@@ -191,7 +192,7 @@ class FavoritesViewModel @AssistedInject constructor(
                 key = SizeSelectorGraph.RESULT_KEY,
             ) { result ->
                 addProductToCart(
-                    productId = result.product.toProduct().id,
+                    productId = result.product.toProductItem().id,
                     barcode = result.offer.toProductOffer().barcode,
                 )
             }

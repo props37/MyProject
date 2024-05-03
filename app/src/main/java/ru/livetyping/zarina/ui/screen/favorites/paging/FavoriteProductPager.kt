@@ -6,13 +6,13 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.data.favorite.FavoriteRepository
 import ru.livetyping.zarina.data.favorite.pagination.FavoriteProductPagingSource
-import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import javax.inject.Inject
 
 class FavoriteProductPager @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
 ) {
-    fun getFavoriteProductPagingDataFlow(): Flow<PagingData<Product>> {
+    fun getFavoriteProductPagingDataFlow(): Flow<PagingData<ProductItem>> {
         return Pager(
             config = getPagingConfig(),
             pagingSourceFactory = {

@@ -4,11 +4,12 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.ui.model.common.MediaParcelable
 
 @Serializable
 @Parcelize
-data class ProductParcelable(
+data class ProductItemParcelable(
     val id: String,
     val name: String,
     val price: PriceParcelable,
@@ -18,7 +19,7 @@ data class ProductParcelable(
     val isInFavorites: Boolean,
     val isInCart: Boolean,
 ) : Parcelable {
-    fun toProduct(): Product = Product(
+    fun toProductItem(): ProductItem = ProductItem(
         id = Product.Id(id),
         name = name,
         price = price.toPrice(),
@@ -30,7 +31,7 @@ data class ProductParcelable(
     )
 
     companion object {
-        fun from(product: Product): ProductParcelable = ProductParcelable(
+        fun from(product: Product): ProductItemParcelable = ProductItemParcelable(
             id = product.id.value,
             name = product.name,
             price = PriceParcelable.from(product.price),

@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.ui.common.component.ProductGrid
 import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
@@ -60,7 +61,7 @@ fun FavoritesScreen(
 
 @Composable
 private fun ScreenContent(
-    productPagingDataFlow: Flow<PagingData<Product>>,
+    productPagingDataFlow: Flow<PagingData<ProductItem>>,
     onProductClicked: (Product) -> Unit,
     onAddProductToFavoritesClicked: (Product) -> Unit,
     onAddProductToCartClicked: (Product) -> Unit,
@@ -122,7 +123,7 @@ private fun Preview() {
     ZarinaPreview {
         ScreenContent(
             productPagingDataFlow = remember {
-                flowOf(PagingData.from(FakeDataGenerator.getProducts()))
+                flowOf(PagingData.from(FakeDataGenerator.getProductItems()))
             },
             onProductClicked = {},
             onAddProductToFavoritesClicked = {},

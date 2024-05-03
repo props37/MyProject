@@ -16,8 +16,8 @@ import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.model.filter.FiltersParcelable
 import ru.livetyping.zarina.ui.model.filter.ListFilterParcelable
 import ru.livetyping.zarina.ui.model.geography.CityParcelable
+import ru.livetyping.zarina.ui.model.product.ProductItemParcelable
 import ru.livetyping.zarina.ui.model.product.ProductOfferParcelable
-import ru.livetyping.zarina.ui.model.product.ProductParcelable
 import ru.livetyping.zarina.ui.navigation.BaseRoute
 import ru.livetyping.zarina.ui.navigation.base.Destination
 import ru.livetyping.zarina.ui.navigation.base.OptionalNavArg
@@ -304,7 +304,7 @@ object UnscopedDestinations {
             )
 
         override fun createRoute(args: Args): String {
-            val productParcelable = ProductParcelable.from(args.product)
+            val productParcelable = ProductItemParcelable.from(args.product)
             val productParcelableString = Uri.encode(Json.encodeToString(productParcelable))
             val offerParcelable = ProductOfferParcelable.from(args.offer)
             val offerParcelableString = Uri.encode(Json.encodeToString(offerParcelable))
@@ -321,7 +321,7 @@ object UnscopedDestinations {
             )
 
         override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
-            val productParcelable = ProductParcelable.from(args.product)
+            val productParcelable = ProductItemParcelable.from(args.product)
             putParcelable(ARG_KEY_PRODUCT, productParcelable)
             val offerParcelable = ProductOfferParcelable.from(args.offer)
             putParcelable(ARG_KEY_OFFER, offerParcelable)

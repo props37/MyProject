@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.FiltersDto
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.PaginationInfoDto
-import ru.livetyping.zarina.data.common.remote.api.zarina.dto.ProductDto
+import ru.livetyping.zarina.data.common.remote.api.zarina.dto.ProductItemDto
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.product.CategoryProductInfo
@@ -19,7 +19,7 @@ data class ProductsDto(
     val filters: FiltersDto? = null,
 
     @SerialName("products")
-    val products: List<ProductDto>? = null,
+    val products: List<ProductItemDto>? = null,
 
     @SerialName("pagination")
     val paginationInfo: PaginationInfoDto? = null,
@@ -30,7 +30,7 @@ data class ProductsDto(
         checkNotNull(itemCount) { "itemCount is null" }
         checkNotNull(paginationInfo) { "paginationInfo is null" }
         val productsWithFilters = ProductsWithFilters(
-            products = products.mapNotNull { it.toProduct() },
+            products = products.mapNotNull { it.toProductItem() },
             filters = filters.toFilters(),
         )
         return Page(

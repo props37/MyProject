@@ -254,7 +254,7 @@ private fun Preview() {
     ZarinaPreview {
         ScreenContent(
             onBackClicked = {},
-            product = remember { FakeDataGenerator.getProduct() },
+            product = remember { FakeDataGenerator.getProductItem() },
             productOffer = remember { FakeDataGenerator.getProductOffer() },
             firstName = "",
             onFirstNameChanged = {},

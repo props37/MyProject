@@ -37,6 +37,7 @@ import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.domain.filter.coerceInAvailable
 import ru.livetyping.zarina.domain.filter.selected
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
@@ -162,7 +163,7 @@ class ProductsViewModel @AssistedInject constructor(
     private var availableFilters: Filters? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val productPagingDataFlow: Flow<PagingData<Product>> = combine(
+    val productPagingDataFlow: Flow<PagingData<ProductItem>> = combine(
         categoryId,
         selectedTagId,
         filters,
@@ -347,7 +348,7 @@ class ProductsViewModel @AssistedInject constructor(
                 key = SizeSelectorGraph.RESULT_KEY,
             ) { result ->
                 addProductToCart(
-                    productId = result.product.toProduct().id,
+                    productId = result.product.toProductItem().id,
                     barcode = result.offer.toProductOffer().barcode,
                 )
             }

@@ -3,8 +3,8 @@ package ru.livetyping.zarina.ui.navigation.screen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navOptions
+import ru.livetyping.zarina.ui.model.product.ProductItemParcelable
 import ru.livetyping.zarina.ui.model.product.ProductOfferParcelable
-import ru.livetyping.zarina.ui.model.product.ProductParcelable
 import ru.livetyping.zarina.ui.navigation.base.bottomSheetDestination
 import ru.livetyping.zarina.ui.navigation.destination.graph.SizeSelectorGraph
 import ru.livetyping.zarina.ui.screen.sizeselector.SizeSelectorBottomSheetScreen
@@ -38,7 +38,7 @@ fun NavGraphBuilder.sizeSelectorBottomSheetScreen(navController: NavHostControll
                                     route = SizeSelectorGraph.routeSchema,
                                     inclusive = true,
                                 )
-                                val productParcelable = ProductParcelable.from(action.product)
+                                val productParcelable = ProductItemParcelable.from(action.product)
                                 val offerParcelable = ProductOfferParcelable.from(firstOffer)
                                 val result = SizeSelectorGraph.Result(
                                     product = productParcelable,

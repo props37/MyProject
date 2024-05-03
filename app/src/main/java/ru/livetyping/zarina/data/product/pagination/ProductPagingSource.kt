@@ -7,7 +7,7 @@ import ru.livetyping.zarina.data.product.ProductRepository
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.common.Sorting
 import ru.livetyping.zarina.domain.filter.Filters
-import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import timber.log.Timber
 
 class ProductPagingSource(
@@ -16,9 +16,9 @@ class ProductPagingSource(
     private val sorting: Sorting,
     private val productRepository: ProductRepository,
     private val onAvailableFiltersReceived: (Filters) -> Unit,
-) : PagingSource<Int, Product>() {
+) : PagingSource<Int, ProductItem>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Product> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ProductItem> {
         try {
             val page = params.key ?: 1
             val productsWithFiltersPage =
@@ -47,7 +47,7 @@ class ProductPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Product>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, ProductItem>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)

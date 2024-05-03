@@ -2,15 +2,15 @@ package ru.livetyping.zarina.domain.product
 
 import ru.livetyping.zarina.domain.common.Media
 
-data class Product(
-    val id: Id,
-    val name: String,
-    val price: Price,
-    val offers: List<ProductOffer>,
-    val colors: List<ProductColor>,
-    val media: List<Media>,
-    val isInFavorites: Boolean,
-    val isInCart: Boolean,
+sealed class Product(
+    open val id: Id,
+    open val name: String,
+    open val price: Price,
+    open val offers: List<ProductOffer>,
+    open val colors: List<ProductColor>,
+    open val media: List<Media>,
+    open val isInFavorites: Boolean,
+    open val isInCart: Boolean,
 ) {
     val isAvailable: Boolean by lazy { offers.any { it.isAvailable } }
 

@@ -11,8 +11,8 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductOffer
+import ru.livetyping.zarina.ui.model.product.ProductItemParcelable
 import ru.livetyping.zarina.ui.model.product.ProductOfferParcelable
-import ru.livetyping.zarina.ui.model.product.ProductParcelable
 import ru.livetyping.zarina.ui.navigation.BaseRoute
 import ru.livetyping.zarina.ui.navigation.base.Destination
 import ru.livetyping.zarina.ui.navigation.base.Graph
@@ -35,7 +35,7 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
         )
 
     override fun createRoute(args: SizeSelector.Args): String {
-        val productParcelable = ProductParcelable.from(args.product)
+        val productParcelable = ProductItemParcelable.from(args.product)
         val productParcelableString = Uri.encode(Json.encodeToString(productParcelable))
         return RouteUtils.generateRoute(
             routeBase = routeBase,
@@ -51,7 +51,7 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
 
     @Parcelize
     data class Result(
-        val product: ProductParcelable,
+        val product: ProductItemParcelable,
         val offer: ProductOfferParcelable,
         override val id: String = UUID.randomUUID().toString(),
     ) : ScreenResult, Parcelable
@@ -70,7 +70,7 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
             )
 
         override fun createRoute(args: Args): String {
-            val productParcelable = ProductParcelable.from(args.product)
+            val productParcelable = ProductItemParcelable.from(args.product)
             val productParcelableString = Uri.encode(Json.encodeToString(productParcelable))
             return RouteUtils.generateRoute(
                 routeBase = baseRoute,
@@ -84,7 +84,7 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
             )
 
         override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
-            val productParcelable = ProductParcelable.from(args.product)
+            val productParcelable = ProductItemParcelable.from(args.product)
             putParcelable(ARG_KEY_PRODUCT, productParcelable)
         }
 
@@ -105,7 +105,7 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
             )
 
         override fun createRoute(args: Args): String {
-            val productParcelable = ProductParcelable.from(args.product)
+            val productParcelable = ProductItemParcelable.from(args.product)
             val productParcelableString = Uri.encode(Json.encodeToString(productParcelable))
             val offersParcelable = args.offers.map { ProductOfferParcelable.from(it) }
             val offersParcelableString = Uri.encode(Json.encodeToString(offersParcelable))
@@ -122,7 +122,7 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
             )
 
         override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
-            val productParcelable = ProductParcelable.from(args.product)
+            val productParcelable = ProductItemParcelable.from(args.product)
             putParcelable(ARG_KEY_PRODUCT, productParcelable)
             val offerParcelables = args.offers.map { ProductOfferParcelable.from(it) }
             putParcelableArray(ARG_KEY_OFFERS, offerParcelables.toTypedArray())

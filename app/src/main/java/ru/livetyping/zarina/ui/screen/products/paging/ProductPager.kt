@@ -9,7 +9,7 @@ import ru.livetyping.zarina.data.product.pagination.ProductPagingSource
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.common.Sorting
 import ru.livetyping.zarina.domain.filter.Filters
-import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -21,7 +21,7 @@ class ProductPager @Inject constructor(
         filters: Filters?,
         sorting: Sorting,
         onAvailableFiltersReceived: (Filters) -> Unit,
-    ): Flow<PagingData<Product>> {
+    ): Flow<PagingData<ProductItem>> {
         return Pager(
             config = getPagingConfig(),
             pagingSourceFactory = {

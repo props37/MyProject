@@ -5,11 +5,12 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 
-fun Flow<PagingData<Product>>.mapProducts(
+fun Flow<PagingData<ProductItem>>.mapProducts(
     favoriteProductIdsResultFlow: Flow<Result<Set<Product.Id>>>,
     cartProductIdsResultFlow: Flow<Result<Set<Product.Id>>>,
-): Flow<PagingData<Product>> {
+): Flow<PagingData<ProductItem>> {
     return combine(
         this,
         favoriteProductIdsResultFlow,
@@ -21,10 +22,10 @@ fun Flow<PagingData<Product>>.mapProducts(
     }
 }
 
-fun PagingData<Product>.mapProducts(
+fun PagingData<ProductItem>.mapProducts(
     favoriteProductIds: Set<Product.Id>,
     cartProductIds: Set<Product.Id>,
-): PagingData<Product> {
+): PagingData<ProductItem> {
     return this.map { product ->
         if (product.id in favoriteProductIds || product.id in cartProductIds) {
             product.copy(
