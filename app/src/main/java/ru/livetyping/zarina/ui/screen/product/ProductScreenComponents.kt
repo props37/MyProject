@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
@@ -18,11 +21,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Media
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.ui.common.component.media.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.ui.common.component.pager.ZarinaHorizontalPagerIndicator
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
@@ -39,6 +47,7 @@ object ProductScreenComponents {
     fun TopBar(
         onBackClicked: () -> Unit,
         productName: String?,
+        onShareClicked: () -> Unit,
         mode: TopBarMode,
         modifier: Modifier = Modifier,
     ) {
@@ -56,7 +65,7 @@ object ProductScreenComponents {
             startContent = {
                 ZarinaBackIconButton(
                     onClick = onBackClicked,
-                    iconSize = 20.dp,
+                    iconSize = TopBarIconSize,
                     modifier = Modifier.padding(start = 2.dp),
                 )
             },
@@ -67,6 +76,19 @@ object ProductScreenComponents {
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
+            },
+            endContent = {
+                ZarinaIconButton(
+                    onClick = onShareClicked,
+                    indication = rememberRipple(bounded = false, radius = TopBarIconSize),
+                    modifier = Modifier.padding(end = 2.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_share_24),
+                        contentDescription = stringResource(R.string.share),
+                        modifier = Modifier.size(TopBarIconSize),
+                    )
+                }
             },
             backgroundColor = backgroundColor,
             contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
@@ -179,6 +201,8 @@ object ProductScreenComponents {
     }
 
     enum class TopBarMode { Transparent, Filled }
+
+    private val TopBarIconSize: Dp get() = 20.dp
 
     private const val MediaPagerAspectRatio = 0.7f
 

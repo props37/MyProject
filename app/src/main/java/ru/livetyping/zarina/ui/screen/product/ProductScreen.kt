@@ -43,6 +43,7 @@ fun ProductScreen(
         productState = productState,
         onProductErrorRefreshClicked = viewModel::onProductErrorRefreshClicked,
         onBackClicked = viewModel::onBackClicked,
+        onShareClicked = viewModel::onShareClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -53,6 +54,7 @@ private fun ScreenContent(
     productState: ProductState,
     onProductErrorRefreshClicked: () -> Unit,
     onBackClicked: () -> Unit,
+    onShareClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProductScreenAction) -> Unit,
 ) {
@@ -77,6 +79,7 @@ private fun ScreenContent(
             TopBar(
                 onBackClicked = onBackClicked,
                 productName = (productState as? ProductState.Success)?.product?.name,
+                onShareClicked = onShareClicked,
                 mode = mode,
             )
         },

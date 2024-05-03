@@ -89,12 +89,21 @@ class ProductViewModel @Inject constructor(
         }
     }
 
+    fun onShareClicked() {
+        val shareUrl = productResult.value?.getOrNull()?.shareUrl ?: return
+        navigationThrottler.throttle {
+            emitSideEffect(SideEffect.Share(shareUrl.value))
+        }
+    }
+
     fun onProductErrorRefreshClicked() {
         productFetchingInfoHolder.requestFetching(Unit)
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: ProductScreenAction) : SideEffect
+
+        data class Share(val text: String) : SideEffect
     }
 
     @Stable
