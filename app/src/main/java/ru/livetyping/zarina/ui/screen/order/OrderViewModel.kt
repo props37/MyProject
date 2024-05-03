@@ -161,7 +161,7 @@ class OrderViewModel @AssistedInject constructor(
         data class Error(val state: ErrorState) : OrderState()
     }
 
-    private enum class OrderFetchingType : DataFetchingInfoHolder.FetchingType { LOADING, REFRESHING }
+    private enum class OrderFetchingType { LOADING, REFRESHING }
 
     @AssistedFactory
     interface Factory {

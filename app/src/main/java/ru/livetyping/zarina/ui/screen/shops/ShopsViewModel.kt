@@ -41,7 +41,7 @@ class ShopsViewModel @Inject constructor(
     private val _currentViewMode = MutableStateFlow(ViewMode.MAP)
     val currentViewMode: StateFlow<ViewMode> = _currentViewMode.asStateFlow()
 
-    private val shopsFetchingInfoHolder = DataFetchingInfoHolder<ShopsFetchingType>()
+    private val shopsFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val userCityShopsResult: StateFlow<Result<List<Shop>>?> =
@@ -60,7 +60,7 @@ class ShopsViewModel @Inject constructor(
         userCityShopsResult,
         shopsFetchingInfoHolder.fetchingType,
     ) { shopsResult, fetchingType ->
-        if (shopsResult == null || fetchingType == ShopsFetchingType.LOADING) {
+        if (shopsResult == null || fetchingType != null) {
             ShopListState.Loading
         } else {
             shopsResult.fold(
@@ -80,7 +80,7 @@ class ShopsViewModel @Inject constructor(
     )
 
     init {
-        shopsFetchingInfoHolder.requestFetching(ShopsFetchingType.LOADING)
+        shopsFetchingInfoHolder.requestFetching(Unit)
     }
 
     fun onBackClicked() {
@@ -95,7 +95,7 @@ class ShopsViewModel @Inject constructor(
     }
 
     fun onShopsErrorRefreshClicked() {
-        shopsFetchingInfoHolder.requestFetching(ShopsFetchingType.LOADING)
+        shopsFetchingInfoHolder.requestFetching(Unit)
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -115,6 +115,4 @@ class ShopsViewModel @Inject constructor(
         @Immutable
         data class Error(val state: ErrorState) : ShopListState()
     }
-
-    private enum class ShopsFetchingType : DataFetchingInfoHolder.FetchingType { LOADING }
 }

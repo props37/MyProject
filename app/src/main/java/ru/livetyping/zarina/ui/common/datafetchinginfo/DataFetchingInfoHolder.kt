@@ -6,9 +6,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import ru.livetyping.zarina.ui.common.datafetchinginfo.DataFetchingInfoHolder.FetchingType
 
-class DataFetchingInfoHolder<F : FetchingType> {
+class DataFetchingInfoHolder<F> {
     private val _fetchingRequests = Channel<Unit>(Channel.CONFLATED)
     val fetchingRequests: Flow<Unit> = _fetchingRequests.receiveAsFlow()
 
@@ -28,6 +27,4 @@ class DataFetchingInfoHolder<F : FetchingType> {
         _isFetching.value = false
         _fetchingType.value = null
     }
-
-    interface FetchingType
 }
