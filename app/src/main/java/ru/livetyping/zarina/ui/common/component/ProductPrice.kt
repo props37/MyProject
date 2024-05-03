@@ -75,7 +75,7 @@ fun ProductPrice(
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = stringResource(R.string.discount_percent, price.discountPercent).uppercase(),
-                style = UiKitTheme.typography.caption2.regular,
+                style = UiKitTheme.typography.caption2.bold,
                 color = discountColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

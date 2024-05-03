@@ -3,12 +3,17 @@ package ru.livetyping.zarina.ui.screen.product
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.Icon
@@ -28,7 +33,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Media
+import ru.livetyping.zarina.domain.product.Price
 import ru.livetyping.zarina.domain.product.ProductDetails
+import ru.livetyping.zarina.ui.common.component.ProductPrice
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.ui.common.component.media.ZarinaMediaHorizontalPager
@@ -36,6 +43,7 @@ import ru.livetyping.zarina.ui.common.component.pager.ZarinaHorizontalPagerIndic
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
+import ru.livetyping.zarina.ui.common.util.domain.toComposeColor
 import ru.livetyping.zarina.ui.screen.product.ProductViewModel.ProductState
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
@@ -154,6 +162,20 @@ object ProductScreenComponents {
             ) {
                 MediaPagerItem(media = product.media)
             }
+
+            item(
+                key = ProductDetailsListKeyGeneralInfo,
+                contentType = ProductDetailsListContentTypeGeneralInfo,
+            ) {
+                ProductGeneralInfoItem(
+                    name = product.name,
+                    label = product.label,
+                    price = product.price,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                )
+            }
         }
     }
 
@@ -186,6 +208,39 @@ object ProductScreenComponents {
     }
 
     @Composable
+    private fun ProductGeneralInfoItem(
+        name: String,
+        label: ProductDetails.Label?,
+        price: Price,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = name.uppercase(),
+                    style = UiKitTheme.typography.caption1.regular,
+                    color = UiKitTheme.colors.text.general.regular.default,
+                )
+
+                if (label != null) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = label.name,
+                        style = UiKitTheme.typography.caption1.bold,
+                        color = label.color.toComposeColor(),
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(2.dp))
+
+            ProductPrice(price = price)
+
+            // TODO: [High] Add colors
+        }
+    }
+
+    @Composable
     fun topBarModeAsState(lazyListState: LazyListState): State<TopBarMode> {
         return remember {
             derivedStateOf {
@@ -209,7 +264,10 @@ object ProductScreenComponents {
     private const val ProductDetailsContentKeySuccess = "ProductDetailsContentKeySuccess"
 
     private const val ProductDetailsListKeyMediaPager = "ProductDetailsListKeyMediaPager"
+    private const val ProductDetailsListKeyGeneralInfo = "ProductDetailsListKeyGeneralInfo"
 
     private const val ProductDetailsListContentTypeMediaPager =
         "ProductDetailsListContentTypeMediaPager"
+    private const val ProductDetailsListContentTypeGeneralInfo =
+        "ProductDetailsListContentTypeGeneralInfo"
 }
