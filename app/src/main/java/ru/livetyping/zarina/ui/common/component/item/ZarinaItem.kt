@@ -28,9 +28,9 @@ import ru.livetyping.zarina.ui.theme.UiKitTheme
 fun ZarinaItem(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
+    backgroundColor: Color = BackgroundColor,
+    contentColor: Color = ContentColor,
     contentPadding: PaddingValues = ContentPadding,
-    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
-    contentColor: Color = UiKitTheme.colors.text.general.regular.default,
     endContent: (@Composable RowScope.() -> Unit)? = null,
     startContent: @Composable RowScope.() -> Unit,
 ) {
@@ -62,10 +62,6 @@ fun ZarinaItem(
     }
 }
 
-private val MinHeight: Dp get() = 56.dp
-private val ContentPadding: PaddingValues
-    get() = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-
 @Preview
 @Composable
 private fun Preview() {
@@ -75,3 +71,16 @@ private fun Preview() {
         }
     }
 }
+
+private val BackgroundColor: Color
+    @Composable
+    get() = UiKitTheme.colors.background.general.regular.default
+
+private val ContentColor: Color
+    @Composable
+    get() = UiKitTheme.colors.text.general.regular.default
+
+private val ContentPadding: PaddingValues
+    get() = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+
+private val MinHeight: Dp get() = 56.dp
