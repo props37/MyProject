@@ -33,7 +33,7 @@ data class ProductDetailsDto(
     @SerialName("share_url")
     val shareUrl: String? = null,
 ) {
-    fun toProductDetails(colorVariants: List<ProductDetails>?): ProductDetails {
+    fun toProductDetails(): ProductDetails {
         checkNotNull(id) { "id is null" }
         checkNotNull(name) { "name is null" }
         checkNotNull(price) { "price is null" }
@@ -50,7 +50,6 @@ data class ProductDetailsDto(
             // States that are not present in the DTO
             isInFavorites = false,
             isInCart = false,
-            colorVariants = colorVariants,
             shareUrl = shareUrl?.let { Url(it) },
         )
     }

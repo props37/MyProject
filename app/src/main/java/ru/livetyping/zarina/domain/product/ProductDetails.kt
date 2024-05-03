@@ -12,7 +12,6 @@ data class ProductDetails(
     override val media: List<Media>,
     override val isInFavorites: Boolean,
     override val isInCart: Boolean,
-    val colorVariants: List<ProductDetails>?,
     val shareUrl: Url?,
 ) : Product(
     id = id,
