@@ -252,6 +252,7 @@ private fun ItemCounter(
     count: Int?,
     modifier: Modifier = Modifier,
 ) {
+    @Suppress("NAME_SHADOWING")
     AnimatedContent(
         targetState = count,
         transitionSpec = {

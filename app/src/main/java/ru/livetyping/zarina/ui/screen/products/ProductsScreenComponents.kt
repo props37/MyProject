@@ -140,6 +140,7 @@ object ProductsScreenComponents {
         onTagClicked: (Category) -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        @Suppress("NAME_SHADOWING")
         AnimatedContent(
             targetState = state,
             transitionSpec = {

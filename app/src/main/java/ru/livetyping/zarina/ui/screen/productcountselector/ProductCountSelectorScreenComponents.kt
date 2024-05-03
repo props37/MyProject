@@ -79,6 +79,7 @@ object ProductCountSelectorScreenComponents {
                 item.isSelected -> CountItemState.Selected
                 else -> CountItemState.Default
             }
+            @Suppress("NAME_SHADOWING")
             AnimatedContent(
                 targetState = state,
                 transitionSpec = {

@@ -72,6 +72,7 @@ fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
                             inclusive = true,
                         )
                         val filtersParcelable = FiltersParcelable.from(result.filters)
+                        @Suppress("NAME_SHADOWING")
                         val result = UnscopedDestinations.Filters.Result(filtersParcelable)
                         navController.currentBackStackEntry?.savedStateHandle
                             ?.set(UnscopedDestinations.Filters.RESULT_KEY, result)

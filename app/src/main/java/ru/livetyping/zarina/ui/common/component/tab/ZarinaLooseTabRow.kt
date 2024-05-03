@@ -57,6 +57,7 @@ fun ZarinaLooseTabRow(
 
             var availableTabWidth = constraints.maxWidth
             val tabPlaceables = tabMeasurables.map {
+                @Suppress("NAME_SHADOWING")
                 val constraints = constraints.copy(minWidth = 0, maxWidth = availableTabWidth)
                 val placeable = it.measure(constraints)
                 availableTabWidth -= placeable.width
@@ -85,6 +86,7 @@ fun ZarinaLooseTabRow(
                 subcompose(Slot.Indicator) {
                     indicator(tabPositions)
                 }.forEach { measurable ->
+                    @Suppress("NAME_SHADOWING")
                     val constraints = Constraints.fixed(tabRowWidth, tabRowHeight)
                     val placeable = measurable.measure(constraints)
                     placeable.placeRelative(0, 0)

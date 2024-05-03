@@ -131,6 +131,7 @@ object FiltersScreenComponents {
         onFilterListErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        @Suppress("NAME_SHADOWING")
         Crossfade(
             targetState = state,
             contentKey = {

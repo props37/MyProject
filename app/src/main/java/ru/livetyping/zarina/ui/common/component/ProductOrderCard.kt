@@ -167,8 +167,6 @@ fun ProductOrderCardSkeleton(
         Spacer(modifier = Modifier.width(16.dp))
 
         Column(modifier = Modifier.weight(1f)) {
-            val height = 10.dp
-
             ZarinaTextSkeleton(
                 textStyle = UiKitTheme.typography.caption1.regular,
                 shimmer = shimmer,

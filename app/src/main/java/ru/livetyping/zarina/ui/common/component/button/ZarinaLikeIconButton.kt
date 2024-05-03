@@ -27,6 +27,7 @@ fun ZarinaLikeIconButton(
     isLiked: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    @Suppress("NAME_SHADOWING")
     contentDescriptionResId: (Boolean) -> Int = { isLiked ->
         if (isLiked) R.string.remove_from_favorites else R.string.add_to_favorites
     },

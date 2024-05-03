@@ -32,6 +32,7 @@ import ru.livetyping.zarina.ui.theme.UiKitTheme
 fun ZarinaCheckmarkAnimatedIcon(
     isVisible: Boolean,
     modifier: Modifier = Modifier,
+    @Suppress("NAME_SHADOWING")
     contentDescriptionResId: (Boolean) -> Int? = { isVisible ->
         if (isVisible) R.string.checkmark_checked else R.string.checkmark_unchecked
     },

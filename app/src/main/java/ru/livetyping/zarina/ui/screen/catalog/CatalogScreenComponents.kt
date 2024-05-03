@@ -198,6 +198,7 @@ object CatalogScreenComponents {
         onErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        @Suppress("NAME_SHADOWING")
         Crossfade(
             targetState = state,
             contentKey = { getCategoryListContentKey(it) },
