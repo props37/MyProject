@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -11,16 +12,21 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.ui.screen.product.ProductScreenComponents.ProductDetailsList
+import ru.livetyping.zarina.ui.screen.product.ProductScreenComponents.ProductDetails
 import ru.livetyping.zarina.ui.screen.product.ProductScreenComponents.TopBar
+import ru.livetyping.zarina.ui.screen.product.ProductScreenComponents.TopBarMode
 import ru.livetyping.zarina.ui.screen.product.ProductScreenComponents.topBarModeAsState
+import ru.livetyping.zarina.ui.screen.product.ProductViewModel.ProductState
 import ru.livetyping.zarina.ui.screen.product.ProductViewModel.SideEffect
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.collapsingtopbar.CollapsingTopBarDefaults
@@ -31,7 +37,12 @@ fun ProductScreen(
     navigate: (ProductScreenAction) -> Unit,
     viewModel: ProductViewModel = hiltViewModel(),
 ) {
+    val productState by viewModel.productState.collectAsStateWithLifecycle()
+
     ScreenContent(
+        productState = productState,
+        onProductErrorRefreshClicked = viewModel::onProductErrorRefreshClicked,
+        onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -39,6 +50,9 @@ fun ProductScreen(
 
 @Composable
 private fun ScreenContent(
+    productState: ProductState,
+    onProductErrorRefreshClicked: () -> Unit,
+    onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProductScreenAction) -> Unit,
 ) {
@@ -48,15 +62,21 @@ private fun ScreenContent(
     )
 
     val lazyListState = rememberLazyListState()
-    val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior()
+    val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior(
+        scrollBeforeContent = { false },
+    )
 
     CollapsingTopBarLayout(
         topBar = {
-            val mode by topBarModeAsState(lazyListState)
-            // TODO: [High] Implement
+            val mode = if (productState is ProductState.Success) {
+                topBarModeAsState(lazyListState).value
+            } else {
+                TopBarMode.Transparent
+            }
+
             TopBar(
-                onBackClicked = { /*TODO*/ },
-                productName = "",
+                onBackClicked = onBackClicked,
+                productName = (productState as? ProductState.Success)?.product?.name,
                 mode = mode,
             )
         },
@@ -68,11 +88,23 @@ private fun ScreenContent(
                 WindowInsets.statusBars
                     .union(WindowInsets.displayCutout),
             )
-            .bottomNavBarPadding(),
-    ) {
-        ProductDetailsList(
+            .bottomNavBarPadding()
+            .clipToBounds(),
+    ) { padding ->
+        val paddingModifier = if (productState !is ProductState.Success) {
+            Modifier.padding(padding)
+        } else {
+            Modifier
+        }
+
+        ProductDetails(
+            productState = productState,
+            onProductErrorRefreshClicked = onProductErrorRefreshClicked,
             lazyListState = lazyListState,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .then(paddingModifier)
+                .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
         )
     }
 }

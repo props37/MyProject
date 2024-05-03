@@ -6,14 +6,17 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductDetails
+import ru.livetyping.zarina.ui.common.datafetchinginfo.DataFetchingInfoHolder
 import ru.livetyping.zarina.ui.common.error.ErrorState
 import ru.livetyping.zarina.ui.common.error.from
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
@@ -45,8 +48,14 @@ class ProductViewModel @Inject constructor(
             Product.Id(value)
         }
 
+    private val productFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val productResult: StateFlow<Result<ProductDetails>?> =
-        interactor.getProductFlow(GetProductFlowUseCase.Params(productId.value))
+        productFetchingInfoHolder.fetchingRequests
+            .flatMapLatest {
+                interactor.getProductFlow(GetProductFlowUseCase.Params(productId.value))
+            }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
@@ -69,11 +78,19 @@ class ProductViewModel @Inject constructor(
             ) ?: ProductState.Loading
         }
 
+    init {
+        productFetchingInfoHolder.requestFetching(Unit)
+    }
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = ProductScreenAction.ScreenClosed
             emitSideEffect(SideEffect.Navigate(action))
         }
+    }
+
+    fun onProductErrorRefreshClicked() {
+        productFetchingInfoHolder.requestFetching(Unit)
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
