@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
@@ -43,7 +42,6 @@ import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
-import ru.livetyping.zarina.domain.product.currentPrice
 import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaLikeIconButton
 import ru.livetyping.zarina.ui.common.component.color.ZarinaColorIcon
@@ -55,7 +53,6 @@ import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonS
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.common.tooling.preview.parameterprovider.ProductPreviewParameterProvider
 import ru.livetyping.zarina.ui.common.util.domain.toComposeColor
-import ru.livetyping.zarina.ui.common.util.rememberFormattedPrice
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.pager.rememberEndlessPagerState
 
@@ -142,58 +139,10 @@ fun ProductCard(
             }
         }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        ProductPrice(
+            price = product.price,
             modifier = Modifier.padding(horizontal = 16.dp),
-        ) {
-            val priceTextStyle = UiKitTheme.typography.caption1.regular
-            val discountColor = UiKitTheme.colors.text.general.accent.red
-            val originalPriceColor = if (product.price.hasDiscount) {
-                UiKitTheme.colors.text.general.regular.disabled
-            } else {
-                UiKitTheme.colors.text.general.regular.default
-            }
-            val originalPriceTextDecoration = if (product.price.hasDiscount) {
-                TextDecoration.LineThrough
-            } else {
-                TextDecoration.None
-            }
-
-            val originalPrice = stringResource(
-                id = R.string.price_in_rubles_string,
-                rememberFormattedPrice(product.price.originalPrice),
-            )
-            Text(
-                text = originalPrice.uppercase(),
-                style = priceTextStyle,
-                color = originalPriceColor,
-                textDecoration = originalPriceTextDecoration,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            if (product.price.hasDiscount) {
-                Spacer(modifier = Modifier.width(8.dp))
-                val currentPrice = stringResource(
-                    id = R.string.price_in_rubles_string,
-                    rememberFormattedPrice(product.price.currentPrice),
-                )
-                Text(
-                    text = currentPrice.uppercase(),
-                    style = priceTextStyle,
-                    color = discountColor,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(R.string.discount_percent, product.price.discountPercent).uppercase(),
-                    style = UiKitTheme.typography.caption2.regular,
-                    color = discountColor,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-        }
+        )
 
         Colors(
             colors = product.colors,
