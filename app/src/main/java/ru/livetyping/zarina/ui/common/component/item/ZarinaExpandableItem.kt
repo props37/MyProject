@@ -50,6 +50,7 @@ fun ZarinaExpandableItem(
     modifier: Modifier = Modifier,
     isExpanded: Boolean = false,
     onExpandedChanged: ((Boolean) -> Unit)? = null,
+    confirmExpandedChange: (Boolean) -> Boolean = { true },
     backgroundColor: Color = BackgroundColor,
     contentColor: Color = ContentColor,
     titleContentPadding: PaddingValues = TitleContentPadding,
@@ -75,7 +76,12 @@ fun ZarinaExpandableItem(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .defaultMinSize(minHeight = MinHeight)
-                    .clickable { isExpanded = !isExpanded }
+                    .clickable {
+                        val newValue = !isExpanded
+                        if (confirmExpandedChange(newValue)) {
+                            isExpanded = newValue
+                        }
+                    }
                     .padding(titleContentPadding),
             ) {
                 Row(
