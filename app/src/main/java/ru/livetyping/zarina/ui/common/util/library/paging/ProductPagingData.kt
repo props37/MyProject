@@ -27,13 +27,9 @@ fun PagingData<ProductItem>.mapProducts(
     cartProductIds: Set<Product.Id>,
 ): PagingData<ProductItem> {
     return this.map { product ->
-        if (product.id in favoriteProductIds || product.id in cartProductIds) {
-            product.copy(
-                isInFavorites = product.id in favoriteProductIds,
-                isInCart = product.id in cartProductIds,
-            )
-        } else {
-            product
-        }
+        product.copy(
+            isInFavorites = product.id in favoriteProductIds,
+            isInCart = product.id in cartProductIds,
+        )
     }
 }

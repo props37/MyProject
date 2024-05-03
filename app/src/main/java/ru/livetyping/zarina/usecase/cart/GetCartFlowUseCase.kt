@@ -35,12 +35,7 @@ class GetCartFlowUseCase @Inject constructor(
             }
             .combineTransform(favoriteRepository.favoriteProductIds) { cart, favoriteProductIds ->
                 val products = cart.products.map { product ->
-                    val isInFavorites = product.productId in favoriteProductIds
-                    if (isInFavorites != product.isInFavorites) {
-                        product.copy(isInFavorites = isInFavorites)
-                    } else {
-                        product
-                    }
+                    product.copy(isInFavorites = product.productId in favoriteProductIds)
                 }
                 emit(cart.copy(products = products))
             }
