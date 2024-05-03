@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.domain.product
 
+import ru.livetyping.zarina.domain.common.Color
 import ru.livetyping.zarina.domain.common.Media
 import ru.livetyping.zarina.domain.common.Url
 
@@ -12,6 +13,7 @@ data class ProductDetails(
     override val media: List<Media>,
     override val isInFavorites: Boolean,
     override val isInCart: Boolean,
+    val label: Label?,
     val shareUrl: Url?,
 ) : Product(
     id = id,
@@ -22,4 +24,9 @@ data class ProductDetails(
     media = media,
     isInFavorites = isInFavorites,
     isInCart = isInCart,
-)
+) {
+    data class Label(
+        val name: String,
+        val color: Color,
+    )
+}

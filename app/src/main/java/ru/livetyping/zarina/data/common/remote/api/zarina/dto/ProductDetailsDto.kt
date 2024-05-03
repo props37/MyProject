@@ -2,9 +2,11 @@ package ru.livetyping.zarina.data.common.remote.api.zarina.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.domain.common.Color
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductDetails
+import timber.log.Timber
 
 @Serializable
 data class ProductDetailsDto(
@@ -30,6 +32,9 @@ data class ProductDetailsDto(
     // TODO: [High] Add measurements?
     // TODO: [High] Add gender?
 
+    @SerialName("label")
+    val label: Label? = null,
+
     @SerialName("share_url")
     val shareUrl: String? = null,
 ) {
@@ -50,7 +55,29 @@ data class ProductDetailsDto(
             // States that are not present in the DTO
             isInFavorites = false,
             isInCart = false,
+            label = label?.toLabel(),
             shareUrl = shareUrl?.let { Url(it) },
         )
+    }
+
+    @Serializable
+    data class Label(
+        @SerialName("title")
+        val name: String? = null,
+
+        @SerialName("color")
+        val color: String? = null,
+    ) {
+        fun toLabel(): ProductDetails.Label? {
+            return if (name != null && color != null) {
+                ProductDetails.Label(
+                    name = name,
+                    color = Color(color.trim()),
+                )
+            } else {
+                Timber.e("Drop label because its name or color is null")
+                null
+            }
+        }
     }
 }
