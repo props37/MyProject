@@ -138,7 +138,7 @@ private fun ScreenContent(
             ProductOrderCard(
                 name = product.name,
                 imageUrl = remember(product.media) {
-                    product.media.firstOrNull { it.type == MediaType.IMAGE }?.url ?: Url.EMPTY
+                    product.media.firstOrNull { it.type == MediaType.IMAGE }?.originalUrl ?: Url.EMPTY
                 },
                 size = productOffer.size,
                 sizeRu = productOffer.sizeRu,

@@ -56,7 +56,7 @@ fun ZarinaMediaHorizontalPager(
             when (media?.type) {
                 MediaType.IMAGE -> {
                     AsyncImage(
-                        model = media.url.value,
+                        model = media.originalUrl.value,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         onSuccess = { isMediaDisplayed = true },
@@ -66,7 +66,7 @@ fun ZarinaMediaHorizontalPager(
 
                 MediaType.VIDEO -> {
                     ZarinaVideoPlayer(
-                        url = media.url,
+                        url = media.originalUrl,
                         onReadyToPlay = { isMediaDisplayed = true },
                         modifier = Modifier.matchParentSize(),
                     )

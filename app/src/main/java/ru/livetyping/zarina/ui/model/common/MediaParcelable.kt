@@ -9,17 +9,20 @@ import ru.livetyping.zarina.domain.common.Url
 @Serializable
 @Parcelize
 data class MediaParcelable(
-    val url: String,
+    val originalUrl: String,
+    val thumbnailUrl: String,
     val type: MediaTypeParcelable,
 ) : Parcelable {
     fun toMedia(): Media = Media(
-        url = Url(url),
+        originalUrl = Url(originalUrl),
+        thumbnailUrl = Url(thumbnailUrl),
         type = type.toMediaType(),
     )
 
     companion object {
         fun from(media: Media): MediaParcelable = MediaParcelable(
-            url = media.url.value,
+            originalUrl = media.originalUrl.value,
+            thumbnailUrl = media.thumbnailUrl.value,
             type = MediaTypeParcelable.from(media.type),
         )
     }

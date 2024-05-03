@@ -337,7 +337,7 @@ object HomeScreenComponents {
                 ),
         ) {
             AsyncImage(
-                model = banner.media.url.value,
+                model = banner.media.originalUrl.value,
                 contentDescription = banner.title,
                 contentScale = ContentScale.Crop,
                 onSuccess = { onBannerDisplayed() },
@@ -369,7 +369,7 @@ object HomeScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         ZarinaVideoPlayer(
-            url = banner.media.url,
+            url = banner.media.originalUrl,
             isOnScreen = isOnScreen,
             onReadyToPlay = onBannerDisplayed,
             modifier = modifier

@@ -6,6 +6,7 @@ import ru.livetyping.zarina.domain.common.MediaType
 import ru.livetyping.zarina.domain.product.Product
 import timber.log.Timber
 
+// TODO: [High] Rename to ProductItemDto?
 @Serializable
 data class ProductDto(
     @SerialName("id")
