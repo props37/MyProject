@@ -223,7 +223,7 @@ fun LoyaltyCardPlaceholder(
                     .padding(30.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.creating_your_loyality_card),
+                    text = stringResource(R.string.creating_your_loyalty_card),
                     style = UiKitTheme.typography.tertiary.regular,
                     color = UiKitTheme.colors.text.general.regular.default,
                 )
