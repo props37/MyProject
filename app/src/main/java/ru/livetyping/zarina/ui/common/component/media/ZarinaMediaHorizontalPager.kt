@@ -35,6 +35,7 @@ fun ZarinaMediaHorizontalPager(
     pagerState: PagerState,
     media: List<Media>,
     modifier: Modifier = Modifier,
+    quality: ZarinaMediaHorizontalPagerQuality = ZarinaMediaHorizontalPagerQuality.Original,
     shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
 ) {
     val placeholderEnterTransition = remember { fadeIn() }
@@ -56,8 +57,12 @@ fun ZarinaMediaHorizontalPager(
         Box(modifier = Modifier.fillMaxSize()) {
             when (media?.type) {
                 MediaType.IMAGE -> {
+                    val url = when (quality) {
+                        ZarinaMediaHorizontalPagerQuality.Original -> media.originalUrl
+                        ZarinaMediaHorizontalPagerQuality.Thumbnail -> media.thumbnailUrl
+                    }
                     AsyncImage(
-                        model = media.originalUrl.value,
+                        model = url.value,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         onSuccess = { isMediaDisplayed = true },
@@ -93,3 +98,5 @@ fun ZarinaMediaHorizontalPager(
         }
     }
 }
+
+enum class ZarinaMediaHorizontalPagerQuality { Original, Thumbnail }
