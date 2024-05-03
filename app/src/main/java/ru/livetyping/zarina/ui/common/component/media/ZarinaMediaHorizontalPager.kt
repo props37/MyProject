@@ -33,7 +33,7 @@ import ru.livetyping.zarina.util.kotlin.loopingGet
 @Composable
 fun ZarinaMediaHorizontalPager(
     pagerState: PagerState,
-    medias: List<Media>,
+    media: List<Media>,
     modifier: Modifier = Modifier,
     shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
 ) {
@@ -49,7 +49,8 @@ fun ZarinaMediaHorizontalPager(
         ),
         modifier = modifier,
     ) { page ->
-        val media = medias.loopingGet(page)
+        @Suppress("NAME_SHADOWING")
+        val media = media.loopingGet(page)
         var isMediaDisplayed by remember(media) { mutableStateOf(false) }
 
         Box(modifier = Modifier.fillMaxSize()) {

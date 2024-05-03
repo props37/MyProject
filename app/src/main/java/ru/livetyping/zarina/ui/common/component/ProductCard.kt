@@ -85,7 +85,7 @@ fun ProductCard(
 
             ZarinaMediaHorizontalPager(
                 pagerState = pagerState,
-                medias = product.media,
+                media = product.media,
                 shimmer = shimmer,
                 modifier = Modifier.matchParentSize(),
             )
