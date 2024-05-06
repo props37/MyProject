@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
@@ -30,6 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.UrlAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
@@ -37,6 +40,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Media
+import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.ui.common.component.ProductColorSelector
 import ru.livetyping.zarina.ui.common.component.ProductPrice
@@ -49,6 +53,7 @@ import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.ui.common.util.domain.toComposeColor
+import ru.livetyping.zarina.ui.common.util.rememberFormattedPrice
 import ru.livetyping.zarina.ui.screen.product.ProductViewModel.ProductState
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
@@ -113,6 +118,7 @@ object ProductScreenComponents {
     fun ProductDetails(
         productState: ProductState,
         onProductErrorRefreshClicked: () -> Unit,
+        onUrlClicked: (Url) -> Unit,
         lazyListState: LazyListState,
         modifier: Modifier = Modifier,
     ) {
@@ -130,6 +136,7 @@ object ProductScreenComponents {
                 is ProductState.Success -> {
                     ProductDetailsImpl(
                         product = state.product,
+                        onUrlClicked = onUrlClicked,
                         lazyListState = lazyListState,
                     )
                 }
@@ -154,6 +161,7 @@ object ProductScreenComponents {
     @Composable
     private fun ProductDetailsImpl(
         product: ProductDetails,
+        onUrlClicked: (Url) -> Unit,
         lazyListState: LazyListState,
         modifier: Modifier = Modifier,
     ) {
@@ -194,7 +202,11 @@ object ProductScreenComponents {
                 key = ProductDetailsListKeyDeliveryAndPayment,
                 contentType = ProductDetailsListContentTypeDeliveryAndPayment,
             ) {
-                DeliveryAndPayment(modifier = Modifier.fillMaxWidth())
+                DeliveryAndPayment(
+                    freeDeliveryTotalPriceThreshold = product.freeDeliveryTotalPriceThreshold,
+                    onUrlClicked = onUrlClicked,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
         }
     }
@@ -293,8 +305,11 @@ object ProductScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalTextApi::class)
     @Composable
     private fun DeliveryAndPayment(
+        freeDeliveryTotalPriceThreshold: Int,
+        onUrlClicked: (Url) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         ZarinaExpandableItem(
@@ -303,14 +318,75 @@ object ProductScreenComponents {
             },
             modifier = modifier,
         ) {
-            // TODO: [High] Implement
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp),
+            val baseText = stringResource(
+                id = R.string.product_delivery_and_payment_info,
+                rememberFormattedPrice(freeDeliveryTotalPriceThreshold.toLong()),
+            )
+            val baseTextStyle = UiKitTheme.typography.tertiary.light
+
+            val clickableDeliveryText =
+                stringResource(R.string.product_delivery_and_payment_info_delivery)
+            val clickablePaymentText =
+                stringResource(R.string.product_delivery_and_payment_info_payment)
+            val clickableTextStyle = UiKitTheme.typography.tertiary.regular
+            val deliveryAndPaymentUrl =
+                stringResource(R.string.product_delivery_and_payment_info_delivery_payment_url)
+
+            val text = remember(
+                baseText,
+                baseTextStyle,
+                clickableDeliveryText,
+                clickablePaymentText,
+                clickableTextStyle,
+                deliveryAndPaymentUrl,
             ) {
-                Text(text = "Доставка и оплата")
+                buildAnnotatedString {
+                    withStyle(baseTextStyle.toSpanStyle()) {
+                        append(baseText)
+                    }
+
+                    val string = this.toAnnotatedString()
+                    val clickableDeliveryTextStartIndex = string.lastIndexOf(clickableDeliveryText)
+                    val clickablePaymentTextStartIndex = string.lastIndexOf(clickablePaymentText)
+
+                    val clickableSpanStyle = clickableTextStyle.toSpanStyle()
+                    if (clickableDeliveryTextStartIndex != -1) {
+                        val end = clickableDeliveryTextStartIndex + clickableDeliveryText.length
+                        addStyle(
+                            style = clickableSpanStyle,
+                            start = clickableDeliveryTextStartIndex,
+                            end = end,
+                        )
+                        addUrlAnnotation(
+                            urlAnnotation = UrlAnnotation(deliveryAndPaymentUrl),
+                            start = clickableDeliveryTextStartIndex,
+                            end = end,
+                        )
+                    }
+                    if (clickablePaymentTextStartIndex != -1) {
+                        val end = clickablePaymentTextStartIndex + clickablePaymentText.length
+                        addStyle(
+                            style = clickableSpanStyle,
+                            start = clickablePaymentTextStartIndex,
+                            end = end,
+                        )
+                        addUrlAnnotation(
+                            urlAnnotation = UrlAnnotation(deliveryAndPaymentUrl),
+                            start = clickablePaymentTextStartIndex,
+                            end = end,
+                        )
+                    }
+                }
+            }
+
+            ClickableText(
+                text = text,
+            ) { offset ->
+                val annotation = text.getUrlAnnotations(offset, offset).firstOrNull()
+                if (annotation != null) {
+                    val url = Url(annotation.item.url)
+                    onUrlClicked(url)
+                }
             }
         }
     }

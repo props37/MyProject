@@ -37,6 +37,9 @@ data class ProductDetailsDto(
     @SerialName("label")
     val label: Label? = null,
 
+    @SerialName("threshold")
+    val freeDeliveryTotalPriceThreshold: Int? = null,
+
     @SerialName("share_url")
     val shareUrl: String? = null,
 ) {
@@ -60,6 +63,7 @@ data class ProductDetailsDto(
             isInCart = false,
             label = label?.toLabel(),
             description = description.mapNotNull { it.toDescriptionEntry() },
+            freeDeliveryTotalPriceThreshold = freeDeliveryTotalPriceThreshold ?: 0,
             shareUrl = shareUrl?.let { Url(it) },
         )
     }

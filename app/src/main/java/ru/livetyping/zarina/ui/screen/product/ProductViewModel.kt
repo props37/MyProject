@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.ui.common.datafetchinginfo.DataFetchingInfoHolder
@@ -100,10 +101,18 @@ class ProductViewModel @Inject constructor(
         productFetchingInfoHolder.requestFetching(Unit)
     }
 
+    fun onUrlClicked(url: Url) {
+        navigationThrottler.throttle {
+            emitSideEffect(SideEffect.OpenUrl(url))
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: ProductScreenAction) : SideEffect
 
         data class Share(val text: String) : SideEffect
+
+        data class OpenUrl(val url: Url) : SideEffect
     }
 
     @Stable

@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.screen.product.ProductScreenComponents.ProductDetails
@@ -44,6 +45,7 @@ fun ProductScreen(
         onProductErrorRefreshClicked = viewModel::onProductErrorRefreshClicked,
         onBackClicked = viewModel::onBackClicked,
         onShareClicked = viewModel::onShareClicked,
+        onUrlClicked = viewModel::onUrlClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -55,6 +57,7 @@ private fun ScreenContent(
     onProductErrorRefreshClicked: () -> Unit,
     onBackClicked: () -> Unit,
     onShareClicked: () -> Unit,
+    onUrlClicked: (Url) -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProductScreenAction) -> Unit,
 ) {
@@ -104,6 +107,7 @@ private fun ScreenContent(
         ProductDetails(
             productState = productState,
             onProductErrorRefreshClicked = onProductErrorRefreshClicked,
+            onUrlClicked = onUrlClicked,
             lazyListState = lazyListState,
             modifier = Modifier
                 .fillMaxSize()
