@@ -9,10 +9,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combineTransform
-import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
@@ -21,6 +21,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.ui.common.datafetchinginfo.DataFetchingInfoHolder
@@ -43,7 +44,7 @@ class ProductViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val productId: StateFlow<Product.Id> = savedStateHandle
+    private val initialProductId: StateFlow<Product.Id> = savedStateHandle
         .getStateFlow<String?>(
             key = UnscopedDestinations.Product.ARG_KEY_PRODUCT_ID,
             initialValue = null,
@@ -56,31 +57,37 @@ class ProductViewModel @Inject constructor(
             Product.Id(value)
         }
 
+    private val productId = MutableStateFlow(initialProductId.value)
+
     private val productFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val productResult: StateFlow<Result<ProductDetails>?> =
-        productFetchingInfoHolder.fetchingRequests
-            .flatMapLatest {
-                interactor.getProductFlow(GetProductFlowUseCase.Params(productId.value))
-            }
-            .onEach { productFetchingInfoHolder.completeFetching() }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                initialValue = null,
-            )
+    private val productResult: StateFlow<Result<ProductDetails>?> = combine(
+        productFetchingInfoHolder.fetchingRequests,
+        productId,
+    ) { _, productId ->
+        val params = GetProductFlowUseCase.Params(productId)
+        interactor.getProductFlow(params)
+    }
+        .flatMapLatest { it }
+        .onEach { productFetchingInfoHolder.completeFetching() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
 
     private val productTotalLookFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
 
-    private val productTotalLookResult: StateFlow<Result<List<ProductItem>>?> = combineTransform(
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val productTotalLookResult: StateFlow<Result<List<ProductItem>>?> = combine(
         productTotalLookFetchingInfoHolder.fetchingRequests,
         productId,
     ) { _, productId ->
         val params = GetProductTotalLookFlowUseCase.Params(productId)
-        val flow = interactor.getProductTotalLookFlow(params)
-        emitAll(flow)
+        interactor.getProductTotalLookFlow(params)
     }
+        .flatMapLatest { it }
         .onEach { productTotalLookFetchingInfoHolder.completeFetching() }
         .stateIn(
             scope = viewModelScope,
@@ -88,21 +95,20 @@ class ProductViewModel @Inject constructor(
             initialValue = null,
         )
 
-    val productState: StateFlow<ProductState> = productResult
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.WhileUiSubscribed,
-        ) { result ->
-            result?.fold(
-                onSuccess = { product ->
-                    ProductState.Success(product)
-                },
-                onFailure = {
-                    val state = ErrorState.from(it)
-                    ProductState.Error(state)
-                },
-            ) ?: ProductState.Loading
-        }
+    val productState: StateFlow<ProductState> = productResult.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { result ->
+        result?.fold(
+            onSuccess = { product ->
+                ProductState.Success(product)
+            },
+            onFailure = {
+                val state = ErrorState.from(it)
+                ProductState.Error(state)
+            },
+        ) ?: ProductState.Loading
+    }
 
     val productTotalLookState: StateFlow<ProductTotalLookState> = productTotalLookResult.mapState(
         scope = viewModelScope,
@@ -132,6 +138,12 @@ class ProductViewModel @Inject constructor(
         val shareUrl = productResult.value?.getOrNull()?.shareUrl ?: return
         navigationThrottler.throttle {
             emitSideEffect(SideEffect.Share(shareUrl.value))
+        }
+    }
+
+    fun onProductColorClicked(productColor: ProductColor) {
+        if (productColor.productId != productId.value) {
+            productId.value = productColor.productId
         }
     }
 

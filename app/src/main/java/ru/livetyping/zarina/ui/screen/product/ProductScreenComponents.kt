@@ -46,6 +46,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Media
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.ui.common.component.ProductCardSmall
@@ -130,6 +131,7 @@ object ProductScreenComponents {
     @Composable
     fun ProductDetails(
         productState: ProductState,
+        onProductColorClicked: (ProductColor) -> Unit,
         onProductErrorRefreshClicked: () -> Unit,
         onSuggestedProductClicked: (Product) -> Unit,
         productTotalLookState: ProductTotalLookState,
@@ -152,6 +154,7 @@ object ProductScreenComponents {
                 is ProductState.Success -> {
                     ProductDetailsImpl(
                         product = state.product,
+                        onProductColorClicked = onProductColorClicked,
                         productTotalLookState = productTotalLookState,
                         onSuggestedProductClicked = onSuggestedProductClicked,
                         onProductTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
@@ -180,6 +183,7 @@ object ProductScreenComponents {
     @Composable
     private fun ProductDetailsImpl(
         product: ProductDetails,
+        onProductColorClicked: (ProductColor) -> Unit,
         productTotalLookState: ProductTotalLookState,
         onSuggestedProductClicked: (Product) -> Unit,
         onProductTotalLookErrorRefreshClicked: () -> Unit,
@@ -204,6 +208,7 @@ object ProductScreenComponents {
             ) {
                 ProductGeneralInfo(
                     product = product,
+                    onProductColorClicked = onProductColorClicked,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp, bottom = 8.dp),
@@ -277,6 +282,7 @@ object ProductScreenComponents {
     @Composable
     private fun ProductGeneralInfo(
         product: ProductDetails,
+        onProductColorClicked: (ProductColor) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
@@ -313,7 +319,7 @@ object ProductScreenComponents {
             ProductColorSelector(
                 productId = product.id,
                 productColors = product.colors,
-                onProductColorClicked = { /* TODO */ },
+                onProductColorClicked = onProductColorClicked,
                 contentPadding = PaddingValues(horizontal = 10.dp),
                 modifier = Modifier.fillMaxWidth(),
             )

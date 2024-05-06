@@ -22,6 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.screen.product.ProductScreenComponents.ProductDetails
@@ -45,6 +46,7 @@ fun ProductScreen(
 
     ScreenContent(
         productState = productState,
+        onProductColorClicked = viewModel::onProductColorClicked,
         onProductErrorRefreshClicked = viewModel::onProductErrorRefreshClicked,
         onSuggestedProductClicked = viewModel::onSuggestedProductClicked,
         productTotalLookState = productTotalLookState,
@@ -60,6 +62,7 @@ fun ProductScreen(
 @Composable
 private fun ScreenContent(
     productState: ProductState,
+    onProductColorClicked: (ProductColor) -> Unit,
     onProductErrorRefreshClicked: () -> Unit,
     onSuggestedProductClicked: (Product) -> Unit,
     productTotalLookState: ProductTotalLookState,
@@ -115,6 +118,7 @@ private fun ScreenContent(
 
         ProductDetails(
             productState = productState,
+            onProductColorClicked = onProductColorClicked,
             onProductErrorRefreshClicked = onProductErrorRefreshClicked,
             onSuggestedProductClicked = onSuggestedProductClicked,
             productTotalLookState = productTotalLookState,
