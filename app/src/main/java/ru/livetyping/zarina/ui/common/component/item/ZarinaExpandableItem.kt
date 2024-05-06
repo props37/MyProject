@@ -27,8 +27,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -58,7 +58,7 @@ fun ZarinaExpandableItem(
     content: @Composable AnimatedVisibilityScope.() -> Unit,
 ) {
     @Suppress("NAME_SHADOWING")
-    var isExpanded by remember(isExpanded) { mutableStateOf(isExpanded) }
+    var isExpanded by rememberSaveable(isExpanded) { mutableStateOf(isExpanded) }
 
     val updatedOnExpandedChanged by rememberUpdatedState(onExpandedChanged)
     LaunchedEffect(Unit) {
