@@ -192,6 +192,8 @@
     <string name="creating_your_loyalty_card">Создаём твою карту лояльности</string>
     <string name="it_will_take_up_to_five_minutes">Это займёт до пяти минут</string>
     <string name="share">Поделиться</string>
+    <string name="product_details">Подробнее об изделии</string>
+    <string name="delivery_and_payment">Доставка и оплата</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

@@ -65,6 +65,7 @@ private fun ScreenContent(
 
     val lazyListState = rememberLazyListState()
     val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior(
+        canScroll = { lazyListState.canScrollForward },
         scrollBeforeContent = { false },
     )
 

@@ -2,6 +2,7 @@ package ru.livetyping.zarina.ui.screen.product
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,19 +29,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Media
-import ru.livetyping.zarina.domain.product.Price
-import ru.livetyping.zarina.domain.product.Product
-import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.ui.common.component.ProductColorSelector
 import ru.livetyping.zarina.ui.common.component.ProductPrice
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
+import ru.livetyping.zarina.ui.common.component.item.ZarinaExpandableItem
 import ru.livetyping.zarina.ui.common.component.media.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.ui.common.component.pager.ZarinaHorizontalPagerIndicator
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
@@ -171,15 +173,28 @@ object ProductScreenComponents {
                 contentType = ProductDetailsListContentTypeGeneralInfo,
             ) {
                 ProductGeneralInfoItem(
-                    id = product.id,
-                    name = product.name,
-                    label = product.label,
-                    price = product.price,
-                    colors = product.colors,
+                    product = product,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp),
+                        .padding(top = 16.dp, bottom = 8.dp),
                 )
+            }
+
+            item(
+                key = ProductDetailsListKeyDescription,
+                contentType = ProductDetailsListContentTypeDescription,
+            ) {
+                ProductDescription(
+                    description = product.description,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            item(
+                key = ProductDetailsListKeyDeliveryAndPayment,
+                contentType = ProductDetailsListContentTypeDeliveryAndPayment,
+            ) {
+                DeliveryAndPayment(modifier = Modifier.fillMaxWidth())
             }
         }
     }
@@ -214,11 +229,7 @@ object ProductScreenComponents {
 
     @Composable
     private fun ProductGeneralInfoItem(
-        id: Product.Id,
-        name: String,
-        label: ProductDetails.Label?,
-        price: Price,
-        colors: List<ProductColor>,
+        product: ProductDetails,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
@@ -227,17 +238,17 @@ object ProductScreenComponents {
                 modifier = Modifier.padding(horizontal = 16.dp),
             ) {
                 Text(
-                    text = name.uppercase(),
+                    text = product.name.uppercase(),
                     style = UiKitTheme.typography.caption1.regular,
                     color = UiKitTheme.colors.text.general.regular.default,
                 )
 
-                if (label != null) {
+                if (product.label != null) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = label.name.uppercase(),
+                        text = product.label.name.uppercase(),
                         style = UiKitTheme.typography.caption1.bold,
-                        color = label.color.toComposeColor()
+                        color = product.label.color.toComposeColor()
                             ?: UiKitTheme.colors.text.general.regular.default,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -248,17 +259,79 @@ object ProductScreenComponents {
             Spacer(modifier = Modifier.height(2.dp))
 
             ProductPrice(
-                price = price,
+                price = product.price,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
 
             ProductColorSelector(
-                productId = id,
-                productColors = colors,
+                productId = product.id,
+                productColors = product.colors,
                 onProductColorClicked = { /* TODO */ },
                 contentPadding = PaddingValues(horizontal = 10.dp),
                 modifier = Modifier.fillMaxWidth(),
             )
+        }
+    }
+
+    @Composable
+    private fun ProductDescription(
+        description: List<ProductDetails.DescriptionEntry>,
+        modifier: Modifier = Modifier,
+    ) {
+        ZarinaExpandableItem(
+            title = {
+                Text(text = stringResource(R.string.product_details))
+            },
+            modifier = modifier,
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                description.forEach { descriptionEntry ->
+                    val text = rememberProductDescriptionEntryText(descriptionEntry)
+                    Text(text = text)
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun DeliveryAndPayment(
+        modifier: Modifier = Modifier,
+    ) {
+        ZarinaExpandableItem(
+            title = {
+                Text(text = stringResource(R.string.delivery_and_payment))
+            },
+            modifier = modifier,
+        ) {
+            // TODO: [High] Implement
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp),
+            ) {
+                Text(text = "Доставка и оплата")
+            }
+        }
+    }
+
+    @Composable
+    private fun rememberProductDescriptionEntryText(
+        descriptionEntry: ProductDetails.DescriptionEntry,
+    ): AnnotatedString {
+        val titleStyle = UiKitTheme.typography.tertiary.regular
+        val bodyStyle = UiKitTheme.typography.tertiary.light
+        return remember(descriptionEntry, titleStyle, bodyStyle) {
+            buildAnnotatedString {
+                withStyle(titleStyle.toSpanStyle()) {
+                    append(descriptionEntry.title)
+                    append(Colon)
+                }
+                withStyle(bodyStyle.toSpanStyle()) {
+                    append(Space)
+                    append(descriptionEntry.body)
+                }
+            }
         }
     }
 
@@ -287,9 +360,19 @@ object ProductScreenComponents {
 
     private const val ProductDetailsListKeyMediaPager = "ProductDetailsListKeyMediaPager"
     private const val ProductDetailsListKeyGeneralInfo = "ProductDetailsListKeyGeneralInfo"
+    private const val ProductDetailsListKeyDescription = "ProductDetailsListKeyDescription"
+    private const val ProductDetailsListKeyDeliveryAndPayment =
+        "ProductDetailsListKeyDeliveryAndPayment"
 
     private const val ProductDetailsListContentTypeMediaPager =
         "ProductDetailsListContentTypeMediaPager"
     private const val ProductDetailsListContentTypeGeneralInfo =
         "ProductDetailsListContentTypeGeneralInfo"
+    private const val ProductDetailsListContentTypeDescription =
+        "ProductDetailsListContentTypeDescription"
+    private const val ProductDetailsListContentTypeDeliveryAndPayment =
+        "ProductDetailsListContentTypeDeliveryAndPayment"
+
+    private const val Colon = ':'
+    private const val Space = ' '
 }
