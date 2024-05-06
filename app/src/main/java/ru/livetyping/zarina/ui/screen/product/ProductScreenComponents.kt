@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
@@ -49,14 +48,17 @@ import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.ui.common.component.ProductCardSmall
+import ru.livetyping.zarina.ui.common.component.ProductCardSmallSkeleton
 import ru.livetyping.zarina.ui.common.component.ProductColorSelector
 import ru.livetyping.zarina.ui.common.component.ProductPrice
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.ui.common.component.item.ZarinaExpandableItem
+import ru.livetyping.zarina.ui.common.component.list.ZarinaListErrorItem
 import ru.livetyping.zarina.ui.common.component.media.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.ui.common.component.pager.ZarinaHorizontalPagerIndicator
 import ru.livetyping.zarina.ui.common.component.screen.ZarinaErrorScreen
+import ru.livetyping.zarina.ui.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.ui.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.ui.common.util.domain.toComposeColor
@@ -231,6 +233,7 @@ object ProductScreenComponents {
             ) {
                 ProductTotalLook(
                     totalLookState = productTotalLookState,
+                    onTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -421,6 +424,7 @@ object ProductScreenComponents {
     @Composable
     private fun ProductTotalLook(
         totalLookState: ProductTotalLookState,
+        onTotalLookErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
         contentPadding: PaddingValues = PaddingValues(),
     ) {
@@ -456,11 +460,16 @@ object ProductScreenComponents {
                     }
 
                     ProductTotalLookState.Loading -> {
-                        // TODO: [High] Implement
+                        SuggestedProductsSkeleton(
+                            contentPadding = contentPadding.getHorizontalPaddingValues(layoutDirection),
+                        )
                     }
 
                     ProductTotalLookState.Error -> {
-                        // TODO: [High] Implement
+                        ZarinaListErrorItem(
+                            onRetryClicked = onTotalLookErrorRefreshClicked,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
                     }
                 }
             }
@@ -475,7 +484,7 @@ object ProductScreenComponents {
     ) {
         LazyRow(
             contentPadding = contentPadding,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(SuggestedProductsSpacedBy),
             modifier = modifier,
         ) {
             items(
@@ -485,6 +494,26 @@ object ProductScreenComponents {
                 ProductCardSmall(
                     product = product,
                     onClick = { /* TODO */ },
+                    modifier = Modifier.width(SuggestedProductCardWidth),
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun SuggestedProductsSkeleton(
+        modifier: Modifier = Modifier,
+        contentPadding: PaddingValues = PaddingValues(),
+    ) {
+        val shimmer = rememberZarinaSkeletonShimmer()
+        LazyRow(
+            contentPadding = contentPadding,
+            horizontalArrangement = Arrangement.spacedBy(SuggestedProductsSpacedBy),
+            modifier = modifier,
+        ) {
+            items(count = SuggestedProductsSkeletonCount) { product ->
+                ProductCardSmallSkeleton(
+                    shimmer = shimmer,
                     modifier = Modifier.width(SuggestedProductCardWidth),
                 )
             }
@@ -554,6 +583,8 @@ object ProductScreenComponents {
 
     private const val ProductTotalLookContentKeySuccess = "ProductTotalLookContentKeySuccess"
 
+    private val SuggestedProductsSpacedBy: Dp get() = 12.dp
+    private val SuggestedProductsSkeletonCount = 4
     private val SuggestedProductCardWidth: Dp get() = 176.dp
 
     private const val Colon = ':'
