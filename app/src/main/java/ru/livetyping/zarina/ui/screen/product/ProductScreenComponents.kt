@@ -34,7 +34,10 @@ import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Media
 import ru.livetyping.zarina.domain.product.Price
+import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.domain.product.ProductDetails
+import ru.livetyping.zarina.ui.common.component.ProductColorSelector
 import ru.livetyping.zarina.ui.common.component.ProductPrice
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
@@ -168,12 +171,14 @@ object ProductScreenComponents {
                 contentType = ProductDetailsListContentTypeGeneralInfo,
             ) {
                 ProductGeneralInfoItem(
+                    id = product.id,
                     name = product.name,
                     label = product.label,
                     price = product.price,
+                    colors = product.colors,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(vertical = 16.dp),
                 )
             }
         }
@@ -209,13 +214,18 @@ object ProductScreenComponents {
 
     @Composable
     private fun ProductGeneralInfoItem(
+        id: Product.Id,
         name: String,
         label: ProductDetails.Label?,
         price: Price,
+        colors: List<ProductColor>,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            ) {
                 Text(
                     text = name.uppercase(),
                     style = UiKitTheme.typography.caption1.regular,
@@ -225,7 +235,7 @@ object ProductScreenComponents {
                 if (label != null) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = label.name,
+                        text = label.name.uppercase(),
                         style = UiKitTheme.typography.caption1.bold,
                         color = label.color.toComposeColor(),
                     )
@@ -234,9 +244,18 @@ object ProductScreenComponents {
 
             Spacer(modifier = Modifier.height(2.dp))
 
-            ProductPrice(price = price)
+            ProductPrice(
+                price = price,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
 
-            // TODO: [High] Add colors
+            ProductColorSelector(
+                productId = id,
+                productColors = colors,
+                onProductColorClicked = { /* TODO */ },
+                contentPadding = PaddingValues(horizontal = 4.dp), // TODO: [High] Check paddings
+                modifier = Modifier.fillMaxWidth(),
+            )
         }
     }
 
