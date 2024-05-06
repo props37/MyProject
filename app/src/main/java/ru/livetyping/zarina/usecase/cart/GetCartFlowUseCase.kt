@@ -3,7 +3,7 @@ package ru.livetyping.zarina.usecase.cart
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.base.usecase.FlowUseCase
@@ -33,11 +33,11 @@ class GetCartFlowUseCase @Inject constructor(
             .onEach { cart ->
                 cartRepository.setCartSize(cart.size)
             }
-            .combineTransform(favoriteRepository.favoriteProductIds) { cart, favoriteProductIds ->
+            .combine(favoriteRepository.favoriteProductIds) { cart, favoriteProductIds ->
                 val products = cart.products.map { product ->
                     product.copy(isInFavorites = product.productId in favoriteProductIds)
                 }
-                emit(cart.copy(products = products))
+                cart.copy(products = products)
             }
     }
 
