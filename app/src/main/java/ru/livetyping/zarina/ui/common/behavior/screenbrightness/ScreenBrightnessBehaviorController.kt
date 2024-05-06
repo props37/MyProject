@@ -8,6 +8,6 @@ typealias ScreenBrightnessBehaviorController = BehaviorController<ScreenBrightne
 
 val LocalScreenBrightnessBehaviorController =
     staticCompositionLocalOf<ScreenBrightnessBehaviorController> {
-        val defaultBehavior = ScreenBrightnessBehavior(brightness = null)
+        val defaultBehavior = ScreenBrightnessBehavior(ScreenBrightness.DEFAULT)
         NoOpBehaviorController(defaultBehavior)
     }

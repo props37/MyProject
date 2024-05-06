@@ -38,6 +38,7 @@ import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.domain.user.User
 import ru.livetyping.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.ui.common.behavior.screenbrightness.ForcedScreenBrightnessBehavior
+import ru.livetyping.zarina.ui.common.behavior.screenbrightness.ScreenBrightness
 import ru.livetyping.zarina.ui.common.component.LoyaltyCardSide
 import ru.livetyping.zarina.ui.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
@@ -95,7 +96,7 @@ private fun ScreenContent(
         navigate = navigate,
     )
 
-    var screenBrightness by remember { mutableStateOf<Float?>(null) }
+    var screenBrightness by remember { mutableStateOf(ScreenBrightness.DEFAULT) }
     ForcedScreenBrightnessBehavior(brightness = screenBrightness)
 
     Column(
@@ -131,12 +132,16 @@ private fun ScreenContent(
                         loyaltyCard = loyaltyCard,
                         onLevelInfoClicked = { /*TODO*/ },
                         onSideChanged = {
-                            screenBrightness = if (it == LoyaltyCardSide.BACK) 1f else null
+                            screenBrightness = if (it == LoyaltyCardSide.BACK) {
+                                ScreenBrightness.MAX
+                            } else {
+                                ScreenBrightness.DEFAULT
+                            }
                         },
                         modifier = Modifier.fillMaxWidth(),
                     )
                 } else {
-                    SideEffect { screenBrightness = null }
+                    SideEffect { screenBrightness = ScreenBrightness.DEFAULT }
                     AuthorizationSuggestion(
                         onSignInClicked = onSignInClicked,
                         onSignUpClicked = onSignUpClicked,

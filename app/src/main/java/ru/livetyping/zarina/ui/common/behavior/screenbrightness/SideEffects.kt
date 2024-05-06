@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 
 @Composable
-fun ForcedScreenBrightnessBehavior(brightness: Float?) {
+fun ForcedScreenBrightnessBehavior(brightness: ScreenBrightness) {
     val controller = LocalScreenBrightnessBehaviorController.current
     DisposableEffect(brightness, controller) {
         val behavior = ScreenBrightnessBehavior(brightness)
