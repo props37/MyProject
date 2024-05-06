@@ -239,6 +239,8 @@ object ProductScreenComponents {
                         style = UiKitTheme.typography.caption1.bold,
                         color = label.color.toComposeColor()
                             ?: UiKitTheme.colors.text.general.regular.default,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
             }
@@ -254,7 +256,7 @@ object ProductScreenComponents {
                 productId = id,
                 productColors = colors,
                 onProductColorClicked = { /* TODO */ },
-                contentPadding = PaddingValues(horizontal = 4.dp), // TODO: [High] Check paddings
+                contentPadding = PaddingValues(horizontal = 10.dp),
                 modifier = Modifier.fillMaxWidth(),
             )
         }
