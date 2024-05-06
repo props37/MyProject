@@ -28,9 +28,11 @@ data class ProductDetailsDto(
     @SerialName("media")
     val media: List<MediaDto>? = null,
 
-    // TODO: [High] Add description
     // TODO: [High] Add measurements?
     // TODO: [High] Add gender?
+
+    @SerialName("description")
+    val description: List<DescriptionEntry>? = null,
 
     @SerialName("label")
     val label: Label? = null,
@@ -45,6 +47,7 @@ data class ProductDetailsDto(
         checkNotNull(offers) { "offers is null" }
         checkNotNull(colors) { "colors is null" }
         checkNotNull(media) { "media is null" }
+        checkNotNull(description) { "description is null" }
         return ProductDetails(
             id = Product.Id(id),
             name = name,
@@ -56,6 +59,7 @@ data class ProductDetailsDto(
             isInFavorites = false,
             isInCart = false,
             label = label?.toLabel(),
+            description = description.mapNotNull { it.toDescriptionEntry() },
             shareUrl = shareUrl?.let { Url(it) },
         )
     }
@@ -76,6 +80,27 @@ data class ProductDetailsDto(
                 )
             } else {
                 Timber.e("Drop label because its name or color is null")
+                null
+            }
+        }
+    }
+
+    @Serializable
+    data class DescriptionEntry(
+        @SerialName("title")
+        val title: String? = null,
+
+        @SerialName("text")
+        val body: String? = null,
+    ) {
+        fun toDescriptionEntry(): ProductDetails.DescriptionEntry? {
+            return if (title != null && body != null) {
+                ProductDetails.DescriptionEntry(
+                    title = title,
+                    body = body,
+                )
+            } else {
+                Timber.e("Drop description entry because its title or body is null")
                 null
             }
         }

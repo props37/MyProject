@@ -14,6 +14,7 @@ data class ProductDetails(
     override val isInFavorites: Boolean,
     override val isInCart: Boolean,
     val label: Label?,
+    val description: List<DescriptionEntry>,
     val shareUrl: Url?,
 ) : Product(
     id = id,
@@ -28,5 +29,10 @@ data class ProductDetails(
     data class Label(
         val name: String,
         val color: Color,
+    )
+
+    data class DescriptionEntry(
+        val title: String,
+        val body: String,
     )
 }
