@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -166,7 +167,7 @@ object ListFilterScreenComponents {
         ) {
             if (item is ColorFilterItem) {
                 ZarinaColorIcon(
-                    color = item.color.toComposeColor(),
+                    color = item.color.toComposeColor() ?: Color.Unspecified,
                     size = 16.dp,
                 )
                 Spacer(modifier = Modifier.width(12.dp))

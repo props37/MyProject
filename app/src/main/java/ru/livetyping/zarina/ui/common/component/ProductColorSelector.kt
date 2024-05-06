@@ -91,7 +91,10 @@ private fun Color(
                 .size(ColorBorderSize)
                 .border(width = 1.dp, color = borderColor, shape = CircleShape)
                 .padding((ColorBorderSize - ColorCircleSize) / 2)
-                .background(color = color.color.toComposeColor(), shape = CircleShape),
+                .background(
+                    color = color.color.toComposeColor() ?: Color.Unspecified,
+                    shape = CircleShape,
+                ),
         )
     }
 }

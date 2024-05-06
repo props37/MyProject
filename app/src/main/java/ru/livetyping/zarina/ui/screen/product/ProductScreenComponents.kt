@@ -237,7 +237,8 @@ object ProductScreenComponents {
                     Text(
                         text = label.name.uppercase(),
                         style = UiKitTheme.typography.caption1.bold,
-                        color = label.color.toComposeColor(),
+                        color = label.color.toComposeColor()
+                            ?: UiKitTheme.colors.text.general.regular.default,
                     )
                 }
             }
