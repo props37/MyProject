@@ -511,7 +511,7 @@ object ProductScreenComponents {
             horizontalArrangement = Arrangement.spacedBy(SuggestedProductsSpacedBy),
             modifier = modifier,
         ) {
-            items(count = SuggestedProductsSkeletonCount) { product ->
+            items(count = SuggestedProductsSkeletonCount) {
                 ProductCardSmallSkeleton(
                     shimmer = shimmer,
                     modifier = Modifier.width(SuggestedProductCardWidth),
