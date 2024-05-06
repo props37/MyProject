@@ -35,7 +35,6 @@ fun ZarinaMediaHorizontalPager(
     pagerState: PagerState,
     media: List<Media>,
     modifier: Modifier = Modifier,
-    userScrollEnabled: Boolean = true,
     quality: ZarinaMediaHorizontalPagerQuality = ZarinaMediaHorizontalPagerQuality.Original,
     shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
 ) {
@@ -49,7 +48,6 @@ fun ZarinaMediaHorizontalPager(
             state = pagerState,
             snapAnimationSpec = spring(stiffness = Spring.StiffnessMedium),
         ),
-        userScrollEnabled = userScrollEnabled,
         modifier = modifier,
     ) { page ->
         @Suppress("NAME_SHADOWING")

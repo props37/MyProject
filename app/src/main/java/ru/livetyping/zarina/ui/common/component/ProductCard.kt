@@ -66,7 +66,6 @@ fun ProductCard(
     onSubscribeClicked: (Product) -> Unit,
     modifier: Modifier = Modifier,
     shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
-    isMediaScrollEnabled: Boolean = true,
     backgroundColor: Color = BackgroundColor,
 ) {
     Column(
@@ -84,7 +83,6 @@ fun ProductCard(
             ZarinaMediaHorizontalPager(
                 pagerState = pagerState,
                 media = product.media,
-                userScrollEnabled = isMediaScrollEnabled,
                 shimmer = shimmer,
                 modifier = Modifier.matchParentSize(),
             )
@@ -95,15 +93,13 @@ fun ProductCard(
                 indication = rememberRipple(bounded = false, radius = IconSize),
                 modifier = Modifier.align(Alignment.TopEnd),
             )
-            if (isMediaScrollEnabled) {
-                ZarinaHorizontalPagerIndicator(
-                    pagerState = pagerState,
-                    itemCount = product.media.size,
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(start = 16.dp, bottom = 8.dp),
-                )
-            }
+            ZarinaHorizontalPagerIndicator(
+                pagerState = pagerState,
+                itemCount = product.media.size,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = 16.dp, bottom = 8.dp),
+            )
         }
         
         Spacer(modifier = Modifier.height(8.dp))

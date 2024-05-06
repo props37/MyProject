@@ -484,7 +484,6 @@ object ProductScreenComponents {
                 ProductCard(
                     product = product,
                     onClick = { /* TODO */ },
-                    isMediaScrollEnabled = false,
                     // TODO: [High] Remove callbacks
                     onAddToFavoritesClicked = {},
                     onAddToCartClicked = {},
