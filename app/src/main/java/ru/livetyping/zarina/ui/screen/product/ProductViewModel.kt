@@ -142,6 +142,12 @@ class ProductViewModel @Inject constructor(
         }
     }
 
+    fun onSuggestedProductClicked(product: Product) {
+        navigationThrottler.throttle {
+            // TODO: [High] Implement
+        }
+    }
+
     fun onProductTotalLookErrorRefreshClicked() {
         productTotalLookFetchingInfoHolder.requestFetching(Unit)
         // TODO: [High] Refresh similar products if needed

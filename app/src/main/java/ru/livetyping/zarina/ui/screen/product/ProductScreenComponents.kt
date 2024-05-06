@@ -45,6 +45,7 @@ import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Media
 import ru.livetyping.zarina.domain.common.Url
+import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.ui.common.component.ProductCardSmall
@@ -130,6 +131,7 @@ object ProductScreenComponents {
     fun ProductDetails(
         productState: ProductState,
         onProductErrorRefreshClicked: () -> Unit,
+        onSuggestedProductClicked: (Product) -> Unit,
         productTotalLookState: ProductTotalLookState,
         onProductTotalLookErrorRefreshClicked: () -> Unit,
         onUrlClicked: (Url) -> Unit,
@@ -151,6 +153,7 @@ object ProductScreenComponents {
                     ProductDetailsImpl(
                         product = state.product,
                         productTotalLookState = productTotalLookState,
+                        onSuggestedProductClicked = onSuggestedProductClicked,
                         onProductTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
                         onUrlClicked = onUrlClicked,
                         lazyListState = lazyListState,
@@ -178,6 +181,7 @@ object ProductScreenComponents {
     private fun ProductDetailsImpl(
         product: ProductDetails,
         productTotalLookState: ProductTotalLookState,
+        onSuggestedProductClicked: (Product) -> Unit,
         onProductTotalLookErrorRefreshClicked: () -> Unit,
         onUrlClicked: (Url) -> Unit,
         lazyListState: LazyListState,
@@ -233,6 +237,7 @@ object ProductScreenComponents {
             ) {
                 ProductTotalLook(
                     totalLookState = productTotalLookState,
+                    onProductClicked = onSuggestedProductClicked,
                     onTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                     modifier = Modifier.fillMaxWidth(),
@@ -424,6 +429,7 @@ object ProductScreenComponents {
     @Composable
     private fun ProductTotalLook(
         totalLookState: ProductTotalLookState,
+        onProductClicked: (Product) -> Unit,
         onTotalLookErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
         contentPadding: PaddingValues = PaddingValues(),
@@ -454,6 +460,7 @@ object ProductScreenComponents {
                     is ProductTotalLookState.Success -> {
                         ProductTotalLookImpl(
                             totalLook = state.totalLook,
+                            onProductClicked = onProductClicked,
                             contentPadding = contentPadding.getHorizontalPaddingValues(layoutDirection),
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -479,6 +486,7 @@ object ProductScreenComponents {
     @Composable
     private fun ProductTotalLookImpl(
         totalLook: ImmutableList<ProductItem>,
+        onProductClicked: (Product) -> Unit,
         modifier: Modifier = Modifier,
         contentPadding: PaddingValues = PaddingValues(),
     ) {
@@ -493,7 +501,7 @@ object ProductScreenComponents {
             ) { product ->
                 ProductCardSmall(
                     product = product,
-                    onClick = { /* TODO */ },
+                    onClick = onProductClicked,
                     modifier = Modifier.width(SuggestedProductCardWidth),
                 )
             }

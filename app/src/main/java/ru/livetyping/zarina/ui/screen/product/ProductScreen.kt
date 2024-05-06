@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.domain.common.Url
+import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.ui.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.ui.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.ui.screen.product.ProductScreenComponents.ProductDetails
@@ -45,6 +46,7 @@ fun ProductScreen(
     ScreenContent(
         productState = productState,
         onProductErrorRefreshClicked = viewModel::onProductErrorRefreshClicked,
+        onSuggestedProductClicked = viewModel::onSuggestedProductClicked,
         productTotalLookState = productTotalLookState,
         onProductTotalLookErrorRefreshClicked = viewModel::onProductTotalLookErrorRefreshClicked,
         onBackClicked = viewModel::onBackClicked,
@@ -59,6 +61,7 @@ fun ProductScreen(
 private fun ScreenContent(
     productState: ProductState,
     onProductErrorRefreshClicked: () -> Unit,
+    onSuggestedProductClicked: (Product) -> Unit,
     productTotalLookState: ProductTotalLookState,
     onProductTotalLookErrorRefreshClicked: () -> Unit,
     onBackClicked: () -> Unit,
@@ -113,6 +116,7 @@ private fun ScreenContent(
         ProductDetails(
             productState = productState,
             onProductErrorRefreshClicked = onProductErrorRefreshClicked,
+            onSuggestedProductClicked = onSuggestedProductClicked,
             productTotalLookState = productTotalLookState,
             onProductTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
             onUrlClicked = onUrlClicked,
