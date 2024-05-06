@@ -12,6 +12,7 @@ import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.domain.product.CategoryProductInfo
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductDetails
+import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.domain.product.ProductsWithFilters
 import javax.inject.Inject
 
@@ -36,6 +37,11 @@ class ProductRemoteDataSource @Inject constructor(
     fun getProductFlow(productId: Product.Id): Flow<ProductDetails> = flow {
         val product = api.getProduct(productId).toProductDetails()
         emit(product)
+    }
+
+    fun getProductTotalLookFlow(productId: Product.Id): Flow<List<ProductItem>> = flow {
+        val totalLook = api.getProductTotalLook(productId).mapNotNull { it.toProductItem() }
+        emit(totalLook)
     }
 
     fun getCategoryProductInfoFlow(

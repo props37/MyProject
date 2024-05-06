@@ -5,6 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.ProductDetailsDto
+import ru.livetyping.zarina.data.common.remote.api.zarina.dto.ProductItemDto
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.SortingDto
 import ru.livetyping.zarina.data.product.remote.api.dto.FiltersRequestDto
 import ru.livetyping.zarina.data.product.remote.api.dto.GetProductsRequestBody
@@ -45,6 +46,10 @@ class ProductApi @Inject constructor(
 
     suspend fun getProduct(productId: Product.Id): ProductDetailsDto {
         return httpClient.get("/api/v1/products/${productId.value}").body()
+    }
+
+    suspend fun getProductTotalLook(productId: Product.Id): List<ProductItemDto> {
+        return httpClient.get("/api/v1/products/${productId.value}/total_look").body()
     }
 
     suspend fun getCategoryProductInfo(
