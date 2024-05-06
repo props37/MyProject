@@ -198,6 +198,7 @@
     <string name="product_delivery_and_payment_info_delivery">Доставка</string>
     <string name="product_delivery_and_payment_info_payment">Оплата</string>
     <string name="product_delivery_and_payment_info_delivery_payment_url" translatable="false">https://zarina.ru/help/delivery-and-payment/</string>
+    <string name="product_total_look">Дополнить образ</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

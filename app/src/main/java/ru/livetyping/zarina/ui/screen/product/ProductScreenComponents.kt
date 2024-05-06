@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -28,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -38,10 +41,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Media
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.ProductDetails
+import ru.livetyping.zarina.domain.product.ProductItem
+import ru.livetyping.zarina.ui.common.component.ProductCard
 import ru.livetyping.zarina.ui.common.component.ProductColorSelector
 import ru.livetyping.zarina.ui.common.component.ProductPrice
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
@@ -55,8 +61,11 @@ import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.ui.common.util.domain.toComposeColor
 import ru.livetyping.zarina.ui.common.util.rememberFormattedPrice
 import ru.livetyping.zarina.ui.screen.product.ProductViewModel.ProductState
+import ru.livetyping.zarina.ui.screen.product.ProductViewModel.ProductTotalLookState
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
+import ru.livetyping.zarina.util.compose.getHorizontalPaddingValues
+import ru.livetyping.zarina.util.compose.getVerticalPaddingValues
 import ru.livetyping.zarina.util.compose.pager.rememberEndlessPagerState
 
 object ProductScreenComponents {
@@ -118,6 +127,8 @@ object ProductScreenComponents {
     fun ProductDetails(
         productState: ProductState,
         onProductErrorRefreshClicked: () -> Unit,
+        productTotalLookState: ProductTotalLookState,
+        onProductTotalLookErrorRefreshClicked: () -> Unit,
         onUrlClicked: (Url) -> Unit,
         lazyListState: LazyListState,
         modifier: Modifier = Modifier,
@@ -136,6 +147,8 @@ object ProductScreenComponents {
                 is ProductState.Success -> {
                     ProductDetailsImpl(
                         product = state.product,
+                        productTotalLookState = productTotalLookState,
+                        onProductTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
                         onUrlClicked = onUrlClicked,
                         lazyListState = lazyListState,
                     )
@@ -161,6 +174,8 @@ object ProductScreenComponents {
     @Composable
     private fun ProductDetailsImpl(
         product: ProductDetails,
+        productTotalLookState: ProductTotalLookState,
+        onProductTotalLookErrorRefreshClicked: () -> Unit,
         onUrlClicked: (Url) -> Unit,
         lazyListState: LazyListState,
         modifier: Modifier = Modifier,
@@ -173,14 +188,14 @@ object ProductScreenComponents {
                 key = ProductDetailsListKeyMediaPager,
                 contentType = ProductDetailsListContentTypeMediaPager,
             ) {
-                MediaPagerItem(media = product.media)
+                ProductMediaPager(media = product.media)
             }
 
             item(
                 key = ProductDetailsListKeyGeneralInfo,
                 contentType = ProductDetailsListContentTypeGeneralInfo,
             ) {
-                ProductGeneralInfoItem(
+                ProductGeneralInfo(
                     product = product,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -202,9 +217,20 @@ object ProductScreenComponents {
                 key = ProductDetailsListKeyDeliveryAndPayment,
                 contentType = ProductDetailsListContentTypeDeliveryAndPayment,
             ) {
-                DeliveryAndPayment(
+                ProductDeliveryAndPayment(
                     freeDeliveryTotalPriceThreshold = product.freeDeliveryTotalPriceThreshold,
                     onUrlClicked = onUrlClicked,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            item(
+                key = ProductDetailsListKeyTotalLook,
+                contentType = ProductDetailsListContentTypeTotalLook,
+            ) {
+                ProductTotalLook(
+                    totalLookState = productTotalLookState,
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -213,7 +239,7 @@ object ProductScreenComponents {
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    private fun MediaPagerItem(
+    private fun ProductMediaPager(
         media: List<Media>,
         modifier: Modifier = Modifier,
     ) {
@@ -240,7 +266,7 @@ object ProductScreenComponents {
     }
 
     @Composable
-    private fun ProductGeneralInfoItem(
+    private fun ProductGeneralInfo(
         product: ProductDetails,
         modifier: Modifier = Modifier,
     ) {
@@ -307,7 +333,7 @@ object ProductScreenComponents {
 
     @OptIn(ExperimentalTextApi::class)
     @Composable
-    private fun DeliveryAndPayment(
+    private fun ProductDeliveryAndPayment(
         freeDeliveryTotalPriceThreshold: Int,
         onUrlClicked: (Url) -> Unit,
         modifier: Modifier = Modifier,
@@ -392,6 +418,83 @@ object ProductScreenComponents {
     }
 
     @Composable
+    private fun ProductTotalLook(
+        totalLookState: ProductTotalLookState,
+        modifier: Modifier = Modifier,
+        contentPadding: PaddingValues = PaddingValues(),
+    ) {
+        Column(
+            modifier = modifier.padding(contentPadding.getVerticalPaddingValues()),
+        ) {
+            val layoutDirection = LocalLayoutDirection.current
+            Text(
+                text = stringResource(R.string.product_total_look),
+                style = UiKitTheme.typography.secondary.bold,
+                modifier = Modifier
+                    .padding(contentPadding.getHorizontalPaddingValues(layoutDirection)),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Crossfade(
+                targetState = totalLookState,
+                contentKey = { state ->
+                    when (state) {
+                        is ProductTotalLookState.Success -> ProductTotalLookContentKeySuccess
+                        else -> state
+                    }
+                },
+            ) { state ->
+                when (state) {
+                    is ProductTotalLookState.Success -> {
+                        ProductTotalLookImpl(
+                            totalLook = state.totalLook,
+                            contentPadding = contentPadding.getHorizontalPaddingValues(layoutDirection),
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+
+                    ProductTotalLookState.Loading -> {
+                        // TODO: [High] Implement
+                    }
+
+                    ProductTotalLookState.Error -> {
+                        // TODO: [High] Implement
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun ProductTotalLookImpl(
+        totalLook: ImmutableList<ProductItem>,
+        modifier: Modifier = Modifier,
+        contentPadding: PaddingValues = PaddingValues(),
+    ) {
+        LazyRow(
+            contentPadding = contentPadding,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = modifier,
+        ) {
+            items(
+                items = totalLook,
+                key = { it.id.value },
+            ) { product ->
+                ProductCard(
+                    product = product,
+                    onClick = { /* TODO */ },
+                    // TODO: [High] Remove callbacks
+                    onAddToFavoritesClicked = {},
+                    onAddToCartClicked = {},
+                    onSubscribeClicked = {},
+                    modifier = Modifier.width(SuggestedProductCardWidth),
+                )
+            }
+        }
+    }
+
+    @Composable
     private fun rememberProductDescriptionEntryText(
         descriptionEntry: ProductDetails.DescriptionEntry,
     ): AnnotatedString {
@@ -439,6 +542,7 @@ object ProductScreenComponents {
     private const val ProductDetailsListKeyDescription = "ProductDetailsListKeyDescription"
     private const val ProductDetailsListKeyDeliveryAndPayment =
         "ProductDetailsListKeyDeliveryAndPayment"
+    private const val ProductDetailsListKeyTotalLook = "ProductDetailsListKeyTotalLook"
 
     private const val ProductDetailsListContentTypeMediaPager =
         "ProductDetailsListContentTypeMediaPager"
@@ -448,6 +552,12 @@ object ProductScreenComponents {
         "ProductDetailsListContentTypeDescription"
     private const val ProductDetailsListContentTypeDeliveryAndPayment =
         "ProductDetailsListContentTypeDeliveryAndPayment"
+    private const val ProductDetailsListContentTypeTotalLook =
+        "ProductDetailsListContentTypeTotalLook"
+
+    private const val ProductTotalLookContentKeySuccess = "ProductTotalLookContentKeySuccess"
+
+    private val SuggestedProductCardWidth: Dp get() = 176.dp
 
     private const val Colon = ':'
     private const val Space = ' '

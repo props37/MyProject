@@ -6,10 +6,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
@@ -17,6 +22,7 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductDetails
+import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.ui.common.datafetchinginfo.DataFetchingInfoHolder
 import ru.livetyping.zarina.ui.common.error.ErrorState
 import ru.livetyping.zarina.ui.common.error.from
@@ -24,6 +30,7 @@ import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.ui.screen.product.ProductViewModel.SideEffect
 import ru.livetyping.zarina.usecase.product.GetProductFlowUseCase
+import ru.livetyping.zarina.usecase.product.GetProductTotalLookFlowUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
@@ -57,11 +64,29 @@ class ProductViewModel @Inject constructor(
             .flatMapLatest {
                 interactor.getProductFlow(GetProductFlowUseCase.Params(productId.value))
             }
+            .onEach { productFetchingInfoHolder.completeFetching() }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = null,
             )
+
+    private val productTotalLookFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
+
+    private val productTotalLookResult: StateFlow<Result<List<ProductItem>>?> = combineTransform(
+        productTotalLookFetchingInfoHolder.fetchingRequests,
+        productId,
+    ) { _, productId ->
+        val params = GetProductTotalLookFlowUseCase.Params(productId)
+        val flow = interactor.getProductTotalLookFlow(params)
+        emitAll(flow)
+    }
+        .onEach { productTotalLookFetchingInfoHolder.completeFetching() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
 
     val productState: StateFlow<ProductState> = productResult
         .mapState(
@@ -79,8 +104,21 @@ class ProductViewModel @Inject constructor(
             ) ?: ProductState.Loading
         }
 
+    val productTotalLookState: StateFlow<ProductTotalLookState> = productTotalLookResult.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { result ->
+        result?.fold(
+            onSuccess = { totalLook ->
+                ProductTotalLookState.Success(totalLook.toImmutableList())
+            },
+            onFailure = { ProductTotalLookState.Error },
+        ) ?: ProductTotalLookState.Loading
+    }
+
     init {
         productFetchingInfoHolder.requestFetching(Unit)
+        productTotalLookFetchingInfoHolder.requestFetching(Unit)
     }
 
     fun onBackClicked() {
@@ -99,6 +137,14 @@ class ProductViewModel @Inject constructor(
 
     fun onProductErrorRefreshClicked() {
         productFetchingInfoHolder.requestFetching(Unit)
+        if (productTotalLookResult.value?.isSuccess != true) {
+            productTotalLookFetchingInfoHolder.requestFetching(Unit)
+        }
+    }
+
+    fun onProductTotalLookErrorRefreshClicked() {
+        productTotalLookFetchingInfoHolder.requestFetching(Unit)
+        // TODO: [High] Refresh similar products if needed
     }
 
     fun onUrlClicked(url: Url) {
@@ -124,5 +170,15 @@ class ProductViewModel @Inject constructor(
 
         @Immutable
         data class Error(val state: ErrorState) : ProductState()
+    }
+
+    @Stable
+    sealed class ProductTotalLookState {
+        @Immutable
+        data class Success(val totalLook: ImmutableList<ProductItem>) : ProductTotalLookState()
+
+        data object Loading : ProductTotalLookState()
+
+        data object Error : ProductTotalLookState()
     }
 }

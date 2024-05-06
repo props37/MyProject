@@ -28,6 +28,7 @@ import ru.livetyping.zarina.ui.screen.product.ProductScreenComponents.TopBar
 import ru.livetyping.zarina.ui.screen.product.ProductScreenComponents.TopBarMode
 import ru.livetyping.zarina.ui.screen.product.ProductScreenComponents.topBarModeAsState
 import ru.livetyping.zarina.ui.screen.product.ProductViewModel.ProductState
+import ru.livetyping.zarina.ui.screen.product.ProductViewModel.ProductTotalLookState
 import ru.livetyping.zarina.ui.screen.product.ProductViewModel.SideEffect
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.collapsingtopbar.CollapsingTopBarDefaults
@@ -39,10 +40,13 @@ fun ProductScreen(
     viewModel: ProductViewModel = hiltViewModel(),
 ) {
     val productState by viewModel.productState.collectAsStateWithLifecycle()
+    val productTotalLookState by viewModel.productTotalLookState.collectAsStateWithLifecycle()
 
     ScreenContent(
         productState = productState,
         onProductErrorRefreshClicked = viewModel::onProductErrorRefreshClicked,
+        productTotalLookState = productTotalLookState,
+        onProductTotalLookErrorRefreshClicked = viewModel::onProductTotalLookErrorRefreshClicked,
         onBackClicked = viewModel::onBackClicked,
         onShareClicked = viewModel::onShareClicked,
         onUrlClicked = viewModel::onUrlClicked,
@@ -55,6 +59,8 @@ fun ProductScreen(
 private fun ScreenContent(
     productState: ProductState,
     onProductErrorRefreshClicked: () -> Unit,
+    productTotalLookState: ProductTotalLookState,
+    onProductTotalLookErrorRefreshClicked: () -> Unit,
     onBackClicked: () -> Unit,
     onShareClicked: () -> Unit,
     onUrlClicked: (Url) -> Unit,
@@ -107,6 +113,8 @@ private fun ScreenContent(
         ProductDetails(
             productState = productState,
             onProductErrorRefreshClicked = onProductErrorRefreshClicked,
+            productTotalLookState = productTotalLookState,
+            onProductTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
             onUrlClicked = onUrlClicked,
             lazyListState = lazyListState,
             modifier = Modifier
