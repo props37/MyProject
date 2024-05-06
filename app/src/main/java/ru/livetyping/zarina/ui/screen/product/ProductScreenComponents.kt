@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
@@ -47,7 +48,7 @@ import ru.livetyping.zarina.domain.common.Media
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.domain.product.ProductItem
-import ru.livetyping.zarina.ui.common.component.ProductCard
+import ru.livetyping.zarina.ui.common.component.ProductCardSmall
 import ru.livetyping.zarina.ui.common.component.ProductColorSelector
 import ru.livetyping.zarina.ui.common.component.ProductPrice
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
@@ -481,13 +482,9 @@ object ProductScreenComponents {
                 items = totalLook,
                 key = { it.id.value },
             ) { product ->
-                ProductCard(
+                ProductCardSmall(
                     product = product,
                     onClick = { /* TODO */ },
-                    // TODO: [High] Remove callbacks
-                    onAddToFavoritesClicked = {},
-                    onAddToCartClicked = {},
-                    onSubscribeClicked = {},
                     modifier = Modifier.width(SuggestedProductCardWidth),
                 )
             }

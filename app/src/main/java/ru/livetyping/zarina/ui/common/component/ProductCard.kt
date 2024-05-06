@@ -23,12 +23,16 @@ import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,6 +42,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.product.Product
@@ -55,6 +60,7 @@ import ru.livetyping.zarina.ui.common.tooling.preview.parameterprovider.ProductP
 import ru.livetyping.zarina.ui.common.util.domain.toComposeColor
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.pager.rememberEndlessPagerState
+import ru.livetyping.zarina.util.library.shimmer.shimmerToggleable
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
@@ -154,13 +160,57 @@ fun ProductCard(
 }
 
 @Composable
+fun ProductCardSmall(
+    product: Product,
+    onClick: (Product) -> Unit,
+    modifier: Modifier = Modifier,
+    shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
+    backgroundColor: Color = BackgroundColor,
+) {
+    Column(
+        modifier = modifier
+            .background(backgroundColor)
+            .clickable { onClick(product) },
+    ) {
+        var isImageDisplayed by remember(product.media) { mutableStateOf(false) }
+        AsyncImage(
+            model = remember(product.media) { product.media.first().originalUrl.value },
+            contentDescription = null,
+            onSuccess = { isImageDisplayed = true },
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(MediaAspectRatio)
+                .shimmerToggleable(shimmer, isEnabled = !isImageDisplayed)
+                .background(UiKitTheme.colors.background.skeleton),
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = product.name.uppercase(),
+            style = UiKitTheme.typography.caption1.regular,
+            color = UiKitTheme.colors.text.general.regular.default,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+
+        ProductPrice(price = product.price)
+
+        Colors(colors = product.colors)
+
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
 fun ProductCardSkeleton(
     modifier: Modifier = Modifier,
     shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
 ) {
     Column(modifier = modifier) {
         ZarinaSkeleton(
-            shimmer = rememberZarinaSkeletonShimmer(width = 350.dp),
+            shimmer = shimmer,
             shape = RectangleShape,
             modifier = Modifier
                 .fillMaxWidth()
@@ -221,6 +271,64 @@ fun ProductCardSkeleton(
                 modifier = Modifier.size(width = 42.dp, height = 8.dp),
             )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
+fun ProductCardSmallSkeleton(
+    modifier: Modifier = Modifier,
+    shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
+) {
+    Column(modifier = modifier) {
+        ZarinaSkeleton(
+            shimmer = shimmer,
+            shape = RectangleShape,
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(MediaAspectRatio),
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        ZarinaTextSkeleton(
+            textStyle = UiKitTheme.typography.caption1.regular,
+            shimmer = shimmer,
+            modifier = Modifier.fillMaxWidth(fraction = 0.6f),
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.caption1.regular,
+                shimmer = shimmer,
+                modifier = Modifier.width(32.dp),
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.caption1.regular,
+                shimmer = shimmer,
+                modifier = Modifier.width(32.dp),
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.caption2.regular,
+                shimmer = shimmer,
+                modifier = Modifier.width(20.dp),
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        ZarinaSkeleton(
+            shimmer = shimmer,
+            modifier = Modifier.size(width = 42.dp, height = 8.dp),
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
     }
@@ -324,7 +432,7 @@ private fun Colors(
 @PreviewFontScale
 @PreviewScreenSizes
 @Composable
-private fun Preview(
+private fun PreviewProductCard(
     @PreviewParameter(ProductPreviewParameterProvider::class, 1)
     product: Product,
 ) {
@@ -341,10 +449,35 @@ private fun Preview(
 }
 
 @Preview
+@PreviewFontScale
+@PreviewScreenSizes
 @Composable
-private fun PreviewSkeleton() {
+private fun PreviewProductCardSmall(
+    @PreviewParameter(ProductPreviewParameterProvider::class, 1)
+    product: Product,
+) {
+    ZarinaPreview {
+        ProductCardSmall(
+            product = product,
+            onClick = {},
+            modifier = Modifier.background(Color.White),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewProductCardSkeleton() {
     ZarinaPreview {
         ProductCardSkeleton(modifier = Modifier.background(Color.White))
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewProductCardSmallSkeleton() {
+    ZarinaPreview {
+        ProductCardSmallSkeleton(modifier = Modifier.background(Color.White))
     }
 }
 
