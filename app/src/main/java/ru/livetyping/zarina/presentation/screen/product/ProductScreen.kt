@@ -119,7 +119,7 @@ private fun ScreenContent(
             .bottomNavBarPadding()
             .clipToBounds(),
     ) { padding ->
-        val paddingModifier = if (productState !is ProductState.Success) {
+        val paddingModifier = if (productState is ProductState.Error) {
             Modifier.padding(padding)
         } else {
             Modifier

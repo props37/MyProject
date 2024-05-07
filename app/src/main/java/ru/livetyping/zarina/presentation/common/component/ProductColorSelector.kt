@@ -8,6 +8,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -25,8 +26,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
+import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleton
+import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.presentation.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.presentation.common.util.domain.toComposeColor
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -56,6 +60,26 @@ fun ProductColorSelector(
                 isSelected = color.productId == productId,
                 onClick = onProductColorClicked,
             )
+        }
+    }
+}
+
+@Composable
+fun ProductColorSelectorSkeleton(
+    modifier: Modifier = Modifier,
+    shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
+) {
+    Row(modifier = modifier) {
+        repeat(SkeletonColorCount) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.size(ColorInteractiveSize),
+            ) {
+                ZarinaSkeleton(
+                    shimmer = shimmer,
+                    modifier = Modifier.size(ColorBorderSize),
+                )
+            }
         }
     }
 }
@@ -120,3 +144,5 @@ private val BackgroundColor: Color
 private val ColorInteractiveSize: Dp get() = 32.dp
 private val ColorBorderSize: Dp get() = 24.dp
 private val ColorCircleSize: Dp get() = 16.dp
+
+private const val SkeletonColorCount = 5

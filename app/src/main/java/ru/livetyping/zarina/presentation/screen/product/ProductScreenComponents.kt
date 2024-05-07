@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -41,6 +43,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Media
@@ -52,6 +56,7 @@ import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.presentation.common.component.ProductCardSmall
 import ru.livetyping.zarina.presentation.common.component.ProductCardSmallSkeleton
 import ru.livetyping.zarina.presentation.common.component.ProductColorSelector
+import ru.livetyping.zarina.presentation.common.component.ProductColorSelectorSkeleton
 import ru.livetyping.zarina.presentation.common.component.ProductPrice
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
@@ -63,6 +68,8 @@ import ru.livetyping.zarina.presentation.common.component.list.ZarinaListErrorIt
 import ru.livetyping.zarina.presentation.common.component.media.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.presentation.common.component.pager.ZarinaHorizontalPagerIndicator
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
+import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleton
+import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
@@ -175,7 +182,7 @@ object ProductScreenComponents {
                 }
 
                 ProductState.Loading -> {
-                    // TODO: [High] Implement
+                    ProductDetailsSkeleton(modifier = Modifier.fillMaxWidth())
                 }
 
                 is ProductState.Error -> {
@@ -580,7 +587,7 @@ object ProductScreenComponents {
             ) { state ->
                 when (state) {
                     is SuggestedProductListState.Success -> {
-                        ProductTotalLookImpl(
+                        SuggestedProductsImpl(
                             totalLook = state.totalLook,
                             onProductClicked = onProductClicked,
                             contentPadding = contentPadding.getHorizontalPaddingValues(layoutDirection),
@@ -608,7 +615,7 @@ object ProductScreenComponents {
     }
 
     @Composable
-    private fun ProductTotalLookImpl(
+    private fun SuggestedProductsImpl(
         totalLook: ImmutableList<ProductItem>,
         onProductClicked: (Product) -> Unit,
         modifier: Modifier = Modifier,
@@ -633,11 +640,173 @@ object ProductScreenComponents {
     }
 
     @Composable
+    private fun ProductDetailsSkeleton(
+        modifier: Modifier = Modifier,
+    ) {
+        val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.View)
+        LazyColumn(modifier = modifier) {
+            item {
+                ZarinaSkeleton(
+                    shimmer = shimmer,
+                    shape = RectangleShape,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(MediaPagerAspectRatio),
+                )
+            }
+
+            item {
+                ProductGeneralInfoSkeleton(
+                    shimmer = shimmer,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                )
+            }
+
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .heightIn(min = 56.dp)
+                        .padding(horizontal = 16.dp),
+                ) {
+                    ZarinaTextSkeleton(
+                        textStyle = UiKitTheme.typography.secondary.light,
+                        shimmer = shimmer,
+                        modifier = Modifier.fillMaxWidth(0.5f),
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    ZarinaSkeleton(
+                        shimmer = shimmer,
+                        modifier = Modifier.size(12.dp),
+                    )
+                }
+            }
+
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .heightIn(min = 56.dp)
+                        .padding(horizontal = 16.dp),
+                ) {
+                    ZarinaTextSkeleton(
+                        textStyle = UiKitTheme.typography.secondary.light,
+                        shimmer = shimmer,
+                        modifier = Modifier.fillMaxWidth(0.5f),
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    ZarinaSkeleton(
+                        shimmer = shimmer,
+                        modifier = Modifier.size(12.dp),
+                    )
+                }
+            }
+
+            item {
+                Box(modifier = Modifier.padding(16.dp)) {
+                    ZarinaTextSkeleton(
+                        textStyle = UiKitTheme.typography.secondary.bold,
+                        shimmer = shimmer,
+                        modifier = Modifier.width(80.dp),
+                    )
+                }
+            }
+
+            item {
+                SuggestedProductsSkeleton(
+                    shimmer = shimmer,
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            item {
+                Box(modifier = Modifier.padding(16.dp)) {
+                    ZarinaTextSkeleton(
+                        textStyle = UiKitTheme.typography.secondary.bold,
+                        shimmer = shimmer,
+                        modifier = Modifier.width(80.dp),
+                    )
+                }
+            }
+
+            item {
+                SuggestedProductsSkeleton(
+                    shimmer = shimmer,
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun ProductGeneralInfoSkeleton(
+        shimmer: Shimmer,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            ZarinaTextSkeleton(
+                textStyle = UiKitTheme.typography.caption1.regular,
+                shimmer = shimmer,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(fraction = 0.5f),
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            ) {
+                ZarinaTextSkeleton(
+                    textStyle = UiKitTheme.typography.caption1.regular,
+                    shimmer = shimmer,
+                    modifier = Modifier.width(42.dp),
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                ZarinaTextSkeleton(
+                    textStyle = UiKitTheme.typography.caption1.regular,
+                    shimmer = shimmer,
+                    modifier = Modifier.width(48.dp),
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                ZarinaTextSkeleton(
+                    textStyle = UiKitTheme.typography.caption1.regular,
+                    shimmer = shimmer,
+                    modifier = Modifier.width(26.dp),
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                ZarinaTextSkeleton(
+                    textStyle = UiKitTheme.typography.caption1.regular,
+                    shimmer = shimmer,
+                    modifier = Modifier.width(44.dp),
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                ZarinaSkeleton(
+                    shimmer = shimmer,
+                    modifier = Modifier.size(12.dp),
+                )
+            }
+
+            ProductColorSelectorSkeleton(
+                shimmer = shimmer,
+                modifier = Modifier.padding(start = 12.dp, top = 2.dp),
+            )
+        }
+    }
+
+    @Composable
     private fun SuggestedProductsSkeleton(
         modifier: Modifier = Modifier,
+        shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
         contentPadding: PaddingValues = PaddingValues(),
     ) {
-        val shimmer = rememberZarinaSkeletonShimmer()
         LazyRow(
             contentPadding = contentPadding,
             horizontalArrangement = Arrangement.spacedBy(SuggestedProductsSpacedBy),
