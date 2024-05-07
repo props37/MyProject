@@ -68,11 +68,10 @@ class OrderViewModel @AssistedInject constructor(
         orderId,
         orderFetchingInfoHolder.fetchingRequests,
     ) { orderId, _ ->
-        GetOrderFlowUseCase.Params(orderId)
+        val params = GetOrderFlowUseCase.Params(orderId)
+        interactor.getOrderFlow(params)
     }
-        .flatMapLatest { params ->
-            interactor.getOrderFlow(params)
-        }
+        .flatMapLatest { it }
         .onEach { orderFetchingInfoHolder.completeFetching() }
         .stateIn(
             scope = viewModelScope,

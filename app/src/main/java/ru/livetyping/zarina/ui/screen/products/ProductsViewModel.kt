@@ -90,11 +90,10 @@ class ProductsViewModel @AssistedInject constructor(
         categoryId,
         categoryFetchRequests.receiveAsFlow(),
     ) { id, _ ->
-        GetCategoryFlowUseCase.Params(id)
+        val params = GetCategoryFlowUseCase.Params(id)
+        interactor.getCategoryFlow(params)
     }
-        .flatMapLatest { params ->
-            interactor.getCategoryFlow(params)
-        }
+        .flatMapLatest { it }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),

@@ -29,9 +29,9 @@ import ru.livetyping.zarina.domain.filter.coerceInAvailable
 import ru.livetyping.zarina.domain.filter.reset
 import ru.livetyping.zarina.domain.filter.updateWith
 import ru.livetyping.zarina.domain.product.CategoryProductInfo
-import ru.livetyping.zarina.ui.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.error.ErrorState
 import ru.livetyping.zarina.ui.common.error.from
+import ru.livetyping.zarina.ui.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
 import ru.livetyping.zarina.ui.model.filter.FiltersParcelable
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations
@@ -99,11 +99,10 @@ class FiltersViewModel @AssistedInject constructor(
         filters,
         categoryProductInfoFetchRequests.receiveAsFlow(),
     ) { categoryId, filters, _ ->
-        GetCategoryProductInfoFlowUseCase.Params(categoryId, filters)
+        val params = GetCategoryProductInfoFlowUseCase.Params(categoryId, filters)
+        interactor.getCategoryProductInfoFlow(params)
     }
-        .flatMapLatest { params ->
-            interactor.getCategoryProductInfoFlow(params)
-        }
+        .flatMapLatest { it }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
