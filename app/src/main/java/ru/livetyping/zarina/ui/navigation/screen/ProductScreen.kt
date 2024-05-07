@@ -7,6 +7,8 @@ import ru.livetyping.zarina.ui.navigation.base.composableDestination
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.ui.navigation.destination.graph.FavoritesGraph
 import ru.livetyping.zarina.ui.navigation.util.slideEnterTransition
+import ru.livetyping.zarina.ui.navigation.util.slideExitTransition
+import ru.livetyping.zarina.ui.navigation.util.slidePopEnterTransition
 import ru.livetyping.zarina.ui.navigation.util.slidePopExitTransition
 import ru.livetyping.zarina.ui.screen.product.ProductScreen
 import ru.livetyping.zarina.ui.screen.product.ProductScreenAction
@@ -17,14 +19,28 @@ fun NavGraphBuilder.productScreen(navController: NavHostController) {
         destination = UnscopedDestinations.Product,
         enterTransition = {
             when (initialState.destination.route) {
+                UnscopedDestinations.Product.routeSchema,
                 UnscopedDestinations.Products.routeSchema,
                 FavoritesGraph.Favorites.routeSchema -> slideEnterTransition()
 
                 else -> null
             }
         },
+        exitTransition = {
+            when (targetState.destination.route) {
+                UnscopedDestinations.Product.routeSchema -> slideExitTransition()
+                else -> null
+            }
+        },
+        popEnterTransition = {
+            when (initialState.destination.route) {
+                UnscopedDestinations.Product.routeSchema -> slidePopEnterTransition()
+                else -> null
+            }
+        },
         popExitTransition = {
             when (targetState.destination.route) {
+                UnscopedDestinations.Product.routeSchema,
                 UnscopedDestinations.Products.routeSchema,
                 FavoritesGraph.Favorites.routeSchema -> slidePopExitTransition()
 
@@ -40,6 +56,10 @@ fun NavGraphBuilder.productScreen(navController: NavHostController) {
                             route = UnscopedDestinations.Product.routeSchema,
                             inclusive = true,
                         )
+                    }
+
+                    is ProductScreenAction.ProductClicked -> {
+                        navController.navigateToProductScreen(action.product.id)
                     }
                 }
             }

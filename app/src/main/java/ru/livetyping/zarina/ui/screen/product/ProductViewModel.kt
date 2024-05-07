@@ -154,9 +154,10 @@ class ProductViewModel @Inject constructor(
         }
     }
 
-    fun onSuggestedProductClicked(product: Product) {
+    fun onProductClicked(product: Product) {
         navigationThrottler.throttle {
-            // TODO: [High] Implement
+            val action = ProductScreenAction.ProductClicked(product)
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
