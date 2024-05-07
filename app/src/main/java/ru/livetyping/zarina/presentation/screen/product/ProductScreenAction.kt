@@ -8,4 +8,6 @@ sealed class ProductScreenAction {
     data class ProductClicked(val product: Product) : ProductScreenAction()
 
     data class AddProductToCartClicked(val product: Product) : ProductScreenAction()
+
+    data class SubscribeToProductClicked(val product: Product) : ProductScreenAction()
 }

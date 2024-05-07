@@ -146,6 +146,7 @@ class ProductViewModel @AssistedInject constructor(
         ) ?: ProductState.Loading
     }
 
+    // TODO: [High] Improve Loading state
     val productTotalLookState: StateFlow<SuggestedProductListState> = productTotalLookResult.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
@@ -162,6 +163,7 @@ class ProductViewModel @AssistedInject constructor(
         ) ?: SuggestedProductListState.Loading
     }
 
+    // TODO: [High] Improve Loading state
     val productSimilarState: StateFlow<SuggestedProductListState> = productSimilarResult.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
@@ -214,17 +216,24 @@ class ProductViewModel @AssistedInject constructor(
     }
 
     fun onAddProductToCartClicked(product: Product) {
-        if (product.offers.size > 1) {
-            navigationThrottler.throttle {
-                val action = ProductScreenAction.AddProductToCartClicked(product)
-                emitSideEffect(SideEffect.Navigate(action))
+        if (product.isAvailable) {
+            if (product.offers.size > 1) {
+                navigationThrottler.throttle {
+                    val action = ProductScreenAction.AddProductToCartClicked(product)
+                    emitSideEffect(SideEffect.Navigate(action))
+                }
+            } else {
+                val offer = product.offers.firstOrNull() ?: run {
+                    Timber.e("Could not add product $product to cart because it has offers")
+                    return
+                }
+                addProductToCart(product.id, offer.barcode)
             }
         } else {
-            val offer = product.offers.firstOrNull() ?: run {
-                Timber.e("Could not add product $product to cart because it has offers")
-                return
+            navigationThrottler.throttle {
+                val action = ProductScreenAction.SubscribeToProductClicked(product)
+                emitSideEffect(SideEffect.Navigate(action))
             }
-            addProductToCart(product.id, offer.barcode)
         }
     }
 

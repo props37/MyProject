@@ -339,18 +339,17 @@ object ProductScreenComponents {
             modifier = modifier.padding(contentPadding),
         ) {
             val buttonColors = when {
-                !isProductAvailable -> ZarinaButtonDefaults.primaryColors()
+                !isProductAvailable -> ZarinaButtonDefaults.outlineColors()
                 isProductInCart -> ZarinaButtonDefaults.outlineColors()
                 else -> ZarinaButtonDefaults.primaryColors()
             }
             ZarinaButton(
                 onClick = onAddProductToCartClicked,
-                isEnabled = isProductAvailable,
                 colors = buttonColors,
                 modifier = Modifier.weight(1f),
             ) {
                 val textResId = when {
-                    !isProductAvailable -> R.string.product_not_available
+                    !isProductAvailable -> R.string.notify_about_product_appearance
                     isProductInCart -> R.string.in_cart
                     else -> R.string.to_cart
                 }

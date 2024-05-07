@@ -71,6 +71,15 @@ fun NavGraphBuilder.productScreen(navController: NavHostController) {
                     is ProductScreenAction.AddProductToCartClicked -> {
                         navController.navigateToSizeSelectorGraph(action.product)
                     }
+
+                    is ProductScreenAction.SubscribeToProductClicked -> {
+                        if (action.product.offers.size > 1) {
+                            navController.navigateToSizeSelectorGraph(action.product)
+                        } else {
+                            val offer = action.product.offers.firstOrNull() ?: return@ProductScreen
+                            navController.navigateToProductSubscriptionScreen(action.product, offer)
+                        }
+                    }
                 }
             }
         )
