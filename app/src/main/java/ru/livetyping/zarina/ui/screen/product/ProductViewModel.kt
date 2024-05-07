@@ -115,16 +115,20 @@ class ProductViewModel @Inject constructor(
         ) ?: ProductState.Loading
     }
 
-    val productTotalLookState: StateFlow<ProductTotalLookState> = productTotalLookResult.mapState(
+    val productTotalLookState: StateFlow<SuggestedProductListState> = productTotalLookResult.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
     ) { result ->
         result?.fold(
             onSuccess = { totalLook ->
-                ProductTotalLookState.Success(totalLook.toImmutableList())
+                if (totalLook.isNotEmpty()) {
+                    SuggestedProductListState.Success(totalLook.toImmutableList())
+                } else {
+                    SuggestedProductListState.Empty
+                }
             },
-            onFailure = { ProductTotalLookState.Error },
-        ) ?: ProductTotalLookState.Loading
+            onFailure = { SuggestedProductListState.Error },
+        ) ?: SuggestedProductListState.Loading
     }
 
     init {
@@ -227,12 +231,14 @@ class ProductViewModel @Inject constructor(
     }
 
     @Stable
-    sealed class ProductTotalLookState {
+    sealed class SuggestedProductListState {
         @Immutable
-        data class Success(val totalLook: ImmutableList<ProductItem>) : ProductTotalLookState()
+        data class Success(val totalLook: ImmutableList<ProductItem>) : SuggestedProductListState()
 
-        data object Loading : ProductTotalLookState()
+        data object Loading : SuggestedProductListState()
 
-        data object Error : ProductTotalLookState()
+        data object Error : SuggestedProductListState()
+
+        data object Empty : SuggestedProductListState()
     }
 }

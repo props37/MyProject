@@ -69,7 +69,7 @@ import ru.livetyping.zarina.ui.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.ui.common.util.domain.toComposeColor
 import ru.livetyping.zarina.ui.common.util.rememberFormattedPrice
 import ru.livetyping.zarina.ui.screen.product.ProductViewModel.ProductState
-import ru.livetyping.zarina.ui.screen.product.ProductViewModel.ProductTotalLookState
+import ru.livetyping.zarina.ui.screen.product.ProductViewModel.SuggestedProductListState
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.getHorizontalPaddingValues
@@ -139,7 +139,7 @@ object ProductScreenComponents {
         onAddProductToFavoritesClicked: (Product) -> Unit,
         onProductErrorRefreshClicked: () -> Unit,
         onProductClicked: (Product) -> Unit,
-        productTotalLookState: ProductTotalLookState,
+        productTotalLookState: SuggestedProductListState,
         onProductTotalLookErrorRefreshClicked: () -> Unit,
         onUrlClicked: (Url) -> Unit,
         lazyListState: LazyListState,
@@ -193,7 +193,7 @@ object ProductScreenComponents {
         onProductColorClicked: (ProductColor) -> Unit,
         onAddProductToCartClicked: (Product) -> Unit,
         onAddProductToFavoritesClicked: (Product) -> Unit,
-        productTotalLookState: ProductTotalLookState,
+        productTotalLookState: SuggestedProductListState,
         onProductClicked: (Product) -> Unit,
         onProductTotalLookErrorRefreshClicked: () -> Unit,
         onUrlClicked: (Url) -> Unit,
@@ -230,7 +230,7 @@ object ProductScreenComponents {
     private fun ProductDetailsList(
         product: ProductDetails,
         onProductColorClicked: (ProductColor) -> Unit,
-        productTotalLookState: ProductTotalLookState,
+        productTotalLookState: SuggestedProductListState,
         onProductClicked: (Product) -> Unit,
         onProductTotalLookErrorRefreshClicked: () -> Unit,
         onUrlClicked: (Url) -> Unit,
@@ -282,17 +282,19 @@ object ProductScreenComponents {
                 )
             }
 
-            item(
-                key = ProductDetailsListKeyTotalLook,
-                contentType = ProductDetailsListContentTypeTotalLook,
-            ) {
-                ProductTotalLook(
-                    totalLookState = productTotalLookState,
-                    onProductClicked = onProductClicked,
-                    onTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                )
+            if (productTotalLookState !is SuggestedProductListState.Empty) {
+                item(
+                    key = ProductDetailsListKeyTotalLook,
+                    contentType = ProductDetailsListContentTypeTotalLook,
+                ) {
+                    ProductTotalLook(
+                        totalLookState = productTotalLookState,
+                        onProductClicked = onProductClicked,
+                        onTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
             }
         }
     }
@@ -523,7 +525,7 @@ object ProductScreenComponents {
 
     @Composable
     private fun ProductTotalLook(
-        totalLookState: ProductTotalLookState,
+        totalLookState: SuggestedProductListState,
         onProductClicked: (Product) -> Unit,
         onTotalLookErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
@@ -546,13 +548,13 @@ object ProductScreenComponents {
                 targetState = totalLookState,
                 contentKey = { state ->
                     when (state) {
-                        is ProductTotalLookState.Success -> ProductTotalLookContentKeySuccess
+                        is SuggestedProductListState.Success -> ProductTotalLookContentKeySuccess
                         else -> state
                     }
                 },
             ) { state ->
                 when (state) {
-                    is ProductTotalLookState.Success -> {
+                    is SuggestedProductListState.Success -> {
                         ProductTotalLookImpl(
                             totalLook = state.totalLook,
                             onProductClicked = onProductClicked,
@@ -561,18 +563,20 @@ object ProductScreenComponents {
                         )
                     }
 
-                    ProductTotalLookState.Loading -> {
+                    SuggestedProductListState.Loading -> {
                         SuggestedProductsSkeleton(
                             contentPadding = contentPadding.getHorizontalPaddingValues(layoutDirection),
                         )
                     }
 
-                    ProductTotalLookState.Error -> {
+                    SuggestedProductListState.Error -> {
                         ZarinaListErrorItem(
                             onRetryClicked = onTotalLookErrorRefreshClicked,
                             modifier = Modifier.fillMaxWidth(),
                         )
                     }
+
+                    SuggestedProductListState.Empty -> Unit
                 }
             }
         }
@@ -687,7 +691,7 @@ object ProductScreenComponents {
     private const val ProductTotalLookContentKeySuccess = "ProductTotalLookContentKeySuccess"
 
     private val SuggestedProductsSpacedBy: Dp get() = 12.dp
-    private val SuggestedProductsSkeletonCount = 4
+    private const val SuggestedProductsSkeletonCount = 4
     private val SuggestedProductCardWidth: Dp get() = 176.dp
 
     private const val Colon = ':'

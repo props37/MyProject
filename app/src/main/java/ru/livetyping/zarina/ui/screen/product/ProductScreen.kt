@@ -30,7 +30,7 @@ import ru.livetyping.zarina.ui.screen.product.ProductScreenComponents.TopBar
 import ru.livetyping.zarina.ui.screen.product.ProductScreenComponents.TopBarMode
 import ru.livetyping.zarina.ui.screen.product.ProductScreenComponents.topBarModeAsState
 import ru.livetyping.zarina.ui.screen.product.ProductViewModel.ProductState
-import ru.livetyping.zarina.ui.screen.product.ProductViewModel.ProductTotalLookState
+import ru.livetyping.zarina.ui.screen.product.ProductViewModel.SuggestedProductListState
 import ru.livetyping.zarina.ui.screen.product.ProductViewModel.SideEffect
 import ru.livetyping.zarina.ui.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.collapsingtopbar.CollapsingTopBarDefaults
@@ -69,7 +69,7 @@ private fun ScreenContent(
     onAddProductToFavoritesClicked: (Product) -> Unit,
     onProductErrorRefreshClicked: () -> Unit,
     onProductClicked: (Product) -> Unit,
-    productTotalLookState: ProductTotalLookState,
+    productTotalLookState: SuggestedProductListState,
     onProductTotalLookErrorRefreshClicked: () -> Unit,
     onBackClicked: () -> Unit,
     onShareClicked: () -> Unit,
