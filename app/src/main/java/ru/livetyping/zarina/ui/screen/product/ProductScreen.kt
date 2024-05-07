@@ -47,6 +47,8 @@ fun ProductScreen(
     ScreenContent(
         productState = productState,
         onProductColorClicked = viewModel::onProductColorClicked,
+        onAddProductToCartClicked = viewModel::onAddProductToCartClicked,
+        onAddProductToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
         onProductErrorRefreshClicked = viewModel::onProductErrorRefreshClicked,
         onProductClicked = viewModel::onProductClicked,
         productTotalLookState = productTotalLookState,
@@ -63,6 +65,8 @@ fun ProductScreen(
 private fun ScreenContent(
     productState: ProductState,
     onProductColorClicked: (ProductColor) -> Unit,
+    onAddProductToCartClicked: (Product) -> Unit,
+    onAddProductToFavoritesClicked: (Product) -> Unit,
     onProductErrorRefreshClicked: () -> Unit,
     onProductClicked: (Product) -> Unit,
     productTotalLookState: ProductTotalLookState,
@@ -119,6 +123,8 @@ private fun ScreenContent(
         ProductDetails(
             productState = productState,
             onProductColorClicked = onProductColorClicked,
+            onAddProductToCartClicked = onAddProductToCartClicked,
+            onAddProductToFavoritesClicked = onAddProductToFavoritesClicked,
             onProductErrorRefreshClicked = onProductErrorRefreshClicked,
             onProductClicked = onProductClicked,
             productTotalLookState = productTotalLookState,

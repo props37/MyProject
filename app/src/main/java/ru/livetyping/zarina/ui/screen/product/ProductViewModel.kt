@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
@@ -24,12 +26,15 @@ import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.domain.product.ProductItem
+import ru.livetyping.zarina.ui.base.text.Text
 import ru.livetyping.zarina.ui.common.datafetchinginfo.DataFetchingInfoHolder
 import ru.livetyping.zarina.ui.common.error.ErrorState
 import ru.livetyping.zarina.ui.common.error.from
 import ru.livetyping.zarina.ui.common.util.getNavigationThrottler
+import ru.livetyping.zarina.ui.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.ui.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.ui.screen.product.ProductViewModel.SideEffect
+import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.livetyping.zarina.usecase.product.GetProductFlowUseCase
 import ru.livetyping.zarina.usecase.product.GetProductTotalLookFlowUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
@@ -154,6 +159,34 @@ class ProductViewModel @Inject constructor(
         }
     }
 
+    fun onAddProductToCartClicked(product: Product) {
+        // TODO: [High] Implement
+    }
+
+    fun onAddProductToFavoritesClicked(product: Product) {
+        viewModelScope.launch {
+            val params = ToggleProductPresenceInFavoritesUseCase.Params(product.id)
+            interactor.toggleProductPresenceInFavorites(params)
+                .onSuccess { isProductInFavorites ->
+                    if (isProductInFavorites) {
+                        val text = Text.Resource(R.string.product_adding_to_favorites_completed)
+                        val message = ZarinaToastMessage(text)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
+                    }
+                }
+                .onFailure {
+                    val messageResId = if (product.isInFavorites) {
+                        R.string.product_removing_from_favorites_error
+                    } else {
+                        R.string.product_adding_to_favorites_error
+                    }
+                    val text = Text.Resource(messageResId)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                }
+        }
+    }
+
     fun onProductClicked(product: Product) {
         navigationThrottler.throttle {
             val action = ProductScreenAction.ProductClicked(product)
@@ -178,6 +211,8 @@ class ProductViewModel @Inject constructor(
         data class Share(val text: String) : SideEffect
 
         data class OpenUrl(val url: Url) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 
     @Stable

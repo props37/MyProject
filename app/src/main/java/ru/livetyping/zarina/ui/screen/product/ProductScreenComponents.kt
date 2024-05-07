@@ -135,6 +135,8 @@ object ProductScreenComponents {
     fun ProductDetails(
         productState: ProductState,
         onProductColorClicked: (ProductColor) -> Unit,
+        onAddProductToCartClicked: (Product) -> Unit,
+        onAddProductToFavoritesClicked: (Product) -> Unit,
         onProductErrorRefreshClicked: () -> Unit,
         onProductClicked: (Product) -> Unit,
         productTotalLookState: ProductTotalLookState,
@@ -158,6 +160,8 @@ object ProductScreenComponents {
                     ProductDetailsImpl(
                         product = state.product,
                         onProductColorClicked = onProductColorClicked,
+                        onAddProductToCartClicked = onAddProductToCartClicked,
+                        onAddProductToFavoritesClicked = onAddProductToFavoritesClicked,
                         productTotalLookState = productTotalLookState,
                         onProductClicked = onProductClicked,
                         onProductTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
@@ -187,6 +191,8 @@ object ProductScreenComponents {
     private fun ProductDetailsImpl(
         product: ProductDetails,
         onProductColorClicked: (ProductColor) -> Unit,
+        onAddProductToCartClicked: (Product) -> Unit,
+        onAddProductToFavoritesClicked: (Product) -> Unit,
         productTotalLookState: ProductTotalLookState,
         onProductClicked: (Product) -> Unit,
         onProductTotalLookErrorRefreshClicked: () -> Unit,
@@ -211,8 +217,8 @@ object ProductScreenComponents {
             ProductDetailsBottomBar(
                 isProductInCart = false,
                 isProductInFavorites = false,
-                onAddProductToCartClicked = {},
-                onAddProductToFavoritesClicked = {},
+                onAddProductToCartClicked = { onAddProductToCartClicked(product) },
+                onAddProductToFavoritesClicked = { onAddProductToFavoritesClicked(product) },
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                 modifier = Modifier.fillMaxWidth(),
             )
