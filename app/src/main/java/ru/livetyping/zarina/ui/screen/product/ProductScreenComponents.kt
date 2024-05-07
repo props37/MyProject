@@ -215,8 +215,8 @@ object ProductScreenComponents {
             )
 
             ProductDetailsBottomBar(
-                isProductInCart = false,
-                isProductInFavorites = false,
+                isProductInCart = product.isInCart,
+                isProductInFavorites = product.isInFavorites,
                 onAddProductToCartClicked = { onAddProductToCartClicked(product) },
                 onAddProductToFavoritesClicked = { onAddProductToFavoritesClicked(product) },
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),

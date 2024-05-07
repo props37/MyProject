@@ -25,7 +25,7 @@ class GetProductFlowUseCase @Inject constructor(
         return combine(
             productFlow,
             cartRepository.cartProductIds,
-            favoriteRepository.favoriteProductIds
+            favoriteRepository.favoriteProductIds,
         ) { product, cartProductIds, favoriteProductIds ->
             product.copy(
                 isInFavorites = product.id in favoriteProductIds,
