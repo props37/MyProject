@@ -14,19 +14,22 @@ class ToggleProductPresenceInFavoritesUseCase @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
     private val addProductToFavoritesUseCase: AddProductToFavoritesUseCase,
     private val removeProductFromFavoritesUseCase: RemoveProductFromFavoritesUseCase,
-) : UseCase<ToggleProductPresenceInFavoritesUseCase.Params, Unit>(dispatcher) {
+) : UseCase<ToggleProductPresenceInFavoritesUseCase.Params, Boolean>(dispatcher) {
 
-    override suspend fun execute(params: Params) {
+    override suspend fun execute(params: Params): Boolean {
         val productId = params.productId
         Timber.v("Toggle presence of product $productId in favorites")
         val favoriteProductIds = favoriteRepository.favoriteProductIds.value
-        if (productId in favoriteProductIds) {
+        val isProductInFavorites = if (productId in favoriteProductIds) {
             val removeParams = RemoveProductFromFavoritesUseCase.Params(productId)
             removeProductFromFavoritesUseCase(removeParams).getOrThrow()
+            false
         } else {
             val addParams = AddProductToFavoritesUseCase.Params(productId)
             addProductToFavoritesUseCase(addParams).getOrThrow()
+            true
         }
+        return isProductInFavorites
     }
 
     data class Params(val productId: Product.Id)

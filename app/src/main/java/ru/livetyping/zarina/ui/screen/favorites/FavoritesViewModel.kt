@@ -101,8 +101,8 @@ class FavoritesViewModel @AssistedInject constructor(
         viewModelScope.launch {
             val params = ToggleProductPresenceInFavoritesUseCase.Params(product.id)
             interactor.toggleProductPresenceInFavorites(params)
-                .onSuccess {
-                    if (!product.isInFavorites) {
+                .onSuccess { isProductInFavorites ->
+                    if (isProductInFavorites) {
                         val text = Text.Resource(R.string.product_adding_to_favorites_completed)
                         val message = ZarinaToastMessage(text)
                         emitSideEffect(SideEffect.ShowZarinaToast(message))
