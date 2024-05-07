@@ -8,9 +8,9 @@ import ru.livetyping.zarina.domain.product.Price
 @Serializable
 @Parcelize
 data class PriceParcelable(
-    val originalPrice: Long,
+    val originalPrice: Int,
     val hasDiscount: Boolean,
-    val discountPrice: Long,
+    val discountPrice: Int,
     val discountPercent: Int,
 ) : Parcelable {
     fun toPrice(): Price = Price(

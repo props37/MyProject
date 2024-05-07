@@ -9,8 +9,8 @@ import ru.livetyping.zarina.presentation.model.common.PriceRangeParcelable
 @Serializable
 @Parcelize
 data class PriceFilterParcelable(
-    val min: Long?,
-    val max: Long?,
+    val min: Int?,
+    val max: Int?,
     val limits: PriceRangeParcelable,
 ) : Parcelable {
     fun toPriceFilter(): PriceFilter = PriceFilter(

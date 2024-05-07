@@ -445,7 +445,7 @@ private fun FrontSideLevelInfo(
                 } else 0
                 val formattedRemainingPurchaseSum = stringResource(
                     id = R.string.price_in_rubles_string,
-                    rememberFormattedPrice(remainingPurchaseSum.toLong()),
+                    rememberFormattedPrice(remainingPurchaseSum),
                 )
                 Text(
                     text = stringResource(R.string.to_next_level, formattedRemainingPurchaseSum),

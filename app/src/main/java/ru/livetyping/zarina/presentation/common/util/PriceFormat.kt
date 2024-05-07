@@ -9,12 +9,12 @@ import kotlin.text.Typography.nbsp
 private const val PRICE_PATTERN = "#,###"
 
 @Composable
-fun rememberFormattedPrice(price: Long): String {
+fun rememberFormattedPrice(price: Int): String {
     val format = remember { getPriceDecimalFormat() }
     return remember(price, format) { format.format(price) }
 }
 
-fun formatPrice(price: Long): String {
+fun formatPrice(price: Int): String {
     val format = getPriceDecimalFormat()
     return format.format(price)
 }

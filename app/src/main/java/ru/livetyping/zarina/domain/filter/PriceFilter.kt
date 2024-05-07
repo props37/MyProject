@@ -3,8 +3,8 @@ package ru.livetyping.zarina.domain.filter
 import ru.livetyping.zarina.domain.common.PriceRange
 
 data class PriceFilter(
-    val min: Long?,
-    val max: Long?,
+    val min: Int?,
+    val max: Int?,
     val limits: PriceRange,
 ) : Filter {
     init {

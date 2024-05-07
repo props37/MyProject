@@ -32,9 +32,9 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable
 fun OrderPrice(
-    orderPrice: Long,
-    deliveryPrice: Long,
-    totalPrice: Long,
+    orderPrice: Int,
+    deliveryPrice: Int,
+    totalPrice: Int,
     modifier: Modifier = Modifier,
     backgroundColor: Color = BackgroundColor,
     contentColor: Color = ContentColor,
@@ -112,7 +112,7 @@ fun OrderPriceSkeleton(
 @Composable
 private fun PriceItem(
     name: String,
-    price: Long,
+    price: Int,
     nameTextStyle: TextStyle,
     priceTextStyle: TextStyle,
     modifier: Modifier = Modifier,

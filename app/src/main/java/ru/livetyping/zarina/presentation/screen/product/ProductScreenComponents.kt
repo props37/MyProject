@@ -483,7 +483,7 @@ object ProductScreenComponents {
         ) {
             val baseText = stringResource(
                 id = R.string.product_delivery_and_payment_info,
-                rememberFormattedPrice(freeDeliveryTotalPriceThreshold.toLong()),
+                rememberFormattedPrice(freeDeliveryTotalPriceThreshold),
             )
             val baseTextStyle = UiKitTheme.typography.tertiary.light
 

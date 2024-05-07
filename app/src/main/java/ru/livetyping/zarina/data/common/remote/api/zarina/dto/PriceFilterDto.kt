@@ -8,10 +8,10 @@ import ru.livetyping.zarina.domain.filter.PriceFilter
 @Serializable
 data class PriceFilterDto(
     @SerialName("min")
-    val min: Long? = null,
+    val min: Int? = null,
 
     @SerialName("max")
-    val max: Long? = null,
+    val max: Int? = null,
 ) {
     fun toPriceRange(): PriceRange = PriceRange(
         min = checkNotNull(min) { "min is null" },

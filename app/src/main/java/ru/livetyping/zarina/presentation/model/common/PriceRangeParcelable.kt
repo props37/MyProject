@@ -8,8 +8,8 @@ import ru.livetyping.zarina.domain.common.PriceRange
 @Parcelize
 @Serializable
 data class PriceRangeParcelable(
-    val min: Long,
-    val max: Long,
+    val min: Int,
+    val max: Int,
 ) : Parcelable {
     fun toPriceRange(): PriceRange = PriceRange(min, max)
 

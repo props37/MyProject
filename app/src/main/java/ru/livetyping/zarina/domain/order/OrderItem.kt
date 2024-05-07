@@ -9,7 +9,7 @@ data class OrderItem(
     override val productCount: Int,
     override val date: LocalDate,
     override val status: OrderStatus,
-    override val totalPrice: Long,
+    override val totalPrice: Int,
     val products: List<Product>,
 ) : Order(
     id = id,

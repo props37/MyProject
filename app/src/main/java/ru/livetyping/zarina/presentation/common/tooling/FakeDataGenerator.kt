@@ -50,7 +50,7 @@ object FakeDataGenerator {
         productCount: Int = Random.nextInt(from = 1, until = 10),
         date: LocalDate = getLocalDate(),
         status: OrderStatus = OrderStatus.entries.random(),
-        totalPrice: Long = 7999,
+        totalPrice: Int = 7999,
         products: List<OrderItem.Product> = List(productCount) { getOrderItemProduct() },
     ): OrderItem = OrderItem(
         id = id,
@@ -188,10 +188,10 @@ object FakeDataGenerator {
     )
 
     fun getPrice(
-        originalPrice: Long = 4999,
+        originalPrice: Int = 4999,
         hasDiscount: Boolean = Random.nextBoolean(),
-        discountPrice: Long = if (hasDiscount) {
-            (originalPrice * Random.nextDouble(0.2, 0.9)).toLong()
+        discountPrice: Int = if (hasDiscount) {
+            (originalPrice * Random.nextDouble(0.2, 0.9)).toInt()
         } else {
             originalPrice
         },

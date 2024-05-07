@@ -36,7 +36,6 @@ import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.google.common.primitives.Longs.max
 import kotlinx.coroutines.flow.distinctUntilChanged
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.PriceRange
@@ -47,6 +46,7 @@ import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFi
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldSize
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import kotlin.math.max
 import kotlin.math.min
 
 // TODO: [High] Add visual transformations to text
@@ -154,10 +154,10 @@ fun PriceFilter(
         ZarinaRangeSlider(
             value = createSliderValue(minPrice, maxPrice, limits),
             onValueChanged = {
-                val startLong = it.start.toLong()
-                val endLong = it.endInclusive.toLong()
-                minPrice = if (startLong != limits.min) startLong else null
-                maxPrice = if (endLong != limits.max) endLong else null
+                val startInt = it.start.toInt()
+                val endInt = it.endInclusive.toInt()
+                minPrice = if (startInt != limits.min) startInt else null
+                maxPrice = if (endInt != limits.max) endInt else null
             },
             valueRange = limits.min.toFloat()..limits.max.toFloat(),
             onValueChangeFinished = {
@@ -176,9 +176,9 @@ fun PriceFilter(
 
 @Composable
 private fun TextField(
-    value: Long?,
-    onValueChanged: (Long?) -> Unit,
-    placeholderValue: Long,
+    value: Int?,
+    onValueChanged: (Int?) -> Unit,
+    placeholderValue: Int,
     leadingText: String,
     onClearClicked: () -> Unit,
     modifier: Modifier = Modifier,
@@ -188,7 +188,7 @@ private fun TextField(
     ZarinaTextField(
         value = valueString,
         onValueChanged = { string ->
-            onValueChanged(string.toLongOrNull())
+            onValueChanged(string.toIntOrNull())
         },
         size = ZarinaTextFieldSize.Small,
         placeholder = {
@@ -221,19 +221,19 @@ private fun TextField(
     )
 }
 
-private fun Long.coerceMinPrice(maxPrice: Long?, limits: PriceRange): Long {
+private fun Int.coerceMinPrice(maxPrice: Int?, limits: PriceRange): Int {
     val max = maxPrice?.let { minOf(it.coerceAtLeast(limits.min), limits.max) } ?: limits.max
     return this.coerceIn(limits.min, max)
 }
 
-private fun Long.coerceMaxPrice(minPrice: Long?, limits: PriceRange): Long {
+private fun Int.coerceMaxPrice(minPrice: Int?, limits: PriceRange): Int {
     val min = minPrice?.let { maxOf(it.coerceAtMost(limits.max), limits.min) } ?: limits.min
     return this.coerceIn(min, limits.max)
 }
 
 private fun createSliderValue(
-    minPrice: Long?,
-    maxPrice: Long?,
+    minPrice: Int?,
+    maxPrice: Int?,
     limits: PriceRange,
 ): ClosedFloatingPointRange<Float> {
     val minValue = minPrice?.coerceIn(

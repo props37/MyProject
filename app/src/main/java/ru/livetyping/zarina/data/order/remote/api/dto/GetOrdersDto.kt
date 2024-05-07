@@ -44,7 +44,7 @@ data class GetOrdersDto(
         val status: OrderStatusDto? = null,
 
         @SerialName("total_sum")
-        val totalPrice: Long? = null,
+        val totalPrice: Int? = null,
 
         @SerialName("products")
         val products: List<Product>? = null,
