@@ -1,0 +1,92 @@
+package ru.livetyping.zarina.presentation.screen.order.cancellation
+
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import ru.livetyping.zarina.R
+import ru.livetyping.zarina.base.operationtracker.OperationKey
+import ru.livetyping.zarina.base.operationtracker.OperationTracker
+import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
+import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
+import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.order.Order
+import ru.livetyping.zarina.presentation.base.text.Text
+import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.navigation.destination.graph.ProfileGraph
+import ru.livetyping.zarina.usecase.order.CancelOrderUseCase
+import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
+import ru.livetyping.zarina.util.library.coroutines.mapState
+import javax.inject.Inject
+
+@HiltViewModel
+class OrderCancellationViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val interactor: OrderCancellationInteractor,
+) : ViewModel(), SideEffectSource<OrderCancellationViewModel.SideEffect> by SideEffectSourceImpl() {
+
+    private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val operationTracker = OperationTracker()
+
+    private var cancelOrderJob: Job? = null
+
+    private val orderId: StateFlow<Order.Id> = savedStateHandle
+        .getStateFlow<Long?>(
+            key = ProfileGraph.OrderCancellation.ARG_KEY_ORDER_ID,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { value ->
+            checkNotNull(value) { "orderId is null" }
+            Order.Id(value)
+        }
+
+    val isCancelButtonLoading: StateFlow<Boolean> = operationTracker
+        .isOperationOngoing(Operation.CANCEL_ORDER)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = false,
+        )
+
+    fun onBackClicked() {
+        navigationThrottler.throttle {
+            val action = OrderCancellationScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
+    fun onCancelClicked() {
+        if (cancelOrderJob?.isActive == true) return
+        cancelOrderJob = viewModelScope.launch {
+            operationTracker.track(Operation.CANCEL_ORDER) {
+                val params = CancelOrderUseCase.Params(orderId.value)
+                interactor.cancelOrder(params)
+                    .onSuccess {
+                        val action = OrderCancellationScreenAction.OrderCancelled
+                        emitSideEffect(SideEffect.Navigate(action))
+                    }
+                    .onFailure {
+                        val message = Text.Resource(R.string.order_cancellation_error)
+                        emitSideEffect(SideEffect.ShowToast(message))
+                    }
+            }
+        }
+    }
+
+    sealed interface SideEffect : SideEffectSource.SideEffect {
+        data class Navigate(val action: OrderCancellationScreenAction) : SideEffect
+
+        data class ShowToast(val message: Text) : SideEffect
+    }
+
+    private enum class Operation : OperationKey { CANCEL_ORDER }
+}

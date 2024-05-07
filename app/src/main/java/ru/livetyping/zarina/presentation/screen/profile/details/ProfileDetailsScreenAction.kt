@@ -1,0 +1,9 @@
+package ru.livetyping.zarina.presentation.screen.profile.details
+
+sealed class ProfileDetailsScreenAction {
+    data object ScreenClosed : ProfileDetailsScreenAction()
+
+    data object SignOutClicked : ProfileDetailsScreenAction()
+
+    data object DeleteAccountClicked : ProfileDetailsScreenAction()
+}
