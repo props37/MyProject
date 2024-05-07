@@ -146,7 +146,6 @@ class ProductViewModel @AssistedInject constructor(
         ) ?: ProductState.Loading
     }
 
-    // TODO: [High] Improve Loading state
     val productTotalLookState: StateFlow<SuggestedProductListState> = productTotalLookResult.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
@@ -163,7 +162,6 @@ class ProductViewModel @AssistedInject constructor(
         ) ?: SuggestedProductListState.Loading
     }
 
-    // TODO: [High] Improve Loading state
     val productSimilarState: StateFlow<SuggestedProductListState> = productSimilarResult.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
