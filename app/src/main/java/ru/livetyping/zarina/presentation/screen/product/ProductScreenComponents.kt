@@ -141,6 +141,8 @@ object ProductScreenComponents {
         onProductClicked: (Product) -> Unit,
         productTotalLookState: SuggestedProductListState,
         onProductTotalLookErrorRefreshClicked: () -> Unit,
+        productSimilarState: SuggestedProductListState,
+        onProductSimilarErrorRefreshClicked: () -> Unit,
         onUrlClicked: (Url) -> Unit,
         lazyListState: LazyListState,
         modifier: Modifier = Modifier,
@@ -163,8 +165,10 @@ object ProductScreenComponents {
                         onAddProductToCartClicked = onAddProductToCartClicked,
                         onAddProductToFavoritesClicked = onAddProductToFavoritesClicked,
                         productTotalLookState = productTotalLookState,
-                        onProductClicked = onProductClicked,
                         onProductTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
+                        productSimilarState = productSimilarState,
+                        onProductSimilarErrorRefreshClicked = onProductSimilarErrorRefreshClicked,
+                        onProductClicked = onProductClicked,
                         onUrlClicked = onUrlClicked,
                         lazyListState = lazyListState,
                     )
@@ -194,8 +198,10 @@ object ProductScreenComponents {
         onAddProductToCartClicked: (Product) -> Unit,
         onAddProductToFavoritesClicked: (Product) -> Unit,
         productTotalLookState: SuggestedProductListState,
-        onProductClicked: (Product) -> Unit,
         onProductTotalLookErrorRefreshClicked: () -> Unit,
+        productSimilarState: SuggestedProductListState,
+        onProductSimilarErrorRefreshClicked: () -> Unit,
+        onProductClicked: (Product) -> Unit,
         onUrlClicked: (Url) -> Unit,
         lazyListState: LazyListState,
         modifier: Modifier = Modifier,
@@ -205,8 +211,10 @@ object ProductScreenComponents {
                 product = product,
                 onProductColorClicked = onProductColorClicked,
                 productTotalLookState = productTotalLookState,
-                onProductClicked = onProductClicked,
                 onProductTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
+                productSimilarState = productSimilarState,
+                onProductSimilarErrorRefreshClicked = onProductSimilarErrorRefreshClicked,
+                onProductClicked = onProductClicked,
                 onUrlClicked = onUrlClicked,
                 lazyListState = lazyListState,
                 modifier = Modifier
@@ -231,8 +239,10 @@ object ProductScreenComponents {
         product: ProductDetails,
         onProductColorClicked: (ProductColor) -> Unit,
         productTotalLookState: SuggestedProductListState,
-        onProductClicked: (Product) -> Unit,
         onProductTotalLookErrorRefreshClicked: () -> Unit,
+        productSimilarState: SuggestedProductListState,
+        onProductSimilarErrorRefreshClicked: () -> Unit,
+        onProductClicked: (Product) -> Unit,
         onUrlClicked: (Url) -> Unit,
         lazyListState: LazyListState,
         modifier: Modifier = Modifier,
@@ -287,11 +297,26 @@ object ProductScreenComponents {
                     key = ProductDetailsListKeyTotalLook,
                     contentType = ProductDetailsListContentTypeTotalLook,
                 ) {
-                    ProductTotalLook(
-                        totalLookState = productTotalLookState,
+                    SuggestedProducts(
+                        title = stringResource(R.string.product_total_look),
+                        state = productTotalLookState,
                         onProductClicked = onProductClicked,
-                        onTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+                        onErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
+
+            if (productSimilarState !is SuggestedProductListState.Empty) {
+                item(
+                    key = ProductDetailsListKeySimilar,
+                    contentType = ProductDetailsListContentTypeSimilar,
+                ) {
+                    SuggestedProducts(
+                        title = stringResource(R.string.you_may_like),
+                        state = productSimilarState,
+                        onProductClicked = onProductClicked,
+                        onErrorRefreshClicked = onProductSimilarErrorRefreshClicked,
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
@@ -524,19 +549,20 @@ object ProductScreenComponents {
     }
 
     @Composable
-    private fun ProductTotalLook(
-        totalLookState: SuggestedProductListState,
+    private fun SuggestedProducts(
+        title: String,
+        state: SuggestedProductListState,
         onProductClicked: (Product) -> Unit,
-        onTotalLookErrorRefreshClicked: () -> Unit,
+        onErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
-        contentPadding: PaddingValues = PaddingValues(),
+        contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
     ) {
         Column(
             modifier = modifier.padding(contentPadding.getVerticalPaddingValues()),
         ) {
             val layoutDirection = LocalLayoutDirection.current
             Text(
-                text = stringResource(R.string.product_total_look),
+                text = title,
                 style = UiKitTheme.typography.secondary.bold,
                 modifier = Modifier
                     .padding(contentPadding.getHorizontalPaddingValues(layoutDirection)),
@@ -545,7 +571,7 @@ object ProductScreenComponents {
             Spacer(modifier = Modifier.height(16.dp))
 
             Crossfade(
-                targetState = totalLookState,
+                targetState = state,
                 contentKey = { state ->
                     when (state) {
                         is SuggestedProductListState.Success -> ProductTotalLookContentKeySuccess
@@ -571,7 +597,7 @@ object ProductScreenComponents {
 
                     SuggestedProductListState.Error -> {
                         ZarinaListErrorItem(
-                            onRetryClicked = onTotalLookErrorRefreshClicked,
+                            onRetryClicked = onErrorRefreshClicked,
                             modifier = Modifier.fillMaxWidth(),
                         )
                     }
@@ -676,6 +702,7 @@ object ProductScreenComponents {
     private const val ProductDetailsListKeyDeliveryAndPayment =
         "ProductDetailsListKeyDeliveryAndPayment"
     private const val ProductDetailsListKeyTotalLook = "ProductDetailsListKeyTotalLook"
+    private const val ProductDetailsListKeySimilar = "ProductDetailsListKeySimilar"
 
     private const val ProductDetailsListContentTypeMediaPager =
         "ProductDetailsListContentTypeMediaPager"
@@ -687,6 +714,8 @@ object ProductScreenComponents {
         "ProductDetailsListContentTypeDeliveryAndPayment"
     private const val ProductDetailsListContentTypeTotalLook =
         "ProductDetailsListContentTypeTotalLook"
+    private const val ProductDetailsListContentTypeSimilar =
+        "ProductDetailsListContentTypeSimilar"
 
     private const val ProductTotalLookContentKeySuccess = "ProductTotalLookContentKeySuccess"
 

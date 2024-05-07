@@ -43,6 +43,7 @@ fun ProductScreen(
 ) {
     val productState by viewModel.productState.collectAsStateWithLifecycle()
     val productTotalLookState by viewModel.productTotalLookState.collectAsStateWithLifecycle()
+    val productSimilarState by viewModel.productSimilarState.collectAsStateWithLifecycle()
 
     ScreenContent(
         productState = productState,
@@ -53,6 +54,8 @@ fun ProductScreen(
         onProductClicked = viewModel::onProductClicked,
         productTotalLookState = productTotalLookState,
         onProductTotalLookErrorRefreshClicked = viewModel::onProductTotalLookErrorRefreshClicked,
+        productSimilarState = productSimilarState,
+        onProductSimilarErrorRefreshClicked = viewModel::onProductSimilarErrorRefreshClicked,
         onBackClicked = viewModel::onBackClicked,
         onShareClicked = viewModel::onShareClicked,
         onUrlClicked = viewModel::onUrlClicked,
@@ -71,6 +74,8 @@ private fun ScreenContent(
     onProductClicked: (Product) -> Unit,
     productTotalLookState: SuggestedProductListState,
     onProductTotalLookErrorRefreshClicked: () -> Unit,
+    productSimilarState: SuggestedProductListState,
+    onProductSimilarErrorRefreshClicked: () -> Unit,
     onBackClicked: () -> Unit,
     onShareClicked: () -> Unit,
     onUrlClicked: (Url) -> Unit,
@@ -129,6 +134,8 @@ private fun ScreenContent(
             onProductClicked = onProductClicked,
             productTotalLookState = productTotalLookState,
             onProductTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
+            productSimilarState = productSimilarState,
+            onProductSimilarErrorRefreshClicked = onProductSimilarErrorRefreshClicked,
             onUrlClicked = onUrlClicked,
             lazyListState = lazyListState,
             modifier = Modifier

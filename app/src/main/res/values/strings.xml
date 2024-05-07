@@ -202,6 +202,7 @@
     <string name="to_cart">В корзину</string>
     <string name="in_cart">В корзине</string>
     <string name="product_not_available">Нет в наличии</string>
+    <string name="you_may_like">Тебе может понравиться</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

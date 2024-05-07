@@ -36,6 +36,7 @@ import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinat
 import ru.livetyping.zarina.presentation.screen.product.ProductViewModel.SideEffect
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.livetyping.zarina.usecase.product.GetProductFlowUseCase
+import ru.livetyping.zarina.usecase.product.GetProductSimilarFlowUseCase
 import ru.livetyping.zarina.usecase.product.GetProductTotalLookFlowUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
@@ -65,6 +66,8 @@ class ProductViewModel @Inject constructor(
     private val productId = MutableStateFlow(initialProductId.value)
 
     private val productFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
+    private val productTotalLookFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
+    private val productSimilarFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val productResult: StateFlow<Result<ProductDetails>?> = combine(
@@ -82,8 +85,6 @@ class ProductViewModel @Inject constructor(
             initialValue = null,
         )
 
-    private val productTotalLookFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
-
     @OptIn(ExperimentalCoroutinesApi::class)
     private val productTotalLookResult: StateFlow<Result<List<ProductItem>>?> = combine(
         productTotalLookFetchingInfoHolder.fetchingRequests,
@@ -94,6 +95,22 @@ class ProductViewModel @Inject constructor(
     }
         .flatMapLatest { it }
         .onEach { productTotalLookFetchingInfoHolder.completeFetching() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val productSimilarResult: StateFlow<Result<List<ProductItem>>?> = combine(
+        productSimilarFetchingInfoHolder.fetchingRequests,
+        productId,
+    ) { _, productId ->
+        val params = GetProductSimilarFlowUseCase.Params(productId)
+        interactor.getProductSimilarFlow(params)
+    }
+        .flatMapLatest { it }
+        .onEach { productSimilarFetchingInfoHolder.completeFetching() }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
@@ -131,9 +148,26 @@ class ProductViewModel @Inject constructor(
         ) ?: SuggestedProductListState.Loading
     }
 
+    val productSimilarState: StateFlow<SuggestedProductListState> = productSimilarResult.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { result ->
+        result?.fold(
+            onSuccess = { totalLook ->
+                if (totalLook.isNotEmpty()) {
+                    SuggestedProductListState.Success(totalLook.toImmutableList())
+                } else {
+                    SuggestedProductListState.Empty
+                }
+            },
+            onFailure = { SuggestedProductListState.Error },
+        ) ?: SuggestedProductListState.Loading
+    }
+
     init {
         productFetchingInfoHolder.requestFetching(Unit)
         productTotalLookFetchingInfoHolder.requestFetching(Unit)
+        productSimilarFetchingInfoHolder.requestFetching(Unit)
     }
 
     fun onBackClicked() {
@@ -200,7 +234,10 @@ class ProductViewModel @Inject constructor(
 
     fun onProductTotalLookErrorRefreshClicked() {
         productTotalLookFetchingInfoHolder.requestFetching(Unit)
-        // TODO: [High] Refresh similar products if needed
+    }
+
+    fun onProductSimilarErrorRefreshClicked() {
+        productSimilarFetchingInfoHolder.requestFetching(Unit)
     }
 
     fun onUrlClicked(url: Url) {
