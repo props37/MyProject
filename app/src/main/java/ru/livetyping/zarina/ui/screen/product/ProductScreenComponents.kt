@@ -215,6 +215,7 @@ object ProductScreenComponents {
             )
 
             ProductDetailsBottomBar(
+                isProductAvailable = product.isAvailable,
                 isProductInCart = product.isInCart,
                 isProductInFavorites = product.isInFavorites,
                 onAddProductToCartClicked = { onAddProductToCartClicked(product) },
@@ -298,6 +299,7 @@ object ProductScreenComponents {
 
     @Composable
     private fun ProductDetailsBottomBar(
+        isProductAvailable: Boolean,
         isProductInCart: Boolean,
         isProductInFavorites: Boolean,
         onAddProductToCartClicked: () -> Unit,
@@ -309,17 +311,22 @@ object ProductScreenComponents {
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier.padding(contentPadding),
         ) {
-            val buttonColors = if (isProductInCart) {
-                ZarinaButtonDefaults.outlineColors()
-            } else {
-                ZarinaButtonDefaults.primaryColors()
+            val buttonColors = when {
+                !isProductAvailable -> ZarinaButtonDefaults.primaryColors()
+                isProductInCart -> ZarinaButtonDefaults.outlineColors()
+                else -> ZarinaButtonDefaults.primaryColors()
             }
             ZarinaButton(
                 onClick = onAddProductToCartClicked,
+                isEnabled = isProductAvailable,
                 colors = buttonColors,
                 modifier = Modifier.weight(1f),
             ) {
-                val textResId = if (isProductInCart) R.string.in_cart else R.string.to_cart
+                val textResId = when {
+                    !isProductAvailable -> R.string.product_not_available
+                    isProductInCart -> R.string.in_cart
+                    else -> R.string.to_cart
+                }
                 Text(text = stringResource(textResId).uppercase())
             }
 
