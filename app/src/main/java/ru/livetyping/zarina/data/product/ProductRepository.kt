@@ -40,6 +40,10 @@ class ProductRepository @Inject constructor(
         return remoteDataSource.getProductTotalLookFlow(productId)
     }
 
+    fun getProductSimilarFlow(productId: Product.Id): Flow<List<ProductItem>> {
+        return remoteDataSource.getProductSimilarFlow(productId)
+    }
+
     fun getCategoryProductInfoFlow(
         categoryId: Category.Id,
         filters: Filters?,

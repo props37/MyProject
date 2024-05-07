@@ -44,6 +44,11 @@ class ProductRemoteDataSource @Inject constructor(
         emit(totalLook)
     }
 
+    fun getProductSimilarFlow(productId: Product.Id): Flow<List<ProductItem>> = flow {
+        val similar = api.getProductSimilar(productId).mapNotNull { it.toProductItem() }
+        emit(similar)
+    }
+
     fun getCategoryProductInfoFlow(
         categoryId: Category.Id,
         filters: Filters?,

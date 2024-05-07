@@ -52,6 +52,10 @@ class ProductApi @Inject constructor(
         return httpClient.get("/api/v1/products/${productId.value}/total_look").body()
     }
 
+    suspend fun getProductSimilar(productId: Product.Id): List<ProductItemDto>{
+        return httpClient.get("api/v1/products/${productId.value}/similar_products").body()
+    }
+
     suspend fun getCategoryProductInfo(
         categoryId: Category.Id,
         filters: DomainFilters?,
