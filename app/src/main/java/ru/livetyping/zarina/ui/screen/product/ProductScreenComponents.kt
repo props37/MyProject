@@ -54,7 +54,10 @@ import ru.livetyping.zarina.ui.common.component.ProductCardSmallSkeleton
 import ru.livetyping.zarina.ui.common.component.ProductColorSelector
 import ru.livetyping.zarina.ui.common.component.ProductPrice
 import ru.livetyping.zarina.ui.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.ui.common.component.button.ZarinaButton
+import ru.livetyping.zarina.ui.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.ui.common.component.button.ZarinaIconButton
+import ru.livetyping.zarina.ui.common.component.button.ZarinaLikeIconButton
 import ru.livetyping.zarina.ui.common.component.item.ZarinaExpandableItem
 import ru.livetyping.zarina.ui.common.component.list.ZarinaListErrorItem
 import ru.livetyping.zarina.ui.common.component.media.ZarinaMediaHorizontalPager
@@ -191,6 +194,42 @@ object ProductScreenComponents {
         lazyListState: LazyListState,
         modifier: Modifier = Modifier,
     ) {
+        Column(modifier = modifier) {
+            ProductDetailsList(
+                product = product,
+                onProductColorClicked = onProductColorClicked,
+                productTotalLookState = productTotalLookState,
+                onSuggestedProductClicked = onSuggestedProductClicked,
+                onProductTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
+                onUrlClicked = onUrlClicked,
+                lazyListState = lazyListState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+            )
+
+            ProductDetailsBottomBar(
+                isProductInCart = false,
+                isProductInFavorites = false,
+                onAddProductToCartClicked = {},
+                onAddProductToFavoritesClicked = {},
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+
+    @Composable
+    private fun ProductDetailsList(
+        product: ProductDetails,
+        onProductColorClicked: (ProductColor) -> Unit,
+        productTotalLookState: ProductTotalLookState,
+        onSuggestedProductClicked: (Product) -> Unit,
+        onProductTotalLookErrorRefreshClicked: () -> Unit,
+        onUrlClicked: (Url) -> Unit,
+        lazyListState: LazyListState,
+        modifier: Modifier = Modifier,
+    ) {
         LazyColumn(
             state = lazyListState,
             modifier = modifier,
@@ -248,6 +287,43 @@ object ProductScreenComponents {
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
+        }
+    }
+
+    @Composable
+    private fun ProductDetailsBottomBar(
+        isProductInCart: Boolean,
+        isProductInFavorites: Boolean,
+        onAddProductToCartClicked: () -> Unit,
+        onAddProductToFavoritesClicked: () -> Unit,
+        modifier: Modifier = Modifier,
+        contentPadding: PaddingValues = PaddingValues(),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier.padding(contentPadding),
+        ) {
+            val buttonColors = if (isProductInCart) {
+                ZarinaButtonDefaults.outlineColors()
+            } else {
+                ZarinaButtonDefaults.primaryColors()
+            }
+            ZarinaButton(
+                onClick = onAddProductToCartClicked,
+                colors = buttonColors,
+                modifier = Modifier.weight(1f),
+            ) {
+                val textResId = if (isProductInCart) R.string.in_cart else R.string.to_cart
+                Text(text = stringResource(textResId).uppercase())
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            ZarinaLikeIconButton(
+                isLiked = isProductInFavorites,
+                onClick = onAddProductToFavoritesClicked,
+                iconSize = 20.dp,
+            )
         }
     }
 
