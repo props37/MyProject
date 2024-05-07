@@ -5,6 +5,9 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -21,6 +24,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
@@ -30,23 +34,33 @@ import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.datafetchinginfo.DataFetchingInfoHolder
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
+import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
+import ru.livetyping.zarina.presentation.navigation.destination.graph.SizeSelectorGraph
 import ru.livetyping.zarina.presentation.screen.product.ProductViewModel.SideEffect
+import ru.livetyping.zarina.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.livetyping.zarina.usecase.product.GetProductFlowUseCase
 import ru.livetyping.zarina.usecase.product.GetProductSimilarFlowUseCase
 import ru.livetyping.zarina.usecase.product.GetProductTotalLookFlowUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
-import javax.inject.Inject
+import timber.log.Timber
 
-@HiltViewModel
-class ProductViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = ProductViewModel.Factory::class)
+class ProductViewModel @AssistedInject constructor(
+    @Assisted
+    backStackEntrySavedStateHandle: SavedStateHandle,
     savedStateHandle: SavedStateHandle,
     private val interactor: ProductInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val screenResultHandler = ScreenResultHandler(
+        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
+        savedStateHandle = savedStateHandle,
+    )
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -168,6 +182,8 @@ class ProductViewModel @Inject constructor(
         productFetchingInfoHolder.requestFetching(Unit)
         productTotalLookFetchingInfoHolder.requestFetching(Unit)
         productSimilarFetchingInfoHolder.requestFetching(Unit)
+
+        handleSizeSelectorResult()
     }
 
     fun onBackClicked() {
@@ -198,7 +214,18 @@ class ProductViewModel @Inject constructor(
     }
 
     fun onAddProductToCartClicked(product: Product) {
-        // TODO: [High] Implement
+        if (product.offers.size > 1) {
+            navigationThrottler.throttle {
+                val action = ProductScreenAction.AddProductToCartClicked(product)
+                emitSideEffect(SideEffect.Navigate(action))
+            }
+        } else {
+            val offer = product.offers.firstOrNull() ?: run {
+                Timber.e("Could not add product $product to cart because it has offers")
+                return
+            }
+            addProductToCart(product.id, offer.barcode)
+        }
     }
 
     fun onAddProductToFavoritesClicked(product: Product) {
@@ -246,6 +273,40 @@ class ProductViewModel @Inject constructor(
         }
     }
 
+    private fun addProductToCart(productId: Product.Id, barcode: Barcode) {
+        viewModelScope.launch {
+            val params = AddProductToCartUseCase.Params(
+                productId = productId,
+                barcode = barcode,
+                count = 1,
+            )
+            interactor.addProductToCart(params)
+                .onSuccess {
+                    val text = Text.Resource(R.string.product_adding_to_cart_completed)
+                    val message = ZarinaToastMessage(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                }
+                .onFailure {
+                    val text = Text.Resource(R.string.product_adding_to_cart_error)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                }
+        }
+    }
+
+    private fun handleSizeSelectorResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<SizeSelectorGraph.Result>(
+                key = SizeSelectorGraph.RESULT_KEY,
+            ) { result ->
+                addProductToCart(
+                    productId = result.product.toProductItem().id,
+                    barcode = result.offer.toProductOffer().barcode,
+                )
+            }
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: ProductScreenAction) : SideEffect
 
@@ -277,5 +338,10 @@ class ProductViewModel @Inject constructor(
         data object Error : SuggestedProductListState()
 
         data object Empty : SuggestedProductListState()
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(backStackEntrySavedStateHandle: SavedStateHandle): ProductViewModel
     }
 }
