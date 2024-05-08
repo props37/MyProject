@@ -53,7 +53,7 @@ class ZarinaAuth private constructor(
          */
         val AuthCircuitBreaker: AttributeKey<Unit> = AttributeKey("auth-request")
 
-        override val key: AttributeKey<ZarinaAuth> = AttributeKey("DigestAuth")
+        override val key: AttributeKey<ZarinaAuth> = AttributeKey("DigestZarinaAuth")
 
         override fun prepare(block: ZarinaAuth.() -> Unit): ZarinaAuth {
             return ZarinaAuth().apply(block)
