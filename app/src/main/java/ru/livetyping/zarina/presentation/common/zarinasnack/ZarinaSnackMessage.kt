@@ -14,7 +14,7 @@ data class ZarinaSnackMessage(
 ) : MessageQueue.Message {
     companion object {
         // According to Android toast lengths
-        val DURATION_SHORT: Duration get() = 2.seconds
-        val DURATION_LONG: Duration get() = 3.5.seconds
+        val DURATION_SHORT: Duration get() = 3.seconds
+        val DURATION_LONG: Duration get() = 5.seconds
     }
 }
