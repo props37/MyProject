@@ -34,6 +34,7 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.common.zarinasnack.ZarinaSnackMessage
 import ru.livetyping.zarina.presentation.common.zarinasnack.ZarinaSnackMessageButton
 import ru.livetyping.zarina.presentation.common.zarinasnack.ZarinaSnackMessageStyle
+import ru.livetyping.zarina.presentation.common.zarinasnack.controller.LocalZarinaSnackController
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable
@@ -45,6 +46,8 @@ fun ZarinaSnack(
     shape: Shape = RoundedCornerShape(topStart = 2.dp, topEnd = 2.dp),
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
 ) {
+    val controller = LocalZarinaSnackController.current
+
     val rippleTheme = when (message.style) {
         ZarinaSnackMessageStyle.DEFAULT -> LightRippleTheme
         ZarinaSnackMessageStyle.ERROR -> DarkRippleTheme
@@ -70,7 +73,14 @@ fun ZarinaSnack(
 
             if (message.button != null) {
                 Spacer(modifier = Modifier.width(12.dp))
-                Button(onClick = message.button.onClick) {
+                Button(
+                    onClick = {
+                        message.button.onClick()
+                        if (message.button.removeSnackOnClick) {
+                            controller.hideCurrentSnack()
+                        }
+                    },
+                ) {
                     Text(
                         text = textString(message.button.text).uppercase(),
                         style = UiKitTheme.typography.caption1.regular,
