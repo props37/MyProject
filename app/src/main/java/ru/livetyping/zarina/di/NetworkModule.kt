@@ -53,8 +53,7 @@ class NetworkModule {
                 }
 
                 refreshTokens {
-                    refreshAuthorizationTokens()
-                    val tokens = getAuthorizationTokensFlow().firstOrNull()?.getOrNull()
+                    val tokens = refreshAuthorizationTokens().getOrNull()
                     Timber.tag(HTTP_CLIENT_TAG).v("Authorization tokens refreshed: $tokens")
                     tokens?.toBearerTokens()
                 }
