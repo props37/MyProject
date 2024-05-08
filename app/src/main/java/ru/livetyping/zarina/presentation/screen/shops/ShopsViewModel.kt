@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.shops
 
+import android.Manifest
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -14,16 +15,25 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.location.Location
 import ru.livetyping.zarina.domain.shop.Shop
+import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.datafetchinginfo.DataFetchingInfoHolder
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
+import ru.livetyping.zarina.presentation.common.permissionmanager.isGranted
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.common.zarinasnack.ZarinaSnackMessage
+import ru.livetyping.zarina.presentation.common.zarinasnack.ZarinaSnackMessageButton
+import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
@@ -35,13 +45,30 @@ class ShopsViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
+    private val permissionManager = interactor.permissionManager
+
     val viewModes: StateFlow<ImmutableList<ViewMode>> =
         MutableStateFlow(ViewMode.entries.toImmutableList()).asStateFlow()
 
     private val _currentViewMode = MutableStateFlow(ViewMode.MAP)
     val currentViewMode: StateFlow<ViewMode> = _currentViewMode.asStateFlow()
 
+    private val currentLocationFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
     private val shopsFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val currentLocation: StateFlow<Location?> = currentLocationFetchingInfoHolder.fetchingRequests
+        .flatMapLatest {
+            interactor.getCurrentLocationFlow()
+        }
+        .map { result ->
+            result.getOrNull()
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = null,
+        )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val userCityShopsResult: StateFlow<Result<List<Shop>>?> =
@@ -80,6 +107,7 @@ class ShopsViewModel @Inject constructor(
     )
 
     init {
+        currentLocationFetchingInfoHolder.requestFetching(Unit)
         shopsFetchingInfoHolder.requestFetching(Unit)
     }
 
@@ -94,12 +122,46 @@ class ShopsViewModel @Inject constructor(
         _currentViewMode.value = mode
     }
 
+    fun onMyLocationClicked() {
+        viewModelScope.launch {
+            val fineLocationPermissionState =
+                permissionManager.getPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+            if (fineLocationPermissionState.isGranted) {
+                currentLocationFetchingInfoHolder.requestFetching(Unit)
+            } else {
+                val newPermissionsState =
+                    permissionManager.requestMultiplePermissions(LOCATION_PERMISSIONS)
+                if (newPermissionsState.any { it.value.isGranted }) {
+                    currentLocationFetchingInfoHolder.requestFetching(Unit)
+                } else {
+                    val messageText = Text.Resource(R.string.current_location_missing_permission_error)
+                    val button = ZarinaSnackMessageButton(
+                        text = Text.Resource(R.string.to_settings),
+                        onClick = { emitSideEffect(SideEffect.OpenApplicationDetailsSettings) },
+                    )
+                    val message = ZarinaSnackMessage(
+                        text = messageText,
+                        button = button,
+                        duration = ZarinaSnackMessage.DURATION_LONG,
+                    )
+                    emitSideEffect(SideEffect.ShowZarinaSnack(message))
+                }
+            }
+        }
+    }
+
     fun onShopsErrorRefreshClicked() {
         shopsFetchingInfoHolder.requestFetching(Unit)
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: ShopsScreenAction) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
+
+        data class ShowZarinaSnack(val message: ZarinaSnackMessage) : SideEffect
+
+        data object OpenApplicationDetailsSettings : SideEffect
     }
 
     enum class ViewMode { MAP, LIST }
@@ -114,5 +176,13 @@ class ShopsViewModel @Inject constructor(
 
         @Immutable
         data class Error(val state: ErrorState) : ShopListState()
+    }
+
+    companion object {
+        private val LOCATION_PERMISSIONS: List<String>
+            get() = listOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            )
     }
 }

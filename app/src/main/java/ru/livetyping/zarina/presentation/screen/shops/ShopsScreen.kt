@@ -2,6 +2,7 @@ package ru.livetyping.zarina.presentation.screen.shops
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
@@ -12,7 +13,9 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
@@ -22,8 +25,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.domain.location.Location
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.presentation.common.component.snack.ZarinaSnackContainer
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.presentation.common.zarinasnack.controller.LocalZarinaSnackController
+import ru.livetyping.zarina.presentation.common.zarinasnack.controller.rememberZarinaSnackController
 import ru.livetyping.zarina.presentation.screen.shops.ShopsScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.shops.ShopsScreenComponents.ViewModePager
 import ru.livetyping.zarina.presentation.screen.shops.ShopsScreenComponents.ViewModeTabRow
@@ -39,12 +46,15 @@ fun ShopsScreen(
 ) {
     val viewModes by viewModel.viewModes.collectAsStateWithLifecycle()
     val currentViewMode by viewModel.currentViewMode.collectAsStateWithLifecycle()
+    val currentLocation by viewModel.currentLocation.collectAsStateWithLifecycle()
     val shopListState by viewModel.shopListState.collectAsStateWithLifecycle()
 
     ScreenContent(
         viewModes = viewModes,
         currentViewMode = currentViewMode,
         onViewModeChanged = viewModel::onViewModeChanged,
+        currentLocation = currentLocation,
+        onMyLocationClicked = viewModel::onMyLocationClicked,
         shopListState = shopListState,
         onShopsErrorRefreshClicked = viewModel::onShopsErrorRefreshClicked,
         onBackClicked = viewModel::onBackClicked,
@@ -59,53 +69,68 @@ private fun ScreenContent(
     viewModes: ImmutableList<ViewMode>,
     currentViewMode: ViewMode,
     onViewModeChanged: (ViewMode) -> Unit,
+    currentLocation: Location?,
+    onMyLocationClicked: () -> Unit,
     shopListState: ShopListState,
     onShopsErrorRefreshClicked: () -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<ShopsViewModel.SideEffect>,
     navigate: (ShopsScreenAction) -> Unit,
 ) {
-    ShopsScreenBehavior(
-        sideEffects = sideEffects,
-        navigate = navigate,
-    )
+    val zarinaSnackController = rememberZarinaSnackController()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
-            .windowInsetsPadding(
-                WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout),
+    CompositionLocalProvider(LocalZarinaSnackController provides zarinaSnackController) {
+        ShopsScreenBehavior(
+            sideEffects = sideEffects,
+            navigate = navigate,
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(UiKitTheme.colors.background.general.regular.default)
+                .windowInsetsPadding(
+                    WindowInsets.statusBars
+                        .union(WindowInsets.displayCutout),
+                )
+                .bottomNavBarPadding()
+        ) {
+            Column {
+                TopBar(onBackClicked = onBackClicked)
+
+                val viewModePagerState = rememberPagerState { viewModes.size }
+
+                PagerTabRowIntegration(
+                    pagerState = viewModePagerState,
+                    tabs = viewModes,
+                    currentTab = currentViewMode,
+                    onCurrentTabChanged = onViewModeChanged,
+                )
+
+                ViewModeTabRow(
+                    viewModes = viewModes,
+                    currentViewMode = currentViewMode,
+                    onViewModeChanged = onViewModeChanged,
+                    viewModePagerState = viewModePagerState,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+
+                ViewModePager(
+                    viewModes = viewModes,
+                    pagerState = viewModePagerState,
+                    currentLocation = currentLocation,
+                    onMyLocationClicked = onMyLocationClicked,
+                    shopListState = shopListState,
+                    onShopsErrorRefreshClicked = onShopsErrorRefreshClicked,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+
+            ZarinaSnackContainer(
+                controller = zarinaSnackController,
+                modifier = Modifier.align(Alignment.BottomCenter),
             )
-            .bottomNavBarPadding(),
-    ) {
-        TopBar(onBackClicked = onBackClicked)
-
-        val viewModePagerState = rememberPagerState { viewModes.size }
-
-        PagerTabRowIntegration(
-            pagerState = viewModePagerState,
-            tabs = viewModes,
-            currentTab = currentViewMode,
-            onCurrentTabChanged = onViewModeChanged,
-        )
-
-        ViewModeTabRow(
-            viewModes = viewModes,
-            currentViewMode = currentViewMode,
-            onViewModeChanged = onViewModeChanged,
-            viewModePagerState = viewModePagerState,
-            modifier = Modifier.padding(horizontal = 16.dp),
-        )
-
-        ViewModePager(
-            viewModes = viewModes,
-            pagerState = viewModePagerState,
-            shopListState = shopListState,
-            onShopsErrorRefreshClicked = onShopsErrorRefreshClicked,
-            modifier = Modifier.fillMaxSize(),
-        )
+        }
     }
 }
 
