@@ -73,10 +73,10 @@ class ShopsViewModel @Inject constructor(
         )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val userCityShopsResult: StateFlow<Result<List<Shop>>?> =
+    private val shopsResult: StateFlow<Result<List<Shop>>?> =
         shopsFetchingInfoHolder.fetchingRequests
             .flatMapLatest {
-                interactor.getUserCityShopsFlow()
+                interactor.getShopsFlow()
             }
             .onEach { shopsFetchingInfoHolder.completeFetching() }
             .stateIn(
@@ -86,15 +86,22 @@ class ShopsViewModel @Inject constructor(
             )
 
     val shopListState: StateFlow<ShopListState> = combine(
-        userCityShopsResult,
+        shopsResult,
+        interactor.getUserCityFlow(),
         shopsFetchingInfoHolder.fetchingType,
-    ) { shopsResult, fetchingType ->
+    ) { shopsResult, userCityResult, fetchingType ->
         if (shopsResult == null || fetchingType != null) {
             ShopListState.Loading
         } else {
             shopsResult.fold(
-                onSuccess = {
-                    ShopListState.Success(it.toImmutableList())
+                onSuccess = { shops ->
+                    val userCity = userCityResult.getOrNull()
+                    val cityShops = if (userCity != null) {
+                        shops.filter { it.cityKladrId == userCity.kladrId }
+                    } else {
+                        shops
+                    }
+                    ShopListState.Success(cityShops.toImmutableList())
                 },
                 onFailure = {
                     val errorState = ErrorState.from(it)
