@@ -47,6 +47,7 @@ fun ShopsScreen(
     val viewModes by viewModel.viewModes.collectAsStateWithLifecycle()
     val currentViewMode by viewModel.currentViewMode.collectAsStateWithLifecycle()
     val currentLocation by viewModel.currentLocation.collectAsStateWithLifecycle()
+    val mapShopsState by viewModel.mapShopsState.collectAsStateWithLifecycle()
     val shopListState by viewModel.shopListState.collectAsStateWithLifecycle()
 
     ScreenContent(
@@ -55,6 +56,7 @@ fun ShopsScreen(
         onViewModeChanged = viewModel::onViewModeChanged,
         currentLocation = currentLocation,
         onMyLocationClicked = viewModel::onMyLocationClicked,
+        mapShopsState = mapShopsState,
         shopListState = shopListState,
         onShopsErrorRefreshClicked = viewModel::onShopsErrorRefreshClicked,
         onBackClicked = viewModel::onBackClicked,
@@ -71,6 +73,7 @@ private fun ScreenContent(
     onViewModeChanged: (ViewMode) -> Unit,
     currentLocation: Location?,
     onMyLocationClicked: () -> Unit,
+    mapShopsState: ShopListState,
     shopListState: ShopListState,
     onShopsErrorRefreshClicked: () -> Unit,
     onBackClicked: () -> Unit,
@@ -120,6 +123,7 @@ private fun ScreenContent(
                     pagerState = viewModePagerState,
                     currentLocation = currentLocation,
                     onMyLocationClicked = onMyLocationClicked,
+                    mapShopsState = mapShopsState,
                     shopListState = shopListState,
                     onShopsErrorRefreshClicked = onShopsErrorRefreshClicked,
                     modifier = Modifier.fillMaxSize(),

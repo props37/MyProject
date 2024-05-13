@@ -38,6 +38,7 @@ import ru.livetyping.zarina.presentation.common.zarinasnack.ZarinaSnackMessageBu
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
+import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -84,6 +85,21 @@ class ShopsViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = null,
             )
+
+    val mapShopsState: StateFlow<ShopListState> = shopsResult.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { result ->
+        result?.fold(
+            onSuccess = {
+                ShopListState.Success(it.toImmutableList())
+            },
+            onFailure = {
+                val errorState = ErrorState.from(it)
+                ShopListState.Error(errorState)
+            },
+        ) ?: ShopListState.Loading
+    }
 
     val shopListState: StateFlow<ShopListState> = combine(
         shopsResult,
