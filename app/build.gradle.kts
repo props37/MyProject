@@ -211,6 +211,7 @@ dependencies {
     implementation(libs.googlePlayServices.location)
     implementation(libs.googlePlayServices.maps)
     implementation(libs.googlePlayServices.maps.compose)
+    implementation(libs.googlePlayServices.maps.compose.utils)
 
     implementation(libs.recaptcha)
 
