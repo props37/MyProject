@@ -2,6 +2,8 @@ package ru.livetyping.zarina.presentation.screen.shops
 
 import android.Manifest
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,25 +12,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -37,12 +40,14 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MapsComposeExperimentalApi
+import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.rememberMarkerState
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
@@ -66,7 +71,6 @@ import ru.livetyping.zarina.presentation.screen.shops.ShopsViewModel.ShopListSta
 import ru.livetyping.zarina.presentation.screen.shops.ShopsViewModel.ViewMode
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
-import ru.livetyping.zarina.util.library.googlemaps.BitmapDescriptorFactoryCompat
 
 object ShopsScreenComponents {
 
@@ -155,8 +159,8 @@ object ShopsScreenComponents {
         }
     }
 
-    // TODO: [High] Add markers
-    @OptIn(ExperimentalPermissionsApi::class)
+    // TODO: [High] Handle clicks
+    @OptIn(ExperimentalPermissionsApi::class, MapsComposeExperimentalApi::class)
     @Composable
     private fun MapViewMode(
         currentLocation: Location?,
@@ -195,7 +199,9 @@ object ShopsScreenComponents {
         val uiSettings = remember {
             MapUiSettings(
                 compassEnabled = false,
+                mapToolbarEnabled = false,
                 myLocationButtonEnabled = false,
+                tiltGesturesEnabled = false,
                 zoomControlsEnabled = false,
             )
         }
@@ -221,36 +227,27 @@ object ShopsScreenComponents {
                 uiSettings = uiSettings,
                 modifier = Modifier.fillMaxSize(),
             ) {
-                val context = LocalContext.current
-                val density = LocalDensity.current
-                val bitmapDescriptor = remember(context, density) {
-                    val size = with(density) { 36.dp.roundToPx() }
-                    BitmapDescriptorFactoryCompat.fromVectorResource(
-                        resourceId = R.drawable.ic_map_shop_marker_24,
-                        context = context,
-                        width = size,
-                        height = size,
-                    )
-                }
-
                 if (mapShopsState is ShopListState.Success) {
-                    mapShopsState.shops.forEach { shop ->
-                        key(shop.id.value) {
-                            val position = remember(shop.location) { shop.location.toLatLng() }
-                            Marker(
-                                state = rememberMarkerState(position = position),
+                    val clusterItems = remember(mapShopsState.shops) {
+                        mapShopsState.shops.map { ShopClusterItem(it) }
+                    }
+                    Clustering(
+                        items = clusterItems,
+                        clusterContent = { cluster ->
+                            MapCluster(clusterSize = cluster.size)
+                        },
+                        clusterItemContent = {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_map_shop_marker_24),
                                 contentDescription = stringResource(
                                     id = R.string.map_shop_content_description,
-                                    shop.name,
+                                    it.shop.name,
                                 ),
-                                icon = bitmapDescriptor,
-                                onClick = {
-                                    // TODO: [High] Implement
-                                    false
-                                },
+                                tint = UiKitTheme.colors.icon.regular.default,
+                                modifier = Modifier.size(36.dp),
                             )
-                        }
-                    }
+                        },
+                    )
                 }
             }
 
@@ -283,6 +280,39 @@ object ShopsScreenComponents {
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(end = 16.dp, bottom = 16.dp),
+            )
+        }
+    }
+
+    @Composable
+    private fun MapCluster(
+        clusterSize: Int,
+        modifier: Modifier = Modifier,
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = modifier
+                .size(52.dp)
+                .border(
+                    width = 1.dp,
+                    color = UiKitTheme.colors.border.general.active,
+                    shape = CircleShape,
+                )
+                .background(
+                    color = UiKitTheme.colors.background.general.regular.default,
+                    shape = CircleShape,
+                ),
+        ) {
+            val text = if (clusterSize <= MapClusterMaxSize) {
+                clusterSize.toString()
+            } else {
+                "$MapClusterMaxSize+"
+            }
+            Text(
+                text = text,
+                style = UiKitTheme.typography.tertiary.regular,
+                color = UiKitTheme.colors.text.general.regular.default,
+                maxLines = 1,
             )
         }
     }
@@ -431,6 +461,18 @@ object ShopsScreenComponents {
         }
     }
 
+    private data class ShopClusterItem(
+        val shop: Shop,
+    ) : ClusterItem {
+        override fun getPosition(): LatLng = shop.location.toLatLng()
+
+        override fun getTitle(): String? = null
+
+        override fun getSnippet(): String? = null
+
+        override fun getZIndex(): Float? = null
+    }
+
     private const val ShopListContentKeySuccess = "ShopListContentKeySuccess"
 
     private const val ShopListSkeletonItemCount = 12
@@ -444,4 +486,6 @@ object ShopsScreenComponents {
     private val ShopListItemInfoTextStyle: TextStyle
         @Composable
         get() = UiKitTheme.typography.tertiary.light
+
+    private const val MapClusterMaxSize = 99
 }
