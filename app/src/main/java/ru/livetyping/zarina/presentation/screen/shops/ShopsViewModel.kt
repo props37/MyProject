@@ -29,7 +29,9 @@ import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.datafetchinginfo.DataFetchingInfoHolder
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
+import ru.livetyping.zarina.presentation.common.packagename.PackageName
 import ru.livetyping.zarina.presentation.common.permissionmanager.isGranted
+import ru.livetyping.zarina.presentation.common.systemsettings.SystemSettings
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinasnack.ZarinaSnackMessage
 import ru.livetyping.zarina.presentation.common.zarinasnack.ZarinaSnackMessageButton
@@ -137,7 +139,10 @@ class ShopsViewModel @Inject constructor(
                     val messageText = Text.Resource(R.string.current_location_missing_permission_error)
                     val button = ZarinaSnackMessageButton(
                         text = Text.Resource(R.string.to_settings),
-                        onClick = { emitSideEffect(SideEffect.OpenApplicationDetailsSettings) },
+                        onClick = {
+                            val settings = SystemSettings.ApplicationDetails(PackageName.Own)
+                            emitSideEffect(SideEffect.OpenSettings(settings))
+                        },
                     )
                     val message = ZarinaSnackMessage(
                         text = messageText,
@@ -161,7 +166,7 @@ class ShopsViewModel @Inject constructor(
 
         data class ShowZarinaSnack(val message: ZarinaSnackMessage) : SideEffect
 
-        data object OpenApplicationDetailsSettings : SideEffect
+        data class OpenSettings(val settings: SystemSettings) : SideEffect
     }
 
     enum class ViewMode { MAP, LIST }

@@ -11,10 +11,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
+import ru.livetyping.zarina.presentation.common.systemsettings.openSettings
 import ru.livetyping.zarina.presentation.common.zarinasnack.controller.LocalZarinaSnackController
 import ru.livetyping.zarina.presentation.common.zarinatoast.controller.LocalZarinaToastController
 import ru.livetyping.zarina.presentation.screen.shops.ShopsViewModel.SideEffect
-import ru.livetyping.zarina.util.platform.openApplicationSettings
 
 @Composable
 fun ShopsScreenBehavior(
@@ -42,8 +42,8 @@ fun ShopsScreenBehavior(
                             updatedZarinaSnackController.show(sideEffect.message)
                         }
 
-                        SideEffect.OpenApplicationDetailsSettings -> {
-                            updatedContext.openApplicationSettings()
+                        is SideEffect.OpenSettings -> {
+                            updatedContext.openSettings(sideEffect.settings)
                         }
                     }
                 }
