@@ -2,7 +2,10 @@ package ru.livetyping.zarina.presentation.navigation.screen
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.livetyping.zarina.R
+import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
+import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopExitTransition
@@ -32,6 +35,14 @@ fun NavGraphBuilder.shopsScreen(navController: NavHostController) {
                         navController.popBackStack(
                             route = ProfileGraph.Shops.routeSchema,
                             inclusive = true,
+                        )
+                    }
+
+                    ShopsScreenAction.LocationPermissionRequired -> {
+                        navController.navigateToPermissionRequirement(
+                            permission = UnscopedDestinations.PermissionRequirement.Permission.LOCATION,
+                            title = Text.Resource(R.string.grant_location_permission),
+                            body = Text.Resource(R.string.it_will_help_us_to_detect_your_location),
                         )
                     }
                 }

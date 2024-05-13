@@ -23,6 +23,7 @@ import ru.livetyping.zarina.presentation.navigation.screen.graph.signUpGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.sizeSelectorGraph
 import ru.livetyping.zarina.presentation.navigation.screen.listFilterScreen
 import ru.livetyping.zarina.presentation.navigation.screen.onboardingScreen
+import ru.livetyping.zarina.presentation.navigation.screen.permissionRequirementBottomSheetScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productSubscriptionScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productsScreen
@@ -62,5 +63,6 @@ fun ZarinaNavigation(
         filtersScreen(updatedNavController)
         listFilterScreen(updatedNavController)
         productSubscriptionScreen(updatedNavController)
+        permissionRequirementBottomSheetScreen(updatedNavController)
     }
 }

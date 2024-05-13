@@ -19,22 +19,16 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.location.Location
 import ru.livetyping.zarina.domain.shop.Shop
-import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.datafetchinginfo.DataFetchingInfoHolder
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
-import ru.livetyping.zarina.presentation.common.packagename.PackageName
 import ru.livetyping.zarina.presentation.common.permissionmanager.isGranted
-import ru.livetyping.zarina.presentation.common.systemsettings.SystemSettings
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
-import ru.livetyping.zarina.presentation.common.zarinasnack.ZarinaSnackMessage
-import ru.livetyping.zarina.presentation.common.zarinasnack.ZarinaSnackMessageButton
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
@@ -159,20 +153,8 @@ class ShopsViewModel @Inject constructor(
                 if (newPermissionsState.any { it.value.isGranted }) {
                     currentLocationFetchingInfoHolder.requestFetching(Unit)
                 } else {
-                    val messageText = Text.Resource(R.string.current_location_missing_permission_error)
-                    val button = ZarinaSnackMessageButton(
-                        text = Text.Resource(R.string.to_settings),
-                        onClick = {
-                            val settings = SystemSettings.ApplicationDetails(PackageName.Own)
-                            emitSideEffect(SideEffect.OpenSettings(settings))
-                        },
-                    )
-                    val message = ZarinaSnackMessage(
-                        text = messageText,
-                        button = button,
-                        duration = ZarinaSnackMessage.DURATION_LONG,
-                    )
-                    emitSideEffect(SideEffect.ShowZarinaSnack(message))
+                    val action = ShopsScreenAction.LocationPermissionRequired
+                    emitSideEffect(SideEffect.Navigate(action))
                 }
             }
         }
@@ -186,10 +168,6 @@ class ShopsViewModel @Inject constructor(
         data class Navigate(val action: ShopsScreenAction) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
-
-        data class ShowZarinaSnack(val message: ZarinaSnackMessage) : SideEffect
-
-        data class OpenSettings(val settings: SystemSettings) : SideEffect
     }
 
     enum class ViewMode { MAP, LIST }

@@ -53,7 +53,8 @@ enum class BaseRoute {
     PRODUCT,
     FILTERS,
     LIST_FILTER,
-    PRODUCT_SUBSCRIPTION;
+    PRODUCT_SUBSCRIPTION,
+    PERMISSION_REQUIREMENT;
 
     val route: String get() = name.lowercase()
 }

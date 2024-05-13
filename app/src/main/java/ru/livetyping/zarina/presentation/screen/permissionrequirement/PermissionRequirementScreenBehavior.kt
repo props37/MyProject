@@ -1,27 +1,25 @@
-package ru.livetyping.zarina.presentation.screen.shops
+package ru.livetyping.zarina.presentation.screen.permissionrequirement
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
-import ru.livetyping.zarina.presentation.common.zarinatoast.controller.LocalZarinaToastController
-import ru.livetyping.zarina.presentation.screen.shops.ShopsViewModel.SideEffect
+import ru.livetyping.zarina.presentation.common.systemsettings.openSettings
+import ru.livetyping.zarina.presentation.screen.permissionrequirement.PermissionRequirementViewModel.SideEffect
 
 @Composable
-fun ShopsScreenBehavior(
+fun PermissionRequirementScreenBehavior(
     sideEffects: Flow<SideEffect>,
-    navigate: (ShopsScreenAction) -> Unit,
+    navigate: (PermissionRequirementScreenAction) -> Unit,
 ) {
-    val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+    val updatedContext by rememberUpdatedState(LocalContext.current)
     val updatedNavigate by rememberUpdatedState(navigate)
-
-    ForcedBottomNavBarBehavior(isVisible = true)
 
     LifecycleStartEffect(sideEffects) {
         lifecycleScope.launch {
@@ -29,8 +27,8 @@ fun ShopsScreenBehavior(
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
                         is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
-                        is SideEffect.ShowZarinaToast -> {
-                            updatedZarinaToastController.show(sideEffect.message)
+                        is SideEffect.OpenSystemSettings -> {
+                            updatedContext.openSettings(sideEffect.settings)
                         }
                     }
                 }

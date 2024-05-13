@@ -329,4 +329,48 @@ object UnscopedDestinations {
 
         data class Args(val product: DomainProduct, val offer: ProductOffer)
     }
+
+    data object PermissionRequirement : Destination<PermissionRequirement.Args>() {
+        const val ARG_KEY_PERMISSION = "arg_permission"
+        const val ARG_KEY_TITLE = "arg_title"
+        const val ARG_KEY_BODY = "arg_body"
+
+        private val baseRoute: String
+            get() = BaseRoute.PERMISSION_REQUIREMENT.route
+
+        override val routeSchema: String
+            get() = RouteUtils.generateRouteSchema(
+                routeBase = baseRoute,
+                argNames = arrayOf(ARG_KEY_PERMISSION, ARG_KEY_TITLE, ARG_KEY_BODY),
+            )
+
+        override fun createRoute(args: Args): String {
+            return RouteUtils.generateRoute(
+                routeBase = baseRoute,
+                args = arrayOf(args.permission),
+            )
+        }
+
+        override val arguments: List<NamedNavArgument>
+            get() = listOf(
+                navArgument(ARG_KEY_PERMISSION) { type = NavType.EnumType(Permission::class.java) },
+                navArgument(ARG_KEY_TITLE) { type = NavType.TextType },
+                navArgument(ARG_KEY_BODY) { type = NavType.TextType },
+            )
+
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            putParcelable(ARG_KEY_PERMISSION, args.permission)
+            putParcelable(ARG_KEY_TITLE, args.title)
+            putParcelable(ARG_KEY_BODY, args.body)
+        }
+
+        @Parcelize
+        enum class Permission : Parcelable { LOCATION }
+
+        data class Args(
+            val permission: Permission,
+            val title: Text,
+            val body: Text,
+        )
+    }
 }
