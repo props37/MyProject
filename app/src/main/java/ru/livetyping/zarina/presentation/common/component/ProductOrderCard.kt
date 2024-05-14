@@ -54,8 +54,6 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.kotlin.capitalize
 import ru.livetyping.zarina.util.library.shimmer.shimmerToggleable
 
-// TODO: [Low] Refactor
-
 @Composable
 fun ProductOrderCard(
     name: String,

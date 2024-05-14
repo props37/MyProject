@@ -22,7 +22,7 @@ data class GetOrdersDto(
         checkNotNull(paginationInfo) { "paginationInfo is null" }
         return Page(
             data = orders.map { it.toOrderItem() },
-            paginationInfo = paginationInfo.toPaginationInfo(Int.MAX_VALUE), // TODO: [Low] Implement
+            paginationInfo = paginationInfo.toPaginationInfo(Int.MAX_VALUE),
         )
     }
 

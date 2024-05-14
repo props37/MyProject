@@ -28,9 +28,6 @@ data class ProductDetailsDto(
     @SerialName("media")
     val media: List<MediaDto>? = null,
 
-    // TODO: [High] Add measurements?
-    // TODO: [High] Add gender?
-
     @SerialName("description")
     val description: List<DescriptionEntry>? = null,
 

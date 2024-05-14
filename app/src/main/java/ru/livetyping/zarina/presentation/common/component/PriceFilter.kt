@@ -49,7 +49,7 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import kotlin.math.max
 import kotlin.math.min
 
-// TODO: [High] Add visual transformations to text
+// TODO: [Low] Add visual transformations to text
 // TODO: [Low] Refactor
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)

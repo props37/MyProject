@@ -59,7 +59,7 @@ class AppViewModel @Inject constructor(
         listenToForcedSignOutRequests()
     }
 
-    // TODO: [High] Deal with navigation?
+    // TODO: [High] Do something with navigation?
     private fun listenToForcedSignOutRequests() {
         interactor.getForcedSignOutRequestFlow()
             .onEach {

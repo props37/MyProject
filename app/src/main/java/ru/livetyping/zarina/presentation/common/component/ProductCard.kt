@@ -334,7 +334,6 @@ fun ProductCardSmallSkeleton(
     }
 }
 
-// TODO: [Low] Extract?
 @Composable
 private fun AddToCartIconButton(
     isAdded: Boolean,
