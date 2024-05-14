@@ -36,6 +36,7 @@ class SignUpUseCase @Inject constructor(
                     "receive SMS notifications: $receiveSmsNotifications"
         )
 
+        // TODO: [High] Validate birth date
         val firstNameValidationException =
             validateFirstNameUseCase(ValidateFirstNameUseCase.Params(firstName)).exceptionOrNull()
         val emailValidationException =

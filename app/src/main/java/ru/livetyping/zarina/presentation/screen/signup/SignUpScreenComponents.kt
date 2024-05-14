@@ -142,4 +142,6 @@ object SignUpScreenComponents {
             modifier = modifier,
         )
     }
+
+    const val DatePickerMinYear = 1900
 }

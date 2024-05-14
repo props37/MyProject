@@ -18,10 +18,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -40,6 +44,9 @@ import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
+import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePicker
+import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePickerDialog
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.switchh.ZarinaSwitch
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPasswordTextField
@@ -47,6 +54,7 @@ import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPhoneN
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.DatePickerMinYear
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.Policies
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.RecaptchaPolicies
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.TopBar
@@ -54,6 +62,7 @@ import ru.livetyping.zarina.presentation.screen.signup.SignUpViewModel.SideEffec
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.navigationBarsOrIme
 import ru.livetyping.zarina.util.compose.tryRequestFocus
+import java.time.LocalDate
 
 @Composable
 fun SignUpScreen(
@@ -87,6 +96,7 @@ fun SignUpScreen(
         firstName = firstName,
         onFirstNameChanged = viewModel::onFirstNameChanged,
         isFirstNameInvalid = isFirstNameInvalid,
+        onBirthDateMillisChanged = viewModel::onBirthDateMillisChanged,
         email = email,
         onEmailChanged = viewModel::onEmailChanged,
         isEmailInvalid = isEmailInvalid,
@@ -111,12 +121,14 @@ fun SignUpScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
     onBackClicked: () -> Unit,
     firstName: String,
     onFirstNameChanged: (String) -> Unit,
     isFirstNameInvalid: Boolean,
+    onBirthDateMillisChanged: (Long?) -> Unit,
     email: String,
     onEmailChanged: (String) -> Unit,
     isEmailInvalid: Boolean,
@@ -148,6 +160,32 @@ private fun ScreenContent(
         sideEffects = sideEffects,
         navigate = navigate,
     )
+
+    var isDatePickerVisible by remember { mutableStateOf(false) }
+    if (isDatePickerVisible) {
+        val currentMillis = remember { System.currentTimeMillis() }
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = currentMillis,
+            yearRange = remember { DatePickerMinYear..LocalDate.now().year },
+        )
+
+        ZarinaDatePickerDialog(
+            onDismissRequest = { isDatePickerVisible = false },
+            confirmButton = {
+                ZarinaButton(
+                    onClick = {
+                        onBirthDateMillisChanged(datePickerState.selectedDateMillis)
+                        isDatePickerVisible = false
+                    },
+                    colors = ZarinaButtonDefaults.backlessColors(),
+                ) {
+                    Text(text = stringResource(R.string.select).uppercase())
+                }
+            },
+        ) {
+            ZarinaDatePicker(state = datePickerState)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -339,6 +377,7 @@ private fun Preview() {
             firstName = "",
             onFirstNameChanged = {},
             isFirstNameInvalid = false,
+            onBirthDateMillisChanged = {},
             email = "",
             onEmailChanged = {},
             isEmailInvalid = false,

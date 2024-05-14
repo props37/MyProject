@@ -61,6 +61,11 @@ class SignUpViewModel @Inject constructor(
         initialValue = "",
     )
 
+    private val birthDateMillisValueHolder = savedStateHandle.createValueHolder<Long?>(
+        key = KEY_BIRTH_DATE_MILLIS,
+        initialValue = null,
+    )
+
     private val emailValueHolder = savedStateHandle.createValueHolder(
         key = KEY_EMAIL,
         initialValue = "",
@@ -142,6 +147,10 @@ class SignUpViewModel @Inject constructor(
     fun onFirstNameChanged(name: String) {
         firstNameValueHolder.set(name)
         _isFirstNameInvalid.value = false
+    }
+
+    fun onBirthDateMillisChanged(millis: Long?) {
+        birthDateMillisValueHolder.set(millis)
     }
 
     fun onEmailChanged(email: String) {
@@ -289,6 +298,7 @@ class SignUpViewModel @Inject constructor(
 
     companion object {
         private const val KEY_FIRST_NAME = "name"
+        private const val KEY_BIRTH_DATE_MILLIS = "birth_date_millis"
         private const val KEY_EMAIL = "email"
         private const val KEY_PHONE = "phone"
         private const val KEY_PASSWORD = "password"

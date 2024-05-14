@@ -203,6 +203,8 @@
     <string name="map_shop_content_description">Магазин %1%s</string>
     <string name="grant_location_permission">Разреши доступ к геолокации</string>
     <string name="it_will_help_us_to_detect_your_location">Это поможет автоматически определить твоё местоположение</string>
+    <string name="select_date">Выбери дату</string>
+    <string name="selected_date">Выбранная дата</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
