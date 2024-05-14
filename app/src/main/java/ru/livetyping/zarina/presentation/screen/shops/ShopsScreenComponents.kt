@@ -132,6 +132,7 @@ object ShopsScreenComponents {
         mapShopsState: ShopListState,
         shopListState: ShopListState,
         onShopsErrorRefreshClicked: () -> Unit,
+        onShopClicked: (Shop) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         HorizontalPager(
@@ -145,6 +146,7 @@ object ShopsScreenComponents {
                         currentLocation = currentLocation,
                         onMyLocationClicked = onMyLocationClicked,
                         mapShopsState = mapShopsState,
+                        onShopClicked = onShopClicked,
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
@@ -166,6 +168,7 @@ object ShopsScreenComponents {
         currentLocation: Location?,
         onMyLocationClicked: () -> Unit,
         mapShopsState: ShopListState,
+        onShopClicked: (Shop) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val coroutineScope = rememberCoroutineScope()
@@ -233,6 +236,10 @@ object ShopsScreenComponents {
                     }
                     Clustering(
                         items = clusterItems,
+                        onClusterItemClick = { item ->
+                            onShopClicked(item.shop)
+                            false
+                        },
                         clusterContent = { cluster ->
                             MapCluster(clusterSize = cluster.size)
                         },

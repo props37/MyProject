@@ -23,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.domain.location.Location
+import ru.livetyping.zarina.domain.shop.Shop
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.shops.ShopsScreenComponents.TopBar
@@ -53,6 +54,7 @@ fun ShopsScreen(
         mapShopsState = mapShopsState,
         shopListState = shopListState,
         onShopsErrorRefreshClicked = viewModel::onShopsErrorRefreshClicked,
+        onShopClicked = viewModel::onShopClicked,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
@@ -70,6 +72,7 @@ private fun ScreenContent(
     mapShopsState: ShopListState,
     shopListState: ShopListState,
     onShopsErrorRefreshClicked: () -> Unit,
+    onShopClicked: (Shop) -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<ShopsViewModel.SideEffect>,
     navigate: (ShopsScreenAction) -> Unit,
@@ -116,6 +119,7 @@ private fun ScreenContent(
             mapShopsState = mapShopsState,
             shopListState = shopListState,
             onShopsErrorRefreshClicked = onShopsErrorRefreshClicked,
+            onShopClicked = onShopClicked,
             modifier = Modifier.fillMaxSize(),
         )
     }

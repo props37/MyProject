@@ -164,6 +164,13 @@ class ShopsViewModel @Inject constructor(
         shopsFetchingInfoHolder.requestFetching(Unit)
     }
 
+    fun onShopClicked(shop: Shop) {
+        navigationThrottler.throttle {
+            val action = ShopsScreenAction.ShopClicked(shop)
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: ShopsScreenAction) : SideEffect
 

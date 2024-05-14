@@ -45,6 +45,24 @@ fun NavGraphBuilder.shopsScreen(navController: NavHostController) {
                             body = Text.Resource(R.string.it_will_help_us_to_detect_your_location),
                         )
                     }
+
+                    is ShopsScreenAction.ShopClicked -> {
+                        val shop = action.shop
+                        val title = Text.String(shop.name)
+                        val bodyString = buildString {
+                            append(shop.address)
+                            if (shop.schedule != null) {
+                                append(NEW_LINE)
+                                append(shop.schedule)
+                            }
+                            if (shop.phone != null) {
+                                append(NEW_LINE)
+                                append(shop.phone.value)
+                            }
+                        }
+                        val body = Text.String(bodyString)
+                        navController.navigateToGenericBottomSheetScreen(title, body)
+                    }
                 }
             },
         )
@@ -54,3 +72,5 @@ fun NavGraphBuilder.shopsScreen(navController: NavHostController) {
 fun NavHostController.navigateToShopsScreen() {
     this.navigate(ProfileGraph.Shops.route)
 }
+
+private const val NEW_LINE = "\n"
