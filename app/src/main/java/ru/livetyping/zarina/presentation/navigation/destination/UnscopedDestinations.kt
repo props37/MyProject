@@ -345,9 +345,11 @@ object UnscopedDestinations {
             )
 
         override fun createRoute(args: Args): String {
+            val titleString = Uri.encode(Json.encodeToString(args.title))
+            val bodyString = Uri.encode(Json.encodeToString(args.body))
             return RouteUtils.generateRoute(
                 routeBase = baseRoute,
-                args = arrayOf(args.permission),
+                args = arrayOf(args.permission, titleString, bodyString),
             )
         }
 
