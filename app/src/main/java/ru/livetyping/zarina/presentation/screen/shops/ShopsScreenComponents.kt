@@ -57,6 +57,7 @@ import ru.livetyping.zarina.domain.location.Location
 import ru.livetyping.zarina.domain.shop.Shop
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
+import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
 import ru.livetyping.zarina.presentation.common.component.map.GoogleMapsDefaults
 import ru.livetyping.zarina.presentation.common.component.map.MapDefaults
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
@@ -146,6 +147,7 @@ object ShopsScreenComponents {
                         currentLocation = currentLocation,
                         onMyLocationClicked = onMyLocationClicked,
                         mapShopsState = mapShopsState,
+                        onShopsErrorRefreshClicked = onShopsErrorRefreshClicked,
                         onShopClicked = onShopClicked,
                         modifier = Modifier.fillMaxSize(),
                     )
@@ -161,13 +163,65 @@ object ShopsScreenComponents {
         }
     }
 
-    // TODO: [High] Handle clicks
-    @OptIn(ExperimentalPermissionsApi::class, MapsComposeExperimentalApi::class)
     @Composable
     private fun MapViewMode(
         currentLocation: Location?,
         onMyLocationClicked: () -> Unit,
         mapShopsState: ShopListState,
+        onShopsErrorRefreshClicked: () -> Unit,
+        onShopClicked: (Shop) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Crossfade(
+            targetState = mapShopsState,
+            contentKey = {
+                when (it) {
+                    is ShopListState.Success -> ShopMapContentKeySuccess
+                    else -> it
+                }
+            },
+            modifier = modifier,
+        ) { state ->
+            when (state) {
+                is ShopListState.Success -> {
+                    ShopMap(
+                        currentLocation = currentLocation,
+                        onMyLocationClicked = onMyLocationClicked,
+                        shops = state.shops,
+                        onShopClicked = onShopClicked,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+
+                ShopListState.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        ZarinaCircularLoader(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .size(40.dp),
+                        )
+                    }
+                }
+
+                is ShopListState.Error -> {
+                    ZarinaErrorScreen(
+                        state = state.state,
+                        onButtonClicked = onShopsErrorRefreshClicked,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                    )
+                }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalPermissionsApi::class, MapsComposeExperimentalApi::class)
+    @Composable
+    private fun ShopMap(
+        currentLocation: Location?,
+        onMyLocationClicked: () -> Unit,
+        shops: ImmutableList<Shop>,
         onShopClicked: (Shop) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -230,32 +284,30 @@ object ShopsScreenComponents {
                 uiSettings = uiSettings,
                 modifier = Modifier.fillMaxSize(),
             ) {
-                if (mapShopsState is ShopListState.Success) {
-                    val clusterItems = remember(mapShopsState.shops) {
-                        mapShopsState.shops.map { ShopClusterItem(it) }
-                    }
-                    Clustering(
-                        items = clusterItems,
-                        onClusterItemClick = { item ->
-                            onShopClicked(item.shop)
-                            false
-                        },
-                        clusterContent = { cluster ->
-                            MapCluster(clusterSize = cluster.size)
-                        },
-                        clusterItemContent = {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_map_shop_marker_24),
-                                contentDescription = stringResource(
-                                    id = R.string.map_shop_content_description,
-                                    it.shop.name,
-                                ),
-                                tint = UiKitTheme.colors.icon.regular.default,
-                                modifier = Modifier.size(36.dp),
-                            )
-                        },
-                    )
+                val clusterItems = remember(shops) {
+                    shops.map { ShopClusterItem(it) }
                 }
+                Clustering(
+                    items = clusterItems,
+                    onClusterItemClick = { item ->
+                        onShopClicked(item.shop)
+                        false
+                    },
+                    clusterContent = { cluster ->
+                        MapCluster(clusterSize = cluster.size)
+                    },
+                    clusterItemContent = {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_map_shop_marker_24),
+                            contentDescription = stringResource(
+                                id = R.string.map_shop_content_description,
+                                it.shop.name,
+                            ),
+                            tint = UiKitTheme.colors.icon.regular.default,
+                            modifier = Modifier.size(36.dp),
+                        )
+                    },
+                )
             }
 
             MapDefaults.MyLocationButton(
@@ -480,6 +532,10 @@ object ShopsScreenComponents {
         override fun getZIndex(): Float? = null
     }
 
+    private const val ShopMapContentKeySuccess = "ShopMapContentKeySuccess"
+
+    private const val MapClusterMaxSize = 99
+
     private const val ShopListContentKeySuccess = "ShopListContentKeySuccess"
 
     private const val ShopListSkeletonItemCount = 12
@@ -493,6 +549,4 @@ object ShopsScreenComponents {
     private val ShopListItemInfoTextStyle: TextStyle
         @Composable
         get() = UiKitTheme.typography.tertiary.light
-
-    private const val MapClusterMaxSize = 99
 }
