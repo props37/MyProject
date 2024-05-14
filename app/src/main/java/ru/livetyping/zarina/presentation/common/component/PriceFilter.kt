@@ -49,7 +49,7 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import kotlin.math.max
 import kotlin.math.min
 
-// TODO: [Low] Add visual transformations to text
+// TODO: [Low] Add visual transformations to text. See https://medium.com/@patilshreyas/filtering-and-modifying-text-input-in-jetpack-compose-way-8f7eeedd958
 // TODO: [Low] Refactor
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
