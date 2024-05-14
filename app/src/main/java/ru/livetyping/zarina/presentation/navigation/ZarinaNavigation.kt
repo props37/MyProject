@@ -13,6 +13,7 @@ import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.screen.citySelectorBottomSheetScreen
 import ru.livetyping.zarina.presentation.navigation.screen.defaultCityDialog
 import ru.livetyping.zarina.presentation.navigation.screen.filtersScreen
+import ru.livetyping.zarina.presentation.navigation.screen.genericBottomSheetScreen
 import ru.livetyping.zarina.presentation.navigation.screen.graph.cartGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.catalogGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.favoritesGraph
@@ -64,5 +65,7 @@ fun ZarinaNavigation(
         listFilterScreen(updatedNavController)
         productSubscriptionScreen(updatedNavController)
         permissionRequirementBottomSheetScreen(updatedNavController)
+
+        genericBottomSheetScreen(updatedNavController)
     }
 }

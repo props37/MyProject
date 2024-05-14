@@ -54,7 +54,10 @@ enum class BaseRoute {
     FILTERS,
     LIST_FILTER,
     PRODUCT_SUBSCRIPTION,
-    PERMISSION_REQUIREMENT;
+    PERMISSION_REQUIREMENT,
+
+    // Generic
+    GENERIC_BOTTOM_SHEET;
 
     val route: String get() = name.lowercase()
 }

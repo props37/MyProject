@@ -375,4 +375,43 @@ object UnscopedDestinations {
             val body: Text,
         )
     }
+
+    data object GenericBottomSheet : Destination<GenericBottomSheet.Args>() {
+        const val ARG_KEY_TITLE = "arg_title"
+        const val ARG_KEY_BODY = "arg_body"
+
+        private val routeBase: String
+            get() = BaseRoute.GENERIC_BOTTOM_SHEET.route
+
+        override val routeSchema: String
+            get() = RouteUtils.generateRouteSchema(
+                routeBase = routeBase,
+                argNames = arrayOf(ARG_KEY_TITLE, ARG_KEY_BODY),
+            )
+
+        override fun createRoute(args: Args): String {
+            val titleString = Uri.encode(Json.encodeToString(args.title))
+            val bodyString = Uri.encode(Json.encodeToString(args.body))
+            return RouteUtils.generateRoute(
+                routeBase = routeBase,
+                args = arrayOf(titleString, bodyString),
+            )
+        }
+
+        override val arguments: List<NamedNavArgument>
+            get() = listOf(
+                navArgument(ARG_KEY_TITLE) { type = NavType.TextType },
+                navArgument(ARG_KEY_BODY) { type = NavType.TextType },
+            )
+
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            putParcelable(ARG_KEY_TITLE, args.title)
+            putParcelable(ARG_KEY_BODY, args.body)
+        }
+
+        data class Args(
+            val title: Text,
+            val body: Text,
+        )
+    }
 }
