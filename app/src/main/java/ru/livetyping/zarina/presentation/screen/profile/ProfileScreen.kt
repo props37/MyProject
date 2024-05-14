@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,7 +36,6 @@ import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.BuildConfig
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.LoyaltyCard
-import ru.livetyping.zarina.domain.user.User
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.behavior.screenbrightness.ForcedScreenBrightnessBehavior
 import ru.livetyping.zarina.presentation.common.behavior.screenbrightness.ScreenBrightness
@@ -48,6 +48,7 @@ import ru.livetyping.zarina.presentation.screen.profile.ProfileScreenComponents.
 import ru.livetyping.zarina.presentation.screen.profile.ProfileScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.profile.ProfileViewModel.InfoItem
 import ru.livetyping.zarina.presentation.screen.profile.ProfileViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.profile.ProfileViewModel.UserState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 
@@ -56,13 +57,13 @@ fun ProfileScreen(
     navigate: (ProfileScreenAction) -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
-    val user by viewModel.user.collectAsStateWithLifecycle()
+    val userState by viewModel.userState.collectAsStateWithLifecycle()
     val loyaltyCard by viewModel.loyaltyCard.collectAsStateWithLifecycle()
     val infoItems by viewModel.infoItems.collectAsStateWithLifecycle()
     val city by viewModel.city.collectAsStateWithLifecycle()
 
     ScreenContent(
-        user = user,
+        userState = userState,
         onProfileDetailsClicked = viewModel::onProfileDetailsClicked,
         loyaltyCard = loyaltyCard,
         infoItems = infoItems,
@@ -78,7 +79,7 @@ fun ProfileScreen(
 
 @Composable
 private fun ScreenContent(
-    user: User?,
+    userState: UserState,
     onProfileDetailsClicked: () -> Unit,
     loyaltyCard: LoyaltyCard?,
     infoItems: ImmutableList<InfoItem>,
@@ -109,6 +110,7 @@ private fun ScreenContent(
             )
             .bottomNavBarPadding(),
     ) {
+        val user = (userState as? UserState.Success)?.user
         TopBar(
             userFirstName = user?.firstName,
             isEditProfileButtonVisible = user != null,
@@ -117,36 +119,47 @@ private fun ScreenContent(
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             AnimatedContent(
-                targetState = user != null,
+                targetState = userState,
                 transitionSpec = {
                     AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
                 },
+                contentAlignment = Alignment.Center,
                 label = "AuthorizationSuggestion/LoyaltyCard",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clipToBounds()
-                    .padding(start = 16.dp, top = 24.dp, end = 16.dp, bottom = 32.dp),
-            ) { isUserAuthorized ->
-                if (isUserAuthorized) {
-                    LoyaltyCard(
-                        loyaltyCard = loyaltyCard,
-                        onLevelInfoClicked = { /*TODO*/ },
-                        onSideChanged = {
-                            screenBrightness = if (it == LoyaltyCardSide.BACK) {
-                                ScreenBrightness.MAX
-                            } else {
-                                ScreenBrightness.DEFAULT
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                } else {
-                    SideEffect { screenBrightness = ScreenBrightness.DEFAULT }
-                    AuthorizationSuggestion(
-                        onSignInClicked = onSignInClicked,
-                        onSignUpClicked = onSignUpClicked,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
+                modifier = Modifier.clipToBounds(),
+            ) { userState ->
+                val paddingModifier = Modifier
+                    .padding(start = 16.dp, top = 24.dp, end = 16.dp, bottom = 32.dp)
+
+                when (userState) {
+                    is UserState.Success -> {
+                        if (userState.user != null) {
+                            LoyaltyCard(
+                                loyaltyCard = loyaltyCard,
+                                onLevelInfoClicked = { /*TODO*/ },
+                                onSideChanged = {
+                                    screenBrightness = if (it == LoyaltyCardSide.BACK) {
+                                        ScreenBrightness.MAX
+                                    } else {
+                                        ScreenBrightness.DEFAULT
+                                    }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .then(paddingModifier),
+                            )
+                        } else {
+                            SideEffect { screenBrightness = ScreenBrightness.DEFAULT }
+                            AuthorizationSuggestion(
+                                onSignInClicked = onSignInClicked,
+                                onSignUpClicked = onSignUpClicked,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .then(paddingModifier),
+                            )
+                        }
+                    }
+
+                    UserState.Loading -> Unit
                 }
             }
 
@@ -167,7 +180,9 @@ private fun ScreenContent(
 private fun PreviewUnauthorized() {
     ZarinaPreview {
         ScreenContent(
-            user = null,
+            userState = remember {
+                UserState.Success(user = null)
+            },
             onProfileDetailsClicked = {},
             loyaltyCard = null,
             infoItems = remember { InfoItem.entries.toImmutableList() },
@@ -189,7 +204,10 @@ private fun PreviewUnauthorized() {
 private fun PreviewAuthorized() {
     ZarinaPreview {
         ScreenContent(
-            user = remember { FakeDataGenerator.getUser() },
+            userState = remember {
+                val user = FakeDataGenerator.getUser()
+                UserState.Success(user)
+            },
             onProfileDetailsClicked = {},
             loyaltyCard = remember { FakeDataGenerator.getLoyaltyCard() },
             infoItems = remember { InfoItem.entries.toImmutableList() },

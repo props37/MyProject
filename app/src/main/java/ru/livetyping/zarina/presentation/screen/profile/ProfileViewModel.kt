@@ -1,5 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.profile
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -50,12 +53,15 @@ class ProfileViewModel @AssistedInject constructor(
 
     private var fetchLoyaltyCardJob: Job? = null
 
-    val user: StateFlow<User?> = interactor.getUserFlow()
-        .map { it.getOrNull() }
+    val userState: StateFlow<UserState> = interactor.getUserFlow()
+        .map { result ->
+            delay(2000)
+            UserState.Success(user = result.getOrNull())
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileUiSubscribed,
-            initialValue = null,
+            initialValue = UserState.Loading,
         )
 
     val loyaltyCard: StateFlow<LoyaltyCard?> = interactor.getLoyaltyCardFlow()
@@ -66,9 +72,10 @@ class ProfileViewModel @AssistedInject constructor(
             initialValue = null,
         )
 
-    val infoItems: StateFlow<ImmutableList<InfoItem>> = user
-        .map { user ->
-            getInfoItems(isUserAuthorized = user != null).toImmutableList()
+    val infoItems: StateFlow<ImmutableList<InfoItem>> = userState
+        .map { userState ->
+            val isUserAuthorized = (userState as? UserState.Success)?.user != null
+            getInfoItems(isUserAuthorized = isUserAuthorized).toImmutableList()
         }
         .stateIn(
             scope = viewModelScope,
@@ -187,6 +194,14 @@ class ProfileViewModel @AssistedInject constructor(
         data class OpenUrl(val url: Url) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
+    }
+
+    @Stable
+    sealed class UserState {
+        @Immutable
+        data class Success(val user: User?) : UserState()
+
+        data object Loading : UserState()
     }
 
     enum class InfoItem { MyOrders, City, Shops, Help, AboutCompany }
