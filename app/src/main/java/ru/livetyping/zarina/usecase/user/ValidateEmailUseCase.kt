@@ -24,6 +24,7 @@ class ValidateEmailUseCase @Inject constructor(
     data class Params(val email: Email)
 
     companion object {
+        // Source: android.util.Patterns.EMAIL_ADDRESS
         private const val EMAIL_REGEX_PATTERN = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
                 "\\@" +
                 "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
