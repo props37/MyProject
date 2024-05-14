@@ -36,7 +36,7 @@ class PhoneNumberVisualTransformation(
         }
 
         return TransformedText(
-            text = AnnotatedString(transformation.formatted.orEmpty()),
+            text = AnnotatedString(transformation.transformed.orEmpty()),
             offsetMapping = offsetMapping,
         )
     }
