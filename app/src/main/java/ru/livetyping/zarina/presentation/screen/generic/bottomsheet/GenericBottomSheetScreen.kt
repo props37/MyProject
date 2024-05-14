@@ -62,7 +62,11 @@ private fun ScreenContent(
     )
 
     ZarinaBottomSheet {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp),
+        ) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically) {

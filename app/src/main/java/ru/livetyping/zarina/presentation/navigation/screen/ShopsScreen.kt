@@ -51,13 +51,13 @@ fun NavGraphBuilder.shopsScreen(navController: NavHostController) {
                         val title = Text.String(shop.name)
                         val bodyString = buildString {
                             append(shop.address)
-                            if (shop.schedule != null) {
+                            if (!shop.schedule.isNullOrBlank()) {
                                 append(NEW_LINE)
                                 append(shop.schedule)
                             }
-                            if (shop.phone != null) {
+                            if (!shop.phone?.value.isNullOrBlank()) {
                                 append(NEW_LINE)
-                                append(shop.phone.value)
+                                append(shop.phone?.value)
                             }
                         }
                         val body = Text.String(bodyString)
