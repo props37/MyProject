@@ -21,6 +21,8 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Url
+import ru.livetyping.zarina.domain.common.exception.DateException
+import ru.livetyping.zarina.domain.common.exception.EmptyDateException
 import ru.livetyping.zarina.domain.common.exception.OtpTimeoutException
 import ru.livetyping.zarina.domain.common.exception.ValidationException
 import ru.livetyping.zarina.domain.user.exception.CaptchaException
@@ -41,7 +43,8 @@ import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.signup.SignUpViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.SignUpUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
-import java.time.LocalDate
+import java.time.Instant
+import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -106,6 +109,11 @@ class SignUpViewModel @Inject constructor(
     private val _isFirstNameInvalid = MutableStateFlow(false)
     val isFirstNameInvalid = _isFirstNameInvalid.asStateFlow()
 
+    val birthDateMillis: StateFlow<Long?> = birthDateMillisValueHolder.stateFlow
+
+    private val _isBirthDateInvalid = MutableStateFlow(false)
+    val isBirthDateInvalid = _isBirthDateInvalid.asStateFlow()
+
     val email: StateFlow<String> = emailValueHolder.stateFlow
 
     private val _isEmailInvalid = MutableStateFlow(false)
@@ -151,6 +159,7 @@ class SignUpViewModel @Inject constructor(
 
     fun onBirthDateMillisChanged(millis: Long?) {
         birthDateMillisValueHolder.set(millis)
+        _isBirthDateInvalid.value = false
     }
 
     fun onEmailChanged(email: String) {
@@ -204,9 +213,12 @@ class SignUpViewModel @Inject constructor(
         signUpJob = viewModelScope.launch {
             operationTracker.track(Operation.SIGN_UP) {
                 val phone = PhoneNumber.create(phone.value)
+                val birthDate = birthDateMillis.value?.let {
+                    Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+                }
                 val params = SignUpUseCase.Params(
                     firstName = firstName.value,
-                    birthDate = LocalDate.now(), // TODO: [High] Implement
+                    birthDate = birthDate,
                     email = Email.create(email.value),
                     phone = phone,
                     password = password.value,
@@ -250,12 +262,13 @@ class SignUpViewModel @Inject constructor(
         val exceptions = listOf(e) + e.suppressedExceptions
 
         val isFirstNameEmpty = exceptions.any { it is EmptyFirstNameException }
+        val isBirthDateEmpty = exceptions.any { it is EmptyDateException }
         val isEmailEmpty = exceptions.any { it is EmptyEmailException }
         val isPhoneEmpty = exceptions.any { it is EmptyPhoneNumberException }
         val isPasswordEmpty = exceptions.any { it is EmptyPasswordException }
 
         val messageText = when {
-            isFirstNameEmpty || isEmailEmpty || isPhoneEmpty || isPasswordEmpty -> {
+            isFirstNameEmpty || isBirthDateEmpty || isEmailEmpty || isPhoneEmpty || isPasswordEmpty -> {
                 Text.Resource(R.string.sign_up_empty_fields_error)
             }
 
@@ -274,6 +287,9 @@ class SignUpViewModel @Inject constructor(
 
         if (exceptions.any { it is FirstNameException }) {
             _isFirstNameInvalid.value = true
+        }
+        if (exceptions.any { it is DateException }) {
+            _isBirthDateInvalid.value = true
         }
         if (exceptions.any { it is EmailException }) {
             _isEmailInvalid.value = true
