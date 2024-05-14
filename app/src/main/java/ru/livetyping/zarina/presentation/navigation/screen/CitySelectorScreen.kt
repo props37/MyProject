@@ -15,7 +15,7 @@ import ru.livetyping.zarina.presentation.screen.cityselector.CitySelectorScreen
 import ru.livetyping.zarina.presentation.screen.cityselector.CitySelectorScreenAction
 import ru.livetyping.zarina.util.library.navigation.navigate
 
-fun NavGraphBuilder.citySelectorBottomSheetScreen(navController: NavHostController) {
+fun NavGraphBuilder.citySelectorScreen(navController: NavHostController) {
     composableDestination(
         destination = UnscopedDestinations.CitySelector,
         enterTransition = {
