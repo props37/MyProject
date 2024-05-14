@@ -12,7 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -55,7 +54,6 @@ class ProfileViewModel @AssistedInject constructor(
 
     val userState: StateFlow<UserState> = interactor.getUserFlow()
         .map { result ->
-            delay(2000)
             UserState.Success(user = result.getOrNull())
         }
         .stateIn(
