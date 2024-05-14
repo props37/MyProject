@@ -9,6 +9,7 @@ import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.exception.ValidationException
 import timber.log.Timber
+import java.time.LocalDate
 import javax.inject.Inject
 
 class SignUpUseCase @Inject constructor(
@@ -56,6 +57,7 @@ class SignUpUseCase @Inject constructor(
 
         userRepository.signUp(
             firstName = firstName,
+            birthDate = params.birthDate,
             email = email,
             phone = phone,
             password = password,
@@ -67,6 +69,7 @@ class SignUpUseCase @Inject constructor(
 
     data class Params(
         val firstName: String,
+        val birthDate: LocalDate,
         val email: Email,
         val phone: PhoneNumber,
         val password: String,

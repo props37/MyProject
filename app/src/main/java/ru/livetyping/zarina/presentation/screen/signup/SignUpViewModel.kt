@@ -41,6 +41,7 @@ import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.signup.SignUpViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.SignUpUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -196,6 +197,7 @@ class SignUpViewModel @Inject constructor(
                 val phone = PhoneNumber.create(phone.value)
                 val params = SignUpUseCase.Params(
                     firstName = firstName.value,
+                    birthDate = LocalDate.now(), // TODO: [High] Implement
                     email = Email.create(email.value),
                     phone = phone,
                     password = password.value,
