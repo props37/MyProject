@@ -41,7 +41,7 @@ class PhoneNumberVisualTransformation(
         )
     }
 
-    private fun reformat(s: CharSequence, cursor: Int): Transformation {
+    private fun reformat(s: CharSequence, cursor: Int): TextTransformation {
         phoneNumberFormatter.clear()
 
         val curIndex = cursor - 1
@@ -80,7 +80,7 @@ class PhoneNumberVisualTransformation(
         originalToTransformed.add(originalToTransformed.maxOrNull()?.plus(1) ?: 0)
         transformedToOriginal.add(transformedToOriginal.maxOrNull()?.plus(1) ?: 0)
 
-        return Transformation(formatted, originalToTransformed, transformedToOriginal)
+        return TextTransformation(formatted, originalToTransformed, transformedToOriginal)
     }
 
     private fun getFormattedNumber(lastNonSeparator: Char, hasCursor: Boolean): String? {
@@ -91,11 +91,7 @@ class PhoneNumberVisualTransformation(
         }
     }
 
-    private data class Transformation(
-        val formatted: String?,
-        val originalToTransformed: List<Int>,
-        val transformedToOriginal: List<Int>,
-    )
+
 }
 
 @Composable
