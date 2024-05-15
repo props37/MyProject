@@ -15,7 +15,7 @@ import ru.livetyping.zarina.usecase.favorite.FetchFavoriteProductIdsUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import javax.inject.Inject
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 class FavoriteProductIdsFetcherApplicationExtension @Inject constructor(
     private val coroutineScope: CoroutineScope,
@@ -41,6 +41,6 @@ class FavoriteProductIdsFetcherApplicationExtension @Inject constructor(
     }
 
     companion object {
-        private val DELAY: Duration get() = 500.milliseconds
+        private val DELAY: Duration get() = 1.seconds
     }
 }

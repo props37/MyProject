@@ -5,12 +5,13 @@ import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.data.favorite.remote.api.FavoriteApi
 import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import javax.inject.Inject
 
 class FavoriteRemoteDataSource @Inject constructor(
     private val api: FavoriteApi,
 ) {
-    fun getFavoriteProductPageFlow(page: Int): Flow<Page<List<Product>>> = flow {
+    fun getFavoriteProductPageFlow(page: Int): Flow<Page<List<ProductItem>>> = flow {
         val productPage = api.getFavoriteProducts(page).toProductPage()
         emit(productPage)
     }

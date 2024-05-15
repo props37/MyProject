@@ -16,7 +16,8 @@ class EnterAlwaysScrollBehavior(
     override val state: CollapsingTopBarState,
     override val snapAnimationSpec: AnimationSpec<Float>?,
     override val flingAnimationSpec: DecayAnimationSpec<Float>?,
-    val canScroll: () -> Boolean = { true }
+    private val canScroll: () -> Boolean = { true },
+    private val scrollBeforeContent: () -> Boolean = { true },
 ) : CollapsingTopBarScrollBehavior {
     private var settleTopBarJob: Job? = null
 
@@ -29,7 +30,7 @@ class EnterAlwaysScrollBehavior(
                 settleTopBarJob?.cancel()
                 val prevHeightOffset = state.heightOffset
                 state.heightOffset += available.y
-                return if (prevHeightOffset != state.heightOffset) {
+                return if (scrollBeforeContent() && prevHeightOffset != state.heightOffset) {
                     // We're in the middle of top app bar collapse or expand.
                     // Consume only the scroll on the Y axis.
                     available.copy(x = 0f)
@@ -44,15 +45,17 @@ class EnterAlwaysScrollBehavior(
                 source: NestedScrollSource
             ): Offset {
                 if (!canScroll()) return Offset.Zero
-                state.contentOffset += consumed.y
-                if (state.heightOffset == 0f || state.heightOffset == state.heightOffsetLimit) {
-                    if (consumed.y == 0f && available.y > 0f) {
-                        // Reset the total content offset to zero when scrolling all the way down.
-                        // This will eliminate some float precision inaccuracies.
-                        state.contentOffset = 0f
+                if (scrollBeforeContent()) {
+                    state.contentOffset += consumed.y
+                    if (state.heightOffset == 0f || state.heightOffset == state.heightOffsetLimit) {
+                        if (consumed.y == 0f && available.y > 0f) {
+                            // Reset the total content offset to zero when scrolling all the way down.
+                            // This will eliminate some float precision inaccuracies.
+                            state.contentOffset = 0f
+                        }
                     }
+                    state.heightOffset += consumed.y
                 }
-                state.heightOffset += consumed.y
                 return Offset.Zero
             }
 

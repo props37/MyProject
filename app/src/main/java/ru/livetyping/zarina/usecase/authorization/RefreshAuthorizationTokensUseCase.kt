@@ -19,23 +19,26 @@ class RefreshAuthorizationTokensUseCase @Inject constructor(
     private val authorizationRepository: AuthorizationRepository,
     private val fetchUnauthorizedUserAuthorizationTokensUseCase: FetchUnauthorizedUserAuthorizationTokensUseCase,
     private val forcedSignOutCoordinator: ForcedSignOutCoordinator,
-) : UseCase<Unit, Unit>(dispatcher) {
+) : UseCase<Unit, AuthorizationTokens>(dispatcher) {
 
-    override suspend fun execute(params: Unit) {
+    override suspend fun execute(params: Unit): AuthorizationTokens {
         Timber.v("Refresh authorization tokens")
         val currentTokens = authorizationRepository.getAuthorizationTokensFlow().firstOrNull()
-        if (currentTokens != null) {
+        return if (currentTokens != null) {
             refreshTokens(currentTokens)
         } else {
-            fetchUnauthorizedUserAuthorizationTokensUseCase()
+            fetchUnauthorizedUserAuthorizationTokensUseCase().getOrThrow()
+            val tokens = authorizationRepository.getAuthorizationTokensFlow().firstOrNull()
+            checkNotNull(tokens) { "tokens are null" }
         }
     }
 
-    private suspend fun refreshTokens(currentTokens: AuthorizationTokens) {
-        try {
+    private suspend fun refreshTokens(currentTokens: AuthorizationTokens): AuthorizationTokens {
+        return try {
             val newTokens = authorizationRepository.refreshAuthorizationTokens(currentTokens)
             authorizationRepository.setAuthorizationTokens(newTokens)
             Timber.v("Authorization tokens refreshed. New tokens: $newTokens")
+            newTokens
         } catch (e: Exception) {
             Timber.e(e, "Failed to refresh authorization tokens. Request forced sign out")
             forcedSignOutCoordinator.requestForcedSignOut()

@@ -1,12 +1,12 @@
 package ru.livetyping.zarina.domain.product
 
 data class Price(
-    val originalPrice: Long,
+    val originalPrice: Int,
     val hasDiscount: Boolean,
-    val discountPrice: Long,
+    val discountPrice: Int,
     val discountPercent: Int,
 ) {
-    constructor(originalPrice: Long) : this(
+    constructor(originalPrice: Int) : this(
         originalPrice = originalPrice,
         hasDiscount = false,
         discountPercent = 0,
@@ -14,5 +14,5 @@ data class Price(
     )
 }
 
-val Price.currentPrice: Long
+val Price.currentPrice: Int
     get() = if (hasDiscount) discountPrice else originalPrice

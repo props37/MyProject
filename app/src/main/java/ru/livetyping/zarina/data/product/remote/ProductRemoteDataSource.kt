@@ -10,6 +10,9 @@ import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.common.Sorting
 import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.domain.product.CategoryProductInfo
+import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductDetails
+import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.domain.product.ProductsWithFilters
 import javax.inject.Inject
 
@@ -29,6 +32,21 @@ class ProductRemoteDataSource @Inject constructor(
             page = page,
         ).toProductsWithFiltersPage()
         emit(productsWithFiltersPage)
+    }
+
+    fun getProductFlow(productId: Product.Id): Flow<ProductDetails> = flow {
+        val product = api.getProduct(productId).toProductDetails()
+        emit(product)
+    }
+
+    fun getProductTotalLookFlow(productId: Product.Id): Flow<List<ProductItem>> = flow {
+        val totalLook = api.getProductTotalLook(productId).mapNotNull { it.toProductItem() }
+        emit(totalLook)
+    }
+
+    fun getProductSimilarFlow(productId: Product.Id): Flow<List<ProductItem>> = flow {
+        val similar = api.getProductSimilar(productId).mapNotNull { it.toProductItem() }
+        emit(similar)
     }
 
     fun getCategoryProductInfoFlow(

@@ -189,8 +189,28 @@
     <string name="show_loyalty_card_info">Показать информацию о карте лояльности</string>
     <string name="turn_card">Перевернуть карту</string>
     <string name="qr_code_generation_error">Не удалось сгенерировать QR-код</string>
-    <string name="creating_your_loyality_card">Создаём твою карту лояльности</string>
+    <string name="creating_your_loyalty_card">Создаём твою карту лояльности</string>
     <string name="it_will_take_up_to_five_minutes">Это займёт до пяти минут</string>
+    <string name="share">Поделиться</string>
+    <string name="product_details">Подробнее об изделии</string>
+    <string name="delivery_and_payment">Доставка и оплата</string>
+    <string name="product_delivery_and_payment_info">Бесплатная доставка при заказе от %1$s ₽. Выбирай подходящий способ доставки товара:\n\n    &#8226; курьером\n    &#8226; в пункты выдачи заказов и постаматы\n    &#8226; самовывозом из магазина\n    \nПодробная информация в разделе Доставка\n\nДля твоего удобства предусмотрели разные способы оплаты:\n\n    &#8226; банковской картой на сайте или в приложении\n    &#8226; наличными или картой при получении\n    &#8226; системой быстрых платежей (СБП)\n    &#8226; Подели — оплата по частям без комиссии и переплат\n    &#8226; подарочным сертификатом\n    \nПодробная информация в разделе Оплата</string>
+    <string name="product_delivery_and_payment_info_delivery">Доставка</string>
+    <string name="product_delivery_and_payment_info_payment">Оплата</string>
+    <string name="product_delivery_and_payment_info_delivery_payment_url" translatable="false">https://zarina.ru/help/delivery-and-payment/</string>
+    <string name="product_total_look">Дополнить образ</string>
+    <string name="to_cart">В корзину</string>
+    <string name="in_cart">В корзине</string>
+    <string name="you_may_like">Тебе может понравиться</string>
+    <string name="notify_about_product_appearance">Сообщить о поступлении</string>
+    <string name="show_my_location">Показать моё местоположение</string>
+    <string name="current_location_missing_permission_error">Для определения местоположения необходимо разрешить приложению доступ к геолокации</string>
+    <string name="to_settings">В настройки</string>
+    <string name="map_shop_content_description">Магазин %1%s</string>
+    <string name="grant_location_permission">Разреши доступ к геолокации</string>
+    <string name="it_will_help_us_to_detect_your_location">Это поможет автоматически определить твоё местоположение</string>
+    <string name="select_date">Выбери дату</string>
+    <string name="selected_date">Выбранная дата</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

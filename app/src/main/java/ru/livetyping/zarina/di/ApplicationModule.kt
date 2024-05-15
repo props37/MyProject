@@ -9,8 +9,8 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.data.location.GooglePlayServicesLocationDataSource
 import ru.livetyping.zarina.data.location.LocationDataSource
-import ru.livetyping.zarina.ui.common.permissionmanager.PermissionManager
-import ru.livetyping.zarina.ui.common.permissionmanager.PermissionManagerImpl
+import ru.livetyping.zarina.presentation.common.permissionmanager.PermissionManager
+import ru.livetyping.zarina.presentation.common.permissionmanager.PermissionManagerImpl
 import javax.inject.Singleton
 
 @Module

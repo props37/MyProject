@@ -6,18 +6,18 @@ firebase-crashlyticsPlugin = "2.9.9"
 androidGitVersion = "0.4.14"
 checkDependencyUpdates = "1.5.0"
 
-kotlin = "1.9.23"
-kotlin-ksp = "1.9.23-1.0.20"
-kotlin-coroutines = "1.8.0"
+kotlin = "1.9.24"
+kotlin-ksp = "1.9.24-1.0.20"
+kotlin-coroutines = "1.8.1"
 kotlin-serialization = "1.6.3"
 kotlin-immutableCollections = "0.3.7"
 
-jetpack-core = "1.13.0"
+jetpack-core = "1.13.1"
 jetpack-appcompat = "1.6.1"
 jetpack-lifecycle = "2.7.0"
 jetpack-activity = "1.9.0"
 jetpack-navigation = "2.7.7"
-jetpack-datastore = "1.1.0"
+jetpack-datastore = "1.1.1"
 jetpack-room = "2.6.1"
 jetpack-splashScreen = "1.0.1"
 jetpack-media3 = "1.3.1"
@@ -29,10 +29,10 @@ jetpack-uiAutomator = "2.3.0"
 jetpack-espresso = "3.5.1"
 jetpack-benchmark = "1.2.3"
 
-jetpack-compose-bom = "2024.04.01"
-jetpack-compose-compiler = "1.5.12"
+jetpack-compose-bom = "2024.05.00"
+jetpack-compose-compiler = "1.5.14"
 
-ktor = "2.3.10"
+ktor = "2.3.11"
 
 hilt = "2.51.1"
 hilt-navigationCompose = "1.2.0"
@@ -50,11 +50,11 @@ leakCanary = "2.14"
 
 googlePlayServices-location = "21.2.0"
 googlePlayServices-maps = "18.2.0"
-googlePlayServices-maps-compose = "4.3.3"
+googlePlayServices-maps-compose = "5.0.1"
 
-recaptcha = "18.5.0-beta02"
+recaptcha = "18.5.0-beta03"
 
-firebase-bom = "32.8.1"
+firebase-bom = "33.0.0"
 
 firebase-performance = "1.4.2"
 mindbox = "2.9.1"
@@ -133,6 +133,7 @@ leakCanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", v
 googlePlayServices-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "googlePlayServices-location" }
 googlePlayServices-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "googlePlayServices-maps" }
 googlePlayServices-maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "googlePlayServices-maps-compose" }
+googlePlayServices-maps-compose-utils = { group = "com.google.maps.android", name = "maps-compose-utils", version.ref = "googlePlayServices-maps-compose" }
 
 recaptcha = { group = "com.google.android.recaptcha", name = "recaptcha", version.ref = "recaptcha" }
 

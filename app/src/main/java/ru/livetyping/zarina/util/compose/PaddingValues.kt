@@ -23,3 +23,19 @@ fun PaddingValues.plus(other: PaddingValues, layoutDirection: LayoutDirection): 
         bottom = calculateBottomPadding() + other.calculateBottomPadding(),
     )
 }
+
+@Stable
+fun PaddingValues.getVerticalPaddingValues(): PaddingValues {
+    return PaddingValues(
+        top = this.calculateTopPadding(),
+        bottom = this.calculateBottomPadding(),
+    )
+}
+
+@Stable
+fun PaddingValues.getHorizontalPaddingValues(layoutDirection: LayoutDirection): PaddingValues {
+    return PaddingValues(
+        start = this.calculateStartPadding(layoutDirection),
+        end = this.calculateEndPadding(layoutDirection),
+    )
+}

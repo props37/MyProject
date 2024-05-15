@@ -22,7 +22,7 @@ data class GetOrdersDto(
         checkNotNull(paginationInfo) { "paginationInfo is null" }
         return Page(
             data = orders.map { it.toOrderItem() },
-            paginationInfo = paginationInfo.toPaginationInfo(Int.MAX_VALUE), // TODO: [Low] Implement
+            paginationInfo = paginationInfo.toPaginationInfo(Int.MAX_VALUE),
         )
     }
 
@@ -44,7 +44,7 @@ data class GetOrdersDto(
         val status: OrderStatusDto? = null,
 
         @SerialName("total_sum")
-        val totalPrice: Long? = null,
+        val totalPrice: Int? = null,
 
         @SerialName("products")
         val products: List<Product>? = null,

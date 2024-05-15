@@ -25,17 +25,20 @@ object CollapsingTopBarDefaults {
         canScroll: () -> Boolean = { true },
         snapAnimationSpec: AnimationSpec<Float>? = spring(stiffness = Spring.StiffnessMediumLow),
         flingAnimationSpec: DecayAnimationSpec<Float>? = rememberSplineBasedDecay(),
+        scrollBeforeContent: () -> Boolean = { true },
     ): CollapsingTopBarScrollBehavior = remember(
         state,
         canScroll,
         snapAnimationSpec,
         flingAnimationSpec,
+        scrollBeforeContent,
     ) {
         EnterAlwaysScrollBehavior(
             state = state,
             snapAnimationSpec = snapAnimationSpec,
             flingAnimationSpec = flingAnimationSpec,
             canScroll = canScroll,
+            scrollBeforeContent = scrollBeforeContent,
         )
     }
 

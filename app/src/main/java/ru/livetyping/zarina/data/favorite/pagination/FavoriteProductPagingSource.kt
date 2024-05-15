@@ -4,14 +4,14 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import kotlinx.coroutines.flow.first
 import ru.livetyping.zarina.data.favorite.FavoriteRepository
-import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import timber.log.Timber
 
 class FavoriteProductPagingSource(
     private val favoriteRepository: FavoriteRepository,
-) : PagingSource<Int, Product>() {
+) : PagingSource<Int, ProductItem>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Product> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ProductItem> {
         return try {
             val page = params.key ?: 1
             val favoriteProductPage = favoriteRepository.getFavoriteProductPageFlow(page).first()
@@ -37,7 +37,7 @@ class FavoriteProductPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Product>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, ProductItem>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)

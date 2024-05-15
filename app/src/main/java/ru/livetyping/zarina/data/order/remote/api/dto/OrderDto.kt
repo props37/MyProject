@@ -34,7 +34,7 @@ data class OrderDto(
     val status: OrderStatusDto? = null,
 
     @SerialName("total_sum")
-    val totalPrice: Long? = null,
+    val totalPrice: Int? = null,
 
     @SerialName("products")
     val products: List<Product>? = null,
@@ -109,7 +109,7 @@ data class OrderDto(
         val imageUrl: String? = null,
 
         @SerialName("price")
-        val price: Long? = null,
+        val price: Int? = null,
 
         @SerialName("quantity")
         val count: Int? = null,
@@ -175,7 +175,7 @@ data class OrderDto(
             val method: OrderDeliveryMethodDto? = null,
 
             @SerialName("price")
-            val price: Long? = null,
+            val price: Int? = null,
         )
     }
 

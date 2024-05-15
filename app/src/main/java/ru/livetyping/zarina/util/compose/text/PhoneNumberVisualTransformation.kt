@@ -10,7 +10,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
-import ru.livetyping.zarina.ui.common.phone.PhoneNumberUtilProvider
+import ru.livetyping.zarina.presentation.common.phone.PhoneNumberUtilProvider
 import ru.livetyping.zarina.util.platform.locale
 
 // Source: https://medium.com/google-developer-experts/hands-on-jetpack-compose-visualtransformation-to-create-a-phone-number-formatter-99b0347fc4f6
@@ -36,12 +36,12 @@ class PhoneNumberVisualTransformation(
         }
 
         return TransformedText(
-            text = AnnotatedString(transformation.formatted.orEmpty()),
+            text = AnnotatedString(transformation.transformed.orEmpty()),
             offsetMapping = offsetMapping,
         )
     }
 
-    private fun reformat(s: CharSequence, cursor: Int): Transformation {
+    private fun reformat(s: CharSequence, cursor: Int): TextTransformation {
         phoneNumberFormatter.clear()
 
         val curIndex = cursor - 1
@@ -80,7 +80,7 @@ class PhoneNumberVisualTransformation(
         originalToTransformed.add(originalToTransformed.maxOrNull()?.plus(1) ?: 0)
         transformedToOriginal.add(transformedToOriginal.maxOrNull()?.plus(1) ?: 0)
 
-        return Transformation(formatted, originalToTransformed, transformedToOriginal)
+        return TextTransformation(formatted, originalToTransformed, transformedToOriginal)
     }
 
     private fun getFormattedNumber(lastNonSeparator: Char, hasCursor: Boolean): String? {
@@ -91,11 +91,7 @@ class PhoneNumberVisualTransformation(
         }
     }
 
-    private data class Transformation(
-        val formatted: String?,
-        val originalToTransformed: List<Int>,
-        val transformedToOriginal: List<Int>,
-    )
+
 }
 
 @Composable

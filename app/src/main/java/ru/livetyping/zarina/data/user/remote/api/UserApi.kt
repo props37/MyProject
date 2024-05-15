@@ -6,6 +6,7 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
+import ru.livetyping.zarina.data.common.remote.api.zarina.dto.util.DATE_BACKEND_PATTERN
 import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignInByPhoneRequestBody
@@ -25,6 +26,8 @@ import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.util.library.ktor.setJsonBody
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class UserApi @Inject constructor(
@@ -48,6 +51,7 @@ class UserApi @Inject constructor(
 
     suspend fun signUp(
         firstName: String,
+        birthDate: LocalDate,
         email: Email,
         phone: PhoneNumber,
         password: String,
@@ -57,6 +61,7 @@ class UserApi @Inject constructor(
     ) {
         val body = SignUpRequestBody(
             firstName = firstName,
+            birthDate = birthDate.format(DateTimeFormatter.ofPattern(DATE_BACKEND_PATTERN)),
             email = email.value,
             phone = phone.value,
             password = password,

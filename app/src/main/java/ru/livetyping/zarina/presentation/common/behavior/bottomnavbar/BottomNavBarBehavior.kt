@@ -1,0 +1,13 @@
+package ru.livetyping.zarina.presentation.common.behavior.bottomnavbar
+
+import androidx.compose.runtime.Stable
+import ru.livetyping.zarina.base.behavior.Behavior
+
+@Stable
+sealed class BottomNavBarBehavior : Behavior {
+    abstract val isAnimated: Boolean
+
+    data class Visible(override val isAnimated: Boolean) : BottomNavBarBehavior()
+
+    data class Hidden(override val isAnimated: Boolean) : BottomNavBarBehavior()
+}

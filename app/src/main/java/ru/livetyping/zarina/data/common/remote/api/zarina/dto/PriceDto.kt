@@ -7,7 +7,7 @@ import ru.livetyping.zarina.domain.product.Price
 @Serializable
 data class PriceDto(
     @SerialName("common_price")
-    val originalPrice: Long? = null,
+    val originalPrice: Int? = null,
 
     @SerialName("has_discount")
     val hasDiscount: Boolean? = null,
@@ -16,7 +16,7 @@ data class PriceDto(
     val discountPercent: Int? = null,
 
     @SerialName("discount_price")
-    val discountPrice: Long? = null,
+    val discountPrice: Int? = null,
 ) {
     fun toPrice(): Price {
         return Price(

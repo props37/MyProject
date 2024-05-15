@@ -1,7 +1,7 @@
 package ru.livetyping.zarina.domain.order
 
 data class OrderPrice(
-    val orderPrice: Long,
-    val deliveryPrice: Long,
-    val totalPrice: Long,
+    val orderPrice: Int,
+    val deliveryPrice: Int,
+    val totalPrice: Int,
 )

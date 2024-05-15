@@ -7,8 +7,10 @@ import ru.livetyping.zarina.data.user.UserRepository
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
+import ru.livetyping.zarina.domain.common.exception.EmptyDateException
 import ru.livetyping.zarina.domain.common.exception.ValidationException
 import timber.log.Timber
+import java.time.LocalDate
 import javax.inject.Inject
 
 class SignUpUseCase @Inject constructor(
@@ -16,6 +18,7 @@ class SignUpUseCase @Inject constructor(
     dispatcher: CoroutineDispatcher,
     private val userRepository: UserRepository,
     private val validateFirstNameUseCase: ValidateFirstNameUseCase,
+    private val validateBirthDateUseCase: ValidateBirthDateUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePhoneNumberUseCase: ValidatePhoneNumberUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
@@ -24,19 +27,25 @@ class SignUpUseCase @Inject constructor(
 
     override suspend fun execute(params: Params) {
         val firstName = params.firstName.split(' ').firstOrNull()?.trim().orEmpty()
+        val birthDate = params.birthDate
         val email = params.email
         val phone = params.phone
         val password = params.password
         val receiveNewsByEmail = params.receiveNewsByEmail
         val receiveSmsNotifications = params.receiveSmsNotifications
         Timber.v(
-            "Sign up. First name: $firstName, email: $email, phone: $phone, " +
+            "Sign up. First name: $firstName, birth date: $birthDate, email: $email, phone: $phone, " +
                     "password: $password, receive news by email: $receiveNewsByEmail, " +
                     "receive SMS notifications: $receiveSmsNotifications"
         )
 
         val firstNameValidationException =
             validateFirstNameUseCase(ValidateFirstNameUseCase.Params(firstName)).exceptionOrNull()
+        val birthDateValidationException = if (birthDate == null) {
+            EmptyDateException()
+        } else {
+            validateBirthDateUseCase(ValidateBirthDateUseCase.Params(birthDate)).exceptionOrNull()
+        }
         val emailValidationException =
             validateEmailUseCase(ValidateEmailUseCase.Params(email)).exceptionOrNull()
         val phoneValidationException =
@@ -46,6 +55,7 @@ class SignUpUseCase @Inject constructor(
 
         val validationException = ValidationException.from(
             firstNameValidationException,
+            birthDateValidationException,
             emailValidationException,
             phoneValidationException,
             passwordValidationException,
@@ -56,6 +66,8 @@ class SignUpUseCase @Inject constructor(
 
         userRepository.signUp(
             firstName = firstName,
+            // `LocalDate.now()` is impossible scenario needed to avoid false nullability
+            birthDate = birthDate ?: LocalDate.now(),
             email = email,
             phone = phone,
             password = password,
@@ -67,6 +79,7 @@ class SignUpUseCase @Inject constructor(
 
     data class Params(
         val firstName: String,
+        val birthDate: LocalDate?,
         val email: Email,
         val phone: PhoneNumber,
         val password: String,

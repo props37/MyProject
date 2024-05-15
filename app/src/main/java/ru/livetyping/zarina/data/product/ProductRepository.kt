@@ -9,6 +9,9 @@ import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.common.Sorting
 import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.domain.product.CategoryProductInfo
+import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductDetails
+import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.domain.product.ProductsWithFilters
 import javax.inject.Inject
 
@@ -27,6 +30,18 @@ class ProductRepository @Inject constructor(
             sorting = sorting,
             page = page,
         )
+    }
+
+    fun getProductFlow(productId: Product.Id): Flow<ProductDetails> {
+        return remoteDataSource.getProductFlow(productId)
+    }
+
+    fun getProductTotalLookFlow(productId: Product.Id): Flow<List<ProductItem>> {
+        return remoteDataSource.getProductTotalLookFlow(productId)
+    }
+
+    fun getProductSimilarFlow(productId: Product.Id): Flow<List<ProductItem>> {
+        return remoteDataSource.getProductSimilarFlow(productId)
     }
 
     fun getCategoryProductInfoFlow(

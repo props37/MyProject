@@ -9,6 +9,7 @@ import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.LoyaltyCard
+import java.time.LocalDate
 import javax.inject.Inject
 
 class UserRemoteDataSource @Inject constructor(
@@ -25,6 +26,7 @@ class UserRemoteDataSource @Inject constructor(
 
     suspend fun signUp(
         firstName: String,
+        birthDate: LocalDate,
         email: Email,
         phone: PhoneNumber,
         password: String,
@@ -34,6 +36,7 @@ class UserRemoteDataSource @Inject constructor(
     ) {
         api.signUp(
             firstName = firstName,
+            birthDate = birthDate,
             email = email,
             phone = phone,
             password = password,

@@ -15,7 +15,7 @@ import ru.livetyping.zarina.usecase.cart.FetchCartProductIdsUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import javax.inject.Inject
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 class CartProductIdsFetcherApplicationExtension @Inject constructor(
     private val coroutineScope: CoroutineScope,
@@ -41,6 +41,6 @@ class CartProductIdsFetcherApplicationExtension @Inject constructor(
     }
 
     companion object {
-        private val DELAY: Duration get() = 500.milliseconds
+        private val DELAY: Duration get() = 1.seconds
     }
 }

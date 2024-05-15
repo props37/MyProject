@@ -16,7 +16,7 @@ style:
   MagicNumber:
     ignorePropertyDeclaration: true
   UnusedPrivateMember:
-    ignoreAnnotated: ['Preview', 'FontScalePreviews', 'DensityPreviews']
+    ignoreAnnotated: ['Preview', 'PreviewFontScale', 'PreviewScreenSizes']
   WildcardImport:
     active: false
 

@@ -8,7 +8,7 @@ sealed class Order(
     open val productCount: Int,
     open val date: LocalDate,
     open val status: OrderStatus,
-    open val totalPrice: Long,
+    open val totalPrice: Int,
 ) {
     @JvmInline
     value class Id(val value: Long)

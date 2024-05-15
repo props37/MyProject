@@ -3,8 +3,7 @@ package ru.livetyping.zarina.usecase.user
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.livetyping.zarina.base.usecase.UseCase
 import ru.livetyping.zarina.di.Qualifiers
-import ru.livetyping.zarina.domain.user.exception.EmptyFirstNameException
-import ru.livetyping.zarina.domain.user.exception.InvalidFirstNameException
+import ru.livetyping.zarina.domain.validation.FirstNameValidator
 import javax.inject.Inject
 
 class ValidateFirstNameUseCase @Inject constructor(
@@ -13,18 +12,9 @@ class ValidateFirstNameUseCase @Inject constructor(
 ) : UseCase<ValidateFirstNameUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
-        val firstName = params.firstName.trim()
-        when {
-            firstName.isBlank() -> throw EmptyFirstNameException()
-            !firstName.matches(FIRST_NAME_REGEX_PATTERN.toRegex()) -> {
-                throw InvalidFirstNameException()
-            }
-        }
+        val validator = FirstNameValidator()
+        validator.validate(params.firstName)
     }
 
     data class Params(val firstName: String)
-
-    companion object {
-        private const val FIRST_NAME_REGEX_PATTERN = "^[А-Яа-яЁё-]*\$"
-    }
 }
