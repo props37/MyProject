@@ -29,10 +29,10 @@ data class FiltersDto(
     val colors: List<ColorItem>? = null,
 
     @SerialName("available_for_shipping")
-    val availableForDelivery: DeliveryAvailability? = null,
+    val deliveryAvailability: DeliveryAvailability? = null,
 
     @SerialName("available_for_store_pickup")
-    val availableForStorePickup: StorePickupAvailability? = null,
+    val storePickupAvailability: StorePickupAvailability? = null,
 ) {
     fun toFilters(): Filters {
         val price = price?.let { PriceFilter(min = null, max = null, limits = it.toPriceRange()) }
@@ -63,18 +63,18 @@ data class FiltersDto(
                 type = Filter.Type.COLORS,
             )
         } else null
-        val deliveryAvailability = availableForDelivery?.let {
-            if (it.available != false) {
+        val deliveryAvailability = deliveryAvailability?.let {
+            if (it.isAvailable != false) {
                 ToggleFilter(
-                    isEnabled = availableForDelivery.isApplied ?: false,
+                    isEnabled = deliveryAvailability.isApplied ?: false,
                     type = Filter.Type.DELIVERY_AVAILABILITY,
                 )
             } else null
         }
-        val storePickupAvailability = availableForStorePickup?.let {
-            if (it.available != false) {
+        val storePickupAvailability = storePickupAvailability?.let {
+            if (it.isAvailable != false) {
                 ToggleFilter(
-                    isEnabled = availableForStorePickup.isApplied ?: false,
+                    isEnabled = storePickupAvailability.isApplied ?: false,
                     type = Filter.Type.STORE_PICKUP_AVAILABILITY,
                 )
             } else null
@@ -148,10 +148,10 @@ data class FiltersDto(
         val isApplied: Boolean? = null,
 
         @SerialName("available")
-        val available: Boolean? = null,
+        val isAvailable: Boolean? = null,
     ) {
         fun toColorFilterItem(): ColorFilterItem? {
-            if (available == false) return null
+            if (isAvailable == false) return null
             return if (id != null && name != null && code != null && isApplied != null) {
                 ColorFilterItem(
                     id = ListFilterItem.Id(id),
@@ -172,7 +172,7 @@ data class FiltersDto(
         val isApplied: Boolean? = null,
 
         @SerialName("available")
-        val available: Boolean? = null,
+        val isAvailable: Boolean? = null,
     )
 
     @Serializable
@@ -181,6 +181,21 @@ data class FiltersDto(
         val isApplied: Boolean? = null,
 
         @SerialName("available")
-        val available: Boolean? = null,
-    )
+        val isAvailable: Boolean? = null,
+
+        @SerialName("shops")
+        val stores: List<Store>? = null,
+    ) {
+        @Serializable
+        data class Store(
+            @SerialName("id")
+            val id: String? = null,
+
+            @SerialName("name")
+            val name: String? = null,
+
+            @SerialName("available")
+            val isAvailable: Boolean? = null,
+        )
+    }
 }
