@@ -8,6 +8,7 @@ import ru.livetyping.zarina.domain.filter.ColorFilterItem
 import ru.livetyping.zarina.domain.filter.ListFilter
 import ru.livetyping.zarina.domain.filter.ListFilterItem
 import ru.livetyping.zarina.domain.filter.MaterialFilterItem
+import ru.livetyping.zarina.domain.filter.PickupStoreFilterItem
 import ru.livetyping.zarina.domain.filter.SizeFilterItem
 import ru.livetyping.zarina.domain.filter.SortFilterItem
 
@@ -37,6 +38,8 @@ class ListFilterParcelable(
             FilterTypeParcelable.STORE_PICKUP_AVAILABILITY -> {
                 error("Could not map ${FilterTypeParcelable.STORE_PICKUP_AVAILABILITY} filter to ListFilter")
             }
+
+            FilterTypeParcelable.PICKUP_STORES -> items.map { it.toPickupStoreFilterItem() }
         }
         return ListFilter(
             items = items,
@@ -80,6 +83,12 @@ class ListFilterParcelable(
                 color = Color(color),
             )
         }
+
+        fun toPickupStoreFilterItem(): PickupStoreFilterItem = PickupStoreFilterItem(
+            id = ListFilterItem.Id(id),
+            name = name,
+            isSelected = isSelected,
+        )
 
         companion object {
             fun from(item: ListFilterItem): Item = Item(

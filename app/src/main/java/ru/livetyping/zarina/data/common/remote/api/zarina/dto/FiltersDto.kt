@@ -9,6 +9,7 @@ import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.domain.filter.ListFilter
 import ru.livetyping.zarina.domain.filter.ListFilterItem
 import ru.livetyping.zarina.domain.filter.MaterialFilterItem
+import ru.livetyping.zarina.domain.filter.PickupStoreFilterItem
 import ru.livetyping.zarina.domain.filter.PriceFilter
 import ru.livetyping.zarina.domain.filter.SizeFilterItem
 import ru.livetyping.zarina.domain.filter.ToggleFilter
@@ -79,6 +80,14 @@ data class FiltersDto(
                 )
             } else null
         }
+        val pickupStores = if (this.storePickupAvailability?.stores != null) {
+            ListFilter(
+                items = this.storePickupAvailability.stores
+                    .mapNotNull { it.toPickupStoreFilterItem() },
+                isSingleSelection = false,
+                type = Filter.Type.PICKUP_STORES,
+            )
+        } else null
         return Filters(
             sorting = Filters.getDefaultSorting(),
             price = price,
@@ -87,6 +96,7 @@ data class FiltersDto(
             colors = colors,
             deliveryAvailability = deliveryAvailability,
             storePickupAvailability = storePickupAvailability,
+            pickupStores = pickupStores,
         )
     }
 
@@ -196,6 +206,20 @@ data class FiltersDto(
 
             @SerialName("available")
             val isAvailable: Boolean? = null,
-        )
+        ) {
+            fun toPickupStoreFilterItem(): PickupStoreFilterItem? {
+                if (isAvailable == false) return null
+                return if (id != null && name != null) {
+                    PickupStoreFilterItem(
+                        id = ListFilterItem.Id(id),
+                        name = name,
+                        isSelected = false,
+                    )
+                } else {
+                    Timber.e("Drop PickupStoreFilterItem because its ID or name is null")
+                    null
+                }
+            }
+        }
     }
 }

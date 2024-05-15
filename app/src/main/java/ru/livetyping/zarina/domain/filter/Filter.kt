@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.domain.filter
 
+// TODO: [Low] Rename to ProductFilter?
 sealed interface Filter {
     val type: Type
     val isEmpty: Boolean
@@ -12,5 +13,6 @@ sealed interface Filter {
         COLORS,
         DELIVERY_AVAILABILITY,
         STORE_PICKUP_AVAILABILITY,
+        PICKUP_STORES,
     }
 }

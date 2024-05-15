@@ -36,5 +36,6 @@ fun ListFilterItem.copy(isSelected: Boolean): ListFilterItem {
         is MaterialFilterItem -> this.copy(isSelected = isSelected)
         is SizeFilterItem -> this.copy(isSelected = isSelected)
         is SortFilterItem -> this.copy(isSelected = isSelected)
+        is PickupStoreFilterItem -> this.copy(isSelected = isSelected)
     }
 }

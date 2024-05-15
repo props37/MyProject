@@ -18,6 +18,7 @@ data class FiltersParcelable(
     val colors: ListFilterParcelable?,
     val deliveryAvailability: Boolean?,
     val storePickupAvailability: Boolean?,
+    val pickupStores: ListFilterParcelable?,
 ) : Parcelable {
     fun toFilters(): Filters {
         val sorting = sorting?.let { sorting ->
@@ -54,6 +55,13 @@ data class FiltersParcelable(
         val storePickupAvailability = storePickupAvailability?.let {
             ToggleFilter(isEnabled = it, type = Filter.Type.STORE_PICKUP_AVAILABILITY)
         }
+        val pickupStores = pickupStores?.let {
+            ListFilter(
+                items = pickupStores.items.map { it.toPickupStoreFilterItem() },
+                isSingleSelection = pickupStores.isSingleSelection,
+                type = pickupStores.type.toFilterType(),
+            )
+        }
         return Filters(
             sorting = sorting,
             price = price?.toPriceFilter(),
@@ -62,6 +70,7 @@ data class FiltersParcelable(
             colors = colors,
             deliveryAvailability = deliveryAvailability,
             storePickupAvailability = storePickupAvailability,
+            pickupStores = pickupStores,
         )
     }
 
@@ -75,6 +84,7 @@ data class FiltersParcelable(
                 colors = filters.colors?.let { ListFilterParcelable.from(it) },
                 deliveryAvailability = filters.deliveryAvailability?.isEnabled,
                 storePickupAvailability = filters.storePickupAvailability?.isEnabled,
+                pickupStores = filters.pickupStores?.let { ListFilterParcelable.from(it) },
             )
         }
     }

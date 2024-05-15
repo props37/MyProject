@@ -58,6 +58,7 @@
     <string name="color">Цвет</string>
     <string name="available_for_delivery">Доступные для доставки</string>
     <string name="available_for_store_pickup">Доступные в магазине</string>
+    <string name="pick_up_from_store">Забрать из магазина</string>
     <string name="show_products">Показать товары</string>
     <string name="reset">Сбросить</string>
     <string name="apply">Применить</string>
