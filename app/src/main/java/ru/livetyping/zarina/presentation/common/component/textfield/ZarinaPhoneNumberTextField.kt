@@ -58,7 +58,6 @@ fun ZarinaPhoneNumberTextField(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
-    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
 ) {
     var selection by remember { mutableStateOf(TextRange(phoneNumber.length)) }
     val textFieldValue by remember(phoneNumber, selection) {
@@ -92,7 +91,6 @@ fun ZarinaPhoneNumberTextField(
         onTextLayout = onTextLayout,
         interactionSource = interactionSource,
         cursorBrush = cursorBrush,
-        backgroundColor = backgroundColor,
         modifier = modifier,
     )
 }

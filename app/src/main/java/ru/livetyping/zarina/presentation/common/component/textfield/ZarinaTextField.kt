@@ -90,7 +90,6 @@ fun ZarinaTextField(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
-    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
 ) {
     var focusState by remember { mutableStateOf<FocusState?>(null) }
 
@@ -98,7 +97,7 @@ fun ZarinaTextField(
         value = textFieldValue,
         onValueChange = onValueChanged,
         modifier = modifier
-            .background(backgroundColor)
+            .background(colors.backgroundColor)
             .onFocusChanged { focusState = it },
         enabled = isEnabled,
         readOnly = isReadOnly,
@@ -159,7 +158,6 @@ fun ZarinaTextField(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
-    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
 ) {
     var focusState by remember { mutableStateOf<FocusState?>(null) }
 
@@ -167,7 +165,7 @@ fun ZarinaTextField(
         value = value,
         onValueChange = onValueChanged,
         modifier = modifier
-            .background(backgroundColor)
+            .background(colors.backgroundColor)
             .onFocusChanged { focusState = it },
         enabled = isEnabled,
         readOnly = isReadOnly,
@@ -341,6 +339,7 @@ private fun DecorationBox(
 }
 
 data class ZarinaTextFieldColors(
+    val backgroundColor: Color,
     val textColor: Color,
     val placeholderColor: Color,
     val labelColor: Color,
@@ -465,6 +464,7 @@ object ZarinaTextFieldDefaults {
 
     @Composable
     fun colors(
+        backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
         textColor: Color = UiKitTheme.colors.text.general.regular.default,
         placeholderColor: Color = UiKitTheme.colors.text.general.regular.muted,
         labelColor: Color = UiKitTheme.colors.text.general.regular.muted,
@@ -485,6 +485,7 @@ object ZarinaTextFieldDefaults {
         disabledIndicationLineColor: Color = UiKitTheme.colors.border.general.disabled,
         disabledErrorIndicationLineColor: Color = UiKitTheme.colors.border.general.errorDisabled,
     ): ZarinaTextFieldColors = ZarinaTextFieldColors(
+        backgroundColor = backgroundColor,
         textColor = textColor,
         placeholderColor = placeholderColor,
         labelColor = labelColor,

@@ -62,7 +62,6 @@ fun ZarinaPasswordTextField(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
-    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
 ) {
     var isPasswordHidden by remember { mutableStateOf(true) }
     val visualTransformation = remember(isPasswordHidden) {
@@ -124,7 +123,6 @@ fun ZarinaPasswordTextField(
         onTextLayout = onTextLayout,
         interactionSource = interactionSource,
         cursorBrush = cursorBrush,
-        backgroundColor = backgroundColor,
         modifier = modifier,
     )
 }
