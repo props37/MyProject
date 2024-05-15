@@ -97,7 +97,9 @@ fun Filters.coerceInAvailable(available: Filters): Filters {
     val colors = available.colors?.let { this.colors?.coerceInAvailable(it) ?: it }
     val deliveryAvailability = this.deliveryAvailability ?: available.deliveryAvailability
     val storePickupAvailability = this.storePickupAvailability ?: available.storePickupAvailability
-    val pickupStores = available.pickupStores?.let { this.pickupStores?.coerceInAvailable(it) ?: it }
+    val pickupStores = if (storePickupAvailability?.isEnabled == true) {
+        available.pickupStores?.let { this.pickupStores?.coerceInAvailable(it) ?: it }
+    } else null
     return this.copy(
         price = price,
         materials = materials,

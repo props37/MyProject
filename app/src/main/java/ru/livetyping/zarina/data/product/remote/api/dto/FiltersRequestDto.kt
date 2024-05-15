@@ -20,17 +20,11 @@ data class FiltersRequestDto(
     val colors: List<String>? = null,
 
     @SerialName("available_for_shipping")
-    val availableForDelivery: Boolean? = null,
+    val deliveryAvailability: Boolean? = null,
 
     @SerialName("available_for_store_pickup")
-    val availableForStorePickup: StorePickupAvailability? = null,
+    val storePickupAvailability: List<String>? = null,
 ) {
-    @Serializable
-    data class StorePickupAvailability(
-        @SerialName("applied")
-        val isApplied: Boolean,
-    )
-
     companion object {
         fun from(filters: Filters): FiltersRequestDto? {
             return if (!filters.isEmptyIgnoringSorting) {
@@ -43,19 +37,21 @@ data class FiltersRequestDto(
                 val colors = filters.colors?.let { filter ->
                     if (!filter.isEmpty) filter.selectedItems.map { it.id.value } else null
                 }
-                val availableForDelivery = filters.deliveryAvailability?.let { filter ->
+                val deliveryAvailability = filters.deliveryAvailability?.let { filter ->
                     if (filter.isEnabled) true else null
                 }
-                val availableForStorePickup = filters.storePickupAvailability?.let { filter ->
-                    if (filter.isEnabled) StorePickupAvailability(isApplied = true) else null
-                }
+                val storePickupAvailability = if (filters.storePickupAvailability?.isEnabled == true) {
+                    filters.pickupStores?.let { filter ->
+                        filter.selectedItems.map { it.id.value }
+                    }
+                } else null
                 FiltersRequestDto(
                     price = filters.price?.let { PriceFilterDto.from(it) },
                     materials = materials,
                     sizes = sizes,
                     colors = colors,
-                    availableForDelivery = availableForDelivery,
-                    availableForStorePickup = availableForStorePickup,
+                    deliveryAvailability = deliveryAvailability,
+                    storePickupAvailability = storePickupAvailability,
                 )
             } else {
                 null
