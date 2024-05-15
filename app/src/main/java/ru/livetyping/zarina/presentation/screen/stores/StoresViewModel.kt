@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.shops
+package ru.livetyping.zarina.presentation.screen.stores
 
 import android.Manifest
 import androidx.compose.runtime.Immutable
@@ -23,21 +23,22 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.location.Location
-import ru.livetyping.zarina.domain.shop.Shop
+import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.common.datafetchinginfo.DataFetchingInfoHolder
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.permissionmanager.isGranted
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
+import ru.livetyping.zarina.presentation.screen.stores.StoresViewModel.SideEffect
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
 
 @HiltViewModel
-class ShopsViewModel @Inject constructor(
-    private val interactor: ShopsInteractor,
-) : ViewModel(), SideEffectSource<ShopsViewModel.SideEffect> by SideEffectSourceImpl() {
+class StoresViewModel @Inject constructor(
+    private val interactor: StoresInteractor,
+) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -50,7 +51,7 @@ class ShopsViewModel @Inject constructor(
     val currentViewMode: StateFlow<ViewMode> = _currentViewMode.asStateFlow()
 
     private val currentLocationFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
-    private val shopsFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
+    private val storesFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val currentLocation: StateFlow<Location?> = currentLocationFetchingInfoHolder.fetchingRequests
@@ -67,79 +68,79 @@ class ShopsViewModel @Inject constructor(
         )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val shopsResult: StateFlow<Result<List<Shop>>?> =
-        shopsFetchingInfoHolder.fetchingRequests
+    private val storesResult: StateFlow<Result<List<Store>>?> =
+        storesFetchingInfoHolder.fetchingRequests
             .flatMapLatest {
-                interactor.getShopsFlow()
+                interactor.getStoresFlow()
             }
-            .onEach { shopsFetchingInfoHolder.completeFetching() }
+            .onEach { storesFetchingInfoHolder.completeFetching() }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = null,
             )
 
-    val mapShopsState: StateFlow<ShopListState> = combine(
-        shopsResult,
-        shopsFetchingInfoHolder.fetchingType,
-    ) { shopsResult, fetchingType ->
-        if (shopsResult == null || fetchingType != null) {
-            ShopListState.Loading
+    val storeMapState: StateFlow<StoreListState> = combine(
+        storesResult,
+        storesFetchingInfoHolder.fetchingType,
+    ) { storesResult, fetchingType ->
+        if (storesResult == null || fetchingType != null) {
+            StoreListState.Loading
         } else {
-            shopsResult.fold(
+            storesResult.fold(
                 onSuccess = {
-                    ShopListState.Success(it.toImmutableList())
+                    StoreListState.Success(it.toImmutableList())
                 },
                 onFailure = {
                     val errorState = ErrorState.from(it)
-                    ShopListState.Error(errorState)
+                    StoreListState.Error(errorState)
                 },
             )
         }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
-        initialValue = ShopListState.Loading,
+        initialValue = StoreListState.Loading,
     )
 
-    val shopListState: StateFlow<ShopListState> = combine(
-        shopsResult,
+    val storeListState: StateFlow<StoreListState> = combine(
+        storesResult,
         interactor.getUserCityFlow(),
-        shopsFetchingInfoHolder.fetchingType,
-    ) { shopsResult, userCityResult, fetchingType ->
-        if (shopsResult == null || fetchingType != null) {
-            ShopListState.Loading
+        storesFetchingInfoHolder.fetchingType,
+    ) { storesResult, userCityResult, fetchingType ->
+        if (storesResult == null || fetchingType != null) {
+            StoreListState.Loading
         } else {
-            shopsResult.fold(
-                onSuccess = { shops ->
+            storesResult.fold(
+                onSuccess = { stores ->
                     val userCity = userCityResult.getOrNull()
-                    val cityShops = if (userCity != null) {
-                        shops.filter { it.cityKladrId == userCity.kladrId }
+                    val cityStores = if (userCity != null) {
+                        stores.filter { it.cityKladrId == userCity.kladrId }
                     } else {
-                        shops
+                        stores
                     }
-                    ShopListState.Success(cityShops.toImmutableList())
+                    StoreListState.Success(cityStores.toImmutableList())
                 },
                 onFailure = {
                     val errorState = ErrorState.from(it)
-                    ShopListState.Error(errorState)
+                    StoreListState.Error(errorState)
                 },
             )
         }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
-        initialValue = ShopListState.Loading,
+        initialValue = StoreListState.Loading,
     )
 
     init {
         currentLocationFetchingInfoHolder.requestFetching(Unit)
-        shopsFetchingInfoHolder.requestFetching(Unit)
+        storesFetchingInfoHolder.requestFetching(Unit)
     }
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = ShopsScreenAction.ScreenClosed
+            val action = StoresScreenAction.ScreenClosed
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
@@ -160,26 +161,26 @@ class ShopsViewModel @Inject constructor(
                 if (newPermissionsState.any { it.value.isGranted }) {
                     currentLocationFetchingInfoHolder.requestFetching(Unit)
                 } else {
-                    val action = ShopsScreenAction.LocationPermissionRequired
+                    val action = StoresScreenAction.LocationPermissionRequired
                     emitSideEffect(SideEffect.Navigate(action))
                 }
             }
         }
     }
 
-    fun onShopsErrorRefreshClicked() {
-        shopsFetchingInfoHolder.requestFetching(Unit)
+    fun onStoresErrorRefreshClicked() {
+        storesFetchingInfoHolder.requestFetching(Unit)
     }
 
-    fun onShopClicked(shop: Shop) {
+    fun onStoreClicked(store: Store) {
         navigationThrottler.throttle {
-            val action = ShopsScreenAction.ShopClicked(shop)
+            val action = StoresScreenAction.StoreClicked(store)
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class Navigate(val action: ShopsScreenAction) : SideEffect
+        data class Navigate(val action: StoresScreenAction) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
@@ -187,15 +188,15 @@ class ShopsViewModel @Inject constructor(
     enum class ViewMode { MAP, LIST }
 
     @Stable
-    sealed class ShopListState {
+    sealed class StoreListState {
 
         @Immutable
-        data class Success(val shops: ImmutableList<Shop>) : ShopListState()
+        data class Success(val stores: ImmutableList<Store>) : StoreListState()
 
-        data object Loading : ShopListState()
+        data object Loading : StoreListState()
 
         @Immutable
-        data class Error(val state: ErrorState) : ShopListState()
+        data class Error(val state: ErrorState) : StoreListState()
     }
 
     companion object {

@@ -99,5 +99,5 @@ data object ProfileGraph : SimpleGraph(
         ) : ScreenResult, Parcelable
     }
 
-    data object Shops : SimpleDestination(BaseRoute.SHOPS)
+    data object Stores : SimpleDestination(BaseRoute.STORES)
 }

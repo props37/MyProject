@@ -27,7 +27,7 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
                 SignUpGraph.SignUp.routeSchema,
                 ProfileGraph.MyOrders.routeSchema,
                 ProfileGraph.ProfileDetails.routeSchema,
-                ProfileGraph.Shops.routeSchema -> slideExitTransition()
+                ProfileGraph.Stores.routeSchema -> slideExitTransition()
 
                 else -> null
             }
@@ -40,7 +40,7 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
                 SignUpGraph.Otp.routeSchema,
                 ProfileGraph.MyOrders.routeSchema,
                 ProfileGraph.ProfileDetails.routeSchema,
-                ProfileGraph.Shops.routeSchema -> slidePopEnterTransition()
+                ProfileGraph.Stores.routeSchema -> slidePopEnterTransition()
 
                 else -> null
             }
@@ -68,7 +68,7 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
                     }
 
                     ProfileScreenAction.MyOrdersClicked -> navController.navigateToMyOrdersScreen()
-                    ProfileScreenAction.ShopsClicked -> navController.navigateToShopsScreen()
+                    ProfileScreenAction.StoresClicked -> navController.navigateToStoresScreen()
                 }
             }
         )

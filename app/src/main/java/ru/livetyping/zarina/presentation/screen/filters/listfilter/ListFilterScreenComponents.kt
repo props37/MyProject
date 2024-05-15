@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,15 +26,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.filter.ColorFilterItem
+import ru.livetyping.zarina.domain.filter.Filter
+import ru.livetyping.zarina.domain.filter.ListFilter
 import ru.livetyping.zarina.domain.filter.ListFilterItem
 import ru.livetyping.zarina.domain.filter.SortFilterItem
 import ru.livetyping.zarina.domain.filter.sorting
+import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.color.ZarinaColorIcon
 import ru.livetyping.zarina.presentation.common.component.icon.ZarinaCheckmarkAnimatedIcon
+import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.util.domain.nameResId
@@ -91,17 +97,35 @@ object ListFilterScreenComponents {
 
     @Composable
     fun FilterItems(
-        items: List<ListFilterItem>,
+        filter: ListFilter<ListFilterItem>,
         onItemClicked: (ListFilterItem) -> Unit,
+        city: City?,
         modifier: Modifier = Modifier,
         contentPadding: PaddingValues = PaddingValues(),
     ) {
+        val lazyListState = rememberLazyListState()
+        LaunchedEffect(city) {
+            lazyListState.scrollToItem(0)
+        }
+
         LazyColumn(
+            state = lazyListState,
             contentPadding = contentPadding,
             modifier = modifier,
         ) {
+            if (filter.type == Filter.Type.PICKUP_STORES && city != null) {
+                item(key = city.name) {
+                    ZarinaItem {
+                        Text(
+                            text = city.name,
+                            style = UiKitTheme.typography.secondary.bold,
+                        )
+                    }
+                }
+            }
+
             itemsIndexed(
-                items = items,
+                items = filter.items,
                 key = { _, item -> item.id.value },
             ) { index, item ->
                 FilterItem(
@@ -109,7 +133,7 @@ object ListFilterScreenComponents {
                     onItemClicked = onItemClicked,
                 )
 
-                if (index < items.size - 1) {
+                if (index < filter.items.size - 1) {
                     Divider(
                         color = UiKitTheme.colors.border.general.default,
                         modifier = Modifier

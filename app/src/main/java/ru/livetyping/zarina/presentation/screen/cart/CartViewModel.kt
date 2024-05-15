@@ -172,7 +172,7 @@ class CartViewModel @AssistedInject constructor(
         navigationThrottler.throttle {
             val availableCount = when (currentDeliveryType.value) {
                 DeliveryType.DELIVERY -> product.availableCount.delivery
-                DeliveryType.PICK_UP_FROM_SHOP -> product.availableCount.pickUpFromShop
+                DeliveryType.PICK_UP_FROM_STORE -> product.availableCount.pickUpFromStore
             }
             val action = CartScreenAction.ProductCountClicked(
                 productId = product.productId,

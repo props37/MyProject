@@ -14,4 +14,5 @@ val Filter.Type.nameResId: Int
         Filter.Type.COLORS -> R.string.color
         Filter.Type.DELIVERY_AVAILABILITY -> R.string.available_for_delivery
         Filter.Type.STORE_PICKUP_AVAILABILITY -> R.string.available_for_store_pickup
+        Filter.Type.PICKUP_STORES -> R.string.pick_up_from_store
     }

@@ -7,10 +7,10 @@ value class DeliveryTypeDto(val value: String) {
     companion object {
         fun fromDeliveryType(deliveryType: DeliveryType): DeliveryTypeDto = when (deliveryType) {
             DeliveryType.DELIVERY -> DeliveryTypeDto(VALUE_DELIVERY)
-            DeliveryType.PICK_UP_FROM_SHOP -> DeliveryTypeDto(VALUE_PICK_UP_FROM_SHOP)
+            DeliveryType.PICK_UP_FROM_STORE -> DeliveryTypeDto(VALUE_PICK_UP_FROM_STORE)
         }
 
         private const val VALUE_DELIVERY = "delivery"
-        private const val VALUE_PICK_UP_FROM_SHOP = "retail"
+        private const val VALUE_PICK_UP_FROM_STORE = "retail"
     }
 }

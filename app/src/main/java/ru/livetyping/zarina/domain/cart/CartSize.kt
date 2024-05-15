@@ -3,7 +3,7 @@ package ru.livetyping.zarina.domain.cart
 data class CartSize(
     val totalProductCount: Int,
     val deliveryProductCount: Int,
-    val pickUpFromShopProductCount: Int,
+    val pickUpFromStoreProductCount: Int,
 ) {
     val isEmpty: Boolean get() = totalProductCount <= 0
 

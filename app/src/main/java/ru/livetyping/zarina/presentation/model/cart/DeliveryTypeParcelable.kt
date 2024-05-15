@@ -9,17 +9,17 @@ import ru.livetyping.zarina.domain.cart.DeliveryType
 @Parcelize
 enum class DeliveryTypeParcelable : Parcelable {
     DELIVERY,
-    PICK_UP_FROM_SHOP;
+    PICK_UP_FROM_STORE;
 
     fun toDeliveryType(): DeliveryType = when (this) {
         DELIVERY -> DeliveryType.DELIVERY
-        PICK_UP_FROM_SHOP -> DeliveryType.PICK_UP_FROM_SHOP
+        PICK_UP_FROM_STORE -> DeliveryType.PICK_UP_FROM_STORE
     }
 
     companion object {
         fun from(deliveryType: DeliveryType): DeliveryTypeParcelable = when (deliveryType) {
             DeliveryType.DELIVERY -> DELIVERY
-            DeliveryType.PICK_UP_FROM_SHOP -> PICK_UP_FROM_SHOP
+            DeliveryType.PICK_UP_FROM_STORE -> PICK_UP_FROM_STORE
         }
     }
 }

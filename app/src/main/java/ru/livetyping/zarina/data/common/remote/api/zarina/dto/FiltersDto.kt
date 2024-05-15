@@ -9,6 +9,7 @@ import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.domain.filter.ListFilter
 import ru.livetyping.zarina.domain.filter.ListFilterItem
 import ru.livetyping.zarina.domain.filter.MaterialFilterItem
+import ru.livetyping.zarina.domain.filter.PickupStoreFilterItem
 import ru.livetyping.zarina.domain.filter.PriceFilter
 import ru.livetyping.zarina.domain.filter.SizeFilterItem
 import ru.livetyping.zarina.domain.filter.ToggleFilter
@@ -29,56 +30,76 @@ data class FiltersDto(
     val colors: List<ColorItem>? = null,
 
     @SerialName("available_for_shipping")
-    val availableForDelivery: DeliveryAvailability? = null,
+    val deliveryAvailability: DeliveryAvailability? = null,
 
     @SerialName("available_for_store_pickup")
-    val availableForStorePickup: StorePickupAvailability? = null,
+    val storePickupAvailability: StorePickupAvailability? = null,
 ) {
     fun toFilters(): Filters {
         val price = price?.let { PriceFilter(min = null, max = null, limits = it.toPriceRange()) }
         val materials = if (!materials.isNullOrEmpty()) {
-            ListFilter(
-                items = materials
-                    .mapNotNull { it.toMaterialFilterItem() }
-                    .distinctBy { it.id }, // TODO: [High] Remove when ID is fixed on backend
-                isSingleSelection = false,
-                type = Filter.Type.MATERIALS,
-            )
+            val items = materials
+                .mapNotNull { it.toMaterialFilterItem() }
+                .distinctBy { it.id } // TODO: [High] Remove when ID is fixed on backend
+            if (items.isNotEmpty()) {
+                ListFilter(
+                    items = items,
+                    isSingleSelection = false,
+                    type = Filter.Type.MATERIALS,
+                )
+            } else null
         } else null
         val sizes = if (!sizes.isNullOrEmpty()) {
-            ListFilter(
-                items = sizes
-                    .mapNotNull { it.toSizeFilterItem() }
-                    .distinctBy { it.id }, // TODO: [High] Remove when ID is fixed on backend
-                isSingleSelection = false,
-                type = Filter.Type.SIZES,
-            )
+            val items = sizes
+                .mapNotNull { it.toSizeFilterItem() }
+                .distinctBy { it.id } // TODO: [High] Remove when ID is fixed on backend
+            if (items.isNotEmpty()) {
+                ListFilter(
+                    items = items,
+                    isSingleSelection = false,
+                    type = Filter.Type.SIZES,
+                )
+            } else null
         } else null
         val colors = if (!colors.isNullOrEmpty()) {
-            ListFilter(
-                items = colors
-                    .mapNotNull { it.toColorFilterItem() }
-                    .distinctBy { it.id }, // TODO: [High] Remove when ID is fixed on backend
-                isSingleSelection = false,
-                type = Filter.Type.COLORS,
-            )
+            val items = colors
+                .mapNotNull { it.toColorFilterItem() }
+                .distinctBy { it.id } // TODO: [High] Remove when ID is fixed on backend
+            if (items.isNotEmpty()) {
+                ListFilter(
+                    items = items,
+                    isSingleSelection = false,
+                    type = Filter.Type.COLORS,
+                )
+            } else null
         } else null
-        val deliveryAvailability = availableForDelivery?.let {
-            if (it.available != false) {
+        val deliveryAvailability = deliveryAvailability?.let {
+            if (it.isAvailable != false) {
                 ToggleFilter(
-                    isEnabled = availableForDelivery.isApplied ?: false,
+                    isEnabled = deliveryAvailability.isApplied ?: false,
                     type = Filter.Type.DELIVERY_AVAILABILITY,
                 )
             } else null
         }
-        val storePickupAvailability = availableForStorePickup?.let {
-            if (it.available != false) {
+        val storePickupAvailability = storePickupAvailability?.let {
+            if (it.isAvailable != false) {
                 ToggleFilter(
-                    isEnabled = availableForStorePickup.isApplied ?: false,
+                    isEnabled = storePickupAvailability.isApplied ?: false,
                     type = Filter.Type.STORE_PICKUP_AVAILABILITY,
                 )
             } else null
         }
+        val pickupStores = if (this.storePickupAvailability?.stores != null) {
+            val items = this.storePickupAvailability.stores
+                .mapNotNull { it.toPickupStoreFilterItem() }
+            if (items.isNotEmpty()) {
+                ListFilter(
+                    items = items,
+                    isSingleSelection = false,
+                    type = Filter.Type.PICKUP_STORES,
+                )
+            } else null
+        } else null
         return Filters(
             sorting = Filters.getDefaultSorting(),
             price = price,
@@ -87,6 +108,7 @@ data class FiltersDto(
             colors = colors,
             deliveryAvailability = deliveryAvailability,
             storePickupAvailability = storePickupAvailability,
+            pickupStores = pickupStores,
         )
     }
 
@@ -148,10 +170,10 @@ data class FiltersDto(
         val isApplied: Boolean? = null,
 
         @SerialName("available")
-        val available: Boolean? = null,
+        val isAvailable: Boolean? = null,
     ) {
         fun toColorFilterItem(): ColorFilterItem? {
-            if (available == false) return null
+            if (isAvailable == false) return null
             return if (id != null && name != null && code != null && isApplied != null) {
                 ColorFilterItem(
                     id = ListFilterItem.Id(id),
@@ -172,7 +194,7 @@ data class FiltersDto(
         val isApplied: Boolean? = null,
 
         @SerialName("available")
-        val available: Boolean? = null,
+        val isAvailable: Boolean? = null,
     )
 
     @Serializable
@@ -181,6 +203,35 @@ data class FiltersDto(
         val isApplied: Boolean? = null,
 
         @SerialName("available")
-        val available: Boolean? = null,
-    )
+        val isAvailable: Boolean? = null,
+
+        @SerialName("shops")
+        val stores: List<Store>? = null,
+    ) {
+        @Serializable
+        data class Store(
+            @SerialName("id")
+            val id: String? = null,
+
+            @SerialName("name")
+            val name: String? = null,
+
+            @SerialName("available")
+            val isAvailable: Boolean? = null,
+        ) {
+            fun toPickupStoreFilterItem(): PickupStoreFilterItem? {
+                if (isAvailable == false) return null
+                return if (id != null && name != null) {
+                    PickupStoreFilterItem(
+                        id = ListFilterItem.Id(id),
+                        name = name,
+                        isSelected = false,
+                    )
+                } else {
+                    Timber.e("Drop PickupStoreFilterItem because its ID or name is null")
+                    null
+                }
+            }
+        }
+    }
 }

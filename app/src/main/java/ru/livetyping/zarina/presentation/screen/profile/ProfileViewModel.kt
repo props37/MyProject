@@ -133,8 +133,8 @@ class ProfileViewModel @AssistedInject constructor(
                     emitSideEffect(SideEffect.Navigate(action))
                 }
 
-                InfoItem.Shops -> {
-                    val action = ProfileScreenAction.ShopsClicked
+                InfoItem.Stores -> {
+                    val action = ProfileScreenAction.StoresClicked
                     emitSideEffect(SideEffect.Navigate(action))
                 }
 
@@ -202,7 +202,7 @@ class ProfileViewModel @AssistedInject constructor(
         data object Loading : UserState()
     }
 
-    enum class InfoItem { MyOrders, City, Shops, Help, AboutCompany }
+    enum class InfoItem { MyOrders, City, Stores, Help, AboutCompany }
 
     @AssistedFactory
     interface Factory {

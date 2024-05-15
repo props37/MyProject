@@ -9,12 +9,12 @@ import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinat
 import ru.livetyping.zarina.presentation.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopExitTransition
-import ru.livetyping.zarina.presentation.screen.shops.ShopsScreen
-import ru.livetyping.zarina.presentation.screen.shops.ShopsScreenAction
+import ru.livetyping.zarina.presentation.screen.stores.StoresScreen
+import ru.livetyping.zarina.presentation.screen.stores.StoresScreenAction
 
-fun NavGraphBuilder.shopsScreen(navController: NavHostController) {
+fun NavGraphBuilder.storesScreen(navController: NavHostController) {
     composableDestination(
-        destination = ProfileGraph.Shops,
+        destination = ProfileGraph.Stores,
         enterTransition = {
             when (initialState.destination.route) {
                 ProfileGraph.Profile.routeSchema -> slideEnterTransition()
@@ -28,17 +28,17 @@ fun NavGraphBuilder.shopsScreen(navController: NavHostController) {
             }
         },
     ) {
-        ShopsScreen(
+        StoresScreen(
             navigate = { action ->
                 when (action) {
-                    ShopsScreenAction.ScreenClosed -> {
+                    StoresScreenAction.ScreenClosed -> {
                         navController.popBackStack(
-                            route = ProfileGraph.Shops.routeSchema,
+                            route = ProfileGraph.Stores.routeSchema,
                             inclusive = true,
                         )
                     }
 
-                    ShopsScreenAction.LocationPermissionRequired -> {
+                    StoresScreenAction.LocationPermissionRequired -> {
                         navController.navigateToPermissionRequirement(
                             permission = UnscopedDestinations.PermissionRequirement.Permission.LOCATION,
                             title = Text.Resource(R.string.grant_location_permission),
@@ -46,18 +46,18 @@ fun NavGraphBuilder.shopsScreen(navController: NavHostController) {
                         )
                     }
 
-                    is ShopsScreenAction.ShopClicked -> {
-                        val shop = action.shop
-                        val title = Text.String(shop.name)
+                    is StoresScreenAction.StoreClicked -> {
+                        val store = action.store
+                        val title = Text.String(store.name)
                         val bodyString = buildString {
-                            append(shop.address)
-                            if (!shop.schedule.isNullOrBlank()) {
+                            append(store.address)
+                            if (!store.schedule.isNullOrBlank()) {
                                 append(NEW_LINE)
-                                append(shop.schedule)
+                                append(store.schedule)
                             }
-                            if (!shop.phone?.value.isNullOrBlank()) {
+                            if (!store.phone?.value.isNullOrBlank()) {
                                 append(NEW_LINE)
-                                append(shop.phone?.value)
+                                append(store.phone?.value)
                             }
                         }
                         val body = Text.String(bodyString)
@@ -69,8 +69,8 @@ fun NavGraphBuilder.shopsScreen(navController: NavHostController) {
     }
 }
 
-fun NavHostController.navigateToShopsScreen() {
-    this.navigate(ProfileGraph.Shops.route)
+fun NavHostController.navigateToStoresScreen() {
+    this.navigate(ProfileGraph.Stores.route)
 }
 
 private const val NEW_LINE = "\n"

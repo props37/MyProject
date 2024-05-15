@@ -10,6 +10,7 @@ data class Filters(
     val colors: ListFilter<ColorFilterItem>?,
     val deliveryAvailability: ToggleFilter?,
     val storePickupAvailability: ToggleFilter?,
+    val pickupStores: ListFilter<PickupStoreFilterItem>?,
 ) : Iterable<Filter> {
     override fun iterator(): Iterator<Filter> = iterator {
         if (sorting != null) yield(sorting)
@@ -19,6 +20,7 @@ data class Filters(
         if (colors != null) yield(colors)
         if (deliveryAvailability != null) yield(deliveryAvailability)
         if (storePickupAvailability != null) yield(storePickupAvailability)
+        if (pickupStores != null) yield(pickupStores)
     }
 
     val appliedFilterCount: Int by lazy {
@@ -29,6 +31,7 @@ data class Filters(
         if (colors?.selectedItems != null) result += colors.selectedItems.size
         if (deliveryAvailability?.isEmpty == false) result++
         if (storePickupAvailability?.isEmpty == false) result++
+        if (pickupStores?.isEmpty == false) result++
         result
     }
 
@@ -39,6 +42,7 @@ data class Filters(
                 && colors?.isEmpty != false
                 && deliveryAvailability?.isEmpty != false
                 && storePickupAvailability?.isEmpty != false
+                && pickupStores?.isEmpty != false
     }
 
     companion object {
@@ -51,6 +55,7 @@ data class Filters(
                 colors = null,
                 deliveryAvailability = null,
                 storePickupAvailability = null,
+                pickupStores = null,
             )
 
         fun create(
@@ -61,6 +66,7 @@ data class Filters(
             colors: ListFilter<ColorFilterItem>? = null,
             availableForDelivery: ToggleFilter? = null,
             availableForStorePickup: ToggleFilter? = null,
+            pickupStores: ListFilter<PickupStoreFilterItem>? = null,
         ): Filters = Filters(
             sorting = sorting,
             price = price,
@@ -69,6 +75,7 @@ data class Filters(
             colors = colors,
             deliveryAvailability = availableForDelivery,
             storePickupAvailability = availableForStorePickup,
+            pickupStores = pickupStores,
         )
 
         fun getDefaultSorting(selected: Sorting? = null): ListFilter<SortFilterItem> {
@@ -90,6 +97,9 @@ fun Filters.coerceInAvailable(available: Filters): Filters {
     val colors = available.colors?.let { this.colors?.coerceInAvailable(it) ?: it }
     val deliveryAvailability = this.deliveryAvailability ?: available.deliveryAvailability
     val storePickupAvailability = this.storePickupAvailability ?: available.storePickupAvailability
+    val pickupStores = if (storePickupAvailability?.isEnabled == true) {
+        available.pickupStores?.let { this.pickupStores?.coerceInAvailable(it) ?: it }
+    } else null
     return this.copy(
         price = price,
         materials = materials,
@@ -97,6 +107,7 @@ fun Filters.coerceInAvailable(available: Filters): Filters {
         colors = colors,
         deliveryAvailability = deliveryAvailability,
         storePickupAvailability = storePickupAvailability,
+        pickupStores = pickupStores,
     )
 }
 
@@ -150,6 +161,13 @@ fun Filters.updateWith(filter: Filter): Filters {
                 "Could not cast ${Filter.Type.STORE_PICKUP_AVAILABILITY} $filter to ToggleFilter"
             }
             this.copy(storePickupAvailability = filter)
+        }
+
+        Filter.Type.PICKUP_STORES -> {
+            val castedFilter = checkNotNull(filter as? ListFilter<PickupStoreFilterItem>) {
+                "Could not cast ${Filter.Type.PICKUP_STORES} $filter to ListFilter<PickupStoreFilterItem>"
+            }
+            this.copy(pickupStores = castedFilter)
         }
     }
 }
