@@ -22,7 +22,7 @@ enum class BaseRoute {
     MY_ORDERS,
     ORDER,
     ORDER_CANCELLATION,
-    SHOPS,
+    STORES,
 
     // Cart graph
     CART_GRAPH,

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.shops
+package ru.livetyping.zarina.presentation.screen.stores
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -23,27 +23,28 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.domain.location.Location
-import ru.livetyping.zarina.domain.shop.Shop
+import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.presentation.screen.shops.ShopsScreenComponents.TopBar
-import ru.livetyping.zarina.presentation.screen.shops.ShopsScreenComponents.ViewModePager
-import ru.livetyping.zarina.presentation.screen.shops.ShopsScreenComponents.ViewModeTabRow
-import ru.livetyping.zarina.presentation.screen.shops.ShopsViewModel.ShopListState
-import ru.livetyping.zarina.presentation.screen.shops.ShopsViewModel.ViewMode
+import ru.livetyping.zarina.presentation.screen.stores.StoresScreenComponents.TopBar
+import ru.livetyping.zarina.presentation.screen.stores.StoresScreenComponents.ViewModePager
+import ru.livetyping.zarina.presentation.screen.stores.StoresScreenComponents.ViewModeTabRow
+import ru.livetyping.zarina.presentation.screen.stores.StoresViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.stores.StoresViewModel.StoreListState
+import ru.livetyping.zarina.presentation.screen.stores.StoresViewModel.ViewMode
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.pager.PagerTabRowIntegration
 
 @Composable
-fun ShopsScreen(
-    navigate: (ShopsScreenAction) -> Unit,
-    viewModel: ShopsViewModel = hiltViewModel(),
+fun StoresScreen(
+    navigate: (StoresScreenAction) -> Unit,
+    viewModel: StoresViewModel = hiltViewModel(),
 ) {
     val viewModes by viewModel.viewModes.collectAsStateWithLifecycle()
     val currentViewMode by viewModel.currentViewMode.collectAsStateWithLifecycle()
     val currentLocation by viewModel.currentLocation.collectAsStateWithLifecycle()
-    val mapShopsState by viewModel.mapShopsState.collectAsStateWithLifecycle()
-    val shopListState by viewModel.shopListState.collectAsStateWithLifecycle()
+    val storeMapState by viewModel.storeMapState.collectAsStateWithLifecycle()
+    val storeListState by viewModel.storeListState.collectAsStateWithLifecycle()
 
     ScreenContent(
         viewModes = viewModes,
@@ -51,10 +52,10 @@ fun ShopsScreen(
         onViewModeChanged = viewModel::onViewModeChanged,
         currentLocation = currentLocation,
         onMyLocationClicked = viewModel::onMyLocationClicked,
-        mapShopsState = mapShopsState,
-        shopListState = shopListState,
-        onShopsErrorRefreshClicked = viewModel::onShopsErrorRefreshClicked,
-        onShopClicked = viewModel::onShopClicked,
+        storeMapState = storeMapState,
+        storeListState = storeListState,
+        onStoresErrorRefreshClicked = viewModel::onStoresErrorRefreshClicked,
+        onStoreClicked = viewModel::onStoreClicked,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
@@ -69,15 +70,15 @@ private fun ScreenContent(
     onViewModeChanged: (ViewMode) -> Unit,
     currentLocation: Location?,
     onMyLocationClicked: () -> Unit,
-    mapShopsState: ShopListState,
-    shopListState: ShopListState,
-    onShopsErrorRefreshClicked: () -> Unit,
-    onShopClicked: (Shop) -> Unit,
+    storeMapState: StoreListState,
+    storeListState: StoreListState,
+    onStoresErrorRefreshClicked: () -> Unit,
+    onStoreClicked: (Store) -> Unit,
     onBackClicked: () -> Unit,
-    sideEffects: Flow<ShopsViewModel.SideEffect>,
-    navigate: (ShopsScreenAction) -> Unit,
+    sideEffects: Flow<SideEffect>,
+    navigate: (StoresScreenAction) -> Unit,
 ) {
-    ShopsScreenBehavior(
+    StoresScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
     )
@@ -116,10 +117,10 @@ private fun ScreenContent(
             pagerState = viewModePagerState,
             currentLocation = currentLocation,
             onMyLocationClicked = onMyLocationClicked,
-            mapShopsState = mapShopsState,
-            shopListState = shopListState,
-            onShopsErrorRefreshClicked = onShopsErrorRefreshClicked,
-            onShopClicked = onShopClicked,
+            storeMapState = storeMapState,
+            storeListState = storeListState,
+            onStoresErrorRefreshClicked = onStoresErrorRefreshClicked,
+            onStoreClicked = onStoreClicked,
             modifier = Modifier.fillMaxSize(),
         )
     }

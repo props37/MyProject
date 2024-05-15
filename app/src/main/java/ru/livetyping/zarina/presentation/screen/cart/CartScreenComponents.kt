@@ -271,7 +271,7 @@ object CartScreenComponents {
             types.forEach { type ->
                 val productCount = when (type) {
                     DeliveryType.DELIVERY -> cartSize.deliveryProductCount
-                    DeliveryType.PICK_UP_FROM_SHOP -> cartSize.pickUpFromShopProductCount
+                    DeliveryType.PICK_UP_FROM_STORE -> cartSize.pickUpFromStoreProductCount
                 }
                 DeliveryTypeButton(
                     type = type,
@@ -300,7 +300,7 @@ object CartScreenComponents {
         ) {
             val textResId = when (type) {
                 DeliveryType.DELIVERY -> R.string.delivery
-                DeliveryType.PICK_UP_FROM_SHOP -> R.string.from_shop
+                DeliveryType.PICK_UP_FROM_STORE -> R.string.from_store
             }
 
             val style = if (isSelected) {
@@ -467,10 +467,10 @@ object CartScreenComponents {
                 bodyResId = R.string.cart_empty_delivery_cart_placeholder_body
             }
 
-            DeliveryType.PICK_UP_FROM_SHOP -> {
-                iconResId = R.drawable.ic_shop_64
-                titleResId = R.string.cart_empty_pick_up_from_shop_cart_placeholder_title
-                bodyResId = R.string.cart_empty_pick_up_from_shop_cart_placeholder_body
+            DeliveryType.PICK_UP_FROM_STORE -> {
+                iconResId = R.drawable.ic_store_64
+                titleResId = R.string.cart_empty_pick_up_from_store_cart_placeholder_title
+                bodyResId = R.string.cart_empty_pick_up_from_store_cart_placeholder_body
             }
         }
         val errorState = rememberErrorState(

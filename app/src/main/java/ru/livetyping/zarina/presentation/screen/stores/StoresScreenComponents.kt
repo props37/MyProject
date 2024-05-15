@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.shops
+package ru.livetyping.zarina.presentation.screen.stores
 
 import android.Manifest
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -54,7 +54,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.location.Location
-import ru.livetyping.zarina.domain.shop.Shop
+import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
@@ -68,12 +68,12 @@ import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.util.domain.toLatLng
-import ru.livetyping.zarina.presentation.screen.shops.ShopsViewModel.ShopListState
-import ru.livetyping.zarina.presentation.screen.shops.ShopsViewModel.ViewMode
+import ru.livetyping.zarina.presentation.screen.stores.StoresViewModel.StoreListState
+import ru.livetyping.zarina.presentation.screen.stores.StoresViewModel.ViewMode
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 
-object ShopsScreenComponents {
+object StoresScreenComponents {
 
     @Composable
     fun TopBar(
@@ -89,7 +89,7 @@ object ShopsScreenComponents {
                 )
             },
             centerContent = {
-                Text(text = stringResource(R.string.shops))
+                Text(text = stringResource(R.string.stores))
             },
             contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
             modifier = modifier,
@@ -130,10 +130,10 @@ object ShopsScreenComponents {
         pagerState: PagerState,
         currentLocation: Location?,
         onMyLocationClicked: () -> Unit,
-        mapShopsState: ShopListState,
-        shopListState: ShopListState,
-        onShopsErrorRefreshClicked: () -> Unit,
-        onShopClicked: (Shop) -> Unit,
+        storeMapState: StoreListState,
+        storeListState: StoreListState,
+        onStoresErrorRefreshClicked: () -> Unit,
+        onStoreClicked: (Store) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         HorizontalPager(
@@ -146,17 +146,17 @@ object ShopsScreenComponents {
                     MapViewMode(
                         currentLocation = currentLocation,
                         onMyLocationClicked = onMyLocationClicked,
-                        mapShopsState = mapShopsState,
-                        onShopsErrorRefreshClicked = onShopsErrorRefreshClicked,
-                        onShopClicked = onShopClicked,
+                        storeMapState = storeMapState,
+                        onStoresErrorRefreshClicked = onStoresErrorRefreshClicked,
+                        onStoreClicked = onStoreClicked,
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
 
                 ViewMode.LIST -> {
                     ListViewMode(
-                        shopListState = shopListState,
-                        onShopsErrorRefreshClicked = onShopsErrorRefreshClicked,
+                        storeListState = storeListState,
+                        onStoresErrorRefreshClicked = onStoresErrorRefreshClicked,
                     )
                 }
             }
@@ -167,33 +167,33 @@ object ShopsScreenComponents {
     private fun MapViewMode(
         currentLocation: Location?,
         onMyLocationClicked: () -> Unit,
-        mapShopsState: ShopListState,
-        onShopsErrorRefreshClicked: () -> Unit,
-        onShopClicked: (Shop) -> Unit,
+        storeMapState: StoreListState,
+        onStoresErrorRefreshClicked: () -> Unit,
+        onStoreClicked: (Store) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Crossfade(
-            targetState = mapShopsState,
+            targetState = storeMapState,
             contentKey = {
                 when (it) {
-                    is ShopListState.Success -> ShopMapContentKeySuccess
+                    is StoreListState.Success -> StoreMapContentKeySuccess
                     else -> it
                 }
             },
             modifier = modifier,
         ) { state ->
             when (state) {
-                is ShopListState.Success -> {
-                    ShopMap(
+                is StoreListState.Success -> {
+                    StoreMap(
                         currentLocation = currentLocation,
                         onMyLocationClicked = onMyLocationClicked,
-                        shops = state.shops,
-                        onShopClicked = onShopClicked,
+                        stores = state.stores,
+                        onStoreClicked = onStoreClicked,
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
 
-                ShopListState.Loading -> {
+                StoreListState.Loading -> {
                     Box(modifier = Modifier.fillMaxSize()) {
                         ZarinaCircularLoader(
                             modifier = Modifier
@@ -203,10 +203,10 @@ object ShopsScreenComponents {
                     }
                 }
 
-                is ShopListState.Error -> {
+                is StoreListState.Error -> {
                     ZarinaErrorScreen(
                         state = state.state,
-                        onButtonClicked = onShopsErrorRefreshClicked,
+                        onButtonClicked = onStoresErrorRefreshClicked,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(16.dp),
@@ -218,11 +218,11 @@ object ShopsScreenComponents {
 
     @OptIn(ExperimentalPermissionsApi::class, MapsComposeExperimentalApi::class)
     @Composable
-    private fun ShopMap(
+    private fun StoreMap(
         currentLocation: Location?,
         onMyLocationClicked: () -> Unit,
-        shops: ImmutableList<Shop>,
-        onShopClicked: (Shop) -> Unit,
+        stores: ImmutableList<Store>,
+        onStoreClicked: (Store) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val coroutineScope = rememberCoroutineScope()
@@ -284,13 +284,13 @@ object ShopsScreenComponents {
                 uiSettings = uiSettings,
                 modifier = Modifier.fillMaxSize(),
             ) {
-                val clusterItems = remember(shops) {
-                    shops.map { ShopClusterItem(it) }
+                val clusterItems = remember(stores) {
+                    stores.map { StoreClusterItem(it) }
                 }
                 Clustering(
                     items = clusterItems,
                     onClusterItemClick = { item ->
-                        onShopClicked(item.shop)
+                        onStoreClicked(item.store)
                         false
                     },
                     clusterContent = { cluster ->
@@ -298,10 +298,10 @@ object ShopsScreenComponents {
                     },
                     clusterItemContent = {
                         Icon(
-                            painter = painterResource(R.drawable.ic_map_shop_marker_24),
+                            painter = painterResource(R.drawable.ic_map_store_marker_24),
                             contentDescription = stringResource(
-                                id = R.string.map_shop_content_description,
-                                it.shop.name,
+                                id = R.string.map_store_content_description,
+                                it.store.name,
                             ),
                             tint = UiKitTheme.colors.icon.regular.default,
                             modifier = Modifier.size(36.dp),
@@ -378,36 +378,36 @@ object ShopsScreenComponents {
 
     @Composable
     private fun ListViewMode(
-        shopListState: ShopListState,
-        onShopsErrorRefreshClicked: () -> Unit,
+        storeListState: StoreListState,
+        onStoresErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Crossfade(
-            targetState = shopListState,
+            targetState = storeListState,
             contentKey = {
                 when (it) {
-                    is ShopListState.Success -> ShopListContentKeySuccess
-                    ShopListState.Loading, is ShopListState.Error -> it
+                    is StoreListState.Success -> StoreListContentKeySuccess
+                    StoreListState.Loading, is StoreListState.Error -> it
                 }
             },
             modifier = modifier,
         ) { state ->
             when (state) {
-                is ShopListState.Success -> {
-                    ShopList(
-                        shops = state.shops,
+                is StoreListState.Success -> {
+                    StoreList(
+                        stores = state.stores,
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
 
-                ShopListState.Loading -> {
-                    ShopListSkeleton(modifier = Modifier.fillMaxSize())
+                StoreListState.Loading -> {
+                    StoreListSkeleton(modifier = Modifier.fillMaxSize())
                 }
 
-                is ShopListState.Error -> {
+                is StoreListState.Error -> {
                     ZarinaErrorScreen(
                         state = state.state,
-                        onButtonClicked = onShopsErrorRefreshClicked,
+                        onButtonClicked = onStoresErrorRefreshClicked,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(16.dp),
@@ -418,18 +418,18 @@ object ShopsScreenComponents {
     }
 
     @Composable
-    private fun ShopList(
-        shops: ImmutableList<Shop>,
+    private fun StoreList(
+        stores: ImmutableList<Store>,
         modifier: Modifier = Modifier,
     ) {
         LazyColumn(modifier = modifier) {
             itemsIndexed(
-                items = shops,
-                key = { _, shop -> shop.id.value },
-            ) { index, shop ->
-                ShopListItem(shop = shop)
+                items = stores,
+                key = { _, store -> store.id.value },
+            ) { index, store ->
+                StoreListItem(store = store)
 
-                if (index < shops.lastIndex) {
+                if (index < stores.lastIndex) {
                     Divider(
                         color = UiKitTheme.colors.background.skeleton,
                         modifier = Modifier.padding(horizontal = 16.dp),
@@ -440,16 +440,16 @@ object ShopsScreenComponents {
     }
 
     @Composable
-    private fun ShopListSkeleton(
+    private fun StoreListSkeleton(
         modifier: Modifier = Modifier,
     ) {
         val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
 
         LazyColumn(modifier = modifier) {
-            items(count = ShopListSkeletonItemCount) { index ->
-                ShopListItemSkeleton(shimmer = shimmer)
+            items(count = StoreListSkeletonItemCount) { index ->
+                StoreListItemSkeleton(shimmer = shimmer)
 
-                if (index < ShopListSkeletonItemCount - 1) {
+                if (index < StoreListSkeletonItemCount - 1) {
                     Divider(
                         color = UiKitTheme.colors.background.skeleton,
                         modifier = Modifier.padding(horizontal = 16.dp),
@@ -460,33 +460,33 @@ object ShopsScreenComponents {
     }
 
     @Composable
-    private fun ShopListItem(
-        shop: Shop,
+    private fun StoreListItem(
+        store: Store,
         modifier: Modifier = Modifier,
     ) {
         ZarinaItem(
-            contentPadding = ShopListItemContentPadding,
+            contentPadding = StoreListItemContentPadding,
             modifier = modifier,
         ) {
             Column {
                 Text(
-                    text = shop.name,
-                    style = ShopListItemNameTextStyle,
+                    text = store.name,
+                    style = StoreListItemNameTextStyle,
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))
 
                 Text(
-                    text = shop.address,
-                    style = ShopListItemInfoTextStyle,
+                    text = store.address,
+                    style = StoreListItemInfoTextStyle,
                 )
                 
-                if (shop.schedule != null) {
+                if (store.schedule != null) {
                     Spacer(modifier = Modifier.height(2.dp))
 
                     Text(
-                        text = shop.schedule,
-                        style = ShopListItemInfoTextStyle,
+                        text = store.schedule,
+                        style = StoreListItemInfoTextStyle,
                     )
                 }
             }
@@ -494,17 +494,17 @@ object ShopsScreenComponents {
     }
 
     @Composable
-    private fun ShopListItemSkeleton(
+    private fun StoreListItemSkeleton(
         shimmer: Shimmer,
         modifier: Modifier = Modifier,
     ) {
         ZarinaItem(
-            contentPadding = ShopListItemContentPadding,
+            contentPadding = StoreListItemContentPadding,
             modifier = modifier,
         ) {
             Column {
                 ZarinaTextSkeleton(
-                    textStyle = ShopListItemNameTextStyle,
+                    textStyle = StoreListItemNameTextStyle,
                     shimmer = shimmer,
                     modifier = Modifier.fillMaxWidth(fraction = 0.4f),
                 )
@@ -512,7 +512,7 @@ object ShopsScreenComponents {
                 Spacer(modifier = Modifier.height(6.dp))
 
                 ZarinaTextSkeleton(
-                    textStyle = ShopListItemInfoTextStyle,
+                    textStyle = StoreListItemInfoTextStyle,
                     shimmer = shimmer,
                     modifier = Modifier.fillMaxWidth(fraction = 0.7f),
                 )
@@ -520,10 +520,10 @@ object ShopsScreenComponents {
         }
     }
 
-    private data class ShopClusterItem(
-        val shop: Shop,
+    private data class StoreClusterItem(
+        val store: Store,
     ) : ClusterItem {
-        override fun getPosition(): LatLng = shop.location.toLatLng()
+        override fun getPosition(): LatLng = store.location.toLatLng()
 
         override fun getTitle(): String? = null
 
@@ -532,21 +532,21 @@ object ShopsScreenComponents {
         override fun getZIndex(): Float? = null
     }
 
-    private const val ShopMapContentKeySuccess = "ShopMapContentKeySuccess"
+    private const val StoreMapContentKeySuccess = "StoreMapContentKeySuccess"
 
     private const val MapClusterMaxSize = 99
 
-    private const val ShopListContentKeySuccess = "ShopListContentKeySuccess"
+    private const val StoreListContentKeySuccess = "StoreListContentKeySuccess"
 
-    private const val ShopListSkeletonItemCount = 12
+    private const val StoreListSkeletonItemCount = 12
 
-    private val ShopListItemContentPadding: PaddingValues get() = PaddingValues(16.dp)
+    private val StoreListItemContentPadding: PaddingValues get() = PaddingValues(16.dp)
 
-    private val ShopListItemNameTextStyle: TextStyle
+    private val StoreListItemNameTextStyle: TextStyle
         @Composable
         get() = UiKitTheme.typography.secondary.light
 
-    private val ShopListItemInfoTextStyle: TextStyle
+    private val StoreListItemInfoTextStyle: TextStyle
         @Composable
         get() = UiKitTheme.typography.tertiary.light
 }

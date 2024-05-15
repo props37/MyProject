@@ -17,7 +17,7 @@ data class CartDto(
     val deliveryProductCount: Int? = null,
 
     @SerialName("retail_count")
-    val pickUpFromShopProductCount: Int? = null,
+    val pickUpFromStoresProductCount: Int? = null,
 ) {
     fun toCart(): Cart {
         checkNotNull(products) { "products is null" }
@@ -30,11 +30,11 @@ data class CartDto(
     private fun getCartSize(): CartSize {
         checkNotNull(totalProductCount) { "totalProductCount is null" }
         checkNotNull(deliveryProductCount) { "deliveryProductCount is null" }
-        checkNotNull(pickUpFromShopProductCount) { "pickUpFromShopProductCount is null" }
+        checkNotNull(pickUpFromStoresProductCount) { "pickUpFromStoresProductCount is null" }
         return CartSize(
             totalProductCount = totalProductCount,
             deliveryProductCount = deliveryProductCount,
-            pickUpFromShopProductCount = pickUpFromShopProductCount,
+            pickUpFromStoreProductCount = pickUpFromStoresProductCount,
         )
     }
 }

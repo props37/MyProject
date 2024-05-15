@@ -226,7 +226,7 @@ object ProfileScreenComponents {
         val itemNameResId = when (item) {
             InfoItem.MyOrders -> R.string.my_orders
             InfoItem.City -> R.string.city
-            InfoItem.Shops -> R.string.shops
+            InfoItem.Stores -> R.string.stores
             InfoItem.Help -> R.string.help
             InfoItem.AboutCompany -> R.string.about_company
         }

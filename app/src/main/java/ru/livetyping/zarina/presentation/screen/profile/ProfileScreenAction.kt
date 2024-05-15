@@ -13,5 +13,5 @@ sealed class ProfileScreenAction {
 
     data object MyOrdersClicked : ProfileScreenAction()
 
-    data object ShopsClicked : ProfileScreenAction()
+    data object StoresClicked : ProfileScreenAction()
 }

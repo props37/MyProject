@@ -50,7 +50,7 @@ data class CartProductDto(
             isInFavorites = offer.isInFavorites ?: false,
             availableCount = CartProduct.AvailableCount(
                 delivery = offer.deliveryAvailableCount ?: 0,
-                pickUpFromShop = offer.pickUpFromShopAvailableCount ?: 0,
+                pickUpFromStore = offer.pickUpFromStoreAvailableCount ?: 0,
             ),
         )
     }
@@ -91,6 +91,6 @@ data class CartProductDto(
         val deliveryAvailableCount: Int? = null,
 
         @SerialName("retail_amount")
-        val pickUpFromShopAvailableCount: Int? = null,
+        val pickUpFromStoreAvailableCount: Int? = null,
     )
 }

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.shops
+package ru.livetyping.zarina.presentation.screen.stores
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,12 +11,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.livetyping.zarina.presentation.common.zarinatoast.controller.LocalZarinaToastController
-import ru.livetyping.zarina.presentation.screen.shops.ShopsViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.stores.StoresViewModel.SideEffect
 
 @Composable
-fun ShopsScreenBehavior(
+fun StoresScreenBehavior(
     sideEffects: Flow<SideEffect>,
-    navigate: (ShopsScreenAction) -> Unit,
+    navigate: (StoresScreenAction) -> Unit,
 ) {
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedNavigate by rememberUpdatedState(navigate)

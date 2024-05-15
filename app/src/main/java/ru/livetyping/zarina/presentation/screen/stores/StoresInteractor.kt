@@ -1,14 +1,14 @@
-package ru.livetyping.zarina.presentation.screen.shops
+package ru.livetyping.zarina.presentation.screen.stores
 
 import ru.livetyping.zarina.presentation.common.permissionmanager.PermissionManager
 import ru.livetyping.zarina.usecase.location.GetCurrentLocationFlowUseCase
-import ru.livetyping.zarina.usecase.shop.GetShopsFlowUseCase
+import ru.livetyping.zarina.usecase.store.GetStoresFlowUseCase
 import ru.livetyping.zarina.usecase.user.GetUserCityFlowUseCase
 import javax.inject.Inject
 
-class ShopsInteractor @Inject constructor(
+class StoresInteractor @Inject constructor(
     val permissionManager: PermissionManager,
     val getCurrentLocationFlow: GetCurrentLocationFlowUseCase,
-    val getShopsFlow: GetShopsFlowUseCase,
+    val getStoresFlow: GetStoresFlowUseCase,
     val getUserCityFlow: GetUserCityFlowUseCase,
 )
