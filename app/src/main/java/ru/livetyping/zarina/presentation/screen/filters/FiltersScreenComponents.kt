@@ -124,6 +124,7 @@ object FiltersScreenComponents {
     @Composable
     fun FilterList(
         state: FilterListState,
+        isPickupStoresFilterVisible: Boolean,
         onFilterChanged: (Filter) -> Unit,
         onFilterClicked: (Filter) -> Unit,
         onShowProductsClicked: () -> Unit,
@@ -146,6 +147,7 @@ object FiltersScreenComponents {
                 is FilterListState.FilterList -> {
                     Filters(
                         filters = state.filters,
+                        isPickupStoresFilterVisible = isPickupStoresFilterVisible,
                         onFilterChanged = onFilterChanged,
                         onFilterClicked = onFilterClicked,
                         onShowProductsClicked = onShowProductsClicked,
@@ -174,6 +176,7 @@ object FiltersScreenComponents {
     @Composable
     private fun Filters(
         filters: Filters,
+        isPickupStoresFilterVisible: Boolean,
         onFilterChanged: (Filter) -> Unit,
         onFilterClicked: (Filter) -> Unit,
         onShowProductsClicked: () -> Unit,
@@ -226,22 +229,29 @@ object FiltersScreenComponents {
                             }
 
                             is ListFilter<*> -> {
-                                if (filter.isSingleSelection) {
-                                    SingleSelectionFilterItem(
-                                        type = filter.type,
-                                        selected = remember(filter.selectedItems) {
-                                            filter.selectedItems.firstOrNull()
-                                        },
-                                        onClick = { onFilterClicked(filter) },
-                                    )
-                                } else {
-                                    MultiSelectionFilterItem(
-                                        type = filter.type,
-                                        selectedCount = remember(filter.selectedItems) {
-                                            filter.selectedItems.size
-                                        },
-                                        onClick = { onFilterClicked(filter) },
-                                    )
+                                when {
+                                    filter.type == Filter.Type.PICKUP_STORES
+                                            && !isPickupStoresFilterVisible -> Unit
+
+                                    filter.isSingleSelection -> {
+                                        SingleSelectionFilterItem(
+                                            type = filter.type,
+                                            selected = remember(filter.selectedItems) {
+                                                filter.selectedItems.firstOrNull()
+                                            },
+                                            onClick = { onFilterClicked(filter) },
+                                        )
+                                    }
+
+                                    else -> {
+                                        MultiSelectionFilterItem(
+                                            type = filter.type,
+                                            selectedCount = remember(filter.selectedItems) {
+                                                filter.selectedItems.size
+                                            },
+                                            onClick = { onFilterClicked(filter) },
+                                        )
+                                    }
                                 }
                             }
 

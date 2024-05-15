@@ -136,6 +136,13 @@ class FiltersViewModel @AssistedInject constructor(
         } ?: FilterListState.Loading,
     )
 
+    val isPickupStoresFilterVisible: StateFlow<Boolean> = filters.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { filters ->
+        filters?.storePickupAvailability?.isEnabled == true
+    }
+
     val isResetButtonVisible: StateFlow<Boolean> = filters.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
