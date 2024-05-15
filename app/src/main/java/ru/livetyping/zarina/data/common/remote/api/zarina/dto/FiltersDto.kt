@@ -38,31 +38,40 @@ data class FiltersDto(
     fun toFilters(): Filters {
         val price = price?.let { PriceFilter(min = null, max = null, limits = it.toPriceRange()) }
         val materials = if (!materials.isNullOrEmpty()) {
-            ListFilter(
-                items = materials
-                    .mapNotNull { it.toMaterialFilterItem() }
-                    .distinctBy { it.id }, // TODO: [High] Remove when ID is fixed on backend
-                isSingleSelection = false,
-                type = Filter.Type.MATERIALS,
-            )
+            val items = materials
+                .mapNotNull { it.toMaterialFilterItem() }
+                .distinctBy { it.id } // TODO: [High] Remove when ID is fixed on backend
+            if (items.isNotEmpty()) {
+                ListFilter(
+                    items = items,
+                    isSingleSelection = false,
+                    type = Filter.Type.MATERIALS,
+                )
+            } else null
         } else null
         val sizes = if (!sizes.isNullOrEmpty()) {
-            ListFilter(
-                items = sizes
-                    .mapNotNull { it.toSizeFilterItem() }
-                    .distinctBy { it.id }, // TODO: [High] Remove when ID is fixed on backend
-                isSingleSelection = false,
-                type = Filter.Type.SIZES,
-            )
+            val items = sizes
+                .mapNotNull { it.toSizeFilterItem() }
+                .distinctBy { it.id } // TODO: [High] Remove when ID is fixed on backend
+            if (items.isNotEmpty()) {
+                ListFilter(
+                    items = items,
+                    isSingleSelection = false,
+                    type = Filter.Type.SIZES,
+                )
+            } else null
         } else null
         val colors = if (!colors.isNullOrEmpty()) {
-            ListFilter(
-                items = colors
-                    .mapNotNull { it.toColorFilterItem() }
-                    .distinctBy { it.id }, // TODO: [High] Remove when ID is fixed on backend
-                isSingleSelection = false,
-                type = Filter.Type.COLORS,
-            )
+            val items = colors
+                .mapNotNull { it.toColorFilterItem() }
+                .distinctBy { it.id } // TODO: [High] Remove when ID is fixed on backend
+            if (items.isNotEmpty()) {
+                ListFilter(
+                    items = items,
+                    isSingleSelection = false,
+                    type = Filter.Type.COLORS,
+                )
+            } else null
         } else null
         val deliveryAvailability = deliveryAvailability?.let {
             if (it.isAvailable != false) {
@@ -81,12 +90,15 @@ data class FiltersDto(
             } else null
         }
         val pickupStores = if (this.storePickupAvailability?.stores != null) {
-            ListFilter(
-                items = this.storePickupAvailability.stores
-                    .mapNotNull { it.toPickupStoreFilterItem() },
-                isSingleSelection = false,
-                type = Filter.Type.PICKUP_STORES,
-            )
+            val items = this.storePickupAvailability.stores
+                .mapNotNull { it.toPickupStoreFilterItem() }
+            if (items.isNotEmpty()) {
+                ListFilter(
+                    items = items,
+                    isSingleSelection = false,
+                    type = Filter.Type.PICKUP_STORES,
+                )
+            } else null
         } else null
         return Filters(
             sorting = Filters.getDefaultSorting(),
