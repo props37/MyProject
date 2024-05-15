@@ -9,6 +9,7 @@ import androidx.compose.material3.DatePickerFormatter
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -40,6 +41,7 @@ fun ZarinaDatePicker(
             modifier = Modifier.padding(start = 24.dp, end = 12.dp, bottom = 12.dp),
         )
     },
+    showModeToggle: Boolean = true,
     colors: DatePickerColors = ZarinaDatePickerDefaults.colors(),
 ) {
     DatePicker(
@@ -47,7 +49,7 @@ fun ZarinaDatePicker(
         dateFormatter = dateFormatter,
         title = title,
         headline = headline,
-        showModeToggle = false,
+        showModeToggle = showModeToggle,
         colors = colors,
         modifier = modifier,
     )
@@ -114,7 +116,23 @@ object ZarinaDatePickerDefaults {
         dayInSelectionRangeContentColor: Color = Color.Unspecified,
         dayInSelectionRangeContainerColor: Color = Color.Unspecified,
         dividerColor: Color = UiKitTheme.colors.background.skeleton,
-        dateTextFieldColors: TextFieldColors? = null
+        dateTextFieldColors: TextFieldColors? = TextFieldDefaults.colors(
+            focusedTextColor = UiKitTheme.colors.text.general.regular.default,
+            focusedContainerColor = UiKitTheme.colors.background.general.regular.default,
+            focusedIndicatorColor = UiKitTheme.colors.border.general.active,
+            focusedLabelColor = UiKitTheme.colors.text.general.regular.default,
+            unfocusedTextColor = UiKitTheme.colors.text.general.regular.default,
+            unfocusedContainerColor = UiKitTheme.colors.background.general.regular.default,
+            unfocusedIndicatorColor = UiKitTheme.colors.border.general.default,
+            unfocusedLabelColor = UiKitTheme.colors.text.general.regular.muted,
+            errorTextColor = UiKitTheme.colors.text.general.accent.red,
+            errorContainerColor = UiKitTheme.colors.background.general.regular.default,
+            errorIndicatorColor = UiKitTheme.colors.border.general.error,
+            errorLabelColor = UiKitTheme.colors.text.general.accent.red,
+            errorSupportingTextColor = UiKitTheme.colors.text.general.accent.red,
+            cursorColor = UiKitTheme.colors.text.general.regular.default,
+            errorCursorColor = UiKitTheme.colors.text.general.regular.default,
+        ),
     ): DatePickerColors = DatePickerDefaults.colors(
         containerColor = containerColor,
         titleContentColor = titleContentColor,
