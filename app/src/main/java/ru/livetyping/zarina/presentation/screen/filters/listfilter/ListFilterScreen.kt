@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.domain.filter.ListFilter
 import ru.livetyping.zarina.domain.filter.ListFilterItem
+import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.common.util.domain.nameResId
 import ru.livetyping.zarina.presentation.screen.filters.listfilter.ListFilterScreenComponents.ApplyButton
@@ -44,6 +45,7 @@ fun ListFilterScreen(
     val filter by viewModel.filter.collectAsStateWithLifecycle()
     val isResetButtonVisible by viewModel.isResetButtonVisible.collectAsStateWithLifecycle()
     val isApplyButtonVisible by viewModel.isApplyButtonVisible.collectAsStateWithLifecycle()
+    val city by viewModel.city.collectAsStateWithLifecycle()
 
     val topBarActions = remember(viewModel) {
         TopBarActions(
@@ -56,6 +58,7 @@ fun ListFilterScreen(
         filter = filter,
         isResetButtonVisible = isResetButtonVisible,
         isApplyButtonVisible = isApplyButtonVisible,
+        city = city,
         topBarActions = topBarActions,
         onItemClicked = viewModel::onItemClicked,
         onApplyClicked = viewModel::onApplyClicked,
@@ -69,6 +72,7 @@ private fun ScreenContent(
     filter: ListFilter<ListFilterItem>,
     isResetButtonVisible: Boolean,
     isApplyButtonVisible: Boolean,
+    city: City?,
     topBarActions: TopBarActions,
     onItemClicked: (ListFilterItem) -> Unit,
     onApplyClicked: () -> Unit,
@@ -101,8 +105,9 @@ private fun ScreenContent(
             PaddingValues()
         }
         FilterItems(
-            items = filter.items,
+            filter = filter,
             onItemClicked = onItemClicked,
+            city = city,
             contentPadding = contentPadding,
             modifier = Modifier.weight(1f),
         )
