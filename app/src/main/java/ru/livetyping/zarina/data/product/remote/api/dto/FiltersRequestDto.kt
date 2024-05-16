@@ -20,10 +20,13 @@ data class FiltersRequestDto(
     val colors: List<String>? = null,
 
     @SerialName("available_for_shipping")
-    val deliveryAvailability: Boolean? = null,
+    val isAvailableForDelivery: Boolean? = null,
+
+    @SerialName("available_for_pickup")
+    val isAvailableForStorePickup: Boolean? = null,
 
     @SerialName("available_for_store_pickup")
-    val storePickupAvailability: List<String>? = null,
+    val pickupStores: List<String>? = null,
 ) {
     companion object {
         fun from(filters: Filters): FiltersRequestDto? {
@@ -37,10 +40,13 @@ data class FiltersRequestDto(
                 val colors = filters.colors?.let { filter ->
                     if (!filter.isEmpty) filter.selectedItems.map { it.id.value } else null
                 }
-                val deliveryAvailability = filters.deliveryAvailability?.let { filter ->
+                val isAvailableForDelivery = filters.deliveryAvailability?.let { filter ->
                     if (filter.isEnabled) true else null
                 }
-                val storePickupAvailability = if (filters.storePickupAvailability?.isEnabled == true) {
+                val isAvailableForStorePickup = filters.storePickupAvailability?.let { filter ->
+                    if (filter.isEnabled) true else null
+                }
+                val pickupStores = if (isAvailableForStorePickup == true) {
                     filters.pickupStores?.let { filter ->
                         filter.selectedItems.map { it.id.value }
                     }
@@ -50,8 +56,9 @@ data class FiltersRequestDto(
                     materials = materials,
                     sizes = sizes,
                     colors = colors,
-                    deliveryAvailability = deliveryAvailability,
-                    storePickupAvailability = storePickupAvailability,
+                    isAvailableForDelivery = isAvailableForDelivery,
+                    isAvailableForStorePickup = isAvailableForStorePickup,
+                    pickupStores = pickupStores,
                 )
             } else {
                 null
