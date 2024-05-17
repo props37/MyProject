@@ -50,6 +50,7 @@ enum class BaseRoute {
     CITY_SELECTOR,
     DEFAULT_CITY,
     PRODUCTS,
+    PRODUCT_SEARCH,
     PRODUCT,
     FILTERS,
     LIST_FILTER,

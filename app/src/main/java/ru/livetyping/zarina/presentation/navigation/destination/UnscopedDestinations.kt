@@ -155,6 +155,8 @@ object UnscopedDestinations {
         )
     }
 
+    data object ProductSearch : SimpleDestination(BaseRoute.PRODUCT_SEARCH)
+
     data object Product : Destination<Product.Args>() {
         const val ARG_KEY_PRODUCT_ID = "arg_product_id"
 

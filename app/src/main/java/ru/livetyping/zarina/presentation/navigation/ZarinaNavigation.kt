@@ -26,6 +26,7 @@ import ru.livetyping.zarina.presentation.navigation.screen.listFilterScreen
 import ru.livetyping.zarina.presentation.navigation.screen.onboardingScreen
 import ru.livetyping.zarina.presentation.navigation.screen.permissionRequirementBottomSheetScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productScreen
+import ru.livetyping.zarina.presentation.navigation.screen.productSearchScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productSubscriptionScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productsScreen
 import ru.livetyping.zarina.presentation.navigation.util.NavigationTransitionDurationMillis
@@ -36,7 +37,8 @@ fun ZarinaNavigation(
     startDestination: Destination<Unit>,
     modifier: Modifier = Modifier,
 ) {
-    val updatedNavController by rememberUpdatedState(navController)
+    @Suppress("NAME_SHADOWING")
+    val navController by rememberUpdatedState(navController)
 
     NavHost(
         navController = navController,
@@ -46,26 +48,27 @@ fun ZarinaNavigation(
         modifier = modifier,
     ) {
         // Bottom nav bar graphs
-        catalogGraph(updatedNavController)
-        favoritesGraph(updatedNavController)
-        homeGraph(updatedNavController)
-        profileGraph(updatedNavController)
-        cartGraph(updatedNavController)
+        catalogGraph(navController)
+        favoritesGraph(navController)
+        homeGraph(navController)
+        profileGraph(navController)
+        cartGraph(navController)
 
-        signUpGraph(updatedNavController)
-        signInGraph(updatedNavController)
-        sizeSelectorGraph(updatedNavController)
+        signUpGraph(navController)
+        signInGraph(navController)
+        sizeSelectorGraph(navController)
 
-        onboardingScreen(updatedNavController)
-        citySelectorScreen(updatedNavController)
-        defaultCityDialog(updatedNavController)
-        productsScreen(updatedNavController)
-        productScreen(updatedNavController)
-        filtersScreen(updatedNavController)
-        listFilterScreen(updatedNavController)
-        productSubscriptionScreen(updatedNavController)
-        permissionRequirementBottomSheetScreen(updatedNavController)
+        onboardingScreen(navController)
+        citySelectorScreen(navController)
+        defaultCityDialog(navController)
+        productsScreen(navController)
+        productSearchScreen(navController)
+        productScreen(navController)
+        filtersScreen(navController)
+        listFilterScreen(navController)
+        productSubscriptionScreen(navController)
+        permissionRequirementBottomSheetScreen(navController)
 
-        genericBottomSheetScreen(updatedNavController)
+        genericBottomSheetScreen(navController)
     }
 }
