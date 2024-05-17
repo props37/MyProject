@@ -118,8 +118,8 @@ object CartScreenComponents {
             endContent = {
                 AnimatedVisibility(
                     visible = isClearButtonVisible,
-                    enter = AnimatedContentDefaultEnterTransition,
-                    exit = AnimatedContentDefaultExitTransition,
+                    enter = remember { AnimatedContentDefaultEnterTransition },
+                    exit = remember { AnimatedContentDefaultExitTransition },
                 ) {
                     ZarinaButton(
                         onClick = onClearClicked,

@@ -100,8 +100,8 @@ object FiltersScreenComponents {
             endContent = {
                 AnimatedVisibility(
                     visible = isResetButtonVisible,
-                    enter = AnimatedContentDefaultEnterTransition,
-                    exit = AnimatedContentDefaultExitTransition,
+                    enter = remember { AnimatedContentDefaultEnterTransition },
+                    exit = remember { AnimatedContentDefaultExitTransition },
                 ) {
                     ZarinaButton(
                         onClick = actions.onResetClicked,

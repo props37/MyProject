@@ -79,8 +79,8 @@ fun ZarinaCheckbox(
     ) {
         AnimatedVisibility(
             visible = isChecked,
-            enter = fadeIn(),
-            exit = fadeOut(),
+            enter = remember { fadeIn() },
+            exit = remember { fadeOut() },
             modifier = Modifier.matchParentSize(),
         ) {
             Icon(

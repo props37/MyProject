@@ -221,12 +221,8 @@ object HomeScreenComponents {
 
             AnimatedVisibility(
                 visible = !isBannerDisplayed,
-                enter = remember {
-                    fadeIn(tween(BannerLoaderAnimationDuration))
-                },
-                exit = remember {
-                    fadeOut(tween(BannerLoaderAnimationDuration))
-                },
+                enter = remember { fadeIn(tween(BannerLoaderAnimationDuration)) },
+                exit = remember { fadeOut(tween(BannerLoaderAnimationDuration)) },
                 modifier = Modifier.matchParentSize(),
             ) {
                 ZarinaLoadingScreen(
