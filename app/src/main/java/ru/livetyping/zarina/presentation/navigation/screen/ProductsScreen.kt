@@ -22,7 +22,8 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
             when (targetState.destination.route) {
                 UnscopedDestinations.Filters.routeSchema,
                 UnscopedDestinations.ProductSubscription.routeSchema,
-                UnscopedDestinations.Product.routeSchema -> slideExitTransition()
+                UnscopedDestinations.Product.routeSchema,
+                UnscopedDestinations.ProductSearch.routeSchema -> slideExitTransition()
 
                 else -> null
             }
@@ -31,7 +32,8 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
             when (initialState.destination.route) {
                 UnscopedDestinations.Filters.routeSchema,
                 UnscopedDestinations.ProductSubscription.routeSchema,
-                UnscopedDestinations.Product.routeSchema -> slidePopEnterTransition()
+                UnscopedDestinations.Product.routeSchema,
+                UnscopedDestinations.ProductSearch.routeSchema -> slidePopEnterTransition()
 
                 else -> null
             }
@@ -48,6 +50,10 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                             route = UnscopedDestinations.Products.routeSchema,
                             inclusive = true,
                         )
+                    }
+
+                    ProductsScreenAction.SearchClicked -> {
+                        navController.navigateToProductSearchScreen()
                     }
 
                     is ProductsScreenAction.FiltersClicked -> {

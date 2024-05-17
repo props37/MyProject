@@ -7,6 +7,8 @@ import ru.livetyping.zarina.domain.product.Product
 sealed class ProductsScreenAction {
     data object ScreenClosed : ProductsScreenAction()
 
+    data object SearchClicked : ProductsScreenAction()
+
     data class FiltersClicked(
         val categoryId: Category.Id,
         val filters: Filters?,

@@ -15,13 +15,17 @@ fun NavGraphBuilder.productSearchScreen(navController: NavHostController) {
         destination = UnscopedDestinations.ProductSearch,
         enterTransition = {
             when (initialState.destination.route) {
-                CatalogGraph.Catalog.routeSchema -> slideEnterTransition()
+                CatalogGraph.Catalog.routeSchema,
+                UnscopedDestinations.Products.routeSchema -> slideEnterTransition()
+
                 else -> null
             }
         },
         popExitTransition = {
             when (targetState.destination.route) {
-                CatalogGraph.Catalog.routeSchema -> slidePopExitTransition()
+                CatalogGraph.Catalog.routeSchema,
+                UnscopedDestinations.Products.routeSchema -> slidePopExitTransition()
+
                 else -> null
             }
         },

@@ -20,13 +20,17 @@ fun NavGraphBuilder.catalogScreen(
         destination = CatalogGraph.Catalog,
         exitTransition = {
             when (targetState.destination.route) {
-                UnscopedDestinations.ProductSearch.routeSchema -> slideExitTransition()
+                UnscopedDestinations.ProductSearch.routeSchema,
+                UnscopedDestinations.Products.routeSchema -> slideExitTransition()
+
                 else -> null
             }
         },
         popEnterTransition = {
             when (initialState.destination.route) {
-                UnscopedDestinations.ProductSearch.routeSchema -> slidePopEnterTransition()
+                UnscopedDestinations.ProductSearch.routeSchema,
+                UnscopedDestinations.Products.routeSchema -> slidePopEnterTransition()
+
                 else -> null
             }
         },
