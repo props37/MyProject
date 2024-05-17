@@ -2,6 +2,7 @@ package ru.livetyping.zarina.presentation.activity
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Window
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -117,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 controller.currentBehavior.collect { behavior ->
-                    val window = this@MainActivity.window
+                    val window: Window? = this@MainActivity.window
                     val brightness = behavior.brightness.toWindowManagerBrightness()
                     val layoutParams = window?.attributes
                     layoutParams?.screenBrightness = brightness
