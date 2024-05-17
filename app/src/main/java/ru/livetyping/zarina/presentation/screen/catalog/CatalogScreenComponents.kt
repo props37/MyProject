@@ -68,7 +68,7 @@ object CatalogScreenComponents {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .heightIn(min = 56.dp)
+                    .heightIn(min = TopBarDefaults.MinHeight)
                     .padding(vertical = TopBarDefaults.VerticalPadding),
             ) {
                 Icon(
