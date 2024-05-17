@@ -53,11 +53,6 @@ class CatalogViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    val searchQuery: StateFlow<String> = savedStateHandle.getStateFlow(
-        key = KEY_SEARCH_QUERY,
-        initialValue = "",
-    )
-
     val genderTabs: StateFlow<ImmutableList<GenderTab>> =
         MutableStateFlow(GenderTab.entries.toImmutableList()).asStateFlow()
 
@@ -147,12 +142,11 @@ class CatalogViewModel @Inject constructor(
         categoriesFetchRequests.trySend(Unit)
     }
 
-    fun onSearchQueryChanged(query: String) {
-        savedStateHandle[KEY_SEARCH_QUERY] = query
-    }
-
-    fun onSearchBarCancelClicked() {
-        emitSideEffect(SideEffect.FreeSearchBarFocus)
+    fun onSearchBarClicked() {
+        navigationThrottler.throttle {
+            val action = CatalogScreenAction.SearchClicked
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     fun onGenderTabChanged(tab: GenderTab) {
@@ -231,7 +225,6 @@ class CatalogViewModel @Inject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CatalogScreenAction) : SideEffect
-        data object FreeSearchBarFocus : SideEffect
     }
 
     @Parcelize
@@ -341,7 +334,6 @@ class CatalogViewModel @Inject constructor(
     }
 
     companion object {
-        private const val KEY_SEARCH_QUERY = "search_query"
         private const val KEY_CURRENT_GENDER_TAB = "current_gender_tab"
     }
 }

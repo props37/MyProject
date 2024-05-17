@@ -3,7 +3,6 @@ package ru.livetyping.zarina.presentation.screen.catalog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
@@ -18,7 +17,6 @@ fun CatalogScreenBehavior(
     sideEffects: Flow<SideEffect>,
     navigate: (CatalogScreenAction) -> Unit,
 ) {
-    val updatedFocusManager by rememberUpdatedState(LocalFocusManager.current)
     val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = true)
@@ -29,7 +27,6 @@ fun CatalogScreenBehavior(
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
                         is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
-                        SideEffect.FreeSearchBarFocus -> updatedFocusManager.clearFocus(force = true)
                     }
                 }
             }

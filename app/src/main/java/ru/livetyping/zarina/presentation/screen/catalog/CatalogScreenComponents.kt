@@ -1,12 +1,11 @@
 package ru.livetyping.zarina.presentation.screen.catalog
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,12 +24,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusState
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -41,16 +37,12 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
-import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
-import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
-import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
+import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
-import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
-import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.util.domain.toComposeColor
 import ru.livetyping.zarina.presentation.screen.catalog.CatalogViewModel.CategoryListItem
@@ -58,62 +50,47 @@ import ru.livetyping.zarina.presentation.screen.catalog.CatalogViewModel.Categor
 import ru.livetyping.zarina.presentation.screen.catalog.CatalogViewModel.CategoryListState
 import ru.livetyping.zarina.presentation.screen.catalog.CatalogViewModel.GenderTab
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
-import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 
 object CatalogScreenComponents {
 
     @Composable
     fun SearchBar(
-        searchQuery: String,
-        onSearchQueryChanged: (String) -> Unit,
-        onCancelClicked: () -> Unit,
+        onClick: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = modifier.heightIn(min = TopBarDefaults.MinHeight),
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(horizontal = 16.dp),
         ) {
-            val focusState = remember { mutableStateOf<FocusState?>(null) }
-
-            ZarinaTextField(
-                value = searchQuery,
-                onValueChanged = onSearchQueryChanged,
-                placeholder = {
-                    Text(text = stringResource(R.string.find_products))
-                },
-                leadingContent = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_magnifying_glass_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp),
-                    )
-                },
-                innerTrailingContent = {
-                    ZarinaTextFieldDefaults.ClearButton(
-                        isVisible = searchQuery.isNotEmpty(),
-                        onClick = { onSearchQueryChanged("") },
-                    )
-                },
-                outerTrailingContent = {
-                    val isCancelButtonVisible = focusState.value?.isFocused == true
-                    AnimatedContent(
-                        targetState = isCancelButtonVisible,
-                        transitionSpec = {
-                            AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
-                        },
-                        contentAlignment = Alignment.Center,
-                        label = "SearchBar Cancel button",
-                    ) { isVisible ->
-                        if (isVisible) {
-                            ZarinaTextFieldDefaults.CancelButton(onClick = onCancelClicked)
-                        }
-                    }
-                },
-                singleLine = true,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState.value = it },
+                    .heightIn(min = 56.dp)
+                    .padding(vertical = TopBarDefaults.VerticalPadding),
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_magnifying_glass_24),
+                    contentDescription = null,
+                    tint = UiKitTheme.colors.icon.regular.muted,
+                    modifier = Modifier.size(20.dp),
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = stringResource(R.string.find_products),
+                    style = UiKitTheme.typography.secondary.light,
+                    color = UiKitTheme.colors.text.general.regular.muted,
+                    maxLines = 1,
+                )
+            }
+
+            Divider(
+                color = UiKitTheme.colors.background.skeleton,
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
@@ -123,7 +100,7 @@ object CatalogScreenComponents {
     fun GenderPicker(
         genders: ImmutableList<GenderTab>,
         pagerState: PagerState,
-        onGenderСhanged: (GenderTab) -> Unit,
+        onGenderChanged: (GenderTab) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val currentGender = remember(genders, pagerState) {
@@ -134,31 +111,18 @@ object CatalogScreenComponents {
             selectedTabIndex = pagerState.currentPage,
             modifier = modifier,
         ) {
-            // TODO: [Low] Migrate to ZarinaTab
             genders.forEach { gender ->
-                ZarinaButton(
-                    onClick = { onGenderСhanged(gender) },
-                    size = ZarinaButtonSize.Medium,
-                    colors = ZarinaButtonDefaults.backlessColors(),
-                    contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
-                ) {
-                    val textResId = when (gender) {
-                        GenderTab.WOMEN -> R.string.for_women
-                        GenderTab.MEN -> R.string.for_men
-                    }
-
-                    val style = if (gender == currentGender.value) {
-                        UiKitTheme.typography.tertiary.regular
-                    } else {
-                        UiKitTheme.typography.tertiary.light
-                    }
-
-                    Text(
-                        text = stringResource(textResId).uppercase(),
-                        style = style,
-                        color = UiKitTheme.colors.text.general.regular.default,
-                    )
+                val textResId = when (gender) {
+                    GenderTab.WOMEN -> R.string.for_women
+                    GenderTab.MEN -> R.string.for_men
                 }
+                ZarinaTab(
+                    text = stringResource(textResId).uppercase(),
+                    onClick = { onGenderChanged(gender) },
+                    isSelected = gender == currentGender.value,
+                    selectedTextStyle = UiKitTheme.typography.tertiary.regular,
+                    unselectedTextStyle = UiKitTheme.typography.tertiary.light,
+                )
             }
         }
     }

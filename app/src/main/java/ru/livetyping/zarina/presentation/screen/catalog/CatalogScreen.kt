@@ -29,7 +29,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
@@ -53,18 +52,13 @@ fun CatalogScreen(
     navigate: (CatalogScreenAction) -> Unit,
     viewModel: CatalogViewModel = hiltViewModel(),
 ) {
-    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
-    )
     val genderTabs by viewModel.genderTabs.collectAsStateWithLifecycle()
     val currentGenderTab by viewModel.currentGenderTab.collectAsStateWithLifecycle()
     val categoryListState by viewModel.categoryListState.collectAsStateWithLifecycle()
     val categoryListItemsState by viewModel.categoryListItemsState.collectAsStateWithLifecycle()
 
     ScreenContent(
-        searchQuery = searchQuery,
-        onSearchQueryChanged = viewModel::onSearchQueryChanged,
-        onSearchBarCancelClicked = viewModel::onSearchBarCancelClicked,
+        onSearchBarClicked = viewModel::onSearchBarClicked,
         genderTabs = genderTabs,
         currentGenderTab = currentGenderTab,
         onGenderTabChanged = viewModel::onGenderTabChanged,
@@ -80,9 +74,7 @@ fun CatalogScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ScreenContent(
-    searchQuery: String,
-    onSearchQueryChanged: (String) -> Unit,
-    onSearchBarCancelClicked: () -> Unit,
+    onSearchBarClicked: () -> Unit,
     genderTabs: ImmutableList<GenderTab>,
     currentGenderTab: GenderTab,
     onGenderTabChanged: (GenderTab) -> Unit,
@@ -102,12 +94,9 @@ private fun ScreenContent(
     CollapsingTopBarLayout(
         topBar = {
             SearchBar(
-                searchQuery = searchQuery,
-                onSearchQueryChanged = onSearchQueryChanged,
-                onCancelClicked = onSearchBarCancelClicked,
+                onClick = onSearchBarClicked,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
                     .padding(bottom = 4.dp),
             )
         },
@@ -143,7 +132,7 @@ private fun ScreenContent(
             GenderPicker(
                 genders = genderTabs,
                 pagerState = pagerState,
-                onGenderСhanged = onGenderTabChanged,
+                onGenderChanged = onGenderTabChanged,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
@@ -172,9 +161,7 @@ private fun Preview(
 ) {
     ZarinaPreview {
         ScreenContent(
-            searchQuery = "",
-            onSearchQueryChanged = {},
-            onSearchBarCancelClicked = {},
+            onSearchBarClicked = {},
             genderTabs = remember { GenderTab.entries.toImmutableList() },
             currentGenderTab = GenderTab.WOMEN,
             onGenderTabChanged = {},
