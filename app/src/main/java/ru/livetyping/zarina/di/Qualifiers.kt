@@ -25,7 +25,7 @@ object Qualifiers {
 
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)
-    annotation class SharedPreferences(val type: ShapredPreferencesType)
+    annotation class SharedPreferences(val type: SharedPreferencesType)
 
-    enum class ShapredPreferencesType { ENCRYPTED }
+    enum class SharedPreferencesType { ENCRYPTED }
 }

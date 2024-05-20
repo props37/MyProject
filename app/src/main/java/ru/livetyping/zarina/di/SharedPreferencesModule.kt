@@ -17,7 +17,7 @@ class SharedPreferencesModule {
 
     @Provides
     @Singleton
-    @Qualifiers.SharedPreferences(Qualifiers.ShapredPreferencesType.ENCRYPTED)
+    @Qualifiers.SharedPreferences(Qualifiers.SharedPreferencesType.ENCRYPTED)
     fun provideEncryptedSharedPreferences(
         @ApplicationContext
         context: Context,
