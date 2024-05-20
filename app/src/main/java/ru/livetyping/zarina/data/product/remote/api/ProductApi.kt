@@ -23,7 +23,7 @@ import javax.inject.Inject
 import ru.livetyping.zarina.domain.filter.Filters as DomainFilters
 
 class ProductApi @Inject constructor(
-    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
     private val subscribeToProductApiExceptionConverter: SubscribeToProductApiExceptionConverter,
 ) {

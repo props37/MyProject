@@ -19,7 +19,7 @@ import ru.livetyping.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
 
 class CartApi @Inject constructor(
-    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
 ) {
     suspend fun getCartProductIds(): CartProductIdsDto {

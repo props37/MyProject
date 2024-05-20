@@ -12,7 +12,7 @@ import ru.livetyping.zarina.domain.order.Order
 import javax.inject.Inject
 
 class OrderApi @Inject constructor(
-    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
 ) {
     suspend fun getOrders(page: Int): GetOrdersDto {

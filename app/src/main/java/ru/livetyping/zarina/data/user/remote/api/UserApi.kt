@@ -31,7 +31,7 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class UserApi @Inject constructor(
-    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
     private val signUpApiExceptionConverter: SignUpApiExceptionConverter,
     private val confirmSignUpApiExceptionConverter: ConfirmSignUpApiExceptionConverter,

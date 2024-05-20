@@ -11,7 +11,7 @@ import ru.livetyping.zarina.domain.location.Location
 import javax.inject.Inject
 
 class GeographyApi @Inject constructor(
-    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
 ) {
     suspend fun getCity(location: Location): CityDto {

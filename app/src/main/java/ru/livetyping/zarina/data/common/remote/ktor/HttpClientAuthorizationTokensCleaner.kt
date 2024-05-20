@@ -9,7 +9,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class HttpClientAuthorizationTokensCleaner @Inject constructor(
-    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
 ) {
     fun clearAuthorizationTokens() {

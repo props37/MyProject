@@ -35,7 +35,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     fun provideAuthorizedZarinaHttpClient(
         json: Json,
         zarinaApiHeaderProvider: ZarinaApiHeaderProvider,
@@ -63,7 +63,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.UNAUTHORIZED)
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.UNAUTHORIZED)
     fun provideUnauthorizedZarinaHttpClient(
         json: Json,
         zarinaApiHeaderProvider: ZarinaApiHeaderProvider,

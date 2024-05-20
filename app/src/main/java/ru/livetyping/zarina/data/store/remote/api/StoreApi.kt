@@ -8,7 +8,7 @@ import ru.livetyping.zarina.di.Qualifiers
 import javax.inject.Inject
 
 class StoreApi @Inject constructor(
-    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
 ) {
     suspend fun getStores(): List<CountryStoresDto> {
