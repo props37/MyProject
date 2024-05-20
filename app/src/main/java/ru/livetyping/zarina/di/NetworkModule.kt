@@ -27,7 +27,6 @@ import ru.livetyping.zarina.usecase.authorization.GetAuthorizationTokensFlowUseC
 import ru.livetyping.zarina.usecase.authorization.RefreshAuthorizationTokensUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import timber.log.Timber
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -81,7 +80,7 @@ class NetworkModule {
     ): HttpClient = HttpClient(OkHttp) {
         baseConfig(json)
         install(DefaultRequest) {
-            url("https://sort.diginetica.net/")
+            url(ANY_QUERY_BASE_URL_SEARCH)
         }
     }
 
@@ -93,7 +92,7 @@ class NetworkModule {
     ): HttpClient = HttpClient(OkHttp) {
         baseConfig(json)
         install(DefaultRequest) {
-            url("https://autocomplete.diginetica.net/")
+            url(ANY_QUERY_BASE_URL_AUTOCOMPLETE)
         }
     }
 
@@ -131,6 +130,9 @@ class NetworkModule {
     }
 
     companion object {
+        private const val ANY_QUERY_BASE_URL_SEARCH = "https://sort.diginetica.net/"
+        private const val ANY_QUERY_BASE_URL_AUTOCOMPLETE = "https://autocomplete.diginetica.net/"
+
         private const val HTTP_CLIENT_TAG = "HttpClient"
     }
 }
