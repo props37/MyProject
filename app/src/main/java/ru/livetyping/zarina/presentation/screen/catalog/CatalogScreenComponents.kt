@@ -5,7 +5,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -43,6 +42,8 @@ import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSke
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
+import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
+import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.util.domain.toComposeColor
 import ru.livetyping.zarina.presentation.screen.catalog.CatalogViewModel.CategoryListItem
@@ -59,38 +60,30 @@ object CatalogScreenComponents {
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        Column(
+        Box(
+            contentAlignment = Alignment.Center,
             modifier = modifier
-                .fillMaxWidth()
+                .heightIn(min = TopBarDefaults.MinHeight)
                 .clickable(onClick = onClick)
                 .padding(horizontal = 16.dp),
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .heightIn(min = TopBarDefaults.MinHeight)
-                    .padding(vertical = TopBarDefaults.VerticalPadding),
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_magnifying_glass_24),
-                    contentDescription = null,
-                    tint = UiKitTheme.colors.icon.regular.muted,
-                    modifier = Modifier.size(20.dp),
+            ZarinaTextField(
+                value = "",
+                onValueChanged = {},
+                isEnabled = false,
+                textStyle = UiKitTheme.typography.secondary.light,
+                placeholder = { Text(text = stringResource(R.string.find_products)) },
+                leadingContent = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_magnifying_glass_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                    )
+                },
+                colors = ZarinaTextFieldDefaults.colors(
+                    disabledPlaceholderColor = UiKitTheme.colors.text.general.regular.muted,
+                    disabledIndicationLineColor = UiKitTheme.colors.border.general.default,
                 )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Text(
-                    text = stringResource(R.string.find_products),
-                    style = UiKitTheme.typography.secondary.light,
-                    color = UiKitTheme.colors.text.general.regular.muted,
-                    maxLines = 1,
-                )
-            }
-
-            Divider(
-                color = UiKitTheme.colors.background.skeleton,
-                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
