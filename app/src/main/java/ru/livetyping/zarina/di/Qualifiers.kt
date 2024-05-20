@@ -9,6 +9,12 @@ object Qualifiers {
 
     enum class ZarinaApis { AUTHORIZED, UNAUTHORIZED }
 
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class AnyQuery(val type: AnyQueryType)
+
+    enum class AnyQueryType { SEARCH, AUTOCOMPLETE }
+
 
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)

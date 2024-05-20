@@ -27,6 +27,7 @@ import ru.livetyping.zarina.usecase.authorization.GetAuthorizationTokensFlowUseC
 import ru.livetyping.zarina.usecase.authorization.RefreshAuthorizationTokensUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import timber.log.Timber
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -70,6 +71,30 @@ class NetworkModule {
     ): HttpClient = HttpClient(OkHttp) {
         baseConfig(json)
         baseZarinaConfig(zarinaApiHeaderProvider)
+    }
+
+    @Provides
+    @Singleton
+    @Qualifiers.AnyQuery(Qualifiers.AnyQueryType.SEARCH)
+    fun provideAnyQuerySearchHttpClient(
+        json: Json,
+    ): HttpClient = HttpClient(OkHttp) {
+        baseConfig(json)
+        install(DefaultRequest) {
+            url("https://sort.diginetica.net/")
+        }
+    }
+
+    @Provides
+    @Singleton
+    @Qualifiers.AnyQuery(Qualifiers.AnyQueryType.AUTOCOMPLETE)
+    fun provideAnyQueryAutocompleteHttpClient(
+        json: Json,
+    ): HttpClient = HttpClient(OkHttp) {
+        baseConfig(json)
+        install(DefaultRequest) {
+            url("https://autocomplete.diginetica.net/")
+        }
     }
 
     private fun HttpClientConfig<*>.baseConfig(json: Json) {
