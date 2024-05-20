@@ -23,7 +23,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
@@ -122,7 +122,7 @@ object ProductScreenComponents {
             endContent = {
                 ZarinaIconButton(
                     onClick = onShareClicked,
-                    indication = rememberRipple(bounded = false, radius = TopBarIconSize),
+                    indication = ripple(bounded = false, radius = TopBarIconSize),
                     modifier = Modifier.padding(end = 2.dp),
                 ) {
                     Icon(

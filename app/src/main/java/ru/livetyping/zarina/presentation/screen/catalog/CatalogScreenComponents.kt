@@ -226,7 +226,9 @@ object CatalogScreenComponents {
                                     item = item,
                                     onItemClicked = onItemClicked,
                                     isExpanded = isExpanded,
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .animateItem(),
                                 )
                             }
 
@@ -234,7 +236,9 @@ object CatalogScreenComponents {
                                 SeeWholeCategoryItem(
                                     item = item,
                                     onItemClicked = onItemClicked,
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .animateItem(),
                                 )
                             }
                         }
@@ -243,7 +247,8 @@ object CatalogScreenComponents {
                             color = UiKitTheme.colors.border.general.default,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
+                                .padding(horizontal = 16.dp)
+                                .animateItem(),
                         )
                     }
                 }

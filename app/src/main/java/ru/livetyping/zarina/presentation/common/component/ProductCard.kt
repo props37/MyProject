@@ -20,7 +20,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -96,7 +96,7 @@ fun ProductCard(
                 isLiked = product.isInFavorites,
                 onClick = { onAddToFavoritesClicked(product) },
                 iconSize = IconSize,
-                indication = rememberRipple(bounded = false, radius = IconSize),
+                indication = ripple(bounded = false, radius = IconSize),
                 modifier = Modifier.align(Alignment.TopEnd),
             )
             ZarinaHorizontalPagerIndicator(
@@ -344,7 +344,7 @@ private fun AddToCartIconButton(
     ZarinaIconButton(
         onClick = onClick,
         isLoading = isLoading,
-        indication = rememberRipple(bounded = false, radius = IconSize),
+        indication = ripple(bounded = false, radius = IconSize),
         modifier = modifier,
     ) {
         Crossfade(
@@ -375,7 +375,7 @@ private fun SubscribeIconButton(
     ZarinaIconButton(
         onClick = onClick,
         isLoading = isLoading,
-        indication = rememberRipple(bounded = false, radius = IconSize),
+        indication = ripple(bounded = false, radius = IconSize),
         modifier = modifier,
     ) {
         Icon(

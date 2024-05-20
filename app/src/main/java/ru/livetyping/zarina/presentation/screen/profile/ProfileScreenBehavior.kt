@@ -29,7 +29,7 @@ fun ProfileScreenBehavior(
 
     ForcedBottomNavBarBehavior(isVisible = true)
 
-    LifecycleStartEffect {
+    LifecycleStartEffect(Unit) {
         updatedOnScreenOpened()
         onStopOrDispose {}
     }

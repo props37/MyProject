@@ -23,7 +23,7 @@ import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
@@ -88,7 +88,7 @@ fun ZarinaTextField(
     minLines: Int = 1,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
 ) {
     var focusState by remember { mutableStateOf<FocusState?>(null) }
@@ -156,7 +156,7 @@ fun ZarinaTextField(
     minLines: Int = 1,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
 ) {
     var focusState by remember { mutableStateOf<FocusState?>(null) }
@@ -404,7 +404,7 @@ object ZarinaTextFieldDefaults {
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
         iconSize: Dp = IconSizeLarge,
-        indication: Indication? = rememberRipple(bounded = false, radius = 8.dp),
+        indication: Indication? = ripple(bounded = false, radius = 8.dp),
     ) {
         AnimatedVisibility(
             visible = isVisible,
@@ -426,7 +426,7 @@ object ZarinaTextFieldDefaults {
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
         iconSize: Dp = IconSizeLarge,
-        indication: Indication? = rememberRipple(bounded = false, radius = 8.dp),
+        indication: Indication? = ripple(bounded = false, radius = 8.dp),
     ) {
         CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
             ZarinaIconButton(

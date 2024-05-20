@@ -19,7 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -173,7 +173,7 @@ private fun ScreenContent(
                         isVisible = firstName.isNotEmpty(),
                         onClick = { onFirstNameChanged("") },
                         iconSize = 16.dp,
-                        indication = rememberRipple(bounded = false, radius = 6.dp),
+                        indication = ripple(bounded = false, radius = 6.dp),
                     )
                 },
                 singleLine = true,
@@ -201,7 +201,7 @@ private fun ScreenContent(
                         isVisible = email.isNotEmpty(),
                         onClick = { onEmailChanged("") },
                         iconSize = 16.dp,
-                        indication = rememberRipple(bounded = false, radius = 6.dp),
+                        indication = ripple(bounded = false, radius = 6.dp),
                     )
                 },
                 singleLine = true,

@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.key
@@ -94,7 +94,7 @@ object ProfileScreenComponents {
                 ) {
                     ZarinaIconButton(
                         onClick = onProfileDetailsClicked,
-                        indication = rememberRipple(bounded = false, radius = 20.dp),
+                        indication = ripple(bounded = false, radius = 20.dp),
                         modifier = Modifier.padding(end = 2.dp),
                     ) {
                         Icon(

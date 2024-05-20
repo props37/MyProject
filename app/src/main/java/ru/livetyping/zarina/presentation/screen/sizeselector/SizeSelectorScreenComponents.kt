@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.sizeselector
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -59,7 +58,7 @@ object SizeSelectorScreenComponents {
         Column(
             modifier = modifier
                 .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
+                    interactionSource = null,
                     indication = null,
                     onClick = onClickOutside,
                 )
@@ -70,7 +69,7 @@ object SizeSelectorScreenComponents {
 
             ZarinaBottomSheet(
                 modifier = Modifier.clickable(
-                    interactionSource = remember { MutableInteractionSource() },
+                    interactionSource = null,
                     indication = null,
                     onClick = {},
                 ),

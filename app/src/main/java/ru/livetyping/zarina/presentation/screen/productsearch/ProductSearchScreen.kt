@@ -66,7 +66,7 @@ private fun ScreenContent(
 
     val focusRequester = remember { FocusRequester() }
 
-    LifecycleStartEffect {
+    LifecycleStartEffect(Unit) {
         focusRequester.tryRequestFocus()
         onStopOrDispose {}
     }

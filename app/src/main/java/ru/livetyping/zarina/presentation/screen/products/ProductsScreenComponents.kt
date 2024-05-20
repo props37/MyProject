@@ -19,7 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
@@ -101,7 +101,7 @@ object ProductsScreenComponents {
 
             ZarinaIconButton(
                 onClick = actions.onSearchClicked,
-                indication = rememberRipple(bounded = false, radius = TopBarIconSize),
+                indication = ripple(bounded = false, radius = TopBarIconSize),
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_magnifying_glass_24),
@@ -114,7 +114,7 @@ object ProductsScreenComponents {
             Box {
                 ZarinaIconButton(
                     onClick = actions.onFiltersClicked,
-                    indication = rememberRipple(bounded = false, radius = TopBarIconSize),
+                    indication = ripple(bounded = false, radius = TopBarIconSize),
                     modifier = Modifier.padding(end = 2.dp),
                 ) {
                     Icon(

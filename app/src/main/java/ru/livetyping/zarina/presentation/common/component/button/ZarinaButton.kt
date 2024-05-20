@@ -17,10 +17,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.LocalRippleConfiguration
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
@@ -39,27 +40,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
-import ru.livetyping.zarina.presentation.common.rippletheme.DarkRippleTheme
-import ru.livetyping.zarina.presentation.common.rippletheme.LightRippleTheme
+import ru.livetyping.zarina.presentation.common.ripple.DarkRippleConfiguration
+import ru.livetyping.zarina.presentation.common.ripple.LightRippleConfiguration
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.presentation.theme.ZarinaTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.compose.defaultMinSize
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ZarinaButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
     isLoading: Boolean = false,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     size: ZarinaButtonSize = ZarinaButtonSize.Large,
     colors: ZarinaButtonColors = ZarinaButtonDefaults.primaryColors(),
     shape: Shape = ZarinaButtonDefaults.Shape,
     contentPadding: PaddingValues = ZarinaButtonDefaults.contentPaddingFromSize(size),
     textStyle: TextStyle = ZarinaButtonDefaults.textStyleFromSize(size),
     isIndicationEnabled: Boolean = true,
-    useProvidedRippleTheme: Boolean = false,
+    useProvidedRippleConfiguration: Boolean = false,
     content: @Composable RowScope.() -> Unit,
 ) {
     val minSize = when (size) {
@@ -81,23 +83,23 @@ fun ZarinaButton(
         label = "$Tag border color",
     )
 
-    val providedRippleTheme = LocalRippleTheme.current
-    val rippleTheme = remember(
-        useProvidedRippleTheme,
-        providedRippleTheme,
+    val providedRippleConfiguration = LocalRippleConfiguration.current
+    val rippleConfiguration = remember(
+        useProvidedRippleConfiguration,
+        providedRippleConfiguration,
         colors.backgroundColor,
     ) {
-        if (useProvidedRippleTheme) {
-            providedRippleTheme
+        if (useProvidedRippleConfiguration) {
+            providedRippleConfiguration
         } else {
             val backgroundColorLuminance = colors.backgroundColor.luminance()
             when {
-                colors.backgroundColor.isUnspecified -> DarkRippleTheme
+                colors.backgroundColor.isUnspecified -> DarkRippleConfiguration
                 backgroundColorLuminance <= MaxBackgroundColorLuminanceForLightRippleTheme -> {
-                    LightRippleTheme
+                    LightRippleConfiguration
                 }
 
-                else -> DarkRippleTheme
+                else -> DarkRippleConfiguration
             }
         }
     }
@@ -105,7 +107,7 @@ fun ZarinaButton(
     CompositionLocalProvider(
         LocalTextStyle provides textStyle,
         LocalContentColor provides contentColor.value,
-        LocalRippleTheme provides rippleTheme,
+        LocalRippleConfiguration provides rippleConfiguration,
     ) {
         Box(
             contentAlignment = Alignment.Center,

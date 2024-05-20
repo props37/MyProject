@@ -40,7 +40,7 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -192,7 +192,7 @@ private fun RowScope.Item(
     modifier: Modifier = Modifier,
     counterValue: Int? = null,
     isEnabled: Boolean = true,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
 ) {
     val selectedColor = UiKitTheme.colors.text.general.regular.default
 
@@ -205,7 +205,7 @@ private fun RowScope.Item(
                 enabled = isEnabled,
                 role = Role.Tab,
                 interactionSource = interactionSource,
-                indication = rememberRipple(bounded = false, color = selectedColor),
+                indication = ripple(bounded = false, color = selectedColor),
             )
             .weight(1f),
     ) {

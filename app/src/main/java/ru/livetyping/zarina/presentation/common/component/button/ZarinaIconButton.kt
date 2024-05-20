@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.minimumInteractiveComponentSize
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -41,8 +41,8 @@ fun ZarinaIconButton(
     isLoading: Boolean = false,
     loaderSize: Dp = 24.dp,
     loaderColor: Color = UiKitTheme.colors.icon.regular.default,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    indication: Indication? = rememberRipple(bounded = false, radius = 24.dp),
+    interactionSource: MutableInteractionSource? = null,
+    indication: Indication? = ripple(bounded = false, radius = 24.dp),
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(

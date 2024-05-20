@@ -44,7 +44,6 @@ import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.util.library.paging.retryAppendPrependErrors
 import ru.livetyping.zarina.util.compose.animateFastScrollToItem
 import ru.livetyping.zarina.util.compose.animation.Crossfade
-import ru.livetyping.zarina.util.compose.collectIsScrollingBackwardAsState
 import ru.livetyping.zarina.util.library.paging3.PagingErrorTimberLogger
 
 // TODO: [Medium] Migrate to ZarinaPagingPullRefreshContainer
@@ -267,13 +266,11 @@ private fun ScrollToTopButton(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val isScrollingBackwardState = gridState.collectIsScrollingBackwardAsState()
-    val isVisible by remember(gridState, isScrollingBackwardState) {
+    val isVisible by remember(gridState) {
         derivedStateOf {
-            val isScrollingBackward = isScrollingBackwardState.value
             val isFarEnough =
                 gridState.firstVisibleItemIndex >= ScrollToTopButtonVisibilityItemThreshold
-            isScrollingBackward && isFarEnough
+            gridState.lastScrolledBackward && isFarEnough
         }
     }
 

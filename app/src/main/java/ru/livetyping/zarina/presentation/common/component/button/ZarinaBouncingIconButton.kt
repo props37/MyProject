@@ -10,7 +10,7 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +40,7 @@ fun ZarinaBouncingIconButton(
     isBouncingEnabled: Boolean = true,
     pressedScale: Float = PressedScale,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    indication: Indication? = rememberRipple(bounded = false, radius = 24.dp),
+    indication: Indication? = ripple(bounded = false, radius = 24.dp),
     content: @Composable () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()

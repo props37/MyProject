@@ -36,7 +36,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -295,7 +295,7 @@ private fun BackSide(
             val iconColor = LocalContentColor.current
             ZarinaIconButton(
                 onClick = onShowFrontSideClicked,
-                indication = rememberRipple(bounded = false, radius = iconSize),
+                indication = ripple(bounded = false, radius = iconSize),
                 modifier = Modifier
                     .size(iconSize)
                     .wrapContentSize(unbounded = true),
@@ -349,12 +349,11 @@ private fun FrontSideQrCode(
     onShowBackSideClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .clickable(
-                interactionSource = interactionSource,
+                interactionSource = null,
                 indication = null,
                 onClick = onShowBackSideClicked,
             ),
@@ -366,8 +365,8 @@ private fun FrontSideQrCode(
             modifier = Modifier
                 .size(qrCodeIconSize)
                 .indication(
-                    interactionSource = interactionSource,
-                    indication = rememberRipple(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = ripple(
                         bounded = false,
                         radius = qrCodeIconSize - 6.dp,
                     )
@@ -411,7 +410,7 @@ private fun FrontSideLevelInfo(
         val iconColor = LocalContentColor.current
         ZarinaIconButton(
             onClick = onLevelInfoClicked,
-            indication = rememberRipple(bounded = false, radius = iconSize),
+            indication = ripple(bounded = false, radius = iconSize),
             modifier = Modifier
                 .size(iconSize)
                 .wrapContentSize(unbounded = true),

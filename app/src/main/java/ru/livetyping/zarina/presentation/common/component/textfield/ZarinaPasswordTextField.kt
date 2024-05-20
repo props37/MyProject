@@ -10,7 +10,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -60,7 +60,7 @@ fun ZarinaPasswordTextField(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     minLines: Int = 1,
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
 ) {
     var isPasswordHidden by remember { mutableStateOf(true) }
@@ -90,7 +90,7 @@ fun ZarinaPasswordTextField(
             ) { isPasswordHiddenValue ->
                 ZarinaIconButton(
                     onClick = { isPasswordHidden = !isPasswordHidden },
-                    indication = rememberRipple(bounded = false, radius = 16.dp),
+                    indication = ripple(bounded = false, radius = 16.dp),
                     modifier = Modifier.size(36.dp),
                 ) {
                     val iconResId: Int

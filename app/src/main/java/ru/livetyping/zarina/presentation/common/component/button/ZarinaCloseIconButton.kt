@@ -6,9 +6,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -29,8 +28,8 @@ fun ZarinaCloseIconButton(
     isLoading: Boolean = false,
     iconSize: Dp = 24.dp,
     tint: Color = UiKitTheme.colors.icon.regular.default,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    indication: Indication = rememberRipple(bounded = false, radius = iconSize),
+    interactionSource: MutableInteractionSource? = null,
+    indication: Indication = ripple(bounded = false, radius = iconSize),
 ) {
     ZarinaIconButton(
         onClick = onClick,

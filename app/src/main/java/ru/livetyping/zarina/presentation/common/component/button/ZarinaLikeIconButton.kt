@@ -6,7 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,7 +33,7 @@ fun ZarinaLikeIconButton(
     },
     iconSize: Dp = 24.dp,
     tint: Color = UiKitTheme.colors.icon.regular.default,
-    indication: Indication? = rememberRipple(bounded = false, radius = iconSize),
+    indication: Indication? = ripple(bounded = false, radius = iconSize),
     isBouncingEnabled: Boolean = true,
 ) {
     ZarinaBouncingIconButton(

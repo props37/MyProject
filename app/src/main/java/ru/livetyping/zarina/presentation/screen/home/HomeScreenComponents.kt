@@ -131,7 +131,6 @@ object HomeScreenComponents {
         CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
             HorizontalPager(
                 state = pagerState,
-                beyondBoundsPageCount = 0,
                 modifier = modifier,
             ) { page ->
                 val banners = when (genders[page]) {
