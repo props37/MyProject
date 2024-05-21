@@ -3,6 +3,7 @@ package ru.livetyping.zarina.presentation.common.component.textfield
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Indication
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -14,9 +15,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.KeyboardActionHandler
+import androidx.compose.foundation.text.input.OutputTransformation
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
@@ -48,6 +57,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
@@ -63,6 +73,72 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTra
 // TODO: [High] Add label animation
 // TODO: [High] Apply error color to description
 // TODO: [High] Migrate to BasicTextField2
+
+@Composable
+fun ZarinaTextField(
+    state: TextFieldState,
+    modifier: Modifier = Modifier,
+    isEnabled: Boolean = true,
+    isError: Boolean = false,
+    isReadOnly: Boolean = false,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Large,
+    inputTransformation: InputTransformation? = null,
+    textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
+    label: (@Composable () -> Unit)? = null,
+    placeholder: (@Composable () -> Unit)? = null,
+    leadingContent: (@Composable () -> Unit)? = null,
+    innerTrailingContent: (@Composable () -> Unit)? = null,
+    outerTrailingContent: (@Composable () -> Unit)? = null,
+    description: (@Composable () -> Unit)? = null,
+    colors: ZarinaTextFieldColors = ZarinaTextFieldDefaults.colors(),
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    onKeyboardAction: KeyboardActionHandler? = null,
+    lineLimits: TextFieldLineLimits = TextFieldLineLimits.Default,
+    onTextLayout: (Density.(getResult: () -> TextLayoutResult?) -> Unit)? = null,
+    interactionSource: MutableInteractionSource? = null,
+    cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
+    outputTransformation: OutputTransformation? = null,
+    scrollState: ScrollState = rememberScrollState(),
+) {
+    var focusState by remember { mutableStateOf<FocusState?>(null) }
+
+    BasicTextField(
+        state = state,
+        modifier = modifier
+            .background(colors.backgroundColor)
+            .onFocusChanged { focusState = it },
+        enabled = isEnabled,
+        readOnly = isReadOnly,
+        inputTransformation = inputTransformation,
+        textStyle = textStyle,
+        keyboardOptions = keyboardOptions,
+        onKeyboardAction = onKeyboardAction,
+        lineLimits = lineLimits,
+        onTextLayout = onTextLayout,
+        interactionSource = interactionSource,
+        cursorBrush = cursorBrush,
+        outputTransformation = outputTransformation,
+        decorator = { innerTextField ->
+            DecorationBox(
+                value = state.text,
+                isEnabled = isEnabled,
+                isError = isError,
+                focusState = focusState,
+                textStyle = textStyle,
+                size = size,
+                innerTextField = innerTextField,
+                label = label,
+                placeholder = placeholder,
+                leadingContent = leadingContent,
+                innerTrailingContent = innerTrailingContent,
+                outerTrailingContent = outerTrailingContent,
+                description = description,
+                colors = colors,
+            )
+        },
+        scrollState = scrollState,
+    )
+}
 
 @Composable
 fun ZarinaTextField(
@@ -202,7 +278,7 @@ fun ZarinaTextField(
 
 @Composable
 private fun DecorationBox(
-    value: String,
+    value: CharSequence,
     isEnabled: Boolean,
     isError: Boolean,
     focusState: FocusState?,
@@ -550,61 +626,53 @@ private fun Preview() {
     ZarinaPreview {
         Column(
             modifier = Modifier
-                .padding(16.dp)
-                .background(Color.White),
+                .background(Color.White)
+                .padding(16.dp),
         ) {
-            var text by remember { mutableStateOf("") }
-            val isError by remember { derivedStateOf { text.contains("error") } }
-            val isEnabled by remember { derivedStateOf { !text.contains("dis") } }
-
-            val zarinaTextField = @Composable { size: ZarinaTextFieldSize ->
-                val iconSize = when (size) {
-                    ZarinaTextFieldSize.Large -> 20.dp
-                    ZarinaTextFieldSize.Small -> 16.dp
-                }
-                ZarinaTextField(
-                    value = text,
-                    onValueChanged = { text = it },
-                    isEnabled = isEnabled,
-                    isError = isError,
-                    size = size,
-                    label = {
-                        Text(text = "Label")
-                    },
-                    placeholder = {
-                        Text(text = "Placeholder ${size.name.lowercase()}")
-                    },
-                    leadingContent = {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_magnifying_glass_24),
-                            contentDescription = null,
-                            modifier = Modifier.size(iconSize),
-                        )
-                    },
-                    innerTrailingContent = {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_cross_24),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(iconSize)
-                                .clickable { text = "" },
-                        )
-                    },
-                    outerTrailingContent = {
-                        Text(
-                            text = "Button".uppercase(),
-                            color = UiKitTheme.colors.text.button.secondary.default,
-                        )
-                    },
-                    description = {
-                        Text(text = "Description")
-                    },
-                    modifier = Modifier.padding(16.dp),
-                )
+            val state = rememberTextFieldState()
+            val isError by remember {
+                derivedStateOf { state.text.contains("error") }
+            }
+            val isEnabled by remember {
+                derivedStateOf { !state.text.contains("dis") }
             }
 
-            zarinaTextField(ZarinaTextFieldSize.Large)
-            zarinaTextField(ZarinaTextFieldSize.Small)
+            ZarinaTextField(
+                state = state,
+                isEnabled = isEnabled,
+                isError = isError,
+                label = {
+                    Text(text = "Label")
+                },
+                placeholder = {
+                    Text(text = "Placeholder")
+                },
+                leadingContent = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_magnifying_glass_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                    )
+                },
+                innerTrailingContent = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_cross_24),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clickable { state.clearText() },
+                    )
+                },
+                outerTrailingContent = {
+                    Text(
+                        text = "Button".uppercase(),
+                        color = UiKitTheme.colors.text.button.secondary.default,
+                    )
+                },
+                description = {
+                    Text(text = "Description")
+                },
+            )
         }
     }
 }
