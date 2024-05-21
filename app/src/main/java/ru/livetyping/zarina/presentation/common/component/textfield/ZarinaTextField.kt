@@ -96,7 +96,6 @@ fun ZarinaTextField(
     lineLimits: TextFieldLineLimits = TextFieldLineLimits.Default,
     onTextLayout: (Density.(getResult: () -> TextLayoutResult?) -> Unit)? = null,
     interactionSource: MutableInteractionSource? = null,
-    cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
     outputTransformation: OutputTransformation? = null,
     scrollState: ScrollState = rememberScrollState(),
 ) {
@@ -116,7 +115,7 @@ fun ZarinaTextField(
         lineLimits = lineLimits,
         onTextLayout = onTextLayout,
         interactionSource = interactionSource,
-        cursorBrush = cursorBrush,
+        cursorBrush = remember(colors.cursorColor) { SolidColor(colors.cursorColor) },
         outputTransformation = outputTransformation,
         decorator = { innerTextField ->
             Decoration(
@@ -435,6 +434,7 @@ data class ZarinaTextFieldColors(
     val disabledDescriptionColor: Color,
     val disabledIndicationLineColor: Color,
     val disabledErrorIndicationLineColor: Color,
+    val cursorColor: Color,
 ) {
     fun getTextColor(isEnabled: Boolean): Color = if (isEnabled) textColor else disabledTextColor
 
@@ -560,6 +560,7 @@ object ZarinaTextFieldDefaults {
         disabledDescriptionColor: Color = UiKitTheme.colors.text.general.regular.disabled,
         disabledIndicationLineColor: Color = UiKitTheme.colors.border.general.disabled,
         disabledErrorIndicationLineColor: Color = UiKitTheme.colors.border.general.errorDisabled,
+        cursorColor: Color = UiKitTheme.colors.text.general.regular.default,
     ): ZarinaTextFieldColors = ZarinaTextFieldColors(
         backgroundColor = backgroundColor,
         textColor = textColor,
@@ -581,6 +582,7 @@ object ZarinaTextFieldDefaults {
         disabledDescriptionColor = disabledDescriptionColor,
         disabledIndicationLineColor = disabledIndicationLineColor,
         disabledErrorIndicationLineColor = disabledErrorIndicationLineColor,
+        cursorColor = cursorColor,
     )
 
     @Composable
