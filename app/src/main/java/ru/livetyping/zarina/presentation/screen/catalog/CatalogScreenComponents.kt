@@ -200,19 +200,16 @@ object CatalogScreenComponents {
         onItemClicked: (CategoryListItem) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        LazyColumn(modifier = modifier) {
-            items.forEach { item ->
-                val isVisible = when (item) {
-                    is CategoryListItem.CategoryItem -> {
-                        item.category.id in itemsState.visibleCategoryIds
-                    }
+        val lastVisibleItemIndex = remember(items, itemsState) {
+            items.indexOfLast { it.isVisible(itemsState) }
+        }
 
-                    is CategoryListItem.SeeWholeCategoryItem -> {
-                        item.category.id in itemsState.expandedCategoryIds
-                    }
-                }
-
-                if (isVisible) {
+        LazyColumn(
+            modifier = modifier,
+            contentPadding = PaddingValues(bottom = 24.dp),
+        ) {
+            items.forEachIndexed { index, item ->
+                if (item.isVisible(itemsState)) {
                     item(
                         key = item.id.value,
                         contentType = getCategoryListItemContentType(item),
@@ -243,13 +240,15 @@ object CatalogScreenComponents {
                             }
                         }
 
-                        Divider(
-                            color = UiKitTheme.colors.border.general.default,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                                .animateItem(),
-                        )
+                        if (index < lastVisibleItemIndex) {
+                            Divider(
+                                color = UiKitTheme.colors.border.general.default,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp)
+                                    .animateItem(),
+                            )
+                        }
                     }
                 }
             }
@@ -425,6 +424,18 @@ object CatalogScreenComponents {
             is CategoryListItem.CategoryItem -> CategoryListItemContentTypeCategoryItem
             is CategoryListItem.SeeWholeCategoryItem ->
                 CategoryListItemContentTypeSeeWholeCategoryItem
+        }
+    }
+
+    private fun CategoryListItem.isVisible(itemsState: CategoryListItemsState): Boolean {
+        return when (this) {
+            is CategoryListItem.CategoryItem -> {
+                this.category.id in itemsState.visibleCategoryIds
+            }
+
+            is CategoryListItem.SeeWholeCategoryItem -> {
+                this.category.id in itemsState.expandedCategoryIds
+            }
         }
     }
 
