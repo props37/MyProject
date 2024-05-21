@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -170,13 +171,14 @@ object CitySelectorScreenComponents {
                     is CityListState.CityList -> {
                         if (listState.items.isNotEmpty()) {
                             val baseContentPadding = remember(isChangeCityButtonVisible) {
+                                val bottomBase = 24.dp
                                 val bottom = if (isChangeCityButtonVisible) {
                                     val buttonHeight = ZarinaButtonDefaults.SizeLarge
                                     buttonHeight + ChangeCityButtonBottomPadding + 8.dp
                                 } else {
                                     0.dp
                                 }
-                                PaddingValues(top = 8.dp, bottom = bottom)
+                                PaddingValues(top = 8.dp, bottom = bottom + bottomBase)
                             }
                             val contentPadding =
                                 baseContentPadding +
@@ -188,11 +190,11 @@ object CitySelectorScreenComponents {
                                 contentPadding = contentPadding,
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
-                                items(
+                                itemsIndexed(
                                     items = listState.items,
-                                    key = { getCityListItemKey(it) },
-                                    contentType = { getCityListItemContentType(it) },
-                                ) { item ->
+                                    key = { _, item -> getCityListItemKey(item) },
+                                    contentType = { _, item -> getCityListItemContentType(item) },
+                                ) { index, item ->
                                     when (item) {
                                         is CityListItem.CityItem -> {
                                             City(
@@ -203,12 +205,14 @@ object CitySelectorScreenComponents {
                                                 modifier = Modifier.fillMaxWidth(),
                                             )
 
-                                            Divider(
-                                                color = UiKitTheme.colors.border.general.default,
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(horizontal = 16.dp),
-                                            )
+                                            if (index < listState.items.lastIndex) {
+                                                Divider(
+                                                    color = UiKitTheme.colors.border.general.default,
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(horizontal = 16.dp),
+                                                )
+                                            }
                                         }
 
                                         is CityListItem.CityFirstLetterHeaderItem -> {
