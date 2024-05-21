@@ -21,9 +21,7 @@ class CategoryRepository @Inject constructor(
             Timber.v("Get cached categories")
             emit(cached)
         } else {
-            val categories = remoteDataSource.getCategoriesFlow().firstOrNull()
-            checkNotNull(categories) { "Failed to fetch categories" }
-            localDataSource.setCategories(categories)
+            val categories = fetchCategories()
             emit(categories)
         }
     }
@@ -34,13 +32,17 @@ class CategoryRepository @Inject constructor(
             Timber.v("Get cached category")
             emit(cached)
         } else {
-            val categories = remoteDataSource.getCategoriesFlow().firstOrNull()
-            checkNotNull(categories) { "Failed to fetch categories" }
-            localDataSource.setCategories(categories)
-
+            val categories = fetchCategories()
             val category = categories.find { it.id == id }
             checkNotNull(category) { "Failed to find Category ${id.value}" }
             emit(category)
         }
+    }
+
+    private suspend fun fetchCategories(): Categories {
+        val categories = remoteDataSource.getCategoriesFlow().firstOrNull()
+        checkNotNull(categories) { "Failed to fetch categories" }
+        localDataSource.setCategories(categories)
+        return categories
     }
 }
