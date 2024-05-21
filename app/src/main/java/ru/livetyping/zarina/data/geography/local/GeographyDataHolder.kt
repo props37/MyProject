@@ -11,6 +11,8 @@ import javax.inject.Singleton
 
 @Singleton
 class GeographyDataHolder @Inject constructor() {
+
+    // TODO: [Low] Use SoftReference?
     private val nameQueryToCities = MutableStateFlow(mapOf<String?, List<City>>())
 
     fun setCities(nameQuery: String?, cities: List<City>) {
