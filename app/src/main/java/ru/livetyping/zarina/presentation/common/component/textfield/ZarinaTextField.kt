@@ -119,7 +119,7 @@ fun ZarinaTextField(
         cursorBrush = cursorBrush,
         outputTransformation = outputTransformation,
         decorator = { innerTextField ->
-            DecorationBox(
+            Decoration(
                 value = state.text,
                 isEnabled = isEnabled,
                 isError = isError,
@@ -188,7 +188,7 @@ fun ZarinaTextField(
         interactionSource = interactionSource,
         cursorBrush = cursorBrush,
         decorationBox = { innerTextField ->
-            DecorationBox(
+            Decoration(
                 value = textFieldValue.text,
                 isEnabled = isEnabled,
                 isError = isError,
@@ -256,7 +256,7 @@ fun ZarinaTextField(
         interactionSource = interactionSource,
         cursorBrush = cursorBrush,
         decorationBox = { innerTextField ->
-            DecorationBox(
+            Decoration(
                 value = value,
                 isEnabled = isEnabled,
                 isError = isError,
@@ -277,7 +277,7 @@ fun ZarinaTextField(
 }
 
 @Composable
-private fun DecorationBox(
+private fun Decoration(
     value: CharSequence,
     isEnabled: Boolean,
     isError: Boolean,
