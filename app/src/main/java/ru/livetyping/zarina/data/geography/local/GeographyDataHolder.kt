@@ -11,27 +11,27 @@ import javax.inject.Singleton
 
 @Singleton
 class GeographyDataHolder @Inject constructor() {
-    private val citiesToNameQuery = MutableStateFlow(mapOf<String?, List<City>>())
+    private val nameQueryToCities = MutableStateFlow(mapOf<String?, List<City>>())
 
     fun setCities(nameQuery: String?, cities: List<City>) {
         Timber.v("Set cities for name query $nameQuery: $cities")
-        citiesToNameQuery.update { it + (nameQuery to cities) }
-        ensureCitiesToNameQueryCacheSize()
+        nameQueryToCities.update { it + (nameQuery to cities) }
+        ensureCityCacheSize()
     }
 
     fun getCitiesFlow(nameQuery: String?): Flow<List<City>?> {
-        return citiesToNameQuery.map { map ->
+        return nameQueryToCities.map { map ->
             map[nameQuery]
         }
     }
 
-    private fun ensureCitiesToNameQueryCacheSize() {
-        val cachedNameQueries = citiesToNameQuery.value.keys
+    private fun ensureCityCacheSize() {
+        val cachedNameQueries = nameQueryToCities.value.keys
         if (cachedNameQueries.size > MAX_CACHED_CITY_NAME_QUERIES) {
             val nameQueryToRemove = cachedNameQueries.firstOrNull { it != null }
             if (nameQueryToRemove != null) {
                 Timber.v("Clear cached cities for name query $nameQueryToRemove")
-                citiesToNameQuery.update { it - nameQueryToRemove }
+                nameQueryToCities.update { it - nameQueryToRemove }
             }
         }
     }
