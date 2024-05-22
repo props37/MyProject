@@ -422,7 +422,10 @@ object StoresScreenComponents {
         stores: ImmutableList<Store>,
         modifier: Modifier = Modifier,
     ) {
-        LazyColumn(modifier = modifier) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier,
+        ) {
             itemsIndexed(
                 items = stores,
                 key = { _, store -> store.id.value },
@@ -445,7 +448,10 @@ object StoresScreenComponents {
     ) {
         val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
 
-        LazyColumn(modifier = modifier) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier,
+        ) {
             items(count = StoreListSkeletonItemCount) { index ->
                 StoreListItemSkeleton(shimmer = shimmer)
 

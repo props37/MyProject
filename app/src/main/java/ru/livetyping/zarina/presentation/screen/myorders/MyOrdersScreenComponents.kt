@@ -119,7 +119,10 @@ object MyOrdersScreenComponents {
         Box(modifier = modifier) {
             if (orderPagingItems.itemCount > 0) {
                 val itemModifier = Modifier.fillMaxWidth()
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                LazyColumn(
+                    contentPadding = PaddingValues(bottom = 24.dp),
+                    modifier = Modifier.fillMaxSize(),
+                ) {
                     zarinaPagingPrependItem(
                         prependLoadState = orderPagingItems.loadState.prepend,
                         onRetryClicked = orderPagingItems::retry,
@@ -181,7 +184,10 @@ object MyOrdersScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         val placeholderShimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
-        LazyColumn(modifier = modifier.fillMaxSize()) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier.fillMaxSize(),
+        ) {
             items(count = OrderListSkeletonItemCount) { index ->
                 OrderCardSkeleton(
                     shimmer = placeholderShimmer,

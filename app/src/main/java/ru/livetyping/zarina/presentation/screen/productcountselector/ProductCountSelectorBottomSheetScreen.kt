@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.productcountselector
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
@@ -35,6 +36,7 @@ import ru.livetyping.zarina.presentation.screen.productcountselector.ProductCoun
 import ru.livetyping.zarina.presentation.screen.productcountselector.ProductCountSelectorViewModel.CountItem
 import ru.livetyping.zarina.presentation.screen.productcountselector.ProductCountSelectorViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.plus
 
 // TODO: [Low] Put package inside ui.cart?
 
@@ -79,6 +81,7 @@ private fun ScreenContent(
             val contentPadding = WindowInsets.safeDrawing
                 .only(WindowInsetsSides.Bottom)
                 .asPaddingValues()
+                .plus(PaddingValues(bottom = 24.dp))
 
             LazyColumn(contentPadding = contentPadding) {
                 itemsIndexed(

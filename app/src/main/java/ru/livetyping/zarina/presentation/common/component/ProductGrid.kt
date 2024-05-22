@@ -2,6 +2,7 @@ package ru.livetyping.zarina.presentation.common.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -165,6 +166,7 @@ fun ProductGrid(
                         state = gridState,
                         verticalArrangement = ProductGridArrangement,
                         horizontalArrangement = ProductGridArrangement,
+                        contentPadding = PaddingValues(bottom = 24.dp),
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         items(
@@ -222,6 +224,7 @@ private fun ProductGridImpl(
                 state = gridState,
                 verticalArrangement = ProductGridArrangement,
                 horizontalArrangement = ProductGridArrangement,
+                contentPadding = PaddingValues(bottom = 24.dp),
                 modifier = Modifier.fillMaxSize(),
             ) {
                 // No need to add append and prepend loaders since item placeholders are used

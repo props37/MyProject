@@ -180,7 +180,10 @@ object OrderScreenComponents {
         onCancelOrderClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        LazyColumn(modifier = modifier) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier,
+        ) {
             item(
                 key = OrderListKeyStatus,
                 contentType = OrderListContentTypeStatus,
@@ -376,7 +379,10 @@ object OrderScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
-        LazyColumn(modifier = modifier) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier,
+        ) {
             item {
                 ZarinaItem(modifier = Modifier.heightIn(min = 40.dp)) {
                     ZarinaTextSkeleton(

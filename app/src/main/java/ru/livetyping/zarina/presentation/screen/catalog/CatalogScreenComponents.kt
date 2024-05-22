@@ -205,8 +205,8 @@ object CatalogScreenComponents {
         }
 
         LazyColumn(
-            modifier = modifier,
             contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier,
         ) {
             items.forEachIndexed { index, item ->
                 if (item.isVisible(itemsState)) {
@@ -351,7 +351,10 @@ object CatalogScreenComponents {
     ) {
         val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
 
-        LazyColumn(modifier = modifier) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier,
+        ) {
             items(
                 count = CategoryListSkeletonItemCount,
                 key = { it },

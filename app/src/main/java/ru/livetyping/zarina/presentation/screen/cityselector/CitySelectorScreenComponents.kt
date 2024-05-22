@@ -180,11 +180,10 @@ object CitySelectorScreenComponents {
                                 }
                                 PaddingValues(top = 8.dp, bottom = bottom + bottomBase)
                             }
-                            val contentPadding =
-                                baseContentPadding +
-                                        WindowInsets.safeDrawing
-                                            .only(WindowInsetsSides.Bottom)
-                                            .asPaddingValues()
+                            val contentPadding = WindowInsets.safeDrawing
+                                .only(WindowInsetsSides.Bottom)
+                                .asPaddingValues()
+                                .plus(baseContentPadding)
 
                             LazyColumn(
                                 contentPadding = contentPadding,

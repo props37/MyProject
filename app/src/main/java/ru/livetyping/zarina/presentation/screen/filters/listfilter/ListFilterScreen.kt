@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
@@ -36,6 +37,7 @@ import ru.livetyping.zarina.presentation.screen.filters.listfilter.ListFilterScr
 import ru.livetyping.zarina.presentation.screen.filters.listfilter.ListFilterScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.filters.listfilter.ListFilterScreenComponents.TopBarActions
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.plus
 
 @Composable
 fun ListFilterScreen(
@@ -103,7 +105,8 @@ private fun ScreenContent(
             WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom).asPaddingValues()
         } else {
             PaddingValues()
-        }
+        }.plus(PaddingValues(bottom = 24.dp))
+
         FilterItems(
             filter = filter,
             onItemClicked = onItemClicked,
