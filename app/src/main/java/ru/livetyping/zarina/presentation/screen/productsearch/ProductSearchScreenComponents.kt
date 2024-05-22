@@ -155,7 +155,10 @@ object ProductSearchScreenComponents {
         items: ImmutableList<SearchSuggestionItem>,
         modifier: Modifier = Modifier,
     ) {
-        LazyColumn(modifier = modifier) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier,
+        ) {
             itemsIndexed(
                 items = items,
                 key = { _, item -> getSearchSuggestionItemKey(item) },
