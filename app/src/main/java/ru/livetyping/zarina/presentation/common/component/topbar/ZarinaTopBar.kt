@@ -1,8 +1,9 @@
 package ru.livetyping.zarina.presentation.common.component.topbar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
@@ -30,23 +32,38 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 @Composable
 fun ZarinaTopBar(
     modifier: Modifier = Modifier,
-    startContent: (@Composable () -> Unit)? = null,
-    centerContent: (@Composable () -> Unit)? = null,
-    endContent: (@Composable () -> Unit)? = null,
+    startContent: (@Composable RowScope.() -> Unit)? = null,
+    centerContent: (@Composable RowScope.() -> Unit)? = null,
+    endContent: (@Composable RowScope.() -> Unit)? = null,
     backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
     contentColor: Color = UiKitTheme.colors.text.general.regular.default,
     contentPadding: PaddingValues = TopBarDefaults.ContentPadding,
 ) {
     val content = @Composable {
-        Box(modifier = Modifier.layoutId(LayoutId.StartContent)) { startContent?.invoke() }
-        Box(modifier = Modifier.layoutId(LayoutId.CenterContent)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.layoutId(LayoutId.StartContent),
+        ) {
+            startContent?.invoke(this)
+        }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.layoutId(LayoutId.CenterContent),
+        ) {
             CompositionLocalProvider(
                 LocalTextStyle provides UiKitTheme.typography.primary.regular,
             ) {
-                centerContent?.invoke()
+                centerContent?.invoke(this)
             }
         }
-        Box(modifier = Modifier.layoutId(LayoutId.EndContent)) { endContent?.invoke() }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.layoutId(LayoutId.EndContent),
+        ) {
+            endContent?.invoke(this)
+        }
     }
 
     CompositionLocalProvider(LocalContentColor provides contentColor) {
@@ -70,9 +87,10 @@ fun ZarinaTopBar(
                 endContentPlaceable?.width ?: 0,
             )
 
-            val centerContentMaxWidth = constraints.maxWidth -
+            val centerContentMaxWidth = (constraints.maxWidth -
                     sideContentMaxWidth * 2 -
-                    CenterContentHorizontalPadding.roundToPx() * 2
+                    CenterContentHorizontalPadding.roundToPx() * 2)
+                .coerceAtLeast(0)
             val centerContentConstraints = constraints.copy(
                 minWidth = 0,
                 minHeight = 0,
