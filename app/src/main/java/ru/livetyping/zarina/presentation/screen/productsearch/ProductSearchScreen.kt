@@ -25,8 +25,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenComponents.SearchSuggestions
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchMode
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SideEffect
@@ -40,6 +42,7 @@ fun ProductSearchScreen(
     viewModel: ProductSearchViewModel = hiltViewModel(),
 ) {
     val searchMode by viewModel.searchMode.collectAsStateWithLifecycle()
+    val searchSuggestions by viewModel.searchSuggestions.collectAsStateWithLifecycle()
 
     ScreenContent(
         onBackClicked = viewModel::onBackClicked,
@@ -48,6 +51,7 @@ fun ProductSearchScreen(
         onSearchTextFieldFocused = viewModel::onSearchTextFieldFocused,
         searchMode = searchMode,
         onSearchBarCancelClicked = viewModel::onSearchTextFieldCancelClicked,
+        searchSuggestions = searchSuggestions,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -61,6 +65,7 @@ private fun ScreenContent(
     onSearchTextFieldFocused: () -> Unit,
     searchMode: SearchMode,
     onSearchBarCancelClicked: () -> Unit,
+    searchSuggestions: ProductSearchSuggestions?,
     sideEffects: Flow<SideEffect>,
     navigate: (ProductSearchScreenAction) -> Unit,
 ) {
@@ -94,6 +99,12 @@ private fun ScreenContent(
             searchMode = searchMode,
             onBackClicked = onBackClicked,
             modifier = Modifier.focusRequester(focusRequester),
+        )
+
+        SearchSuggestions(
+            query = searchTextFieldState.text.toString(),
+            suggestions = searchSuggestions,
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }
