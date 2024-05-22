@@ -2,6 +2,7 @@ package ru.livetyping.zarina.domain.productsearch
 
 import ru.livetyping.zarina.domain.category.Category as DomainCategory
 
+// TODO: [High] Rename
 data class ProductSearchSuggestions(
     val autocompleteSuggestions: List<AutocompleteSuggestion>,
     val resultSuggestions: List<String>,

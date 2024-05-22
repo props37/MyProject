@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
@@ -31,6 +32,7 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenComponents.SearchSuggestions
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchMode
+import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchSuggestionItem
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.tryRequestFocus
@@ -42,7 +44,7 @@ fun ProductSearchScreen(
     viewModel: ProductSearchViewModel = hiltViewModel(),
 ) {
     val searchMode by viewModel.searchMode.collectAsStateWithLifecycle()
-    val searchSuggestions by viewModel.searchSuggestions.collectAsStateWithLifecycle()
+    val searchSuggestionItems by viewModel.searchSuggestionItems.collectAsStateWithLifecycle()
 
     ScreenContent(
         onBackClicked = viewModel::onBackClicked,
@@ -51,7 +53,7 @@ fun ProductSearchScreen(
         onSearchTextFieldFocused = viewModel::onSearchTextFieldFocused,
         searchMode = searchMode,
         onSearchBarCancelClicked = viewModel::onSearchTextFieldCancelClicked,
-        searchSuggestions = searchSuggestions,
+        searchSuggestionItems = searchSuggestionItems,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -65,7 +67,7 @@ private fun ScreenContent(
     onSearchTextFieldFocused: () -> Unit,
     searchMode: SearchMode,
     onSearchBarCancelClicked: () -> Unit,
-    searchSuggestions: ProductSearchSuggestions?,
+    searchSuggestionItems: ImmutableList<SearchSuggestionItem>,
     sideEffects: Flow<SideEffect>,
     navigate: (ProductSearchScreenAction) -> Unit,
 ) {
@@ -103,7 +105,7 @@ private fun ScreenContent(
 
         SearchSuggestions(
             query = searchTextFieldState.text.toString(),
-            suggestions = searchSuggestions,
+            items = searchSuggestionItems,
             modifier = Modifier.fillMaxSize(),
         )
     }

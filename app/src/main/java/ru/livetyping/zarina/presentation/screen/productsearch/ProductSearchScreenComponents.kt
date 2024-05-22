@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -39,8 +40,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
-import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
+import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
@@ -48,6 +50,7 @@ import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFi
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldSize
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchMode
+import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchSuggestionItem
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.kotlin.findSubstringBounds
@@ -149,121 +152,94 @@ object ProductSearchScreenComponents {
     @Composable
     fun SearchSuggestions(
         query: String,
-        suggestions: ProductSearchSuggestions?,
+        items: ImmutableList<SearchSuggestionItem>,
         modifier: Modifier = Modifier,
     ) {
         LazyColumn(modifier = modifier) {
-            val resultSuggestions = suggestions?.resultSuggestions
-            if (!resultSuggestions.isNullOrEmpty()) {
-                item(
-                    key = SearchSuggestionsKeyResultsTitle,
-                    contentType = SearchSuggestionsContentTypeTitle,
-                ) {
-                    ZarinaItem(
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .animateItem(),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.search_results),
-                            style = SearchSuggestionTitleTextStyle,
-                            color = UiKitTheme.colors.text.general.regular.default,
-                        )
-                    }
-                }
-
-                itemsIndexed(
-                    items = resultSuggestions,
-                    key = { _, text -> "$SearchSuggestionsKeyResultItemPrefix $text" },
-                    contentType = { _, _ -> SearchSuggestionsContentTypeResultItem },
-                ) { index, text ->
-                    ZarinaItem(
-                        modifier = Modifier
-                            .heightIn(min = 48.dp)
-                            .animateItem(),
-                    ) {
-                        val textWithQueryMatch = rememberSuggestionItemTextWithQueryMatch(
-                            text = text,
-                            query = query,
-                        )
-
-                        Icon(
-                            painter = painterResource(R.drawable.ic_magnifying_glass_24),
-                            contentDescription = null,
-                            tint = UiKitTheme.colors.icon.regular.default,
-                            modifier = Modifier.size(16.dp),
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = textWithQueryMatch,
-                            style = SearchSuggestionItemTextStyle,
-                            color = UiKitTheme.colors.text.general.regular.default,
-                        )
-                    }
-
-                    if (index < resultSuggestions.lastIndex) {
-                        Divider(
-                            color = UiKitTheme.colors.background.skeleton,
+            itemsIndexed(
+                items = items,
+                key = { _, item -> getSearchSuggestionItemKey(item) },
+                contentType = { _, item -> getSearchSuggestionItemContentType(item) },
+            ) { index, item ->
+                when (item) {
+                    is SearchSuggestionItem.GenericTitle -> {
+                        ZarinaItem(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
+                                .padding(top = 16.dp)
+                                .heightIn(min = 48.dp)
                                 .animateItem(),
-                        )
-                    }
-                }
-            }
-
-            val categories = suggestions?.categories
-            if (!categories.isNullOrEmpty()) {
-                item(
-                    key = SearchSuggestionsKeyCategoriesTitle,
-                    contentType = SearchSuggestionsContentTypeTitle,
-                ) {
-                    ZarinaItem(
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .animateItem(),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.categories),
-                            style = SearchSuggestionTitleTextStyle,
-                            color = UiKitTheme.colors.text.general.regular.default,
-                        )
-                    }
-                }
-
-                itemsIndexed(
-                    items = categories,
-                    key = { _, category ->
-                        "$SearchSuggestionsKeyCategoryItemPrefix ${category.id}"
-                    },
-                    contentType = { _, _ -> SearchSuggestionsContentTypeCategoryItem },
-                ) { index, category ->
-                    ZarinaItem(
-                        modifier = Modifier
-                            .heightIn(min = 48.dp)
-                            .animateItem(),
-                    ) {
-                        val categoryNameWithQueryMatch = rememberSuggestionItemTextWithQueryMatch(
-                            text = category.name,
-                            query = query,
-                        )
-
-                        Text(
-                            text = categoryNameWithQueryMatch,
-                            style = SearchSuggestionItemTextStyle,
-                            color = UiKitTheme.colors.text.general.regular.default,
-                        )
+                        ) {
+                            Text(
+                                text = textString(item.text),
+                                style = SearchSuggestionTitleTextStyle,
+                                color = SearchSuggestionsColor,
+                            )
+                        }
                     }
 
-                    if (index < categories.lastIndex) {
-                        Divider(
-                            color = UiKitTheme.colors.background.skeleton,
+                    is SearchSuggestionItem.QueryItem -> {
+                        ZarinaItem(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
+                                .heightIn(min = 48.dp)
                                 .animateItem(),
-                        )
+                        ) {
+                            val textWithQueryMatch = rememberSuggestionItemTextWithQueryMatch(
+                                text = item.query,
+                                query = query,
+                            )
+
+                            Icon(
+                                painter = painterResource(R.drawable.ic_magnifying_glass_24),
+                                contentDescription = null,
+                                tint = UiKitTheme.colors.icon.regular.default,
+                                modifier = Modifier.size(16.dp),
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = textWithQueryMatch,
+                                style = SearchSuggestionItemTextStyle,
+                                color = SearchSuggestionsColor,
+                            )
+                        }
+
+                        if (index < items.lastIndex) {
+                            Divider(
+                                color = UiKitTheme.colors.background.skeleton,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp)
+                                    .animateItem(),
+                            )
+                        }
+                    }
+
+                    is SearchSuggestionItem.CategoryItem -> {
+                        ZarinaItem(
+                            modifier = Modifier
+                                .heightIn(min = 48.dp)
+                                .animateItem(),
+                        ) {
+                            val textWithQueryMatch = rememberSuggestionItemTextWithQueryMatch(
+                                text = item.name,
+                                query = query,
+                            )
+
+                            Text(
+                                text = textWithQueryMatch,
+                                style = SearchSuggestionItemTextStyle,
+                                color = SearchSuggestionsColor,
+                            )
+                        }
+
+                        if (index < items.lastIndex) {
+                            Divider(
+                                color = UiKitTheme.colors.background.skeleton,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp)
+                                    .animateItem(),
+                            )
+                        }
                     }
                 }
             }
@@ -291,6 +267,30 @@ object ProductSearchScreenComponents {
         }
     }
 
+    private fun getSearchSuggestionItemKey(item: SearchSuggestionItem): String {
+        return when (item) {
+            is SearchSuggestionItem.GenericTitle -> {
+                "$SearchSuggestionsKeyTitlePrefix ${item.text.hashCode()}"
+            }
+
+            is SearchSuggestionItem.QueryItem -> {
+                "$SearchSuggestionsKeyQueryItemPrefix ${item.query}"
+            }
+
+            is SearchSuggestionItem.CategoryItem -> {
+                "$SearchSuggestionsKeyCategoryItemPrefix ${item.id.value}"
+            }
+        }
+    }
+
+    private fun getSearchSuggestionItemContentType(item: SearchSuggestionItem): String {
+        return when (item) {
+            is SearchSuggestionItem.GenericTitle -> SearchSuggestionsContentTypeTitle
+            is SearchSuggestionItem.QueryItem -> SearchSuggestionsContentTypeQueryItem
+            is SearchSuggestionItem.CategoryItem -> SearchSuggestionsContentTypeCategoryItem
+        }
+    }
+
     private val SearchSuggestionTitleTextStyle: TextStyle
         @Composable
         get() = UiKitTheme.typography.secondary.bold
@@ -303,16 +303,18 @@ object ProductSearchScreenComponents {
         @Composable
         get() = UiKitTheme.typography.secondary.regular
 
-    private const val SearchSuggestionsKeyResultsTitle = "SearchSuggestionsKeyResultsTitle"
-    private const val SearchSuggestionsKeyCategoriesTitle = "SearchSuggestionsKeyCategoriesTitle"
-    private const val SearchSuggestionsKeyResultItemPrefix =
-        "SearchSuggestionsKeyResultItemPrefix"
+    private val SearchSuggestionsColor: Color
+        @Composable
+        get() = UiKitTheme.colors.text.general.regular.default
+
+    private const val SearchSuggestionsKeyTitlePrefix = "SearchSuggestionsKeyTitlePrefix"
+    private const val SearchSuggestionsKeyQueryItemPrefix = "SearchSuggestionsKeyQueryItemPrefix"
     private const val SearchSuggestionsKeyCategoryItemPrefix =
         "SearchSuggestionsKeyCategoryItemPrefix"
 
-    private const val SearchSuggestionsContentTypeTitle = "SearchSuggestionsKeyResultsTitle"
-    private const val SearchSuggestionsContentTypeResultItem =
-        "SearchSuggestionsContentTypeResultItem"
+    private const val SearchSuggestionsContentTypeTitle = "SearchSuggestionsContentTypeTitle"
+    private const val SearchSuggestionsContentTypeQueryItem =
+        "SearchSuggestionsContentTypeQueryItem"
     private const val SearchSuggestionsContentTypeCategoryItem =
         "SearchSuggestionsContentTypeCategoryItem"
 }
