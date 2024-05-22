@@ -3,7 +3,9 @@ package ru.livetyping.zarina.util.library.accompanist
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.spring
 import androidx.compose.material.ExperimentalMaterialApi
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.ModalBottomSheetValue
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

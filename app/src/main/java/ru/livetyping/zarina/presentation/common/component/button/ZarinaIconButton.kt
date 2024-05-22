@@ -9,8 +9,11 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Icon
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.LocalContentColor
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable

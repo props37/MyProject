@@ -21,8 +21,11 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Divider
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Icon
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

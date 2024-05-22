@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.onboarding.defaultcity
 
 import androidx.compose.foundation.layout.fillMaxWidth
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

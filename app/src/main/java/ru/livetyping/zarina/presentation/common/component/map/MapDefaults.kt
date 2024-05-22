@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.common.component.map
 
 import androidx.compose.foundation.layout.size
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

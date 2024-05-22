@@ -5,6 +5,7 @@ import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Icon
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable

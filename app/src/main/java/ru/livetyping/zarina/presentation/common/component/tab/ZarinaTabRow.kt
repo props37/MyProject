@@ -1,8 +1,12 @@
 package ru.livetyping.zarina.presentation.common.component.tab
 
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.TabPosition
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.TabRow
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.common.ripple
 
 import androidx.compose.material.ExperimentalMaterialApi
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.RippleConfiguration
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
