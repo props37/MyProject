@@ -27,7 +27,7 @@ jetpack-browser = "1.8.0"
 jetpack-junit = "1.1.5"
 jetpack-uiAutomator = "2.3.0"
 jetpack-espresso = "3.5.1"
-jetpack-benchmark = "1.2.3"
+jetpack-benchmark = "1.2.4"
 
 jetpack-compose-bom = "2024.05.00"
 jetpack-compose = "1.7.0-beta01"
