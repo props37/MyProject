@@ -206,6 +206,7 @@
     <string name="it_will_help_us_to_detect_your_location">Это поможет автоматически определить твоё местоположение</string>
     <string name="select_date">Выбери дату</string>
     <string name="selected_date">Выбранная дата</string>
+    <string name="search_results">Результаты поиска</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

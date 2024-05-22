@@ -2,7 +2,6 @@ package ru.livetyping.zarina.presentation.screen.catalog
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -44,6 +43,7 @@ import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
+import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldSize
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.util.domain.toComposeColor
 import ru.livetyping.zarina.presentation.screen.catalog.CatalogViewModel.CategoryListItem
@@ -71,7 +71,7 @@ object CatalogScreenComponents {
                 value = "",
                 onValueChanged = {},
                 isEnabled = false,
-                textStyle = UiKitTheme.typography.secondary.light,
+                size = ZarinaTextFieldSize.Small,
                 placeholder = { Text(text = stringResource(R.string.find_products)) },
                 leadingContent = {
                     Icon(
@@ -88,7 +88,6 @@ object CatalogScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun GenderPicker(
         genders: ImmutableList<GenderTab>,
@@ -120,7 +119,6 @@ object CatalogScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun GenderCategoryPager(
         genders: ImmutableList<GenderTab>,

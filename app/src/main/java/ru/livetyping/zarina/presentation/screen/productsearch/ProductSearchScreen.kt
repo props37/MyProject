@@ -7,11 +7,12 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -20,32 +21,33 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenComponents.SearchBar
+import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenComponents.TopBar
+import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchMode
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.tryRequestFocus
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun ProductSearchScreen(
     navigate: (ProductSearchScreenAction) -> Unit,
     viewModel: ProductSearchViewModel = hiltViewModel(),
 ) {
-    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
-    )
+    val searchMode by viewModel.searchMode.collectAsStateWithLifecycle()
 
     ScreenContent(
-        searchQuery = searchQuery,
-        onSearchQueryChanged = viewModel::onSearchQueryChanged,
-        onSearchBarCancelClicked = viewModel::onSearchBarCancelClicked,
+        onBackClicked = viewModel::onBackClicked,
+        searchTextFieldState = viewModel.searchTextFieldState,
+        onSearchTextFieldSearchClicked = viewModel::onSearchTextFieldSearchClicked,
+        onSearchTextFieldFocused = viewModel::onSearchTextFieldFocused,
+        searchMode = searchMode,
+        onSearchBarCancelClicked = viewModel::onSearchTextFieldCancelClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -53,8 +55,11 @@ fun ProductSearchScreen(
 
 @Composable
 private fun ScreenContent(
-    searchQuery: String,
-    onSearchQueryChanged: (String) -> Unit,
+    onBackClicked: () -> Unit,
+    searchTextFieldState: TextFieldState,
+    onSearchTextFieldSearchClicked: () -> Unit,
+    onSearchTextFieldFocused: () -> Unit,
+    searchMode: SearchMode,
     onSearchBarCancelClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProductSearchScreenAction) -> Unit,
@@ -65,10 +70,9 @@ private fun ScreenContent(
     )
 
     val focusRequester = remember { FocusRequester() }
-
-    LifecycleStartEffect(Unit) {
+    LaunchedEffect(Unit) {
+        delay(300.milliseconds)
         focusRequester.tryRequestFocus()
-        onStopOrDispose {}
     }
 
     Column(
@@ -82,13 +86,14 @@ private fun ScreenContent(
             .imePadding()
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
-        SearchBar(
-            query = searchQuery,
-            onQueryChanged = onSearchQueryChanged,
-            onCancelClicked = onSearchBarCancelClicked,
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .focusRequester(focusRequester),
+        TopBar(
+            searchTextFieldState = searchTextFieldState,
+            onSearchTextFieldSearchClicked = onSearchTextFieldSearchClicked,
+            onSearchTextFieldFocused = onSearchTextFieldFocused,
+            onSearchTextFieldCancelClicked = onSearchBarCancelClicked,
+            searchMode = searchMode,
+            onBackClicked = onBackClicked,
+            modifier = Modifier.focusRequester(focusRequester),
         )
     }
 }
