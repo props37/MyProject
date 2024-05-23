@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
@@ -119,9 +120,8 @@ object LooseTabRowDefaults {
         this
             .fillMaxWidth()
             .wrapContentSize(Alignment.BottomStart)
-            // TODO: [High] Migrate to offset {}?
-            .offset(x = indicatorOffset)
             .width(currentTabWidth)
+            .offset { IntOffset(x = indicatorOffset.roundToPx(), 0) }
     }
 }
 
