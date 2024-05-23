@@ -7,9 +7,12 @@ import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
+import ru.livetyping.zarina.presentation.navigation.destination.graph.CatalogGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.navigateToSizeSelectorGraph
+import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
+import ru.livetyping.zarina.presentation.navigation.util.slidePopExitTransition
 import ru.livetyping.zarina.presentation.screen.products.ProductsScreen
 import ru.livetyping.zarina.presentation.screen.products.ProductsScreenAction
 import ru.livetyping.zarina.presentation.screen.products.ProductsViewModel
@@ -18,6 +21,14 @@ import ru.livetyping.zarina.util.library.navigation.navigate
 fun NavGraphBuilder.productsScreen(navController: NavHostController) {
     composableDestination(
         destination = UnscopedDestinations.Products,
+        enterTransition = {
+            when (initialState.destination.route) {
+                CatalogGraph.Catalog.routeSchema,
+                UnscopedDestinations.ProductSearch.routeSchema -> slideEnterTransition()
+
+                else -> null
+            }
+        },
         exitTransition = {
             when (targetState.destination.route) {
                 UnscopedDestinations.Filters.routeSchema,
@@ -34,6 +45,14 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                 UnscopedDestinations.ProductSubscription.routeSchema,
                 UnscopedDestinations.Product.routeSchema,
                 UnscopedDestinations.ProductSearch.routeSchema -> slidePopEnterTransition()
+
+                else -> null
+            }
+        },
+        popExitTransition = {
+            when (targetState.destination.route) {
+                CatalogGraph.Catalog.routeSchema,
+                UnscopedDestinations.ProductSearch.routeSchema -> slidePopExitTransition()
 
                 else -> null
             }

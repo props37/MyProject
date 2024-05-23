@@ -6,6 +6,8 @@ import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CatalogGraph
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
+import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
+import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopExitTransition
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreen
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenAction
@@ -18,6 +20,18 @@ fun NavGraphBuilder.productSearchScreen(navController: NavHostController) {
                 CatalogGraph.Catalog.routeSchema,
                 UnscopedDestinations.Products.routeSchema -> slideEnterTransition()
 
+                else -> null
+            }
+        },
+        exitTransition = {
+            when (targetState.destination.route) {
+                UnscopedDestinations.Products.routeSchema -> slideExitTransition()
+                else -> null
+            }
+        },
+        popEnterTransition = {
+            when (initialState.destination.route) {
+                UnscopedDestinations.Products.routeSchema -> slidePopEnterTransition()
                 else -> null
             }
         },
@@ -38,6 +52,10 @@ fun NavGraphBuilder.productSearchScreen(navController: NavHostController) {
                             route = UnscopedDestinations.ProductSearch.routeSchema,
                             inclusive = true,
                         )
+                    }
+
+                    is ProductSearchScreenAction.CategoryClicked -> {
+                        navController.navigateToProductsScreen(action.categoryId)
                     }
                 }
             },

@@ -55,6 +55,11 @@ class ProductSearchViewModel @Inject constructor(
         initialValue = SearchMode.SEARCH,
     )
 
+    private val searchQueryValueHolder = savedStateHandle.createValueHolder(
+        key = KEY_SEARCH_QUERY,
+        initialValue = "",
+    )
+
     val searchTextFieldState: TextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
@@ -100,8 +105,12 @@ class ProductSearchViewModel @Inject constructor(
     }
 
     fun onSearchTextFieldSearchClicked() {
-        emitSideEffect(SideEffect.ReleaseSearchTextFieldFocus)
-        searchModeValueHolder.set(SearchMode.SEARCH_RESULTS)
+        val searchQuery = searchTextFieldState.text.toString()
+        if (searchQuery.isNotBlank()) {
+            emitSideEffect(SideEffect.ReleaseSearchTextFieldFocus)
+            searchModeValueHolder.set(SearchMode.SEARCH_RESULTS)
+            searchQueryValueHolder.set(searchQuery)
+        }
     }
 
     fun onSearchTextFieldFocused() {
@@ -109,9 +118,22 @@ class ProductSearchViewModel @Inject constructor(
     }
 
     fun onSearchSuggestionItemClicked(item: SearchSuggestionItem) {
-        emitSideEffect(SideEffect.ReleaseSearchTextFieldFocus)
-        searchModeValueHolder.set(SearchMode.SEARCH_RESULTS)
-        // TODO: [High] Implement
+        when (item) {
+            is SearchSuggestionItem.QueryItem -> {
+                emitSideEffect(SideEffect.ReleaseSearchTextFieldFocus)
+                searchModeValueHolder.set(SearchMode.SEARCH_RESULTS)
+                searchQueryValueHolder.set(item.query)
+            }
+
+            is SearchSuggestionItem.CategoryItem -> {
+                navigationThrottler.throttle {
+                    val action = ProductSearchScreenAction.CategoryClicked(item.id)
+                    emitSideEffect(SideEffect.Navigate(action))
+                }
+            }
+
+            is SearchSuggestionItem.GenericTitle -> Unit
+        }
     }
 
     private fun Result<ProductSearchSuggestions>.toSearchSuggestionsState(): SearchSuggestionsState {
@@ -220,6 +242,7 @@ class ProductSearchViewModel @Inject constructor(
 
     companion object {
         private const val KEY_SEARCH_MODE = "search_mode"
+        private const val KEY_SEARCH_QUERY = "search_query"
 
         private const val SEARCH_SUGGESTIONS_QUERIES_MAX_COUNT = 5
         private const val SEARCH_SUGGESTIONS_CATEGORIES_MAX_COUNT = 5
