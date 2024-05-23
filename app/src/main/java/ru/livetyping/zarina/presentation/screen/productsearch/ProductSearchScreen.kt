@@ -23,7 +23,6 @@ import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
@@ -32,6 +31,7 @@ import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScree
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchMode
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchSuggestionItem
+import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchSuggestionsState
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.tryRequestFocus
@@ -43,7 +43,7 @@ fun ProductSearchScreen(
     viewModel: ProductSearchViewModel = hiltViewModel(),
 ) {
     val searchMode by viewModel.searchMode.collectAsStateWithLifecycle()
-    val searchSuggestionItems by viewModel.searchSuggestionItems.collectAsStateWithLifecycle()
+    val searchSuggestionsState by viewModel.searchSuggestionsState.collectAsStateWithLifecycle()
 
     ScreenContent(
         onBackClicked = viewModel::onBackClicked,
@@ -52,7 +52,7 @@ fun ProductSearchScreen(
         onSearchTextFieldFocused = viewModel::onSearchTextFieldFocused,
         searchMode = searchMode,
         onSearchBarCancelClicked = viewModel::onSearchTextFieldCancelClicked,
-        searchSuggestionItems = searchSuggestionItems,
+        searchSuggestionsState = searchSuggestionsState,
         onSearchSuggestionItemClicked = viewModel::onSearchSuggestionItemClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
@@ -67,7 +67,7 @@ private fun ScreenContent(
     onSearchTextFieldFocused: () -> Unit,
     searchMode: SearchMode,
     onSearchBarCancelClicked: () -> Unit,
-    searchSuggestionItems: ImmutableList<SearchSuggestionItem>,
+    searchSuggestionsState: SearchSuggestionsState,
     onSearchSuggestionItemClicked: (SearchSuggestionItem) -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProductSearchScreenAction) -> Unit,
@@ -105,8 +105,8 @@ private fun ScreenContent(
         )
 
         SearchSuggestions(
+            state = searchSuggestionsState,
             query = searchTextFieldState.text.toString(),
-            items = searchSuggestionItems,
             onItemClicked = onSearchSuggestionItemClicked,
             modifier = Modifier.fillMaxSize(),
         )

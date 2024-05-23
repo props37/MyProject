@@ -214,6 +214,8 @@
     <string name="selected_date">Выбранная дата</string>
     <string name="search_results">Результаты поиска</string>
     <string name="categories">Категории</string>
+    <string name="nothing_found">Ничего не нашлось</string>
+    <string name="write_different_search_query">Напиши по‑другому или измени запрос</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

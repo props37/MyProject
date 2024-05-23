@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -46,14 +47,18 @@ import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
+import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldSize
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
+import ru.livetyping.zarina.presentation.common.error.rememberErrorState
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchMode
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchSuggestionItem
+import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchSuggestionsState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
+import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.kotlin.findSubstringBounds
 
 @Suppress("ConstPropertyName")
@@ -153,6 +158,68 @@ object ProductSearchScreenComponents {
 
     @Composable
     fun SearchSuggestions(
+        state: SearchSuggestionsState,
+        query: String,
+        onItemClicked: (SearchSuggestionItem) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        @Suppress("NAME_SHADOWING")
+        Crossfade(
+            targetState = state,
+            contentKey = {
+                when (it) {
+                    is SearchSuggestionsState.Suggestions -> SearchSuggestionsContentKeySuggestions
+                    SearchSuggestionsState.Empty -> it
+                    is SearchSuggestionsState.Error -> it
+                    SearchSuggestionsState.Loading -> it
+                }
+            },
+            label = "SearchSuggestions",
+            modifier = modifier,
+        ) { state ->
+            when (state) {
+                is SearchSuggestionsState.Suggestions -> {
+                    SearchSuggestionList(
+                        query = query,
+                        items = state.items,
+                        onItemClicked = onItemClicked,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+
+                SearchSuggestionsState.Loading -> Unit
+
+                SearchSuggestionsState.Empty -> {
+                    val errorState = rememberErrorState(
+                        iconResId = R.drawable.ic_magnifying_glass_64,
+                        title = stringResource(R.string.nothing_found),
+                        body = stringResource(R.string.write_different_search_query),
+                        isButtonVisible = false,
+                    )
+                    ZarinaErrorScreen(
+                        state = errorState,
+                        onButtonClicked = {},
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                    )
+                }
+
+                is SearchSuggestionsState.Error -> {
+                    ZarinaErrorScreen(
+                        state = state.state,
+                        onButtonClicked = {},
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun SearchSuggestionList(
         query: String,
         items: ImmutableList<SearchSuggestionItem>,
         onItemClicked: (SearchSuggestionItem) -> Unit,
@@ -372,6 +439,9 @@ object ProductSearchScreenComponents {
     private val SearchSuggestionsColor: Color
         @Composable
         get() = UiKitTheme.colors.text.general.regular.default
+
+    private const val SearchSuggestionsContentKeySuggestions =
+        "SearchSuggestionsContentKeySuggestions"
 
     private const val SearchSuggestionsKeyTitlePrefix = "SearchSuggestionsKeyTitlePrefix"
     private const val SearchSuggestionsKeyQueryItemPrefix = "SearchSuggestionsKeyQueryItemPrefix"

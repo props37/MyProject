@@ -10,7 +10,6 @@ import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,6 +29,8 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.base.text.Text
+import ru.livetyping.zarina.presentation.common.error.ErrorState
+import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.usecase.productsearch.GetProductSearchSuggestionsFlowUseCase
 import ru.livetyping.zarina.util.compose.text.textAsFlow
@@ -70,13 +71,12 @@ class ProductSearchViewModel @Inject constructor(
                 initialValue = null,
             )
 
-    val searchSuggestionItems: StateFlow<ImmutableList<SearchSuggestionItem>> =
-        searchSuggestionsResult.mapState(
-            scope = viewModelScope + Dispatchers.Default,
-            started = SharingStarted.WhileUiSubscribed,
-        ) { result ->
-            result?.toSearchSuggestionItems()?.toImmutableList() ?: persistentListOf()
-        }
+    val searchSuggestionsState: StateFlow<SearchSuggestionsState> = searchSuggestionsResult.mapState(
+        scope = viewModelScope + Dispatchers.Default,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { result ->
+        result?.toSearchSuggestionsState() ?: SearchSuggestionsState.Loading
+    }
 
     private val categoryParentCategoryChainRegex = CATEGORY_PARENT_CATEGORY_CHAIN_PATTERN.toRegex()
 
@@ -109,35 +109,48 @@ class ProductSearchViewModel @Inject constructor(
         // TODO: [High] Implement
     }
 
-    private fun Result<ProductSearchSuggestions>.toSearchSuggestionItems(): List<SearchSuggestionItem> {
+    private fun Result<ProductSearchSuggestions>.toSearchSuggestionsState(): SearchSuggestionsState {
         return this.fold(
             onSuccess = { suggestions ->
-                buildList {
-                    if (suggestions.resultSuggestions.isNotEmpty()) {
-                        val titleText = Text.Resource(R.string.search_results)
-                        add(SearchSuggestionItem.GenericTitle(titleText))
-
-                        val items = suggestions.resultSuggestions
-                            .take(SEARCH_SUGGESTIONS_QUERIES_MAX_COUNT)
-                            .map { query ->
-                                SearchSuggestionItem.QueryItem(query.capitalize())
-                            }
-                        addAll(items)
-                    }
-
-                    if (suggestions.categories.isNotEmpty()) {
-                        val titleText = Text.Resource(R.string.categories)
-                        add(SearchSuggestionItem.GenericTitle(titleText))
-
-                        val items = suggestions.categories
-                            .take(SEARCH_SUGGESTIONS_CATEGORIES_MAX_COUNT)
-                            .map { it.toCategoryItem() }
-                        addAll(items)
-                    }
-                }.toImmutableList()
+                val items = suggestions.toSearchSuggestionItems().toImmutableList()
+                if (items.isNotEmpty()) {
+                    SearchSuggestionsState.Suggestions(items)
+                }else {
+                    SearchSuggestionsState.Empty
+                }
             },
-            onFailure = { persistentListOf() },
+            onFailure = { throwable ->
+                val errorState = ErrorState.from(throwable).copy(isButtonVisible = false)
+                SearchSuggestionsState.Error(errorState)
+            },
         )
+    }
+
+    private fun ProductSearchSuggestions.toSearchSuggestionItems(): List<SearchSuggestionItem> {
+        val suggestions = this
+        return buildList {
+            if (suggestions.resultSuggestions.isNotEmpty()) {
+                val titleText = Text.Resource(R.string.search_results)
+                add(SearchSuggestionItem.GenericTitle(titleText))
+
+                val items = suggestions.resultSuggestions
+                    .take(SEARCH_SUGGESTIONS_QUERIES_MAX_COUNT)
+                    .map { query ->
+                        SearchSuggestionItem.QueryItem(query.capitalize())
+                    }
+                addAll(items)
+            }
+
+            if (suggestions.categories.isNotEmpty()) {
+                val titleText = Text.Resource(R.string.categories)
+                add(SearchSuggestionItem.GenericTitle(titleText))
+
+                val items = suggestions.categories
+                    .take(SEARCH_SUGGESTIONS_CATEGORIES_MAX_COUNT)
+                    .map { it.toCategoryItem() }
+                addAll(items)
+            }
+        }
     }
 
     private fun ProductSearchSuggestions.Category.toCategoryItem(): SearchSuggestionItem.CategoryItem {
@@ -168,6 +181,20 @@ class ProductSearchViewModel @Inject constructor(
     }
 
     enum class SearchMode { SEARCH, SEARCH_RESULTS }
+
+    @Stable
+    sealed class SearchSuggestionsState {
+        @Immutable
+        data class Suggestions(val items: ImmutableList<SearchSuggestionItem>) :
+            SearchSuggestionsState()
+
+        data object Loading : SearchSuggestionsState()
+
+        data object Empty : SearchSuggestionsState()
+
+        @Immutable
+        data class Error(val state: ErrorState) : SearchSuggestionsState()
+    }
 
     @Stable
     sealed class SearchSuggestionItem {
