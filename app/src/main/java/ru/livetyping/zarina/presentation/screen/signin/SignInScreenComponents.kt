@@ -33,7 +33,6 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDef
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
-import ru.livetyping.zarina.presentation.common.component.text.ZarinaClickableText
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPasswordTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPhoneNumberTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
@@ -43,6 +42,7 @@ import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.screen.signin.SignInViewModel.SignInType
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.navigationBarsOrIme
+import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
 
 object SignInScreenComponents {
 
@@ -343,7 +343,7 @@ object SignInScreenComponents {
         val recaptchaPrivacyUrl = stringResource(R.string.recaptcha_policies_privacy_url)
         val recaptchaTermsUrl = stringResource(R.string.recaptcha_policies_terms_url)
 
-        val clickableTextToUrl = remember(
+        val substringToUrl = remember(
             privacyPolicy,
             recaptchaPrivacy,
             recaptchaTerms,
@@ -357,11 +357,17 @@ object SignInScreenComponents {
                 recaptchaTerms to recaptchaTermsUrl,
             )
         }
+        val stringWithLinks = rememberStringWithLinks(
+            baseString = stringResource(R.string.sign_in_policies),
+            substringToUrl = substringToUrl,
+            urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle(),
+            onUrlClicked = { onUrlClicked(Url(it)) },
+        )
 
-        ZarinaClickableText(
-            baseText = stringResource(R.string.sign_in_policies),
-            clickableTextToUrl = clickableTextToUrl,
-            onUrlClicked = onUrlClicked,
+        Text(
+            text = stringWithLinks,
+            style = UiKitTheme.typography.footnote.light,
+            color = UiKitTheme.colors.text.general.regular.default,
             modifier = modifier,
         )
     }

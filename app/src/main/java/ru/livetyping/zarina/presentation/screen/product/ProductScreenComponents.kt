@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple
@@ -36,7 +35,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.UrlAnnotation
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
@@ -484,7 +483,6 @@ object ProductScreenComponents {
                 id = R.string.product_delivery_and_payment_info,
                 rememberFormattedPrice(freeDeliveryTotalPriceThreshold),
             )
-            val baseTextStyle = UiKitTheme.typography.tertiary.light
 
             val clickableDeliveryText =
                 stringResource(R.string.product_delivery_and_payment_info_delivery)
@@ -496,44 +494,45 @@ object ProductScreenComponents {
 
             val text = remember(
                 baseText,
-                baseTextStyle,
                 clickableDeliveryText,
                 clickablePaymentText,
                 clickableTextStyle,
                 deliveryAndPaymentUrl,
+                onUrlClicked,
             ) {
                 buildAnnotatedString {
-                    withStyle(baseTextStyle.toSpanStyle()) {
-                        append(baseText)
-                    }
+                    append(baseText)
 
                     val string = this.toAnnotatedString()
                     val clickableDeliveryTextStartIndex = string.lastIndexOf(clickableDeliveryText)
                     val clickablePaymentTextStartIndex = string.lastIndexOf(clickablePaymentText)
 
                     val clickableSpanStyle = clickableTextStyle.toSpanStyle()
+                    val linkInteractionListener = { link: LinkAnnotation ->
+                        if (link is LinkAnnotation.Url) {
+                            onUrlClicked(Url(link.url))
+                        }
+                    }
                     if (clickableDeliveryTextStartIndex != -1) {
                         val end = clickableDeliveryTextStartIndex + clickableDeliveryText.length
-                        addStyle(
-                            style = clickableSpanStyle,
-                            start = clickableDeliveryTextStartIndex,
-                            end = end,
-                        )
-                        addUrlAnnotation(
-                            urlAnnotation = UrlAnnotation(deliveryAndPaymentUrl),
+                        addLink(
+                            url = LinkAnnotation.Url(
+                                url = deliveryAndPaymentUrl,
+                                style = clickableSpanStyle,
+                                linkInteractionListener = linkInteractionListener,
+                            ),
                             start = clickableDeliveryTextStartIndex,
                             end = end,
                         )
                     }
                     if (clickablePaymentTextStartIndex != -1) {
                         val end = clickablePaymentTextStartIndex + clickablePaymentText.length
-                        addStyle(
-                            style = clickableSpanStyle,
-                            start = clickablePaymentTextStartIndex,
-                            end = end,
-                        )
-                        addUrlAnnotation(
-                            urlAnnotation = UrlAnnotation(deliveryAndPaymentUrl),
+                        addLink(
+                            url = LinkAnnotation.Url(
+                                url = deliveryAndPaymentUrl,
+                                style = clickableSpanStyle,
+                                linkInteractionListener = linkInteractionListener,
+                            ),
                             start = clickablePaymentTextStartIndex,
                             end = end,
                         )
@@ -541,15 +540,11 @@ object ProductScreenComponents {
                 }
             }
 
-            ClickableText(
+            Text(
                 text = text,
-            ) { offset ->
-                val annotation = text.getUrlAnnotations(offset, offset).firstOrNull()
-                if (annotation != null) {
-                    val url = Url(annotation.item.url)
-                    onUrlClicked(url)
-                }
-            }
+                style = UiKitTheme.typography.tertiary.light,
+                color = UiKitTheme.colors.text.general.regular.default,
+            )
         }
     }
 

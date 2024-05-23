@@ -19,9 +19,10 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.checkbox.ZarinaCheckbox
-import ru.livetyping.zarina.presentation.common.component.text.ZarinaClickableText
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
+import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
 
 object ProductSubscriptionScreenComponents {
 
@@ -90,7 +91,7 @@ object ProductSubscriptionScreenComponents {
         val onlineStoreUrl = stringResource(R.string.online_store_policy_url)
         val personalDataUrl = stringResource(R.string.personal_data_policy_url)
 
-        val clickableTextToUrl = remember(
+        val substringToUrl = remember(
             privacy,
             onlineStore,
             personalData,
@@ -104,11 +105,17 @@ object ProductSubscriptionScreenComponents {
                 personalData to personalDataUrl,
             )
         }
+        val stringWithLinks = rememberStringWithLinks(
+            baseString = stringResource(R.string.product_subscription_policies),
+            substringToUrl = substringToUrl,
+            urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle(),
+            onUrlClicked = { onUrlClicked(Url(it)) },
+        )
 
-        ZarinaClickableText(
-            baseText = stringResource(R.string.product_subscription_policies),
-            clickableTextToUrl = clickableTextToUrl,
-            onUrlClicked = onUrlClicked,
+        Text(
+            text = stringWithLinks,
+            style = UiKitTheme.typography.footnote.light,
+            color = UiKitTheme.colors.text.general.regular.default,
             modifier = modifier,
         )
     }
