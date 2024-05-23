@@ -21,11 +21,11 @@ data class SearchSuggestionsDto(
         val autocompleteSuggestions = autocompleteSuggestions
             ?.mapNotNull { it.toAutocompleteSuggestion() }
             ?: emptyList()
-        val resultSuggestions = resultSuggestions?.mapNotNull { it.st } ?: emptyList()
+        val searchQueries = resultSuggestions?.mapNotNull { it.st } ?: emptyList()
         val categories = categories?.mapNotNull { it.toCategory() } ?: emptyList()
         return ProductSearchSuggestions(
             autocompleteSuggestions = autocompleteSuggestions,
-            resultSuggestions = resultSuggestions,
+            searchQueries = searchQueries,
             categories = categories,
         )
     }

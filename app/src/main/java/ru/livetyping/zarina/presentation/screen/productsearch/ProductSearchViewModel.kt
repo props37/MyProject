@@ -119,7 +119,7 @@ class ProductSearchViewModel @Inject constructor(
 
     fun onSearchSuggestionItemClicked(item: SearchSuggestionItem) {
         when (item) {
-            is SearchSuggestionItem.QueryItem -> {
+            is SearchSuggestionItem.SearchQueryItem -> {
                 emitSideEffect(SideEffect.ReleaseSearchTextFieldFocus)
                 searchModeValueHolder.set(SearchMode.SEARCH_RESULTS)
                 searchQueryValueHolder.set(item.query)
@@ -156,14 +156,14 @@ class ProductSearchViewModel @Inject constructor(
     private fun ProductSearchSuggestions.toSearchSuggestionItems(): List<SearchSuggestionItem> {
         val suggestions = this
         return buildList {
-            if (suggestions.resultSuggestions.isNotEmpty()) {
+            if (suggestions.searchQueries.isNotEmpty()) {
                 val titleText = Text.Resource(R.string.search_results)
                 add(SearchSuggestionItem.GenericTitle(titleText))
 
-                val items = suggestions.resultSuggestions
+                val items = suggestions.searchQueries
                     .take(SEARCH_SUGGESTIONS_QUERIES_MAX_COUNT)
                     .map { query ->
-                        SearchSuggestionItem.QueryItem(query.capitalize())
+                        SearchSuggestionItem.SearchQueryItem(query.capitalize())
                     }
                 addAll(items)
             }
@@ -230,7 +230,7 @@ class ProductSearchViewModel @Inject constructor(
         data class GenericTitle(val text: Text) : SearchSuggestionItem()
 
         @Immutable
-        data class QueryItem(val query: String) : SearchSuggestionItem()
+        data class SearchQueryItem(val query: String) : SearchSuggestionItem()
 
         @Immutable
         data class CategoryItem(

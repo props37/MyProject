@@ -242,12 +242,12 @@ object ProductSearchScreenComponents {
                         )
                     }
 
-                    is SearchSuggestionItem.QueryItem -> {
+                    is SearchSuggestionItem.SearchQueryItem -> {
                         val nextItem = items.getOrNull(index + 1)
                         val isDividerVisible =
-                            index < items.lastIndex && nextItem is SearchSuggestionItem.QueryItem
+                            index < items.lastIndex && nextItem is SearchSuggestionItem.SearchQueryItem
 
-                        SearchSuggestionQueryItem(
+                        SearchSuggestionSearchQueryItem(
                             item = item,
                             onClick = onItemClicked,
                             query = query,
@@ -293,9 +293,9 @@ object ProductSearchScreenComponents {
     }
 
     @Composable
-    private fun SearchSuggestionQueryItem(
-        item: SearchSuggestionItem.QueryItem,
-        onClick: (SearchSuggestionItem.QueryItem) -> Unit,
+    private fun SearchSuggestionSearchQueryItem(
+        item: SearchSuggestionItem.SearchQueryItem,
+        onClick: (SearchSuggestionItem.SearchQueryItem) -> Unit,
         query: String,
         isDividerVisible: Boolean,
         modifier: Modifier = Modifier,
@@ -406,7 +406,7 @@ object ProductSearchScreenComponents {
                 "$SearchSuggestionsKeyTitlePrefix ${item.text.hashCode()}"
             }
 
-            is SearchSuggestionItem.QueryItem -> {
+            is SearchSuggestionItem.SearchQueryItem -> {
                 "$SearchSuggestionsKeyQueryItemPrefix ${item.query}"
             }
 
@@ -419,7 +419,7 @@ object ProductSearchScreenComponents {
     private fun getSearchSuggestionItemContentType(item: SearchSuggestionItem): String {
         return when (item) {
             is SearchSuggestionItem.GenericTitle -> SearchSuggestionsContentTypeTitle
-            is SearchSuggestionItem.QueryItem -> SearchSuggestionsContentTypeQueryItem
+            is SearchSuggestionItem.SearchQueryItem -> SearchSuggestionsContentTypeQueryItem
             is SearchSuggestionItem.CategoryItem -> SearchSuggestionsContentTypeCategoryItem
         }
     }
