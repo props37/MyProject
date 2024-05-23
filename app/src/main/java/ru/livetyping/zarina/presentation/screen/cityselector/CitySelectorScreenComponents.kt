@@ -1,5 +1,8 @@
 package ru.livetyping.zarina.presentation.screen.cityselector
 
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
@@ -20,13 +23,8 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Divider
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Icon
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -48,6 +46,7 @@ import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.icon.ZarinaCheckmarkAnimatedIcon
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
@@ -208,8 +207,7 @@ object CitySelectorScreenComponents {
                                             )
 
                                             if (index < listState.items.lastIndex) {
-                                                Divider(
-                                                    color = UiKitTheme.colors.border.general.default,
+                                                ZarinaDivider(
                                                     modifier = Modifier
                                                         .fillMaxWidth()
                                                         .padding(horizontal = 16.dp),

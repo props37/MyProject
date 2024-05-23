@@ -1,5 +1,8 @@
 package ru.livetyping.zarina.presentation.screen.filters
 
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -20,11 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Divider
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Icon
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -61,6 +60,7 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.counter.ZarinaCounter
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
@@ -271,8 +271,7 @@ object FiltersScreenComponents {
                         }
 
                         if (filter !is PriceFilter && index < filterCount - 1) {
-                            Divider(
-                                color = UiKitTheme.colors.border.general.default,
+                            ZarinaDivider(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp),
@@ -282,10 +281,7 @@ object FiltersScreenComponents {
                 }
             }
 
-            Divider(
-                color = UiKitTheme.colors.border.general.default,
-                modifier = Modifier.fillMaxWidth(),
-            )
+            ZarinaDivider(modifier = Modifier.fillMaxWidth())
 
             ShowProductsButton(
                 onClick = onShowProductsClicked,
@@ -327,10 +323,7 @@ object FiltersScreenComponents {
                 }
 
                 if (index < FilterSkeletonItemCount - 1) {
-                    Divider(
-                        color = UiKitTheme.colors.border.general.default,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
+                    ZarinaDivider(modifier = Modifier.fillMaxWidth())
                 }
             }
         }
@@ -529,6 +522,4 @@ object FiltersScreenComponents {
     private val FilterTitleColor: Color
         @Composable
         get() = UiKitTheme.colors.text.general.regular.default
-
-    private val MultiSelectionFilterItemCounterMinSize: Dp get() = 24.dp
 }

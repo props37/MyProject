@@ -1,10 +1,12 @@
 package ru.livetyping.zarina.presentation.screen.cart
 
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -35,11 +37,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Divider
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Icon
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -81,6 +79,7 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.counter.ZarinaCounter
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
@@ -336,7 +335,6 @@ object CartScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun DeliveryTypeContentPager(
         pagerState: PagerState,
@@ -443,8 +441,7 @@ object CartScreenComponents {
                 ProductOrderCardSkeleton(shimmer = shimmer)
 
                 if (index < CartProductSkeletonCount - 1) {
-                    Divider(
-                        color = UiKitTheme.colors.border.general.default,
+                    ZarinaDivider(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
@@ -576,11 +573,9 @@ object CartScreenComponents {
                 )
 
                 if (isDividerVisible) {
-                    Divider(
-                        color = UiKitTheme.colors.border.general.default,
+                    ZarinaDivider(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(UiKitTheme.colors.background.general.regular.default)
                             .padding(horizontal = 16.dp),
                     )
                 }

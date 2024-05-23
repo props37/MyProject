@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 //noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Divider
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
@@ -28,6 +26,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.product.ProductOffer
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIconButton
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.screen.sizeselector.SizeSelectorScreenComponents.NavigationBarSpacer
@@ -84,8 +83,7 @@ object HeightSelectorScreenComponents {
                     )
 
                     if (index < offers.lastIndex) {
-                        Divider(
-                            color = UiKitTheme.colors.border.general.default,
+                        ZarinaDivider(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),

@@ -1,5 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.filters.listfilter
 
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -13,9 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Divider
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,6 +39,7 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.color.ZarinaColorIcon
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.icon.ZarinaCheckmarkAnimatedIcon
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
@@ -137,8 +137,7 @@ object ListFilterScreenComponents {
                 )
 
                 if (index < filter.items.size - 1) {
-                    Divider(
-                        color = UiKitTheme.colors.border.general.default,
+                    ZarinaDivider(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
@@ -161,10 +160,7 @@ object ListFilterScreenComponents {
             modifier = modifier,
         ) {
             Column {
-                Divider(
-                    color = UiKitTheme.colors.border.general.default,
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                ZarinaDivider(modifier = Modifier.fillMaxWidth())
 
                 ZarinaButton(
                     onClick = onClick,

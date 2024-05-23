@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.productcountselector
 
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -14,8 +15,6 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -31,12 +30,12 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaBottomSheet
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.productcountselector.ProductCountSelectorScreenComponents.CountItem
 import ru.livetyping.zarina.presentation.screen.productcountselector.ProductCountSelectorScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.productcountselector.ProductCountSelectorViewModel.CountItem
 import ru.livetyping.zarina.presentation.screen.productcountselector.ProductCountSelectorViewModel.SideEffect
-import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.plus
 
 // TODO: [Low] Put package inside ui.cart?
@@ -96,8 +95,7 @@ private fun ScreenContent(
                     )
 
                     if (index < countItems.lastIndex) {
-                        Divider(
-                            color = UiKitTheme.colors.border.general.default,
+                        ZarinaDivider(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),

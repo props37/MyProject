@@ -329,7 +329,7 @@ private fun Decoration(
                 modifier = Modifier
                     .weight(1f)
                     .drawBehind {
-                        val width = 1.dp.toPx()
+                        val width = 0.5.dp.toPx()
                         drawLine(
                             color = indicationLineColor.value,
                             start = Offset(0f, this.size.height - width),

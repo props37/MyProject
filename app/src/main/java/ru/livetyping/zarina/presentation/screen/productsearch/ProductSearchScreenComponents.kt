@@ -25,7 +25,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -48,6 +47,7 @@ import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
@@ -260,8 +260,7 @@ object ProductSearchScreenComponents {
             }
 
             if (isDividerVisible) {
-                Divider(
-                    color = UiKitTheme.colors.background.skeleton,
+                ZarinaDivider(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
@@ -306,8 +305,7 @@ object ProductSearchScreenComponents {
             }
 
             if (isDividerVisible) {
-                Divider(
-                    color = UiKitTheme.colors.background.skeleton,
+                ZarinaDivider(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),

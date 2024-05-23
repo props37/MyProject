@@ -1,5 +1,9 @@
 package ru.livetyping.zarina.presentation.screen.order
 
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,14 +19,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.LocalContentColor
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.LocalTextStyle
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -54,6 +53,7 @@ import ru.livetyping.zarina.presentation.common.component.ProductOrderCardSkelet
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.label.ZarinaLabelSize
 import ru.livetyping.zarina.presentation.common.component.pullrefresh.ZarinaPullRefreshIndicator
@@ -226,9 +226,10 @@ object OrderScreenComponents {
                 )
 
                 if (index < order.products.lastIndex) {
-                    Divider(
-                        color = UiKitTheme.colors.background.skeleton,
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                    ZarinaDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
                     )
                 }
             }
@@ -424,9 +425,10 @@ object OrderScreenComponents {
                 )
 
                 if (index < OrderSkeletonProductCount - 1) {
-                    Divider(
-                        color = UiKitTheme.colors.background.skeleton,
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                    ZarinaDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
                     )
                 }
             }

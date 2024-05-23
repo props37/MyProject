@@ -1,14 +1,13 @@
 package ru.livetyping.zarina.presentation.screen.myorders
 
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Divider
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -26,6 +25,7 @@ import ru.livetyping.zarina.domain.order.OrderItem
 import ru.livetyping.zarina.presentation.common.component.OrderCard
 import ru.livetyping.zarina.presentation.common.component.OrderCardSkeleton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.paging.ZarinaPagingPullRefreshContainer
 import ru.livetyping.zarina.presentation.common.component.paging.zarinaPagingAppendItem
 import ru.livetyping.zarina.presentation.common.component.paging.zarinaPagingPrependItem
@@ -36,7 +36,6 @@ import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
-import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 
 object MyOrdersScreenComponents {
@@ -149,8 +148,7 @@ object MyOrdersScreenComponents {
                         }
 
                         if (index < orderPagingItems.itemCount - 1) {
-                            Divider(
-                                color = UiKitTheme.colors.background.skeleton,
+                            ZarinaDivider(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp),
@@ -197,8 +195,7 @@ object MyOrdersScreenComponents {
                 )
 
                 if (index < OrderListSkeletonItemCount - 1) {
-                    Divider(
-                        color = UiKitTheme.colors.background.skeleton,
+                    ZarinaDivider(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),

@@ -19,8 +19,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
 //noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Divider
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Icon
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
@@ -59,6 +57,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.location.Location
 import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
 import ru.livetyping.zarina.presentation.common.component.map.GoogleMapsDefaults
@@ -436,9 +435,10 @@ object StoresScreenComponents {
                 StoreListItem(store = store)
 
                 if (index < stores.lastIndex) {
-                    Divider(
-                        color = UiKitTheme.colors.background.skeleton,
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                    ZarinaDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
                     )
                 }
             }
@@ -459,9 +459,10 @@ object StoresScreenComponents {
                 StoreListItemSkeleton(shimmer = shimmer)
 
                 if (index < StoreListSkeletonItemCount - 1) {
-                    Divider(
-                        color = UiKitTheme.colors.background.skeleton,
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                    ZarinaDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
                     )
                 }
             }

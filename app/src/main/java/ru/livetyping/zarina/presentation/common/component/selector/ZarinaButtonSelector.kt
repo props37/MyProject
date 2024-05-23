@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 //noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Divider
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Icon
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.LocalContentColor
@@ -46,6 +44,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
@@ -112,10 +111,7 @@ fun ZarinaButtonSelector(
             }
         }
 
-        Divider(
-            color = UiKitTheme.colors.border.general.default,
-            modifier = Modifier.fillMaxWidth(),
-        )
+        ZarinaDivider(modifier = Modifier.fillMaxWidth())
     }
 }
 
