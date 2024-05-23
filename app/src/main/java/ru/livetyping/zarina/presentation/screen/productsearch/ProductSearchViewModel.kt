@@ -78,6 +78,8 @@ class ProductSearchViewModel @Inject constructor(
             result?.toSearchSuggestionItems()?.toImmutableList() ?: persistentListOf()
         }
 
+    private val categoryParentCategoryChainRegex = CATEGORY_PARENT_CATEGORY_CHAIN_PATTERN.toRegex()
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = ProductSearchScreenAction.ScreenClosed
@@ -99,6 +101,10 @@ class ProductSearchViewModel @Inject constructor(
 
     fun onSearchTextFieldFocused() {
         _searchMode.value = SearchMode.SEARCH
+    }
+
+    fun onSearchSuggestionItemClicked(item: SearchSuggestionItem) {
+        // TODO: [High] Implement
     }
 
     private fun Result<ProductSearchSuggestions>.toSearchSuggestionItems(): List<SearchSuggestionItem> {
@@ -123,17 +129,33 @@ class ProductSearchViewModel @Inject constructor(
 
                         val items = suggestions.categories
                             .take(SEARCH_SUGGESTIONS_CATEGORIES_MAX_COUNT)
-                            .map { category ->
-                                SearchSuggestionItem.CategoryItem(
-                                    id = category.id,
-                                    name = category.name.capitalize(),
-                                )
-                            }
+                            .map { it.toCategoryItem() }
                         addAll(items)
                     }
                 }.toImmutableList()
             },
             onFailure = { persistentListOf() },
+        )
+    }
+
+    private fun ProductSearchSuggestions.Category.toCategoryItem(): SearchSuggestionItem.CategoryItem {
+        var name = this.name
+        var parentCategoryChain = categoryParentCategoryChainRegex.find(name)?.value
+
+        if (parentCategoryChain != null) {
+            name = name.removeSuffix(parentCategoryChain).trim()
+            parentCategoryChain = parentCategoryChain
+                .removeSurrounding(BRACKET_START, BRACKET_END)
+                .split(CATEGORY_PARENT_CATEGORY_CHAIN_SEPARATOR)
+                .joinToString(separator = CATEGORY_PARENT_CATEGORY_CHAIN_SEPARATOR) {
+                    it.capitalize()
+                }
+        }
+
+        return SearchSuggestionItem.CategoryItem(
+            id = this.id,
+            name = name.capitalize(),
+            parentCategoryChain = parentCategoryChain,
         )
     }
 
@@ -157,11 +179,18 @@ class ProductSearchViewModel @Inject constructor(
         data class CategoryItem(
             val id: Category.Id,
             val name: String,
+            val parentCategoryChain: String?,
         ) : SearchSuggestionItem()
     }
 
     companion object {
         private const val SEARCH_SUGGESTIONS_QUERIES_MAX_COUNT = 5
         private const val SEARCH_SUGGESTIONS_CATEGORIES_MAX_COUNT = 5
+
+        private const val CATEGORY_PARENT_CATEGORY_CHAIN_PATTERN = "\\(.+\\)"
+        private const val CATEGORY_PARENT_CATEGORY_CHAIN_SEPARATOR = " - "
+
+        private const val BRACKET_START = "("
+        private const val BRACKET_END = ")"
     }
 }

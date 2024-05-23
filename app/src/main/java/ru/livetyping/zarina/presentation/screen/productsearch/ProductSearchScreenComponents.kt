@@ -1,5 +1,8 @@
 package ru.livetyping.zarina.presentation.screen.productsearch
 
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
@@ -8,6 +11,7 @@ import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,11 +25,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Divider
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Icon
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -156,6 +157,7 @@ object ProductSearchScreenComponents {
     fun SearchSuggestions(
         query: String,
         items: ImmutableList<SearchSuggestionItem>,
+        onItemClicked: (SearchSuggestionItem) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         LazyColumn(
@@ -169,83 +171,38 @@ object ProductSearchScreenComponents {
             ) { index, item ->
                 when (item) {
                     is SearchSuggestionItem.GenericTitle -> {
-                        ZarinaItem(
-                            modifier = Modifier
-                                .padding(top = 16.dp)
-                                .heightIn(min = 48.dp)
-                                .animateItem(),
-                        ) {
-                            Text(
-                                text = textString(item.text),
-                                style = SearchSuggestionTitleTextStyle,
-                                color = SearchSuggestionsColor,
-                            )
-                        }
+                        SearchSuggestionGenericTitle(
+                            item = item,
+                            modifier = Modifier.animateItem(),
+                        )
                     }
 
                     is SearchSuggestionItem.QueryItem -> {
-                        ZarinaItem(
-                            modifier = Modifier
-                                .heightIn(min = 48.dp)
-                                .animateItem(),
-                        ) {
-                            val textWithQueryMatch = rememberSuggestionItemTextWithQueryMatch(
-                                text = item.query,
-                                query = query,
-                            )
+                        val nextItem = items.getOrNull(index + 1)
+                        val isDividerVisible =
+                            index < items.lastIndex && nextItem is SearchSuggestionItem.QueryItem
 
-                            Icon(
-                                painter = painterResource(R.drawable.ic_magnifying_glass_24),
-                                contentDescription = null,
-                                tint = UiKitTheme.colors.icon.regular.default,
-                                modifier = Modifier.size(16.dp),
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = textWithQueryMatch,
-                                style = SearchSuggestionItemTextStyle,
-                                color = SearchSuggestionsColor,
-                            )
-                        }
-
-                        if (index < items.lastIndex) {
-                            Divider(
-                                color = UiKitTheme.colors.background.skeleton,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp)
-                                    .animateItem(),
-                            )
-                        }
+                        SearchSuggestionQueryItem(
+                            item = item,
+                            onClick = onItemClicked,
+                            query = query,
+                            isDividerVisible = isDividerVisible,
+                            modifier = Modifier.animateItem(),
+                        )
                     }
 
                     is SearchSuggestionItem.CategoryItem -> {
-                        ZarinaItem(
-                            modifier = Modifier
-                                .heightIn(min = 48.dp)
-                                .animateItem(),
-                        ) {
-                            val textWithQueryMatch = rememberSuggestionItemTextWithQueryMatch(
-                                text = item.name,
-                                query = query,
-                            )
+                        val nextItem = items.getOrNull(index + 1)
+                        val isDividerVisible =
+                            index < items.lastIndex && nextItem is SearchSuggestionItem.CategoryItem
 
-                            Text(
-                                text = textWithQueryMatch,
-                                style = SearchSuggestionItemTextStyle,
-                                color = SearchSuggestionsColor,
-                            )
-                        }
-
-                        if (index < items.lastIndex) {
-                            Divider(
-                                color = UiKitTheme.colors.background.skeleton,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp)
-                                    .animateItem(),
-                            )
-                        }
+                        SearchSuggestionCategoryItem(
+                            item = item,
+                            onClick = onItemClicked,
+                            query = query,
+                            isDividerVisible = isDividerVisible,
+                            modifier = Modifier.animateItem(),
+                        )
                     }
                 }
             }
@@ -253,7 +210,114 @@ object ProductSearchScreenComponents {
     }
 
     @Composable
-    private fun rememberSuggestionItemTextWithQueryMatch(
+    private fun SearchSuggestionGenericTitle(
+        item: SearchSuggestionItem.GenericTitle,
+        modifier: Modifier = Modifier,
+    ) {
+        ZarinaItem(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .heightIn(min = 48.dp),
+        ) {
+            Text(
+                text = textString(item.text),
+                style = SearchSuggestionTitleTextStyle,
+                color = SearchSuggestionsColor,
+            )
+        }
+    }
+
+    @Composable
+    private fun SearchSuggestionQueryItem(
+        item: SearchSuggestionItem.QueryItem,
+        onClick: (SearchSuggestionItem.QueryItem) -> Unit,
+        query: String,
+        isDividerVisible: Boolean,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            ZarinaItem(
+                onClick = { onClick(item) },
+                modifier = Modifier.heightIn(min = 48.dp),
+            ) {
+                val textWithQueryMatch = rememberSearchSuggestionItemTextWithQueryMatch(
+                    text = item.query,
+                    query = query,
+                )
+
+                Icon(
+                    painter = painterResource(R.drawable.ic_magnifying_glass_24),
+                    contentDescription = null,
+                    tint = UiKitTheme.colors.icon.regular.default,
+                    modifier = Modifier.size(16.dp),
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = textWithQueryMatch,
+                    style = SearchSuggestionItemTextStyle,
+                    color = SearchSuggestionsColor,
+                )
+            }
+
+            if (isDividerVisible) {
+                Divider(
+                    color = UiKitTheme.colors.background.skeleton,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun SearchSuggestionCategoryItem(
+        item: SearchSuggestionItem.CategoryItem,
+        onClick: (SearchSuggestionItem.CategoryItem) -> Unit,
+        query: String,
+        isDividerVisible: Boolean,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            ZarinaItem(
+                onClick = { onClick(item) },
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+            ) {
+                Column {
+                    val nameWithQueryMatch = rememberSearchSuggestionItemTextWithQueryMatch(
+                        text = item.name,
+                        query = query,
+                    )
+
+                    Text(
+                        text = nameWithQueryMatch,
+                        style = SearchSuggestionItemTextStyle,
+                        color = SearchSuggestionsColor,
+                    )
+
+                    if (item.parentCategoryChain != null) {
+                        Text(
+                            text = item.parentCategoryChain,
+                            style = UiKitTheme.typography.footnote.light,
+                            color = UiKitTheme.colors.text.general.regular.muted,
+                        )
+                    }
+                }
+            }
+
+            if (isDividerVisible) {
+                Divider(
+                    color = UiKitTheme.colors.background.skeleton,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun rememberSearchSuggestionItemTextWithQueryMatch(
         text: String,
         query: String,
     ): AnnotatedString {

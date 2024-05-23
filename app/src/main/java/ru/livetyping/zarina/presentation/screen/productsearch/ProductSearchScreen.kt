@@ -26,7 +26,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenComponents.SearchSuggestions
@@ -54,6 +53,7 @@ fun ProductSearchScreen(
         searchMode = searchMode,
         onSearchBarCancelClicked = viewModel::onSearchTextFieldCancelClicked,
         searchSuggestionItems = searchSuggestionItems,
+        onSearchSuggestionItemClicked = viewModel::onSearchSuggestionItemClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -68,6 +68,7 @@ private fun ScreenContent(
     searchMode: SearchMode,
     onSearchBarCancelClicked: () -> Unit,
     searchSuggestionItems: ImmutableList<SearchSuggestionItem>,
+    onSearchSuggestionItemClicked: (SearchSuggestionItem) -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProductSearchScreenAction) -> Unit,
 ) {
@@ -106,6 +107,7 @@ private fun ScreenContent(
         SearchSuggestions(
             query = searchTextFieldState.text.toString(),
             items = searchSuggestionItems,
+            onItemClicked = onSearchSuggestionItemClicked,
             modifier = Modifier.fillMaxSize(),
         )
     }
