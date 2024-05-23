@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.productsearch
 
+import android.os.Parcelable
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -14,14 +15,13 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.plus
+import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
@@ -31,6 +31,7 @@ import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
+import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.usecase.productsearch.GetProductSearchSuggestionsFlowUseCase
 import ru.livetyping.zarina.util.compose.text.textAsFlow
@@ -49,13 +50,17 @@ class ProductSearchViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
+    private val searchModeValueHolder = savedStateHandle.createValueHolder(
+        key = KEY_SEARCH_MODE,
+        initialValue = SearchMode.SEARCH,
+    )
+
     val searchTextFieldState: TextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
     )
 
-    private val _searchMode = MutableStateFlow(SearchMode.SEARCH)
-    val searchMode: StateFlow<SearchMode> = _searchMode.asStateFlow()
+    val searchMode: StateFlow<SearchMode> = searchModeValueHolder.stateFlow
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     private val searchSuggestionsResult: StateFlow<Result<ProductSearchSuggestions>?> =
@@ -96,16 +101,16 @@ class ProductSearchViewModel @Inject constructor(
 
     fun onSearchTextFieldSearchClicked() {
         emitSideEffect(SideEffect.ReleaseSearchTextFieldFocus)
-        _searchMode.value = SearchMode.SEARCH_RESULTS
+        searchModeValueHolder.set(SearchMode.SEARCH_RESULTS)
     }
 
     fun onSearchTextFieldFocused() {
-        _searchMode.value = SearchMode.SEARCH
+        searchModeValueHolder.set(SearchMode.SEARCH)
     }
 
     fun onSearchSuggestionItemClicked(item: SearchSuggestionItem) {
         emitSideEffect(SideEffect.ReleaseSearchTextFieldFocus)
-        _searchMode.value = SearchMode.SEARCH_RESULTS
+        searchModeValueHolder.set(SearchMode.SEARCH_RESULTS)
         // TODO: [High] Implement
     }
 
@@ -180,7 +185,8 @@ class ProductSearchViewModel @Inject constructor(
         data object ReleaseSearchTextFieldFocus : SideEffect
     }
 
-    enum class SearchMode { SEARCH, SEARCH_RESULTS }
+    @Parcelize
+    enum class SearchMode : Parcelable { SEARCH, SEARCH_RESULTS }
 
     @Stable
     sealed class SearchSuggestionsState {
@@ -213,6 +219,8 @@ class ProductSearchViewModel @Inject constructor(
     }
 
     companion object {
+        private const val KEY_SEARCH_MODE = "search_mode"
+
         private const val SEARCH_SUGGESTIONS_QUERIES_MAX_COUNT = 5
         private const val SEARCH_SUGGESTIONS_CATEGORIES_MAX_COUNT = 5
 
