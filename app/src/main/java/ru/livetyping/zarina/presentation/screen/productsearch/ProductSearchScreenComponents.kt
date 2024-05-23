@@ -280,7 +280,7 @@ object ProductSearchScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         ZarinaItem(
-            modifier = Modifier
+            modifier = modifier
                 .padding(top = 8.dp)
                 .heightIn(min = 48.dp),
         ) {
