@@ -74,6 +74,7 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransit
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.sizeIn
 
+@Suppress("ConstPropertyName")
 object FiltersScreenComponents {
 
     @Composable

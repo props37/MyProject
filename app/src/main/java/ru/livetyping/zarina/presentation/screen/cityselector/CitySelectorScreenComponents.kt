@@ -62,6 +62,7 @@ import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.navigationBarsOrIme
 import ru.livetyping.zarina.util.compose.plus
 
+@Suppress("ConstPropertyName")
 object CitySelectorScreenComponents {
 
     @Composable

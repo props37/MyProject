@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.presentation.screen.signin
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -72,7 +71,6 @@ object SignInScreenComponents {
         )
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun SignInTypeTabRow(
         signInTypes: ImmutableList<SignInType>,
@@ -100,7 +98,6 @@ object SignInScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun SignInTypePager(
         signInTypes: ImmutableList<SignInType>,

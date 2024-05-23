@@ -48,6 +48,7 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentCrossfadeTrans
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.compose.text.unscalable
 
+@Suppress("ConstPropertyName")
 object ProductsScreenComponents {
 
     @Composable

@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.product
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -83,6 +82,7 @@ import ru.livetyping.zarina.util.compose.getHorizontalPaddingValues
 import ru.livetyping.zarina.util.compose.getVerticalPaddingValues
 import ru.livetyping.zarina.util.compose.pager.rememberEndlessPagerState
 
+@Suppress("ConstPropertyName")
 object ProductScreenComponents {
 
     @Composable
@@ -373,7 +373,6 @@ object ProductScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun ProductMediaPager(
         media: List<Media>,

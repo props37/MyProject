@@ -56,6 +56,7 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.kotlin.findSubstringBounds
 
+@Suppress("ConstPropertyName")
 object ProductSearchScreenComponents {
 
     @Composable

@@ -98,6 +98,7 @@ import ru.livetyping.zarina.util.compose.rememberAnchoredDraggableState
 import ru.livetyping.zarina.util.compose.requireCoercedOffset
 import kotlin.math.roundToInt
 
+@Suppress("ConstPropertyName")
 object CartScreenComponents {
 
     @Composable
@@ -136,7 +137,6 @@ object CartScreenComponents {
         )
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun CartContent(
         city: City?,

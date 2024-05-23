@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.stores
 
 import android.Manifest
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -73,6 +72,7 @@ import ru.livetyping.zarina.presentation.screen.stores.StoresViewModel.ViewMode
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 
+@Suppress("ConstPropertyName")
 object StoresScreenComponents {
 
     @Composable
@@ -96,7 +96,6 @@ object StoresScreenComponents {
         )
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun ViewModeTabRow(
         viewModes: ImmutableList<ViewMode>,
@@ -123,7 +122,6 @@ object StoresScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun ViewModePager(
         viewModes: ImmutableList<ViewMode>,

@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.presentation.common.component
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -62,7 +61,7 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.pager.rememberEndlessPagerState
 import ru.livetyping.zarina.util.library.shimmer.shimmerToggleable
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProductCard(
     product: Product,

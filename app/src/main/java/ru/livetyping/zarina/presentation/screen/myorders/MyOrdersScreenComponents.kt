@@ -36,6 +36,7 @@ import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 
+@Suppress("ConstPropertyName")
 object MyOrdersScreenComponents {
     
     @Composable

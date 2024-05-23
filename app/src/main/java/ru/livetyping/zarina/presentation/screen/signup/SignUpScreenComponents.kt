@@ -24,6 +24,7 @@ import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
+@Suppress("ConstPropertyName")
 object SignUpScreenComponents {
 
     @Composable

@@ -1,11 +1,9 @@
 package ru.livetyping.zarina.util.compose.pager
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun rememberEndlessPagerState(itemCount: Int): PagerState {
     val pageCount = (itemCount * PAGE_COUNT_MULTIPLIER).coerceAtMost(PAGE_COUNT_MAX_VALUE)

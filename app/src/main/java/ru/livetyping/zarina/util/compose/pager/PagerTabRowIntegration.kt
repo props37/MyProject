@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.util.compose.pager
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -12,7 +11,6 @@ import timber.log.Timber
 
 // TODO: [Low] Rewrite to state class?
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun <T> PagerTabRowIntegration(
     pagerState: PagerState,

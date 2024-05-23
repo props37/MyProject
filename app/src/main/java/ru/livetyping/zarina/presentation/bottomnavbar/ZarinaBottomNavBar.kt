@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.Spring
@@ -78,7 +77,6 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransit
 import ru.livetyping.zarina.util.compose.sizeIn
 import ru.livetyping.zarina.util.compose.text.unscalable
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ZarinaBottomNavBar(
     navController: NavHostController,

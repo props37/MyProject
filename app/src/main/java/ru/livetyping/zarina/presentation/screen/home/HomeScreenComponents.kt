@@ -59,9 +59,9 @@ import ru.livetyping.zarina.presentation.screen.home.HomeViewModel.GenderTab
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import timber.log.Timber
 
+@Suppress("ConstPropertyName")
 object HomeScreenComponents {
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun TopBar(
         genders: ImmutableList<GenderTab>,
@@ -147,7 +147,6 @@ object HomeScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun BannerPager(
         banners: List<HomeContent.BannerContainer>,

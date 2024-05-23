@@ -5,7 +5,6 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +28,6 @@ import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarin
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.kotlin.loopingGet
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ZarinaMediaHorizontalPager(
     pagerState: PagerState,

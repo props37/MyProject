@@ -2,7 +2,6 @@ package ru.livetyping.zarina.presentation.common.component.pager
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -48,7 +47,6 @@ import ru.livetyping.zarina.util.kotlin.valueAt
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ZarinaHorizontalPagerIndicator(
     pagerState: PagerState,
@@ -128,7 +126,6 @@ private fun Segment(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 private fun Preview() {

@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.presentation.screen.signin
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -83,7 +82,6 @@ fun SignInScreen(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ScreenContent(
     signInTypes: ImmutableList<SignInType>,

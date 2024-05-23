@@ -53,6 +53,7 @@ import ru.livetyping.zarina.presentation.screen.catalog.CatalogViewModel.GenderT
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 
+@Suppress("ConstPropertyName")
 object CatalogScreenComponents {
 
     @Composable

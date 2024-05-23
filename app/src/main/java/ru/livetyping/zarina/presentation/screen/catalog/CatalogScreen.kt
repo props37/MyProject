@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.presentation.screen.catalog
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -69,7 +68,6 @@ fun CatalogScreen(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ScreenContent(
     onSearchBarClicked: () -> Unit,
