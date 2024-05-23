@@ -27,15 +27,10 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.ExperimentalMaterialApi
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Icon
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.LocalContentColor
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.LocalTextStyle
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable

@@ -2,11 +2,8 @@ package ru.livetyping.zarina.presentation.common.component.switchh
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Switch
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.SwitchColors
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.SwitchDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

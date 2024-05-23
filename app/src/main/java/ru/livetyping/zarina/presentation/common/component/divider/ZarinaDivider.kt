@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.presentation.common.component.divider
 
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.presentation.common.component.loader
 
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

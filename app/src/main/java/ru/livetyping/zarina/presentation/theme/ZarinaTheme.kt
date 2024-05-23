@@ -1,10 +1,7 @@
 package ru.livetyping.zarina.presentation.theme
 
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.MaterialTheme
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.darkColors
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider

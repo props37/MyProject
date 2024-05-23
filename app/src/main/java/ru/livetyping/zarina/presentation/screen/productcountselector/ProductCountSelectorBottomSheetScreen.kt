@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.presentation.screen.productcountselector
 
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets

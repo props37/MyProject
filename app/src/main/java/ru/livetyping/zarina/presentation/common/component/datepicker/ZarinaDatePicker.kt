@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.presentation.common.component.datepicker
 
 import androidx.compose.foundation.layout.padding
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Text
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerColors

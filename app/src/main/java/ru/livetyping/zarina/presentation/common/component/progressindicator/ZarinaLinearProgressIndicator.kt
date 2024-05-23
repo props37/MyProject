@@ -2,7 +2,6 @@ package ru.livetyping.zarina.presentation.common.component.progressindicator
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
