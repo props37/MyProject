@@ -169,9 +169,9 @@ object ProductSearchScreenComponents {
             contentKey = {
                 when (it) {
                     is SearchSuggestionsState.Suggestions -> SearchSuggestionsContentKeySuggestions
-                    SearchSuggestionsState.Empty -> it
-                    is SearchSuggestionsState.Error -> it
-                    SearchSuggestionsState.Loading -> it
+
+                    SearchSuggestionsState.Empty,
+                    is SearchSuggestionsState.Error, SearchSuggestionsState.Loading -> it
                 }
             },
             label = "SearchSuggestions",

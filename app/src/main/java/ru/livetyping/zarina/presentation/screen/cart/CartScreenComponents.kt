@@ -689,9 +689,7 @@ object CartScreenComponents {
 
     private fun getDeliveryTypePagerContentKey(cartState: CartState): Any = when (cartState) {
         is CartState.Cart -> DeliveryTypePagerContentKeyCart
-        CartState.EmptyCart -> cartState
-        is CartState.Error -> cartState
-        CartState.Skeleton -> cartState
+        CartState.EmptyCart, is CartState.Error, CartState.Skeleton -> cartState
     }
 
     @Stable

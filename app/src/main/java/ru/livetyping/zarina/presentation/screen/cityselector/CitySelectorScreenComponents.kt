@@ -345,6 +345,7 @@ object CitySelectorScreenComponents {
             is CityListState.CityList -> {
                 if (state.items.isNotEmpty()) CityListContentKeyCities else CityListContentKeyCityNotFound
             }
+
             CityListState.Loading, is CityListState.Error -> state
         }
     }

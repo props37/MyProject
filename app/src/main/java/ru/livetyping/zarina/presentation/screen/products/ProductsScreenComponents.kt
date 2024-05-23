@@ -155,8 +155,7 @@ object ProductsScreenComponents {
             contentKey = {
                 when (it) {
                     is TagListState.TagList -> TagListContentKeyTagList
-                    TagListState.Loading -> it
-                    null -> it
+                    TagListState.Loading, null -> it
                 }
             },
             label = "Tags",

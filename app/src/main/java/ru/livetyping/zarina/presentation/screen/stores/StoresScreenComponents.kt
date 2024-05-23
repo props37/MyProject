@@ -175,7 +175,7 @@ object StoresScreenComponents {
             contentKey = {
                 when (it) {
                     is StoreListState.Success -> StoreMapContentKeySuccess
-                    else -> it
+                    is StoreListState.Error, StoreListState.Loading -> it
                 }
             },
             modifier = modifier,

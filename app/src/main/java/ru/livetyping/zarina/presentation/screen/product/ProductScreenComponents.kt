@@ -158,7 +158,7 @@ object ProductScreenComponents {
             contentKey = {
                 when (it) {
                     is ProductState.Success -> ProductDetailsContentKeySuccess
-                    else -> it
+                    is ProductState.Error, ProductState.Loading -> it
                 }
             },
             modifier = modifier,
@@ -575,7 +575,9 @@ object ProductScreenComponents {
                 contentKey = { state ->
                     when (state) {
                         is SuggestedProductListState.Success -> ProductTotalLookContentKeySuccess
-                        else -> state
+
+                        SuggestedProductListState.Empty,
+                        SuggestedProductListState.Error, SuggestedProductListState.Loading -> state
                     }
                 },
             ) { state ->
