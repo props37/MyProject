@@ -5,9 +5,13 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,13 +23,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,11 +52,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
+import ru.livetyping.zarina.presentation.common.component.tag.ZarinaTag
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldSize
@@ -59,6 +70,7 @@ import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewM
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.compose.animation.Crossfade
+import ru.livetyping.zarina.util.kotlin.capitalize
 import ru.livetyping.zarina.util.kotlin.findSubstringBounds
 
 @Suppress("ConstPropertyName")
@@ -148,6 +160,7 @@ object ProductSearchScreenComponents {
                 onKeyboardAction = {
                     onSearchTextFieldSearchClicked()
                 },
+                lineLimits = TextFieldLineLimits.SingleLine,
                 modifier = Modifier.onFocusChanged {
                     focusState.value = it
                     if (it.isFocused) onSearchTextFieldFocused()
@@ -159,60 +172,114 @@ object ProductSearchScreenComponents {
     @Composable
     fun SearchSuggestions(
         state: SearchSuggestionsState,
+        autocompleteSuggestions: ImmutableList<ProductSearchSuggestions.AutocompleteSuggestion>,
         query: String,
-        onItemClicked: (SearchSuggestionItem) -> Unit,
+        onSearchSuggestionItemClicked: (SearchSuggestionItem) -> Unit,
+        onAutocompleteSuggestionClicked: (ProductSearchSuggestions.AutocompleteSuggestion) -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        Column(modifier = modifier) {
+            SearchAutocompleteSuggestions(
+                suggestions = autocompleteSuggestions,
+                onSuggestionClicked = onAutocompleteSuggestionClicked,
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Crossfade(
+                targetState = state,
+                contentKey = {
+                    when (it) {
+                        is SearchSuggestionsState.Suggestions -> SearchSuggestionsContentKeySuggestions
+
+                        SearchSuggestionsState.Empty,
+                        is SearchSuggestionsState.Error, SearchSuggestionsState.Loading -> it
+                    }
+                },
+                label = "SearchSuggestions",
+            ) { state ->
+                when (state) {
+                    is SearchSuggestionsState.Suggestions -> {
+                        SearchSuggestionList(
+                            query = query,
+                            items = state.items,
+                            onItemClicked = onSearchSuggestionItemClicked,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+
+                    SearchSuggestionsState.Loading -> Unit
+
+                    SearchSuggestionsState.Empty -> {
+                        val errorState = rememberErrorState(
+                            iconResId = R.drawable.ic_magnifying_glass_64,
+                            title = stringResource(R.string.nothing_found),
+                            body = stringResource(R.string.write_different_search_query),
+                            isButtonVisible = false,
+                        )
+                        ZarinaErrorScreen(
+                            state = errorState,
+                            onButtonClicked = {},
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                        )
+                    }
+
+                    is SearchSuggestionsState.Error -> {
+                        ZarinaErrorScreen(
+                            state = state.state,
+                            onButtonClicked = {},
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun SearchAutocompleteSuggestions(
+        suggestions: ImmutableList<ProductSearchSuggestions.AutocompleteSuggestion>,
+        onSuggestionClicked: (ProductSearchSuggestions.AutocompleteSuggestion) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        val listState = rememberLazyListState()
+        LaunchedEffect(suggestions) {
+            listState.scrollToItem(0)
+        }
+
         @Suppress("NAME_SHADOWING")
-        Crossfade(
-            targetState = state,
-            contentKey = {
-                when (it) {
-                    is SearchSuggestionsState.Suggestions -> SearchSuggestionsContentKeySuggestions
-
-                    SearchSuggestionsState.Empty,
-                    is SearchSuggestionsState.Error, SearchSuggestionsState.Loading -> it
-                }
+        AnimatedContent(
+            targetState = suggestions,
+            transitionSpec = {
+                val enter = expandVertically() + fadeIn()
+                val exit = shrinkVertically() + fadeOut()
+                (enter togetherWith exit).using(SizeTransform(clip = false))
             },
-            label = "SearchSuggestions",
+            contentAlignment = Alignment.TopCenter,
+            contentKey = { it.isNotEmpty() },
+            label = "SearchAutocompleteSuggestions",
             modifier = modifier,
-        ) { state ->
-            when (state) {
-                is SearchSuggestionsState.Suggestions -> {
-                    SearchSuggestionList(
-                        query = query,
-                        items = state.items,
-                        onItemClicked = onItemClicked,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
-
-                SearchSuggestionsState.Loading -> Unit
-
-                SearchSuggestionsState.Empty -> {
-                    val errorState = rememberErrorState(
-                        iconResId = R.drawable.ic_magnifying_glass_64,
-                        title = stringResource(R.string.nothing_found),
-                        body = stringResource(R.string.write_different_search_query),
-                        isButtonVisible = false,
-                    )
-                    ZarinaErrorScreen(
-                        state = errorState,
-                        onButtonClicked = {},
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                    )
-                }
-
-                is SearchSuggestionsState.Error -> {
-                    ZarinaErrorScreen(
-                        state = state.state,
-                        onButtonClicked = {},
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                    )
+        ) { suggestions ->
+            if (suggestions.isNotEmpty()) {
+                LazyRow(
+                    state = listState,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                ) {
+                    items(
+                        items = suggestions,
+                        key = { it.text },
+                    ) { suggestion ->
+                        ZarinaTag(
+                            onClick = { onSuggestionClicked(suggestion) },
+                            modifier = Modifier.animateItem(),
+                        ) {
+                            Text(text = suggestion.text.capitalize())
+                        }
+                    }
                 }
             }
         }

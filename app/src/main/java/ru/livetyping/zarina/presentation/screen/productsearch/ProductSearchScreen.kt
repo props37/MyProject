@@ -23,8 +23,10 @@ import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenComponents.SearchSuggestions
@@ -43,6 +45,7 @@ fun ProductSearchScreen(
     viewModel: ProductSearchViewModel = hiltViewModel(),
 ) {
     val searchMode by viewModel.searchMode.collectAsStateWithLifecycle()
+    val searchAutocompleteSuggestions by viewModel.searchAutocompleteSuggestions.collectAsStateWithLifecycle()
     val searchSuggestionsState by viewModel.searchSuggestionsState.collectAsStateWithLifecycle()
 
     ScreenContent(
@@ -52,6 +55,8 @@ fun ProductSearchScreen(
         onSearchTextFieldFocused = viewModel::onSearchTextFieldFocused,
         searchMode = searchMode,
         onSearchBarCancelClicked = viewModel::onSearchTextFieldCancelClicked,
+        searchAutocompleteSuggestions = searchAutocompleteSuggestions,
+        onSearchAutocompleteSuggestionClicked = viewModel::onSearchAutocompleteSuggestionClicked,
         searchSuggestionsState = searchSuggestionsState,
         onSearchSuggestionItemClicked = viewModel::onSearchSuggestionItemClicked,
         sideEffects = viewModel.sideEffects,
@@ -67,6 +72,8 @@ private fun ScreenContent(
     onSearchTextFieldFocused: () -> Unit,
     searchMode: SearchMode,
     onSearchBarCancelClicked: () -> Unit,
+    searchAutocompleteSuggestions: ImmutableList<ProductSearchSuggestions.AutocompleteSuggestion>,
+    onSearchAutocompleteSuggestionClicked: (ProductSearchSuggestions.AutocompleteSuggestion) -> Unit,
     searchSuggestionsState: SearchSuggestionsState,
     onSearchSuggestionItemClicked: (SearchSuggestionItem) -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -106,8 +113,10 @@ private fun ScreenContent(
 
         SearchSuggestions(
             state = searchSuggestionsState,
+            autocompleteSuggestions = searchAutocompleteSuggestions,
             query = searchTextFieldState.text.toString(),
-            onItemClicked = onSearchSuggestionItemClicked,
+            onSearchSuggestionItemClicked = onSearchSuggestionItemClicked,
+            onAutocompleteSuggestionClicked = onSearchAutocompleteSuggestionClicked,
             modifier = Modifier.fillMaxSize(),
         )
     }

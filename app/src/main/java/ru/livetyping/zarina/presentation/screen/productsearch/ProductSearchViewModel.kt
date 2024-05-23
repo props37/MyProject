@@ -2,6 +2,7 @@ package ru.livetyping.zarina.presentation.screen.productsearch
 
 import android.os.Parcelable
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.placeCursorAtEnd
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
@@ -11,6 +12,7 @@ import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,6 +36,7 @@ import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.usecase.productsearch.GetProductSearchSuggestionsFlowUseCase
+import ru.livetyping.zarina.util.compose.text.clear
 import ru.livetyping.zarina.util.compose.text.textAsFlow
 import ru.livetyping.zarina.util.kotlin.capitalize
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
@@ -81,6 +84,19 @@ class ProductSearchViewModel @Inject constructor(
                 initialValue = null,
             )
 
+    val searchAutocompleteSuggestions: StateFlow<ImmutableList<ProductSearchSuggestions.AutocompleteSuggestion>> =
+        searchSuggestionsResult.mapState(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+        ) { result ->
+            result?.fold(
+                onSuccess = { suggestions ->
+                    suggestions.autocompleteSuggestions.toImmutableList()
+                },
+                onFailure = { persistentListOf() },
+            ) ?: persistentListOf()
+        }
+
     val searchSuggestionsState: StateFlow<SearchSuggestionsState> = searchSuggestionsResult.mapState(
         scope = viewModelScope + Dispatchers.Default,
         started = SharingStarted.WhileUiSubscribed,
@@ -115,6 +131,14 @@ class ProductSearchViewModel @Inject constructor(
 
     fun onSearchTextFieldFocused() {
         searchModeValueHolder.set(SearchMode.SEARCH)
+    }
+
+    fun onSearchAutocompleteSuggestionClicked(suggestion: ProductSearchSuggestions.AutocompleteSuggestion) {
+        searchTextFieldState.edit {
+            clear()
+            append("${suggestion.resultQuery} ")
+            placeCursorAtEnd()
+        }
     }
 
     fun onSearchSuggestionItemClicked(item: SearchSuggestionItem) {
