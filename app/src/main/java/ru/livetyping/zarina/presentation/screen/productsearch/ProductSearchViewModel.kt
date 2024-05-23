@@ -104,6 +104,8 @@ class ProductSearchViewModel @Inject constructor(
     }
 
     fun onSearchSuggestionItemClicked(item: SearchSuggestionItem) {
+        emitSideEffect(SideEffect.ReleaseSearchTextFieldFocus)
+        _searchMode.value = SearchMode.SEARCH_RESULTS
         // TODO: [High] Implement
     }
 
