@@ -5,6 +5,8 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CatalogGraph
+import ru.livetyping.zarina.presentation.navigation.util.fadeInTransition
+import ru.livetyping.zarina.presentation.navigation.util.fadeOutTransition
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
@@ -17,9 +19,8 @@ fun NavGraphBuilder.productSearchScreen(navController: NavHostController) {
         destination = UnscopedDestinations.ProductSearch,
         enterTransition = {
             when (initialState.destination.route) {
-                CatalogGraph.Catalog.routeSchema,
+                CatalogGraph.Catalog.routeSchema -> fadeInTransition()
                 UnscopedDestinations.Products.routeSchema -> slideEnterTransition()
-
                 else -> null
             }
         },
@@ -37,9 +38,8 @@ fun NavGraphBuilder.productSearchScreen(navController: NavHostController) {
         },
         popExitTransition = {
             when (targetState.destination.route) {
-                CatalogGraph.Catalog.routeSchema,
+                CatalogGraph.Catalog.routeSchema -> fadeOutTransition()
                 UnscopedDestinations.Products.routeSchema -> slidePopExitTransition()
-
                 else -> null
             }
         },

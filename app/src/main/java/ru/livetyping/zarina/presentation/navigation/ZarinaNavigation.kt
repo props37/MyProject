@@ -1,8 +1,5 @@
 package ru.livetyping.zarina.presentation.navigation
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -29,7 +26,8 @@ import ru.livetyping.zarina.presentation.navigation.screen.productScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productSearchScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productSubscriptionScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productsScreen
-import ru.livetyping.zarina.presentation.navigation.util.NavigationTransitionDurationMillis
+import ru.livetyping.zarina.presentation.navigation.util.fadeInTransition
+import ru.livetyping.zarina.presentation.navigation.util.fadeOutTransition
 
 @Composable
 fun ZarinaNavigation(
@@ -43,8 +41,8 @@ fun ZarinaNavigation(
     NavHost(
         navController = navController,
         startDestination = startDestination.routeSchema,
-        enterTransition = { fadeIn(tween(NavigationTransitionDurationMillis)) },
-        exitTransition = { fadeOut(tween(NavigationTransitionDurationMillis)) },
+        enterTransition = { fadeInTransition() },
+        exitTransition = { fadeOutTransition() },
         modifier = modifier,
     ) {
         // Bottom nav bar graphs
