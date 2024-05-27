@@ -24,9 +24,9 @@ data class GetProductsRequestBody(
 ) {
     @Suppress("unused")
     @SerialName("count")
-    val itemCount: Boolean? = if (!returnProducts) true else null
+    val returnProductTotalCount: Boolean? = if (!returnProducts) true else null
 
     @Suppress("unused")
     @SerialName("filterRanges")
-    val filterRanges: Boolean? = if (!returnProducts) true else null
+    val returnAvailableFilters: Boolean? = if (!returnProducts) true else null
 }

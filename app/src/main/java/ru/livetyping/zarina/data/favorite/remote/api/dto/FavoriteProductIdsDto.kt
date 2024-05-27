@@ -7,8 +7,8 @@ import ru.livetyping.zarina.domain.product.Product
 @Serializable
 data class FavoriteProductIdsDto(
     @SerialName("items_count") 
-    val itemCount: Int? = null,
-    
+    val productTotalCount: Int? = null,
+
     @SerialName("items") 
     val items: List<String>? = null,
 ) {

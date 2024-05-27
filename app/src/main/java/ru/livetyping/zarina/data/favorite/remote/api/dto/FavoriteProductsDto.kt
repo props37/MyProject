@@ -10,7 +10,7 @@ import ru.livetyping.zarina.domain.product.ProductItem
 @Serializable
 data class FavoriteProductsDto(
     @SerialName("items_count")
-    val itemCount: Int? = null,
+    val productTotalCount: Int? = null,
 
     @SerialName("items")
     val products: List<ProductItemDto>? = null,
@@ -20,11 +20,11 @@ data class FavoriteProductsDto(
 ) {
     fun toProductPage(): Page<List<ProductItem>> {
         checkNotNull(products) { "products is null" }
-        checkNotNull(itemCount) { "itemsCount is null" }
+        checkNotNull(productTotalCount) { "itemsCount is null" }
         checkNotNull(paginationInfo) { "paginationInfo is null" }
         return Page(
             data = products.mapNotNull { it.toProductItem() },
-            paginationInfo = paginationInfo.toPaginationInfo(itemCount),
+            paginationInfo = paginationInfo.toPaginationInfo(productTotalCount),
         )
     }
 }

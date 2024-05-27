@@ -13,7 +13,7 @@ import ru.livetyping.zarina.domain.product.ProductsWithFilters
 @Serializable
 data class ProductsDto(
     @SerialName("items_count")
-    val itemCount: Int? = null,
+    val productTotalCount: Int? = null,
 
     @SerialName("filters")
     val filters: FiltersDto? = null,
@@ -27,7 +27,7 @@ data class ProductsDto(
     fun toProductsWithFiltersPage(): Page<ProductsWithFilters> {
         checkNotNull(products) { "products is null" }
         checkNotNull(filters) { "filters is null" }
-        checkNotNull(itemCount) { "itemCount is null" }
+        checkNotNull(productTotalCount) { "productTotalCount is null" }
         checkNotNull(paginationInfo) { "paginationInfo is null" }
         val productsWithFilters = ProductsWithFilters(
             products = products.mapNotNull { it.toProductItem() },
@@ -35,7 +35,7 @@ data class ProductsDto(
         )
         return Page(
             data = productsWithFilters,
-            paginationInfo = paginationInfo.toPaginationInfo(itemCount),
+            paginationInfo = paginationInfo.toPaginationInfo(productTotalCount),
         )
     }
 
@@ -43,7 +43,7 @@ data class ProductsDto(
         checkNotNull(filters) { "filters is null" }
         return CategoryProductInfo(
             categoryId = categoryId,
-            productCount = checkNotNull(itemCount) { "itemCount is null" },
+            productCount = checkNotNull(productTotalCount) { "productTotalCount is null" },
             availableFilters = filters.toFilters(),
         )
     }
