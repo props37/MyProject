@@ -90,14 +90,17 @@ private fun ScreenContent(
                     CountItem(
                         item = item,
                         onClick = onCountItemClicked,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateItem(),
                     )
 
                     if (index < countItems.lastIndex) {
                         ZarinaDivider(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
+                                .padding(horizontal = 16.dp)
+                                .animateItem(),
                         )
                     }
                 }

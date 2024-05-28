@@ -419,7 +419,9 @@ object CartScreenComponents {
                             onDragStarted = { lastDraggedProductId = it },
                             lastDraggedProductId = lastDraggedProductId,
                             onResetSwipeState = { lastDraggedProductId = null },
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .animateItem(),
                         )
                     }
                 }

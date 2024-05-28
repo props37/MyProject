@@ -360,14 +360,17 @@ object CatalogScreenComponents {
                 CategoryListSkeletonItem(
                     index = index,
                     shimmer = shimmer,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
                 )
 
                 if (index != CategoryListSkeletonItemCount - 1) {
                     ZarinaDivider(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 16.dp)
+                            .animateItem(),
                     )
                 }
             }

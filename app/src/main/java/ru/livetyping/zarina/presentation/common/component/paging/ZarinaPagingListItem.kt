@@ -5,6 +5,7 @@ import androidx.paging.LoadState
 import ru.livetyping.zarina.presentation.common.component.list.ZarinaListErrorItem
 import ru.livetyping.zarina.presentation.common.component.list.ZarinaListLoaderItem
 
+// TODO: [High] Refactor?
 fun LazyListScope.zarinaPagingPrependItem(
     prependLoadState: LoadState,
     onRetryClicked: () -> Unit,
@@ -32,6 +33,7 @@ fun LazyListScope.zarinaPagingPrependItem(
     }
 }
 
+// TODO: [High] Refactor?
 fun LazyListScope.zarinaPagingAppendItem(
     appendLoadState: LoadState,
     onRetryClicked: () -> Unit,

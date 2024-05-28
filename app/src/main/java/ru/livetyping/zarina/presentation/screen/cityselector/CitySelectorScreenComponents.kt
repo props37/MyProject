@@ -201,20 +201,26 @@ object CitySelectorScreenComponents {
                                                 onClick = onCityClicked,
                                                 showFullName = item.showFullName,
                                                 isSelected = item.city.kladrId == selectedCity?.kladrId,
-                                                modifier = Modifier.fillMaxWidth(),
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .animateItem(),
                                             )
 
                                             if (index < listState.items.lastIndex) {
                                                 ZarinaDivider(
                                                     modifier = Modifier
                                                         .fillMaxWidth()
-                                                        .padding(horizontal = 16.dp),
+                                                        .padding(horizontal = 16.dp)
+                                                        .animateItem(),
                                                 )
                                             }
                                         }
 
                                         is CityListItem.CityFirstLetterHeaderItem -> {
-                                            CityFirstLetterHeader(item.letter)
+                                            CityFirstLetterHeader(
+                                                letter = item.letter,
+                                                modifier = Modifier.animateItem(),
+                                            )
                                         }
                                     }
                                 }

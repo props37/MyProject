@@ -261,7 +261,10 @@ object ProductScreenComponents {
                 key = ProductDetailsListKeyMediaPager,
                 contentType = ProductDetailsListContentTypeMediaPager,
             ) {
-                ProductMediaPager(media = product.media)
+                ProductMediaPager(
+                    media = product.media,
+                    modifier = Modifier.animateItem(),
+                )
             }
 
             item(
@@ -273,7 +276,8 @@ object ProductScreenComponents {
                     onProductColorClicked = onProductColorClicked,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp, bottom = 8.dp),
+                        .padding(top = 16.dp, bottom = 8.dp)
+                        .animateItem(),
                 )
             }
 
@@ -283,7 +287,9 @@ object ProductScreenComponents {
             ) {
                 ProductDescription(
                     description = product.description,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
                 )
             }
 
@@ -294,7 +300,9 @@ object ProductScreenComponents {
                 ProductDeliveryAndPayment(
                     freeDeliveryTotalPriceThreshold = product.freeDeliveryTotalPriceThreshold,
                     onUrlClicked = onUrlClicked,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
                 )
             }
 
@@ -308,7 +316,9 @@ object ProductScreenComponents {
                         state = productTotalLookState,
                         onProductClicked = onProductClicked,
                         onErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateItem(),
                     )
                 }
             }
@@ -323,7 +333,9 @@ object ProductScreenComponents {
                         state = productSimilarState,
                         onProductClicked = onProductClicked,
                         onErrorRefreshClicked = onProductSimilarErrorRefreshClicked,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateItem(),
                     )
                 }
             }
@@ -649,7 +661,8 @@ object ProductScreenComponents {
                     shape = RectangleShape,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(MediaPagerAspectRatio),
+                        .aspectRatio(MediaPagerAspectRatio)
+                        .animateItem(),
                 )
             }
 
@@ -658,7 +671,8 @@ object ProductScreenComponents {
                     shimmer = shimmer,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp),
+                        .padding(vertical = 16.dp)
+                        .animateItem(),
                 )
             }
 
@@ -667,7 +681,8 @@ object ProductScreenComponents {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .heightIn(min = 56.dp)
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 16.dp)
+                        .animateItem(),
                 ) {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.light,
@@ -687,7 +702,8 @@ object ProductScreenComponents {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .heightIn(min = 56.dp)
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 16.dp)
+                        .animateItem(),
                 ) {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.light,
@@ -703,7 +719,11 @@ object ProductScreenComponents {
             }
 
             item {
-                Box(modifier = Modifier.padding(16.dp)) {
+                Box(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .animateItem(),
+                ) {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.bold,
                         shimmer = shimmer,
@@ -716,12 +736,18 @@ object ProductScreenComponents {
                 SuggestedProductsSkeleton(
                     shimmer = shimmer,
                     contentPadding = PaddingValues(horizontal = 16.dp),
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
                 )
             }
 
             item {
-                Box(modifier = Modifier.padding(16.dp)) {
+                Box(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .animateItem(),
+                ) {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.bold,
                         shimmer = shimmer,
@@ -734,7 +760,9 @@ object ProductScreenComponents {
                 SuggestedProductsSkeleton(
                     shimmer = shimmer,
                     contentPadding = PaddingValues(horizontal = 16.dp),
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
                 )
             }
         }

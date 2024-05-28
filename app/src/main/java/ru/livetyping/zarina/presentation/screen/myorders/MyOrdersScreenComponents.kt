@@ -140,17 +140,18 @@ object MyOrdersScreenComponents {
                             OrderCard(
                                 order = order,
                                 onClick = onOrderClicked,
-                                modifier = itemModifier,
+                                modifier = itemModifier.animateItem(),
                             )
                         } else {
-                            OrderCardSkeleton(modifier = itemModifier)
+                            OrderCardSkeleton(modifier = itemModifier.animateItem())
                         }
 
                         if (index < orderPagingItems.itemCount - 1) {
                             ZarinaDivider(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 16.dp),
+                                    .padding(horizontal = 16.dp)
+                                    .animateItem(),
                             )
                         }
                     }
@@ -190,14 +191,17 @@ object MyOrdersScreenComponents {
             items(count = OrderListSkeletonItemCount) { index ->
                 OrderCardSkeleton(
                     shimmer = placeholderShimmer,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
                 )
 
                 if (index < OrderListSkeletonItemCount - 1) {
                     ZarinaDivider(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 16.dp)
+                            .animateItem(),
                     )
                 }
             }

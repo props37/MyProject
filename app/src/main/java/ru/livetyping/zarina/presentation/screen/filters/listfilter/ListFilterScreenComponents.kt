@@ -120,6 +120,7 @@ object ListFilterScreenComponents {
                         Text(
                             text = city.name,
                             style = UiKitTheme.typography.secondary.bold,
+                            modifier = Modifier.animateItem(),
                         )
                     }
                 }
@@ -132,13 +133,15 @@ object ListFilterScreenComponents {
                 FilterItem(
                     item = item,
                     onItemClicked = onItemClicked,
+                    modifier = Modifier.animateItem(),
                 )
 
                 if (index < filter.items.size - 1) {
                     ZarinaDivider(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 16.dp)
+                            .animateItem(),
                     )
                 }
             }

@@ -428,13 +428,17 @@ object StoresScreenComponents {
                 items = stores,
                 key = { _, store -> store.id.value },
             ) { index, store ->
-                StoreListItem(store = store)
+                StoreListItem(
+                    store = store,
+                    modifier = Modifier.animateItem(),
+                )
 
                 if (index < stores.lastIndex) {
                     ZarinaDivider(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 16.dp)
+                            .animateItem(),
                     )
                 }
             }
@@ -452,13 +456,17 @@ object StoresScreenComponents {
             modifier = modifier,
         ) {
             items(count = StoreListSkeletonItemCount) { index ->
-                StoreListItemSkeleton(shimmer = shimmer)
+                StoreListItemSkeleton(
+                    shimmer = shimmer,
+                    modifier = Modifier.animateItem(),
+                )
 
                 if (index < StoreListSkeletonItemCount - 1) {
                     ZarinaDivider(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 16.dp)
+                            .animateItem(),
                     )
                 }
             }
