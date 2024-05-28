@@ -87,21 +87,20 @@ private fun ScreenContent(
                     items = countItems,
                     key = { _, item -> item.count },
                 ) { index, item ->
-                    CountItem(
-                        item = item,
-                        onClick = onCountItemClicked,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .animateItem(),
-                    )
-
-                    if (index < countItems.lastIndex) {
-                        ZarinaDivider(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                                .animateItem(),
+                    Column(modifier = Modifier.animateItem()) {
+                        CountItem(
+                            item = item,
+                            onClick = onCountItemClicked,
+                            modifier = Modifier.fillMaxWidth(),
                         )
+
+                        if (index < countItems.lastIndex) {
+                            ZarinaDivider(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                            )
+                        }
                     }
                 }
             }

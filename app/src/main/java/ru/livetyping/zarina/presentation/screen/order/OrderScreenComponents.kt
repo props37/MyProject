@@ -216,28 +216,27 @@ object OrderScreenComponents {
                 key = { _, order -> order.id.value },
                 contentType = { _, _ -> OrderListContentTypeProduct },
             ) { index, product ->
-                ProductOrderCard(
-                    name = product.name,
-                    imageUrl = product.imageUrl,
-                    size = product.size,
-                    sizeRu = null,
-                    height = null,
-                    color = product.color,
-                    count = product.count,
-                    countStyle = ProductOrderCardCountStyle.Info,
-                    price = product.price,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .animateItem(),
-                )
-
-                if (index < order.products.lastIndex) {
-                    ZarinaDivider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .animateItem(),
+                Column(modifier = Modifier.animateItem()) {
+                    ProductOrderCard(
+                        name = product.name,
+                        imageUrl = product.imageUrl,
+                        size = product.size,
+                        sizeRu = null,
+                        height = null,
+                        color = product.color,
+                        count = product.count,
+                        countStyle = ProductOrderCardCountStyle.Info,
+                        price = product.price,
+                        modifier = Modifier.fillMaxWidth(),
                     )
+
+                    if (index < order.products.lastIndex) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
 
@@ -436,20 +435,19 @@ object OrderScreenComponents {
             }
 
             items(OrderSkeletonProductCount) { index ->
-                ProductOrderCardSkeleton(
-                    shimmer = shimmer,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .animateItem(),
-                )
-
-                if (index < OrderSkeletonProductCount - 1) {
-                    ZarinaDivider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .animateItem(),
+                Column(modifier = Modifier.animateItem()) {
+                    ProductOrderCardSkeleton(
+                        shimmer = shimmer,
+                        modifier = Modifier.fillMaxWidth(),
                     )
+
+                    if (index < OrderSkeletonProductCount - 1) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
 

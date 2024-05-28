@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -213,39 +214,36 @@ object CatalogScreenComponents {
                         key = item.id.value,
                         contentType = getCategoryListItemContentType(item),
                     ) {
-                        when (item) {
-                            is CategoryListItem.CategoryItem -> {
-                                val isExpanded =
-                                    item.category.id in itemsState.expandedCategoryIds
+                        Column(modifier = Modifier.animateItem()) {
+                            when (item) {
+                                is CategoryListItem.CategoryItem -> {
+                                    val isExpanded =
+                                        item.category.id in itemsState.expandedCategoryIds
 
-                                CategoryItem(
-                                    item = item,
-                                    onItemClicked = onItemClicked,
-                                    isExpanded = isExpanded,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .animateItem(),
-                                )
+                                    CategoryItem(
+                                        item = item,
+                                        onItemClicked = onItemClicked,
+                                        isExpanded = isExpanded,
+                                        modifier = Modifier.fillMaxWidth(),
+                                    )
+                                }
+
+                                is CategoryListItem.SeeWholeCategoryItem -> {
+                                    SeeWholeCategoryItem(
+                                        item = item,
+                                        onItemClicked = onItemClicked,
+                                        modifier = Modifier.fillMaxWidth(),
+                                    )
+                                }
                             }
 
-                            is CategoryListItem.SeeWholeCategoryItem -> {
-                                SeeWholeCategoryItem(
-                                    item = item,
-                                    onItemClicked = onItemClicked,
+                            if (index < lastVisibleItemIndex) {
+                                ZarinaDivider(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .animateItem(),
+                                        .padding(horizontal = 16.dp),
                                 )
                             }
-                        }
-
-                        if (index < lastVisibleItemIndex) {
-                            ZarinaDivider(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp)
-                                    .animateItem(),
-                            )
                         }
                     }
                 }
@@ -357,21 +355,20 @@ object CatalogScreenComponents {
                 count = CategoryListSkeletonItemCount,
                 key = { it },
             ) { index ->
-                CategoryListSkeletonItem(
-                    index = index,
-                    shimmer = shimmer,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .animateItem(),
-                )
-
-                if (index != CategoryListSkeletonItemCount - 1) {
-                    ZarinaDivider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .animateItem(),
+                Column(modifier = Modifier.animateItem()) {
+                    CategoryListSkeletonItem(
+                        index = index,
+                        shimmer = shimmer,
+                        modifier = Modifier.fillMaxWidth(),
                     )
+
+                    if (index != CategoryListSkeletonItemCount - 1) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
         }

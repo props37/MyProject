@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.myorders
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -135,24 +136,25 @@ object MyOrdersScreenComponents {
                             OrderListContentTypeOrderCard
                         },
                     ) { index ->
-                        val order = orderPagingItems[index]
-                        if (order != null) {
-                            OrderCard(
-                                order = order,
-                                onClick = onOrderClicked,
-                                modifier = itemModifier.animateItem(),
-                            )
-                        } else {
-                            OrderCardSkeleton(modifier = itemModifier.animateItem())
-                        }
+                        Column(modifier = Modifier.animateItem()) {
+                            val order = orderPagingItems[index]
+                            if (order != null) {
+                                OrderCard(
+                                    order = order,
+                                    onClick = onOrderClicked,
+                                    modifier = itemModifier,
+                                )
+                            } else {
+                                OrderCardSkeleton(modifier = itemModifier)
+                            }
 
-                        if (index < orderPagingItems.itemCount - 1) {
-                            ZarinaDivider(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp)
-                                    .animateItem(),
-                            )
+                            if (index < orderPagingItems.itemCount - 1) {
+                                ZarinaDivider(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp),
+                                )
+                            }
                         }
                     }
 
@@ -189,20 +191,19 @@ object MyOrdersScreenComponents {
             modifier = modifier.fillMaxSize(),
         ) {
             items(count = OrderListSkeletonItemCount) { index ->
-                OrderCardSkeleton(
-                    shimmer = placeholderShimmer,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .animateItem(),
-                )
-
-                if (index < OrderListSkeletonItemCount - 1) {
-                    ZarinaDivider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .animateItem(),
+                Column(modifier = Modifier.animateItem()) {
+                    OrderCardSkeleton(
+                        shimmer = placeholderShimmer,
+                        modifier = Modifier.fillMaxWidth(),
                     )
+
+                    if (index < OrderListSkeletonItemCount - 1) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
         }

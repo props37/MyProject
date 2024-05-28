@@ -116,11 +116,10 @@ object ListFilterScreenComponents {
         ) {
             if (filter.type == Filter.Type.PICKUP_STORES && city != null) {
                 item(key = city.name) {
-                    ZarinaItem {
+                    ZarinaItem(modifier = Modifier.animateItem()) {
                         Text(
                             text = city.name,
                             style = UiKitTheme.typography.secondary.bold,
-                            modifier = Modifier.animateItem(),
                         )
                     }
                 }
@@ -130,19 +129,19 @@ object ListFilterScreenComponents {
                 items = filter.items,
                 key = { _, item -> item.id.value },
             ) { index, item ->
-                FilterItem(
-                    item = item,
-                    onItemClicked = onItemClicked,
-                    modifier = Modifier.animateItem(),
-                )
-
-                if (index < filter.items.size - 1) {
-                    ZarinaDivider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .animateItem(),
+                Column(modifier = Modifier.animateItem()) {
+                    FilterItem(
+                        item = item,
+                        onItemClicked = onItemClicked,
                     )
+
+                    if (index < filter.items.size - 1) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
         }

@@ -196,23 +196,22 @@ object CitySelectorScreenComponents {
                                 ) { index, item ->
                                     when (item) {
                                         is CityListItem.CityItem -> {
-                                            City(
-                                                city = item.city,
-                                                onClick = onCityClicked,
-                                                showFullName = item.showFullName,
-                                                isSelected = item.city.kladrId == selectedCity?.kladrId,
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .animateItem(),
-                                            )
-
-                                            if (index < listState.items.lastIndex) {
-                                                ZarinaDivider(
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .padding(horizontal = 16.dp)
-                                                        .animateItem(),
+                                            Column(modifier = Modifier.animateItem()) {
+                                                City(
+                                                    city = item.city,
+                                                    onClick = onCityClicked,
+                                                    showFullName = item.showFullName,
+                                                    isSelected = item.city.kladrId == selectedCity?.kladrId,
+                                                    modifier = Modifier.fillMaxWidth(),
                                                 )
+
+                                                if (index < listState.items.lastIndex) {
+                                                    ZarinaDivider(
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .padding(horizontal = 16.dp),
+                                                    )
+                                                }
                                             }
                                         }
 
