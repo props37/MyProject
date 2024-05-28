@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -120,13 +122,15 @@ object MyOrdersScreenComponents {
         Box(modifier = modifier) {
             if (orderPagingItems.itemCount > 0) {
                 val itemModifier = Modifier.fillMaxWidth()
+                val updatedRetry by rememberUpdatedState { orderPagingItems.retry() }
+
                 LazyColumn(
                     contentPadding = PaddingValues(bottom = 24.dp),
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     zarinaPagingPrependItem(
                         prependLoadState = orderPagingItems.loadState.prepend,
-                        onRetryClicked = orderPagingItems::retry,
+                        onRetryClicked = updatedRetry,
                     )
 
                     items(
@@ -160,7 +164,7 @@ object MyOrdersScreenComponents {
 
                     zarinaPagingAppendItem(
                         appendLoadState = orderPagingItems.loadState.append,
-                        onRetryClicked = orderPagingItems::retry,
+                        onRetryClicked = updatedRetry,
                     )
                 }
             } else {
