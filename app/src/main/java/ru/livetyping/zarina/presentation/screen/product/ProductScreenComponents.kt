@@ -629,7 +629,9 @@ object ProductScreenComponents {
                 ProductCardSmall(
                     product = product,
                     onClick = onProductClicked,
-                    modifier = Modifier.width(SuggestedProductCardWidth),
+                    modifier = Modifier
+                        .width(SuggestedProductCardWidth)
+                        .animateItem(),
                 )
             }
         }
@@ -811,7 +813,9 @@ object ProductScreenComponents {
             items(count = SuggestedProductsSkeletonCount) {
                 ProductCardSmallSkeleton(
                     shimmer = shimmer,
-                    modifier = Modifier.width(SuggestedProductCardWidth),
+                    modifier = Modifier
+                        .width(SuggestedProductCardWidth)
+                        .animateItem(),
                 )
             }
         }

@@ -58,6 +58,7 @@ fun ProductColorSelector(
                 color = color,
                 isSelected = color.productId == productId,
                 onClick = onProductColorClicked,
+                modifier = Modifier.animateItem(),
             )
         }
     }

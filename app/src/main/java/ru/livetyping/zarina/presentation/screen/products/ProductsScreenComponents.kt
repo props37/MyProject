@@ -177,6 +177,7 @@ object ProductsScreenComponents {
                             ZarinaTag(
                                 onClick = { onTagClicked(tag) },
                                 isSelected = tag.id == selectedTagId,
+                                modifier = Modifier.animateItem(),
                             ) {
                                 Text(text = tag.name)
                             }
@@ -191,7 +192,10 @@ object ProductsScreenComponents {
                         contentPadding = contentPadding,
                     ) {
                         items(count = 10) {
-                            ZarinaTagSkeleton(shimmer = skeletonShimmer)
+                            ZarinaTagSkeleton(
+                                shimmer = skeletonShimmer,
+                                modifier = Modifier.animateItem(),
+                            )
                         }
                     }
                 }
