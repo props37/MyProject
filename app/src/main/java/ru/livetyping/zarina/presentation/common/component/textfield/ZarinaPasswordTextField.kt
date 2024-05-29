@@ -21,8 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -104,7 +105,7 @@ fun ZarinaPasswordTextField(
                     }
 
                     Icon(
-                        painter = painterResource(iconResId),
+                        imageVector = ImageVector.vectorResource(iconResId),
                         contentDescription = stringResource(contentDescriptionResId),
                         modifier = Modifier.size(16.dp),
                     )

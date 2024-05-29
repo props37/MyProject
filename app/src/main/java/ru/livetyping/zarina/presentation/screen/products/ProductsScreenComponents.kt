@@ -25,9 +25,10 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -105,7 +106,7 @@ object ProductsScreenComponents {
                 indication = ripple(bounded = false, radius = TopBarIconSize),
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_magnifying_glass_24),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
                     contentDescription = stringResource(R.string.search),
                     tint = UiKitTheme.colors.icon.regular.default,
                     modifier = Modifier.size(TopBarIconSize),
@@ -119,7 +120,7 @@ object ProductsScreenComponents {
                     modifier = Modifier.padding(end = 2.dp),
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_settings_menu_24),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_settings_menu_24),
                         contentDescription = stringResource(R.string.filters),
                         tint = UiKitTheme.colors.icon.regular.default,
                         modifier = Modifier.size(TopBarIconSize),

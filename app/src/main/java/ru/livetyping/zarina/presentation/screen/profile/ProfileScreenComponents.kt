@@ -21,8 +21,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -98,7 +99,7 @@ object ProfileScreenComponents {
                         modifier = Modifier.padding(end = 2.dp),
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_pencil_24),
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_pencil_24),
                             contentDescription = stringResource(R.string.edit_profile),
                             modifier = Modifier.size(20.dp),
                         )
@@ -268,7 +269,7 @@ object ProfileScreenComponents {
             },
             endContent = {
                 Icon(
-                    painter = painterResource(R.drawable.ic_small_arrow_up_24),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
                     contentDescription = null,
                     tint = UiKitTheme.colors.icon.regular.default,
                     modifier = Modifier

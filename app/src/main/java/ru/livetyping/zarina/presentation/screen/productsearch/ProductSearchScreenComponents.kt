@@ -43,8 +43,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -126,7 +127,7 @@ object ProductSearchScreenComponents {
                 },
                 leadingContent = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_magnifying_glass_24),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
                         contentDescription = null,
                         modifier = Modifier.size(20.dp),
                     )
@@ -378,7 +379,7 @@ object ProductSearchScreenComponents {
                 )
 
                 Icon(
-                    painter = painterResource(R.drawable.ic_magnifying_glass_24),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
                     contentDescription = null,
                     tint = UiKitTheme.colors.icon.regular.default,
                     modifier = Modifier.size(16.dp),

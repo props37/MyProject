@@ -28,8 +28,9 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -91,7 +92,7 @@ object SizeSelectorScreenComponents {
             modifier = modifier,
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_ruler_24),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_ruler_24),
                 contentDescription = null,
             )
             Spacer(modifier = Modifier.width(6.dp))

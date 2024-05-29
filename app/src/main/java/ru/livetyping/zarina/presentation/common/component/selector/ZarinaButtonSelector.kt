@@ -30,8 +30,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -136,7 +137,7 @@ object ZarinaButtonSelectorDefaults {
         )
 
         Icon(
-            painter = painterResource(R.drawable.ic_small_arrow_up_24),
+            imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
             contentDescription = stringResource(R.string.select),
             tint = tint,
             modifier = modifier

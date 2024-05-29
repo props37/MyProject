@@ -26,8 +26,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -77,7 +78,7 @@ object CatalogScreenComponents {
                 placeholder = { Text(text = stringResource(R.string.find_products)) },
                 leadingContent = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_magnifying_glass_24),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
                         contentDescription = null,
                         modifier = Modifier.size(20.dp),
                     )
@@ -306,7 +307,7 @@ object CatalogScreenComponents {
                     if (isExpanded) R.string.collapse else R.string.expand
 
                 Icon(
-                    painter = painterResource(R.drawable.ic_small_arrow_up_24),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
                     contentDescription = stringResource(contentDescriptionResId),
                     modifier = Modifier
                         .size(16.dp)

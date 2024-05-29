@@ -64,12 +64,14 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -301,7 +303,7 @@ private fun BackSide(
                     .wrapContentSize(unbounded = true),
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_turn_back_24),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_turn_back_24),
                     tint = iconColor,
                     contentDescription = stringResource(R.string.turn_card),
                     modifier = Modifier.size(iconSize),
@@ -360,7 +362,7 @@ private fun FrontSideQrCode(
     ) {
         val qrCodeIconSize = 24.dp
         Icon(
-            painter = painterResource(R.drawable.ic_qr_24),
+            imageVector = ImageVector.vectorResource(R.drawable.ic_qr_24),
             contentDescription = stringResource(R.string.qr_code),
             modifier = Modifier
                 .size(qrCodeIconSize)
@@ -386,7 +388,7 @@ private fun FrontSideQrCode(
             @Suppress("MagicNumber")
             val iconSize = with(LocalDensity.current) { textStyle.fontSize.toDp() * 0.8f }
             Icon(
-                painter = painterResource(R.drawable.ic_small_arrow_up_24),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
                 contentDescription = stringResource(R.string.qr_code),
                 modifier = Modifier
                     .padding(bottom = 2.dp) // Circe font padding
@@ -416,7 +418,7 @@ private fun FrontSideLevelInfo(
                 .wrapContentSize(unbounded = true),
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_exclamation_mark_shaped_24),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_exclamation_mark_shaped_24),
                 tint = iconColor,
                 contentDescription = stringResource(R.string.show_loyalty_card_info),
                 modifier = Modifier.size(iconSize),

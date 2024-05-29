@@ -22,7 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -97,7 +98,7 @@ private fun Preview() {
                 .padding(16.dp),
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_heart_24),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_heart_24),
                 contentDescription = null,
             )
         }

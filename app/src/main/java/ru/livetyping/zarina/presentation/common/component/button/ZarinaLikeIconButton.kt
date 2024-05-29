@@ -14,8 +14,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -48,7 +49,7 @@ fun ZarinaLikeIconButton(
         ) { isLiked ->
             val iconResId = if (isLiked) R.drawable.ic_heart_24 else R.drawable.ic_heart_outline_24
             Icon(
-                painter = painterResource(iconResId),
+                imageVector = ImageVector.vectorResource(iconResId),
                 contentDescription = stringResource(contentDescriptionResId(isLiked)),
                 tint = tint,
                 modifier = Modifier.size(iconSize),

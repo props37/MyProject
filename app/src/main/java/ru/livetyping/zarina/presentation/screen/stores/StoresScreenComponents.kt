@@ -29,8 +29,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -296,7 +297,7 @@ object StoresScreenComponents {
                     },
                     clusterItemContent = {
                         Icon(
-                            painter = painterResource(R.drawable.ic_map_store_marker_24),
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_map_store_marker_24),
                             contentDescription = stringResource(
                                 id = R.string.map_store_content_description,
                                 it.store.name,

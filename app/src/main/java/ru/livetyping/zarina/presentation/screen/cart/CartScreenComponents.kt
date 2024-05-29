@@ -49,10 +49,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -226,7 +227,7 @@ object CartScreenComponents {
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Icon(
-                        painter = painterResource(R.drawable.ic_small_arrow_up_24),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
                         contentDescription = stringResource(R.string.change_city),
                         tint = UiKitTheme.colors.icon.regular.default,
                         modifier = Modifier
@@ -636,7 +637,7 @@ object CartScreenComponents {
                         label = "Add To Favorites button icon",
                     ) { iconResId ->
                         Icon(
-                            painter = painterResource(iconResId),
+                            imageVector = ImageVector.vectorResource(iconResId),
                             contentDescription = null,
                             modifier = Modifier.size(16.dp),
                         )
@@ -673,7 +674,7 @@ object CartScreenComponents {
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_trash_can_24),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_trash_can_24),
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
                     )

@@ -50,8 +50,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
@@ -511,7 +512,7 @@ object ZarinaTextFieldDefaults {
                 modifier = modifier,
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_cross_shaped_24),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_cross_shaped_24),
                     contentDescription = stringResource(R.string.clear),
                     tint = Color.Unspecified,
                     modifier = Modifier.size(iconSize),
@@ -651,14 +652,14 @@ private fun Preview() {
                 },
                 leadingContent = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_magnifying_glass_24),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
                         contentDescription = null,
                         modifier = Modifier.size(20.dp),
                     )
                 },
                 innerTrailingContent = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_cross_24),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_cross_24),
                         contentDescription = null,
                         modifier = Modifier
                             .size(20.dp)

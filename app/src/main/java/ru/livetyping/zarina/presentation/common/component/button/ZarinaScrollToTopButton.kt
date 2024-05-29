@@ -11,8 +11,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
@@ -39,7 +40,7 @@ fun ZarinaScrollToTopButton(
             contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_arrow_left_24),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left_24),
                 contentDescription = stringResource(R.string.scroll_to_top),
                 modifier = Modifier
                     .size(16.dp)
