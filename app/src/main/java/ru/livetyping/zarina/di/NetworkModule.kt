@@ -8,6 +8,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
@@ -16,16 +17,20 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.plugin
 import io.ktor.client.request.headers
+import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.BuildConfig
 import ru.livetyping.zarina.data.common.remote.api.zarina.ZarinaApiHeaderProvider
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
+import ru.livetyping.zarina.usecase.authorization.FetchUnauthorizedUserAuthorizationTokensUseCase
 import ru.livetyping.zarina.usecase.authorization.GetAuthorizationTokensFlowUseCase
 import ru.livetyping.zarina.usecase.authorization.RefreshAuthorizationTokensUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.util.library.ktor.clearBearerTokens
 import timber.log.Timber
 import javax.inject.Singleton
 
@@ -40,6 +45,7 @@ class NetworkModule {
         json: Json,
         zarinaApiHeaderProvider: ZarinaApiHeaderProvider,
         getAuthorizationTokensFlow: GetAuthorizationTokensFlowUseCase,
+        fetchUnauthorizedUserAuthorizationTokens: FetchUnauthorizedUserAuthorizationTokensUseCase,
         refreshAuthorizationTokens: RefreshAuthorizationTokensUseCase,
     ): HttpClient = HttpClient(OkHttp) {
         baseConfig(json)
@@ -47,8 +53,13 @@ class NetworkModule {
         install(Auth) {
             bearer {
                 loadTokens {
-                    val tokens = getAuthorizationTokensFlow().firstOrNull()?.getOrNull()
+                    var tokens = getAuthorizationTokensFlow().firstOrNull()?.getOrNull()
                     Timber.tag(HTTP_CLIENT_TAG).v("Authorization tokens loaded: $tokens")
+                    if (tokens == null) {
+                        Timber.tag(HTTP_CLIENT_TAG).v("Loaded authorization tokens are null, trying to fetch")
+                        tokens = fetchUnauthorizedUserAuthorizationTokens().getOrNull()
+                        Timber.tag(HTTP_CLIENT_TAG).v("Fetched authorization tokens: $tokens")
+                    }
                     tokens?.toBearerTokens()
                 }
 
@@ -59,6 +70,8 @@ class NetworkModule {
                 }
             }
         }
+    }.also { client ->
+        client.loadTokensIfNotPresent()
     }
 
     @Provides
@@ -125,6 +138,21 @@ class NetworkModule {
         }
     }
 
+    private fun HttpClient.loadTokensIfNotPresent() {
+        this.plugin(HttpSend).intercept { request ->
+            val call = execute(request)
+            val isAccessTokenPresent = request.headers[HEADER_AUTHORIZATION] != null
+            val response = call.response
+            if (response.status == HttpStatusCode.Forbidden && !isAccessTokenPresent) {
+                Timber
+                    .tag(HTTP_CLIENT_TAG)
+                    .w("${response.status} received and access token is not present. Initiating loading of tokens")
+                this@loadTokensIfNotPresent.clearBearerTokens()
+            }
+            call
+        }
+    }
+
     private fun AuthorizationTokens.toBearerTokens(): BearerTokens {
         return BearerTokens(accessToken.value, refreshToken.value)
     }
@@ -132,6 +160,8 @@ class NetworkModule {
     companion object {
         private const val ANY_QUERY_BASE_URL_SEARCH = "https://sort.diginetica.net/"
         private const val ANY_QUERY_BASE_URL_AUTOCOMPLETE = "https://autocomplete.diginetica.net/"
+
+        private const val HEADER_AUTHORIZATION = "Authorization"
 
         private const val HTTP_CLIENT_TAG = "HttpClient"
     }
