@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.product
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -254,6 +256,14 @@ object ProductScreenComponents {
         lazyListState: LazyListState,
         modifier: Modifier = Modifier,
     ) {
+        val animateItemModifier: LazyItemScope.() -> Modifier = {
+            Modifier.animateItem(
+                fadeInSpec = spring(),
+                placementSpec = spring(),
+                fadeOutSpec = spring(),
+            )
+        }
+
         LazyColumn(
             state = lazyListState,
             modifier = modifier,
@@ -264,7 +274,7 @@ object ProductScreenComponents {
             ) {
                 ProductMediaPager(
                     media = product.media,
-                    modifier = Modifier.animateItem(),
+                    modifier = Modifier.then(animateItemModifier()),
                 )
             }
 
@@ -278,7 +288,7 @@ object ProductScreenComponents {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp, bottom = 8.dp)
-                        .animateItem(),
+                        .then(animateItemModifier()),
                 )
             }
 
@@ -290,7 +300,7 @@ object ProductScreenComponents {
                     description = product.description,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .animateItem(),
+                        .then(animateItemModifier()),
                 )
             }
 
@@ -303,7 +313,7 @@ object ProductScreenComponents {
                     onUrlClicked = onUrlClicked,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .animateItem(),
+                        .then(animateItemModifier()),
                 )
             }
 
@@ -319,7 +329,7 @@ object ProductScreenComponents {
                         onErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .animateItem(),
+                            .then(animateItemModifier()),
                     )
                 }
             }
@@ -336,7 +346,7 @@ object ProductScreenComponents {
                         onErrorRefreshClicked = onProductSimilarErrorRefreshClicked,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .animateItem(),
+                            .then(animateItemModifier()),
                     )
                 }
             }
