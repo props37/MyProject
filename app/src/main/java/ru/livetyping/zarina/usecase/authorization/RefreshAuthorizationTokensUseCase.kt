@@ -28,8 +28,6 @@ class RefreshAuthorizationTokensUseCase @Inject constructor(
             refreshTokens(currentTokens)
         } else {
             fetchUnauthorizedUserAuthorizationTokensUseCase().getOrThrow()
-            val tokens = authorizationRepository.getAuthorizationTokensFlow().firstOrNull()
-            checkNotNull(tokens) { "tokens are null" }
         }
     }
 
