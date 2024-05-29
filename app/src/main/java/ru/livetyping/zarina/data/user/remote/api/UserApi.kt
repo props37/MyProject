@@ -15,6 +15,7 @@ import ru.livetyping.zarina.data.user.remote.api.dto.GetLoyaltyCardDto
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestPasswordResetRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendSmsOtpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
+import ru.livetyping.zarina.data.user.remote.api.dto.SignOutDto
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.exception.ConfirmSignUpApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.RequestPasswordResetApiExceptionConverter
@@ -128,8 +129,8 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun signOut() {
-        httpClient.delete("/api/auth")
+    suspend fun signOut(): SignOutDto {
+        return httpClient.delete("/api/auth").body()
     }
 
     suspend fun deleteAccount() {
