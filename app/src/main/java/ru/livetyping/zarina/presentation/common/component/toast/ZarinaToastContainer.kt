@@ -73,7 +73,7 @@ fun ZarinaToastContainer(
         }
 
         LaunchedEffect(controller, anchoredDraggableState) {
-            snapshotFlow { anchoredDraggableState.currentValue }
+            snapshotFlow { anchoredDraggableState.settledValue }
                 .filter { it == SwipeableState.Swiped }
                 .collect {
                     controller.hideCurrentToast()
