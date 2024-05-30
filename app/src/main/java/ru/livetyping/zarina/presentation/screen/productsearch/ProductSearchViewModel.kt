@@ -72,6 +72,8 @@ class ProductSearchViewModel @AssistedInject constructor(
     private val interactor: ProductSearchInteractor,
 ) : ViewModel(), SideEffectSource<ProductSearchViewModel.SideEffect> by SideEffectSourceImpl() {
 
+    private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
+
     private val screenResultHandler = ScreenResultHandler(
         backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
         savedStateHandle = savedStateHandle,
@@ -105,14 +107,14 @@ class ProductSearchViewModel @AssistedInject constructor(
                 interactor.getProductSearchSuggestionsFlow(params)
             }
             .stateIn(
-                scope = viewModelScope,
+                scope = viewModelScopeDefault,
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = null,
             )
 
     val searchAutocompleteSuggestions: StateFlow<ImmutableList<ProductSearchSuggestions.AutocompleteSuggestion>> =
         searchSuggestionsResult.mapState(
-            scope = viewModelScope,
+            scope = viewModelScopeDefault,
             started = SharingStarted.WhileUiSubscribed,
         ) { result ->
             result?.fold(
@@ -124,7 +126,7 @@ class ProductSearchViewModel @AssistedInject constructor(
         }
 
     val searchSuggestionsState: StateFlow<SearchSuggestionsState> = searchSuggestionsResult.mapState(
-        scope = viewModelScope + Dispatchers.Default,
+        scope = viewModelScopeDefault,
         started = SharingStarted.WhileUiSubscribed,
     ) { result ->
         result?.toSearchSuggestionsState() ?: SearchSuggestionsState.Loading
@@ -140,12 +142,12 @@ class ProductSearchViewModel @AssistedInject constructor(
                     sorting = Sorting.NEW,
                 )
             }
-            .cachedIn(viewModelScope)
+            .cachedIn(viewModelScopeDefault)
             .mapProducts(
                 favoriteProductIdsResultFlow = interactor.getFavoriteProductIdsFlow(),
                 cartProductIdsResultFlow = interactor.getCardProductsIdsFlow(),
             )
-            .cachedIn(viewModelScope)
+            .cachedIn(viewModelScopeDefault)
 
     private val categoryParentCategoryChainRegex = CATEGORY_PARENT_CATEGORY_CHAIN_PATTERN.toRegex()
 
@@ -220,7 +222,7 @@ class ProductSearchViewModel @AssistedInject constructor(
     }
 
     fun onAddProductToFavoritesClicked(product: Product) {
-        viewModelScope.launch {
+        viewModelScopeDefault.launch {
             val params = ToggleProductPresenceInFavoritesUseCase.Params(product.id)
             interactor.toggleProductPresenceInFavorites(params)
                 .onSuccess { isInFavorites ->
@@ -265,7 +267,7 @@ class ProductSearchViewModel @AssistedInject constructor(
     }
 
     private fun addProductToCart(productId: Product.Id, barcode: Barcode) {
-        viewModelScope.launch {
+        viewModelScopeDefault.launch {
             val params = AddProductToCartUseCase.Params(
                 productId = productId,
                 barcode = barcode,

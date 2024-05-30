@@ -13,6 +13,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +27,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
@@ -63,6 +65,8 @@ class ProductsViewModel @AssistedInject constructor(
     private val interactor: ProductsInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
+    private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
+
     private val screenResultHandler = ScreenResultHandler(
         backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
         savedStateHandle = savedStateHandle,
@@ -95,7 +99,7 @@ class ProductsViewModel @AssistedInject constructor(
     }
         .flatMapLatest { it }
         .stateIn(
-            scope = viewModelScope,
+            scope = viewModelScopeDefault,
             started = SharingStarted.WhileSubscribed(),
             initialValue = null,
         )
@@ -103,13 +107,13 @@ class ProductsViewModel @AssistedInject constructor(
     val category: StateFlow<Category?> = categoryResult
         .map { it?.getOrNull() }
         .stateIn(
-            scope = viewModelScope,
+            scope = viewModelScopeDefault,
             started = SharingStarted.WhileUiSubscribed,
             initialValue = null,
         )
 
     val tagListState: StateFlow<TagListState?> = categoryResult.mapState(
-        scope = viewModelScope,
+        scope = viewModelScopeDefault,
         started = SharingStarted.WhileUiSubscribed,
     ) { result ->
         if (result != null) {
@@ -176,15 +180,15 @@ class ProductsViewModel @AssistedInject constructor(
         )
     }
         .flatMapLatest { it }
-        .cachedIn(viewModelScope)
+        .cachedIn(viewModelScopeDefault)
         .mapProducts(
             favoriteProductIdsResultFlow = interactor.getFavoriteProductIdsFlow(),
             cartProductIdsResultFlow = interactor.getCartProductIdsFlow(),
         )
-        .cachedIn(viewModelScope)
+        .cachedIn(viewModelScopeDefault)
 
     val appliedFilterCount: StateFlow<Int> = filters.mapState(
-        scope = viewModelScope,
+        scope = viewModelScopeDefault,
         started = SharingStarted.WhileUiSubscribed,
     ) { it.appliedFilterCount }
 
@@ -250,7 +254,7 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     fun onAddProductToFavoritesClicked(product: Product) {
-        viewModelScope.launch {
+        viewModelScopeDefault.launch {
             val params = ToggleProductPresenceInFavoritesUseCase.Params(product.id)
             interactor.toggleProductPresenceInFavorites(params)
                 .onSuccess { isProductInFavorites ->
@@ -312,7 +316,7 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     private fun addProductToCart(productId: Product.Id, barcode: Barcode) {
-        viewModelScope.launch {
+        viewModelScopeDefault.launch {
             val params = AddProductToCartUseCase.Params(
                 productId = productId,
                 barcode = barcode,
