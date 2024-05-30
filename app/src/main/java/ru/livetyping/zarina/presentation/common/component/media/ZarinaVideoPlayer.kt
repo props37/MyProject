@@ -114,7 +114,7 @@ fun ZarinaVideoPlayer(
 fun ZarinaVideoPlayer(
     exoPlayer: ExoPlayer,
     modifier: Modifier = Modifier,
-    resizeMode: Int = AspectRatioFrameLayout.RESIZE_MODE_FIT,
+    resizeMode: Int = AspectRatioFrameLayout.RESIZE_MODE_ZOOM,
 ) {
     val playerViewState = remember { mutableStateOf<PlayerView?>(null) }
 
