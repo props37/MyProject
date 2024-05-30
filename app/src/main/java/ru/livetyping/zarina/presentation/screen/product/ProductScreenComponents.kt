@@ -39,6 +39,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
@@ -541,7 +542,7 @@ object ProductScreenComponents {
                         addLink(
                             url = LinkAnnotation.Url(
                                 url = deliveryAndPaymentUrl,
-                                style = clickableSpanStyle,
+                                styles = TextLinkStyles(clickableSpanStyle),
                                 linkInteractionListener = linkInteractionListener,
                             ),
                             start = clickableDeliveryTextStartIndex,
@@ -553,7 +554,7 @@ object ProductScreenComponents {
                         addLink(
                             url = LinkAnnotation.Url(
                                 url = deliveryAndPaymentUrl,
-                                style = clickableSpanStyle,
+                                styles = TextLinkStyles(clickableSpanStyle),
                                 linkInteractionListener = linkInteractionListener,
                             ),
                             start = clickablePaymentTextStartIndex,

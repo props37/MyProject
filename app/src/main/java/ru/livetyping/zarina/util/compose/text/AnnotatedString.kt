@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import ru.livetyping.zarina.util.kotlin.findSubstringBounds
 
@@ -53,7 +54,7 @@ fun rememberStringWithLinks(
                 if (substringBounds != null) {
                     val urlAnnotation = LinkAnnotation.Url(
                         url = url,
-                        style = urlStyle,
+                        styles = TextLinkStyles(urlStyle),
                         linkInteractionListener = { link ->
                             if (link is LinkAnnotation.Url) {
                                 onUrlClicked(link.url)
