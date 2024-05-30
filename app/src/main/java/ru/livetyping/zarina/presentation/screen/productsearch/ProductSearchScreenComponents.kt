@@ -211,15 +211,7 @@ object ProductSearchScreenComponents {
                     SearchSuggestionsState.Loading -> Unit
 
                     SearchSuggestionsState.Empty -> {
-                        val errorState = rememberErrorState(
-                            iconResId = R.drawable.ic_magnifying_glass_64,
-                            title = stringResource(R.string.nothing_found),
-                            body = stringResource(R.string.write_different_search_query),
-                            isButtonVisible = false,
-                        )
-                        ZarinaErrorScreen(
-                            state = errorState,
-                            onButtonClicked = {},
+                        NothingFoundPlaceholder(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(16.dp),
@@ -238,6 +230,23 @@ object ProductSearchScreenComponents {
                 }
             }
         }
+    }
+
+    @Composable
+    fun NothingFoundPlaceholder(
+        modifier: Modifier = Modifier,
+    ) {
+        val errorState = rememberErrorState(
+            iconResId = R.drawable.ic_magnifying_glass_64,
+            title = stringResource(R.string.nothing_found),
+            body = stringResource(R.string.write_different_search_query),
+            isButtonVisible = false,
+        )
+        ZarinaErrorScreen(
+            state = errorState,
+            onButtonClicked = {},
+            modifier = modifier,
+        )
     }
 
     @Composable

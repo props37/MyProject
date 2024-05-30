@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
+import ru.livetyping.zarina.presentation.common.zarinatoast.controller.LocalZarinaToastController
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SideEffect
 
 @Composable
@@ -21,6 +22,7 @@ fun ProductSearchScreenBehavior(
 ) {
     val updatedNavigate by rememberUpdatedState(navigate)
     val updatedFocusManager by rememberUpdatedState(LocalFocusManager.current)
+    val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
 
     ForcedBottomNavBarBehavior(isVisible = true)
@@ -36,6 +38,9 @@ fun ProductSearchScreenBehavior(
                         }
 
                         SideEffect.ReleaseSearchTextFieldFocus -> updatedFocusManager.clearFocus()
+                        is SideEffect.ShowZarinaToast -> {
+                            updatedZarinaToastController.show(sideEffect.message)
+                        }
                     }
                 }
             }

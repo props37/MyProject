@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.productsearch
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -21,14 +23,20 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.presentation.common.component.ProductGrid
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenComponents.NothingFoundPlaceholder
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenComponents.SearchSuggestions
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchMode
@@ -61,6 +69,11 @@ fun ProductSearchScreen(
         onSearchAutocompleteSuggestionClicked = viewModel::onSearchAutocompleteSuggestionClicked,
         searchSuggestionsState = searchSuggestionsState,
         onSearchSuggestionItemClicked = viewModel::onSearchSuggestionItemClicked,
+        productSearchResultPagingDataFlow = viewModel.productSearchResultPagingDataFlow,
+        onProductClicked = viewModel::onProductClicked,
+        onAddProductToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
+        onAddProductToCartClicked = viewModel::onAddProductToCartClicked,
+        onSubscribeToProductClicked = viewModel::onSubscribeToProductClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -78,6 +91,11 @@ private fun ScreenContent(
     onSearchAutocompleteSuggestionClicked: (ProductSearchSuggestions.AutocompleteSuggestion) -> Unit,
     searchSuggestionsState: SearchSuggestionsState,
     onSearchSuggestionItemClicked: (SearchSuggestionItem) -> Unit,
+    productSearchResultPagingDataFlow: Flow<PagingData<ProductItem>>,
+    onProductClicked: (Product) -> Unit,
+    onAddProductToFavoritesClicked: (Product) -> Unit,
+    onAddProductToCartClicked: (Product) -> Unit,
+    onSubscribeToProductClicked: (Product) -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProductSearchScreenAction) -> Unit,
 ) {
@@ -88,8 +106,10 @@ private fun ScreenContent(
 
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
-        delay(300.milliseconds)
-        focusRequester.tryRequestFocus()
+        if (searchMode == SearchMode.SEARCH) {
+            delay(300.milliseconds)
+            focusRequester.tryRequestFocus()
+        }
     }
 
     Column(
@@ -113,14 +133,46 @@ private fun ScreenContent(
             modifier = Modifier.focusRequester(focusRequester),
         )
 
-        SearchSuggestions(
-            state = searchSuggestionsState,
-            autocompleteSuggestions = searchAutocompleteSuggestions,
-            query = searchTextFieldState.text.toString(),
-            onSearchSuggestionItemClicked = onSearchSuggestionItemClicked,
-            onAutocompleteSuggestionClicked = onSearchAutocompleteSuggestionClicked,
+        Crossfade(
+            targetState = searchMode,
+            label = "Search mode",
             modifier = Modifier.fillMaxSize(),
-        )
+        ) { mode ->
+            when (mode) {
+                SearchMode.SEARCH -> {
+                    SearchSuggestions(
+                        state = searchSuggestionsState,
+                        autocompleteSuggestions = searchAutocompleteSuggestions,
+                        query = searchTextFieldState.text.toString(),
+                        onSearchSuggestionItemClicked = onSearchSuggestionItemClicked,
+                        onAutocompleteSuggestionClicked = onSearchAutocompleteSuggestionClicked,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(UiKitTheme.colors.background.general.regular.default),
+                    )
+                }
+
+                SearchMode.SEARCH_RESULTS -> {
+                    ProductGrid(
+                        productPagingDataFlow = productSearchResultPagingDataFlow,
+                        onProductClicked = onProductClicked,
+                        onAddToFavoritesClicked = onAddProductToFavoritesClicked,
+                        onAddToCartClicked = onAddProductToCartClicked,
+                        onSubscribeClicked = onSubscribeToProductClicked,
+                        noProductsPlaceholder = {
+                            NothingFoundPlaceholder(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp),
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(UiKitTheme.colors.background.general.regular.default),
+                    )
+                }
+            }
+        }
     }
 }
 

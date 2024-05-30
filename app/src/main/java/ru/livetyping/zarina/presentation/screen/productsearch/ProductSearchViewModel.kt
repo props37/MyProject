@@ -10,6 +10,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -17,11 +22,14 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.R
@@ -29,27 +37,45 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.category.Category
+import ru.livetyping.zarina.domain.common.Barcode
+import ru.livetyping.zarina.domain.common.Sorting
+import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
+import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.common.util.library.paging.mapProducts
+import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
+import ru.livetyping.zarina.presentation.navigation.destination.graph.SizeSelectorGraph
+import ru.livetyping.zarina.usecase.cart.AddProductToCartUseCase
+import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.livetyping.zarina.usecase.productsearch.GetProductSearchSuggestionsFlowUseCase
+import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.clear
 import ru.livetyping.zarina.util.compose.text.textAsFlow
 import ru.livetyping.zarina.util.kotlin.capitalize
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
-import javax.inject.Inject
+import timber.log.Timber
 import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(SavedStateHandleSaveableApi::class)
-@HiltViewModel
-class ProductSearchViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = ProductSearchViewModel.Factory::class)
+class ProductSearchViewModel @AssistedInject constructor(
+    @Assisted
+    backStackEntrySavedStateHandle: SavedStateHandle,
     savedStateHandle: SavedStateHandle,
     private val interactor: ProductSearchInteractor,
 ) : ViewModel(), SideEffectSource<ProductSearchViewModel.SideEffect> by SideEffectSourceImpl() {
+
+    private val screenResultHandler = ScreenResultHandler(
+        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
+        savedStateHandle = savedStateHandle,
+    )
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -104,7 +130,28 @@ class ProductSearchViewModel @Inject constructor(
         result?.toSearchSuggestionsState() ?: SearchSuggestionsState.Loading
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val productSearchResultPagingDataFlow: Flow<PagingData<ProductItem>> =
+        searchQueryValueHolder.stateFlow
+            .filter { it.isNotBlank() }
+            .flatMapLatest { query ->
+                interactor.productSearchResultPager.getProductPagingDataFlow(
+                    query = query,
+                    sorting = Sorting.NEW,
+                )
+            }
+            .cachedIn(viewModelScope)
+            .mapProducts(
+                favoriteProductIdsResultFlow = interactor.getFavoriteProductIdsFlow(),
+                cartProductIdsResultFlow = interactor.getCardProductsIdsFlow(),
+            )
+            .cachedIn(viewModelScope)
+
     private val categoryParentCategoryChainRegex = CATEGORY_PARENT_CATEGORY_CHAIN_PATTERN.toRegex()
+
+    init {
+        handleSizeSelectorResult()
+    }
 
     fun onBackClicked() {
         navigationThrottler.throttle {
@@ -146,6 +193,11 @@ class ProductSearchViewModel @Inject constructor(
             is SearchSuggestionItem.SearchQueryItem -> {
                 emitSideEffect(SideEffect.ReleaseSearchTextFieldFocus)
                 searchModeValueHolder.set(SearchMode.SEARCH_RESULTS)
+                searchTextFieldState.edit {
+                    clear()
+                    append(item.query)
+                    placeCursorAtEnd()
+                }
                 searchQueryValueHolder.set(item.query)
             }
 
@@ -157,6 +209,92 @@ class ProductSearchViewModel @Inject constructor(
             }
 
             is SearchSuggestionItem.GenericTitle -> Unit
+        }
+    }
+
+    fun onProductClicked(product: Product) {
+        navigationThrottler.throttle {
+            val action = ProductSearchScreenAction.ProductClicked(product)
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
+    fun onAddProductToFavoritesClicked(product: Product) {
+        viewModelScope.launch {
+            val params = ToggleProductPresenceInFavoritesUseCase.Params(product.id)
+            interactor.toggleProductPresenceInFavorites(params)
+                .onSuccess { isInFavorites ->
+                    if (isInFavorites) {
+                        val text = Text.Resource(R.string.product_adding_to_favorites_completed)
+                        val message = ZarinaToastMessage(text)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
+                    }
+                }
+                .onFailure {
+                    val messageResId = if (product.isInFavorites) {
+                        R.string.product_removing_from_favorites_error
+                    } else {
+                        R.string.product_adding_to_favorites_error
+                    }
+                    val message = ZarinaToastMessage.error(Text.Resource(messageResId))
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                }
+        }
+    }
+
+    fun onAddProductToCartClicked(product: Product) {
+        if (product.offers.size > 1) {
+            navigationThrottler.throttle {
+                val action = ProductSearchScreenAction.AddProductToCartClicked(product)
+                emitSideEffect(SideEffect.Navigate(action))
+            }
+        } else {
+            val offer = product.offers.firstOrNull() ?: run {
+                Timber.e("Could not add product $product to cart because it has no offers")
+                return
+            }
+            addProductToCart(product.id, offer.barcode)
+        }
+    }
+
+    fun onSubscribeToProductClicked(product: Product) {
+        navigationThrottler.throttle {
+            val action = ProductSearchScreenAction.SubscribeToProductClicked(product)
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
+    private fun addProductToCart(productId: Product.Id, barcode: Barcode) {
+        viewModelScope.launch {
+            val params = AddProductToCartUseCase.Params(
+                productId = productId,
+                barcode = barcode,
+                count = 1,
+            )
+            interactor.addProductToCart(params)
+                .onSuccess {
+                    val text = Text.Resource(R.string.product_adding_to_cart_completed)
+                    val message = ZarinaToastMessage(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                }
+                .onFailure {
+                    val text = Text.Resource(R.string.product_adding_to_cart_error)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                }
+        }
+    }
+
+    private fun handleSizeSelectorResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<SizeSelectorGraph.Result>(
+                key = SizeSelectorGraph.RESULT_KEY,
+            ) { result ->
+                addProductToCart(
+                    productId = result.product.toProductItem().id,
+                    barcode = result.offer.toProductOffer().barcode,
+                )
+            }
         }
     }
 
@@ -229,6 +367,8 @@ class ProductSearchViewModel @Inject constructor(
         data class Navigate(val action: ProductSearchScreenAction) : SideEffect
 
         data object ReleaseSearchTextFieldFocus : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 
     @Parcelize
@@ -262,6 +402,11 @@ class ProductSearchViewModel @Inject constructor(
             val name: String,
             val parentCategoryChain: String?,
         ) : SearchSuggestionItem()
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(backStackEntrySavedStateHandle: SavedStateHandle): ProductSearchViewModel
     }
 
     companion object {

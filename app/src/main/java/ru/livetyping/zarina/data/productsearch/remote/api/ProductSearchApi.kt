@@ -5,9 +5,15 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.timeout
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
 import ru.livetyping.zarina.BuildConfig
+import ru.livetyping.zarina.data.productsearch.remote.api.dto.ProductSearchSortingDto
+import ru.livetyping.zarina.data.productsearch.remote.api.dto.SearchProductsDto
+import ru.livetyping.zarina.data.productsearch.remote.api.dto.SearchProductsRequestBody
 import ru.livetyping.zarina.data.productsearch.remote.api.dto.SearchSuggestionsDto
 import ru.livetyping.zarina.di.Qualifiers
+import ru.livetyping.zarina.domain.common.Sorting
+import ru.livetyping.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
 
 class ProductSearchApi @Inject constructor(
@@ -16,6 +22,9 @@ class ProductSearchApi @Inject constructor(
 
     @Qualifiers.AnyQuery(Qualifiers.AnyQueryType.AUTOCOMPLETE)
     private val autocompleteHttpClient: HttpClient,
+
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
+    private val httpClient: HttpClient,
 ) {
     suspend fun getSearchSuggestions(query: String): SearchSuggestionsDto {
         return autocompleteHttpClient.get("autocomplete") {
@@ -26,6 +35,21 @@ class ProductSearchApi @Inject constructor(
             timeout {
                 // TODO: [High] Set timeout to 2 seconds
             }
+        }.body()
+    }
+
+    suspend fun searchProducts(
+        query: String,
+        sorting: Sorting,
+        offset: Int,
+    ): SearchProductsDto {
+        val body = SearchProductsRequestBody(
+            query = query,
+            sort = ProductSearchSortingDto.from(sorting),
+            offset = offset,
+        )
+        return httpClient.post("/api/search/") {
+            setJsonBody(body)
         }.body()
     }
 }
