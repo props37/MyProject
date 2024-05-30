@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
+import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.presentation.navigation.destination.graph.SignInGraph
 import ru.livetyping.zarina.presentation.navigation.destination.graph.SignUpGraph
@@ -50,7 +51,12 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
 
         ProfileScreen(
             viewModel = hiltViewModel { factory: ProfileViewModel.Factory ->
-                factory.create(it.savedStateHandle)
+                val citySelectorResultFlow = it.savedStateHandle
+                    .getStateFlow<UnscopedDestinations.CitySelector.Result?>(
+                        key = UnscopedDestinations.CitySelector.RESULT_KEY,
+                        initialValue = null,
+                    )
+                factory.create(citySelectorResultFlow)
             },
             navigate = { action ->
                 when (action) {

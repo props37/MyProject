@@ -67,17 +67,14 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiltViewModel(assistedFactory = ProductSearchViewModel.Factory::class)
 class ProductSearchViewModel @AssistedInject constructor(
     @Assisted
-    backStackEntrySavedStateHandle: SavedStateHandle,
+    private val sizeSelectorResultFlow: StateFlow<SizeSelectorGraph.Result?>,
     savedStateHandle: SavedStateHandle,
     private val interactor: ProductSearchInteractor,
 ) : ViewModel(), SideEffectSource<ProductSearchViewModel.SideEffect> by SideEffectSourceImpl() {
 
     private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
 
-    private val screenResultHandler = ScreenResultHandler(
-        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
-        savedStateHandle = savedStateHandle,
-    )
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -290,7 +287,8 @@ class ProductSearchViewModel @AssistedInject constructor(
     private fun handleSizeSelectorResult() {
         viewModelScope.launch {
             screenResultHandler.handle<SizeSelectorGraph.Result>(
-                key = SizeSelectorGraph.RESULT_KEY,
+                resultFlow = sizeSelectorResultFlow,
+                key = KEY_SIZE_SELECTOR_RESULT,
             ) { result ->
                 addProductToCart(
                     productId = result.product.toProductItem().id,
@@ -408,12 +406,16 @@ class ProductSearchViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(backStackEntrySavedStateHandle: SavedStateHandle): ProductSearchViewModel
+        fun create(
+            sizeSelectorResultFlow: StateFlow<SizeSelectorGraph.Result?>,
+        ): ProductSearchViewModel
     }
 
     companion object {
         private const val KEY_SEARCH_MODE = "search_mode"
         private const val KEY_SEARCH_QUERY = "search_query"
+
+        private const val KEY_SIZE_SELECTOR_RESULT = "size_selector_result"
 
         private const val SEARCH_SUGGESTIONS_QUERIES_MAX_COUNT = 5
         private const val SEARCH_SUGGESTIONS_CATEGORIES_MAX_COUNT = 5

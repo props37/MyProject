@@ -44,15 +44,12 @@ import timber.log.Timber
 @HiltViewModel(assistedFactory = FiltersViewModel.Factory::class)
 class FiltersViewModel @AssistedInject constructor(
     @Assisted
-    backStackEntrySavedStateHandle: SavedStateHandle,
+    private val listFilterResultFlow: StateFlow<UnscopedDestinations.ListFilter.Result?>,
     private val savedStateHandle: SavedStateHandle,
     private val interactor: FiltersInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
-    private val screenResultHandler = ScreenResultHandler(
-        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
-        savedStateHandle = savedStateHandle,
-    )
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -209,7 +206,8 @@ class FiltersViewModel @AssistedInject constructor(
     private fun handleListFilterResult() {
         viewModelScope.launch {
             screenResultHandler.handle<UnscopedDestinations.ListFilter.Result>(
-                key = UnscopedDestinations.ListFilter.RESULT_KEY,
+                resultFlow = listFilterResultFlow,
+                key = KEY_RESULT_LIST_FILTER,
             ) { result ->
                 val filter = result.filter.toListFilter()
                 val newFilters = filters.value?.updateWith(filter)
@@ -237,10 +235,13 @@ class FiltersViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(backStackEntrySavedStateHandle: SavedStateHandle): FiltersViewModel
+        fun create(
+            listFilterResultFlow: StateFlow<UnscopedDestinations.ListFilter.Result?>,
+        ): FiltersViewModel
     }
 
     companion object {
         private const val KEY_FILTERS = "filters"
+        private const val KEY_RESULT_LIST_FILTER = "result_list_filter"
     }
 }

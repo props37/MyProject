@@ -31,7 +31,12 @@ fun NavGraphBuilder.orderScreen(navController: NavHostController) {
     ) {
         OrderScreen(
             viewModel = hiltViewModel { factory: OrderViewModel.Factory ->
-                factory.create(it.savedStateHandle)
+                val orderCancellationResultFlow = it.savedStateHandle
+                    .getStateFlow<ProfileGraph.OrderCancellation.Result?>(
+                        key = ProfileGraph.OrderCancellation.RESULT_KEY,
+                        initialValue = null,
+                    )
+                factory.create(orderCancellationResultFlow)
             },
             navigate = { action ->
                 when (action) {

@@ -48,7 +48,12 @@ fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
     ) {
         FiltersScreen(
             viewModel = hiltViewModel { factory: FiltersViewModel.Factory ->
-                factory.create(it.savedStateHandle)
+                val listFilterResultFlow = it.savedStateHandle
+                    .getStateFlow<UnscopedDestinations.ListFilter.Result?>(
+                        key = UnscopedDestinations.ListFilter.RESULT_KEY,
+                        initialValue = null,
+                    )
+                factory.create(listFilterResultFlow)
             },
             navigateForward = { action ->
                 when (action) {

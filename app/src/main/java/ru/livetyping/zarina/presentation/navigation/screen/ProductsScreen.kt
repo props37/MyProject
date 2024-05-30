@@ -8,6 +8,7 @@ import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CatalogGraph
+import ru.livetyping.zarina.presentation.navigation.destination.graph.SizeSelectorGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.navigateToSizeSelectorGraph
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
@@ -60,7 +61,17 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
     ) {
         ProductsScreen(
             viewModel = hiltViewModel { factory: ProductsViewModel.Factory ->
-                factory.create(it.savedStateHandle)
+                val filtersResultFlow = it.savedStateHandle
+                    .getStateFlow<UnscopedDestinations.Filters.Result?>(
+                        key = UnscopedDestinations.Filters.RESULT_KEY,
+                        initialValue = null,
+                    )
+                val sizeSelectorResultFlow = it.savedStateHandle
+                    .getStateFlow<SizeSelectorGraph.Result?>(
+                        key = SizeSelectorGraph.RESULT_KEY,
+                        initialValue = null,
+                    )
+                factory.create(filtersResultFlow, sizeSelectorResultFlow)
             },
             navigate = { action ->
                 when (action) {

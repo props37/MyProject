@@ -55,17 +55,16 @@ import ru.livetyping.zarina.util.library.coroutines.mapState
 @HiltViewModel(assistedFactory = CartViewModel.Factory::class)
 class CartViewModel @AssistedInject constructor(
     @Assisted
-    backStackEntrySavedStateHandle: SavedStateHandle,
+    private val citySelectorResultFlow: StateFlow<UnscopedDestinations.CitySelector.Result?>,
+    @Assisted
+    private val productCountSelectorResultFlow: StateFlow<CartGraph.ProductCountSelector.Result?>,
     savedStateHandle: SavedStateHandle,
     private val interactor: CartInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val screenResultHandler = ScreenResultHandler(
-        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
-        savedStateHandle = savedStateHandle,
-    )
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private var clearCartJob: Job? = null
 
@@ -234,7 +233,8 @@ class CartViewModel @AssistedInject constructor(
     private fun handleCitySelectorResult() {
         viewModelScope.launch {
             screenResultHandler.handle<UnscopedDestinations.CitySelector.Result>(
-                key = UnscopedDestinations.CitySelector.RESULT_KEY,
+                resultFlow = citySelectorResultFlow,
+                key = KEY_RESULT_CITY_SELECTOR_RESULT,
             ) { result ->
                 val newCity = result.city.toCity()
                 val currentCity = city.value
@@ -254,7 +254,8 @@ class CartViewModel @AssistedInject constructor(
     private fun handleProductCountSelectorResult() {
         viewModelScope.launch {
             screenResultHandler.handle<CartGraph.ProductCountSelector.Result>(
-                key = CartGraph.ProductCountSelector.RESULT_KEY,
+                resultFlow = productCountSelectorResultFlow,
+                key = KEY_RESULT_PRODUCT_COUNT_SELECTOR,
             ) { result ->
                 if (result.countChanged) {
                     cartFetchRequests.trySend(Unit)
@@ -346,6 +347,14 @@ class CartViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(backStackEntrySavedStateHandle: SavedStateHandle): CartViewModel
+        fun create(
+            citySelectorResultFlow: StateFlow<UnscopedDestinations.CitySelector.Result?>,
+            productCountSelectorResultFlow: StateFlow<CartGraph.ProductCountSelector.Result?>,
+        ): CartViewModel
+    }
+
+    companion object {
+        private const val KEY_RESULT_CITY_SELECTOR_RESULT = "result_city_selector"
+        private const val KEY_RESULT_PRODUCT_COUNT_SELECTOR = "result_product_count_selector"
     }
 }

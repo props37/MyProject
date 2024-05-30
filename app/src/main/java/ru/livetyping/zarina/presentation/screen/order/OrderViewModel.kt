@@ -36,17 +36,14 @@ import ru.livetyping.zarina.util.library.coroutines.mapState
 @HiltViewModel(assistedFactory = OrderViewModel.Factory::class)
 class OrderViewModel @AssistedInject constructor(
     @Assisted
-    backStackEntrySavedStateHandle: SavedStateHandle,
+    private val orderCancellationResultFlow: StateFlow<ProfileGraph.OrderCancellation.Result?>,
     savedStateHandle: SavedStateHandle,
     private val interactor: OrderInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val screenResultHandler = ScreenResultHandler(
-        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
-        savedStateHandle = savedStateHandle,
-    )
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val orderId: StateFlow<Order.Id> = savedStateHandle
         .getStateFlow<Long?>(
@@ -138,7 +135,8 @@ class OrderViewModel @AssistedInject constructor(
     private fun handleOrderCancellationResult() {
         viewModelScope.launch {
             screenResultHandler.handle<ProfileGraph.OrderCancellation.Result>(
-                key = ProfileGraph.OrderCancellation.RESULT_KEY,
+                resultFlow = orderCancellationResultFlow,
+                key = KEY_RESULT_ORDER_CANCELLATION,
             ) {
                 orderFetchingInfoHolder.requestFetching(OrderFetchingType.LOADING)
             }
@@ -164,6 +162,12 @@ class OrderViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(backStackEntrySavedStateHandle: SavedStateHandle): OrderViewModel
+        fun create(
+            orderCancellationResultFlow: StateFlow<ProfileGraph.OrderCancellation.Result?>,
+        ): OrderViewModel
+    }
+
+    companion object {
+        private const val KEY_RESULT_ORDER_CANCELLATION = "result_order_cancellation"
     }
 }

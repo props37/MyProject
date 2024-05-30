@@ -38,15 +38,12 @@ import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 @HiltViewModel(assistedFactory = ProfileViewModel.Factory::class)
 class ProfileViewModel @AssistedInject constructor(
     @Assisted
-    backStackEntrySavedStateHandle: SavedStateHandle,
+    private val citySelectorResultFlow: StateFlow<UnscopedDestinations.CitySelector.Result?>,
     savedStateHandle: SavedStateHandle,
     private val interactor: ProfileInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
-    private val screenResultHandler = ScreenResultHandler(
-        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
-        savedStateHandle = savedStateHandle,
-    )
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -169,7 +166,8 @@ class ProfileViewModel @AssistedInject constructor(
     private fun handleCitySelectorResult() {
         viewModelScope.launch {
             screenResultHandler.handle<UnscopedDestinations.CitySelector.Result>(
-                key = UnscopedDestinations.CitySelector.RESULT_KEY,
+                resultFlow = citySelectorResultFlow,
+                key = KEY_RESULT_CITY_SELECTOR,
             ) { result ->
                 val newCity = result.city.toCity()
                 val currentCity = city.value
@@ -206,10 +204,14 @@ class ProfileViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(backStackEntrySavedStateHandle: SavedStateHandle): ProfileViewModel
+        fun create(
+            citySelectorResultFlow: StateFlow<UnscopedDestinations.CitySelector.Result?>,
+        ): ProfileViewModel
     }
 
     companion object {
+        private const val KEY_RESULT_CITY_SELECTOR = "result_city_selector"
+
         private const val HELP_URL = "https://zarina.ru/help/"
         private const val ABOUT_COMPANY_URL = "https://zarina.ru/about/"
     }

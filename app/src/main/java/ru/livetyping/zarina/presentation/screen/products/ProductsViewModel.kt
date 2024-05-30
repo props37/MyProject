@@ -60,17 +60,16 @@ import timber.log.Timber
 @HiltViewModel(assistedFactory = ProductsViewModel.Factory::class)
 class ProductsViewModel @AssistedInject constructor(
     @Assisted
-    backStackEntrySavedStateHandle: SavedStateHandle,
+    private val filtersResultFlow: StateFlow<UnscopedDestinations.Filters.Result?>,
+    @Assisted
+    private val sizeSelectorResultFlow: StateFlow<SizeSelectorGraph.Result?>,
     private val savedStateHandle: SavedStateHandle,
     private val interactor: ProductsInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
 
-    private val screenResultHandler = ScreenResultHandler(
-        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
-        savedStateHandle = savedStateHandle,
-    )
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -339,7 +338,8 @@ class ProductsViewModel @AssistedInject constructor(
     private fun handleFiltersResult() {
         viewModelScope.launch {
             screenResultHandler.handle<UnscopedDestinations.Filters.Result>(
-                key = UnscopedDestinations.Filters.RESULT_KEY,
+                resultFlow = filtersResultFlow,
+                key = KEY_FILTERS_RESULT,
             ) { result ->
                 val filters = result.filters.toFilters()
                 val filtersParcelable = FiltersParcelable.from(filters)
@@ -351,7 +351,8 @@ class ProductsViewModel @AssistedInject constructor(
     private fun handleSizeSelectorResult() {
         viewModelScope.launch {
             screenResultHandler.handle<SizeSelectorGraph.Result>(
-                key = SizeSelectorGraph.RESULT_KEY,
+                resultFlow = sizeSelectorResultFlow,
+                key = KEY_SIZE_SELECTOR_RESULT,
             ) { result ->
                 addProductToCart(
                     productId = result.product.toProductItem().id,
@@ -377,10 +378,16 @@ class ProductsViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(backStackEntrySavedStateHandle: SavedStateHandle): ProductsViewModel
+        fun create(
+            filtersResultFlow: StateFlow<UnscopedDestinations.Filters.Result?>,
+            sizeSelectorResultFlow: StateFlow<SizeSelectorGraph.Result?>,
+        ): ProductsViewModel
     }
 
     companion object {
         private const val KEY_FILTERS = "filters"
+
+        private const val KEY_FILTERS_RESULT = "filters_result"
+        private const val KEY_SIZE_SELECTOR_RESULT = "size_selector_result"
     }
 }
