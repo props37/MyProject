@@ -50,7 +50,7 @@ libphonenumber = "8.13.35"
 timber = "5.0.1"
 leakCanary = "2.14"
 
-googlePlayServices-location = "21.2.0"
+googlePlayServices-location = "21.3.0"
 googlePlayServices-maps = "18.2.0"
 googlePlayServices-maps-compose = "5.0.1"
 
