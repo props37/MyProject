@@ -30,8 +30,8 @@ jetpack-espresso = "3.5.1"
 jetpack-benchmark = "1.2.4"
 
 jetpack-compose-bom = "2024.05.00"
-jetpack-compose = "1.7.0-beta01"
-jetpack-compose-media3 = "1.3.0-beta01"
+jetpack-compose = "1.7.0-beta02"
+jetpack-compose-media3 = "1.3.0-beta02"
 jetpack-compose-compiler = "1.5.14"
 
 ktor = "2.3.11"
