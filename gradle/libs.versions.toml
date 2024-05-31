@@ -56,7 +56,7 @@ googlePlayServices-maps-compose = "5.0.1"
 
 recaptcha = "18.5.1"
 
-firebase-bom = "33.0.0"
+firebase-bom = "33.1.0"
 
 firebase-performance = "1.4.2"
 mindbox = "2.9.1"
