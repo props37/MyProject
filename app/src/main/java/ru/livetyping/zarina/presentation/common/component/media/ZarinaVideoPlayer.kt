@@ -156,6 +156,7 @@ fun ZarinaVideoPlayer(
         lifecycleScope.launch(Dispatchers.Default) {
             lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 placedEvents.first()
+                delay(100.milliseconds)
                 xOffset.intValue = 1
                 delay(50.milliseconds)
                 xOffset.intValue = 0
