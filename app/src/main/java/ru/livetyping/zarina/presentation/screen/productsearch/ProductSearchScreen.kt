@@ -65,6 +65,7 @@ fun ProductSearchScreen(
         onSearchTextFieldFocused = viewModel::onSearchTextFieldFocused,
         searchMode = searchMode,
         onSearchBarCancelClicked = viewModel::onSearchTextFieldCancelClicked,
+        onFiltersClicked = viewModel::onFiltersClicked,
         searchAutocompleteSuggestions = searchAutocompleteSuggestions,
         onSearchAutocompleteSuggestionClicked = viewModel::onSearchAutocompleteSuggestionClicked,
         searchSuggestionsState = searchSuggestionsState,
@@ -87,6 +88,7 @@ private fun ScreenContent(
     onSearchTextFieldFocused: () -> Unit,
     searchMode: SearchMode,
     onSearchBarCancelClicked: () -> Unit,
+    onFiltersClicked: () -> Unit,
     searchAutocompleteSuggestions: ImmutableList<ProductSearchSuggestions.AutocompleteSuggestion>,
     onSearchAutocompleteSuggestionClicked: (ProductSearchSuggestions.AutocompleteSuggestion) -> Unit,
     searchSuggestionsState: SearchSuggestionsState,
@@ -130,6 +132,7 @@ private fun ScreenContent(
             onSearchTextFieldCancelClicked = onSearchBarCancelClicked,
             searchMode = searchMode,
             onBackClicked = onBackClicked,
+            onFiltersClicked = onFiltersClicked,
             modifier = Modifier.focusRequester(focusRequester),
         )
 

@@ -211,6 +211,10 @@ class ProductSearchViewModel @AssistedInject constructor(
         }
     }
 
+    fun onFiltersClicked() {
+        // TODO: [High] Implement
+    }
+
     fun onProductClicked(product: Product) {
         navigationThrottler.throttle {
             val action = ProductSearchScreenAction.ProductClicked(product)
