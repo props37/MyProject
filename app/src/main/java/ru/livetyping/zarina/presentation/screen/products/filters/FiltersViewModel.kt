@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.filters
+package ru.livetyping.zarina.presentation.screen.products.filters
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -35,7 +35,7 @@ import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.filter.FiltersParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
-import ru.livetyping.zarina.presentation.screen.filters.FiltersViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.products.filters.FiltersViewModel.SideEffect
 import ru.livetyping.zarina.usecase.product.GetCategoryProductInfoFlowUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState

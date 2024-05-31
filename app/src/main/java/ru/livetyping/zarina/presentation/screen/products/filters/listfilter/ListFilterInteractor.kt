@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.filters.listfilter
+package ru.livetyping.zarina.presentation.screen.products.filters.listfilter
 
 import ru.livetyping.zarina.usecase.user.GetUserCityFlowUseCase
 import javax.inject.Inject

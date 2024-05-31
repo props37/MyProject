@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.filters
+package ru.livetyping.zarina.presentation.screen.products.filters
 
 import ru.livetyping.zarina.domain.filter.Filters
 

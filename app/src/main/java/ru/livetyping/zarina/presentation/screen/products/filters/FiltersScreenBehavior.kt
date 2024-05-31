@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.filters
+package ru.livetyping.zarina.presentation.screen.products.filters
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -10,7 +10,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
-import ru.livetyping.zarina.presentation.screen.filters.FiltersViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.products.filters.FiltersViewModel.SideEffect
 
 @Composable
 fun FiltersScreenBehavior(

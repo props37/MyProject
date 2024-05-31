@@ -12,10 +12,10 @@ import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopExitTransition
-import ru.livetyping.zarina.presentation.screen.filters.FiltersScreen
-import ru.livetyping.zarina.presentation.screen.filters.FiltersScreenAction
-import ru.livetyping.zarina.presentation.screen.filters.FiltersScreenResult
-import ru.livetyping.zarina.presentation.screen.filters.FiltersViewModel
+import ru.livetyping.zarina.presentation.screen.products.filters.FiltersScreen
+import ru.livetyping.zarina.presentation.screen.products.filters.FiltersScreenAction
+import ru.livetyping.zarina.presentation.screen.products.filters.FiltersScreenResult
+import ru.livetyping.zarina.presentation.screen.products.filters.FiltersViewModel
 import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.filtersScreen(navController: NavHostController) {

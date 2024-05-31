@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.filters
+package ru.livetyping.zarina.presentation.screen.products.filters
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -20,10 +20,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.domain.filter.Filter
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.presentation.screen.filters.FiltersScreenComponents.FilterList
-import ru.livetyping.zarina.presentation.screen.filters.FiltersScreenComponents.TopBar
-import ru.livetyping.zarina.presentation.screen.filters.FiltersScreenComponents.TopBarActions
-import ru.livetyping.zarina.presentation.screen.filters.FiltersViewModel.FilterListState
+import ru.livetyping.zarina.presentation.screen.products.filters.FiltersScreenComponents.FilterList
+import ru.livetyping.zarina.presentation.screen.products.filters.FiltersScreenComponents.TopBar
+import ru.livetyping.zarina.presentation.screen.products.filters.FiltersScreenComponents.TopBarActions
+import ru.livetyping.zarina.presentation.screen.products.filters.FiltersViewModel.FilterListState
+import ru.livetyping.zarina.presentation.screen.products.filters.FiltersViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable
@@ -70,7 +71,7 @@ private fun ScreenContent(
     productCount: Int?,
     onShowProductsClicked: () -> Unit,
     onFilterListErrorRefreshClicked: () -> Unit,
-    sideEffects: Flow<FiltersViewModel.SideEffect>,
+    sideEffects: Flow<SideEffect>,
     navigateForward: (FiltersScreenAction) -> Unit,
     navigateBackward: (FiltersScreenResult) -> Unit,
 ) {
@@ -116,4 +117,3 @@ private fun Preview() {
         // TODO: [Low] Add preview
     }
 }
-

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.filters
+package ru.livetyping.zarina.presentation.screen.products.filters
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -67,7 +67,7 @@ import ru.livetyping.zarina.presentation.common.component.switchh.ZarinaSwitch
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.util.domain.nameResId
-import ru.livetyping.zarina.presentation.screen.filters.FiltersViewModel.FilterListState
+import ru.livetyping.zarina.presentation.screen.products.filters.FiltersViewModel.FilterListState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
