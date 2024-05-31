@@ -25,6 +25,7 @@ fun NavGraphBuilder.productScreen(navController: NavHostController) {
             when (initialState.destination.route) {
                 UnscopedDestinations.Product.routeSchema,
                 UnscopedDestinations.Products.routeSchema,
+                UnscopedDestinations.ProductSearch.routeSchema,
                 FavoritesGraph.Favorites.routeSchema -> slideEnterTransition()
 
                 else -> null
@@ -46,6 +47,7 @@ fun NavGraphBuilder.productScreen(navController: NavHostController) {
             when (targetState.destination.route) {
                 UnscopedDestinations.Product.routeSchema,
                 UnscopedDestinations.Products.routeSchema,
+                UnscopedDestinations.ProductSearch.routeSchema,
                 FavoritesGraph.Favorites.routeSchema -> slidePopExitTransition()
 
                 else -> null

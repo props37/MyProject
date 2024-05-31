@@ -30,13 +30,19 @@ fun NavGraphBuilder.productSearchScreen(navController: NavHostController) {
         },
         exitTransition = {
             when (targetState.destination.route) {
-                UnscopedDestinations.Products.routeSchema -> slideExitTransition()
+                UnscopedDestinations.Products.routeSchema,
+                UnscopedDestinations.ProductSubscription.routeSchema,
+                UnscopedDestinations.Product.routeSchema -> slideExitTransition()
+
                 else -> null
             }
         },
         popEnterTransition = {
             when (initialState.destination.route) {
-                UnscopedDestinations.Products.routeSchema -> slidePopEnterTransition()
+                UnscopedDestinations.Products.routeSchema,
+                UnscopedDestinations.ProductSubscription.routeSchema,
+                UnscopedDestinations.Product.routeSchema -> slidePopEnterTransition()
+
                 else -> null
             }
         },

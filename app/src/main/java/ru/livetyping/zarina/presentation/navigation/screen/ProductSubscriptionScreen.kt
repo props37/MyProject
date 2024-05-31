@@ -20,6 +20,7 @@ fun NavGraphBuilder.productSubscriptionScreen(navController: NavHostController) 
         enterTransition = {
             when (initialState.destination.route) {
                 UnscopedDestinations.Products.routeSchema,
+                UnscopedDestinations.ProductSearch.routeSchema,
                 FavoritesGraph.Favorites.routeSchema -> slideEnterTransition()
 
                 else -> null
@@ -28,6 +29,7 @@ fun NavGraphBuilder.productSubscriptionScreen(navController: NavHostController) 
         popExitTransition = {
             when (targetState.destination.route) {
                 UnscopedDestinations.Products.routeSchema,
+                UnscopedDestinations.ProductSearch.routeSchema,
                 FavoritesGraph.Favorites.routeSchema -> slidePopExitTransition()
 
                 else -> null
