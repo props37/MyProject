@@ -54,7 +54,7 @@ googlePlayServices-location = "21.3.0"
 googlePlayServices-maps = "18.2.0"
 googlePlayServices-maps-compose = "5.0.1"
 
-recaptcha = "18.5.0"
+recaptcha = "18.5.1"
 
 firebase-bom = "33.0.0"
 
