@@ -2,6 +2,7 @@ package ru.livetyping.zarina.presentation.screen.catalog
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -263,6 +264,7 @@ object CatalogScreenComponents {
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .heightIn(min = CategoryListItemMinHeight)
+                .background(UiKitTheme.colors.background.general.regular.default)
                 .clickable { onItemClicked(item) }
                 .padding(CategoryListItemContentPadding)
                 .padding(start = CategoryListItemNestingStartPadding * item.nestingLevel),
@@ -330,6 +332,7 @@ object CatalogScreenComponents {
             modifier = modifier
                 .heightIn(min = CategoryListItemMinHeight)
                 .clickable { onItemClicked(item) }
+                .background(UiKitTheme.colors.background.general.regular.default)
                 .padding(CategoryListItemContentPadding)
                 .padding(start = CategoryListItemNestingStartPadding * item.nestingLevel),
         ) {
