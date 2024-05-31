@@ -136,7 +136,10 @@ private fun ScreenContent(
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = email.isNotEmpty(),
-                        onClick = { onEmailChanged("") },
+                        onClick = {
+                            onEmailChanged("")
+                            emailFocusRequester.tryRequestFocus()
+                        },
                     )
                 },
                 keyboardOptions = remember {

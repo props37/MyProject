@@ -29,7 +29,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -62,6 +64,7 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransit
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.navigationBarsOrIme
 import ru.livetyping.zarina.util.compose.plus
+import ru.livetyping.zarina.util.compose.tryRequestFocus
 
 @Suppress("ConstPropertyName")
 object CitySelectorScreenComponents {
@@ -101,6 +104,7 @@ object CitySelectorScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         val focusState = remember { mutableStateOf<FocusState?>(null) }
+        val focusRequester = remember { FocusRequester() }
 
         ZarinaTextField(
             value = cityNameQuery,
@@ -118,7 +122,10 @@ object CitySelectorScreenComponents {
             innerTrailingContent = {
                 ZarinaTextFieldDefaults.ClearButton(
                     isVisible = cityNameQuery.isNotEmpty(),
-                    onClick = onClearClicked,
+                    onClick = {
+                        onClearClicked()
+                        focusRequester.tryRequestFocus()
+                    },
                 )
             },
             outerTrailingContent = {
@@ -137,7 +144,9 @@ object CitySelectorScreenComponents {
                 }
             },
             singleLine = true,
-            modifier = modifier.onFocusChanged { focusState.value = it },
+            modifier = modifier
+                .onFocusChanged { focusState.value = it }
+                .focusRequester(focusRequester),
         )
     }
 

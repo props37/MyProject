@@ -212,7 +212,10 @@ private fun ScreenContent(
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = firstName.isNotEmpty(),
-                        onClick = { onFirstNameChanged("") },
+                        onClick = {
+                            onFirstNameChanged("")
+                            firstNameFocusRequester.tryRequestFocus()
+                        },
                     )
                 },
                 keyboardOptions = remember { KeyboardOptions(imeAction = ImeAction.Next) },
@@ -225,6 +228,7 @@ private fun ScreenContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            val emailFocusRequester = remember { FocusRequester() }
             ZarinaTextField(
                 value = email,
                 onValueChanged = onEmailChanged,
@@ -234,7 +238,10 @@ private fun ScreenContent(
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = email.isNotEmpty(),
-                        onClick = { onEmailChanged("") },
+                        onClick = {
+                            onEmailChanged("")
+                            emailFocusRequester.tryRequestFocus()
+                        },
                     )
                 },
                 keyboardOptions = remember {
@@ -246,7 +253,8 @@ private fun ScreenContent(
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .focusRequester(emailFocusRequester),
             )
 
             Spacer(modifier = Modifier.height(16.dp))

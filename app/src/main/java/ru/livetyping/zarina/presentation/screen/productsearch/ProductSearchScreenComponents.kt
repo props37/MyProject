@@ -40,7 +40,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -71,6 +73,7 @@ import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewM
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.compose.animation.Crossfade
+import ru.livetyping.zarina.util.compose.tryRequestFocus
 import ru.livetyping.zarina.util.kotlin.capitalize
 import ru.livetyping.zarina.util.kotlin.findSubstringBounds
 
@@ -119,6 +122,7 @@ object ProductSearchScreenComponents {
             }
 
             val focusState = remember { mutableStateOf<FocusState?>(null) }
+            val focusRequester = remember { FocusRequester() }
             ZarinaTextField(
                 state = searchTextFieldState,
                 size = ZarinaTextFieldSize.Small,
@@ -135,7 +139,10 @@ object ProductSearchScreenComponents {
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = searchTextFieldState.text.isNotEmpty(),
-                        onClick = searchTextFieldState::clearText,
+                        onClick = {
+                            searchTextFieldState.clearText()
+                            focusRequester.tryRequestFocus()
+                        },
                     )
                 },
                 outerTrailingContent = {
@@ -162,10 +169,12 @@ object ProductSearchScreenComponents {
                     onSearchTextFieldSearchClicked()
                 },
                 lineLimits = TextFieldLineLimits.SingleLine,
-                modifier = Modifier.onFocusChanged {
-                    focusState.value = it
-                    if (it.isFocused) onSearchTextFieldFocused()
-                },
+                modifier = Modifier
+                    .onFocusChanged {
+                        focusState.value = it
+                        if (it.isFocused) onSearchTextFieldFocused()
+                    }
+                    .focusRequester(focusRequester),
             )
         }
     }

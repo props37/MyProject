@@ -18,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -43,6 +45,7 @@ import ru.livetyping.zarina.presentation.screen.signin.SignInViewModel.SignInTyp
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.navigationBarsOrIme
 import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
+import ru.livetyping.zarina.util.compose.tryRequestFocus
 
 object SignInScreenComponents {
 
@@ -174,6 +177,7 @@ object SignInScreenComponents {
         Column(modifier = modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(TopPadding))
 
+            val emailFocusRequester = remember { FocusRequester() }
             ZarinaTextField(
                 value = email,
                 onValueChanged = onEmailChanged,
@@ -185,7 +189,10 @@ object SignInScreenComponents {
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = email.isNotEmpty(),
-                        onClick = { onEmailChanged("") },
+                        onClick = {
+                            onEmailChanged("")
+                            emailFocusRequester.tryRequestFocus()
+                        },
                     )
                 },
                 keyboardOptions = remember {
@@ -197,7 +204,8 @@ object SignInScreenComponents {
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .focusRequester(emailFocusRequester),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
