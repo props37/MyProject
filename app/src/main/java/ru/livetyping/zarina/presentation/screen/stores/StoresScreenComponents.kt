@@ -285,6 +285,7 @@ object StoresScreenComponents {
             ) {
                 val clusterItems = remember(stores) {
                     stores.map { StoreClusterItem(it) }
+//                    emptyList<StoreClusterItem>()
                 }
                 Clustering(
                     items = clusterItems,
@@ -351,13 +352,13 @@ object StoresScreenComponents {
             contentAlignment = Alignment.Center,
             modifier = modifier
                 .size(52.dp)
+                .background(
+                    color = UiKitTheme.colors.background.general.regular.default,
+                    shape = CircleShape,
+                )
                 .border(
                     width = 1.dp,
                     color = UiKitTheme.colors.border.general.active,
-                    shape = CircleShape,
-                )
-                .background(
-                    color = UiKitTheme.colors.background.general.regular.default,
                     shape = CircleShape,
                 ),
         ) {
