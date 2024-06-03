@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.products.filters.listfilter
+package ru.livetyping.zarina.presentation.screen.filters.listfilter
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -19,7 +19,7 @@ import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.filter.ListFilterParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
-import ru.livetyping.zarina.presentation.screen.products.filters.listfilter.ListFilterViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.filters.listfilter.ListFilterViewModel.SideEffect
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState

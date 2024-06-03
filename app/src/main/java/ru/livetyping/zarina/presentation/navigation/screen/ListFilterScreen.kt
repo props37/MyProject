@@ -8,8 +8,8 @@ import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopExitTransition
-import ru.livetyping.zarina.presentation.screen.products.filters.listfilter.ListFilterScreen
-import ru.livetyping.zarina.presentation.screen.products.filters.listfilter.ListFilterScreenResult
+import ru.livetyping.zarina.presentation.screen.filters.listfilter.ListFilterScreen
+import ru.livetyping.zarina.presentation.screen.filters.listfilter.ListFilterScreenResult
 import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.listFilterScreen(navController: NavHostController) {

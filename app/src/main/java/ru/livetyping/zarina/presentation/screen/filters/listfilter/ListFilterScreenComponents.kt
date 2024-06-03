@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.products.filters.listfilter
+package ru.livetyping.zarina.presentation.screen.filters.listfilter
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.products.filters.listfilter
+package ru.livetyping.zarina.presentation.screen.filters.listfilter
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -32,11 +32,11 @@ import ru.livetyping.zarina.domain.filter.ListFilterItem
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.common.util.domain.nameResId
-import ru.livetyping.zarina.presentation.screen.products.filters.listfilter.ListFilterScreenComponents.ApplyButton
-import ru.livetyping.zarina.presentation.screen.products.filters.listfilter.ListFilterScreenComponents.FilterItems
-import ru.livetyping.zarina.presentation.screen.products.filters.listfilter.ListFilterScreenComponents.TopBar
-import ru.livetyping.zarina.presentation.screen.products.filters.listfilter.ListFilterScreenComponents.TopBarActions
-import ru.livetyping.zarina.presentation.screen.products.filters.listfilter.ListFilterViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.filters.listfilter.ListFilterScreenComponents.ApplyButton
+import ru.livetyping.zarina.presentation.screen.filters.listfilter.ListFilterScreenComponents.FilterItems
+import ru.livetyping.zarina.presentation.screen.filters.listfilter.ListFilterScreenComponents.TopBar
+import ru.livetyping.zarina.presentation.screen.filters.listfilter.ListFilterScreenComponents.TopBarActions
+import ru.livetyping.zarina.presentation.screen.filters.listfilter.ListFilterViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.plus
 
