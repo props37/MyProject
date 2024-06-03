@@ -32,7 +32,8 @@ fun NavGraphBuilder.productSearchScreen(navController: NavHostController) {
             when (targetState.destination.route) {
                 UnscopedDestinations.Products.routeSchema,
                 UnscopedDestinations.ProductSubscription.routeSchema,
-                UnscopedDestinations.Product.routeSchema -> slideExitTransition()
+                UnscopedDestinations.Product.routeSchema,
+                UnscopedDestinations.ProductSearchFilters.routeSchema -> slideExitTransition()
 
                 else -> null
             }
@@ -41,7 +42,8 @@ fun NavGraphBuilder.productSearchScreen(navController: NavHostController) {
             when (initialState.destination.route) {
                 UnscopedDestinations.Products.routeSchema,
                 UnscopedDestinations.ProductSubscription.routeSchema,
-                UnscopedDestinations.Product.routeSchema -> slidePopEnterTransition()
+                UnscopedDestinations.Product.routeSchema,
+                UnscopedDestinations.ProductSearchFilters.routeSchema -> slidePopEnterTransition()
 
                 else -> null
             }
@@ -61,7 +63,12 @@ fun NavGraphBuilder.productSearchScreen(navController: NavHostController) {
                         key = SizeSelectorGraph.RESULT_KEY,
                         initialValue = null,
                     )
-                factory.create(sizeSelectorResultFlow)
+                val filtersResultFlow = it.savedStateHandle
+                    .getStateFlow<UnscopedDestinations.ProductSearchFilters.Result?>(
+                        key = UnscopedDestinations.ProductSearchFilters.RESULT_KEY,
+                        initialValue = null,
+                    )
+                factory.create(sizeSelectorResultFlow, filtersResultFlow)
             },
             navigate = { action ->
                 when (action) {
@@ -91,6 +98,13 @@ fun NavGraphBuilder.productSearchScreen(navController: NavHostController) {
                             val offer = action.product.offers.firstOrNull() ?: return@ProductSearchScreen
                             navController.navigateToProductSubscriptionScreen(action.product, offer)
                         }
+                    }
+
+                    is ProductSearchScreenAction.FiltersClicked -> {
+                        navController.navigateToProductSearchFiltersScreen(
+                            searchQuery = action.searchQuery,
+                            filters = action.filters,
+                        )
                     }
                 }
             },

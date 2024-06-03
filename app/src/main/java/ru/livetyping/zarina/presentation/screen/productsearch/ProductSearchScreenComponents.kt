@@ -195,7 +195,7 @@ object ProductSearchScreenComponents {
                 exit = remember { fadeOut() + shrinkHorizontally(shrinkTowards = Alignment.Start) },
             ) {
                 ZarinaIconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = onFiltersClicked,
                     indication = ripple(bounded = false, radius = 20.dp),
                 ) {
                     Icon(

@@ -40,6 +40,7 @@ import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.common.Sorting
 import ru.livetyping.zarina.domain.filter.Filters
+import ru.livetyping.zarina.domain.filter.coerceInAvailable
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
@@ -51,6 +52,8 @@ import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.util.library.paging.mapProducts
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
+import ru.livetyping.zarina.presentation.model.filter.FiltersParcelable
+import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.SizeSelectorGraph
 import ru.livetyping.zarina.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
@@ -69,6 +72,8 @@ import kotlin.time.Duration.Companion.milliseconds
 class ProductSearchViewModel @AssistedInject constructor(
     @Assisted
     private val sizeSelectorResultFlow: StateFlow<SizeSelectorGraph.Result?>,
+    @Assisted
+    private val filtersResultFlow: StateFlow<UnscopedDestinations.ProductSearchFilters.Result?>,
     savedStateHandle: SavedStateHandle,
     private val interactor: ProductSearchInteractor,
 ) : ViewModel(), SideEffectSource<ProductSearchViewModel.SideEffect> by SideEffectSourceImpl() {
@@ -130,6 +135,18 @@ class ProductSearchViewModel @AssistedInject constructor(
         result?.toSearchSuggestionsState() ?: SearchSuggestionsState.Loading
     }
 
+    private val filtersValueHolder = savedStateHandle.createValueHolder<FiltersParcelable?>(
+        key = KEY_FILTERS,
+        initialValue = null,
+    )
+
+    private val filters: StateFlow<Filters> = filtersValueHolder.stateFlow.mapState(
+        scope = viewModelScopeDefault,
+        started = SharingStarted.Eagerly,
+    ) {
+        it?.toFilters() ?: Filters.EMPTY
+    }
+
     private var availableFilters: Filters? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -137,6 +154,7 @@ class ProductSearchViewModel @AssistedInject constructor(
         searchQueryValueHolder.stateFlow
             .filter { it.isNotBlank() }
             .flatMapLatest { query ->
+                // TODO: [High] Add filters parameter
                 interactor.productSearchResultPager.getProductPagingDataFlow(
                     query = query,
                     sorting = Sorting.NEW,
@@ -154,6 +172,7 @@ class ProductSearchViewModel @AssistedInject constructor(
 
     init {
         handleSizeSelectorResult()
+        handleFiltersResult()
     }
 
     fun onBackClicked() {
@@ -216,7 +235,16 @@ class ProductSearchViewModel @AssistedInject constructor(
     }
 
     fun onFiltersClicked() {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val availableFilters = availableFilters
+            val combinedFilters =
+                availableFilters?.let { filters.value.coerceInAvailable(availableFilters) }
+            val action = ProductSearchScreenAction.FiltersClicked(
+                searchQuery = searchQueryValueHolder.stateFlow.value,
+                filters = combinedFilters,
+            )
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     fun onProductClicked(product: Product) {
@@ -302,6 +330,19 @@ class ProductSearchViewModel @AssistedInject constructor(
                     productId = result.product.toProductItem().id,
                     barcode = result.offer.toProductOffer().barcode,
                 )
+            }
+        }
+    }
+
+    private fun handleFiltersResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<UnscopedDestinations.ProductSearchFilters.Result>(
+                resultFlow = filtersResultFlow,
+                key = KEY_FILTERS_RESULT,
+            ) { result ->
+                val filters = result.filters.toFilters()
+                val filtersParcelable = FiltersParcelable.from(filters)
+                filtersValueHolder.set(filtersParcelable)
             }
         }
     }
@@ -416,14 +457,17 @@ class ProductSearchViewModel @AssistedInject constructor(
     interface Factory {
         fun create(
             sizeSelectorResultFlow: StateFlow<SizeSelectorGraph.Result?>,
+            filtersResultFlow: StateFlow<UnscopedDestinations.ProductSearchFilters.Result?>,
         ): ProductSearchViewModel
     }
 
     companion object {
         private const val KEY_SEARCH_MODE = "search_mode"
         private const val KEY_SEARCH_QUERY = "search_query"
+        private const val KEY_FILTERS = "filters"
 
         private const val KEY_SIZE_SELECTOR_RESULT = "size_selector_result"
+        private const val KEY_FILTERS_RESULT = "filters_result"
 
         private const val SEARCH_SUGGESTIONS_QUERIES_MAX_COUNT = 5
         private const val SEARCH_SUGGESTIONS_CATEGORIES_MAX_COUNT = 5

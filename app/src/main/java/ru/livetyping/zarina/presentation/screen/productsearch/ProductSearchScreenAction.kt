@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.productsearch
 
 import ru.livetyping.zarina.domain.category.Category
+import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.domain.product.Product
 
 sealed class ProductSearchScreenAction {
@@ -13,4 +14,9 @@ sealed class ProductSearchScreenAction {
     data class AddProductToCartClicked(val product: Product) : ProductSearchScreenAction()
 
     data class SubscribeToProductClicked(val product: Product) : ProductSearchScreenAction()
+
+    data class FiltersClicked(
+        val searchQuery: String,
+        val filters: Filters?,
+    ) : ProductSearchScreenAction()
 }

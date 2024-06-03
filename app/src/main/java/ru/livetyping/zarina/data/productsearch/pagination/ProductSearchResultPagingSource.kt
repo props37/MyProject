@@ -21,7 +21,7 @@ class ProductSearchResultPagingSource(
             val offset = params.key ?: 0
             val result = productSearchRepository.searchProductsFlow(query, sorting, offset).first()
             val products = result.products
-            onAvailableFiltersReceived(result.filters)
+            onAvailableFiltersReceived(result.availableFilters)
 
             val nextOffset = result.offset + products.size
             val nextKey = nextOffset.takeIf { products.isNotEmpty() }

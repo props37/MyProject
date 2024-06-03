@@ -40,7 +40,7 @@ data class SearchProductsDto(
         return ProductSearchResult(
             products = products,
             productTotalCount = productTotalCount,
-            filters = getFilters(),
+            availableFilters = getFilters(),
             offset = offset,
         )
     }

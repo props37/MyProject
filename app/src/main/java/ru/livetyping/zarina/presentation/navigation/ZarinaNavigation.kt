@@ -23,6 +23,7 @@ import ru.livetyping.zarina.presentation.navigation.screen.onboardingScreen
 import ru.livetyping.zarina.presentation.navigation.screen.permissionRequirementBottomSheetScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productFiltersScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productScreen
+import ru.livetyping.zarina.presentation.navigation.screen.productSearchFiltersScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productSearchScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productSubscriptionScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productsScreen
@@ -60,9 +61,10 @@ fun ZarinaNavigation(
         citySelectorScreen(navController)
         defaultCityDialog(navController)
         productsScreen(navController)
-        productSearchScreen(navController)
-        productScreen(navController)
         productFiltersScreen(navController)
+        productSearchScreen(navController)
+        productSearchFiltersScreen(navController)
+        productScreen(navController)
         listFilterScreen(navController)
         productSubscriptionScreen(navController)
         permissionRequirementBottomSheetScreen(navController)

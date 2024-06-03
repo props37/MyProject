@@ -15,6 +15,7 @@ import javax.inject.Inject
 class ProductSearchResultPager @Inject constructor(
     private val productSearchRepository: ProductSearchRepository,
 ) {
+    // TODO: [High] Add filters parameter
     fun getProductPagingDataFlow(
         query: String,
         sorting: Sorting,

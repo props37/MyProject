@@ -6,6 +6,6 @@ import ru.livetyping.zarina.domain.product.ProductItem
 data class ProductSearchResult(
     val products: List<ProductItem>,
     val productTotalCount: Int,
-    val filters: Filters,
+    val availableFilters: Filters,
     val offset: Int,
 )

@@ -75,12 +75,11 @@ class ListFilterParcelable(
         )
 
         fun toColorFilterItem(): ColorFilterItem {
-            checkNotNull(color) { "color is null" }
             return ColorFilterItem(
                 id = ListFilterItem.Id(id),
                 name = name,
                 isSelected = isSelected,
-                color = Color(color),
+                color = color?.let { Color(color) },
             )
         }
 
