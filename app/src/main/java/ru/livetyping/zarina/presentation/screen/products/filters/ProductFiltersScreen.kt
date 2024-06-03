@@ -20,18 +20,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.domain.filter.Filter
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.presentation.screen.products.filters.FiltersScreenComponents.FilterList
-import ru.livetyping.zarina.presentation.screen.products.filters.FiltersScreenComponents.TopBar
-import ru.livetyping.zarina.presentation.screen.products.filters.FiltersScreenComponents.TopBarActions
-import ru.livetyping.zarina.presentation.screen.products.filters.FiltersViewModel.FilterListState
-import ru.livetyping.zarina.presentation.screen.products.filters.FiltersViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersScreenComponents.FilterList
+import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersScreenComponents.TopBar
+import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersScreenComponents.TopBarActions
+import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersViewModel.FilterListState
+import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable
-fun FiltersScreen(
-    navigateForward: (FiltersScreenAction) -> Unit,
-    navigateBackward: (FiltersScreenResult) -> Unit,
-    viewModel: FiltersViewModel = hiltViewModel(),
+fun ProductFiltersScreen(
+    navigateForward: (ProductFiltersScreenAction) -> Unit,
+    navigateBackward: (ProductFiltersScreenResult) -> Unit,
+    viewModel: ProductFiltersViewModel = hiltViewModel(),
 ) {
     val filterListState by viewModel.filterListState.collectAsStateWithLifecycle()
     val isPickupStoresFilterVisible by viewModel.isPickupStoresFilterVisible.collectAsStateWithLifecycle()
@@ -72,10 +72,10 @@ private fun ScreenContent(
     onShowProductsClicked: () -> Unit,
     onFilterListErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigateForward: (FiltersScreenAction) -> Unit,
-    navigateBackward: (FiltersScreenResult) -> Unit,
+    navigateForward: (ProductFiltersScreenAction) -> Unit,
+    navigateBackward: (ProductFiltersScreenResult) -> Unit,
 ) {
-    FiltersScreenBehavior(
+    ProductFiltersScreenBehavior(
         sideEffects = sideEffects,
         navigateForward = navigateForward,
         navigateBackward = navigateBackward,

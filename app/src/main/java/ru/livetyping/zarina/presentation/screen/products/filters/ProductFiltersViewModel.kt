@@ -35,18 +35,18 @@ import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.filter.FiltersParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
-import ru.livetyping.zarina.presentation.screen.products.filters.FiltersViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersViewModel.SideEffect
 import ru.livetyping.zarina.usecase.product.GetCategoryProductInfoFlowUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import timber.log.Timber
 
-@HiltViewModel(assistedFactory = FiltersViewModel.Factory::class)
-class FiltersViewModel @AssistedInject constructor(
+@HiltViewModel(assistedFactory = ProductFiltersViewModel.Factory::class)
+class ProductFiltersViewModel @AssistedInject constructor(
     @Assisted
     private val listFilterResultFlow: StateFlow<UnscopedDestinations.ListFilter.Result?>,
     private val savedStateHandle: SavedStateHandle,
-    private val interactor: FiltersInteractor,
+    private val interactor: ProductFiltersInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val screenResultHandler = ScreenResultHandler(savedStateHandle)
@@ -159,7 +159,7 @@ class FiltersViewModel @AssistedInject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            emitSideEffect(SideEffect.NavigateBackward(FiltersScreenResult.ScreenClosed))
+            emitSideEffect(SideEffect.NavigateBackward(ProductFiltersScreenResult.ScreenClosed))
         }
     }
 
@@ -181,7 +181,7 @@ class FiltersViewModel @AssistedInject constructor(
     fun onFilterClicked(filter: Filter) {
         if (filter is ListFilter<*>) {
             navigationThrottler.throttle {
-                val action = FiltersScreenAction.ListFilterClicked(filter)
+                val action = ProductFiltersScreenAction.ListFilterClicked(filter)
                 emitSideEffect(SideEffect.NavigateForward(action))
             }
         }
@@ -191,9 +191,9 @@ class FiltersViewModel @AssistedInject constructor(
         navigationThrottler.throttle {
             val filters = filters.value
             val result = if (filters != null) {
-                FiltersScreenResult.FiltersChanged(filters)
+                ProductFiltersScreenResult.FiltersChanged(filters)
             } else {
-                FiltersScreenResult.ScreenClosed
+                ProductFiltersScreenResult.ScreenClosed
             }
             emitSideEffect(SideEffect.NavigateBackward(result))
         }
@@ -217,9 +217,9 @@ class FiltersViewModel @AssistedInject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class NavigateForward(val action: FiltersScreenAction) : SideEffect
+        data class NavigateForward(val action: ProductFiltersScreenAction) : SideEffect
 
-        data class NavigateBackward(val result: FiltersScreenResult) : SideEffect
+        data class NavigateBackward(val result: ProductFiltersScreenResult) : SideEffect
     }
 
     @Stable
@@ -237,7 +237,7 @@ class FiltersViewModel @AssistedInject constructor(
     interface Factory {
         fun create(
             listFilterResultFlow: StateFlow<UnscopedDestinations.ListFilter.Result?>,
-        ): FiltersViewModel
+        ): ProductFiltersViewModel
     }
 
     companion object {

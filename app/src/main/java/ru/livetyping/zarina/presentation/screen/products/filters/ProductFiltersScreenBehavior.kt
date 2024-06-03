@@ -10,13 +10,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
-import ru.livetyping.zarina.presentation.screen.products.filters.FiltersViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersViewModel.SideEffect
 
 @Composable
-fun FiltersScreenBehavior(
+fun ProductFiltersScreenBehavior(
     sideEffects: Flow<SideEffect>,
-    navigateForward: (FiltersScreenAction) -> Unit,
-    navigateBackward: (FiltersScreenResult) -> Unit,
+    navigateForward: (ProductFiltersScreenAction) -> Unit,
+    navigateBackward: (ProductFiltersScreenResult) -> Unit,
 ) {
     val updatedNavigateForward by rememberUpdatedState(navigateForward)
     val updatedNavigateBackward by rememberUpdatedState(navigateBackward)

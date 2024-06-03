@@ -12,10 +12,10 @@ import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopExitTransition
-import ru.livetyping.zarina.presentation.screen.products.filters.FiltersScreen
-import ru.livetyping.zarina.presentation.screen.products.filters.FiltersScreenAction
-import ru.livetyping.zarina.presentation.screen.products.filters.FiltersScreenResult
-import ru.livetyping.zarina.presentation.screen.products.filters.FiltersViewModel
+import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersScreen
+import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersScreenAction
+import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersScreenResult
+import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersViewModel
 import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
@@ -46,8 +46,8 @@ fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
             }
         },
     ) {
-        FiltersScreen(
-            viewModel = hiltViewModel { factory: FiltersViewModel.Factory ->
+        ProductFiltersScreen(
+            viewModel = hiltViewModel { factory: ProductFiltersViewModel.Factory ->
                 val listFilterResultFlow = it.savedStateHandle
                     .getStateFlow<UnscopedDestinations.ListFilter.Result?>(
                         key = UnscopedDestinations.ListFilter.RESULT_KEY,
@@ -57,21 +57,21 @@ fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
             },
             navigateForward = { action ->
                 when (action) {
-                    is FiltersScreenAction.ListFilterClicked -> {
+                    is ProductFiltersScreenAction.ListFilterClicked -> {
                         navController.navigateToListFilterScreen(action.filter)
                     }
                 }
             },
             navigateBackward = { result ->
                 when (result) {
-                    FiltersScreenResult.ScreenClosed -> {
+                    ProductFiltersScreenResult.ScreenClosed -> {
                         navController.popBackStack(
                             route = UnscopedDestinations.ProductFilters.routeSchema,
                             inclusive = true,
                         )
                     }
 
-                    is FiltersScreenResult.FiltersChanged -> {
+                    is ProductFiltersScreenResult.FiltersChanged -> {
                         navController.popBackStack(
                             route = UnscopedDestinations.ProductFilters.routeSchema,
                             inclusive = true,
