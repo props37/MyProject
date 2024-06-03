@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.data.productsearch.ProductSearchRepository
 import ru.livetyping.zarina.data.productsearch.pagination.ProductSearchResultPagingSource
 import ru.livetyping.zarina.domain.common.Sorting
+import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.domain.product.ProductItem
+import timber.log.Timber
 import javax.inject.Inject
 
 class ProductSearchResultPager @Inject constructor(
@@ -16,6 +18,7 @@ class ProductSearchResultPager @Inject constructor(
     fun getProductPagingDataFlow(
         query: String,
         sorting: Sorting,
+        onAvailableFiltersReceived: (Filters) -> Unit,
     ): Flow<PagingData<ProductItem>> {
         return Pager(
             config = getPagingConfig(),
@@ -24,6 +27,10 @@ class ProductSearchResultPager @Inject constructor(
                     query = query,
                     sorting = sorting,
                     productSearchRepository = productSearchRepository,
+                    onAvailableFiltersReceived = {
+                        Timber.tag(TAG).v("Available filters received: $it")
+                        onAvailableFiltersReceived(it)
+                    },
                 )
             }
         ).flow
@@ -42,5 +49,7 @@ class ProductSearchResultPager @Inject constructor(
         private const val PAGE_SIZE = 20
         private const val PREFETCH_DISTANCE = PAGE_SIZE
         private const val INITIAL_LOAD_SIZE = PAGE_SIZE * 2
+
+        private const val TAG = "ProductSearchResultPager"
     }
 }

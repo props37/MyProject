@@ -39,6 +39,7 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.common.Sorting
+import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
@@ -129,6 +130,8 @@ class ProductSearchViewModel @AssistedInject constructor(
         result?.toSearchSuggestionsState() ?: SearchSuggestionsState.Loading
     }
 
+    private var availableFilters: Filters? = null
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val productSearchResultPagingDataFlow: Flow<PagingData<ProductItem>> =
         searchQueryValueHolder.stateFlow
@@ -137,6 +140,7 @@ class ProductSearchViewModel @AssistedInject constructor(
                 interactor.productSearchResultPager.getProductPagingDataFlow(
                     query = query,
                     sorting = Sorting.NEW,
+                    onAvailableFiltersReceived = { availableFilters = it },
                 )
             }
             .cachedIn(viewModelScopeDefault)
