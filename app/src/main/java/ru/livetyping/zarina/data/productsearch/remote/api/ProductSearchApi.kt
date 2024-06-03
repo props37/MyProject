@@ -17,9 +17,6 @@ import ru.livetyping.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
 
 class ProductSearchApi @Inject constructor(
-    @Qualifiers.AnyQuery(Qualifiers.AnyQueryType.SEARCH)
-    private val searchHttpClient: HttpClient,
-
     @Qualifiers.AnyQuery(Qualifiers.AnyQueryType.AUTOCOMPLETE)
     private val autocompleteHttpClient: HttpClient,
 

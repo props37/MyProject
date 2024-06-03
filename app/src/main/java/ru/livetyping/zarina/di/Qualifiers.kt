@@ -13,7 +13,7 @@ object Qualifiers {
     @Retention(AnnotationRetention.RUNTIME)
     annotation class AnyQuery(val type: AnyQueryType)
 
-    enum class AnyQueryType { SEARCH, AUTOCOMPLETE }
+    enum class AnyQueryType { AUTOCOMPLETE }
 
 
     @Qualifier

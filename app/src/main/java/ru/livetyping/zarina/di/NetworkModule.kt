@@ -87,18 +87,6 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    @Qualifiers.AnyQuery(Qualifiers.AnyQueryType.SEARCH)
-    fun provideAnyQuerySearchHttpClient(
-        json: Json,
-    ): HttpClient = HttpClient(OkHttp) {
-        baseConfig(json)
-        install(DefaultRequest) {
-            url(ANY_QUERY_BASE_URL_SEARCH)
-        }
-    }
-
-    @Provides
-    @Singleton
     @Qualifiers.AnyQuery(Qualifiers.AnyQueryType.AUTOCOMPLETE)
     fun provideAnyQueryAutocompleteHttpClient(
         json: Json,
@@ -158,7 +146,6 @@ class NetworkModule {
     }
 
     companion object {
-        private const val ANY_QUERY_BASE_URL_SEARCH = "https://sort.diginetica.net/"
         private const val ANY_QUERY_BASE_URL_AUTOCOMPLETE = "https://autocomplete.diginetica.net/"
 
         private const val HEADER_AUTHORIZATION = "Authorization"
