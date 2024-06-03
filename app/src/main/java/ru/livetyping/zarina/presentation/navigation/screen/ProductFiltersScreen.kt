@@ -18,7 +18,7 @@ import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersS
 import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersViewModel
 import ru.livetyping.zarina.util.library.navigation.navigate
 
-fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
+fun NavGraphBuilder.productFiltersScreen(navController: NavHostController) {
     composableDestination(
         destination = UnscopedDestinations.ProductFilters,
         enterTransition = {
@@ -88,7 +88,7 @@ fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
     }
 }
 
-fun NavHostController.navigateToFiltersScreen(
+fun NavHostController.navigateToProductFiltersScreen(
     categoryId: Category.Id,
     filters: Filters? = null,
 ) {

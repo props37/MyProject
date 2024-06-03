@@ -87,7 +87,7 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                     }
 
                     is ProductsScreenAction.FiltersClicked -> {
-                        navController.navigateToFiltersScreen(
+                        navController.navigateToProductFiltersScreen(
                             categoryId = action.categoryId,
                             filters = action.filters,
                         )

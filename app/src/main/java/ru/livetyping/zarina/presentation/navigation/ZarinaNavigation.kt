@@ -9,7 +9,6 @@ import androidx.navigation.compose.NavHost
 import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.screen.citySelectorScreen
 import ru.livetyping.zarina.presentation.navigation.screen.defaultCityDialog
-import ru.livetyping.zarina.presentation.navigation.screen.filtersScreen
 import ru.livetyping.zarina.presentation.navigation.screen.genericBottomSheetScreen
 import ru.livetyping.zarina.presentation.navigation.screen.graph.cartGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.catalogGraph
@@ -22,6 +21,7 @@ import ru.livetyping.zarina.presentation.navigation.screen.graph.sizeSelectorGra
 import ru.livetyping.zarina.presentation.navigation.screen.listFilterScreen
 import ru.livetyping.zarina.presentation.navigation.screen.onboardingScreen
 import ru.livetyping.zarina.presentation.navigation.screen.permissionRequirementBottomSheetScreen
+import ru.livetyping.zarina.presentation.navigation.screen.productFiltersScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productSearchScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productSubscriptionScreen
@@ -62,7 +62,7 @@ fun ZarinaNavigation(
         productsScreen(navController)
         productSearchScreen(navController)
         productScreen(navController)
-        filtersScreen(navController)
+        productFiltersScreen(navController)
         listFilterScreen(navController)
         productSubscriptionScreen(navController)
         permissionRequirementBottomSheetScreen(navController)
