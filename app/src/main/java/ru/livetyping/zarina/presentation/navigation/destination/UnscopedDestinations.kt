@@ -127,7 +127,7 @@ object UnscopedDestinations {
                 args = arrayOf(args.categoryId.value),
                 optionalArgs = arrayOf(
                     OptionalNavArg(
-                        name = Filters.ARG_KEY_FILTERS,
+                        name = ProductFilters.ARG_KEY_FILTERS,
                         value = filtersParcelableString,
                     )
                 ),
@@ -155,49 +155,14 @@ object UnscopedDestinations {
         )
     }
 
-    data object ProductSearch : SimpleDestination(BaseRoute.PRODUCT_SEARCH)
-
-    data object Product : Destination<Product.Args>() {
-        const val ARG_KEY_PRODUCT_ID = "arg_product_id"
-
-        private val baseRoute: String
-            get() = BaseRoute.PRODUCT.route
-
-        override val routeSchema: String
-            get() = RouteUtils.generateRouteSchema(
-                routeBase = baseRoute,
-                argNames = arrayOf(ARG_KEY_PRODUCT_ID),
-            )
-
-        override fun createRoute(args: Args): String {
-            return RouteUtils.generateRoute(
-                routeBase = baseRoute,
-                args = arrayOf(args.productId.value),
-            )
-        }
-
-        override val arguments: List<NamedNavArgument>
-            get() = listOf(
-                navArgument(ARG_KEY_PRODUCT_ID) { type = NavType.StringType },
-            )
-
-        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
-            putString(ARG_KEY_PRODUCT_ID, args.productId.value)
-        }
-
-        data class Args(
-            val productId: DomainProduct.Id,
-        )
-    }
-
-    data object Filters : Destination<Filters.Args>() {
+    data object ProductFilters : Destination<ProductFilters.Args>() {
         const val ARG_KEY_CATEGORY_ID = "arg_category_id"
         const val ARG_KEY_FILTERS = "arg_filters"
 
         const val RESULT_KEY = "result_filters"
 
         private val baseRoute: String
-            get() = BaseRoute.FILTERS.route
+            get() = BaseRoute.PRODUCT_FILTERS.route
 
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(
@@ -248,6 +213,41 @@ object UnscopedDestinations {
             val filters: FiltersParcelable,
             override val id: String = UUID.randomUUID().toString(),
         ) : ScreenResult, Parcelable
+    }
+
+    data object ProductSearch : SimpleDestination(BaseRoute.PRODUCT_SEARCH)
+
+    data object Product : Destination<Product.Args>() {
+        const val ARG_KEY_PRODUCT_ID = "arg_product_id"
+
+        private val baseRoute: String
+            get() = BaseRoute.PRODUCT.route
+
+        override val routeSchema: String
+            get() = RouteUtils.generateRouteSchema(
+                routeBase = baseRoute,
+                argNames = arrayOf(ARG_KEY_PRODUCT_ID),
+            )
+
+        override fun createRoute(args: Args): String {
+            return RouteUtils.generateRoute(
+                routeBase = baseRoute,
+                args = arrayOf(args.productId.value),
+            )
+        }
+
+        override val arguments: List<NamedNavArgument>
+            get() = listOf(
+                navArgument(ARG_KEY_PRODUCT_ID) { type = NavType.StringType },
+            )
+
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            putString(ARG_KEY_PRODUCT_ID, args.productId.value)
+        }
+
+        data class Args(
+            val productId: DomainProduct.Id,
+        )
     }
 
     data object ListFilter : Destination<ListFilter.Args>() {

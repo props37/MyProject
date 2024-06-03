@@ -20,7 +20,7 @@ import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
     composableDestination(
-        destination = UnscopedDestinations.Filters,
+        destination = UnscopedDestinations.ProductFilters,
         enterTransition = {
             when (initialState.destination.route) {
                 UnscopedDestinations.Products.routeSchema -> slideEnterTransition()
@@ -66,21 +66,21 @@ fun NavGraphBuilder.filtersScreen(navController: NavHostController) {
                 when (result) {
                     FiltersScreenResult.ScreenClosed -> {
                         navController.popBackStack(
-                            route = UnscopedDestinations.Filters.routeSchema,
+                            route = UnscopedDestinations.ProductFilters.routeSchema,
                             inclusive = true,
                         )
                     }
 
                     is FiltersScreenResult.FiltersChanged -> {
                         navController.popBackStack(
-                            route = UnscopedDestinations.Filters.routeSchema,
+                            route = UnscopedDestinations.ProductFilters.routeSchema,
                             inclusive = true,
                         )
                         val filtersParcelable = FiltersParcelable.from(result.filters)
                         @Suppress("NAME_SHADOWING")
-                        val result = UnscopedDestinations.Filters.Result(filtersParcelable)
+                        val result = UnscopedDestinations.ProductFilters.Result(filtersParcelable)
                         navController.currentBackStackEntry?.savedStateHandle
-                            ?.set(UnscopedDestinations.Filters.RESULT_KEY, result)
+                            ?.set(UnscopedDestinations.ProductFilters.RESULT_KEY, result)
                     }
                 }
             },
@@ -92,12 +92,12 @@ fun NavHostController.navigateToFiltersScreen(
     categoryId: Category.Id,
     filters: Filters? = null,
 ) {
-    val args = UnscopedDestinations.Filters.Args(
+    val args = UnscopedDestinations.ProductFilters.Args(
         categoryId = categoryId,
         filters = filters,
     )
     this.navigate(
-        route = UnscopedDestinations.Filters.routeSchema,
-        args = UnscopedDestinations.Filters.createArgsBundle(args),
+        route = UnscopedDestinations.ProductFilters.routeSchema,
+        args = UnscopedDestinations.ProductFilters.createArgsBundle(args),
     )
 }

@@ -32,7 +32,7 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
         },
         exitTransition = {
             when (targetState.destination.route) {
-                UnscopedDestinations.Filters.routeSchema,
+                UnscopedDestinations.ProductFilters.routeSchema,
                 UnscopedDestinations.ProductSubscription.routeSchema,
                 UnscopedDestinations.Product.routeSchema,
                 UnscopedDestinations.ProductSearch.routeSchema -> slideExitTransition()
@@ -42,7 +42,7 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
         },
         popEnterTransition = {
             when (initialState.destination.route) {
-                UnscopedDestinations.Filters.routeSchema,
+                UnscopedDestinations.ProductFilters.routeSchema,
                 UnscopedDestinations.ProductSubscription.routeSchema,
                 UnscopedDestinations.Product.routeSchema,
                 UnscopedDestinations.ProductSearch.routeSchema -> slidePopEnterTransition()
@@ -62,8 +62,8 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
         ProductsScreen(
             viewModel = hiltViewModel { factory: ProductsViewModel.Factory ->
                 val filtersResultFlow = it.savedStateHandle
-                    .getStateFlow<UnscopedDestinations.Filters.Result?>(
-                        key = UnscopedDestinations.Filters.RESULT_KEY,
+                    .getStateFlow<UnscopedDestinations.ProductFilters.Result?>(
+                        key = UnscopedDestinations.ProductFilters.RESULT_KEY,
                         initialValue = null,
                     )
                 val sizeSelectorResultFlow = it.savedStateHandle

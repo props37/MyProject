@@ -60,7 +60,7 @@ import timber.log.Timber
 @HiltViewModel(assistedFactory = ProductsViewModel.Factory::class)
 class ProductsViewModel @AssistedInject constructor(
     @Assisted
-    private val filtersResultFlow: StateFlow<UnscopedDestinations.Filters.Result?>,
+    private val filtersResultFlow: StateFlow<UnscopedDestinations.ProductFilters.Result?>,
     @Assisted
     private val sizeSelectorResultFlow: StateFlow<SizeSelectorGraph.Result?>,
     private val savedStateHandle: SavedStateHandle,
@@ -337,7 +337,7 @@ class ProductsViewModel @AssistedInject constructor(
 
     private fun handleFiltersResult() {
         viewModelScope.launch {
-            screenResultHandler.handle<UnscopedDestinations.Filters.Result>(
+            screenResultHandler.handle<UnscopedDestinations.ProductFilters.Result>(
                 resultFlow = filtersResultFlow,
                 key = KEY_FILTERS_RESULT,
             ) { result ->
@@ -379,7 +379,7 @@ class ProductsViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(
-            filtersResultFlow: StateFlow<UnscopedDestinations.Filters.Result?>,
+            filtersResultFlow: StateFlow<UnscopedDestinations.ProductFilters.Result?>,
             sizeSelectorResultFlow: StateFlow<SizeSelectorGraph.Result?>,
         ): ProductsViewModel
     }

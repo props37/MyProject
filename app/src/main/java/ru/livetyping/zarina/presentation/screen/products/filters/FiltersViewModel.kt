@@ -55,7 +55,7 @@ class FiltersViewModel @AssistedInject constructor(
 
     private val categoryId: StateFlow<Category.Id> = savedStateHandle
         .getStateFlow<Long?>(
-            key = UnscopedDestinations.Filters.ARG_KEY_CATEGORY_ID,
+            key = UnscopedDestinations.ProductFilters.ARG_KEY_CATEGORY_ID,
             initialValue = null,
         )
         .mapState(
@@ -68,7 +68,7 @@ class FiltersViewModel @AssistedInject constructor(
 
     private val initialFilters: StateFlow<Filters?> = savedStateHandle
         .getStateFlow<FiltersParcelable?>(
-            key = UnscopedDestinations.Filters.ARG_KEY_FILTERS,
+            key = UnscopedDestinations.ProductFilters.ARG_KEY_FILTERS,
             initialValue = null,
         )
         .mapState(
