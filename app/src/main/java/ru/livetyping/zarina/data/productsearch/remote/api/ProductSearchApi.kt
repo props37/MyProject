@@ -15,6 +15,7 @@ import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.common.Sorting
 import ru.livetyping.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 class ProductSearchApi @Inject constructor(
     @Qualifiers.AnyQuery(Qualifiers.AnyQueryType.AUTOCOMPLETE)
@@ -30,7 +31,7 @@ class ProductSearchApi @Inject constructor(
             parameter("apiKey", BuildConfig.ANY_QUERY_KEY)
 
             timeout {
-                // TODO: [High] Set timeout to 2 seconds
+                requestTimeoutMillis = 2.seconds.inWholeMilliseconds
             }
         }.body()
     }
