@@ -95,7 +95,7 @@ class ListFilterParcelable(
                 id = item.id.value,
                 name = item.name,
                 isSelected = item.isSelected,
-                color = if (item is ColorFilterItem) item.color.value else null,
+                color = if (item is ColorFilterItem) item.color?.value else null,
             )
         }
     }

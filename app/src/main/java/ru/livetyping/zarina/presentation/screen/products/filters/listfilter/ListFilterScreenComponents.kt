@@ -188,7 +188,7 @@ object ListFilterScreenComponents {
                 .clickable { onItemClicked(item) }
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
-            if (item is ColorFilterItem) {
+            if (item is ColorFilterItem && item.color != null) {
                 ZarinaColorIcon(
                     color = item.color.toComposeColor() ?: Color.Unspecified,
                     size = 16.dp,
