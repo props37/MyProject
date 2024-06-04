@@ -1,7 +1,5 @@
 package ru.livetyping.zarina.presentation.screen.products.filters
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,11 +33,14 @@ import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.filter.FiltersParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
+import ru.livetyping.zarina.presentation.screen.filters.FilterListState
 import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersViewModel.SideEffect
 import ru.livetyping.zarina.usecase.product.GetCategoryProductInfoFlowUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import timber.log.Timber
+
+// TODO: [High] DRY!
 
 @HiltViewModel(assistedFactory = ProductFiltersViewModel.Factory::class)
 class ProductFiltersViewModel @AssistedInject constructor(
@@ -140,7 +141,7 @@ class ProductFiltersViewModel @AssistedInject constructor(
         filters?.storePickupAvailability?.isEnabled == true
     }
 
-    val isResetButtonVisible: StateFlow<Boolean> = filters.mapState(
+    val isResetFiltersButtonVisible: StateFlow<Boolean> = filters.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
     ) { it?.isEmptyIgnoringSorting != true }
@@ -163,7 +164,7 @@ class ProductFiltersViewModel @AssistedInject constructor(
         }
     }
 
-    fun onResetClicked() {
+    fun onResetFiltersClicked() {
         val filters = filters.value
         if (filters != null) {
             val newFilters = filters.reset()
@@ -220,17 +221,6 @@ class ProductFiltersViewModel @AssistedInject constructor(
         data class NavigateForward(val action: ProductFiltersScreenAction) : SideEffect
 
         data class NavigateBackward(val result: ProductFiltersScreenResult) : SideEffect
-    }
-
-    @Stable
-    sealed class FilterListState {
-        data object Loading : FilterListState()
-
-        @Immutable
-        data class FilterList(val filters: Filters) : FilterListState()
-
-        @Immutable
-        data class Error(val errorState: ErrorState) : FilterListState()
     }
 
     @AssistedFactory

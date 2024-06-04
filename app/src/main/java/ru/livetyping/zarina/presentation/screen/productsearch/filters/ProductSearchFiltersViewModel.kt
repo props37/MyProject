@@ -1,7 +1,5 @@
 package ru.livetyping.zarina.presentation.screen.productsearch.filters
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,6 +33,7 @@ import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.filter.FiltersParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
+import ru.livetyping.zarina.presentation.screen.filters.FilterListState
 import ru.livetyping.zarina.presentation.screen.productsearch.filters.ProductSearchFiltersViewModel.SideEffect
 import ru.livetyping.zarina.usecase.productsearch.SearchProductsFlowUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
@@ -146,7 +145,7 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
         filters?.storePickupAvailability?.isEnabled == true
     }
 
-    val isResetButtonVisible: StateFlow<Boolean> = filters.mapState(
+    val isResetFiltersButtonVisible: StateFlow<Boolean> = filters.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
     ) { it?.isEmptyIgnoringSorting != true }
@@ -169,7 +168,7 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
         }
     }
 
-    fun onResetClicked() {
+    fun onResetFiltersClicked() {
         val filters = filters.value
         if (filters != null) {
             val newFilters = filters.reset()
@@ -226,17 +225,6 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
         data class NavigateForward(val action: ProductSearchFiltersScreenAction) : SideEffect
 
         data class NavigateBackward(val result: ProductSearchFiltersScreenResult) : SideEffect
-    }
-
-    @Stable
-    sealed class FilterListState {
-        data object Loading : FilterListState()
-
-        @Immutable
-        data class FilterList(val filters: Filters) : FilterListState()
-
-        @Immutable
-        data class Error(val errorState: ErrorState) : FilterListState()
     }
 
     @AssistedFactory

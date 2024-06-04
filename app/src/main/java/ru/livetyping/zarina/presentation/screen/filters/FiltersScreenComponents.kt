@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.products.filters
+package ru.livetyping.zarina.presentation.screen.filters
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -24,7 +24,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
@@ -67,7 +66,6 @@ import ru.livetyping.zarina.presentation.common.component.switchh.ZarinaSwitch
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.util.domain.nameResId
-import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersViewModel.FilterListState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
@@ -76,18 +74,19 @@ import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.sizeIn
 
 @Suppress("ConstPropertyName")
-object ProductFiltersScreenComponents {
+object FiltersScreenComponents {
 
     @Composable
     fun TopBar(
         isResetButtonVisible: Boolean,
-        actions: TopBarActions,
+        onResetClicked: () -> Unit,
+        onBackClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         ZarinaTopBar(
             startContent = {
                 ZarinaBackIconButton(
-                    onClick = actions.onBackClicked,
+                    onClick = onBackClicked,
                     iconSize = 20.dp,
                     modifier = Modifier.padding(start = 2.dp),
                 )
@@ -106,7 +105,7 @@ object ProductFiltersScreenComponents {
                     exit = remember { AnimatedContentDefaultExitTransition },
                 ) {
                     ZarinaButton(
-                        onClick = actions.onResetClicked,
+                        onClick = onResetClicked,
                         size = ZarinaButtonSize.Small,
                         colors = ZarinaButtonDefaults.backlessColors(),
                         modifier = Modifier.padding(end = 8.dp),
@@ -484,28 +483,6 @@ object ProductFiltersScreenComponents {
                 .size(16.dp)
                 .rotate(degrees = 90f),
         )
-    }
-
-    @Stable
-    class TopBarActions(
-        val onBackClicked: () -> Unit,
-        val onResetClicked: () -> Unit,
-    ) {
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-
-            other as TopBarActions
-
-            if (onBackClicked != other.onBackClicked) return false
-            return onResetClicked == other.onResetClicked
-        }
-
-        override fun hashCode(): Int {
-            var result = onBackClicked.hashCode()
-            result = 31 * result + onResetClicked.hashCode()
-            return result
-        }
     }
 
     private const val FilterListContentKey = "FilterListContentKey"
