@@ -46,7 +46,7 @@ class ProductSearchApi @Inject constructor(
         val body = SearchProductsRequestBody(
             query = query,
             sort = ProductSearchSortingDto.from(sorting),
-            filters = SearchProductsRequestBody.Filters.from(filters),
+            filters = filters?.let { SearchProductsRequestBody.Filters.from(it) },
             offset = offset,
         )
         return httpClient.post("/api/search/") {

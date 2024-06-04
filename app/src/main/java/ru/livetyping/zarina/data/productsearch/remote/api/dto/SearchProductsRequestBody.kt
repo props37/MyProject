@@ -30,8 +30,8 @@ data class SearchProductsRequestBody(
         val colors: String?,
     ) {
         companion object {
-            fun from(filters: DomainFilters?): Filters? {
-                if (filters == null || filters.isEmptyIgnoringSorting) return null
+            fun from(filters: DomainFilters): Filters? {
+                if (filters.isEmptyIgnoringSorting) return null
                 val price = filters.price?.let {
                     val min = it.min ?: it.limits.min
                     val max = it.max ?: it.limits.max
