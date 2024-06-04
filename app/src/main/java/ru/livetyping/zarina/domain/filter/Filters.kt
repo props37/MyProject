@@ -25,24 +25,24 @@ data class Filters(
 
     val appliedFilterCount: Int by lazy {
         var result = 0
-        if (price?.isEmpty == false) result++
-        if (materials?.selectedItems != null) result += materials.selectedItems.size
-        if (sizes?.selectedItems != null) result += sizes.selectedItems.size
-        if (colors?.selectedItems != null) result += colors.selectedItems.size
-        if (deliveryAvailability?.isEmpty == false) result++
-        if (storePickupAvailability?.isEmpty == false) result++
-        if (pickupStores?.isEmpty == false) result++
+        if (price?.isApplied == true) result++
+        if (materials?.isApplied == true) result += materials.selectedItems.size
+        if (sizes?.isApplied == true) result += sizes.selectedItems.size
+        if (colors?.isApplied == true) result += colors.selectedItems.size
+        if (deliveryAvailability?.isApplied == true) result++
+        if (storePickupAvailability?.isApplied == true) result++
+        if (pickupStores?.isApplied == true) result++
         result
     }
 
-    val isEmptyIgnoringSorting: Boolean by lazy {
-        price?.isEmpty != false
-                && materials?.isEmpty != false
-                && sizes?.isEmpty != false
-                && colors?.isEmpty != false
-                && deliveryAvailability?.isEmpty != false
-                && storePickupAvailability?.isEmpty != false
-                && pickupStores?.isEmpty != false
+    val hasAppliedIgnoringSorting: Boolean by lazy {
+        price?.isApplied == true
+                || materials?.isApplied == true
+                || sizes?.isApplied == true
+                || colors?.isApplied == true
+                || deliveryAvailability?.isApplied == true
+                || storePickupAvailability?.isApplied == true
+                || pickupStores?.isApplied == true
     }
 
     companion object {

@@ -149,7 +149,7 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
     val isResetFiltersButtonVisible: StateFlow<Boolean> = filters.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
-    ) { it?.isEmptyIgnoringSorting != true }
+    ) { it?.hasAppliedIgnoringSorting == true }
 
     init {
         categoryProductInfoFetchRequests.trySend(Unit)

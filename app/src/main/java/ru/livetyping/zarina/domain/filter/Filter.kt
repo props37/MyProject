@@ -3,6 +3,7 @@ package ru.livetyping.zarina.domain.filter
 // TODO: [Low] Rename to ProductFilter?
 sealed interface Filter {
     val type: Type
+    val isApplied: Boolean
     val isEmpty: Boolean
 
     enum class Type {
