@@ -174,6 +174,11 @@ class ProductSearchViewModel @AssistedInject constructor(
         )
         .cachedIn(viewModelScopeDefault)
 
+    val appliedFilterCount: StateFlow<Int> = filters.mapState(
+        scope = viewModelScopeDefault,
+        started = SharingStarted.WhileUiSubscribed,
+    ) { it.appliedFilterCount }
+
     private val categoryParentCategoryChainRegex = CATEGORY_PARENT_CATEGORY_CHAIN_PATTERN.toRegex()
 
     init {

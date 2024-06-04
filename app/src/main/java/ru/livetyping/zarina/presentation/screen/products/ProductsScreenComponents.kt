@@ -2,9 +2,7 @@ package ru.livetyping.zarina.presentation.screen.products
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,17 +14,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaFilterIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
@@ -47,7 +43,6 @@ import ru.livetyping.zarina.presentation.screen.products.ProductsViewModel.TagLi
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentCrossfadeTransitionSpec
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
-import ru.livetyping.zarina.util.compose.text.unscalable
 
 @Suppress("ConstPropertyName")
 object ProductsScreenComponents {
@@ -113,25 +108,12 @@ object ProductsScreenComponents {
                 )
             }
 
-            Box {
-                ZarinaIconButton(
-                    onClick = actions.onFiltersClicked,
-                    indication = ripple(bounded = false, radius = TopBarIconSize),
-                    modifier = Modifier.padding(end = 2.dp),
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_settings_menu_24),
-                        contentDescription = stringResource(R.string.filters),
-                        tint = UiKitTheme.colors.icon.regular.default,
-                        modifier = Modifier.size(TopBarIconSize),
-                    )
-                }
-
-                AppliedFilterCounter(
-                    appliedFilterCount = appliedFilterCount,
-                    modifier = Modifier.align(AppliedFilterCounterAlignment),
-                )
-            }
+            ZarinaFilterIconButton(
+                onClick = actions.onFiltersClicked,
+                appliedFilterCount = appliedFilterCount,
+                iconSize = 20.dp,
+                modifier = Modifier.padding(end = 2.dp),
+            )
         }
     }
 
@@ -224,26 +206,6 @@ object ProductsScreenComponents {
         )
     }
 
-    @Composable
-    private fun AppliedFilterCounter(
-        appliedFilterCount: Int,
-        modifier: Modifier = Modifier,
-    ) {
-        if (appliedFilterCount > 0) {
-            Text(
-                text = appliedFilterCount.toString(),
-                style = UiKitTheme.typography.caption2.bold.unscalable(LocalDensity.current),
-                color = UiKitTheme.colors.text.general.inversed.default,
-                modifier = modifier
-                    .background(
-                        color = UiKitTheme.colors.background.general.inversed.default,
-                        shape = CircleShape,
-                    )
-                    .padding(start = 6.dp, top = 1.dp, end = 6.dp),
-            )
-        }
-    }
-
     @Stable
     class TopBarActions(
         val onBackClicked: () -> Unit,
@@ -272,7 +234,4 @@ object ProductsScreenComponents {
     private val TopBarIconSize: Dp get() = 20.dp
 
     private const val TagListContentKeyTagList = "TagListContentKeyTagList"
-
-    private val AppliedFilterCounterAlignment: Alignment
-        get() = BiasAlignment(0.5f, -0.5f)
 }

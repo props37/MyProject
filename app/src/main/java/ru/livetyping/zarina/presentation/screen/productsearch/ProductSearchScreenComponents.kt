@@ -33,7 +33,6 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -59,7 +58,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
-import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButton
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaFilterIconButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
@@ -78,7 +77,6 @@ import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.tryRequestFocus
 import ru.livetyping.zarina.util.kotlin.capitalize
 import ru.livetyping.zarina.util.kotlin.findSubstringBounds
-import kotlin.math.exp
 
 @Suppress("ConstPropertyName")
 object ProductSearchScreenComponents {
@@ -92,6 +90,7 @@ object ProductSearchScreenComponents {
         searchMode: SearchMode,
         onBackClicked: () -> Unit,
         onFiltersClicked: () -> Unit,
+        appliedFilterCount: Int,
         modifier: Modifier = Modifier,
     ) {
         val startPadding by animateDpAsState(
@@ -194,16 +193,11 @@ object ProductSearchScreenComponents {
                 enter = remember { fadeIn() + expandHorizontally(expandFrom = Alignment.Start) },
                 exit = remember { fadeOut() + shrinkHorizontally(shrinkTowards = Alignment.Start) },
             ) {
-                ZarinaIconButton(
+                ZarinaFilterIconButton(
                     onClick = onFiltersClicked,
-                    indication = ripple(bounded = false, radius = 20.dp),
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_settings_menu_24),
-                        contentDescription = stringResource(R.string.filters),
-                        modifier = Modifier.size(20.dp),
-                    )
-                }
+                    appliedFilterCount = appliedFilterCount,
+                    iconSize = 20.dp,
+                )
             }
         }
     }

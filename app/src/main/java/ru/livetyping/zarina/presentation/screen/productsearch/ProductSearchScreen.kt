@@ -57,6 +57,7 @@ fun ProductSearchScreen(
     val searchMode by viewModel.searchMode.collectAsStateWithLifecycle()
     val searchAutocompleteSuggestions by viewModel.searchAutocompleteSuggestions.collectAsStateWithLifecycle()
     val searchSuggestionsState by viewModel.searchSuggestionsState.collectAsStateWithLifecycle()
+    val appliedFilterCount by viewModel.appliedFilterCount.collectAsStateWithLifecycle()
 
     ScreenContent(
         onBackClicked = viewModel::onBackClicked,
@@ -66,6 +67,7 @@ fun ProductSearchScreen(
         searchMode = searchMode,
         onSearchBarCancelClicked = viewModel::onSearchTextFieldCancelClicked,
         onFiltersClicked = viewModel::onFiltersClicked,
+        appliedFilterCount = appliedFilterCount,
         searchAutocompleteSuggestions = searchAutocompleteSuggestions,
         onSearchAutocompleteSuggestionClicked = viewModel::onSearchAutocompleteSuggestionClicked,
         searchSuggestionsState = searchSuggestionsState,
@@ -89,6 +91,7 @@ private fun ScreenContent(
     searchMode: SearchMode,
     onSearchBarCancelClicked: () -> Unit,
     onFiltersClicked: () -> Unit,
+    appliedFilterCount: Int,
     searchAutocompleteSuggestions: ImmutableList<ProductSearchSuggestions.AutocompleteSuggestion>,
     onSearchAutocompleteSuggestionClicked: (ProductSearchSuggestions.AutocompleteSuggestion) -> Unit,
     searchSuggestionsState: SearchSuggestionsState,
@@ -133,6 +136,7 @@ private fun ScreenContent(
             searchMode = searchMode,
             onBackClicked = onBackClicked,
             onFiltersClicked = onFiltersClicked,
+            appliedFilterCount = appliedFilterCount,
             modifier = Modifier.focusRequester(focusRequester),
         )
 
