@@ -45,6 +45,16 @@ data class Filters(
                 || pickupStores?.isApplied == true
     }
 
+    val isEmptyIgnoringSorting: Boolean by lazy {
+        price?.isEmpty != false
+                && materials?.isEmpty != false
+                && sizes?.isEmpty != false
+                && colors?.isEmpty != false
+                && deliveryAvailability?.isEmpty != false
+                && storePickupAvailability?.isEmpty != false
+                && pickupStores?.isEmpty != false
+    }
+
     companion object {
         val EMPTY: Filters
             get() = Filters(
