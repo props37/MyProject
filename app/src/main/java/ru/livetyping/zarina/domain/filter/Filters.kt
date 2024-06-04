@@ -101,6 +101,7 @@ data class Filters(
 }
 
 fun Filters.coerceInAvailable(available: Filters): Filters {
+    val sorting = available.sorting?.let { this.sorting?.coerceInAvailable(it) ?: it }
     val price = available.price?.let { this.price?.coerceInAvailable(it) ?: it }
     val materials = available.materials?.let { this.materials?.coerceInAvailable(it) ?: it }
     val sizes = available.sizes?.let { this.sizes?.coerceInAvailable(it) ?: it }
@@ -111,6 +112,7 @@ fun Filters.coerceInAvailable(available: Filters): Filters {
         available.pickupStores?.let { this.pickupStores?.coerceInAvailable(it) ?: it }
     } else null
     return this.copy(
+        sorting = sorting,
         price = price,
         materials = materials,
         sizes = sizes,
