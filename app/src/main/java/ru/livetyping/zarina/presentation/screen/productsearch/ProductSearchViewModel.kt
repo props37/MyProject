@@ -154,10 +154,10 @@ class ProductSearchViewModel @AssistedInject constructor(
         searchQueryValueHolder.stateFlow
             .filter { it.isNotBlank() }
             .flatMapLatest { query ->
-                // TODO: [High] Add filters parameter
                 interactor.productSearchResultPager.getProductPagingDataFlow(
                     query = query,
                     sorting = Sorting.NEW,
+                    filters = null, // TODO: [High] Implement
                     onAvailableFiltersReceived = { availableFilters = it },
                 )
             }

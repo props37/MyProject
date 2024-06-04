@@ -100,6 +100,7 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
         val params = SearchProductsFlowUseCase.Params(
             query = searchQuery,
             sorting = Sorting.NEW,
+            filters = filters,
             offset = 0,
         )
         interactor.searchProductsFlow(params)

@@ -39,10 +39,11 @@ class ProductSearchApi @Inject constructor(
 
     suspend fun searchProducts(
         query: String,
-        filters: Filters?,
         sorting: Sorting,
+        filters: Filters?,
         offset: Int,
     ): SearchProductsDto {
+        // TODO: [High] Apply filters
         val body = SearchProductsRequestBody(
             query = query,
             sort = ProductSearchSortingDto.from(sorting),

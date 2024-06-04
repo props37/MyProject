@@ -12,14 +12,16 @@ import timber.log.Timber
 class ProductSearchResultPagingSource(
     private val query: String,
     private val sorting: Sorting,
-    private val productSearchRepository: ProductSearchRepository,
+    private val filters: Filters?,
     private val onAvailableFiltersReceived: (Filters) -> Unit,
+    private val productSearchRepository: ProductSearchRepository,
 ) : PagingSource<Int, ProductItem>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ProductItem> {
         try {
             val offset = params.key ?: 0
-            val result = productSearchRepository.searchProductsFlow(query, sorting, offset).first()
+            val result =
+                productSearchRepository.searchProductsFlow(query, sorting, filters, offset).first()
             val products = result.products
             onAvailableFiltersReceived(result.availableFilters)
 

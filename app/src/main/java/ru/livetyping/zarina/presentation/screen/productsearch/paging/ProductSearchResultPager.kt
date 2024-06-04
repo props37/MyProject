@@ -15,10 +15,10 @@ import javax.inject.Inject
 class ProductSearchResultPager @Inject constructor(
     private val productSearchRepository: ProductSearchRepository,
 ) {
-    // TODO: [High] Add filters parameter
     fun getProductPagingDataFlow(
         query: String,
         sorting: Sorting,
+        filters: Filters?,
         onAvailableFiltersReceived: (Filters) -> Unit,
     ): Flow<PagingData<ProductItem>> {
         return Pager(
@@ -27,11 +27,12 @@ class ProductSearchResultPager @Inject constructor(
                 ProductSearchResultPagingSource(
                     query = query,
                     sorting = sorting,
-                    productSearchRepository = productSearchRepository,
+                    filters = filters,
                     onAvailableFiltersReceived = {
                         Timber.tag(TAG).v("Available filters received: $it")
                         onAvailableFiltersReceived(it)
                     },
+                    productSearchRepository = productSearchRepository,
                 )
             }
         ).flow
