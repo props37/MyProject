@@ -42,6 +42,7 @@ import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.common.Sorting
 import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.domain.filter.coerceInAvailable
+import ru.livetyping.zarina.domain.filter.selected
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
@@ -145,7 +146,9 @@ class ProductSearchViewModel @AssistedInject constructor(
         scope = viewModelScopeDefault,
         started = SharingStarted.Eagerly,
     ) {
-        it?.toFilters() ?: Filters.EMPTY
+        it?.toFilters() ?: Filters.create(
+            sorting = Filters.getDefaultSorting(Sorting.getDefault()),
+        )
     }
 
     private var availableFilters: Filters? = null
@@ -155,9 +158,10 @@ class ProductSearchViewModel @AssistedInject constructor(
         searchQueryValueHolder.stateFlow.filter { it.isNotBlank() },
         filters,
     ) { searchQuery, filters ->
+        val sorting = filters.sorting?.selected ?: Sorting.getDefault()
         interactor.productSearchResultPager.getProductPagingDataFlow(
             query = searchQuery,
-            sorting = Sorting.NEW,
+            sorting = sorting,
             filters = filters,
             onAvailableFiltersReceived = { availableFilters = it },
         )
@@ -241,6 +245,9 @@ class ProductSearchViewModel @AssistedInject constructor(
             val availableFilters = availableFilters
             val combinedFilters =
                 availableFilters?.let { filters.value.coerceInAvailable(it) } ?: filters.value
+            Timber.d("<3 filters: ${filters.value}")
+            Timber.d("<3 availableFilters: $availableFilters")
+            Timber.d("<3 combinedFilters: $combinedFilters")
             val action = ProductSearchScreenAction.FiltersClicked(
                 searchQuery = searchQueryValueHolder.stateFlow.value,
                 filters = combinedFilters,
