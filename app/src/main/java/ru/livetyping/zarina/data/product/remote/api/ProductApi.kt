@@ -17,10 +17,10 @@ import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Sorting
+import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
-import ru.livetyping.zarina.domain.filter.Filters as DomainFilters
 
 class ProductApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
@@ -29,7 +29,7 @@ class ProductApi @Inject constructor(
 ) {
     suspend fun getProducts(
         categoryId: Category.Id,
-        filters: DomainFilters?,
+        filters: Filters?,
         sorting: Sorting,
         page: Int,
     ): ProductsDto {
@@ -58,7 +58,7 @@ class ProductApi @Inject constructor(
 
     suspend fun getCategoryProductInfo(
         categoryId: Category.Id,
-        filters: DomainFilters?,
+        filters: Filters?,
     ): ProductsDto {
         val body = GetProductsRequestBody(
             categoryId = categoryId.value,

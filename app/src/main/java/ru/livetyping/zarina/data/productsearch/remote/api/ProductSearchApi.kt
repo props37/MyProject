@@ -13,6 +13,7 @@ import ru.livetyping.zarina.data.productsearch.remote.api.dto.SearchProductsRequ
 import ru.livetyping.zarina.data.productsearch.remote.api.dto.SearchSuggestionsDto
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.common.Sorting
+import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
@@ -38,6 +39,7 @@ class ProductSearchApi @Inject constructor(
 
     suspend fun searchProducts(
         query: String,
+        filters: Filters?,
         sorting: Sorting,
         offset: Int,
     ): SearchProductsDto {
