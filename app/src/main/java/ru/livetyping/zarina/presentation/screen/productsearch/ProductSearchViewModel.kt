@@ -25,6 +25,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
@@ -150,23 +151,24 @@ class ProductSearchViewModel @AssistedInject constructor(
     private var availableFilters: Filters? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val productSearchResultPagingDataFlow: Flow<PagingData<ProductItem>> =
-        searchQueryValueHolder.stateFlow
-            .filter { it.isNotBlank() }
-            .flatMapLatest { query ->
-                interactor.productSearchResultPager.getProductPagingDataFlow(
-                    query = query,
-                    sorting = Sorting.NEW,
-                    filters = null, // TODO: [High] Implement
-                    onAvailableFiltersReceived = { availableFilters = it },
-                )
-            }
-            .cachedIn(viewModelScopeDefault)
-            .mapProducts(
-                favoriteProductIdsResultFlow = interactor.getFavoriteProductIdsFlow(),
-                cartProductIdsResultFlow = interactor.getCardProductsIdsFlow(),
-            )
-            .cachedIn(viewModelScopeDefault)
+    val productSearchResultPagingDataFlow: Flow<PagingData<ProductItem>> = combine(
+        searchQueryValueHolder.stateFlow.filter { it.isNotBlank() },
+        filters,
+    ) { searchQuery, filters ->
+        interactor.productSearchResultPager.getProductPagingDataFlow(
+            query = searchQuery,
+            sorting = Sorting.NEW,
+            filters = filters,
+            onAvailableFiltersReceived = { availableFilters = it },
+        )
+    }
+        .flatMapLatest { it }
+        .cachedIn(viewModelScopeDefault)
+        .mapProducts(
+            favoriteProductIdsResultFlow = interactor.getFavoriteProductIdsFlow(),
+            cartProductIdsResultFlow = interactor.getCardProductsIdsFlow(),
+        )
+        .cachedIn(viewModelScopeDefault)
 
     private val categoryParentCategoryChainRegex = CATEGORY_PARENT_CATEGORY_CHAIN_PATTERN.toRegex()
 
