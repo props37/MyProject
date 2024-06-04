@@ -240,7 +240,7 @@ class ProductSearchViewModel @AssistedInject constructor(
         navigationThrottler.throttle {
             val availableFilters = availableFilters
             val combinedFilters =
-                availableFilters?.let { filters.value.coerceInAvailable(availableFilters) }
+                availableFilters?.let { filters.value.coerceInAvailable(it) } ?: filters.value
             val action = ProductSearchScreenAction.FiltersClicked(
                 searchQuery = searchQueryValueHolder.stateFlow.value,
                 filters = combinedFilters,
