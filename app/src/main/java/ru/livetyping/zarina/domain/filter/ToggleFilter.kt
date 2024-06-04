@@ -6,5 +6,5 @@ data class ToggleFilter(
 ) : Filter {
     override val isApplied: Boolean get() = isEnabled
 
-    override val isEmpty: Boolean get() = !isEnabled
+    override val isEmpty: Boolean get() = false
 }
