@@ -38,7 +38,7 @@ data class ProductSearchHistoryEntryEntity(
 
         fun from(entry: ProductSearchHistoryEntry): ProductSearchHistoryEntryEntity {
             return ProductSearchHistoryEntryEntity(
-                text = entry.text,
+                text = entry.text.lowercase().trim(),
                 timestampMillis = entry.timestampMillis,
             )
         }

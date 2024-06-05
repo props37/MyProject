@@ -14,10 +14,12 @@ class ProductSearchLocalDataSource @Inject constructor(
         text: String,
         limit: Int,
     ): Flow<List<ProductSearchHistoryEntry>> {
-        return productSearchHistoryEntryDao.getLastProductSearchHistoryEntriesFlow(text, limit)
-            .map { list ->
-                list.map { it.toProductSearchHistoryEntry() }
-            }
+        return productSearchHistoryEntryDao.getLastProductSearchHistoryEntriesFlow(
+            text = text.lowercase(),
+            limit = limit,
+        ).map { list ->
+            list.map { it.toProductSearchHistoryEntry() }
+        }
     }
 
     suspend fun saveProductSearchHistoryEntry(entry: ProductSearchHistoryEntry) {
