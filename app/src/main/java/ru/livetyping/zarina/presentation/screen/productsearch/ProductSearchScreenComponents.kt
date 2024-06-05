@@ -380,7 +380,8 @@ object ProductSearchScreenComponents {
                                 ZarinaButton(
                                     onClick = onClearHistoryClicked,
                                     size = ZarinaButtonSize.Medium,
-                                    colors = ZarinaButtonDefaults.backlessColors()
+                                    colors = ZarinaButtonDefaults.backlessColors(),
+                                    modifier = Modifier.heightIn(min = 32.dp),
                                 ) {
                                     Text(text = stringResource(R.string.clear).uppercase())
                                 }
