@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.data.productsearch
 
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.data.productsearch.local.ProductSearchLocalDataSource
 import ru.livetyping.zarina.data.productsearch.remote.ProductSearchRemoteDataSource
 import ru.livetyping.zarina.domain.common.Sorting
 import ru.livetyping.zarina.domain.filter.Filters
@@ -10,6 +11,7 @@ import javax.inject.Inject
 
 class ProductSearchRepository @Inject constructor(
     private val remoteDataSource: ProductSearchRemoteDataSource,
+    private val localDataSource: ProductSearchLocalDataSource,
 ) {
     fun getSearchSuggestionsFlow(query: String): Flow<ProductSearchSuggestions> {
         return remoteDataSource.getSearchSuggestionsFlow(query)
@@ -22,5 +24,9 @@ class ProductSearchRepository @Inject constructor(
         offset: Int,
     ): Flow<ProductSearchResult> {
         return remoteDataSource.searchProductsFlow(query, sorting, filters, offset)
+    }
+
+    suspend fun clear() {
+        localDataSource.clear()
     }
 }
