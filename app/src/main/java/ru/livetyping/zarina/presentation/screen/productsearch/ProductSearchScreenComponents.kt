@@ -31,9 +31,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.Text
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,6 +63,7 @@ import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaFilterIconButton
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
@@ -457,6 +462,7 @@ object ProductSearchScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     private fun SearchSuggestionHistoryQueryItem(
         item: SearchSuggestionItem.HistoryQueryItem,
@@ -469,25 +475,43 @@ object ProductSearchScreenComponents {
             ZarinaItem(
                 onClick = { onClick(item) },
                 modifier = Modifier.heightIn(min = 48.dp),
-            ) {
-                val textWithQueryMatch = rememberSearchSuggestionItemTextWithQueryMatch(
-                    text = item.query,
-                    query = query,
-                )
+                startContent = {
+                    val textWithQueryMatch = rememberSearchSuggestionItemTextWithQueryMatch(
+                        text = item.query,
+                        query = query,
+                    )
 
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
-                    contentDescription = null,
-                    tint = UiKitTheme.colors.icon.regular.default,
-                    modifier = Modifier.size(16.dp),
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = textWithQueryMatch,
-                    style = SearchSuggestionItemTextStyle,
-                    color = SearchSuggestionsColor,
-                )
-            }
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_history_24),
+                        contentDescription = null,
+                        tint = UiKitTheme.colors.icon.regular.default,
+                        modifier = Modifier.size(16.dp),
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = textWithQueryMatch,
+                        style = SearchSuggestionItemTextStyle,
+                        color = SearchSuggestionsColor,
+                    )
+                },
+                endContent = {
+                    CompositionLocalProvider(
+                        LocalMinimumInteractiveComponentEnforcement provides false,
+                    ) {
+                        ZarinaIconButton(
+                            onClick = { /*TODO*/ },
+                            indication = ripple(bounded = false, radius = 16.dp),
+                            modifier = Modifier.size(32.dp),
+                        ) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(R.drawable.ic_cross_24),
+                                contentDescription = stringResource(R.string.delete),
+                                modifier = Modifier.size(16.dp),
+                            )
+                        }
+                    }
+                },
+            )
 
             if (isDividerVisible) {
                 ZarinaDivider(
