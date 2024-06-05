@@ -5,6 +5,7 @@ import ru.livetyping.zarina.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.usecase.favorite.GetFavoriteProductIdsFlowUseCase
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
+import ru.livetyping.zarina.usecase.productsearch.DeleteProductSearchHistoryQueryUseCase
 import ru.livetyping.zarina.usecase.productsearch.GetLastProductSearchHistoryQueriesFlowUseCase
 import ru.livetyping.zarina.usecase.productsearch.GetProductSearchSuggestionsFlowUseCase
 import ru.livetyping.zarina.usecase.productsearch.SaveProductSearchHistoryQueryUseCase
@@ -19,4 +20,5 @@ class ProductSearchInteractor @Inject constructor(
     val addProductToCart: AddProductToCartUseCase,
     val getLastProductSearchHistoryQueriesFlow: GetLastProductSearchHistoryQueriesFlowUseCase,
     val saveProductSearchHistoryQuery: SaveProductSearchHistoryQueryUseCase,
+    val deleteProductSearchHistoryQuery: DeleteProductSearchHistoryQueryUseCase,
 )

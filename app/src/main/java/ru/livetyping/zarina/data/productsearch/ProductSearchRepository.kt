@@ -34,8 +34,12 @@ class ProductSearchRepository @Inject constructor(
         return localDataSource.getLastProductSearchHistoryQueriesFlow(text, limit)
     }
 
-    suspend fun saveProductSearchHistoryQuery(entry: ProductSearchHistoryQuery) {
-        localDataSource.saveProductSearchHistoryQuery(entry)
+    suspend fun saveProductSearchHistoryQuery(query: ProductSearchHistoryQuery) {
+        localDataSource.saveProductSearchHistoryQuery(query)
+    }
+
+    suspend fun deleteProductSearchHistoryQuery(text: String) {
+        localDataSource.deleteProductSearchHistoryQuery(text)
     }
 
     suspend fun clear() {

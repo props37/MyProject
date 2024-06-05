@@ -12,7 +12,7 @@ import ru.livetyping.zarina.data.productsearch.local.database.entity.ProductSear
 abstract class ProductSearchHistoryQueryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun saveProductSearchHistoryQuery(entry: ProductSearchHistoryQueryEntity)
+    abstract suspend fun saveProductSearchHistoryQuery(query: ProductSearchHistoryQueryEntity)
 
     fun getLastProductSearchHistoryQueriesFlow(
         text: String,
@@ -20,6 +20,15 @@ abstract class ProductSearchHistoryQueryDao {
     ): Flow<List<ProductSearchHistoryQueryEntity>> {
         return getLastProductSearchHistoryQueriesFlowImpl(text, limit).distinctUntilChanged()
     }
+
+    @Query(
+        """
+            DELETE
+            FROM ${ProductSearchHistoryQueryEntity.TABLE_NAME}
+            WHERE ${ProductSearchHistoryQueryEntity.FIELD_TEXT} = :text
+        """
+    )
+    abstract suspend fun deleteProductSearchHistoryQuery(text: String)
 
     @Query("DELETE FROM ${ProductSearchHistoryQueryEntity.TABLE_NAME}")
     abstract suspend fun clear()

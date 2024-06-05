@@ -213,6 +213,7 @@ object ProductSearchScreenComponents {
         autocompleteSuggestions: ImmutableList<ProductSearchSuggestions.AutocompleteSuggestion>,
         query: String,
         onSearchSuggestionItemClicked: (SearchSuggestionItem) -> Unit,
+        onDeleteSearchHistoryQueryItemClicked: (SearchSuggestionItem.HistoryQueryItem) -> Unit,
         onAutocompleteSuggestionClicked: (ProductSearchSuggestions.AutocompleteSuggestion) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -241,6 +242,7 @@ object ProductSearchScreenComponents {
                             query = query,
                             items = state.items,
                             onItemClicked = onSearchSuggestionItemClicked,
+                            onDeleteHistoryQueryItemClicked = onDeleteSearchHistoryQueryItemClicked,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
@@ -337,6 +339,7 @@ object ProductSearchScreenComponents {
         query: String,
         items: ImmutableList<SearchSuggestionItem>,
         onItemClicked: (SearchSuggestionItem) -> Unit,
+        onDeleteHistoryQueryItemClicked: (SearchSuggestionItem.HistoryQueryItem) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val lazyListState = rememberLazyListState()
@@ -384,6 +387,7 @@ object ProductSearchScreenComponents {
                         SearchSuggestionHistoryQueryItem(
                             item = item,
                             onClick = onItemClicked,
+                            onDeleteClicked = onDeleteHistoryQueryItemClicked,
                             query = query,
                             isDividerVisible = isDividerVisible,
                             modifier = Modifier.animateItem(),
@@ -473,6 +477,7 @@ object ProductSearchScreenComponents {
     private fun SearchSuggestionHistoryQueryItem(
         item: SearchSuggestionItem.HistoryQueryItem,
         onClick: (SearchSuggestionItem.HistoryQueryItem) -> Unit,
+        onDeleteClicked: (SearchSuggestionItem.HistoryQueryItem) -> Unit,
         query: String,
         isDividerVisible: Boolean,
         modifier: Modifier = Modifier,
@@ -505,7 +510,7 @@ object ProductSearchScreenComponents {
                         LocalMinimumInteractiveComponentEnforcement provides false,
                     ) {
                         ZarinaIconButton(
-                            onClick = { /*TODO*/ },
+                            onClick = { onDeleteClicked(item) },
                             indication = ripple(bounded = false, radius = 16.dp),
                             modifier = Modifier.size(32.dp),
                         ) {

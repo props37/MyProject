@@ -60,6 +60,7 @@ import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinat
 import ru.livetyping.zarina.presentation.navigation.destination.graph.SizeSelectorGraph
 import ru.livetyping.zarina.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
+import ru.livetyping.zarina.usecase.productsearch.DeleteProductSearchHistoryQueryUseCase
 import ru.livetyping.zarina.usecase.productsearch.GetLastProductSearchHistoryQueriesFlowUseCase
 import ru.livetyping.zarina.usecase.productsearch.GetProductSearchSuggestionsFlowUseCase
 import ru.livetyping.zarina.usecase.productsearch.SaveProductSearchHistoryQueryUseCase
@@ -263,6 +264,13 @@ class ProductSearchViewModel @AssistedInject constructor(
             }
 
             is SearchSuggestionItem.GenericTitle -> Unit
+        }
+    }
+
+    fun onDeleteSearchHistoryQueryItemClicked(item: SearchSuggestionItem.HistoryQueryItem) {
+        viewModelScope.launch {
+            val params = DeleteProductSearchHistoryQueryUseCase.Params(item.query)
+            interactor.deleteProductSearchHistoryQuery(params)
         }
     }
 

@@ -22,9 +22,13 @@ class ProductSearchLocalDataSource @Inject constructor(
         }
     }
 
-    suspend fun saveProductSearchHistoryQuery(entry: ProductSearchHistoryQuery) {
-        val entity = ProductSearchHistoryQueryEntity.from(entry)
+    suspend fun saveProductSearchHistoryQuery(query: ProductSearchHistoryQuery) {
+        val entity = ProductSearchHistoryQueryEntity.from(query)
         productSearchHistoryQueryDao.saveProductSearchHistoryQuery(entity)
+    }
+
+    suspend fun deleteProductSearchHistoryQuery(text: String) {
+        productSearchHistoryQueryDao.deleteProductSearchHistoryQuery(text.lowercase())
     }
 
     suspend fun clear() {

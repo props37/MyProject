@@ -72,6 +72,7 @@ fun ProductSearchScreen(
         onSearchAutocompleteSuggestionClicked = viewModel::onSearchAutocompleteSuggestionClicked,
         searchSuggestionsState = searchSuggestionsState,
         onSearchSuggestionItemClicked = viewModel::onSearchSuggestionItemClicked,
+        onDeleteSearchHistoryQueryItemClicked = viewModel::onDeleteSearchHistoryQueryItemClicked,
         productSearchResultPagingDataFlow = viewModel.productSearchResultPagingDataFlow,
         onProductClicked = viewModel::onProductClicked,
         onAddProductToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
@@ -96,6 +97,7 @@ private fun ScreenContent(
     onSearchAutocompleteSuggestionClicked: (ProductSearchSuggestions.AutocompleteSuggestion) -> Unit,
     searchSuggestionsState: SearchSuggestionsState,
     onSearchSuggestionItemClicked: (SearchSuggestionItem) -> Unit,
+    onDeleteSearchHistoryQueryItemClicked: (SearchSuggestionItem.HistoryQueryItem) -> Unit,
     productSearchResultPagingDataFlow: Flow<PagingData<ProductItem>>,
     onProductClicked: (Product) -> Unit,
     onAddProductToFavoritesClicked: (Product) -> Unit,
@@ -152,6 +154,7 @@ private fun ScreenContent(
                         autocompleteSuggestions = searchAutocompleteSuggestions,
                         query = searchTextFieldState.text.toString(),
                         onSearchSuggestionItemClicked = onSearchSuggestionItemClicked,
+                        onDeleteSearchHistoryQueryItemClicked = onDeleteSearchHistoryQueryItemClicked,
                         onAutocompleteSuggestionClicked = onSearchAutocompleteSuggestionClicked,
                         modifier = Modifier
                             .fillMaxSize()

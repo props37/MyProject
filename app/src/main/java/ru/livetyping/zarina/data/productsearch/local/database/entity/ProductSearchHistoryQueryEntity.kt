@@ -36,10 +36,10 @@ data class ProductSearchHistoryQueryEntity(
         const val FIELD_TEXT = "product_search_history_query_text"
         const val FIELD_TIMESTAMP_MILLIS = "product_search_history_query_timestamp_millis"
 
-        fun from(entry: ProductSearchHistoryQuery): ProductSearchHistoryQueryEntity {
+        fun from(query: ProductSearchHistoryQuery): ProductSearchHistoryQueryEntity {
             return ProductSearchHistoryQueryEntity(
-                text = entry.text.lowercase().trim(),
-                timestampMillis = entry.timestampMillis,
+                text = query.text.lowercase().trim(),
+                timestampMillis = query.timestampMillis,
             )
         }
     }

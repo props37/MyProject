@@ -4,21 +4,20 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.livetyping.zarina.base.usecase.UseCase
 import ru.livetyping.zarina.data.productsearch.ProductSearchRepository
 import ru.livetyping.zarina.di.Qualifiers
-import ru.livetyping.zarina.domain.productsearch.ProductSearchHistoryQuery
 import timber.log.Timber
 import javax.inject.Inject
 
-class SaveProductSearchHistoryQueryUseCase @Inject constructor(
+class DeleteProductSearchHistoryQueryUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val productSearchRepository: ProductSearchRepository,
-) : UseCase<SaveProductSearchHistoryQueryUseCase.Params, Unit>(dispatcher) {
+) : UseCase<DeleteProductSearchHistoryQueryUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
-        val query = params.query
-        Timber.v("Save product search history query: $query")
-        productSearchRepository.saveProductSearchHistoryQuery(query)
+        val text = params.text
+        Timber.v("Delete product search history query: $text")
+        productSearchRepository.deleteProductSearchHistoryQuery(text)
     }
 
-    data class Params(val query: ProductSearchHistoryQuery)
+    data class Params(val text: String)
 }
