@@ -10,11 +10,11 @@ import javax.inject.Inject
 class ProductSearchLocalDataSource @Inject constructor(
     private val productSearchHistoryEntryDao: ProductSearchHistoryEntryDao,
 ) {
-    fun getLastProductSearchHistoryEntries(
+    fun getLastProductSearchHistoryEntriesFlow(
         text: String,
         limit: Int,
     ): Flow<List<ProductSearchHistoryEntry>> {
-        return productSearchHistoryEntryDao.getLastProductSearchHistoryEntries(text, limit)
+        return productSearchHistoryEntryDao.getLastProductSearchHistoryEntriesFlow(text, limit)
             .map { list ->
                 list.map { it.toProductSearchHistoryEntry() }
             }

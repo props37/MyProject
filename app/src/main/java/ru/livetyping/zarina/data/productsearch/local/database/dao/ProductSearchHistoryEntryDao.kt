@@ -14,11 +14,11 @@ abstract class ProductSearchHistoryEntryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun saveProductSearchHistoryEntry(entry: ProductSearchHistoryEntryEntity)
 
-    fun getLastProductSearchHistoryEntries(
+    fun getLastProductSearchHistoryEntriesFlow(
         text: String,
         limit: Int,
     ): Flow<List<ProductSearchHistoryEntryEntity>> {
-        return getLastProductSearchHistoryEntriesImpl(text, limit).distinctUntilChanged()
+        return getLastProductSearchHistoryEntriesFlowImpl(text, limit).distinctUntilChanged()
     }
 
     @Query("DELETE FROM ${ProductSearchHistoryEntryEntity.TABLE_NAME}")
@@ -33,7 +33,7 @@ abstract class ProductSearchHistoryEntryDao {
             LIMIT :limit
         """
     )
-    protected abstract fun getLastProductSearchHistoryEntriesImpl(
+    protected abstract fun getLastProductSearchHistoryEntriesFlowImpl(
         text: String,
         limit: Int,
     ): Flow<List<ProductSearchHistoryEntryEntity>>

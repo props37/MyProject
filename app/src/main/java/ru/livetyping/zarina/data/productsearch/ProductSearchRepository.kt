@@ -5,6 +5,7 @@ import ru.livetyping.zarina.data.productsearch.local.ProductSearchLocalDataSourc
 import ru.livetyping.zarina.data.productsearch.remote.ProductSearchRemoteDataSource
 import ru.livetyping.zarina.domain.common.Sorting
 import ru.livetyping.zarina.domain.filter.Filters
+import ru.livetyping.zarina.domain.productsearch.ProductSearchHistoryEntry
 import ru.livetyping.zarina.domain.productsearch.ProductSearchResult
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import javax.inject.Inject
@@ -24,6 +25,17 @@ class ProductSearchRepository @Inject constructor(
         offset: Int,
     ): Flow<ProductSearchResult> {
         return remoteDataSource.searchProductsFlow(query, sorting, filters, offset)
+    }
+
+    fun getLastProductSearchHistoryEntriesFlow(
+        text: String,
+        limit: Int,
+    ): Flow<List<ProductSearchHistoryEntry>> {
+        return localDataSource.getLastProductSearchHistoryEntriesFlow(text, limit)
+    }
+
+    suspend fun saveProductSearchHistoryEntry(entry: ProductSearchHistoryEntry) {
+        localDataSource.saveProductSearchHistoryEntry(entry)
     }
 
     suspend fun clear() {
