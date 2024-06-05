@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "7ecaa11bd3f216379825c5acd5a681d2",
+    "identityHash": "076fdd946c581e0e5e7ae02cfc0e8ff4",
     "entities": [
       {
         "tableName": "user",
@@ -55,18 +55,18 @@
         "foreignKeys": []
       },
       {
-        "tableName": "product_search_history_entry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`product_search_history_entry_text` TEXT NOT NULL, `product_search_history_entry_` INTEGER NOT NULL, PRIMARY KEY(`product_search_history_entry_text`))",
+        "tableName": "product_search_history_query",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`product_search_history_query_text` TEXT NOT NULL, `product_search_history_query_timestamp_millis` INTEGER NOT NULL, PRIMARY KEY(`product_search_history_query_text`))",
         "fields": [
           {
             "fieldPath": "text",
-            "columnName": "product_search_history_entry_text",
+            "columnName": "product_search_history_query_text",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "timestampMillis",
-            "columnName": "product_search_history_entry_",
+            "columnName": "product_search_history_query_timestamp_millis",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -74,20 +74,20 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "product_search_history_entry_text"
+            "product_search_history_query_text"
           ]
         },
         "indices": [
           {
-            "name": "index_product_search_history_entry_product_search_history_entry_",
+            "name": "index_product_search_history_query_product_search_history_query_timestamp_millis",
             "unique": false,
             "columnNames": [
-              "product_search_history_entry_"
+              "product_search_history_query_timestamp_millis"
             ],
             "orders": [
               "DESC"
             ],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_product_search_history_entry_product_search_history_entry_` ON `${TABLE_NAME}` (`product_search_history_entry_` DESC)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_product_search_history_query_product_search_history_query_timestamp_millis` ON `${TABLE_NAME}` (`product_search_history_query_timestamp_millis` DESC)"
           }
         ],
         "foreignKeys": []
@@ -96,7 +96,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7ecaa11bd3f216379825c5acd5a681d2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '076fdd946c581e0e5e7ae02cfc0e8ff4')"
     ]
   }
 }

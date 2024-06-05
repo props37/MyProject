@@ -5,19 +5,19 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.base.usecase.FlowUseCase
 import ru.livetyping.zarina.data.productsearch.ProductSearchRepository
 import ru.livetyping.zarina.di.Qualifiers
-import ru.livetyping.zarina.domain.productsearch.ProductSearchHistoryEntry
+import ru.livetyping.zarina.domain.productsearch.ProductSearchHistoryQuery
 import javax.inject.Inject
 
-class GetLastProductSearchHistoryEntriesFlowUseCase @Inject constructor(
+class GetLastProductSearchHistoryQueriesFlowUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val productSearchRepository: ProductSearchRepository,
-) : FlowUseCase<GetLastProductSearchHistoryEntriesFlowUseCase.Params, List<ProductSearchHistoryEntry>>(
+) : FlowUseCase<GetLastProductSearchHistoryQueriesFlowUseCase.Params, List<ProductSearchHistoryQuery>>(
     dispatcher,
 ) {
 
-    override fun execute(params: Params): Flow<List<ProductSearchHistoryEntry>> {
-        return productSearchRepository.getLastProductSearchHistoryEntriesFlow(
+    override fun execute(params: Params): Flow<List<ProductSearchHistoryQuery>> {
+        return productSearchRepository.getLastProductSearchHistoryQueriesFlow(
             text = params.text,
             limit = params.limit,
         )

@@ -45,7 +45,7 @@ import ru.livetyping.zarina.domain.filter.coerceInAvailable
 import ru.livetyping.zarina.domain.filter.selected
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductItem
-import ru.livetyping.zarina.domain.productsearch.ProductSearchHistoryEntry
+import ru.livetyping.zarina.domain.productsearch.ProductSearchHistoryQuery
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
@@ -60,9 +60,9 @@ import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinat
 import ru.livetyping.zarina.presentation.navigation.destination.graph.SizeSelectorGraph
 import ru.livetyping.zarina.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
-import ru.livetyping.zarina.usecase.productsearch.GetLastProductSearchHistoryEntriesFlowUseCase
+import ru.livetyping.zarina.usecase.productsearch.GetLastProductSearchHistoryQueriesFlowUseCase
 import ru.livetyping.zarina.usecase.productsearch.GetProductSearchSuggestionsFlowUseCase
-import ru.livetyping.zarina.usecase.productsearch.SaveProductSearchHistoryEntryUseCase
+import ru.livetyping.zarina.usecase.productsearch.SaveProductSearchHistoryQueryUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.clear
 import ru.livetyping.zarina.util.compose.text.textAsFlow
@@ -134,14 +134,14 @@ class ProductSearchViewModel @AssistedInject constructor(
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val lastSearchHistoryEntriesResult: StateFlow<Result<List<ProductSearchHistoryEntry>>?> =
+    private val lastSearchHistoryQueriesResult: StateFlow<Result<List<ProductSearchHistoryQuery>>?> =
         searchTextFieldState.textAsFlow()
             .flatMapLatest { query ->
-                val params = GetLastProductSearchHistoryEntriesFlowUseCase.Params(
+                val params = GetLastProductSearchHistoryQueriesFlowUseCase.Params(
                     text = query.toString(),
                     limit = SEARCH_HISTORY_QUERIES_MAX_COUNT,
                 )
-                interactor.getLastProductSearchHistoryEntriesFlow(params)
+                interactor.getLastProductSearchHistoryQueriesFlow(params)
             }
             .stateIn(
                 scope = viewModelScopeDefault,
@@ -150,7 +150,7 @@ class ProductSearchViewModel @AssistedInject constructor(
             )
 
     val searchSuggestionsState: StateFlow<SearchSuggestionsState> = combine(
-        lastSearchHistoryEntriesResult,
+        lastSearchHistoryQueriesResult,
         searchSuggestionsResult,
     ) { lastSearchHistoryEntriesResult, searchSuggestionsResult ->
         createSearchSuggestionsState(lastSearchHistoryEntriesResult, searchSuggestionsResult)
@@ -369,12 +369,12 @@ class ProductSearchViewModel @AssistedInject constructor(
 
     private fun saveSearchQuery(query: String) {
         viewModelScope.launch {
-            val entry = ProductSearchHistoryEntry(
+            val entry = ProductSearchHistoryQuery(
                 text = query,
                 timestampMillis = System.currentTimeMillis(),
             )
-            val params = SaveProductSearchHistoryEntryUseCase.Params(entry)
-            interactor.saveProductSearchHistoryEntryFlow(params)
+            val params = SaveProductSearchHistoryQueryUseCase.Params(entry)
+            interactor.saveProductSearchHistoryQuery(params)
         }
     }
 
@@ -405,35 +405,21 @@ class ProductSearchViewModel @AssistedInject constructor(
         }
     }
 
-    private fun Result<ProductSearchSuggestions>.toSearchSuggestionsState(): SearchSuggestionsState {
-        return this.fold(
-            onSuccess = { suggestions ->
-                val items = suggestions.toSearchSuggestionItems().toImmutableList()
-                if (items.isNotEmpty()) {
-                    SearchSuggestionsState.Suggestions(items)
-                }else {
-                    SearchSuggestionsState.Empty
-                }
-            },
-            onFailure = { throwable ->
-                val errorState = ErrorState.from(throwable).copy(isButtonVisible = false)
-                SearchSuggestionsState.Error(errorState)
-            },
-        )
-    }
-
     private fun createSearchSuggestionsState(
-        searchHistoryQueriesResult: Result<List<ProductSearchHistoryEntry>>?,
+        searchHistoryQueriesResult: Result<List<ProductSearchHistoryQuery>>?,
         searchSuggestionsResult: Result<ProductSearchSuggestions>?,
     ): SearchSuggestionsState {
         return searchSuggestionsResult?.fold(
             onSuccess = { suggestions ->
-                val searchSuggestionItems = suggestions.toSearchSuggestionItems().toImmutableList()
+                val searchSuggestionItems = suggestions.toSearchSuggestionItems()
                 if (searchSuggestionItems.isNotEmpty()) {
-                    val historyQueryItems = searchHistoryQueriesResult?.getOrNull()?.toHistoryQueryItems()
+                    val historyQueryItems =
+                        searchHistoryQueriesResult?.getOrNull()?.toSearchSuggestionItems()
                     val items = if (historyQueryItems != null) {
                         historyQueryItems + searchSuggestionItems
-                    } else searchSuggestionItems
+                    } else {
+                        searchSuggestionItems
+                    }
                     SearchSuggestionsState.Suggestions(items.toImmutableList())
                 } else {
                     SearchSuggestionsState.Empty
@@ -446,7 +432,7 @@ class ProductSearchViewModel @AssistedInject constructor(
         ) ?: SearchSuggestionsState.Loading
     }
 
-    private fun List<ProductSearchHistoryEntry>.toHistoryQueryItems(): List<SearchSuggestionItem> {
+    private fun List<ProductSearchHistoryQuery>.toSearchSuggestionItems(): List<SearchSuggestionItem> {
         val historyQueries = this
         return buildList {
             if (historyQueries.isNotEmpty()) {

@@ -8,7 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.data.database.ZarinaDatabase
-import ru.livetyping.zarina.data.productsearch.local.database.dao.ProductSearchHistoryEntryDao
+import ru.livetyping.zarina.data.productsearch.local.database.dao.ProductSearchHistoryQueryDao
 import ru.livetyping.zarina.data.user.local.database.dao.UserDao
 import javax.inject.Singleton
 
@@ -35,8 +35,8 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideProductSearchHistoryEntryDao(database: ZarinaDatabase): ProductSearchHistoryEntryDao {
-        return database.getProductSearchHistoryEntryDao()
+    fun provideProductSearchHistoryQueryDao(database: ZarinaDatabase): ProductSearchHistoryQueryDao {
+        return database.getProductSearchHistoryQueryDao()
     }
 
     companion object {

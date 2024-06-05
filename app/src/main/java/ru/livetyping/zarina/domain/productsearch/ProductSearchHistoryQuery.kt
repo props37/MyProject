@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.domain.productsearch
 
-data class ProductSearchHistoryEntry(
+data class ProductSearchHistoryQuery(
     val text: String,
     val timestampMillis: Long,
 )
