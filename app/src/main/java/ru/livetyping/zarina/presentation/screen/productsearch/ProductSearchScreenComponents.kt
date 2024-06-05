@@ -365,6 +365,20 @@ object ProductSearchScreenComponents {
                         )
                     }
 
+                    is SearchSuggestionItem.HistoryQueryItem -> {
+                        val nextItem = items.getOrNull(index + 1)
+                        val isDividerVisible =
+                            index < items.lastIndex && nextItem is SearchSuggestionItem.HistoryQueryItem
+
+                        SearchSuggestionHistoryQueryItem(
+                            item = item,
+                            onClick = onItemClicked,
+                            query = query,
+                            isDividerVisible = isDividerVisible,
+                            modifier = Modifier.animateItem(),
+                        )
+                    }
+
                     is SearchSuggestionItem.CategoryItem -> {
                         val nextItem = items.getOrNull(index + 1)
                         val isDividerVisible =
@@ -405,6 +419,48 @@ object ProductSearchScreenComponents {
     private fun SearchSuggestionSearchQueryItem(
         item: SearchSuggestionItem.SearchQueryItem,
         onClick: (SearchSuggestionItem.SearchQueryItem) -> Unit,
+        query: String,
+        isDividerVisible: Boolean,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            ZarinaItem(
+                onClick = { onClick(item) },
+                modifier = Modifier.heightIn(min = 48.dp),
+            ) {
+                val textWithQueryMatch = rememberSearchSuggestionItemTextWithQueryMatch(
+                    text = item.query,
+                    query = query,
+                )
+
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
+                    contentDescription = null,
+                    tint = UiKitTheme.colors.icon.regular.default,
+                    modifier = Modifier.size(16.dp),
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = textWithQueryMatch,
+                    style = SearchSuggestionItemTextStyle,
+                    color = SearchSuggestionsColor,
+                )
+            }
+
+            if (isDividerVisible) {
+                ZarinaDivider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun SearchSuggestionHistoryQueryItem(
+        item: SearchSuggestionItem.HistoryQueryItem,
+        onClick: (SearchSuggestionItem.HistoryQueryItem) -> Unit,
         query: String,
         isDividerVisible: Boolean,
         modifier: Modifier = Modifier,
@@ -516,7 +572,11 @@ object ProductSearchScreenComponents {
             }
 
             is SearchSuggestionItem.SearchQueryItem -> {
-                "$SearchSuggestionsKeyQueryItemPrefix ${item.query}"
+                "$SearchSuggestionsKeySearchQueryItemPrefix ${item.query}"
+            }
+
+            is SearchSuggestionItem.HistoryQueryItem -> {
+                "$SearchSuggestionsKeyHistoryQueryItemPrefix ${item.query}"
             }
 
             is SearchSuggestionItem.CategoryItem -> {
@@ -528,7 +588,8 @@ object ProductSearchScreenComponents {
     private fun getSearchSuggestionItemContentType(item: SearchSuggestionItem): String {
         return when (item) {
             is SearchSuggestionItem.GenericTitle -> SearchSuggestionsContentTypeTitle
-            is SearchSuggestionItem.SearchQueryItem -> SearchSuggestionsContentTypeQueryItem
+            is SearchSuggestionItem.SearchQueryItem -> SearchSuggestionsContentTypeSearchQueryItem
+            is SearchSuggestionItem.HistoryQueryItem -> SearchSuggestionsContentTypeHistoryQueryItem
             is SearchSuggestionItem.CategoryItem -> SearchSuggestionsContentTypeCategoryItem
         }
     }
@@ -553,13 +614,18 @@ object ProductSearchScreenComponents {
         "SearchSuggestionsContentKeySuggestions"
 
     private const val SearchSuggestionsKeyTitlePrefix = "SearchSuggestionsKeyTitlePrefix"
-    private const val SearchSuggestionsKeyQueryItemPrefix = "SearchSuggestionsKeyQueryItemPrefix"
+    private const val SearchSuggestionsKeySearchQueryItemPrefix =
+        "SearchSuggestionsKeySearchQueryItemPrefix"
+    private const val SearchSuggestionsKeyHistoryQueryItemPrefix =
+        "SearchSuggestionsKeyHistoryQueryItemPrefix"
     private const val SearchSuggestionsKeyCategoryItemPrefix =
         "SearchSuggestionsKeyCategoryItemPrefix"
 
     private const val SearchSuggestionsContentTypeTitle = "SearchSuggestionsContentTypeTitle"
-    private const val SearchSuggestionsContentTypeQueryItem =
-        "SearchSuggestionsContentTypeQueryItem"
+    private const val SearchSuggestionsContentTypeSearchQueryItem =
+        "SearchSuggestionsContentTypeSearchQueryItem"
+    private const val SearchSuggestionsContentTypeHistoryQueryItem =
+        "SearchSuggestionsContentTypeHistoryQueryItem"
     private const val SearchSuggestionsContentTypeCategoryItem =
         "SearchSuggestionsContentTypeCategoryItem"
 }

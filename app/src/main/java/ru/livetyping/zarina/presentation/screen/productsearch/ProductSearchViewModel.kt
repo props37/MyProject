@@ -60,6 +60,7 @@ import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinat
 import ru.livetyping.zarina.presentation.navigation.destination.graph.SizeSelectorGraph
 import ru.livetyping.zarina.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
+import ru.livetyping.zarina.usecase.productsearch.GetLastProductSearchHistoryEntriesFlowUseCase
 import ru.livetyping.zarina.usecase.productsearch.GetProductSearchSuggestionsFlowUseCase
 import ru.livetyping.zarina.usecase.productsearch.SaveProductSearchHistoryEntryUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
@@ -132,12 +133,32 @@ class ProductSearchViewModel @AssistedInject constructor(
             ) ?: persistentListOf()
         }
 
-    val searchSuggestionsState: StateFlow<SearchSuggestionsState> = searchSuggestionsResult.mapState(
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val lastSearchHistoryEntriesResult: StateFlow<Result<List<ProductSearchHistoryEntry>>?> =
+        searchTextFieldState.textAsFlow()
+            .flatMapLatest { query ->
+                val params = GetLastProductSearchHistoryEntriesFlowUseCase.Params(
+                    text = query.toString(),
+                    limit = SEARCH_HISTORY_QUERIES_MAX_COUNT,
+                )
+                interactor.getLastProductSearchHistoryEntriesFlow(params)
+            }
+            .stateIn(
+                scope = viewModelScopeDefault,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = null,
+            )
+
+    val searchSuggestionsState: StateFlow<SearchSuggestionsState> = combine(
+        lastSearchHistoryEntriesResult,
+        searchSuggestionsResult,
+    ) { lastSearchHistoryEntriesResult, searchSuggestionsResult ->
+        createSearchSuggestionsState(lastSearchHistoryEntriesResult, searchSuggestionsResult)
+    }.stateIn(
         scope = viewModelScopeDefault,
         started = SharingStarted.WhileUiSubscribed,
-    ) { result ->
-        result?.toSearchSuggestionsState() ?: SearchSuggestionsState.Loading
-    }
+        initialValue = SearchSuggestionsState.Loading,
+    )
 
     private val filtersValueHolder = savedStateHandle.createValueHolder<FiltersParcelable?>(
         key = KEY_FILTERS,
@@ -227,15 +248,11 @@ class ProductSearchViewModel @AssistedInject constructor(
     fun onSearchSuggestionItemClicked(item: SearchSuggestionItem) {
         when (item) {
             is SearchSuggestionItem.SearchQueryItem -> {
-                emitSideEffect(SideEffect.ReleaseSearchTextFieldFocus)
-                searchModeValueHolder.set(SearchMode.SEARCH_RESULTS)
-                searchTextFieldState.edit {
-                    clear()
-                    append(item.query)
-                    placeCursorAtEnd()
-                }
-                searchQueryValueHolder.set(item.query)
-                saveSearchQuery(item.query)
+                onSearchSuggestionQueryItemClicked(item.query)
+            }
+
+            is SearchSuggestionItem.HistoryQueryItem -> {
+                onSearchSuggestionQueryItemClicked(item.query)
             }
 
             is SearchSuggestionItem.CategoryItem -> {
@@ -317,6 +334,18 @@ class ProductSearchViewModel @AssistedInject constructor(
         }
     }
 
+    private fun onSearchSuggestionQueryItemClicked(query: String) {
+        emitSideEffect(SideEffect.ReleaseSearchTextFieldFocus)
+        searchModeValueHolder.set(SearchMode.SEARCH_RESULTS)
+        searchTextFieldState.edit {
+            clear()
+            append(query)
+            placeCursorAtEnd()
+        }
+        searchQueryValueHolder.set(query)
+        saveSearchQuery(query)
+    }
+
     private fun addProductToCart(productId: Product.Id, barcode: Barcode) {
         viewModelScopeDefault.launch {
             val params = AddProductToCartUseCase.Params(
@@ -391,6 +420,47 @@ class ProductSearchViewModel @AssistedInject constructor(
                 SearchSuggestionsState.Error(errorState)
             },
         )
+    }
+
+    private fun createSearchSuggestionsState(
+        searchHistoryQueriesResult: Result<List<ProductSearchHistoryEntry>>?,
+        searchSuggestionsResult: Result<ProductSearchSuggestions>?,
+    ): SearchSuggestionsState {
+        return searchSuggestionsResult?.fold(
+            onSuccess = { suggestions ->
+                val searchSuggestionItems = suggestions.toSearchSuggestionItems().toImmutableList()
+                if (searchSuggestionItems.isNotEmpty()) {
+                    val historyQueryItems = searchHistoryQueriesResult?.getOrNull()?.toHistoryQueryItems()
+                    val items = if (historyQueryItems != null) {
+                        historyQueryItems + searchSuggestionItems
+                    } else searchSuggestionItems
+                    SearchSuggestionsState.Suggestions(items.toImmutableList())
+                } else {
+                    SearchSuggestionsState.Empty
+                }
+            },
+            onFailure = { throwable ->
+                val errorState = ErrorState.from(throwable).copy(isButtonVisible = false)
+                SearchSuggestionsState.Error(errorState)
+            },
+        ) ?: SearchSuggestionsState.Loading
+    }
+
+    private fun List<ProductSearchHistoryEntry>.toHistoryQueryItems(): List<SearchSuggestionItem> {
+        val historyQueries = this
+        return buildList {
+            if (historyQueries.isNotEmpty()) {
+                val titleText = Text.Resource(R.string.search_history)
+                add(SearchSuggestionItem.GenericTitle(titleText))
+
+                val items = historyQueries
+                    .take(SEARCH_HISTORY_QUERIES_MAX_COUNT)
+                    .map { query ->
+                        SearchSuggestionItem.HistoryQueryItem(query.text.capitalize())
+                    }
+                addAll(items)
+            }
+        }
     }
 
     private fun ProductSearchSuggestions.toSearchSuggestionItems(): List<SearchSuggestionItem> {
@@ -475,6 +545,9 @@ class ProductSearchViewModel @AssistedInject constructor(
         data class SearchQueryItem(val query: String) : SearchSuggestionItem()
 
         @Immutable
+        data class HistoryQueryItem(val query: String) : SearchSuggestionItem()
+
+        @Immutable
         data class CategoryItem(
             val id: Category.Id,
             val name: String,
@@ -498,6 +571,7 @@ class ProductSearchViewModel @AssistedInject constructor(
         private const val KEY_SIZE_SELECTOR_RESULT = "size_selector_result"
         private const val KEY_FILTERS_RESULT = "filters_result"
 
+        private const val SEARCH_HISTORY_QUERIES_MAX_COUNT = 5
         private const val SEARCH_SUGGESTIONS_QUERIES_MAX_COUNT = 5
         private const val SEARCH_SUGGESTIONS_CATEGORIES_MAX_COUNT = 5
 

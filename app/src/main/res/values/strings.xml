@@ -213,6 +213,7 @@
     <string name="select_date">Выбери дату</string>
     <string name="selected_date">Выбранная дата</string>
     <string name="search_results">Результаты поиска</string>
+    <string name="search_history">История поиска</string>
     <string name="categories">Категории</string>
     <string name="nothing_found">Ничего не нашлось</string>
     <string name="write_different_search_query">Напиши по‑другому или измени запрос</string>
