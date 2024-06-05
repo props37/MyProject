@@ -339,7 +339,13 @@ object ProductSearchScreenComponents {
         onItemClicked: (SearchSuggestionItem) -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        val lazyListState = rememberLazyListState()
+        LaunchedEffect(items) {
+            lazyListState.scrollToItem(0)
+        }
+
         LazyColumn(
+            state = lazyListState,
             contentPadding = PaddingValues(bottom = 24.dp),
             modifier = modifier,
         ) {
