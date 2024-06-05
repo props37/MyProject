@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -334,6 +335,7 @@ object ProductSearchScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     private fun SearchSuggestionList(
         query: String,
@@ -370,10 +372,11 @@ object ProductSearchScreenComponents {
                         val isDividerVisible =
                             index < items.lastIndex && nextItem is SearchSuggestionItem.SearchQueryItem
 
-                        SearchSuggestionSearchQueryItem(
-                            item = item,
-                            onClick = onItemClicked,
-                            query = query,
+                        SearchSuggestionQueryItem(
+                            itemQuery = item.query,
+                            onClick = { onItemClicked(item) },
+                            searchQuery = query,
+                            leadingIconResId = R.drawable.ic_magnifying_glass_24,
                             isDividerVisible = isDividerVisible,
                             modifier = Modifier.animateItem(),
                         )
@@ -384,11 +387,29 @@ object ProductSearchScreenComponents {
                         val isDividerVisible =
                             index < items.lastIndex && nextItem is SearchSuggestionItem.HistoryQueryItem
 
-                        SearchSuggestionHistoryQueryItem(
-                            item = item,
-                            onClick = onItemClicked,
-                            onDeleteClicked = onDeleteHistoryQueryItemClicked,
-                            query = query,
+                        SearchSuggestionQueryItem(
+                            itemQuery = item.query,
+                            onClick = { onItemClicked(item) },
+                            searchQuery = query,
+                            leadingIconResId = R.drawable.ic_history_24,
+                            trailingContent = {
+                                CompositionLocalProvider(
+                                    LocalMinimumInteractiveComponentEnforcement provides false,
+                                ) {
+                                    val iconSize = 16.dp
+                                    ZarinaIconButton(
+                                        onClick = { onDeleteHistoryQueryItemClicked(item) },
+                                        indication = ripple(bounded = false, radius = iconSize),
+                                        modifier = Modifier.size(32.dp),
+                                    ) {
+                                        Icon(
+                                            imageVector = ImageVector.vectorResource(R.drawable.ic_cross_24),
+                                            contentDescription = stringResource(R.string.delete),
+                                            modifier = Modifier.size(iconSize),
+                                        )
+                                    }
+                                }
+                            },
                             isDividerVisible = isDividerVisible,
                             modifier = Modifier.animateItem(),
                         )
@@ -431,69 +452,27 @@ object ProductSearchScreenComponents {
     }
 
     @Composable
-    private fun SearchSuggestionSearchQueryItem(
-        item: SearchSuggestionItem.SearchQueryItem,
-        onClick: (SearchSuggestionItem.SearchQueryItem) -> Unit,
-        query: String,
+    private fun SearchSuggestionQueryItem(
+        itemQuery: String,
+        onClick: () -> Unit,
+        searchQuery: String,
+        leadingIconResId: Int,
         isDividerVisible: Boolean,
         modifier: Modifier = Modifier,
+        trailingContent: (@Composable RowScope.() -> Unit)? = null,
     ) {
         Column(modifier = modifier) {
             ZarinaItem(
-                onClick = { onClick(item) },
-                modifier = Modifier.heightIn(min = 48.dp),
-            ) {
-                val textWithQueryMatch = rememberSearchSuggestionItemTextWithQueryMatch(
-                    text = item.query,
-                    query = query,
-                )
-
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
-                    contentDescription = null,
-                    tint = UiKitTheme.colors.icon.regular.default,
-                    modifier = Modifier.size(16.dp),
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = textWithQueryMatch,
-                    style = SearchSuggestionItemTextStyle,
-                    color = SearchSuggestionsColor,
-                )
-            }
-
-            if (isDividerVisible) {
-                ZarinaDivider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                )
-            }
-        }
-    }
-
-    @OptIn(ExperimentalMaterialApi::class)
-    @Composable
-    private fun SearchSuggestionHistoryQueryItem(
-        item: SearchSuggestionItem.HistoryQueryItem,
-        onClick: (SearchSuggestionItem.HistoryQueryItem) -> Unit,
-        onDeleteClicked: (SearchSuggestionItem.HistoryQueryItem) -> Unit,
-        query: String,
-        isDividerVisible: Boolean,
-        modifier: Modifier = Modifier,
-    ) {
-        Column(modifier = modifier) {
-            ZarinaItem(
-                onClick = { onClick(item) },
+                onClick = onClick,
                 modifier = Modifier.heightIn(min = 48.dp),
                 startContent = {
                     val textWithQueryMatch = rememberSearchSuggestionItemTextWithQueryMatch(
-                        text = item.query,
-                        query = query,
+                        text = itemQuery,
+                        query = searchQuery,
                     )
 
                     Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_history_24),
+                        imageVector = ImageVector.vectorResource(leadingIconResId),
                         contentDescription = null,
                         tint = UiKitTheme.colors.icon.regular.default,
                         modifier = Modifier.size(16.dp),
@@ -505,23 +484,7 @@ object ProductSearchScreenComponents {
                         color = SearchSuggestionsColor,
                     )
                 },
-                endContent = {
-                    CompositionLocalProvider(
-                        LocalMinimumInteractiveComponentEnforcement provides false,
-                    ) {
-                        ZarinaIconButton(
-                            onClick = { onDeleteClicked(item) },
-                            indication = ripple(bounded = false, radius = 16.dp),
-                            modifier = Modifier.size(32.dp),
-                        ) {
-                            Icon(
-                                imageVector = ImageVector.vectorResource(R.drawable.ic_cross_24),
-                                contentDescription = stringResource(R.string.delete),
-                                modifier = Modifier.size(16.dp),
-                            )
-                        }
-                    }
-                },
+                endContent = trailingContent,
             )
 
             if (isDividerVisible) {
