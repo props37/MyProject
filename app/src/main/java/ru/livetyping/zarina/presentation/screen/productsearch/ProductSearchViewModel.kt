@@ -45,6 +45,7 @@ import ru.livetyping.zarina.domain.filter.coerceInAvailable
 import ru.livetyping.zarina.domain.filter.selected
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductItem
+import ru.livetyping.zarina.domain.productsearch.ProductSearchHistoryEntry
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
@@ -60,6 +61,7 @@ import ru.livetyping.zarina.presentation.navigation.destination.graph.SizeSelect
 import ru.livetyping.zarina.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.livetyping.zarina.usecase.productsearch.GetProductSearchSuggestionsFlowUseCase
+import ru.livetyping.zarina.usecase.productsearch.SaveProductSearchHistoryEntryUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.clear
 import ru.livetyping.zarina.util.compose.text.textAsFlow
@@ -206,6 +208,7 @@ class ProductSearchViewModel @AssistedInject constructor(
             emitSideEffect(SideEffect.ReleaseSearchTextFieldFocus)
             searchModeValueHolder.set(SearchMode.SEARCH_RESULTS)
             searchQueryValueHolder.set(searchQuery)
+            saveSearchQuery(searchQuery)
         }
     }
 
@@ -232,6 +235,7 @@ class ProductSearchViewModel @AssistedInject constructor(
                     placeCursorAtEnd()
                 }
                 searchQueryValueHolder.set(item.query)
+                saveSearchQuery(item.query)
             }
 
             is SearchSuggestionItem.CategoryItem -> {
@@ -331,6 +335,17 @@ class ProductSearchViewModel @AssistedInject constructor(
                     val message = ZarinaToastMessage.error(text)
                     emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
+        }
+    }
+
+    private fun saveSearchQuery(query: String) {
+        viewModelScope.launch {
+            val entry = ProductSearchHistoryEntry(
+                text = query,
+                timestampMillis = System.currentTimeMillis(),
+            )
+            val params = SaveProductSearchHistoryEntryUseCase.Params(entry)
+            interactor.saveProductSearchHistoryEntryFlow(params)
         }
     }
 
