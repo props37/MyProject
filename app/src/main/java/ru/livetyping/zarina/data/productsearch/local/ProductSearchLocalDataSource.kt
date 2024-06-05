@@ -31,6 +31,10 @@ class ProductSearchLocalDataSource @Inject constructor(
         productSearchHistoryQueryDao.deleteProductSearchHistoryQuery(text.lowercase())
     }
 
+    suspend fun clearProductSearchHistory() {
+        productSearchHistoryQueryDao.clear()
+    }
+
     suspend fun clear() {
         productSearchHistoryQueryDao.clear()
     }

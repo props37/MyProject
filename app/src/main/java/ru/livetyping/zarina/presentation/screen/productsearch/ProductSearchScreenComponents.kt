@@ -63,6 +63,9 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaFilterIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
@@ -213,6 +216,7 @@ object ProductSearchScreenComponents {
         state: SearchSuggestionsState,
         autocompleteSuggestions: ImmutableList<ProductSearchSuggestions.AutocompleteSuggestion>,
         query: String,
+        onClearSearchHistoryClicked: () -> Unit,
         onSearchSuggestionItemClicked: (SearchSuggestionItem) -> Unit,
         onDeleteSearchHistoryQueryItemClicked: (SearchSuggestionItem.HistoryQueryItem) -> Unit,
         onAutocompleteSuggestionClicked: (ProductSearchSuggestions.AutocompleteSuggestion) -> Unit,
@@ -242,6 +246,7 @@ object ProductSearchScreenComponents {
                         SearchSuggestionList(
                             query = query,
                             items = state.items,
+                            onClearHistoryClicked = onClearSearchHistoryClicked,
                             onItemClicked = onSearchSuggestionItemClicked,
                             onDeleteHistoryQueryItemClicked = onDeleteSearchHistoryQueryItemClicked,
                             modifier = Modifier.fillMaxSize(),
@@ -340,6 +345,7 @@ object ProductSearchScreenComponents {
     private fun SearchSuggestionList(
         query: String,
         items: ImmutableList<SearchSuggestionItem>,
+        onClearHistoryClicked: () -> Unit,
         onItemClicked: (SearchSuggestionItem) -> Unit,
         onDeleteHistoryQueryItemClicked: (SearchSuggestionItem.HistoryQueryItem) -> Unit,
         modifier: Modifier = Modifier,
@@ -361,8 +367,30 @@ object ProductSearchScreenComponents {
             ) { index, item ->
                 when (item) {
                     is SearchSuggestionItem.GenericTitle -> {
-                        SearchSuggestionGenericTitle(
-                            item = item,
+                        SearchSuggestionTitle(
+                            text = textString(item.text),
+                            modifier = Modifier.animateItem(),
+                        )
+                    }
+
+                    SearchSuggestionItem.SearchHistoryTitle -> {
+                        SearchSuggestionTitle(
+                            text = stringResource(R.string.search_history),
+                            trailingContent = {
+                                ZarinaButton(
+                                    onClick = onClearHistoryClicked,
+                                    size = ZarinaButtonSize.Medium,
+                                    colors = ZarinaButtonDefaults.backlessColors()
+                                ) {
+                                    Text(text = stringResource(R.string.clear).uppercase())
+                                }
+                            },
+                            contentPadding = PaddingValues(
+                                start = 16.dp,
+                                top = 8.dp,
+                                end = 8.dp,
+                                bottom = 8.dp,
+                            ),
                             modifier = Modifier.animateItem(),
                         )
                     }
@@ -411,6 +439,12 @@ object ProductSearchScreenComponents {
                                 }
                             },
                             isDividerVisible = isDividerVisible,
+                            contentPadding = PaddingValues(
+                                start = 16.dp,
+                                top = 8.dp,
+                                end = 8.dp,
+                                bottom = 8.dp,
+                            ),
                             modifier = Modifier.animateItem(),
                         )
                     }
@@ -434,21 +468,26 @@ object ProductSearchScreenComponents {
     }
 
     @Composable
-    private fun SearchSuggestionGenericTitle(
-        item: SearchSuggestionItem.GenericTitle,
+    private fun SearchSuggestionTitle(
+        text: String,
         modifier: Modifier = Modifier,
+        trailingContent: (@Composable RowScope.() -> Unit)? = null,
+        contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     ) {
         ZarinaItem(
+            startContent = {
+                Text(
+                    text = text,
+                    style = SearchSuggestionTitleTextStyle,
+                    color = SearchSuggestionsColor,
+                )
+            },
+            endContent = trailingContent,
+            contentPadding = contentPadding,
             modifier = modifier
                 .padding(top = 8.dp)
                 .heightIn(min = 48.dp),
-        ) {
-            Text(
-                text = textString(item.text),
-                style = SearchSuggestionTitleTextStyle,
-                color = SearchSuggestionsColor,
-            )
-        }
+        )
     }
 
     @Composable
@@ -460,6 +499,7 @@ object ProductSearchScreenComponents {
         isDividerVisible: Boolean,
         modifier: Modifier = Modifier,
         trailingContent: (@Composable RowScope.() -> Unit)? = null,
+        contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     ) {
         Column(modifier = modifier) {
             ZarinaItem(
@@ -485,6 +525,7 @@ object ProductSearchScreenComponents {
                     )
                 },
                 endContent = trailingContent,
+                contentPadding = contentPadding,
             )
 
             if (isDividerVisible) {
@@ -569,6 +610,7 @@ object ProductSearchScreenComponents {
                 "$SearchSuggestionsKeyTitlePrefix ${item.text.hashCode()}"
             }
 
+            SearchSuggestionItem.SearchHistoryTitle -> SearchSuggestionsKeySearchHistoryTitle
             is SearchSuggestionItem.SearchQueryItem -> {
                 "$SearchSuggestionsKeySearchQueryItemPrefix ${item.query}"
             }
@@ -586,6 +628,7 @@ object ProductSearchScreenComponents {
     private fun getSearchSuggestionItemContentType(item: SearchSuggestionItem): String {
         return when (item) {
             is SearchSuggestionItem.GenericTitle -> SearchSuggestionsContentTypeTitle
+            SearchSuggestionItem.SearchHistoryTitle -> SearchSuggestionsContentTypeSearchHistoryTitle
             is SearchSuggestionItem.SearchQueryItem -> SearchSuggestionsContentTypeSearchQueryItem
             is SearchSuggestionItem.HistoryQueryItem -> SearchSuggestionsContentTypeHistoryQueryItem
             is SearchSuggestionItem.CategoryItem -> SearchSuggestionsContentTypeCategoryItem
@@ -612,6 +655,8 @@ object ProductSearchScreenComponents {
         "SearchSuggestionsContentKeySuggestions"
 
     private const val SearchSuggestionsKeyTitlePrefix = "SearchSuggestionsKeyTitlePrefix"
+    private const val SearchSuggestionsKeySearchHistoryTitle =
+        "SearchSuggestionsKeySearchHistoryTitle"
     private const val SearchSuggestionsKeySearchQueryItemPrefix =
         "SearchSuggestionsKeySearchQueryItemPrefix"
     private const val SearchSuggestionsKeyHistoryQueryItemPrefix =
@@ -620,6 +665,8 @@ object ProductSearchScreenComponents {
         "SearchSuggestionsKeyCategoryItemPrefix"
 
     private const val SearchSuggestionsContentTypeTitle = "SearchSuggestionsContentTypeTitle"
+    private const val SearchSuggestionsContentTypeSearchHistoryTitle =
+        "SearchSuggestionsContentTypeSearchHistoryTitle"
     private const val SearchSuggestionsContentTypeSearchQueryItem =
         "SearchSuggestionsContentTypeSearchQueryItem"
     private const val SearchSuggestionsContentTypeHistoryQueryItem =

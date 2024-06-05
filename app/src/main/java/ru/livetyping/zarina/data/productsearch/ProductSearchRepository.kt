@@ -42,6 +42,10 @@ class ProductSearchRepository @Inject constructor(
         localDataSource.deleteProductSearchHistoryQuery(text)
     }
 
+    suspend fun clearProductSearchHistory() {
+        localDataSource.clearProductSearchHistory()
+    }
+
     suspend fun clear() {
         localDataSource.clear()
     }

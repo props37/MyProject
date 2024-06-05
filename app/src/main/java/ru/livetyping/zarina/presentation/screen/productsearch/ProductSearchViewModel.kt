@@ -264,6 +264,13 @@ class ProductSearchViewModel @AssistedInject constructor(
             }
 
             is SearchSuggestionItem.GenericTitle -> Unit
+            SearchSuggestionItem.SearchHistoryTitle -> Unit
+        }
+    }
+
+    fun onClearProductSearchHistoryClicked() {
+        viewModelScope.launch {
+            interactor.clearProductSearchHistory()
         }
     }
 
@@ -444,8 +451,7 @@ class ProductSearchViewModel @AssistedInject constructor(
         val historyQueries = this
         return buildList {
             if (historyQueries.isNotEmpty()) {
-                val titleText = Text.Resource(R.string.search_history)
-                add(SearchSuggestionItem.GenericTitle(titleText))
+                add(SearchSuggestionItem.SearchHistoryTitle)
 
                 val items = historyQueries
                     .take(SEARCH_HISTORY_QUERIES_MAX_COUNT)
@@ -534,6 +540,8 @@ class ProductSearchViewModel @AssistedInject constructor(
     sealed class SearchSuggestionItem {
         @Immutable
         data class GenericTitle(val text: Text) : SearchSuggestionItem()
+
+        data object SearchHistoryTitle : SearchSuggestionItem()
 
         @Immutable
         data class SearchQueryItem(val query: String) : SearchSuggestionItem()
