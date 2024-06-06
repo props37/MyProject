@@ -19,11 +19,12 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.checkbox.ZarinaCheckbox
-import ru.livetyping.zarina.presentation.common.component.text.ZarinaClickableText
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
 
+@Suppress("ConstPropertyName")
 object SignUpScreenComponents {
 
     @Composable
@@ -89,20 +90,26 @@ object SignUpScreenComponents {
         val privacyUrl = stringResource(R.string.recaptcha_policies_privacy_url)
         val termsUrl = stringResource(R.string.recaptcha_policies_terms_url)
 
-        val clickableTextToUrl = remember(privacy, terms, privacyUrl, termsUrl) {
+        val substringToUrl = remember(privacy, terms, privacyUrl, termsUrl) {
             mapOf(
                 privacy to privacyUrl,
                 terms to termsUrl,
             )
         }
+        val linkStyle = UiKitTheme.typography.footnote.regular.copy(
+            color = UiKitTheme.colors.text.general.regular.default,
+        )
+        val stringWithLinks = rememberStringWithLinks(
+            baseString = stringResource(R.string.sign_up_recaptcha_policies),
+            substringToUrl = substringToUrl,
+            urlStyle = linkStyle.toSpanStyle(),
+            onUrlClicked = { onUrlClicked(Url(it)) },
+        )
 
-        ZarinaClickableText(
-            baseText = stringResource(R.string.sign_up_recaptcha_policies),
-            clickableTextToUrl = clickableTextToUrl,
-            onUrlClicked = onUrlClicked,
-            baseTextStyle = UiKitTheme.typography.footnote.light.copy(
-                color = UiKitTheme.colors.text.general.regular.muted,
-            ),
+        Text(
+            text = stringWithLinks,
+            style = UiKitTheme.typography.footnote.light,
+            color = UiKitTheme.colors.text.general.regular.muted,
             modifier = modifier,
         )
     }
@@ -120,7 +127,7 @@ object SignUpScreenComponents {
         val onlineStoreUrl = stringResource(R.string.online_store_policy_url)
         val loyaltyUrl = stringResource(R.string.loyalty_policy_url)
 
-        val clickableTextToUrl = remember(
+        val substringToUrl = remember(
             privacy,
             onlineStore,
             loyalty,
@@ -134,12 +141,17 @@ object SignUpScreenComponents {
                 loyalty to loyaltyUrl,
             )
         }
+        val stringWithLinks = rememberStringWithLinks(
+            baseString = stringResource(R.string.sign_up_policies),
+            substringToUrl = substringToUrl,
+            urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle(),
+            onUrlClicked = { onUrlClicked(Url(it)) },
+        )
 
-        ZarinaClickableText(
-            baseText = stringResource(R.string.sign_up_policies),
-            clickableTextToUrl = clickableTextToUrl,
-            onUrlClicked = onUrlClicked,
-            modifier = modifier,
+        Text(
+            text = stringWithLinks,
+            style = UiKitTheme.typography.footnote.light,
+            color = UiKitTheme.colors.text.general.regular.default,
         )
     }
 

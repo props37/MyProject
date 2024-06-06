@@ -13,6 +13,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +27,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
@@ -58,15 +60,16 @@ import timber.log.Timber
 @HiltViewModel(assistedFactory = ProductsViewModel.Factory::class)
 class ProductsViewModel @AssistedInject constructor(
     @Assisted
-    backStackEntrySavedStateHandle: SavedStateHandle,
+    private val filtersResultFlow: StateFlow<UnscopedDestinations.ProductFilters.Result?>,
+    @Assisted
+    private val sizeSelectorResultFlow: StateFlow<SizeSelectorGraph.Result?>,
     private val savedStateHandle: SavedStateHandle,
     private val interactor: ProductsInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
-    private val screenResultHandler = ScreenResultHandler(
-        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
-        savedStateHandle = savedStateHandle,
-    )
+    private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
+
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -95,7 +98,7 @@ class ProductsViewModel @AssistedInject constructor(
     }
         .flatMapLatest { it }
         .stateIn(
-            scope = viewModelScope,
+            scope = viewModelScopeDefault,
             started = SharingStarted.WhileSubscribed(),
             initialValue = null,
         )
@@ -103,13 +106,13 @@ class ProductsViewModel @AssistedInject constructor(
     val category: StateFlow<Category?> = categoryResult
         .map { it?.getOrNull() }
         .stateIn(
-            scope = viewModelScope,
+            scope = viewModelScopeDefault,
             started = SharingStarted.WhileUiSubscribed,
             initialValue = null,
         )
 
     val tagListState: StateFlow<TagListState?> = categoryResult.mapState(
-        scope = viewModelScope,
+        scope = viewModelScopeDefault,
         started = SharingStarted.WhileUiSubscribed,
     ) { result ->
         if (result != null) {
@@ -176,15 +179,15 @@ class ProductsViewModel @AssistedInject constructor(
         )
     }
         .flatMapLatest { it }
-        .cachedIn(viewModelScope)
+        .cachedIn(viewModelScopeDefault)
         .mapProducts(
             favoriteProductIdsResultFlow = interactor.getFavoriteProductIdsFlow(),
             cartProductIdsResultFlow = interactor.getCartProductIdsFlow(),
         )
-        .cachedIn(viewModelScope)
+        .cachedIn(viewModelScopeDefault)
 
     val appliedFilterCount: StateFlow<Int> = filters.mapState(
-        scope = viewModelScope,
+        scope = viewModelScopeDefault,
         started = SharingStarted.WhileUiSubscribed,
     ) { it.appliedFilterCount }
 
@@ -211,7 +214,10 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     fun onSearchClicked() {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val action = ProductsScreenAction.SearchClicked
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     fun onFiltersClicked() {
@@ -247,7 +253,7 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     fun onAddProductToFavoritesClicked(product: Product) {
-        viewModelScope.launch {
+        viewModelScopeDefault.launch {
             val params = ToggleProductPresenceInFavoritesUseCase.Params(product.id)
             interactor.toggleProductPresenceInFavorites(params)
                 .onSuccess { isProductInFavorites ->
@@ -309,7 +315,7 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     private fun addProductToCart(productId: Product.Id, barcode: Barcode) {
-        viewModelScope.launch {
+        viewModelScopeDefault.launch {
             val params = AddProductToCartUseCase.Params(
                 productId = productId,
                 barcode = barcode,
@@ -331,8 +337,9 @@ class ProductsViewModel @AssistedInject constructor(
 
     private fun handleFiltersResult() {
         viewModelScope.launch {
-            screenResultHandler.handle<UnscopedDestinations.Filters.Result>(
-                key = UnscopedDestinations.Filters.RESULT_KEY,
+            screenResultHandler.handle<UnscopedDestinations.ProductFilters.Result>(
+                resultFlow = filtersResultFlow,
+                key = KEY_FILTERS_RESULT,
             ) { result ->
                 val filters = result.filters.toFilters()
                 val filtersParcelable = FiltersParcelable.from(filters)
@@ -344,7 +351,8 @@ class ProductsViewModel @AssistedInject constructor(
     private fun handleSizeSelectorResult() {
         viewModelScope.launch {
             screenResultHandler.handle<SizeSelectorGraph.Result>(
-                key = SizeSelectorGraph.RESULT_KEY,
+                resultFlow = sizeSelectorResultFlow,
+                key = KEY_SIZE_SELECTOR_RESULT,
             ) { result ->
                 addProductToCart(
                     productId = result.product.toProductItem().id,
@@ -370,10 +378,16 @@ class ProductsViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(backStackEntrySavedStateHandle: SavedStateHandle): ProductsViewModel
+        fun create(
+            filtersResultFlow: StateFlow<UnscopedDestinations.ProductFilters.Result?>,
+            sizeSelectorResultFlow: StateFlow<SizeSelectorGraph.Result?>,
+        ): ProductsViewModel
     }
 
     companion object {
         private const val KEY_FILTERS = "filters"
+
+        private const val KEY_FILTERS_RESULT = "filters_result"
+        private const val KEY_SIZE_SELECTOR_RESULT = "size_selector_result"
     }
 }

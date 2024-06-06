@@ -1,7 +1,9 @@
 package ru.livetyping.zarina.util.compose
 
 import androidx.compose.animation.core.AnimationSpec
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.DecayAnimationSpec
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
@@ -18,7 +20,8 @@ fun <T> rememberAnchoredDraggableState(
     initialValue: T,
     positionalThreshold: (totalDistance: Float) -> Float = PositionalThreshold,
     velocityThresholdDp: Dp = VelocityThreshold,
-    animationSpec: AnimationSpec<Float> = spring(),
+    snapAnimationSpec: AnimationSpec<Float> = tween(),
+    decayAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay(),
     confirmValueChange: (newValue: T) -> Boolean = { true },
 ): AnchoredDraggableState<T> {
     val density = LocalDensity.current
@@ -26,7 +29,8 @@ fun <T> rememberAnchoredDraggableState(
         initialValue,
         positionalThreshold,
         velocityThresholdDp,
-        animationSpec,
+        snapAnimationSpec,
+        decayAnimationSpec,
         confirmValueChange,
         density,
     ) {
@@ -34,7 +38,8 @@ fun <T> rememberAnchoredDraggableState(
             initialValue = initialValue,
             positionalThreshold = positionalThreshold,
             velocityThreshold = { with(density) { velocityThresholdDp.toPx() } },
-            animationSpec = animationSpec,
+            snapAnimationSpec = snapAnimationSpec,
+            decayAnimationSpec = decayAnimationSpec,
             confirmValueChange = confirmValueChange,
         )
     }
@@ -47,7 +52,8 @@ fun <T> rememberAnchoredDraggableState(
     anchors: DraggableAnchors<T>,
     positionalThreshold: (totalDistance: Float) -> Float = PositionalThreshold,
     velocityThresholdDp: Dp = VelocityThreshold,
-    animationSpec: AnimationSpec<Float> = spring(),
+    snapAnimationSpec: AnimationSpec<Float> = tween(),
+    decayAnimationSpec: DecayAnimationSpec<Float> = rememberSplineBasedDecay(),
     confirmValueChange: (newValue: T) -> Boolean = { true },
 ): AnchoredDraggableState<T> {
     val density = LocalDensity.current
@@ -56,7 +62,8 @@ fun <T> rememberAnchoredDraggableState(
         anchors,
         positionalThreshold,
         velocityThresholdDp,
-        animationSpec,
+        snapAnimationSpec,
+        decayAnimationSpec,
         confirmValueChange,
         density,
     ) {
@@ -65,7 +72,8 @@ fun <T> rememberAnchoredDraggableState(
             anchors = anchors,
             positionalThreshold = positionalThreshold,
             velocityThreshold = { with(density) { velocityThresholdDp.toPx() } },
-            animationSpec = animationSpec,
+            snapAnimationSpec = snapAnimationSpec,
+            decayAnimationSpec = decayAnimationSpec,
             confirmValueChange = confirmValueChange,
         )
     }

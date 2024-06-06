@@ -1,15 +1,17 @@
 package ru.livetyping.zarina.presentation.screen.myorders
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -24,6 +26,7 @@ import ru.livetyping.zarina.domain.order.OrderItem
 import ru.livetyping.zarina.presentation.common.component.OrderCard
 import ru.livetyping.zarina.presentation.common.component.OrderCardSkeleton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.paging.ZarinaPagingPullRefreshContainer
 import ru.livetyping.zarina.presentation.common.component.paging.zarinaPagingAppendItem
 import ru.livetyping.zarina.presentation.common.component.paging.zarinaPagingPrependItem
@@ -34,9 +37,9 @@ import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
-import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 
+@Suppress("ConstPropertyName")
 object MyOrdersScreenComponents {
     
     @Composable
@@ -119,10 +122,15 @@ object MyOrdersScreenComponents {
         Box(modifier = modifier) {
             if (orderPagingItems.itemCount > 0) {
                 val itemModifier = Modifier.fillMaxWidth()
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                val updatedRetry by rememberUpdatedState { orderPagingItems.retry() }
+
+                LazyColumn(
+                    contentPadding = PaddingValues(bottom = 24.dp),
+                    modifier = Modifier.fillMaxSize(),
+                ) {
                     zarinaPagingPrependItem(
                         prependLoadState = orderPagingItems.loadState.prepend,
-                        onRetryClicked = orderPagingItems::retry,
+                        onRetryClicked = updatedRetry,
                     )
 
                     items(
@@ -132,30 +140,31 @@ object MyOrdersScreenComponents {
                             OrderListContentTypeOrderCard
                         },
                     ) { index ->
-                        val order = orderPagingItems[index]
-                        if (order != null) {
-                            OrderCard(
-                                order = order,
-                                onClick = onOrderClicked,
-                                modifier = itemModifier,
-                            )
-                        } else {
-                            OrderCardSkeleton(modifier = itemModifier)
-                        }
+                        Column(modifier = Modifier.animateItem()) {
+                            val order = orderPagingItems[index]
+                            if (order != null) {
+                                OrderCard(
+                                    order = order,
+                                    onClick = onOrderClicked,
+                                    modifier = itemModifier,
+                                )
+                            } else {
+                                OrderCardSkeleton(modifier = itemModifier)
+                            }
 
-                        if (index < orderPagingItems.itemCount - 1) {
-                            Divider(
-                                color = UiKitTheme.colors.background.skeleton,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp),
-                            )
+                            if (index < orderPagingItems.itemCount - 1) {
+                                ZarinaDivider(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp),
+                                )
+                            }
                         }
                     }
 
                     zarinaPagingAppendItem(
                         appendLoadState = orderPagingItems.loadState.append,
-                        onRetryClicked = orderPagingItems::retry,
+                        onRetryClicked = updatedRetry,
                     )
                 }
             } else {
@@ -181,20 +190,24 @@ object MyOrdersScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         val placeholderShimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
-        LazyColumn(modifier = modifier.fillMaxSize()) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier.fillMaxSize(),
+        ) {
             items(count = OrderListSkeletonItemCount) { index ->
-                OrderCardSkeleton(
-                    shimmer = placeholderShimmer,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                if (index < OrderListSkeletonItemCount - 1) {
-                    Divider(
-                        color = UiKitTheme.colors.background.skeleton,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                Column(modifier = Modifier.animateItem()) {
+                    OrderCardSkeleton(
+                        shimmer = placeholderShimmer,
+                        modifier = Modifier.fillMaxWidth(),
                     )
+
+                    if (index < OrderListSkeletonItemCount - 1) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
         }

@@ -22,8 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.filter
 import ru.livetyping.zarina.presentation.common.zarinasnack.controller.ZarinaSnackController
 import ru.livetyping.zarina.util.compose.rememberAnchoredDraggableState
 import kotlin.math.roundToInt
@@ -64,16 +63,10 @@ fun ZarinaSnackContainer(
         }
 
         LaunchedEffect(controller, anchoredDraggableState) {
-            snapshotFlow { anchoredDraggableState.progress }
-                .map { it == 1f }
-                .distinctUntilChanged()
-                .collect { isAnimationCompleted ->
-                    if (
-                        isAnimationCompleted
-                        && anchoredDraggableState.targetValue == SwipeableState.Swiped
-                    ) {
-                        controller.hideCurrentSnack()
-                    }
+            snapshotFlow { anchoredDraggableState.settledValue }
+                .filter { it == SwipeableState.Swiped }
+                .collect {
+                    controller.hideCurrentSnack()
                 }
         }
 

@@ -15,10 +15,10 @@ data class PaginationInfoDto(
     @SerialName("page_size")
     val pageSize: Int? = null,
 ) {
-    fun toPaginationInfo(itemCount: Int): PaginationInfo = PaginationInfo(
+    fun toPaginationInfo(itemTotalCount: Int): PaginationInfo = PaginationInfo(
         currentPage = checkNotNull(currentPage) { "currentPage is null" },
         pageCount = checkNotNull(pageCount) { "pageCount is null" },
         pageSize = checkNotNull(pageSize) { "pageSize is null" },
-        itemCount = itemCount,
+        itemTotalCount = itemTotalCount,
     )
 }

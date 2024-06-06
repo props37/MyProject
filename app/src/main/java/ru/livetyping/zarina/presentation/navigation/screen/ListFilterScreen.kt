@@ -17,13 +17,17 @@ fun NavGraphBuilder.listFilterScreen(navController: NavHostController) {
         destination = UnscopedDestinations.ListFilter,
         enterTransition = {
             when (initialState.destination.route) {
-                UnscopedDestinations.Filters.routeSchema -> slideEnterTransition()
+                UnscopedDestinations.ProductFilters.routeSchema,
+                UnscopedDestinations.ProductSearchFilters.routeSchema -> slideEnterTransition()
+
                 else -> null
             }
         },
         popExitTransition = {
             when (targetState.destination.route) {
-                UnscopedDestinations.Filters.routeSchema -> slidePopExitTransition()
+                UnscopedDestinations.ProductFilters.routeSchema,
+                UnscopedDestinations.ProductSearchFilters.routeSchema -> slidePopExitTransition()
+
                 else -> null
             }
         }

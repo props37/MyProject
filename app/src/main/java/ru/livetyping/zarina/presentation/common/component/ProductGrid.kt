@@ -2,6 +2,7 @@ package ru.livetyping.zarina.presentation.common.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -44,7 +45,6 @@ import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.util.library.paging.retryAppendPrependErrors
 import ru.livetyping.zarina.util.compose.animateFastScrollToItem
 import ru.livetyping.zarina.util.compose.animation.Crossfade
-import ru.livetyping.zarina.util.compose.collectIsScrollingBackwardAsState
 import ru.livetyping.zarina.util.library.paging3.PagingErrorTimberLogger
 
 // TODO: [Medium] Migrate to ZarinaPagingPullRefreshContainer
@@ -166,6 +166,7 @@ fun ProductGrid(
                         state = gridState,
                         verticalArrangement = ProductGridArrangement,
                         horizontalArrangement = ProductGridArrangement,
+                        contentPadding = PaddingValues(bottom = 24.dp),
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         items(
@@ -223,6 +224,7 @@ private fun ProductGridImpl(
                 state = gridState,
                 verticalArrangement = ProductGridArrangement,
                 horizontalArrangement = ProductGridArrangement,
+                contentPadding = PaddingValues(bottom = 24.dp),
                 modifier = Modifier.fillMaxSize(),
             ) {
                 // No need to add append and prepend loaders since item placeholders are used
@@ -267,13 +269,11 @@ private fun ScrollToTopButton(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val isScrollingBackwardState = gridState.collectIsScrollingBackwardAsState()
-    val isVisible by remember(gridState, isScrollingBackwardState) {
+    val isVisible by remember(gridState) {
         derivedStateOf {
-            val isScrollingBackward = isScrollingBackwardState.value
             val isFarEnough =
                 gridState.firstVisibleItemIndex >= ScrollToTopButtonVisibilityItemThreshold
-            isScrollingBackward && isFarEnough
+            gridState.lastScrolledBackward && isFarEnough
         }
     }
 

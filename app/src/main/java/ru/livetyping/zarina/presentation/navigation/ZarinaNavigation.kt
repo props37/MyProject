@@ -1,8 +1,5 @@
 package ru.livetyping.zarina.presentation.navigation
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -12,7 +9,6 @@ import androidx.navigation.compose.NavHost
 import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.screen.citySelectorScreen
 import ru.livetyping.zarina.presentation.navigation.screen.defaultCityDialog
-import ru.livetyping.zarina.presentation.navigation.screen.filtersScreen
 import ru.livetyping.zarina.presentation.navigation.screen.genericBottomSheetScreen
 import ru.livetyping.zarina.presentation.navigation.screen.graph.cartGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.catalogGraph
@@ -25,10 +21,14 @@ import ru.livetyping.zarina.presentation.navigation.screen.graph.sizeSelectorGra
 import ru.livetyping.zarina.presentation.navigation.screen.listFilterScreen
 import ru.livetyping.zarina.presentation.navigation.screen.onboardingScreen
 import ru.livetyping.zarina.presentation.navigation.screen.permissionRequirementBottomSheetScreen
+import ru.livetyping.zarina.presentation.navigation.screen.productFiltersScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productScreen
+import ru.livetyping.zarina.presentation.navigation.screen.productSearchFiltersScreen
+import ru.livetyping.zarina.presentation.navigation.screen.productSearchScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productSubscriptionScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productsScreen
-import ru.livetyping.zarina.presentation.navigation.util.NavigationTransitionDurationMillis
+import ru.livetyping.zarina.presentation.navigation.util.fadeInTransition
+import ru.livetyping.zarina.presentation.navigation.util.fadeOutTransition
 
 @Composable
 fun ZarinaNavigation(
@@ -36,36 +36,39 @@ fun ZarinaNavigation(
     startDestination: Destination<Unit>,
     modifier: Modifier = Modifier,
 ) {
-    val updatedNavController by rememberUpdatedState(navController)
+    @Suppress("NAME_SHADOWING")
+    val navController by rememberUpdatedState(navController)
 
     NavHost(
         navController = navController,
         startDestination = startDestination.routeSchema,
-        enterTransition = { fadeIn(tween(NavigationTransitionDurationMillis)) },
-        exitTransition = { fadeOut(tween(NavigationTransitionDurationMillis)) },
+        enterTransition = { fadeInTransition() },
+        exitTransition = { fadeOutTransition() },
         modifier = modifier,
     ) {
         // Bottom nav bar graphs
-        catalogGraph(updatedNavController)
-        favoritesGraph(updatedNavController)
-        homeGraph(updatedNavController)
-        profileGraph(updatedNavController)
-        cartGraph(updatedNavController)
+        catalogGraph(navController)
+        favoritesGraph(navController)
+        homeGraph(navController)
+        profileGraph(navController)
+        cartGraph(navController)
 
-        signUpGraph(updatedNavController)
-        signInGraph(updatedNavController)
-        sizeSelectorGraph(updatedNavController)
+        signUpGraph(navController)
+        signInGraph(navController)
+        sizeSelectorGraph(navController)
 
-        onboardingScreen(updatedNavController)
-        citySelectorScreen(updatedNavController)
-        defaultCityDialog(updatedNavController)
-        productsScreen(updatedNavController)
-        productScreen(updatedNavController)
-        filtersScreen(updatedNavController)
-        listFilterScreen(updatedNavController)
-        productSubscriptionScreen(updatedNavController)
-        permissionRequirementBottomSheetScreen(updatedNavController)
+        onboardingScreen(navController)
+        citySelectorScreen(navController)
+        defaultCityDialog(navController)
+        productsScreen(navController)
+        productFiltersScreen(navController)
+        productSearchScreen(navController)
+        productSearchFiltersScreen(navController)
+        productScreen(navController)
+        listFilterScreen(navController)
+        productSubscriptionScreen(navController)
+        permissionRequirementBottomSheetScreen(navController)
 
-        genericBottomSheetScreen(updatedNavController)
+        genericBottomSheetScreen(navController)
     }
 }

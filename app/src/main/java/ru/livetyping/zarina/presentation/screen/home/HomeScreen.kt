@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.presentation.screen.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -80,7 +79,7 @@ fun HomeScreen(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ScreenContent(
     genderTabs: ImmutableList<GenderTab>,

@@ -125,9 +125,7 @@ private fun ScreenContent(
                 },
                 contentAlignment = Alignment.Center,
                 label = "AuthorizationSuggestion/LoyaltyCard",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clipToBounds(),
+                modifier = Modifier.fillMaxWidth(),
             ) { userState ->
                 val paddingModifier = Modifier
                     .padding(start = 16.dp, top = 24.dp, end = 16.dp, bottom = 32.dp)
@@ -147,6 +145,7 @@ private fun ScreenContent(
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .clipToBounds()
                                     .then(paddingModifier),
                             )
                         } else {

@@ -1,8 +1,8 @@
 [versions]
 # Plugins
-androidGradlePlugin = "8.3.2"
-googlePlayServices-plugin = "4.4.1"
-firebase-crashlyticsPlugin = "2.9.9"
+androidGradlePlugin = "8.4.1"
+googlePlayServices-plugin = "4.4.2"
+firebase-crashlyticsPlugin = "3.0.1"
 androidGitVersion = "0.4.14"
 checkDependencyUpdates = "1.5.0"
 
@@ -13,23 +13,25 @@ kotlin-serialization = "1.6.3"
 kotlin-immutableCollections = "0.3.7"
 
 jetpack-core = "1.13.1"
-jetpack-appcompat = "1.6.1"
-jetpack-lifecycle = "2.7.0"
+jetpack-appcompat = "1.7.0"
+jetpack-lifecycle = "2.8.1"
 jetpack-activity = "1.9.0"
 jetpack-navigation = "2.7.7"
 jetpack-datastore = "1.1.1"
 jetpack-room = "2.6.1"
 jetpack-splashScreen = "1.0.1"
 jetpack-media3 = "1.3.1"
-jetpack-paging = "3.2.1"
+jetpack-paging = "3.3.0"
 jetpack-security-cripto = "1.0.0"
 jetpack-browser = "1.8.0"
 jetpack-junit = "1.1.5"
 jetpack-uiAutomator = "2.3.0"
 jetpack-espresso = "3.5.1"
-jetpack-benchmark = "1.2.3"
+jetpack-benchmark = "1.2.4"
 
 jetpack-compose-bom = "2024.05.00"
+jetpack-compose = "1.7.0-beta02"
+jetpack-compose-media3 = "1.3.0-beta02"
 jetpack-compose-compiler = "1.5.14"
 
 ktor = "2.3.11"
@@ -48,16 +50,16 @@ libphonenumber = "8.13.35"
 timber = "5.0.1"
 leakCanary = "2.14"
 
-googlePlayServices-location = "21.2.0"
+googlePlayServices-location = "21.3.0"
 googlePlayServices-maps = "18.2.0"
 googlePlayServices-maps-compose = "5.0.1"
 
-recaptcha = "18.5.0-beta03"
+recaptcha = "18.5.1"
 
-firebase-bom = "33.0.0"
+firebase-bom = "33.1.0"
 
 firebase-performance = "1.4.2"
-mindbox = "2.9.1"
+mindbox = "2.10.0"
 
 junit = "4.13.2"
 
@@ -90,13 +92,13 @@ jetpack-benchmark = { group = "androidx.benchmark", name = "benchmark-macro-juni
 
 # Jetpack Compose
 jetpack-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "jetpack-compose-bom" }
-jetpack-compose-ui = { group = "androidx.compose.ui", name = "ui" }
-jetpack-compose-material = { group = "androidx.compose.material", name = "material" }
-jetpack-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
-jetpack-compose-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-jetpack-compose-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-jetpack-compose-testManifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-jetpack-compose-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+jetpack-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "jetpack-compose" }
+jetpack-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "jetpack-compose" }
+jetpack-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "jetpack-compose-media3" }
+jetpack-compose-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "jetpack-compose" }
+jetpack-compose-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "jetpack-compose" }
+jetpack-compose-testManifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "jetpack-compose" }
+jetpack-compose-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "jetpack-compose" }
 
 # Kotlin
 kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlin-coroutines" }

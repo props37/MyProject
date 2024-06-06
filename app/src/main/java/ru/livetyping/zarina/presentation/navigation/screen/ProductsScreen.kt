@@ -7,9 +7,13 @@ import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
+import ru.livetyping.zarina.presentation.navigation.destination.graph.CatalogGraph
+import ru.livetyping.zarina.presentation.navigation.destination.graph.SizeSelectorGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.navigateToSizeSelectorGraph
+import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
+import ru.livetyping.zarina.presentation.navigation.util.slidePopExitTransition
 import ru.livetyping.zarina.presentation.screen.products.ProductsScreen
 import ru.livetyping.zarina.presentation.screen.products.ProductsScreenAction
 import ru.livetyping.zarina.presentation.screen.products.ProductsViewModel
@@ -18,20 +22,38 @@ import ru.livetyping.zarina.util.library.navigation.navigate
 fun NavGraphBuilder.productsScreen(navController: NavHostController) {
     composableDestination(
         destination = UnscopedDestinations.Products,
+        enterTransition = {
+            when (initialState.destination.route) {
+                CatalogGraph.Catalog.routeSchema,
+                UnscopedDestinations.ProductSearch.routeSchema -> slideEnterTransition()
+
+                else -> null
+            }
+        },
         exitTransition = {
             when (targetState.destination.route) {
-                UnscopedDestinations.Filters.routeSchema,
+                UnscopedDestinations.ProductFilters.routeSchema,
                 UnscopedDestinations.ProductSubscription.routeSchema,
-                UnscopedDestinations.Product.routeSchema -> slideExitTransition()
+                UnscopedDestinations.Product.routeSchema,
+                UnscopedDestinations.ProductSearch.routeSchema -> slideExitTransition()
 
                 else -> null
             }
         },
         popEnterTransition = {
             when (initialState.destination.route) {
-                UnscopedDestinations.Filters.routeSchema,
+                UnscopedDestinations.ProductFilters.routeSchema,
                 UnscopedDestinations.ProductSubscription.routeSchema,
-                UnscopedDestinations.Product.routeSchema -> slidePopEnterTransition()
+                UnscopedDestinations.Product.routeSchema,
+                UnscopedDestinations.ProductSearch.routeSchema -> slidePopEnterTransition()
+
+                else -> null
+            }
+        },
+        popExitTransition = {
+            when (targetState.destination.route) {
+                CatalogGraph.Catalog.routeSchema,
+                UnscopedDestinations.ProductSearch.routeSchema -> slidePopExitTransition()
 
                 else -> null
             }
@@ -39,7 +61,17 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
     ) {
         ProductsScreen(
             viewModel = hiltViewModel { factory: ProductsViewModel.Factory ->
-                factory.create(it.savedStateHandle)
+                val filtersResultFlow = it.savedStateHandle
+                    .getStateFlow<UnscopedDestinations.ProductFilters.Result?>(
+                        key = UnscopedDestinations.ProductFilters.RESULT_KEY,
+                        initialValue = null,
+                    )
+                val sizeSelectorResultFlow = it.savedStateHandle
+                    .getStateFlow<SizeSelectorGraph.Result?>(
+                        key = SizeSelectorGraph.RESULT_KEY,
+                        initialValue = null,
+                    )
+                factory.create(filtersResultFlow, sizeSelectorResultFlow)
             },
             navigate = { action ->
                 when (action) {
@@ -50,8 +82,12 @@ fun NavGraphBuilder.productsScreen(navController: NavHostController) {
                         )
                     }
 
+                    ProductsScreenAction.SearchClicked -> {
+                        navController.navigateToProductSearchScreen()
+                    }
+
                     is ProductsScreenAction.FiltersClicked -> {
-                        navController.navigateToFiltersScreen(
+                        navController.navigateToProductFiltersScreen(
                             categoryId = action.categoryId,
                             filters = action.filters,
                         )

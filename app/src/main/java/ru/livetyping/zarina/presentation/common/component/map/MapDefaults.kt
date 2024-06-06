@@ -5,8 +5,9 @@ import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
@@ -30,7 +31,7 @@ object MapDefaults {
             modifier = modifier.shadow(elevation),
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_location_arrow_outline_24),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_location_arrow_outline_24),
                 contentDescription = stringResource(R.string.show_my_location),
                 modifier = Modifier.size(20.dp),
             )

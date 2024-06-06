@@ -33,7 +33,7 @@ class ProductPagingSource(
             val prevKey = prevPage.takeIf { it >= 1 }
             val nextKey = nextPage.takeIf { it <= paginationInfo.pageCount }
             val itemsBefore = (paginationInfo.currentPage - 1) * paginationInfo.pageSize
-            val itemsAfter = paginationInfo.itemCount - (itemsBefore + products.size)
+            val itemsAfter = paginationInfo.itemTotalCount - (itemsBefore + products.size)
             return LoadResult.Page(
                 data = products,
                 prevKey = prevKey,

@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.Spring
@@ -40,7 +39,7 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -52,10 +51,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -78,7 +78,6 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransit
 import ru.livetyping.zarina.util.compose.sizeIn
 import ru.livetyping.zarina.util.compose.text.unscalable
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ZarinaBottomNavBar(
     navController: NavHostController,
@@ -192,7 +191,7 @@ private fun RowScope.Item(
     modifier: Modifier = Modifier,
     counterValue: Int? = null,
     isEnabled: Boolean = true,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
 ) {
     val selectedColor = UiKitTheme.colors.text.general.regular.default
 
@@ -205,7 +204,7 @@ private fun RowScope.Item(
                 enabled = isEnabled,
                 role = Role.Tab,
                 interactionSource = interactionSource,
-                indication = rememberRipple(bounded = false, color = selectedColor),
+                indication = ripple(bounded = false, color = selectedColor),
             )
             .weight(1f),
     ) {
@@ -223,7 +222,7 @@ private fun RowScope.Item(
             modifier = Modifier.widthIn(min = 40.dp),
         ) {
             Icon(
-                painter = painterResource(iconResId),
+                imageVector = ImageVector.vectorResource(iconResId),
                 contentDescription = title,
                 tint = color,
                 modifier = Modifier.size(20.dp),

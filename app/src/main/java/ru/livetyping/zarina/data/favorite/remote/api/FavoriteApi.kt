@@ -13,7 +13,7 @@ import ru.livetyping.zarina.domain.product.Product
 import javax.inject.Inject
 
 class FavoriteApi @Inject constructor(
-    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
 ) {
     suspend fun getFavoriteProductIds(): FavoriteProductIdsDto {

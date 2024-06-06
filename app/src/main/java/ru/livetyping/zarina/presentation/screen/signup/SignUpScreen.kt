@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberDatePickerState
@@ -47,6 +46,7 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePicker
 import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePickerDialog
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.switchh.ZarinaSwitch
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPasswordTextField
@@ -212,7 +212,10 @@ private fun ScreenContent(
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = firstName.isNotEmpty(),
-                        onClick = { onFirstNameChanged("") },
+                        onClick = {
+                            onFirstNameChanged("")
+                            firstNameFocusRequester.tryRequestFocus()
+                        },
                     )
                 },
                 keyboardOptions = remember { KeyboardOptions(imeAction = ImeAction.Next) },
@@ -225,6 +228,7 @@ private fun ScreenContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            val emailFocusRequester = remember { FocusRequester() }
             ZarinaTextField(
                 value = email,
                 onValueChanged = onEmailChanged,
@@ -234,7 +238,10 @@ private fun ScreenContent(
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = email.isNotEmpty(),
-                        onClick = { onEmailChanged("") },
+                        onClick = {
+                            onEmailChanged("")
+                            emailFocusRequester.tryRequestFocus()
+                        },
                     )
                 },
                 keyboardOptions = remember {
@@ -246,7 +253,8 @@ private fun ScreenContent(
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .focusRequester(emailFocusRequester),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -301,8 +309,7 @@ private fun ScreenContent(
                 },
             )
 
-            Divider(
-                color = UiKitTheme.colors.border.general.default,
+            ZarinaDivider(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),

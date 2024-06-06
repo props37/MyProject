@@ -23,6 +23,7 @@ import ru.livetyping.zarina.presentation.common.component.dialog.ZarinaDialogCon
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.profile.details.accountdeletionconfirmation.AccountDeletionConfirmationViewModel.SideEffect
 
+// TODO: [Low] Make internal and remove from navigation
 @Composable
 fun AccountDeletionConfirmationDialogScreen(
     navigate: (AccountDeletionConfirmationScreenAction) -> Unit,

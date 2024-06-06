@@ -10,7 +10,7 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -20,7 +20,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,7 @@ fun ZarinaBouncingIconButton(
     isBouncingEnabled: Boolean = true,
     pressedScale: Float = PressedScale,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    indication: Indication? = rememberRipple(bounded = false, radius = 24.dp),
+    indication: Indication? = ripple(bounded = false, radius = 24.dp),
     content: @Composable () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -109,7 +110,7 @@ private fun Preview() {
             .padding(16.dp)
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_heart_outline_24),
+            imageVector = ImageVector.vectorResource(R.drawable.ic_heart_outline_24),
             contentDescription = null,
         )
     }

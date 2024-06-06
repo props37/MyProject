@@ -34,9 +34,9 @@ data class CountryStoresDto(
     ) {
         fun getStores(country: String): List<DomainStore> {
             checkNotNull(stores) { "stores is null" }
-            return stores.map {
+            return stores.map { store ->
                 checkNotNull(name) { "name is null" }
-                it.toStore(
+                store.toStore(
                     cityKladrId = kladrId?.let { KladrId(it) },
                     cityName = name,
                     country = country,

@@ -11,18 +11,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -34,6 +35,7 @@ import ru.livetyping.zarina.presentation.common.component.LoyaltyCardSide
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButton
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
@@ -88,16 +90,16 @@ object ProfileScreenComponents {
             endContent = {
                 AnimatedVisibility(
                     visible = isEditProfileButtonVisible,
-                    enter = AnimatedContentDefaultEnterTransition,
-                    exit = AnimatedContentDefaultExitTransition,
+                    enter = remember { AnimatedContentDefaultEnterTransition },
+                    exit = remember { AnimatedContentDefaultExitTransition },
                 ) {
                     ZarinaIconButton(
                         onClick = onProfileDetailsClicked,
-                        indication = rememberRipple(bounded = false, radius = 20.dp),
+                        indication = ripple(bounded = false, radius = 20.dp),
                         modifier = Modifier.padding(end = 2.dp),
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_pencil_24),
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_pencil_24),
                             contentDescription = stringResource(R.string.edit_profile),
                             modifier = Modifier.size(20.dp),
                         )
@@ -195,8 +197,7 @@ object ProfileScreenComponents {
                     )
 
                     if (index < infoItems.lastIndex) {
-                        Divider(
-                            color = UiKitTheme.colors.border.general.default,
+                        ZarinaDivider(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
@@ -268,7 +269,7 @@ object ProfileScreenComponents {
             },
             endContent = {
                 Icon(
-                    painter = painterResource(R.drawable.ic_small_arrow_up_24),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
                     contentDescription = null,
                     tint = UiKitTheme.colors.icon.regular.default,
                     modifier = Modifier

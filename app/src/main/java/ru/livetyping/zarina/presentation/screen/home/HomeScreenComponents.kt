@@ -8,6 +8,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,24 +26,29 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.coroutines.delay
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.MediaType
 import ru.livetyping.zarina.domain.content.HomeContent
@@ -58,10 +64,11 @@ import ru.livetyping.zarina.presentation.common.component.tab.ZarinaLooseTabRow
 import ru.livetyping.zarina.presentation.screen.home.HomeViewModel.GenderTab
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import timber.log.Timber
+import kotlin.time.Duration.Companion.seconds
 
+@Suppress("ConstPropertyName")
 object HomeScreenComponents {
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun TopBar(
         genders: ImmutableList<GenderTab>,
@@ -131,7 +138,6 @@ object HomeScreenComponents {
         CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
             HorizontalPager(
                 state = pagerState,
-                beyondBoundsPageCount = 0,
                 modifier = modifier,
             ) { page ->
                 val banners = when (genders[page]) {
@@ -148,7 +154,6 @@ object HomeScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun BannerPager(
         banners: List<HomeContent.BannerContainer>,
@@ -156,6 +161,28 @@ object HomeScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         val pagerState = rememberPagerState { banners.size }
+
+        var wasScrolled by rememberSaveable { mutableStateOf(false) }
+        LaunchedEffect(pagerState) {
+            snapshotFlow { pagerState.isScrollInProgress }.collect {
+                if (it) wasScrolled = true
+            }
+        }
+
+        val density = LocalDensity.current
+        LaunchedEffect(pagerState, density) {
+            delay(3.seconds)
+            if (!wasScrolled) {
+                val scrollValue = with(density) { 80.dp.toPx() }
+                val animationSpec = tween<Float>(durationMillis = 500)
+                pagerState.animateScrollBy(scrollValue, animationSpec)
+                delay(timeMillis = 750)
+                pagerState.animateScrollToPage(
+                    page = pagerState.currentPage,
+                    animationSpec = animationSpec
+                )
+            }
+        }
 
         val visibleBannersPagesState = remember {
             derivedStateOf {
@@ -221,12 +248,8 @@ object HomeScreenComponents {
 
             AnimatedVisibility(
                 visible = !isBannerDisplayed,
-                enter = remember {
-                    fadeIn(tween(BannerLoaderAnimationDuration))
-                },
-                exit = remember {
-                    fadeOut(tween(BannerLoaderAnimationDuration))
-                },
+                enter = remember { fadeIn(tween(BannerLoaderAnimationDuration)) },
+                exit = remember { fadeOut(tween(BannerLoaderAnimationDuration)) },
                 modifier = Modifier.matchParentSize(),
             ) {
                 ZarinaLoadingScreen(

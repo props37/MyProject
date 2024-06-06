@@ -35,7 +35,17 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
 
         CartScreen(
             viewModel = hiltViewModel { factory: CartViewModel.Factory ->
-                factory.create(it.savedStateHandle)
+                val citySelectorResultFlow = it.savedStateHandle
+                    .getStateFlow<UnscopedDestinations.CitySelector.Result?>(
+                        key = UnscopedDestinations.CitySelector.RESULT_KEY,
+                        initialValue = null,
+                    )
+                val productCountSelectorResultFlow = it.savedStateHandle
+                    .getStateFlow<CartGraph.ProductCountSelector.Result?>(
+                        key = CartGraph.ProductCountSelector.RESULT_KEY,
+                        initialValue = null,
+                    )
+                factory.create(citySelectorResultFlow, productCountSelectorResultFlow)
             },
             navigate = { action ->
                 when (action) {

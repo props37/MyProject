@@ -19,11 +19,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -53,6 +55,7 @@ import ru.livetyping.zarina.presentation.screen.productsubscription.ProductSubsc
 import ru.livetyping.zarina.presentation.screen.productsubscription.ProductSubscriptionScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.productsubscription.ProductSubscriptionViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.tryRequestFocus
 
 @Composable
 fun ProductSubscriptionScreen(
@@ -159,6 +162,7 @@ private fun ScreenContent(
             )
             Spacer(modifier = Modifier.height(20.dp))
 
+            val firstNameFocusRequester = remember { FocusRequester() }
             ZarinaTextField(
                 value = firstName,
                 onValueChanged = onFirstNameChanged,
@@ -171,9 +175,12 @@ private fun ScreenContent(
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = firstName.isNotEmpty(),
-                        onClick = { onFirstNameChanged("") },
+                        onClick = {
+                            onFirstNameChanged("")
+                            firstNameFocusRequester.tryRequestFocus()
+                        },
                         iconSize = 16.dp,
-                        indication = rememberRipple(bounded = false, radius = 6.dp),
+                        indication = ripple(bounded = false, radius = 6.dp),
                     )
                 },
                 singleLine = true,
@@ -185,10 +192,12 @@ private fun ScreenContent(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .focusRequester(firstNameFocusRequester),
             )
             Spacer(modifier = Modifier.height(20.dp))
 
+            val emailFocusRequester = remember { FocusRequester() }
             ZarinaTextField(
                 value = email,
                 onValueChanged = onEmailChanged,
@@ -199,9 +208,12 @@ private fun ScreenContent(
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = email.isNotEmpty(),
-                        onClick = { onEmailChanged("") },
+                        onClick = {
+                            onEmailChanged("")
+                            emailFocusRequester.tryRequestFocus()
+                        },
                         iconSize = 16.dp,
-                        indication = rememberRipple(bounded = false, radius = 6.dp),
+                        indication = ripple(bounded = false, radius = 6.dp),
                     )
                 },
                 singleLine = true,
@@ -213,7 +225,8 @@ private fun ScreenContent(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .focusRequester(emailFocusRequester),
             )
             Spacer(modifier = Modifier.height(28.dp))
 

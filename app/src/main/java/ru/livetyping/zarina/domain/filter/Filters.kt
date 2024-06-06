@@ -25,14 +25,24 @@ data class Filters(
 
     val appliedFilterCount: Int by lazy {
         var result = 0
-        if (price?.isEmpty == false) result++
-        if (materials?.selectedItems != null) result += materials.selectedItems.size
-        if (sizes?.selectedItems != null) result += sizes.selectedItems.size
-        if (colors?.selectedItems != null) result += colors.selectedItems.size
-        if (deliveryAvailability?.isEmpty == false) result++
-        if (storePickupAvailability?.isEmpty == false) result++
-        if (pickupStores?.isEmpty == false) result++
+        if (price?.isApplied == true) result++
+        if (materials?.isApplied == true) result += materials.selectedItems.size
+        if (sizes?.isApplied == true) result += sizes.selectedItems.size
+        if (colors?.isApplied == true) result += colors.selectedItems.size
+        if (deliveryAvailability?.isApplied == true) result++
+        if (storePickupAvailability?.isApplied == true) result++
+        if (pickupStores?.isApplied == true) result++
         result
+    }
+
+    val hasAppliedIgnoringSorting: Boolean by lazy {
+        price?.isApplied == true
+                || materials?.isApplied == true
+                || sizes?.isApplied == true
+                || colors?.isApplied == true
+                || deliveryAvailability?.isApplied == true
+                || storePickupAvailability?.isApplied == true
+                || pickupStores?.isApplied == true
     }
 
     val isEmptyIgnoringSorting: Boolean by lazy {
@@ -91,6 +101,7 @@ data class Filters(
 }
 
 fun Filters.coerceInAvailable(available: Filters): Filters {
+    val sorting = available.sorting?.let { this.sorting?.coerceInAvailable(it) ?: it }
     val price = available.price?.let { this.price?.coerceInAvailable(it) ?: it }
     val materials = available.materials?.let { this.materials?.coerceInAvailable(it) ?: it }
     val sizes = available.sizes?.let { this.sizes?.coerceInAvailable(it) ?: it }
@@ -101,6 +112,7 @@ fun Filters.coerceInAvailable(available: Filters): Filters {
         available.pickupStores?.let { this.pickupStores?.coerceInAvailable(it) ?: it }
     } else null
     return this.copy(
+        sorting = sorting,
         price = price,
         materials = materials,
         sizes = sizes,

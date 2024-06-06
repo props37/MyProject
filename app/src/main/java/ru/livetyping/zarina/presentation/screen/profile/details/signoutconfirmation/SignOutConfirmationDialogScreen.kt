@@ -22,6 +22,7 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDef
 import ru.livetyping.zarina.presentation.common.component.dialog.ZarinaDialogContainer
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 
+// TODO: [Low] Make internal and remove from navigation
 @Composable
 fun SignOutConfirmationDialogScreen(
     navigate: (SignOutConfirmationScreenAction) -> Unit,

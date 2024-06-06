@@ -12,7 +12,7 @@ import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
 import javax.inject.Inject
 
 class AuthorizationApi @Inject constructor(
-    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.UNAUTHORIZED)
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.UNAUTHORIZED)
     private val httpClient: HttpClient,
 ) {
     suspend fun getUnauthorizedUserAuthorizationTokens(): AuthorizationTokensDto {

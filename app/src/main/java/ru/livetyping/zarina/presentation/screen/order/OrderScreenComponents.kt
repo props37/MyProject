@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
@@ -50,6 +49,7 @@ import ru.livetyping.zarina.presentation.common.component.ProductOrderCardSkelet
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.label.ZarinaLabelSize
 import ru.livetyping.zarina.presentation.common.component.pullrefresh.ZarinaPullRefreshIndicator
@@ -66,6 +66,7 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentCrossfadeTransitionSpec
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 
+@Suppress("ConstPropertyName")
 object OrderScreenComponents {
 
     @Composable
@@ -180,12 +181,19 @@ object OrderScreenComponents {
         onCancelOrderClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        LazyColumn(modifier = modifier) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier,
+        ) {
             item(
                 key = OrderListKeyStatus,
                 contentType = OrderListContentTypeStatus,
             ) {
-                ZarinaItem(modifier = Modifier.heightIn(min = 40.dp)) {
+                ZarinaItem(
+                    modifier = Modifier
+                        .heightIn(min = 40.dp)
+                        .animateItem(),
+                ) {
                     OrderStatusLabel(
                         status = order.status,
                         size = ZarinaLabelSize.Medium,
@@ -197,7 +205,10 @@ object OrderScreenComponents {
                 key = OrderListKeyContents,
                 contentType = OrderListContentTypeContents,
             ) {
-                OrderProductContentsItem(order.productCount)
+                OrderProductContentsItem(
+                    productCount = order.productCount,
+                    modifier = Modifier.animateItem(),
+                )
             }
 
             itemsIndexed(
@@ -205,24 +216,27 @@ object OrderScreenComponents {
                 key = { _, order -> order.id.value },
                 contentType = { _, _ -> OrderListContentTypeProduct },
             ) { index, product ->
-                ProductOrderCard(
-                    name = product.name,
-                    imageUrl = product.imageUrl,
-                    size = product.size,
-                    sizeRu = null,
-                    height = null,
-                    color = product.color,
-                    count = product.count,
-                    countStyle = ProductOrderCardCountStyle.Info,
-                    price = product.price,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                if (index < order.products.lastIndex) {
-                    Divider(
-                        color = UiKitTheme.colors.background.skeleton,
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                Column(modifier = Modifier.animateItem()) {
+                    ProductOrderCard(
+                        name = product.name,
+                        imageUrl = product.imageUrl,
+                        size = product.size,
+                        sizeRu = null,
+                        height = null,
+                        color = product.color,
+                        count = product.count,
+                        countStyle = ProductOrderCardCountStyle.Info,
+                        price = product.price,
+                        modifier = Modifier.fillMaxWidth(),
                     )
+
+                    if (index < order.products.lastIndex) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
 
@@ -234,7 +248,9 @@ object OrderScreenComponents {
                     orderPrice = order.price.orderPrice,
                     deliveryPrice = order.price.deliveryPrice,
                     totalPrice = order.price.totalPrice,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
                 )
             }
 
@@ -247,6 +263,7 @@ object OrderScreenComponents {
                     deliveryAddress = order.deliveryAddress,
                     contactInfo = order.contactInfo,
                     paymentMethod = order.paymentMethod,
+                    modifier = Modifier.animateItem(),
                 )
             }
 
@@ -260,7 +277,8 @@ object OrderScreenComponents {
                         colors = ZarinaButtonDefaults.backlessErrorColors(),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
+                            .padding(16.dp)
+                            .animateItem(),
                     ) {
                         Text(text = stringResource(R.string.cancel_order).uppercase())
                     }
@@ -376,9 +394,16 @@ object OrderScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
-        LazyColumn(modifier = modifier) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier,
+        ) {
             item {
-                ZarinaItem(modifier = Modifier.heightIn(min = 40.dp)) {
+                ZarinaItem(
+                    modifier = Modifier
+                        .heightIn(min = 40.dp)
+                        .animateItem(),
+                ) {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.footnote.bold,
                         shimmer = shimmer,
@@ -403,33 +428,43 @@ object OrderScreenComponents {
                             modifier = Modifier.fillMaxWidth(fraction = 0.16f),
                         )
                     },
-                    modifier = Modifier.heightIn(min = 40.dp),
+                    modifier = Modifier
+                        .heightIn(min = 40.dp)
+                        .animateItem(),
                 )
             }
 
             items(OrderSkeletonProductCount) { index ->
-                ProductOrderCardSkeleton(
-                    shimmer = shimmer,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                if (index < OrderSkeletonProductCount - 1) {
-                    Divider(
-                        color = UiKitTheme.colors.background.skeleton,
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                Column(modifier = Modifier.animateItem()) {
+                    ProductOrderCardSkeleton(
+                        shimmer = shimmer,
+                        modifier = Modifier.fillMaxWidth(),
                     )
+
+                    if (index < OrderSkeletonProductCount - 1) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
 
             item {
                 OrderPriceSkeleton(
                     shimmer = shimmer,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
                 )
             }
 
             item {
-                OrderInfoSkeleton(shimmer = shimmer)
+                OrderInfoSkeleton(
+                    shimmer = shimmer,
+                    modifier = Modifier.animateItem(),
+                )
             }
 
             item {
@@ -438,7 +473,8 @@ object OrderScreenComponents {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
-                        .height(56.dp),
+                        .height(56.dp)
+                        .animateItem(),
                 )
             }
         }

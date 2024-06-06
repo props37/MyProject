@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.productcountselector
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -29,12 +29,13 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaBottomSheet
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.productcountselector.ProductCountSelectorScreenComponents.CountItem
 import ru.livetyping.zarina.presentation.screen.productcountselector.ProductCountSelectorScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.productcountselector.ProductCountSelectorViewModel.CountItem
 import ru.livetyping.zarina.presentation.screen.productcountselector.ProductCountSelectorViewModel.SideEffect
-import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.plus
 
 // TODO: [Low] Put package inside ui.cart?
 
@@ -79,25 +80,27 @@ private fun ScreenContent(
             val contentPadding = WindowInsets.safeDrawing
                 .only(WindowInsetsSides.Bottom)
                 .asPaddingValues()
+                .plus(PaddingValues(bottom = 24.dp))
 
             LazyColumn(contentPadding = contentPadding) {
                 itemsIndexed(
                     items = countItems,
                     key = { _, item -> item.count },
                 ) { index, item ->
-                    CountItem(
-                        item = item,
-                        onClick = onCountItemClicked,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-
-                    if (index < countItems.lastIndex) {
-                        Divider(
-                            color = UiKitTheme.colors.border.general.default,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
+                    Column(modifier = Modifier.animateItem()) {
+                        CountItem(
+                            item = item,
+                            onClick = onCountItemClicked,
+                            modifier = Modifier.fillMaxWidth(),
                         )
+
+                        if (index < countItems.lastIndex) {
+                            ZarinaDivider(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                            )
+                        }
                     }
                 }
             }

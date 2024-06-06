@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.data.user.remote.api.UserApi
 import ru.livetyping.zarina.domain.authorization.AuthorizationResult
+import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Token
@@ -70,8 +71,8 @@ class UserRemoteDataSource @Inject constructor(
         api.requestPasswordReset(email)
     }
 
-    suspend fun signOut() {
-        api.signOut()
+    suspend fun signOut(): AuthorizationTokens {
+        return api.signOut().toAuthorizationTokens()
     }
 
     suspend fun deleteAccount() {

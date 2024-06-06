@@ -18,8 +18,9 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -43,7 +44,7 @@ fun ZarinaCheckmarkAnimatedIcon(
     Box(modifier = modifier) {
         val contentDescription = contentDescriptionResId(isVisible)?.let { stringResource(it) }
         Icon(
-            painter = painterResource(R.drawable.ic_checkmark_24),
+            imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark_24),
             contentDescription = contentDescription,
             tint = color,
             modifier = Modifier.size(iconSize),

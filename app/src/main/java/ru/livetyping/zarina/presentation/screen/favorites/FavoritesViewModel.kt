@@ -43,15 +43,12 @@ import timber.log.Timber
 @HiltViewModel(assistedFactory = FavoritesViewModel.Factory::class)
 class FavoritesViewModel @AssistedInject constructor(
     @Assisted
-    backStackEntrySavedStateHandle: SavedStateHandle,
+    private val sizeSelectorResultFlow: StateFlow<SizeSelectorGraph.Result?>,
     savedStateHandle: SavedStateHandle,
     private val interactor: FavoritesInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
-    private val screenResultHandler = ScreenResultHandler(
-        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
-        savedStateHandle = savedStateHandle,
-    )
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -189,7 +186,8 @@ class FavoritesViewModel @AssistedInject constructor(
     private fun handleSizeSelectorResult() {
         viewModelScope.launch {
             screenResultHandler.handle<SizeSelectorGraph.Result>(
-                key = SizeSelectorGraph.RESULT_KEY,
+                resultFlow = sizeSelectorResultFlow,
+                key = KEY_SIZE_SELECTOR_RESULT,
             ) { result ->
                 addProductToCart(
                     productId = result.product.toProductItem().id,
@@ -207,6 +205,12 @@ class FavoritesViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(backStackEntrySavedStateHandle: SavedStateHandle): FavoritesViewModel
+        fun create(
+            sizeSelectorResultFlow: StateFlow<SizeSelectorGraph.Result?>,
+        ): FavoritesViewModel
+    }
+
+    companion object {
+        private const val KEY_SIZE_SELECTOR_RESULT = "size_selector_result"
     }
 }

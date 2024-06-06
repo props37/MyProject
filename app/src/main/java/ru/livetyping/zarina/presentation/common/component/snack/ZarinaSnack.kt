@@ -11,9 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.LocalRippleConfiguration
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -27,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
-import ru.livetyping.zarina.presentation.common.rippletheme.DarkRippleTheme
-import ru.livetyping.zarina.presentation.common.rippletheme.LightRippleTheme
+import ru.livetyping.zarina.presentation.common.ripple.DarkRippleConfiguration
+import ru.livetyping.zarina.presentation.common.ripple.LightRippleConfiguration
 import ru.livetyping.zarina.presentation.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.common.zarinasnack.ZarinaSnackMessage
@@ -37,6 +38,7 @@ import ru.livetyping.zarina.presentation.common.zarinasnack.ZarinaSnackMessageSt
 import ru.livetyping.zarina.presentation.common.zarinasnack.controller.LocalZarinaSnackController
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ZarinaSnack(
     message: ZarinaSnackMessage,
@@ -48,14 +50,14 @@ fun ZarinaSnack(
 ) {
     val controller = LocalZarinaSnackController.current
 
-    val rippleTheme = when (message.style) {
-        ZarinaSnackMessageStyle.DEFAULT -> LightRippleTheme
-        ZarinaSnackMessageStyle.ERROR -> DarkRippleTheme
+    val rippleConfiguration = when (message.style) {
+        ZarinaSnackMessageStyle.DEFAULT -> LightRippleConfiguration
+        ZarinaSnackMessageStyle.ERROR -> DarkRippleConfiguration
     }
 
     CompositionLocalProvider(
         LocalContentColor provides contentColor,
-        LocalRippleTheme provides rippleTheme,
+        LocalRippleConfiguration provides rippleConfiguration,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

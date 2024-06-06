@@ -28,7 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ListFilterViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val interactor: ListFilterInteractor,
+    interactor: ListFilterInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()

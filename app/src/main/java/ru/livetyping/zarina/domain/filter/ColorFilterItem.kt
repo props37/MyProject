@@ -6,5 +6,5 @@ data class ColorFilterItem(
     override val id: Id,
     override val name: String,
     override val isSelected: Boolean,
-    val color: Color,
+    val color: Color?,
 ) : ListFilterItem(id, name, isSelected)

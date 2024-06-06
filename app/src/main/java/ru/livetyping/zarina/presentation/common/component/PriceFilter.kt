@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -207,7 +207,7 @@ private fun TextField(
                 isVisible = valueString.isNotEmpty(),
                 onClick = onClearClicked,
                 iconSize = 16.dp,
-                indication = rememberRipple(bounded = false, radius = 6.dp),
+                indication = ripple(bounded = false, radius = 6.dp),
             )
         },
         keyboardOptions = remember {

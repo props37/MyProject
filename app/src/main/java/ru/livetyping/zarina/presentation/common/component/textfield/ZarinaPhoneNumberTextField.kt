@@ -56,7 +56,7 @@ fun ZarinaPhoneNumberTextField(
     minLines: Int = 1,
     visualTransformation: VisualTransformation = rememberPhoneNumberVisualTransformation(),
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
 ) {
     var selection by remember { mutableStateOf(TextRange(phoneNumber.length)) }

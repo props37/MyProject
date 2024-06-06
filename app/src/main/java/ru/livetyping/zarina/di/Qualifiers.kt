@@ -5,9 +5,15 @@ import javax.inject.Qualifier
 object Qualifiers {
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)
-    annotation class ZarinaApi(val api: ZarinaApis)
+    annotation class ZarinaApi(val api: ZarinaApiType)
 
-    enum class ZarinaApis { AUTHORIZED, UNAUTHORIZED }
+    enum class ZarinaApiType { AUTHORIZED, UNAUTHORIZED }
+
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class AnyQuery(val type: AnyQueryType)
+
+    enum class AnyQueryType { AUTOCOMPLETE }
 
 
     @Qualifier
@@ -19,7 +25,7 @@ object Qualifiers {
 
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)
-    annotation class SharedPreferences(val type: ShapredPreferencesType)
+    annotation class SharedPreferences(val type: SharedPreferencesType)
 
-    enum class ShapredPreferencesType { ENCRYPTED }
+    enum class SharedPreferencesType { ENCRYPTED }
 }

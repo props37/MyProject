@@ -8,7 +8,7 @@ import ru.livetyping.zarina.domain.product.Product
 @Serializable
 data class CartProductIdsDto(
     @SerialName("items_count")
-    val itemCount: Int? = null,
+    val productTotalCount: Int? = null,
 
     @SerialName("items")
     val items: List<String>? = null,
@@ -17,7 +17,7 @@ data class CartProductIdsDto(
         checkNotNull(items) { "items is null" }
         return CartProductIds(
             cartProductIds = items.map { Product.Id(it) }.toSet(),
-            cartProductCount = checkNotNull(itemCount) { "itemCount is null" },
+            cartProductCount = checkNotNull(productTotalCount) { "itemCount is null" },
         )
     }
 }

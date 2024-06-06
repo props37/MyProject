@@ -35,8 +35,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -97,7 +98,7 @@ fun ZarinaExpandableItem(
                 )
                 val contentDescResId = if (isExpanded) R.string.collapse else R.string.expand
                 Icon(
-                    painter = painterResource(R.drawable.ic_small_arrow_up_24),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
                     contentDescription = stringResource(contentDescResId),
                     modifier = Modifier
                         .size(16.dp)

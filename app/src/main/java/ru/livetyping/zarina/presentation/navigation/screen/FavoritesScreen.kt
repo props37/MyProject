@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.FavoritesGraph
+import ru.livetyping.zarina.presentation.navigation.destination.graph.SizeSelectorGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.navigateToSizeSelectorGraph
 import ru.livetyping.zarina.presentation.navigation.util.BottomNavBarItemSecondaryStartDestinationBackHandler
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
@@ -38,7 +39,12 @@ fun NavGraphBuilder.favoritesScreen(navController: NavHostController) {
 
         FavoritesScreen(
             viewModel = hiltViewModel { factory: FavoritesViewModel.Factory ->
-                factory.create(it.savedStateHandle)
+                val sizeSelectorResultFlow = it.savedStateHandle
+                    .getStateFlow<SizeSelectorGraph.Result?>(
+                        key = SizeSelectorGraph.RESULT_KEY,
+                        initialValue = null,
+                    )
+                factory.create(sizeSelectorResultFlow)
             },
             navigate = { action ->
                 when (action) {

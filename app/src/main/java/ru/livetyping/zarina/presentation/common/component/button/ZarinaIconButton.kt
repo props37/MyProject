@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.minimumInteractiveComponentSize
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -22,7 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -41,8 +42,8 @@ fun ZarinaIconButton(
     isLoading: Boolean = false,
     loaderSize: Dp = 24.dp,
     loaderColor: Color = UiKitTheme.colors.icon.regular.default,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    indication: Indication? = rememberRipple(bounded = false, radius = 24.dp),
+    interactionSource: MutableInteractionSource? = null,
+    indication: Indication? = ripple(bounded = false, radius = 24.dp),
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
@@ -97,7 +98,7 @@ private fun Preview() {
                 .padding(16.dp),
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_heart_24),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_heart_24),
                 contentDescription = null,
             )
         }

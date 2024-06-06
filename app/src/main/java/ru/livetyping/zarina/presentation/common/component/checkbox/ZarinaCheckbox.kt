@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,7 +13,7 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.minimumInteractiveComponentSize
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,7 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,8 +66,8 @@ fun ZarinaCheckbox(
             )
             .toggleable(
                 value = isChecked,
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = false, radius = sizeDp),
+                interactionSource = null,
+                indication = ripple(bounded = false, radius = sizeDp),
                 enabled = true,
                 role = Role.Checkbox,
                 onValueChange = onCheckedChanged,
@@ -79,12 +79,12 @@ fun ZarinaCheckbox(
     ) {
         AnimatedVisibility(
             visible = isChecked,
-            enter = fadeIn(),
-            exit = fadeOut(),
+            enter = remember { fadeIn() },
+            exit = remember { fadeOut() },
             modifier = Modifier.matchParentSize(),
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_checkbox_24),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_checkbox_24),
                 contentDescription = null,
                 tint = UiKitTheme.colors.icon.regular.default,
             )

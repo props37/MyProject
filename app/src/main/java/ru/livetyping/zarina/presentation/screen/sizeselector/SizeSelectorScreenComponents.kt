@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.sizeselector
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -22,7 +21,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -30,8 +28,9 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -41,6 +40,7 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIconButton
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.screen.sizeselector.SizeSelectorViewModel.Size
@@ -59,7 +59,7 @@ object SizeSelectorScreenComponents {
         Column(
             modifier = modifier
                 .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
+                    interactionSource = null,
                     indication = null,
                     onClick = onClickOutside,
                 )
@@ -70,7 +70,7 @@ object SizeSelectorScreenComponents {
 
             ZarinaBottomSheet(
                 modifier = Modifier.clickable(
-                    interactionSource = remember { MutableInteractionSource() },
+                    interactionSource = null,
                     indication = null,
                     onClick = {},
                 ),
@@ -92,7 +92,7 @@ object SizeSelectorScreenComponents {
             modifier = modifier,
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_ruler_24),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_ruler_24),
                 contentDescription = null,
             )
             Spacer(modifier = Modifier.width(6.dp))
@@ -144,8 +144,7 @@ object SizeSelectorScreenComponents {
                     )
 
                     if (index < sizes.lastIndex) {
-                        Divider(
-                            color = UiKitTheme.colors.border.general.default,
+                        ZarinaDivider(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),

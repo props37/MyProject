@@ -3,7 +3,8 @@ package ru.livetyping.zarina.presentation.common.component.button
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.Indication
+import androidx.compose.foundation.IndicationNodeFactory
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -20,18 +21,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.isUnspecified
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
@@ -39,8 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
-import ru.livetyping.zarina.presentation.common.rippletheme.DarkRippleTheme
-import ru.livetyping.zarina.presentation.common.rippletheme.LightRippleTheme
+import ru.livetyping.zarina.presentation.common.ripple.DarkRipple
+import ru.livetyping.zarina.presentation.common.ripple.LightRipple
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.presentation.theme.ZarinaTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
@@ -52,14 +51,13 @@ fun ZarinaButton(
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
     isLoading: Boolean = false,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     size: ZarinaButtonSize = ZarinaButtonSize.Large,
     colors: ZarinaButtonColors = ZarinaButtonDefaults.primaryColors(),
     shape: Shape = ZarinaButtonDefaults.Shape,
     contentPadding: PaddingValues = ZarinaButtonDefaults.contentPaddingFromSize(size),
     textStyle: TextStyle = ZarinaButtonDefaults.textStyleFromSize(size),
-    isIndicationEnabled: Boolean = true,
-    useProvidedRippleTheme: Boolean = false,
+    indication: Indication? = ZarinaButtonDefaults.indicationFromColors(colors),
     content: @Composable RowScope.() -> Unit,
 ) {
     val minSize = when (size) {
@@ -81,31 +79,9 @@ fun ZarinaButton(
         label = "$Tag border color",
     )
 
-    val providedRippleTheme = LocalRippleTheme.current
-    val rippleTheme = remember(
-        useProvidedRippleTheme,
-        providedRippleTheme,
-        colors.backgroundColor,
-    ) {
-        if (useProvidedRippleTheme) {
-            providedRippleTheme
-        } else {
-            val backgroundColorLuminance = colors.backgroundColor.luminance()
-            when {
-                colors.backgroundColor.isUnspecified -> DarkRippleTheme
-                backgroundColorLuminance <= MaxBackgroundColorLuminanceForLightRippleTheme -> {
-                    LightRippleTheme
-                }
-
-                else -> DarkRippleTheme
-            }
-        }
-    }
-
     CompositionLocalProvider(
         LocalTextStyle provides textStyle,
         LocalContentColor provides contentColor.value,
-        LocalRippleTheme provides rippleTheme,
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -116,7 +92,7 @@ fun ZarinaButton(
                 .border(width = 1.dp, color = borderColor.value, shape = shape)
                 .clickable(
                     interactionSource = interactionSource,
-                    indication = if (isIndicationEnabled) LocalIndication.current else null,
+                    indication = indication,
                     enabled = isEnabled,
                     role = Role.Button,
                     onClick = onClick,
@@ -312,6 +288,21 @@ object ZarinaButtonDefaults {
         ZarinaButtonSize.Medium -> UiKitTheme.typography.caption1.regular
         ZarinaButtonSize.Small -> UiKitTheme.typography.caption3.regular
     }
+
+    @Stable
+    fun indicationFromColors(colors: ZarinaButtonColors): IndicationNodeFactory {
+        val backgroundColor = colors.backgroundColor
+        return if (backgroundColor.isSpecified) {
+            val backgroundColorLuminance = colors.backgroundColor.luminance()
+            if (backgroundColorLuminance <= MaxBackgroundColorLuminanceForLightRipple) {
+                LightRipple
+            } else {
+                DarkRipple
+            }
+        } else {
+            DarkRipple
+        }
+    }
 }
 
 @Preview
@@ -482,6 +473,6 @@ private fun Outline() {
     }
 }
 
-private const val MaxBackgroundColorLuminanceForLightRippleTheme = 0.5f
+private const val MaxBackgroundColorLuminanceForLightRipple = 0.5f
 
 private const val Tag = "ZarinaButton"

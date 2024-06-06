@@ -17,7 +17,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class AuthorizationEncryptedStorage @Inject constructor(
-    @Qualifiers.SharedPreferences(Qualifiers.ShapredPreferencesType.ENCRYPTED)
+    @Qualifiers.SharedPreferences(Qualifiers.SharedPreferencesType.ENCRYPTED)
     private val encryptedSharedPreferences: SharedPreferences,
 ) {
     fun getAuthorizationTokensFlow(): Flow<AuthorizationTokens?> = callbackFlow {

@@ -10,7 +10,7 @@ import ru.livetyping.zarina.domain.common.Url
 import javax.inject.Inject
 
 class ContentApi @Inject constructor(
-    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApis.AUTHORIZED)
+    @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
 ) {
     fun getOnboardingBannerUrl(): Url {

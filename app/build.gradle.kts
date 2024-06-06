@@ -56,6 +56,10 @@ android {
         generateLocaleConfig = true
     }
 
+    lint {
+        disable += "UsingMaterialAndMaterial3Libraries"
+    }
+
     signingConfigs {
         ZarinaSigningVariant.values().forEach { variant ->
             maybeCreate(variant.name).apply {

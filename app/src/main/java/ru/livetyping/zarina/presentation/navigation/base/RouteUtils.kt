@@ -3,6 +3,7 @@ package ru.livetyping.zarina.presentation.navigation.base
 /**
  * Contains helper methods for generating Jetpack Navigation route schemas and routes.
  */
+@Suppress("ConstPropertyName")
 object RouteUtils {
 
     /**

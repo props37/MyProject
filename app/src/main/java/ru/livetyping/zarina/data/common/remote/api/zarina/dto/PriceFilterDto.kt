@@ -20,7 +20,7 @@ data class PriceFilterDto(
 
     companion object {
         fun from(priceFilter: PriceFilter): PriceFilterDto? {
-            return if (!priceFilter.isEmpty) {
+            return if (priceFilter.isApplied) {
                 PriceFilterDto(
                     min = priceFilter.min,
                     max = priceFilter.max,

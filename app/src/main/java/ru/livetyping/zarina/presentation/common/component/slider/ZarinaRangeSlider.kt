@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.RangeSliderState
@@ -60,6 +60,7 @@ fun ZarinaRangeSlider(
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
     onValueChangeFinished: (() -> Unit)? = null,
     colors: SliderColors = ZarinaRangeSliderDefaults.colors(),
+    // TODO: [Low] Make interaction source nullable when possible
     startInteractionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     endInteractionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     startThumb: @Composable (RangeSliderState) -> Unit = {
@@ -164,7 +165,7 @@ object ZarinaRangeSliderDefaults {
                 .size(thumbSize)
                 .indication(
                     interactionSource = interactionSource,
-                    indication = rememberRipple(bounded = false, radius = thumbSize),
+                    indication = ripple(bounded = false, radius = thumbSize),
                 )
                 .hoverable(
                     interactionSource = interactionSource,

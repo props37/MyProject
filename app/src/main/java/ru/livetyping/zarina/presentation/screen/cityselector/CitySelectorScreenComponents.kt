@@ -20,8 +20,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -30,10 +29,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -44,6 +46,7 @@ import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.icon.ZarinaCheckmarkAnimatedIcon
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
@@ -61,7 +64,9 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransit
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.navigationBarsOrIme
 import ru.livetyping.zarina.util.compose.plus
+import ru.livetyping.zarina.util.compose.tryRequestFocus
 
+@Suppress("ConstPropertyName")
 object CitySelectorScreenComponents {
 
     @Composable
@@ -99,6 +104,7 @@ object CitySelectorScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         val focusState = remember { mutableStateOf<FocusState?>(null) }
+        val focusRequester = remember { FocusRequester() }
 
         ZarinaTextField(
             value = cityNameQuery,
@@ -108,7 +114,7 @@ object CitySelectorScreenComponents {
             },
             leadingContent = {
                 Icon(
-                    painter = painterResource(R.drawable.ic_magnifying_glass_24),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
                 )
@@ -116,7 +122,10 @@ object CitySelectorScreenComponents {
             innerTrailingContent = {
                 ZarinaTextFieldDefaults.ClearButton(
                     isVisible = cityNameQuery.isNotEmpty(),
-                    onClick = onClearClicked,
+                    onClick = {
+                        onClearClicked()
+                        focusRequester.tryRequestFocus()
+                    },
                 )
             },
             outerTrailingContent = {
@@ -135,7 +144,9 @@ object CitySelectorScreenComponents {
                 }
             },
             singleLine = true,
-            modifier = modifier.onFocusChanged { focusState.value = it },
+            modifier = modifier
+                .onFocusChanged { focusState.value = it }
+                .focusRequester(focusRequester),
         )
     }
 
@@ -170,49 +181,55 @@ object CitySelectorScreenComponents {
                     is CityListState.CityList -> {
                         if (listState.items.isNotEmpty()) {
                             val baseContentPadding = remember(isChangeCityButtonVisible) {
+                                val bottomBase = 24.dp
                                 val bottom = if (isChangeCityButtonVisible) {
                                     val buttonHeight = ZarinaButtonDefaults.SizeLarge
                                     buttonHeight + ChangeCityButtonBottomPadding + 8.dp
                                 } else {
                                     0.dp
                                 }
-                                PaddingValues(top = 8.dp, bottom = bottom)
+                                PaddingValues(top = 8.dp, bottom = bottom + bottomBase)
                             }
-                            val contentPadding =
-                                baseContentPadding +
-                                        WindowInsets.safeDrawing
-                                            .only(WindowInsetsSides.Bottom)
-                                            .asPaddingValues()
+                            val contentPadding = WindowInsets.safeDrawing
+                                .only(WindowInsetsSides.Bottom)
+                                .asPaddingValues()
+                                .plus(baseContentPadding)
 
                             LazyColumn(
                                 contentPadding = contentPadding,
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
-                                items(
+                                itemsIndexed(
                                     items = listState.items,
-                                    key = { getCityListItemKey(it) },
-                                    contentType = { getCityListItemContentType(it) },
-                                ) { item ->
+                                    key = { _, item -> getCityListItemKey(item) },
+                                    contentType = { _, item -> getCityListItemContentType(item) },
+                                ) { index, item ->
                                     when (item) {
                                         is CityListItem.CityItem -> {
-                                            City(
-                                                city = item.city,
-                                                onClick = onCityClicked,
-                                                showFullName = item.showFullName,
-                                                isSelected = item.city.kladrId == selectedCity?.kladrId,
-                                                modifier = Modifier.fillMaxWidth(),
-                                            )
+                                            Column(modifier = Modifier.animateItem()) {
+                                                City(
+                                                    city = item.city,
+                                                    onClick = onCityClicked,
+                                                    showFullName = item.showFullName,
+                                                    isSelected = item.city.kladrId == selectedCity?.kladrId,
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                )
 
-                                            Divider(
-                                                color = UiKitTheme.colors.border.general.default,
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(horizontal = 16.dp),
-                                            )
+                                                if (index < listState.items.lastIndex) {
+                                                    ZarinaDivider(
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .padding(horizontal = 16.dp),
+                                                    )
+                                                }
+                                            }
                                         }
 
                                         is CityListItem.CityFirstLetterHeaderItem -> {
-                                            CityFirstLetterHeader(item.letter)
+                                            CityFirstLetterHeader(
+                                                letter = item.letter,
+                                                modifier = Modifier.animateItem(),
+                                            )
                                         }
                                     }
                                 }
@@ -343,6 +360,7 @@ object CitySelectorScreenComponents {
             is CityListState.CityList -> {
                 if (state.items.isNotEmpty()) CityListContentKeyCities else CityListContentKeyCityNotFound
             }
+
             CityListState.Loading, is CityListState.Error -> state
         }
     }

@@ -51,15 +51,12 @@ import kotlin.coroutines.coroutineContext
 @HiltViewModel(assistedFactory = OnboardingViewModel.Factory::class)
 class OnboardingViewModel @AssistedInject constructor(
     @Assisted
-    backStackEntrySavedStateHandle: SavedStateHandle,
+    private val citySelectorResultFlow: StateFlow<UnscopedDestinations.CitySelector.Result?>,
     private val savedStateHandle: SavedStateHandle,
     private val interactor: OnboardingInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
-    private val screenResultHandler = ScreenResultHandler(
-        backStackEntrySavedStateHandle = backStackEntrySavedStateHandle,
-        savedStateHandle = savedStateHandle,
-    )
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val operationTracker = OperationTracker()
 
@@ -301,7 +298,8 @@ class OnboardingViewModel @AssistedInject constructor(
     private fun handleCitySelectorResult() {
         viewModelScope.launch {
             screenResultHandler.handle<UnscopedDestinations.CitySelector.Result>(
-                key = UnscopedDestinations.CitySelector.RESULT_KEY,
+                resultFlow = citySelectorResultFlow,
+                key = KEY_RESULT_CITY_SELECTOR,
             ) { result ->
                 savedStateHandle[KEY_CURRENT_CITY] = result.city
             }
@@ -352,13 +350,17 @@ class OnboardingViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(backStackEntrySavedStateHandle: SavedStateHandle): OnboardingViewModel
+        fun create(
+            citySelectorResultFlow: StateFlow<UnscopedDestinations.CitySelector.Result?>,
+        ): OnboardingViewModel
     }
 
     companion object {
         private const val KEY_ONBOARDING_STEPS = "onboarding_steps"
         private const val KEY_CURRENT_ONBOARDING_STEP = "current_onboarding_step"
         private const val KEY_CURRENT_CITY = "current_city"
+
+        private const val KEY_RESULT_CITY_SELECTOR = "result_city_selector"
 
         private val LOCATION_PERMISSIONS: List<String>
             get() = listOf(

@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.stores
 
 import android.Manifest
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -18,7 +17,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -31,8 +29,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -56,6 +55,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.location.Location
 import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
 import ru.livetyping.zarina.presentation.common.component.map.GoogleMapsDefaults
@@ -73,6 +73,7 @@ import ru.livetyping.zarina.presentation.screen.stores.StoresViewModel.ViewMode
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 
+@Suppress("ConstPropertyName")
 object StoresScreenComponents {
 
     @Composable
@@ -96,7 +97,6 @@ object StoresScreenComponents {
         )
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun ViewModeTabRow(
         viewModes: ImmutableList<ViewMode>,
@@ -123,7 +123,6 @@ object StoresScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun ViewModePager(
         viewModes: ImmutableList<ViewMode>,
@@ -177,7 +176,7 @@ object StoresScreenComponents {
             contentKey = {
                 when (it) {
                     is StoreListState.Success -> StoreMapContentKeySuccess
-                    else -> it
+                    is StoreListState.Error, StoreListState.Loading -> it
                 }
             },
             modifier = modifier,
@@ -286,6 +285,7 @@ object StoresScreenComponents {
             ) {
                 val clusterItems = remember(stores) {
                     stores.map { StoreClusterItem(it) }
+//                    emptyList<StoreClusterItem>()
                 }
                 Clustering(
                     items = clusterItems,
@@ -298,7 +298,7 @@ object StoresScreenComponents {
                     },
                     clusterItemContent = {
                         Icon(
-                            painter = painterResource(R.drawable.ic_map_store_marker_24),
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_map_store_marker_24),
                             contentDescription = stringResource(
                                 id = R.string.map_store_content_description,
                                 it.store.name,
@@ -352,13 +352,13 @@ object StoresScreenComponents {
             contentAlignment = Alignment.Center,
             modifier = modifier
                 .size(52.dp)
+                .background(
+                    color = UiKitTheme.colors.background.general.regular.default,
+                    shape = CircleShape,
+                )
                 .border(
                     width = 1.dp,
                     color = UiKitTheme.colors.border.general.active,
-                    shape = CircleShape,
-                )
-                .background(
-                    color = UiKitTheme.colors.background.general.regular.default,
                     shape = CircleShape,
                 ),
         ) {
@@ -422,18 +422,24 @@ object StoresScreenComponents {
         stores: ImmutableList<Store>,
         modifier: Modifier = Modifier,
     ) {
-        LazyColumn(modifier = modifier) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier,
+        ) {
             itemsIndexed(
                 items = stores,
                 key = { _, store -> store.id.value },
             ) { index, store ->
-                StoreListItem(store = store)
+                Column(modifier = Modifier.animateItem()) {
+                    StoreListItem(store = store)
 
-                if (index < stores.lastIndex) {
-                    Divider(
-                        color = UiKitTheme.colors.background.skeleton,
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                    )
+                    if (index < stores.lastIndex) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
         }
@@ -445,15 +451,21 @@ object StoresScreenComponents {
     ) {
         val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
 
-        LazyColumn(modifier = modifier) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier,
+        ) {
             items(count = StoreListSkeletonItemCount) { index ->
-                StoreListItemSkeleton(shimmer = shimmer)
+                Column(modifier = Modifier.animateItem()) {
+                    StoreListItemSkeleton(shimmer = shimmer)
 
-                if (index < StoreListSkeletonItemCount - 1) {
-                    Divider(
-                        color = UiKitTheme.colors.background.skeleton,
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                    )
+                    if (index < StoreListSkeletonItemCount - 1) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
         }

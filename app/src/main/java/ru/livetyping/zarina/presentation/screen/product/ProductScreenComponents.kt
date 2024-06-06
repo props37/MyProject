@@ -1,7 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.product
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,13 +17,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
@@ -32,12 +32,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.UrlAnnotation
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
@@ -83,6 +85,7 @@ import ru.livetyping.zarina.util.compose.getHorizontalPaddingValues
 import ru.livetyping.zarina.util.compose.getVerticalPaddingValues
 import ru.livetyping.zarina.util.compose.pager.rememberEndlessPagerState
 
+@Suppress("ConstPropertyName")
 object ProductScreenComponents {
 
     @Composable
@@ -122,11 +125,11 @@ object ProductScreenComponents {
             endContent = {
                 ZarinaIconButton(
                     onClick = onShareClicked,
-                    indication = rememberRipple(bounded = false, radius = TopBarIconSize),
+                    indication = ripple(bounded = false, radius = TopBarIconSize),
                     modifier = Modifier.padding(end = 2.dp),
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_share_24),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_share_24),
                         contentDescription = stringResource(R.string.share),
                         modifier = Modifier.size(TopBarIconSize),
                     )
@@ -159,7 +162,7 @@ object ProductScreenComponents {
             contentKey = {
                 when (it) {
                     is ProductState.Success -> ProductDetailsContentKeySuccess
-                    else -> it
+                    is ProductState.Error, ProductState.Loading -> it
                 }
             },
             modifier = modifier,
@@ -254,6 +257,14 @@ object ProductScreenComponents {
         lazyListState: LazyListState,
         modifier: Modifier = Modifier,
     ) {
+        val animateItemModifier: LazyItemScope.() -> Modifier = {
+            Modifier.animateItem(
+                fadeInSpec = spring(),
+                placementSpec = spring(),
+                fadeOutSpec = spring(),
+            )
+        }
+
         LazyColumn(
             state = lazyListState,
             modifier = modifier,
@@ -262,7 +273,10 @@ object ProductScreenComponents {
                 key = ProductDetailsListKeyMediaPager,
                 contentType = ProductDetailsListContentTypeMediaPager,
             ) {
-                ProductMediaPager(media = product.media)
+                ProductMediaPager(
+                    media = product.media,
+                    modifier = Modifier.then(animateItemModifier()),
+                )
             }
 
             item(
@@ -274,7 +288,8 @@ object ProductScreenComponents {
                     onProductColorClicked = onProductColorClicked,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp, bottom = 8.dp),
+                        .padding(top = 16.dp, bottom = 8.dp)
+                        .then(animateItemModifier()),
                 )
             }
 
@@ -284,7 +299,9 @@ object ProductScreenComponents {
             ) {
                 ProductDescription(
                     description = product.description,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(animateItemModifier()),
                 )
             }
 
@@ -295,7 +312,9 @@ object ProductScreenComponents {
                 ProductDeliveryAndPayment(
                     freeDeliveryTotalPriceThreshold = product.freeDeliveryTotalPriceThreshold,
                     onUrlClicked = onUrlClicked,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(animateItemModifier()),
                 )
             }
 
@@ -309,7 +328,9 @@ object ProductScreenComponents {
                         state = productTotalLookState,
                         onProductClicked = onProductClicked,
                         onErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .then(animateItemModifier()),
                     )
                 }
             }
@@ -324,7 +345,9 @@ object ProductScreenComponents {
                         state = productSimilarState,
                         onProductClicked = onProductClicked,
                         onErrorRefreshClicked = onProductSimilarErrorRefreshClicked,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .then(animateItemModifier()),
                     )
                 }
             }
@@ -373,7 +396,6 @@ object ProductScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun ProductMediaPager(
         media: List<Media>,
@@ -485,7 +507,6 @@ object ProductScreenComponents {
                 id = R.string.product_delivery_and_payment_info,
                 rememberFormattedPrice(freeDeliveryTotalPriceThreshold),
             )
-            val baseTextStyle = UiKitTheme.typography.tertiary.light
 
             val clickableDeliveryText =
                 stringResource(R.string.product_delivery_and_payment_info_delivery)
@@ -497,44 +518,45 @@ object ProductScreenComponents {
 
             val text = remember(
                 baseText,
-                baseTextStyle,
                 clickableDeliveryText,
                 clickablePaymentText,
                 clickableTextStyle,
                 deliveryAndPaymentUrl,
+                onUrlClicked,
             ) {
                 buildAnnotatedString {
-                    withStyle(baseTextStyle.toSpanStyle()) {
-                        append(baseText)
-                    }
+                    append(baseText)
 
                     val string = this.toAnnotatedString()
                     val clickableDeliveryTextStartIndex = string.lastIndexOf(clickableDeliveryText)
                     val clickablePaymentTextStartIndex = string.lastIndexOf(clickablePaymentText)
 
                     val clickableSpanStyle = clickableTextStyle.toSpanStyle()
+                    val linkInteractionListener = { link: LinkAnnotation ->
+                        if (link is LinkAnnotation.Url) {
+                            onUrlClicked(Url(link.url))
+                        }
+                    }
                     if (clickableDeliveryTextStartIndex != -1) {
                         val end = clickableDeliveryTextStartIndex + clickableDeliveryText.length
-                        addStyle(
-                            style = clickableSpanStyle,
-                            start = clickableDeliveryTextStartIndex,
-                            end = end,
-                        )
-                        addUrlAnnotation(
-                            urlAnnotation = UrlAnnotation(deliveryAndPaymentUrl),
+                        addLink(
+                            url = LinkAnnotation.Url(
+                                url = deliveryAndPaymentUrl,
+                                styles = TextLinkStyles(clickableSpanStyle),
+                                linkInteractionListener = linkInteractionListener,
+                            ),
                             start = clickableDeliveryTextStartIndex,
                             end = end,
                         )
                     }
                     if (clickablePaymentTextStartIndex != -1) {
                         val end = clickablePaymentTextStartIndex + clickablePaymentText.length
-                        addStyle(
-                            style = clickableSpanStyle,
-                            start = clickablePaymentTextStartIndex,
-                            end = end,
-                        )
-                        addUrlAnnotation(
-                            urlAnnotation = UrlAnnotation(deliveryAndPaymentUrl),
+                        addLink(
+                            url = LinkAnnotation.Url(
+                                url = deliveryAndPaymentUrl,
+                                styles = TextLinkStyles(clickableSpanStyle),
+                                linkInteractionListener = linkInteractionListener,
+                            ),
                             start = clickablePaymentTextStartIndex,
                             end = end,
                         )
@@ -542,15 +564,11 @@ object ProductScreenComponents {
                 }
             }
 
-            ClickableText(
+            Text(
                 text = text,
-            ) { offset ->
-                val annotation = text.getUrlAnnotations(offset, offset).firstOrNull()
-                if (annotation != null) {
-                    val url = Url(annotation.item.url)
-                    onUrlClicked(url)
-                }
-            }
+                style = UiKitTheme.typography.tertiary.light,
+                color = UiKitTheme.colors.text.general.regular.default,
+            )
         }
     }
 
@@ -581,7 +599,9 @@ object ProductScreenComponents {
                 contentKey = { state ->
                     when (state) {
                         is SuggestedProductListState.Success -> ProductTotalLookContentKeySuccess
-                        else -> state
+
+                        SuggestedProductListState.Empty,
+                        SuggestedProductListState.Error, SuggestedProductListState.Loading -> state
                     }
                 },
             ) { state ->
@@ -633,7 +653,9 @@ object ProductScreenComponents {
                 ProductCardSmall(
                     product = product,
                     onClick = onProductClicked,
-                    modifier = Modifier.width(SuggestedProductCardWidth),
+                    modifier = Modifier
+                        .width(SuggestedProductCardWidth)
+                        .animateItem(),
                 )
             }
         }
@@ -651,7 +673,8 @@ object ProductScreenComponents {
                     shape = RectangleShape,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(MediaPagerAspectRatio),
+                        .aspectRatio(MediaPagerAspectRatio)
+                        .animateItem(),
                 )
             }
 
@@ -660,7 +683,8 @@ object ProductScreenComponents {
                     shimmer = shimmer,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp),
+                        .padding(vertical = 16.dp)
+                        .animateItem(),
                 )
             }
 
@@ -669,7 +693,8 @@ object ProductScreenComponents {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .heightIn(min = 56.dp)
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 16.dp)
+                        .animateItem(),
                 ) {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.light,
@@ -689,7 +714,8 @@ object ProductScreenComponents {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .heightIn(min = 56.dp)
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 16.dp)
+                        .animateItem(),
                 ) {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.light,
@@ -705,7 +731,11 @@ object ProductScreenComponents {
             }
 
             item {
-                Box(modifier = Modifier.padding(16.dp)) {
+                Box(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .animateItem(),
+                ) {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.bold,
                         shimmer = shimmer,
@@ -718,12 +748,18 @@ object ProductScreenComponents {
                 SuggestedProductsSkeleton(
                     shimmer = shimmer,
                     contentPadding = PaddingValues(horizontal = 16.dp),
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
                 )
             }
 
             item {
-                Box(modifier = Modifier.padding(16.dp)) {
+                Box(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .animateItem(),
+                ) {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.bold,
                         shimmer = shimmer,
@@ -736,7 +772,9 @@ object ProductScreenComponents {
                 SuggestedProductsSkeleton(
                     shimmer = shimmer,
                     contentPadding = PaddingValues(horizontal = 16.dp),
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
                 )
             }
         }
@@ -815,7 +853,9 @@ object ProductScreenComponents {
             items(count = SuggestedProductsSkeletonCount) {
                 ProductCardSmallSkeleton(
                     shimmer = shimmer,
-                    modifier = Modifier.width(SuggestedProductCardWidth),
+                    modifier = Modifier
+                        .width(SuggestedProductCardWidth)
+                        .animateItem(),
                 )
             }
         }

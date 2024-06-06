@@ -1,12 +1,11 @@
 package ru.livetyping.zarina.presentation.screen.catalog
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,21 +18,18 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusState
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -41,16 +37,16 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
-import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
-import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
-import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
+import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
+import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldSize
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.util.domain.toComposeColor
 import ru.livetyping.zarina.presentation.screen.catalog.CatalogViewModel.CategoryListItem
@@ -58,72 +54,49 @@ import ru.livetyping.zarina.presentation.screen.catalog.CatalogViewModel.Categor
 import ru.livetyping.zarina.presentation.screen.catalog.CatalogViewModel.CategoryListState
 import ru.livetyping.zarina.presentation.screen.catalog.CatalogViewModel.GenderTab
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
-import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 
+@Suppress("ConstPropertyName")
 object CatalogScreenComponents {
 
     @Composable
     fun SearchBar(
-        searchQuery: String,
-        onSearchQueryChanged: (String) -> Unit,
-        onCancelClicked: () -> Unit,
+        onClick: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = modifier.heightIn(min = TopBarDefaults.MinHeight),
+            modifier = modifier
+                .heightIn(min = TopBarDefaults.MinHeight)
+                .clickable(onClick = onClick)
+                .padding(horizontal = 16.dp),
         ) {
-            val focusState = remember { mutableStateOf<FocusState?>(null) }
-
             ZarinaTextField(
-                value = searchQuery,
-                onValueChanged = onSearchQueryChanged,
-                placeholder = {
-                    Text(text = stringResource(R.string.find_products))
-                },
+                value = "",
+                onValueChanged = {},
+                isEnabled = false,
+                size = ZarinaTextFieldSize.Small,
+                placeholder = { Text(text = stringResource(R.string.find_products)) },
                 leadingContent = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_magnifying_glass_24),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
                         contentDescription = null,
                         modifier = Modifier.size(20.dp),
                     )
                 },
-                innerTrailingContent = {
-                    ZarinaTextFieldDefaults.ClearButton(
-                        isVisible = searchQuery.isNotEmpty(),
-                        onClick = { onSearchQueryChanged("") },
-                    )
-                },
-                outerTrailingContent = {
-                    val isCancelButtonVisible = focusState.value?.isFocused == true
-                    AnimatedContent(
-                        targetState = isCancelButtonVisible,
-                        transitionSpec = {
-                            AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
-                        },
-                        contentAlignment = Alignment.Center,
-                        label = "SearchBar Cancel button",
-                    ) { isVisible ->
-                        if (isVisible) {
-                            ZarinaTextFieldDefaults.CancelButton(onClick = onCancelClicked)
-                        }
-                    }
-                },
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .onFocusChanged { focusState.value = it },
+                colors = ZarinaTextFieldDefaults.colors(
+                    disabledPlaceholderColor = UiKitTheme.colors.text.general.regular.muted,
+                    disabledIndicationLineColor = UiKitTheme.colors.border.general.default,
+                )
             )
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun GenderPicker(
         genders: ImmutableList<GenderTab>,
         pagerState: PagerState,
-        onGenderСhanged: (GenderTab) -> Unit,
+        onGenderChanged: (GenderTab) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val currentGender = remember(genders, pagerState) {
@@ -134,36 +107,22 @@ object CatalogScreenComponents {
             selectedTabIndex = pagerState.currentPage,
             modifier = modifier,
         ) {
-            // TODO: [Low] Migrate to ZarinaTab
             genders.forEach { gender ->
-                ZarinaButton(
-                    onClick = { onGenderСhanged(gender) },
-                    size = ZarinaButtonSize.Medium,
-                    colors = ZarinaButtonDefaults.backlessColors(),
-                    contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
-                ) {
-                    val textResId = when (gender) {
-                        GenderTab.WOMEN -> R.string.for_women
-                        GenderTab.MEN -> R.string.for_men
-                    }
-
-                    val style = if (gender == currentGender.value) {
-                        UiKitTheme.typography.tertiary.regular
-                    } else {
-                        UiKitTheme.typography.tertiary.light
-                    }
-
-                    Text(
-                        text = stringResource(textResId).uppercase(),
-                        style = style,
-                        color = UiKitTheme.colors.text.general.regular.default,
-                    )
+                val textResId = when (gender) {
+                    GenderTab.WOMEN -> R.string.for_women
+                    GenderTab.MEN -> R.string.for_men
                 }
+                ZarinaTab(
+                    text = stringResource(textResId).uppercase(),
+                    onClick = { onGenderChanged(gender) },
+                    isSelected = gender == currentGender.value,
+                    selectedTextStyle = UiKitTheme.typography.tertiary.regular,
+                    unselectedTextStyle = UiKitTheme.typography.tertiary.light,
+                )
             }
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun GenderCategoryPager(
         genders: ImmutableList<GenderTab>,
@@ -243,51 +202,51 @@ object CatalogScreenComponents {
         onItemClicked: (CategoryListItem) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        LazyColumn(modifier = modifier) {
-            items.forEach { item ->
-                val isVisible = when (item) {
-                    is CategoryListItem.CategoryItem -> {
-                        item.category.id in itemsState.visibleCategoryIds
-                    }
+        val lastVisibleItemIndex = remember(items, itemsState) {
+            items.indexOfLast { it.isVisible(itemsState) }
+        }
 
-                    is CategoryListItem.SeeWholeCategoryItem -> {
-                        item.category.id in itemsState.expandedCategoryIds
-                    }
-                }
-
-                if (isVisible) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier,
+        ) {
+            items.forEachIndexed { index, item ->
+                if (item.isVisible(itemsState)) {
                     item(
                         key = item.id.value,
                         contentType = getCategoryListItemContentType(item),
                     ) {
-                        when (item) {
-                            is CategoryListItem.CategoryItem -> {
-                                val isExpanded =
-                                    item.category.id in itemsState.expandedCategoryIds
+                        Column(modifier = Modifier.animateItem()) {
+                            when (item) {
+                                is CategoryListItem.CategoryItem -> {
+                                    val isExpanded =
+                                        item.category.id in itemsState.expandedCategoryIds
 
-                                CategoryItem(
-                                    item = item,
-                                    onItemClicked = onItemClicked,
-                                    isExpanded = isExpanded,
-                                    modifier = Modifier.fillMaxWidth(),
-                                )
+                                    CategoryItem(
+                                        item = item,
+                                        onItemClicked = onItemClicked,
+                                        isExpanded = isExpanded,
+                                        modifier = Modifier.fillMaxWidth(),
+                                    )
+                                }
+
+                                is CategoryListItem.SeeWholeCategoryItem -> {
+                                    SeeWholeCategoryItem(
+                                        item = item,
+                                        onItemClicked = onItemClicked,
+                                        modifier = Modifier.fillMaxWidth(),
+                                    )
+                                }
                             }
 
-                            is CategoryListItem.SeeWholeCategoryItem -> {
-                                SeeWholeCategoryItem(
-                                    item = item,
-                                    onItemClicked = onItemClicked,
-                                    modifier = Modifier.fillMaxWidth(),
+                            if (index < lastVisibleItemIndex) {
+                                ZarinaDivider(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp),
                                 )
                             }
                         }
-
-                        Divider(
-                            color = UiKitTheme.colors.border.general.default,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                        )
                     }
                 }
             }
@@ -305,6 +264,7 @@ object CatalogScreenComponents {
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .heightIn(min = CategoryListItemMinHeight)
+                .background(UiKitTheme.colors.background.general.regular.default)
                 .clickable { onItemClicked(item) }
                 .padding(CategoryListItemContentPadding)
                 .padding(start = CategoryListItemNestingStartPadding * item.nestingLevel),
@@ -349,7 +309,7 @@ object CatalogScreenComponents {
                     if (isExpanded) R.string.collapse else R.string.expand
 
                 Icon(
-                    painter = painterResource(R.drawable.ic_small_arrow_up_24),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
                     contentDescription = stringResource(contentDescriptionResId),
                     modifier = Modifier
                         .size(16.dp)
@@ -372,6 +332,7 @@ object CatalogScreenComponents {
             modifier = modifier
                 .heightIn(min = CategoryListItemMinHeight)
                 .clickable { onItemClicked(item) }
+                .background(UiKitTheme.colors.background.general.regular.default)
                 .padding(CategoryListItemContentPadding)
                 .padding(start = CategoryListItemNestingStartPadding * item.nestingLevel),
         ) {
@@ -390,24 +351,28 @@ object CatalogScreenComponents {
     ) {
         val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
 
-        LazyColumn(modifier = modifier) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier,
+        ) {
             items(
                 count = CategoryListSkeletonItemCount,
                 key = { it },
             ) { index ->
-                CategoryListSkeletonItem(
-                    index = index,
-                    shimmer = shimmer,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                if (index != CategoryListSkeletonItemCount - 1) {
-                    Divider(
-                        color = UiKitTheme.colors.border.general.default,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                Column(modifier = Modifier.animateItem()) {
+                    CategoryListSkeletonItem(
+                        index = index,
+                        shimmer = shimmer,
+                        modifier = Modifier.fillMaxWidth(),
                     )
+
+                    if (index != CategoryListSkeletonItemCount - 1) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
         }
@@ -463,6 +428,18 @@ object CatalogScreenComponents {
             is CategoryListItem.CategoryItem -> CategoryListItemContentTypeCategoryItem
             is CategoryListItem.SeeWholeCategoryItem ->
                 CategoryListItemContentTypeSeeWholeCategoryItem
+        }
+    }
+
+    private fun CategoryListItem.isVisible(itemsState: CategoryListItemsState): Boolean {
+        return when (this) {
+            is CategoryListItem.CategoryItem -> {
+                this.category.id in itemsState.visibleCategoryIds
+            }
+
+            is CategoryListItem.SeeWholeCategoryItem -> {
+                this.category.id in itemsState.expandedCategoryIds
+            }
         }
     }
 

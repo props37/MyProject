@@ -4,7 +4,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,7 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,6 +58,7 @@ fun ProductColorSelector(
                 color = color,
                 isSelected = color.productId == productId,
                 onClick = onProductColorClicked,
+                modifier = Modifier.animateItem(),
             )
         }
     }
@@ -96,8 +96,8 @@ private fun Color(
         modifier = modifier
             .size(ColorInteractiveSize)
             .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = false, radius = ColorCircleSize),
+                interactionSource = null,
+                indication = ripple(bounded = false, radius = ColorCircleSize),
                 onClick = { onClick(color) },
             ),
     ) {

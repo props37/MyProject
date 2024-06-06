@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -35,7 +34,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -51,10 +49,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -78,6 +77,7 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.counter.ZarinaCounter
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
@@ -99,6 +99,7 @@ import ru.livetyping.zarina.util.compose.rememberAnchoredDraggableState
 import ru.livetyping.zarina.util.compose.requireCoercedOffset
 import kotlin.math.roundToInt
 
+@Suppress("ConstPropertyName")
 object CartScreenComponents {
 
     @Composable
@@ -118,8 +119,8 @@ object CartScreenComponents {
             endContent = {
                 AnimatedVisibility(
                     visible = isClearButtonVisible,
-                    enter = AnimatedContentDefaultEnterTransition,
-                    exit = AnimatedContentDefaultExitTransition,
+                    enter = remember { AnimatedContentDefaultEnterTransition },
+                    exit = remember { AnimatedContentDefaultExitTransition },
                 ) {
                     ZarinaButton(
                         onClick = onClearClicked,
@@ -137,7 +138,6 @@ object CartScreenComponents {
         )
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun CartContent(
         city: City?,
@@ -227,7 +227,7 @@ object CartScreenComponents {
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Icon(
-                        painter = painterResource(R.drawable.ic_small_arrow_up_24),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
                         contentDescription = stringResource(R.string.change_city),
                         tint = UiKitTheme.colors.icon.regular.default,
                         modifier = Modifier
@@ -333,7 +333,6 @@ object CartScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun DeliveryTypeContentPager(
         pagerState: PagerState,
@@ -421,7 +420,9 @@ object CartScreenComponents {
                             onDragStarted = { lastDraggedProductId = it },
                             lastDraggedProductId = lastDraggedProductId,
                             onResetSwipeState = { lastDraggedProductId = null },
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .animateItem(),
                         )
                     }
                 }
@@ -440,8 +441,7 @@ object CartScreenComponents {
                 ProductOrderCardSkeleton(shimmer = shimmer)
 
                 if (index < CartProductSkeletonCount - 1) {
-                    Divider(
-                        color = UiKitTheme.colors.border.general.default,
+                    ZarinaDivider(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
@@ -573,11 +573,9 @@ object CartScreenComponents {
                 )
 
                 if (isDividerVisible) {
-                    Divider(
-                        color = UiKitTheme.colors.border.general.default,
+                    ZarinaDivider(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(UiKitTheme.colors.background.general.regular.default)
                             .padding(horizontal = 16.dp),
                     )
                 }
@@ -639,7 +637,7 @@ object CartScreenComponents {
                         label = "Add To Favorites button icon",
                     ) { iconResId ->
                         Icon(
-                            painter = painterResource(iconResId),
+                            imageVector = ImageVector.vectorResource(iconResId),
                             contentDescription = null,
                             modifier = Modifier.size(16.dp),
                         )
@@ -676,7 +674,7 @@ object CartScreenComponents {
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_trash_can_24),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_trash_can_24),
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
                     )
@@ -694,9 +692,7 @@ object CartScreenComponents {
 
     private fun getDeliveryTypePagerContentKey(cartState: CartState): Any = when (cartState) {
         is CartState.Cart -> DeliveryTypePagerContentKeyCart
-        CartState.EmptyCart -> cartState
-        is CartState.Error -> cartState
-        CartState.Skeleton -> cartState
+        CartState.EmptyCart, is CartState.Error, CartState.Skeleton -> cartState
     }
 
     @Stable

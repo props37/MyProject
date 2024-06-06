@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.presentation.screen.signin
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -34,7 +35,6 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDef
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
-import ru.livetyping.zarina.presentation.common.component.text.ZarinaClickableText
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPasswordTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPhoneNumberTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
@@ -44,6 +44,8 @@ import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.screen.signin.SignInViewModel.SignInType
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.navigationBarsOrIme
+import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
+import ru.livetyping.zarina.util.compose.tryRequestFocus
 
 object SignInScreenComponents {
 
@@ -72,7 +74,6 @@ object SignInScreenComponents {
         )
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun SignInTypeTabRow(
         signInTypes: ImmutableList<SignInType>,
@@ -100,7 +101,6 @@ object SignInScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun SignInTypePager(
         signInTypes: ImmutableList<SignInType>,
@@ -177,6 +177,7 @@ object SignInScreenComponents {
         Column(modifier = modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(TopPadding))
 
+            val emailFocusRequester = remember { FocusRequester() }
             ZarinaTextField(
                 value = email,
                 onValueChanged = onEmailChanged,
@@ -188,7 +189,10 @@ object SignInScreenComponents {
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = email.isNotEmpty(),
-                        onClick = { onEmailChanged("") },
+                        onClick = {
+                            onEmailChanged("")
+                            emailFocusRequester.tryRequestFocus()
+                        },
                     )
                 },
                 keyboardOptions = remember {
@@ -200,7 +204,8 @@ object SignInScreenComponents {
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .focusRequester(emailFocusRequester),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -225,7 +230,7 @@ object SignInScreenComponents {
                 size = ZarinaButtonSize.Medium,
                 colors = ZarinaButtonDefaults.backlessColors(),
                 contentPadding = PaddingValues(vertical = 8.dp),
-                isIndicationEnabled = false,
+                indication = null,
                 modifier = Modifier.padding(horizontal = 16.dp),
             ) {
                 Text(
@@ -346,7 +351,7 @@ object SignInScreenComponents {
         val recaptchaPrivacyUrl = stringResource(R.string.recaptcha_policies_privacy_url)
         val recaptchaTermsUrl = stringResource(R.string.recaptcha_policies_terms_url)
 
-        val clickableTextToUrl = remember(
+        val substringToUrl = remember(
             privacyPolicy,
             recaptchaPrivacy,
             recaptchaTerms,
@@ -360,11 +365,17 @@ object SignInScreenComponents {
                 recaptchaTerms to recaptchaTermsUrl,
             )
         }
+        val stringWithLinks = rememberStringWithLinks(
+            baseString = stringResource(R.string.sign_in_policies),
+            substringToUrl = substringToUrl,
+            urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle(),
+            onUrlClicked = { onUrlClicked(Url(it)) },
+        )
 
-        ZarinaClickableText(
-            baseText = stringResource(R.string.sign_in_policies),
-            clickableTextToUrl = clickableTextToUrl,
-            onUrlClicked = onUrlClicked,
+        Text(
+            text = stringWithLinks,
+            style = UiKitTheme.typography.footnote.light,
+            color = UiKitTheme.colors.text.general.regular.default,
             modifier = modifier,
         )
     }

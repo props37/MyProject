@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.presentation.common.component.tag
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -14,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -34,8 +32,8 @@ import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
-import ru.livetyping.zarina.presentation.common.rippletheme.DarkRippleTheme
-import ru.livetyping.zarina.presentation.common.rippletheme.LightRippleTheme
+import ru.livetyping.zarina.presentation.common.ripple.DarkRipple
+import ru.livetyping.zarina.presentation.common.ripple.LightRipple
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.defaultMinSize
@@ -46,7 +44,7 @@ fun ZarinaTag(
     onClick: (() -> Unit)? = null,
     isSelected: Boolean = false,
     shape: Shape = ZarinaTagDefaults.Shape,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     contentPadding: PaddingValues = ZarinaTagDefaults.ContentPadding,
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -74,12 +72,11 @@ fun ZarinaTag(
         UiKitTheme.typography.secondary.light
     }
 
-    val rippleTheme = if (isSelected) LightRippleTheme else DarkRippleTheme
+    val ripple = if (isSelected) LightRipple else DarkRipple
 
     CompositionLocalProvider(
         LocalContentColor provides contentColor.value,
         LocalTextStyle provides textStyle,
-        LocalRippleTheme provides rippleTheme,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -89,7 +86,7 @@ fun ZarinaTag(
                 .drawBehind { drawRect(backgroundColor.value) }
                 .clickable(
                     interactionSource = interactionSource,
-                    indication = LocalIndication.current,
+                    indication = ripple,
                     enabled = onClick != null,
                     role = Role.Button,
                     onClick = { onClick?.invoke() },

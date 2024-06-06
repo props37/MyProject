@@ -42,7 +42,12 @@ fun NavGraphBuilder.onboardingScreen(navController: NavHostController) {
     ) {
         OnboardingScreen(
             viewModel = hiltViewModel { factory : OnboardingViewModel.Factory ->
-                factory.create(it.savedStateHandle)
+                val citySelectorResultFlow = it.savedStateHandle
+                    .getStateFlow<UnscopedDestinations.CitySelector.Result?>(
+                        key = UnscopedDestinations.CitySelector.RESULT_KEY,
+                        initialValue = null,
+                    )
+                factory.create(citySelectorResultFlow)
             },
             navigateForward = { action ->
                 when (action) {

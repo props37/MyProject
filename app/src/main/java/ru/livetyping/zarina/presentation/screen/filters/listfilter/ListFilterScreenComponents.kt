@@ -13,11 +13,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +37,7 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.color.ZarinaColorIcon
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.icon.ZarinaCheckmarkAnimatedIcon
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
@@ -74,8 +75,8 @@ object ListFilterScreenComponents {
             endContent = {
                 AnimatedVisibility(
                     visible = isResetButtonVisible,
-                    enter = AnimatedContentDefaultEnterTransition,
-                    exit = AnimatedContentDefaultExitTransition,
+                    enter = remember { AnimatedContentDefaultEnterTransition },
+                    exit = remember { AnimatedContentDefaultExitTransition },
                 ) {
                     ZarinaButton(
                         onClick = actions.onResetClicked,
@@ -115,7 +116,7 @@ object ListFilterScreenComponents {
         ) {
             if (filter.type == Filter.Type.PICKUP_STORES && city != null) {
                 item(key = city.name) {
-                    ZarinaItem {
+                    ZarinaItem(modifier = Modifier.animateItem()) {
                         Text(
                             text = city.name,
                             style = UiKitTheme.typography.secondary.bold,
@@ -128,18 +129,19 @@ object ListFilterScreenComponents {
                 items = filter.items,
                 key = { _, item -> item.id.value },
             ) { index, item ->
-                FilterItem(
-                    item = item,
-                    onItemClicked = onItemClicked,
-                )
-
-                if (index < filter.items.size - 1) {
-                    Divider(
-                        color = UiKitTheme.colors.border.general.default,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                Column(modifier = Modifier.animateItem()) {
+                    FilterItem(
+                        item = item,
+                        onItemClicked = onItemClicked,
                     )
+
+                    if (index < filter.items.size - 1) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
         }
@@ -153,15 +155,12 @@ object ListFilterScreenComponents {
     ) {
         AnimatedVisibility(
             visible = isVisible,
-            enter = AnimatedContentDefaultEnterTransition,
-            exit = AnimatedContentDefaultExitTransition,
+            enter = remember { AnimatedContentDefaultEnterTransition },
+            exit = remember { AnimatedContentDefaultExitTransition },
             modifier = modifier,
         ) {
             Column {
-                Divider(
-                    color = UiKitTheme.colors.border.general.default,
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                ZarinaDivider(modifier = Modifier.fillMaxWidth())
 
                 ZarinaButton(
                     onClick = onClick,
@@ -189,7 +188,7 @@ object ListFilterScreenComponents {
                 .clickable { onItemClicked(item) }
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
-            if (item is ColorFilterItem) {
+            if (item is ColorFilterItem && item.color != null) {
                 ZarinaColorIcon(
                     color = item.color.toComposeColor() ?: Color.Unspecified,
                     size = 16.dp,

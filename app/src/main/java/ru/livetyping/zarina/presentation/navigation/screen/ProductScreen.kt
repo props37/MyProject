@@ -7,6 +7,7 @@ import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.FavoritesGraph
+import ru.livetyping.zarina.presentation.navigation.destination.graph.SizeSelectorGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.navigateToSizeSelectorGraph
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
@@ -24,6 +25,7 @@ fun NavGraphBuilder.productScreen(navController: NavHostController) {
             when (initialState.destination.route) {
                 UnscopedDestinations.Product.routeSchema,
                 UnscopedDestinations.Products.routeSchema,
+                UnscopedDestinations.ProductSearch.routeSchema,
                 FavoritesGraph.Favorites.routeSchema -> slideEnterTransition()
 
                 else -> null
@@ -45,6 +47,7 @@ fun NavGraphBuilder.productScreen(navController: NavHostController) {
             when (targetState.destination.route) {
                 UnscopedDestinations.Product.routeSchema,
                 UnscopedDestinations.Products.routeSchema,
+                UnscopedDestinations.ProductSearch.routeSchema,
                 FavoritesGraph.Favorites.routeSchema -> slidePopExitTransition()
 
                 else -> null
@@ -53,7 +56,12 @@ fun NavGraphBuilder.productScreen(navController: NavHostController) {
     ) {
         ProductScreen(
             viewModel = hiltViewModel { factory: ProductViewModel.Factory ->
-                factory.create(it.savedStateHandle)
+                val sizeSelectorResultFlow = it.savedStateHandle
+                    .getStateFlow<SizeSelectorGraph.Result?>(
+                        key = SizeSelectorGraph.RESULT_KEY,
+                        initialValue = null,
+                    )
+                factory.create(sizeSelectorResultFlow)
             },
             navigate = { action ->
                 when (action) {

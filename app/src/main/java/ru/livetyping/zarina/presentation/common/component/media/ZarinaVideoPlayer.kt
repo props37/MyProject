@@ -1,13 +1,20 @@
 package ru.livetyping.zarina.presentation.common.component.media
 
+import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -16,10 +23,17 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.common.media.exoplayer.LocalExoPlayerCacheHolder
 import ru.livetyping.zarina.presentation.common.media.exoplayer.rememberExoPlayer
 import timber.log.Timber
+import kotlin.time.Duration.Companion.milliseconds
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
@@ -114,7 +128,7 @@ fun ZarinaVideoPlayer(
 fun ZarinaVideoPlayer(
     exoPlayer: ExoPlayer,
     modifier: Modifier = Modifier,
-    resizeMode: Int = AspectRatioFrameLayout.RESIZE_MODE_FIT,
+    resizeMode: Int = AspectRatioFrameLayout.RESIZE_MODE_ZOOM,
 ) {
     val playerViewState = remember { mutableStateOf<PlayerView?>(null) }
 
@@ -127,6 +141,28 @@ fun ZarinaVideoPlayer(
             Timber.tag(TAG).v("onPauseOrDispose")
             playerView?.onPause()
         }
+    }
+
+    // Workaround for PlayerView bug due to which the video sometimes doesn't occupy the whole
+    // PlayerView size
+    val xOffset = remember { mutableIntStateOf(0) }
+    val placedEvents = remember {
+        MutableSharedFlow<Unit>(
+            extraBufferCapacity = 1,
+            onBufferOverflow = BufferOverflow.DROP_OLDEST,
+        )
+    }
+    LifecycleResumeEffect(Unit) {
+        lifecycleScope.launch(Dispatchers.Default) {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                placedEvents.first()
+                delay(100.milliseconds)
+                xOffset.intValue = 1
+                delay(50.milliseconds)
+                xOffset.intValue = 0
+            }
+        }
+        onPauseOrDispose {}
     }
 
     AndroidView(
@@ -153,7 +189,9 @@ fun ZarinaVideoPlayer(
             Timber.tag(TAG).v("AndroidView onRelease")
             playerView.player = null
         },
-        modifier = modifier,
+        modifier = modifier
+            .offset { IntOffset(xOffset.intValue, 0) }
+            .onPlaced { placedEvents.tryEmit(Unit) },
     )
 }
 

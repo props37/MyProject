@@ -18,6 +18,6 @@ class DeleteAccountUseCase @Inject constructor(
     override suspend fun execute(params: Unit) {
         Timber.v("Delete account")
         userRepository.deleteAccount()
-        signOutCleanupUseCase().getOrThrow()
+        signOutCleanupUseCase(SignOutCleanupUseCase.Params()).getOrThrow()
     }
 }

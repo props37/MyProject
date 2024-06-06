@@ -20,12 +20,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
@@ -33,11 +31,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -58,6 +57,7 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.counter.ZarinaCounter
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
@@ -66,7 +66,6 @@ import ru.livetyping.zarina.presentation.common.component.switchh.ZarinaSwitch
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.util.domain.nameResId
-import ru.livetyping.zarina.presentation.screen.filters.FiltersViewModel.FilterListState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
@@ -74,18 +73,20 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransit
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.sizeIn
 
+@Suppress("ConstPropertyName")
 object FiltersScreenComponents {
 
     @Composable
     fun TopBar(
         isResetButtonVisible: Boolean,
-        actions: TopBarActions,
+        onResetClicked: () -> Unit,
+        onBackClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         ZarinaTopBar(
             startContent = {
                 ZarinaBackIconButton(
-                    onClick = actions.onBackClicked,
+                    onClick = onBackClicked,
                     iconSize = 20.dp,
                     modifier = Modifier.padding(start = 2.dp),
                 )
@@ -100,11 +101,11 @@ object FiltersScreenComponents {
             endContent = {
                 AnimatedVisibility(
                     visible = isResetButtonVisible,
-                    enter = AnimatedContentDefaultEnterTransition,
-                    exit = AnimatedContentDefaultExitTransition,
+                    enter = remember { AnimatedContentDefaultEnterTransition },
+                    exit = remember { AnimatedContentDefaultExitTransition },
                 ) {
                     ZarinaButton(
-                        onClick = actions.onResetClicked,
+                        onClick = onResetClicked,
                         size = ZarinaButtonSize.Small,
                         colors = ZarinaButtonDefaults.backlessColors(),
                         modifier = Modifier.padding(end = 8.dp),
@@ -268,8 +269,7 @@ object FiltersScreenComponents {
                         }
 
                         if (filter !is PriceFilter && index < filterCount - 1) {
-                            Divider(
-                                color = UiKitTheme.colors.border.general.default,
+                            ZarinaDivider(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp),
@@ -279,10 +279,7 @@ object FiltersScreenComponents {
                 }
             }
 
-            Divider(
-                color = UiKitTheme.colors.border.general.default,
-                modifier = Modifier.fillMaxWidth(),
-            )
+            ZarinaDivider(modifier = Modifier.fillMaxWidth())
 
             ShowProductsButton(
                 onClick = onShowProductsClicked,
@@ -324,10 +321,7 @@ object FiltersScreenComponents {
                 }
 
                 if (index < FilterSkeletonItemCount - 1) {
-                    Divider(
-                        color = UiKitTheme.colors.border.general.default,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
+                    ZarinaDivider(modifier = Modifier.fillMaxWidth())
                 }
             }
         }
@@ -483,34 +477,12 @@ object FiltersScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_small_arrow_up_24),
+            imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
             contentDescription = null,
             modifier = modifier
                 .size(16.dp)
                 .rotate(degrees = 90f),
         )
-    }
-
-    @Stable
-    class TopBarActions(
-        val onBackClicked: () -> Unit,
-        val onResetClicked: () -> Unit,
-    ) {
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-
-            other as TopBarActions
-
-            if (onBackClicked != other.onBackClicked) return false
-            return onResetClicked == other.onResetClicked
-        }
-
-        override fun hashCode(): Int {
-            var result = onBackClicked.hashCode()
-            result = 31 * result + onResetClicked.hashCode()
-            return result
-        }
     }
 
     private const val FilterListContentKey = "FilterListContentKey"
@@ -526,6 +498,4 @@ object FiltersScreenComponents {
     private val FilterTitleColor: Color
         @Composable
         get() = UiKitTheme.colors.text.general.regular.default
-
-    private val MultiSelectionFilterItemCounterMinSize: Dp get() = 24.dp
 }
