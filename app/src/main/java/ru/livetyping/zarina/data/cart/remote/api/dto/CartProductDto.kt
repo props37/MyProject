@@ -3,12 +3,14 @@ package ru.livetyping.zarina.data.cart.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.PriceDto
-import ru.livetyping.zarina.data.common.remote.api.zarina.dto.ProductColorDto
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.common.Barcode
+import ru.livetyping.zarina.domain.common.Color
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductOffer
+import timber.log.Timber
+import ru.livetyping.zarina.domain.product.ProductColor as DomainProductColor
 
 @Serializable
 data class CartProductDto(
@@ -70,7 +72,7 @@ data class CartProductDto(
         val name: String? = null,
 
         @SerialName("color")
-        val color: ProductColorDto? = null,
+        val color: ProductColor? = null,
 
         @SerialName("cover_picture")
         val imageUrl: String? = null,
@@ -92,5 +94,34 @@ data class CartProductDto(
 
         @SerialName("retail_amount")
         val pickUpFromStoreAvailableCount: Int? = null,
-    )
+    ) {
+        @Serializable
+        data class ProductColor(
+            @SerialName("id")
+            val id: String? = null,
+
+            @SerialName("title")
+            val name: String? = null,
+
+            @SerialName("code")
+            val code: String? = null,
+
+            @SerialName("product_id")
+            val productId: String? = null,
+        ) {
+            fun toProductColor(): DomainProductColor? {
+                return if (id != null && name != null && code != null && productId != null) {
+                    DomainProductColor(
+                        id = DomainProductColor.Id(id),
+                        name = name,
+                        color = Color(code),
+                        productId = Product.Id(productId),
+                    )
+                } else {
+                    Timber.e("Drop ProductColor because its ID, name, color code or product ID is null")
+                    null
+                }
+            }
+        }
+    }
 }

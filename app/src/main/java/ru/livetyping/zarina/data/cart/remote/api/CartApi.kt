@@ -35,7 +35,7 @@ class CartApi @Inject constructor(
 
     suspend fun addProductToCard(barcode: Barcode, count: Int): CartProductCountDto {
         val body = AddProductToCartRequestBody(barcode.value, count)
-        return httpClient.post("/api/cart/item/") {
+        return httpClient.post("/api/cart/item") {
             setJsonBody(body)
         }.body()
     }
