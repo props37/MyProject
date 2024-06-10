@@ -12,7 +12,7 @@ data class ProductColorDto(
     @SerialName("id")
     val id: String? = null,
 
-    @SerialName("name")
+    @SerialName("title")
     val name: String? = null,
 
     @SerialName("code")
