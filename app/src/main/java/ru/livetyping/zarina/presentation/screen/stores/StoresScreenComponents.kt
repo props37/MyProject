@@ -65,7 +65,6 @@ import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSke
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.util.domain.toLatLng
 import ru.livetyping.zarina.presentation.screen.stores.StoresViewModel.StoreListState
@@ -92,7 +91,7 @@ object StoresScreenComponents {
             centerContent = {
                 Text(text = stringResource(R.string.stores))
             },
-            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
+            contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,
         )
     }

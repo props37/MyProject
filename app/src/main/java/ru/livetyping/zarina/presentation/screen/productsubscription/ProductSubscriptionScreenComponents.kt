@@ -19,7 +19,6 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.checkbox.ZarinaCheckbox
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
@@ -46,7 +45,7 @@ object ProductSubscriptionScreenComponents {
                     overflow = TextOverflow.Ellipsis,
                 )
             },
-            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
+            contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,
         )
     }

@@ -26,7 +26,6 @@ import ru.livetyping.zarina.domain.product.ProductOffer
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.screen.sizeselector.SizeSelectorScreenComponents.NavigationBarSpacer
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -62,7 +61,7 @@ object HeightSelectorScreenComponents {
                     modifier = Modifier.padding(end = 2.dp),
                 )
             },
-            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
+            contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,
         )
     }

@@ -57,7 +57,6 @@ import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScre
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.util.domain.nameResId
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPhoneNumber
@@ -106,7 +105,7 @@ object OrderScreenComponents {
                     }
                 }
             },
-            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
+            contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,
         )
     }

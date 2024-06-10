@@ -10,7 +10,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 
 object ProfileDetailsScreenComponents {
@@ -35,7 +34,7 @@ object ProfileDetailsScreenComponents {
                     overflow = TextOverflow.Ellipsis,
                 )
             },
-            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
+            contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,
         )
     }
