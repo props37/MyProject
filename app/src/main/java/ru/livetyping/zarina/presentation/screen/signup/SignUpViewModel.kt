@@ -43,9 +43,8 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.signup.SignUpViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.SignUpUseCase
+import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
-import java.time.Instant
-import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -220,7 +219,7 @@ class SignUpViewModel @Inject constructor(
             operationTracker.track(Operation.SIGN_UP) {
                 val phone = PhoneNumber.create(phone.value)
                 val birthDate = birthDateMillis.value?.let {
-                    Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+                    LocalDateUtil.fromMillis(it)
                 }
                 val params = SignUpUseCase.Params(
                     firstName = firstName.value,
