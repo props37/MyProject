@@ -33,8 +33,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
@@ -104,7 +106,7 @@ import kotlin.enums.EnumEntries
 @Composable
 fun LoyaltyCard(
     card: LoyaltyCard,
-    onLevelInfoClicked: () -> Unit,
+    onInfoClicked: () -> Unit,
     modifier: Modifier = Modifier,
     initialSide: LoyaltyCardSide = LoyaltyCardSide.FRONT,
     onSideChanged: ((LoyaltyCardSide) -> Unit)? = null,
@@ -160,7 +162,7 @@ fun LoyaltyCard(
             FrontSide(
                 card = card,
                 onShowBackSideClicked = { side = LoyaltyCardSide.BACK },
-                onLevelInfoClicked = onLevelInfoClicked,
+                onInfoClicked = onInfoClicked,
                 modifier = Modifier
                     .graphicsLayer {
                         alpha = if (visibleSide == LoyaltyCardSide.FRONT) 1f else 0f
@@ -202,7 +204,7 @@ fun LoyaltyCardPlaceholder(
     Box(modifier = modifier) {
         LoyaltyCard(
             card = placeholderCard,
-            onLevelInfoClicked = {},
+            onInfoClicked = {},
             modifier = Modifier.alpha(0f),
         )
 
@@ -243,7 +245,7 @@ fun LoyaltyCardPlaceholder(
 private fun FrontSide(
     card: LoyaltyCard,
     onShowBackSideClicked: () -> Unit,
-    onLevelInfoClicked: () -> Unit,
+    onInfoClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.padding(ContentPaddingFrontSide)) {
@@ -265,7 +267,7 @@ private fun FrontSide(
 
         FrontSideLevelInfo(
             card = card,
-            onLevelInfoClicked = onLevelInfoClicked,
+            onInfoClicked = onInfoClicked,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -399,10 +401,11 @@ private fun FrontSideQrCode(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun FrontSideLevelInfo(
     card: LoyaltyCard,
-    onLevelInfoClicked: () -> Unit,
+    onInfoClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val levelNameTextStyle = UiKitTheme.typography.primary.bold
@@ -410,19 +413,19 @@ private fun FrontSideLevelInfo(
     val levelInfoButton = @Composable {
         val iconSize = 16.dp
         val iconColor = LocalContentColor.current
-        ZarinaIconButton(
-            onClick = onLevelInfoClicked,
-            indication = ripple(bounded = false, radius = iconSize),
-            modifier = Modifier
-                .size(iconSize)
-                .wrapContentSize(unbounded = true),
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_exclamation_mark_shaped_24),
-                tint = iconColor,
-                contentDescription = stringResource(R.string.show_loyalty_card_info),
+        CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+            ZarinaIconButton(
+                onClick = onInfoClicked,
+                indication = ripple(bounded = false, radius = iconSize),
                 modifier = Modifier.size(iconSize),
-            )
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_exclamation_mark_shaped_24),
+                    tint = iconColor,
+                    contentDescription = stringResource(R.string.show_loyalty_card_info),
+                    modifier = Modifier.size(iconSize),
+                )
+            }
         }
     }
 
@@ -770,7 +773,7 @@ private fun PreviewPrime() {
                     totalPurchaseSum = totalPurchaseSum,
                 )
             },
-            onLevelInfoClicked = {},
+            onInfoClicked = {},
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp)
@@ -798,7 +801,7 @@ private fun PreviewPriority() {
                     totalPurchaseSum = totalPurchaseSum,
                 )
             },
-            onLevelInfoClicked = {},
+            onInfoClicked = {},
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp)
@@ -822,7 +825,7 @@ private fun PreviewStar() {
                     nextLevelInfo = null,
                 )
             },
-            onLevelInfoClicked = {},
+            onInfoClicked = {},
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp)
@@ -847,7 +850,7 @@ private fun PreviewBackSide() {
                 )
             },
             initialSide = LoyaltyCardSide.BACK,
-            onLevelInfoClicked = {},
+            onInfoClicked = {},
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp)

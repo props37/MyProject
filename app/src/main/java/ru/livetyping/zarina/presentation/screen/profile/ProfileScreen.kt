@@ -135,7 +135,7 @@ private fun ScreenContent(
                         if (userState.user != null) {
                             LoyaltyCard(
                                 loyaltyCard = loyaltyCard,
-                                onLevelInfoClicked = { /*TODO*/ },
+                                onLoyaltyCardInfoClicked = { /*TODO*/ },
                                 onSideChanged = {
                                     screenBrightness = if (it == LoyaltyCardSide.BACK) {
                                         ScreenBrightness.MAX
