@@ -55,6 +55,14 @@ class SignInOtpViewModel @Inject constructor(
 
     val otpResendState: StateFlow<OtpResendState> = otpComponent.otpResendState
 
+    init {
+        interactor.smsCodeRetriever.addListener { code ->
+            onOtpChanged(code)
+            onOtpEntered()
+            emitSideEffect(SideEffect.HideKeyboard)
+        }
+    }
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = SignInOtpScreenAction.ScreenClosed
@@ -108,7 +116,14 @@ class SignInOtpViewModel @Inject constructor(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        interactor.smsCodeRetriever.release()
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
+        data object HideKeyboard : SideEffect
+
         data class Navigate(val action: SignInOtpScreenAction) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect

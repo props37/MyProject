@@ -35,6 +35,7 @@ import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
 import ru.livetyping.zarina.domain.user.exception.UserNotFoundException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
+import ru.livetyping.zarina.presentation.common.sms.SmsConstants
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.signin.SignInViewModel.SideEffect
@@ -174,6 +175,10 @@ class SignInViewModel @Inject constructor(
     }
 
     private suspend fun signInByPhone() {
+        interactor.smsCodeRetriever.start(
+            sender = SmsConstants.SENDER_ZARINA,
+            codeRegexPattern = SmsConstants.CODE_PATTERN_ZARINA,
+        )
         val phone = PhoneNumber.create(phone.value)
         val params = SignInByPhoneUseCase.Params(phone)
         interactor.signInByPhone(params)

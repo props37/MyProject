@@ -53,6 +53,7 @@ leakCanary = "2.14"
 googlePlayServices-location = "21.3.0"
 googlePlayServices-maps = "18.2.0"
 googlePlayServices-maps-compose = "5.0.1"
+googlePlayServices-auth-api-phone = "18.1.0"
 
 recaptcha = "18.5.1"
 
@@ -136,6 +137,7 @@ googlePlayServices-location = { group = "com.google.android.gms", name = "play-s
 googlePlayServices-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "googlePlayServices-maps" }
 googlePlayServices-maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "googlePlayServices-maps-compose" }
 googlePlayServices-maps-compose-utils = { group = "com.google.maps.android", name = "maps-compose-utils", version.ref = "googlePlayServices-maps-compose" }
+googlePlayServices-auth-api-phone = { group = "com.google.android.gms", name = "play-services-auth-api-phone", version.ref = "googlePlayServices-auth-api-phone" }
 
 recaptcha = { group = "com.google.android.recaptcha", name = "recaptcha", version.ref = "recaptcha" }
 
