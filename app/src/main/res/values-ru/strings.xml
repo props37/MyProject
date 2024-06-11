@@ -213,6 +213,9 @@
     <string name="nothing_found">Ничего не нашлось</string>
     <string name="write_different_search_query">Напиши по‑другому или измени запрос</string>
     <string name="loyalty_program">Программа лояльности</string>
+    <string name="loyalty_program_level">Уровень в программе лояльности</string>
+    <string name="my_bonuses">Мои бонусы</string>
+    <string name="expected_bonuses">Ожидается поступление</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

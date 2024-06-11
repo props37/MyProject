@@ -1,21 +1,35 @@
 package ru.livetyping.zarina.presentation.screen.loyaltyprogram
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
 
 @HiltViewModel
 class LoyaltyProgramViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
-    private val interactor: LoyaltyProgramInteractor,
+    interactor: LoyaltyProgramInteractor,
 ) : ViewModel(), SideEffectSource<LoyaltyProgramViewModel.SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    val loyaltyCard: StateFlow<LoyaltyCard?> = interactor.getLoyaltyCardFlow()
+        .map { it.getOrNull() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = null,
+        )
 
     fun onBackClicked() {
         navigationThrottler.throttle {

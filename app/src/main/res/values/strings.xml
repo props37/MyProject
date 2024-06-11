@@ -219,6 +219,9 @@
     <string name="nothing_found">Ничего не нашлось</string>
     <string name="write_different_search_query">Напиши по‑другому или измени запрос</string>
     <string name="loyalty_program">Программа лояльности</string>
+    <string name="loyalty_program_level">Уровень в программе лояльности</string>
+    <string name="my_bonuses">Мои бонусы</string>
+    <string name="expected_bonuses">Ожидается поступление</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
@@ -330,6 +333,15 @@
         <item quantity="few">бонуса</item>
         <item quantity="many">бонусов</item>
         <item quantity="other">бонусов</item>
+    </plurals>
+
+    <plurals name="d_bonuses">
+        <item quantity="zero">%1$d бонусов</item>
+        <item quantity="one">%1$d бонус</item>
+        <item quantity="two">%1$d бонуса</item>
+        <item quantity="few">%1$d бонуса</item>
+        <item quantity="many">%1$d бонусов</item>
+        <item quantity="other">%1$d бонусов</item>
     </plurals>
 
 </resources>

@@ -8,15 +8,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.presentation.screen.loyaltyprogram.LoyaltyProgramScreenComponents.LoyaltyProgramInfo
 import ru.livetyping.zarina.presentation.screen.loyaltyprogram.LoyaltyProgramScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.loyaltyprogram.LoyaltyProgramViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -26,8 +32,11 @@ fun LoyaltyProgramScreen(
     navigate: (LoyaltyProgramScreenAction) -> Unit,
     viewModel: LoyaltyProgramViewModel = hiltViewModel(),
 ) {
+    val loyaltyCard by viewModel.loyaltyCard.collectAsStateWithLifecycle()
+
     ScreenContent(
         onBackClicked = viewModel::onBackClicked,
+        loyaltyCard = loyaltyCard,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -36,6 +45,7 @@ fun LoyaltyProgramScreen(
 @Composable
 private fun ScreenContent(
     onBackClicked: () -> Unit,
+    loyaltyCard: LoyaltyCard?,
     sideEffects: Flow<SideEffect>,
     navigate: (LoyaltyProgramScreenAction) -> Unit,
 ) {
@@ -55,6 +65,10 @@ private fun ScreenContent(
             .bottomNavBarPadding(),
     ) {
         TopBar(onBackClicked = onBackClicked)
+
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            LoyaltyProgramInfo(loyaltyCard)
+        }
     }
 }
 
