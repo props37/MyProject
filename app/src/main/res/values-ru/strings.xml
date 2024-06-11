@@ -129,6 +129,7 @@
     <string name="password_text_field_placeholder_eight_symbolds">Минимум 8 символов</string>
     <string name="password_text_field_placeholder_nine_symbolds">Минимум 8 символов</string>
     <string name="promotional_code_text_field_placeholder">Вставь или введи промокод</string>
+    <string name="birth_date_text_field_label">Дата рождения</string>
     <string name="birth_date_text_field_placeholder">ДД.ММ.ГГГГ</string>
     <string name="payment_placeholder">Один из предложенных вариантов</string>
     <string name="street_text_field_placeholder">Название улицы</string>
@@ -275,7 +276,7 @@
     <string name="sign_up_recaptcha_policies_privacy">конфиденциальность</string>
     <string name="sign_up_recaptcha_policies_terms">условия использования</string>
     <string name="sign_up_agreement_error">Ознакомься с политикой конфиденциальности и правилами работы интернет-магазина и подтверди согласие с правилами бонусной программы</string>
-    <string name="sign_up_empty_fields_error">Поля ввода пусты. Для регистрации введи имя, адрес электронной почты, номер телефона и пароль</string>
+    <string name="sign_up_empty_fields_error">Поля ввода пусты. Для регистрации введи имя, дату рождения, адрес электронной почты, номер телефона и пароль</string>
     <string name="sign_up_email_already_in_use_error">Пользователь с таким адресом электронной почты уже существует. Повтори попытку</string>
     <string name="sign_up_phone_number_already_in_use_error">Пользователь с таким номером телефона уже существует. Повтори попытку</string>
     <string name="sign_up_otp_timeout_error">Прошло недостаточно времени с предыдущей попытки получить код на номер телефона. Повтори попытку позже</string>

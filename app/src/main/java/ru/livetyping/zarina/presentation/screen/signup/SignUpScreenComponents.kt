@@ -152,6 +152,7 @@ object SignUpScreenComponents {
             text = stringWithLinks,
             style = UiKitTheme.typography.footnote.light,
             color = UiKitTheme.colors.text.general.regular.default,
+            modifier = modifier,
         )
     }
 
