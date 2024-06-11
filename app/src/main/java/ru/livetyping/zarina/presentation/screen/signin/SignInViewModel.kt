@@ -48,7 +48,7 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val interactor: SignInInteractor,
-) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+) : ViewModel(interactor.smsCodeRetriever), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val operationTracker = OperationTracker()
 

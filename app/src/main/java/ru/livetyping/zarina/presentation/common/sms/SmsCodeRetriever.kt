@@ -41,6 +41,7 @@ class SmsCodeRetriever @Inject constructor(
 
     fun start(sender: String, codeRegexPattern: String) {
         stop()
+        Timber.tag(TAG).v("Start")
 
         smsRetrieverClient.startSmsUserConsent(sender)
         activityResultLauncher = getActivityResultLauncher(codeRegexPattern)
@@ -48,15 +49,17 @@ class SmsCodeRetriever @Inject constructor(
     }
 
     fun stop() {
+        Timber.tag(TAG).v("Stop")
         activityResultLauncher?.unregister()
         try {
             context.unregisterReceiver(receiver)
         } catch (e: IllegalArgumentException) {
-            Timber.tag(TAG).e(e, "Failed to unregister BroadcastReceiver")
+            Timber.tag(TAG).w("Failed to unregister BroadcastReceiver")
         }
     }
 
     fun release() {
+        Timber.tag(TAG).v("Release")
         listeners.clear()
         stop()
     }
@@ -97,7 +100,7 @@ class SmsCodeRetriever @Inject constructor(
                             try {
                                 activityResultLauncher?.launch(consentIntent)
                             } catch (e: ActivityNotFoundException) {
-                                Timber.tag(TAG).d(e, "Failed to start activity for result")
+                                Timber.tag(TAG).e(e, "Failed to start activity for result")
                             }
                         }
                     }

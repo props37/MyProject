@@ -30,7 +30,8 @@ class SignInOtpViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val interactor: SignInOtpInteractor,
     private val otpComponent: OtpViewModelComponent,
-) : ViewModel(otpComponent), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+) : ViewModel(otpComponent, interactor.smsCodeRetriever),
+    SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -114,11 +115,6 @@ class SignInOtpViewModel @Inject constructor(
                 emitSideEffect(SideEffect.ShowZarinaToast(message))
             }
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        interactor.smsCodeRetriever.release()
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

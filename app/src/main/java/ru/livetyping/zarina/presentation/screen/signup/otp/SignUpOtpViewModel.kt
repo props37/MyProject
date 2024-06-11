@@ -30,7 +30,8 @@ class SignUpOtpViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val interactor: SignUpOtpInteractor,
     private val otpComponent: OtpViewModelComponent,
-) : ViewModel(otpComponent), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+) : ViewModel(otpComponent, interactor.smsCodeRetriever),
+    SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -54,6 +55,14 @@ class SignUpOtpViewModel @Inject constructor(
     val isOtpInvalid: StateFlow<Boolean> = otpComponent.isOtpInvalid
 
     val otpResendState: StateFlow<OtpResendState> = otpComponent.otpResendState
+
+    init {
+        interactor.smsCodeRetriever.addListener { code ->
+            onOtpChanged(code)
+            onOtpEntered()
+            emitSideEffect(SideEffect.HideKeyboard)
+        }
+    }
 
     fun onBackClicked() {
         navigationThrottler.throttle {
@@ -109,6 +118,8 @@ class SignUpOtpViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
+        data object HideKeyboard : SideEffect
+
         data class Navigate(val action: SignUpOtpScreenAction) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
