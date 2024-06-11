@@ -66,6 +66,7 @@ fun ProfileScreen(
         userState = userState,
         onProfileDetailsClicked = viewModel::onProfileDetailsClicked,
         loyaltyCard = loyaltyCard,
+        onLoyaltyCardInfoClicked = viewModel::onLoyaltyCardInfoClicked,
         infoItems = infoItems,
         city = city,
         onInfoItemClicked = viewModel::onInfoItemClicked,
@@ -82,6 +83,7 @@ private fun ScreenContent(
     userState: UserState,
     onProfileDetailsClicked: () -> Unit,
     loyaltyCard: LoyaltyCard?,
+    onLoyaltyCardInfoClicked: () -> Unit,
     infoItems: ImmutableList<InfoItem>,
     city: City?,
     onInfoItemClicked: (InfoItem) -> Unit,
@@ -135,7 +137,7 @@ private fun ScreenContent(
                         if (userState.user != null) {
                             LoyaltyCard(
                                 loyaltyCard = loyaltyCard,
-                                onLoyaltyCardInfoClicked = { /*TODO*/ },
+                                onLoyaltyCardInfoClicked = onLoyaltyCardInfoClicked,
                                 onSideChanged = {
                                     screenBrightness = if (it == LoyaltyCardSide.BACK) {
                                         ScreenBrightness.MAX
@@ -186,6 +188,7 @@ private fun PreviewUnauthorized() {
             },
             onProfileDetailsClicked = {},
             loyaltyCard = null,
+            onLoyaltyCardInfoClicked = {},
             infoItems = remember { InfoItem.entries.toImmutableList() },
             city = remember { City.DEFAULT },
             onInfoItemClicked = {},
@@ -211,6 +214,7 @@ private fun PreviewAuthorized() {
             },
             onProfileDetailsClicked = {},
             loyaltyCard = remember { FakeDataGenerator.getLoyaltyCard() },
+            onLoyaltyCardInfoClicked = {},
             infoItems = remember { InfoItem.entries.toImmutableList() },
             city = remember { City.DEFAULT },
             onInfoItemClicked = {},
