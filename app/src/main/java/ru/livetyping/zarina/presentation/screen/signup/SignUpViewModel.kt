@@ -38,6 +38,7 @@ import ru.livetyping.zarina.domain.user.exception.PhoneNumberAlreadyInUseExcepti
 import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
+import ru.livetyping.zarina.presentation.common.sms.SmsConstants
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.signup.SignUpViewModel.SideEffect
@@ -209,6 +210,11 @@ class SignUpViewModel @Inject constructor(
             emitSideEffect(SideEffect.ShowZarinaToast(message))
             return
         }
+
+        interactor.smsCodeRetriever.start(
+            sender = SmsConstants.SENDER_ZARINA,
+            codeRegexPattern = SmsConstants.CODE_PATTERN_ZARINA,
+        )
 
         signUpJob = viewModelScope.launch {
             operationTracker.track(Operation.SIGN_UP) {

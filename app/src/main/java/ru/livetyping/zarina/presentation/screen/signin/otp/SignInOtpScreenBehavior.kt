@@ -30,6 +30,10 @@ fun SignInOtpScreenBehavior(
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sideEffects.collect { sideEffect ->
                     when (sideEffect) {
+                        SideEffect.HideKeyboard -> {
+                            updatedKeyboardController?.hide()
+                        }
+
                         is SideEffect.Navigate -> {
                             updatedNavigate(sideEffect.action)
                             updatedKeyboardController?.hide()
