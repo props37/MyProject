@@ -108,7 +108,7 @@ fun OrderCard(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = pluralStringResource(R.plurals.products, order.productCount, order.productCount),
+                text = pluralStringResource(R.plurals.d_products, order.productCount, order.productCount),
                 style = textStyle,
                 color = color,
             )
