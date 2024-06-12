@@ -6,15 +6,20 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
@@ -65,6 +70,7 @@ object LoyaltyProgramScreenComponents {
         }
 
         val body = @Composable { text: String? ->
+            @Suppress("NAME_SHADOWING")
             Crossfade(
                 targetState = text,
                 contentKey = { it != null },
@@ -121,6 +127,65 @@ object LoyaltyProgramScreenComponents {
             )
             divider()
         }
+    }
+
+    @Composable
+    fun LoyaltyProgramPolicies(
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            ZarinaItem(
+                onClick = onClick,
+                startContent = {
+                    Text(
+                        text = stringResource(id = R.string.loyalty_program_policies),
+                        style = LoyaltyProgramInfoItemBodyTextStyle,
+                    )
+                },
+                endContent = {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(16.dp)
+                            .rotate(degrees = 90f),
+                    )
+                },
+            )
+
+            ZarinaDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
+        }
+    }
+
+    @Composable
+    fun BonusHistory(
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        ZarinaItem(
+            onClick = onClick,
+            startContent = {
+                Text(
+                    text = stringResource(id = R.string.bonus_history),
+                    style = LoyaltyProgramInfoItemBodyTextStyle,
+                )
+            },
+            endContent = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .rotate(degrees = 90f),
+                )
+            },
+            modifier = modifier,
+        )
     }
 
     @Composable

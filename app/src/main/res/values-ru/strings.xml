@@ -216,6 +216,8 @@
     <string name="loyalty_program_level">Уровень в программе лояльности</string>
     <string name="my_bonuses">Мои бонусы</string>
     <string name="expected_bonuses">Ожидается поступление</string>
+    <string name="loyalty_program_policies">Условия программы лояльности</string>
+    <string name="bonus_history">История бонусного счёта</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

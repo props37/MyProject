@@ -7,10 +7,12 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.user.LoyaltyCard
+import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
@@ -38,8 +40,23 @@ class LoyaltyProgramViewModel @Inject constructor(
         }
     }
 
+    fun onLoyaltyProgramPoliciesClicked() {
+        navigationThrottler.throttle {
+            val url = Text.Resource(R.string.loyalty_policy_url)
+            emitSideEffect(SideEffect.OpenUrl(url))
+        }
+    }
+
+    fun onBonusHistoryClicked() {
+        navigationThrottler.throttle {
+            // TODO: [High] Implement
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: LoyaltyProgramScreenAction) : SideEffect
+
+        data class OpenUrl(val url: Text) : SideEffect
     }
 }
 
