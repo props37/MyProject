@@ -14,6 +14,7 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.screen.loyaltyprogram.LoyaltyProgramViewModel.SideEffect
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
@@ -21,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoyaltyProgramViewModel @Inject constructor(
     interactor: LoyaltyProgramInteractor,
-) : ViewModel(), SideEffectSource<LoyaltyProgramViewModel.SideEffect> by SideEffectSourceImpl() {
+) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -49,7 +50,8 @@ class LoyaltyProgramViewModel @Inject constructor(
 
     fun onBonusHistoryClicked() {
         navigationThrottler.throttle {
-            // TODO: [High] Implement
+            val action = LoyaltyProgramScreenAction.BonusHistoryClicked
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 

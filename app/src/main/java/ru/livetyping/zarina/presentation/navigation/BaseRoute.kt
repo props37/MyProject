@@ -48,6 +48,7 @@ enum class BaseRoute {
     // Loyalty card graph
     LOYALTY_PROGRAM_GRAPH,
     LOYALTY_PROGRAM,
+    BONUS_HISTORY,
 
     // Unscoped destinations
     ONBOARDING,

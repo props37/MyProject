@@ -9,4 +9,6 @@ object LoyaltyProgramGraph : SimpleGraph(
     startDestination = LoyaltyProgram,
 ) {
     data object LoyaltyProgram : SimpleDestination(BaseRoute.LOYALTY_PROGRAM)
+
+    data object BonusHistory : SimpleDestination(BaseRoute.BONUS_HISTORY)
 }
