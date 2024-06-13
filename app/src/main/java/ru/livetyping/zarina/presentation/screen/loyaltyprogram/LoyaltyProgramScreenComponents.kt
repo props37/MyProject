@@ -21,6 +21,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.user.LoyaltyCard
@@ -49,7 +50,11 @@ object LoyaltyProgramScreenComponents {
                 )
             },
             centerContent = {
-                Text(text = stringResource(R.string.loyalty_program))
+                Text(
+                    text = stringResource(R.string.loyalty_program),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
             },
             contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,

@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -90,7 +91,11 @@ object StoresScreenComponents {
                 )
             },
             centerContent = {
-                Text(text = stringResource(R.string.stores))
+                Text(
+                    text = stringResource(R.string.stores),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
             },
             contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
             modifier = modifier,
