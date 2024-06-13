@@ -6,10 +6,12 @@ import ru.livetyping.zarina.data.user.remote.api.UserApi
 import ru.livetyping.zarina.domain.authorization.AuthorizationResult
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
 import ru.livetyping.zarina.domain.common.Email
+import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.LoyaltyCard
+import ru.livetyping.zarina.domain.user.LoyaltyProgramBonusAction
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -20,6 +22,20 @@ class UserRemoteDataSource @Inject constructor(
         val dto = api.getLoyaltyCard()
         emit(dto.toLoyaltyCard())
     }
+
+    fun getLoyaltyCardBonusHistoryPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> =
+        flow {
+            val dto = api.getLoyaltyCardBonusHistory(page)
+            val bonusHistoryPage = dto.toLoyaltyProgramBonusActionPage()
+            emit(bonusHistoryPage)
+        }
+
+    fun getLoyaltyCardExpectedBonusesFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> =
+        flow {
+            val dto = api.getLoyaltyCardExpectedBonuses(page)
+            val expectedBonusesPage = dto.toLoyaltyProgramBonusActionPage()
+            emit(expectedBonusesPage)
+        }
 
     suspend fun setUserCity(city: City) {
         api.setUserCity(city)

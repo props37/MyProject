@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.util.DATE_BACKEND_PATTERN
@@ -12,6 +13,7 @@ import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignInByPhoneRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.GetLoyaltyCardDto
+import ru.livetyping.zarina.data.user.remote.api.dto.LoyaltyProgramBonusHistoryDto
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestPasswordResetRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendSmsOtpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
@@ -41,6 +43,20 @@ class UserApi @Inject constructor(
 ) {
     suspend fun getLoyaltyCard(): GetLoyaltyCardDto {
         return httpClient.get("/api/card").body()
+    }
+
+    suspend fun getLoyaltyCardBonusHistory(page: Int): LoyaltyProgramBonusHistoryDto {
+        return httpClient.get("/api/v1/card/history") {
+            parameter("page", page)
+            parameter("page_size", LOYALTY_PROGRAM_BONUS_HISTORY_PAGE_SIZE)
+        }.body()
+    }
+
+    suspend fun getLoyaltyCardExpectedBonuses(page: Int): LoyaltyProgramBonusHistoryDto {
+        return httpClient.get("/api/v1/card/history/expected") {
+            parameter("page", page)
+            parameter("page_size", LOYALTY_PROGRAM_BONUS_HISTORY_PAGE_SIZE)
+        }.body()
     }
 
     suspend fun setUserCity(city: City) {
@@ -135,5 +151,9 @@ class UserApi @Inject constructor(
 
     suspend fun deleteAccount() {
         httpClient.post("/api/profile/delete")
+    }
+
+    companion object {
+        private const val LOYALTY_PROGRAM_BONUS_HISTORY_PAGE_SIZE = 20
     }
 }

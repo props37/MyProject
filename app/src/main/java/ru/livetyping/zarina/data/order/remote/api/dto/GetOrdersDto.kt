@@ -61,7 +61,7 @@ data class GetOrdersDto(
                 id = DomainOrder.Id(id),
                 number = DomainOrder.Number(number),
                 productCount = productCount,
-                date = LocalDateUtil.parseRussianDate(date),
+                date = LocalDateUtil.parseRussianDate(date), // TODO: [High] Check!!!
                 status = status.toOrderStatus(),
                 totalPrice = totalPrice,
                 products = products.map { it.toProduct() },

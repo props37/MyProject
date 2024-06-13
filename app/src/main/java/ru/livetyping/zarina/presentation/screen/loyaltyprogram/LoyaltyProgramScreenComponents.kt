@@ -118,7 +118,7 @@ object LoyaltyProgramScreenComponents {
             divider()
 
             LoyaltyProgramInfoItem(
-                title = stringResource(R.string.expected_bonuses),
+                title = stringResource(R.string.expected_arrival),
                 body = {
                     val text = loyaltyCard?.let {
                         pluralStringResource(
@@ -176,7 +176,7 @@ object LoyaltyProgramScreenComponents {
             onClick = onClick,
             startContent = {
                 Text(
-                    text = stringResource(id = R.string.bonus_history),
+                    text = stringResource(id = R.string.bonus_account_history),
                     style = LoyaltyProgramInfoItemBodyTextStyle,
                 )
             },
