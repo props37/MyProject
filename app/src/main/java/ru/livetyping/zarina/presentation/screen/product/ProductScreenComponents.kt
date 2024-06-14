@@ -37,7 +37,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
@@ -490,7 +489,6 @@ object ProductScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalTextApi::class)
     @Composable
     private fun ProductDeliveryAndPayment(
         freeDeliveryTotalPriceThreshold: Int,
@@ -720,7 +718,7 @@ object ProductScreenComponents {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.light,
                         shimmer = shimmer,
-                        modifier = Modifier.fillMaxWidth(0.5f),
+                        modifier = Modifier.fillMaxWidth(fraction = 0.5f),
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     ZarinaSkeleton(
