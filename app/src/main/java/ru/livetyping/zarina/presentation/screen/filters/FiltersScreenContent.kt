@@ -1,19 +1,12 @@
 package ru.livetyping.zarina.presentation.screen.filters
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ru.livetyping.zarina.domain.filter.Filter
 import ru.livetyping.zarina.presentation.screen.filters.FiltersScreenComponents.FilterList
 import ru.livetyping.zarina.presentation.screen.filters.FiltersScreenComponents.TopBar
-import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable
 fun FiltersScreenContent(
@@ -29,15 +22,7 @@ fun FiltersScreenContent(
     onFilterListErrorRefreshClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
-            .windowInsetsPadding(
-                WindowInsets.systemBars
-                    .union(WindowInsets.displayCutout),
-            ),
-    ) {
+    Column(modifier = modifier) {
         TopBar(
             isResetButtonVisible = isResetFiltersButtonVisible,
             onBackClicked = onBackClicked,
