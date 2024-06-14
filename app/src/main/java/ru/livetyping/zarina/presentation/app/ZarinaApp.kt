@@ -24,6 +24,7 @@ import ru.livetyping.zarina.presentation.bottomnavbar.rememberBottomNavBarSizeTr
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.BottomNavBarBehavior
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.rememberBottomNavBarBehaviorController
+import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaBottomSheetDefaults
 import ru.livetyping.zarina.presentation.common.component.toast.ZarinaToastContainer
 import ru.livetyping.zarina.presentation.common.media.exoplayer.LocalExoPlayerCacheHolder
 import ru.livetyping.zarina.presentation.common.media.exoplayer.rememberExoPlayerCacheHolder
@@ -33,7 +34,6 @@ import ru.livetyping.zarina.presentation.common.zarinatoast.controller.LocalZari
 import ru.livetyping.zarina.presentation.common.zarinatoast.controller.rememberZarinaToastController
 import ru.livetyping.zarina.presentation.navigation.ZarinaNavigation
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
-import ru.livetyping.zarina.presentation.theme.Colors
 import ru.livetyping.zarina.util.library.accompanist.rememberBottomSheetNavigator
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
@@ -91,7 +91,7 @@ fun ZarinaApp(
                 sheetElevation = 0.dp,
                 sheetBackgroundColor = Color.Unspecified,
                 sheetContentColor = Color.Unspecified,
-                scrimColor = Colors.MineShaftDark.copy(alpha = 0.4f),
+                scrimColor = ZarinaBottomSheetDefaults.ScrimColor,
             ) {
                 Box(modifier = modifier) {
                     ZarinaNavigation(
