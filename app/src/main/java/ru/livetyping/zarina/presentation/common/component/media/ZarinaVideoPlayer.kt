@@ -10,11 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -153,16 +151,17 @@ fun ZarinaVideoPlayer(
         )
     }
     LifecycleResumeEffect(Unit) {
-        lifecycleScope.launch(Dispatchers.Default) {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                placedEvents.first()
-                delay(100.milliseconds)
-                xOffset.intValue = 1
-                delay(50.milliseconds)
-                xOffset.intValue = 0
-            }
+        val job = lifecycleScope.launch(Dispatchers.Default) {
+            placedEvents.first()
+            delay(100.milliseconds)
+            xOffset.intValue = 1
+            delay(50.milliseconds)
+            xOffset.intValue = 0
         }
-        onPauseOrDispose {}
+
+        onPauseOrDispose {
+            job.cancel()
+        }
     }
 
     AndroidView(

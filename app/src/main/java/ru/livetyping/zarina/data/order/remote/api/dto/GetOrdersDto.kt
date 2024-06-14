@@ -6,7 +6,7 @@ import ru.livetyping.zarina.data.common.remote.api.zarina.dto.PaginationInfoDto
 import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.order.OrderItem
-import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
+import java.time.LocalDate
 import ru.livetyping.zarina.domain.order.Order as DomainOrder
 
 @Serializable
@@ -61,7 +61,7 @@ data class GetOrdersDto(
                 id = DomainOrder.Id(id),
                 number = DomainOrder.Number(number),
                 productCount = productCount,
-                date = LocalDateUtil.parseRussianDate(date),
+                date = LocalDate.parse(date),
                 status = status.toOrderStatus(),
                 totalPrice = totalPrice,
                 products = products.map { it.toProduct() },

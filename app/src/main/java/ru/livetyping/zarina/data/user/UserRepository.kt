@@ -8,10 +8,12 @@ import ru.livetyping.zarina.domain.authorization.AuthorizationResult
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Gender
+import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.LoyaltyCard
+import ru.livetyping.zarina.domain.user.LoyaltyProgramBonusAction
 import ru.livetyping.zarina.domain.user.User
 import java.time.LocalDate
 import javax.inject.Inject
@@ -30,6 +32,14 @@ class UserRepository @Inject constructor(
 
     fun getLoyaltyCardFlow(): Flow<LoyaltyCard?> {
         return localDataSource.getLoyaltyCardFlow()
+    }
+
+    fun getLoyaltyCardBonusHistoryPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
+        return remoteDataSource.getLoyaltyCardBonusHistoryPageFlow(page)
+    }
+
+    fun getLoyaltyCardExpectedBonusesPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
+        return remoteDataSource.getLoyaltyCardExpectedBonusesFlow(page)
     }
 
     suspend fun fetchLoyaltyCard() {

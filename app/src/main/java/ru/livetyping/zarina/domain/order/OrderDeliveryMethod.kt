@@ -6,4 +6,5 @@ enum class OrderDeliveryMethod {
     PICK_UP,
     RETAIL,
     YANDEX,
+    EXPRESS,
 }

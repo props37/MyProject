@@ -6,10 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
@@ -29,36 +27,36 @@ fun ProductScreenBehavior(
     ForcedBottomNavBarBehavior(isVisible = true)
 
     LifecycleStartEffect(sideEffects) {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sideEffects.collect { sideEffect ->
-                    when (sideEffect) {
-                        is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
-                        is SideEffect.Share -> {
-                            val intent = Intent(Intent.ACTION_SEND).apply {
-                                putExtra(Intent.EXTRA_TEXT, sideEffect.text)
-                                type = MIME_TYPE_TEXT_PLAIN
-                            }
-                            val shareIntent = Intent.createChooser(intent, null)
-                            updatedContext.startActivity(shareIntent)
+        val job = lifecycleScope.launch {
+            sideEffects.collect { sideEffect ->
+                when (sideEffect) {
+                    is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
+                    is SideEffect.Share -> {
+                        val intent = Intent(Intent.ACTION_SEND).apply {
+                            putExtra(Intent.EXTRA_TEXT, sideEffect.text)
+                            type = MIME_TYPE_TEXT_PLAIN
                         }
+                        val shareIntent = Intent.createChooser(intent, null)
+                        updatedContext.startActivity(shareIntent)
+                    }
 
-                        is SideEffect.OpenUrl -> {
-                            val intent = CustomTabsIntent.Builder()
-                                .setShowTitle(true)
-                                .build()
-                            intent.launchUrl(updatedContext, sideEffect.url.toUri())
-                        }
+                    is SideEffect.OpenUrl -> {
+                        val intent = CustomTabsIntent.Builder()
+                            .setShowTitle(true)
+                            .build()
+                        intent.launchUrl(updatedContext, sideEffect.url.toUri())
+                    }
 
-                        is SideEffect.ShowZarinaToast -> {
-                            updatedZarinaToastController.show(sideEffect.message)
-                        }
+                    is SideEffect.ShowZarinaToast -> {
+                        updatedZarinaToastController.show(sideEffect.message)
                     }
                 }
             }
         }
 
-        onStopOrDispose {}
+        onStopOrDispose {
+            job.cancel()
+        }
     }
 }
 

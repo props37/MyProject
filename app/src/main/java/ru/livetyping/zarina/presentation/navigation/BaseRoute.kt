@@ -45,6 +45,11 @@ enum class BaseRoute {
     SIZE_SELECTOR,
     HEIGHT_SELECTOR,
 
+    // Loyalty card graph
+    LOYALTY_PROGRAM_GRAPH,
+    LOYALTY_PROGRAM,
+    BONUS_HISTORY,
+
     // Unscoped destinations
     ONBOARDING,
     CITY_SELECTOR,

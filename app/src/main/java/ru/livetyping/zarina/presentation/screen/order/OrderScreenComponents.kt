@@ -301,7 +301,7 @@ object OrderScreenComponents {
             },
             endContent = {
                 Text(
-                    text = pluralStringResource(R.plurals.products, productCount, productCount),
+                    text = pluralStringResource(R.plurals.d_products, productCount, productCount),
                     style = UiKitTheme.typography.secondary.light,
                 )
             },
@@ -380,6 +380,7 @@ object OrderScreenComponents {
             Text(
                 text = name,
                 style = OrderInfoNameTextStyle,
+                color = UiKitTheme.colors.text.general.regular.muted,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(

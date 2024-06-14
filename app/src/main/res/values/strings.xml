@@ -218,6 +218,16 @@
     <string name="categories">Категории</string>
     <string name="nothing_found">Ничего не нашлось</string>
     <string name="write_different_search_query">Напиши по‑другому или измени запрос</string>
+    <string name="loyalty_program">Программа лояльности</string>
+    <string name="loyalty_program_level">Уровень в программе лояльности</string>
+    <string name="my_bonuses">Мои бонусы</string>
+    <string name="expected_arrival">Ожидается поступление</string>
+    <string name="loyalty_program_policies">Условия программы лояльности</string>
+    <string name="bonus_account_history">История бонусного счёта</string>
+    <string name="bonus_history">История бонусов</string>
+    <string name="expected_bonuses">Ожидаемые бонусы</string>
+    <string name="accrual">Начисление</string>
+    <string name="write_off">Списание</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
@@ -313,7 +323,7 @@
         <item quantity="other">Показать %1$d товаров</item>
     </plurals>
 
-    <plurals name="products">
+    <plurals name="d_products">
         <item quantity="zero">%1$d товаров</item>
         <item quantity="one">%1$d товар</item>
         <item quantity="two">%1$d товара</item>
@@ -329,6 +339,15 @@
         <item quantity="few">бонуса</item>
         <item quantity="many">бонусов</item>
         <item quantity="other">бонусов</item>
+    </plurals>
+
+    <plurals name="d_bonuses">
+        <item quantity="zero">%1$d бонусов</item>
+        <item quantity="one">%1$d бонус</item>
+        <item quantity="two">%1$d бонуса</item>
+        <item quantity="few">%1$d бонуса</item>
+        <item quantity="many">%1$d бонусов</item>
+        <item quantity="other">%1$d бонусов</item>
     </plurals>
 
 </resources>
