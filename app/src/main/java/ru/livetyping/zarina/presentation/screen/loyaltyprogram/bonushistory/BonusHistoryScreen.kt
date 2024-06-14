@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.domain.user.LoyaltyProgramBonusAction
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
@@ -83,13 +84,16 @@ private fun ScreenContent(
             modifier = Modifier.padding(horizontal = 16.dp),
         )
 
+        val bonusHistoryPagingItems = bonusHistoryPagingDataFlow.collectAsLazyPagingItems()
+        val expectedBonusesPagingItems = expectedBonusesPagingDataFlow.collectAsLazyPagingItems()
+
         BonusHistoryHorizontalPager(
             pagerState = rememberPagerState { tabs.size },
             tabs = tabs,
             selectedTab = selectedTab,
             onSelectedTabChanged = { selectedTab = it },
-            bonusHistoryPagingDataFlow = bonusHistoryPagingDataFlow,
-            expectedBonusesPagingDataFlow = expectedBonusesPagingDataFlow,
+            bonusHistoryPagingItems = bonusHistoryPagingItems,
+            expectedBonusesPagingItems = expectedBonusesPagingItems,
             modifier = Modifier.fillMaxSize(),
         )
     }

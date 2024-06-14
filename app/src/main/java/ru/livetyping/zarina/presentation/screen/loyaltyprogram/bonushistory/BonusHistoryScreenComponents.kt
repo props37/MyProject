@@ -1,25 +1,29 @@
 package ru.livetyping.zarina.presentation.screen.loyaltyprogram.bonushistory
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.paging.PagingData
-import androidx.paging.compose.collectAsLazyPagingItems
-import kotlinx.coroutines.flow.Flow
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.user.LoyaltyProgramBonusAction
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
@@ -27,9 +31,14 @@ import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.paging.zarinaPagingAppendItem
 import ru.livetyping.zarina.presentation.common.component.paging.zarinaPagingPrependItem
+import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
+import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
+import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
+import ru.livetyping.zarina.presentation.common.error.ErrorState
+import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedLocalDate
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPrice
 import ru.livetyping.zarina.presentation.screen.loyaltyprogram.bonushistory.BonusHistoryViewModel.Tab
@@ -100,8 +109,8 @@ object BonusHistoryScreenComponents {
         tabs: List<Tab>,
         selectedTab: Tab,
         onSelectedTabChanged: (Tab) -> Unit,
-        bonusHistoryPagingDataFlow: Flow<PagingData<LoyaltyProgramBonusAction>>,
-        expectedBonusesPagingDataFlow: Flow<PagingData<LoyaltyProgramBonusAction>>,
+        bonusHistoryPagingItems: LazyPagingItems<LoyaltyProgramBonusAction>,
+        expectedBonusesPagingItems: LazyPagingItems<LoyaltyProgramBonusAction>,
         modifier: Modifier = Modifier,
     ) {
         PagerTabRowIntegration(
@@ -111,49 +120,160 @@ object BonusHistoryScreenComponents {
             onCurrentTabChanged = onSelectedTabChanged,
         )
 
-        val bonusHistoryPagingItems = bonusHistoryPagingDataFlow.collectAsLazyPagingItems()
-        val expectedBonusesPagingItems = expectedBonusesPagingDataFlow.collectAsLazyPagingItems()
-
         HorizontalPager(
             state = pagerState,
             modifier = modifier,
         ) { page ->
             val tab = tabs[page]
-            val lazyPagingItems = when (tab) {
+            val pagingItems = when (tab) {
                 Tab.BONUS_HISTORY -> bonusHistoryPagingItems
                 Tab.EXPECTED_BONUSES -> expectedBonusesPagingItems
             }
 
-            // TODO: [High] Display different states
-            // TODO: [High] Refactor
-            LazyColumn {
-                zarinaPagingPrependItem(
-                    prependLoadState = lazyPagingItems.loadState.prepend,
-                    onRetryClicked = lazyPagingItems::retry,
-                )
+            BonusHistoryList(
+                pagingItems = pagingItems,
+                noBonusHistoryPlaceholder = {
+                    // TODO: [High] Implement
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+    }
 
-                // TODO: [Backend] Add keys
-                items(count = lazyPagingItems.itemCount) { index ->
-                    val action = lazyPagingItems[index]
-                    if (action != null) {
-                        Column(modifier = Modifier.animateItem()) {
-                            BonusAction(action)
+    @Composable
+    private fun BonusHistoryList(
+        pagingItems: LazyPagingItems<LoyaltyProgramBonusAction>,
+        noBonusHistoryPlaceholder: @Composable () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Crossfade(
+            targetState = pagingItems.loadState.refresh,
+            label = "BonusHistoryList",
+            modifier = modifier,
+        ) { loadState ->
+            when (loadState) {
+                is LoadState.NotLoading -> {
+                    BonusHistoryListImpl(
+                        pagingItems = pagingItems,
+                        noBonusHistoryPlaceholder = noBonusHistoryPlaceholder,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
 
-                            if (index < lazyPagingItems.itemCount - 1) {
-                                ZarinaDivider(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 16.dp),
-                                )
+                LoadState.Loading -> {
+                    BonusHistoryListSkeleton()
+                }
+
+                is LoadState.Error -> {
+                    val state = remember(loadState.error) {
+                        ErrorState.from(loadState.error)
+                    }
+
+                    ZarinaErrorScreen(
+                        state = state,
+                        onButtonClicked = pagingItems::retry,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun BonusHistoryListImpl(
+        pagingItems: LazyPagingItems<LoyaltyProgramBonusAction>,
+        noBonusHistoryPlaceholder: @Composable () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Box(modifier = modifier) {
+            if (pagingItems.itemCount > 0) {
+                LazyColumn(
+                    contentPadding = PaddingValues(bottom = 24.dp),
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    zarinaPagingPrependItem(
+                        prependLoadState = pagingItems.loadState.prepend,
+                        onRetryClicked = pagingItems::retry,
+                    )
+
+                    // TODO: [Backend] Add keys
+                    items(count = pagingItems.itemCount) { index ->
+                        val action = pagingItems[index]
+                        if (action != null) {
+                            Column(modifier = Modifier.animateItem()) {
+                                BonusAction(action)
+
+                                if (index < pagingItems.itemCount - 1) {
+                                    ZarinaDivider(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 16.dp),
+                                    )
+                                }
                             }
                         }
                     }
-                }
 
-                zarinaPagingAppendItem(
-                    appendLoadState = lazyPagingItems.loadState.append,
-                    onRetryClicked = lazyPagingItems::retry,
-                )
+                    zarinaPagingAppendItem(
+                        appendLoadState = pagingItems.loadState.append,
+                        onRetryClicked = pagingItems::retry,
+                    )
+                }
+            } else {
+                noBonusHistoryPlaceholder()
+            }
+        }
+    }
+
+    @Composable
+    private fun BonusHistoryListSkeleton(
+        modifier: Modifier = Modifier,
+    ) {
+        val shimmer = rememberZarinaSkeletonShimmer()
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = modifier,
+        ) {
+            items(BonusHistorySkeletonItemCount) { index ->
+                Column {
+                    ZarinaItem(
+                        startContent = {
+                            Column {
+                                ZarinaTextSkeleton(
+                                    textStyle = BonusActionTitleTextStyle,
+                                    shimmer = shimmer,
+                                    modifier = Modifier.width(100.dp),
+                                )
+
+                                Spacer(modifier = Modifier.height(4.dp))
+
+                                ZarinaTextSkeleton(
+                                    textStyle = BonusActionDescriptionTextStyle,
+                                    shimmer = shimmer,
+                                    modifier = Modifier.width(120.dp),
+                                )
+                            }
+                        },
+                        endContent = {
+                            ZarinaTextSkeleton(
+                                textStyle = BonusActionTitleTextStyle,
+                                shimmer = shimmer,
+                                modifier = Modifier.width(80.dp),
+                            )
+                        },
+                        contentPadding = PaddingValues(16.dp),
+                    )
+
+                    if (index < BonusHistorySkeletonItemCount - 1) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
+                }
             }
         }
     }
@@ -180,19 +300,19 @@ object BonusHistoryScreenComponents {
 
                             Text(
                                 text = stringResource(typeTextResId),
-                                style = UiKitTheme.typography.secondary.light,
+                                style = BonusActionTitleTextStyle,
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = formattedDate,
-                                style = UiKitTheme.typography.footnote.light,
+                                style = BonusActionDescriptionTextStyle,
                                 color = UiKitTheme.colors.text.general.regular.muted,
                             )
                         }
                     } else {
                         Text(
                             text = stringResource(typeTextResId),
-                            style = UiKitTheme.typography.secondary.light,
+                            style = BonusActionTitleTextStyle,
                         )
                     }
                 }
@@ -219,25 +339,15 @@ object BonusHistoryScreenComponents {
         )
     }
 
-    @Composable
-    private fun BonusActionStartContent(
-        text: String,
-        date: String,
-        modifier: Modifier = Modifier,
-    ) {
-        Column(modifier = modifier) {
-            Text(
-                text = text,
-                style = UiKitTheme.typography.secondary.light,
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = date,
-                style = UiKitTheme.typography.footnote.light,
-                color = UiKitTheme.colors.text.general.regular.muted,
-            )
-        }
-    }
+    private val BonusActionTitleTextStyle: TextStyle
+        @Composable
+        get() = UiKitTheme.typography.secondary.light
+
+    private val BonusActionDescriptionTextStyle: TextStyle
+        @Composable
+        get() = UiKitTheme.typography.footnote.light
 
     private const val DateFormatterPattern = "dd MMMM yyyy"
+
+    private const val BonusHistorySkeletonItemCount = 30
 }
