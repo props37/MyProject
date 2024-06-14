@@ -12,6 +12,7 @@ value class OrderDeliveryMethodDto(val value: String) {
         "pickup" -> OrderDeliveryMethod.PICK_UP
         "retail" -> OrderDeliveryMethod.RETAIL
         "yandex" -> OrderDeliveryMethod.YANDEX
+        "express" -> OrderDeliveryMethod.EXPRESS
         else -> error("Unknown delivery method $value")
     }
 }
