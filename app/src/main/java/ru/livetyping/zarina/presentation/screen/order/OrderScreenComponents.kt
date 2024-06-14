@@ -380,6 +380,7 @@ object OrderScreenComponents {
             Text(
                 text = name,
                 style = OrderInfoNameTextStyle,
+                color = UiKitTheme.colors.text.general.regular.muted,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
