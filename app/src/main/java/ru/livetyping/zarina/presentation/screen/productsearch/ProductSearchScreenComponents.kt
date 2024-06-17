@@ -14,7 +14,6 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -75,7 +74,7 @@ import ru.livetyping.zarina.presentation.common.component.tag.ZarinaTag
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldSize
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
+import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchMode
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchSuggestionItem
@@ -123,11 +122,9 @@ object ProductSearchScreenComponents {
             bottom = 4.dp,
         )
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
-                .heightIn(min = TopBarDefaults.MinHeight)
-                .padding(contentPadding),
+        ZarinaTopBar(
+            contentPadding = contentPadding,
+            modifier = modifier,
         ) {
             AnimatedVisibility(
                 visible = searchMode == SearchMode.SEARCH_RESULTS,

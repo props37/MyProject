@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
@@ -36,8 +37,8 @@ fun ZarinaTopBar(
     startContent: (@Composable RowScope.() -> Unit)? = null,
     centerContent: (@Composable RowScope.() -> Unit)? = null,
     endContent: (@Composable RowScope.() -> Unit)? = null,
-    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
-    contentColor: Color = UiKitTheme.colors.text.general.regular.default,
+    backgroundColor: Color = ZarinaTopBarDefaults.BackgroundColor,
+    contentColor: Color = ZarinaTopBarDefaults.ContentColor,
     contentPadding: PaddingValues = TopBarDefaults.ContentPadding,
 ) {
     val content = @Composable {
@@ -124,6 +125,37 @@ fun ZarinaTopBar(
             }
         }
     }
+}
+
+@Composable
+fun ZarinaTopBar(
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = ZarinaTopBarDefaults.BackgroundColor,
+    contentColor: Color = ZarinaTopBarDefaults.ContentColor,
+    contentPadding: PaddingValues = TopBarDefaults.ContentPadding,
+    content: @Composable RowScope.() -> Unit,
+) {
+    CompositionLocalProvider(LocalContentColor provides contentColor) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .fillMaxWidth()
+                .heightIn(TopBarDefaults.MinHeight)
+                .drawBehind { drawRect(backgroundColor) }
+                .padding(contentPadding),
+            content = content,
+        )
+    }
+}
+
+object ZarinaTopBarDefaults {
+    val BackgroundColor: Color
+        @Composable
+        get() = UiKitTheme.colors.background.general.regular.default
+
+    val ContentColor: Color
+        @Composable
+        get() = UiKitTheme.colors.text.general.regular.default
 }
 
 @Preview

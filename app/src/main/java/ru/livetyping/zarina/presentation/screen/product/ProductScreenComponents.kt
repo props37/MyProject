@@ -213,15 +213,13 @@ object ProductScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
-            Row(
-                modifier = Modifier
-                    .heightIn(min = TopBarDefaults.MinHeight)
-                    .padding(
-                        start = 16.dp,
-                        top = 4.dp,
-                        end = 2.dp,
-                        bottom = 4.dp,
-                    ),
+            ZarinaTopBar(
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    top = 4.dp,
+                    end = 2.dp,
+                    bottom = 4.dp,
+                ),
             ) {
                 Text(
                     text = stringResource(R.string.for_zarina_club_members),

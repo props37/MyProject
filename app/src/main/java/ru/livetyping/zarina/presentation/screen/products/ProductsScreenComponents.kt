@@ -4,10 +4,8 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -37,7 +35,7 @@ import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSke
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.presentation.common.component.tag.ZarinaTag
 import ru.livetyping.zarina.presentation.common.component.tag.ZarinaTagSkeleton
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
+import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
 import ru.livetyping.zarina.presentation.screen.products.ProductsViewModel.TagListState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -54,11 +52,9 @@ object ProductsScreenComponents {
         actions: TopBarActions,
         modifier: Modifier = Modifier,
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
-                .heightIn(min = TopBarDefaults.MinHeight)
-                .padding(vertical = TopBarDefaults.VerticalPadding),
+        ZarinaTopBar(
+            contentPadding = PaddingValues(vertical = 4.dp),
+            modifier = modifier,
         ) {
             ZarinaBackIconButton(
                 onClick = actions.onBackClicked,
