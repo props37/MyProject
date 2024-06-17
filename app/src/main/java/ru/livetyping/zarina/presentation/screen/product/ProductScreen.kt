@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
@@ -16,13 +17,12 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +42,7 @@ import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
-import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaBottomSheetDefaults
+import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaModalBottomSheet
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
@@ -104,25 +104,20 @@ private fun ScreenContent(
     sideEffects: Flow<SideEffect>,
     navigate: (ProductScreenAction) -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     ProductScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
     )
 
-    // TODO: [High] Extract
-    val coroutineScope = rememberCoroutineScope()
-    var isZarinaClubBottomSheetVisible by remember { mutableStateOf(false) }
+    var isZarinaClubBottomSheetVisible by rememberSaveable { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     if (isZarinaClubBottomSheetVisible) {
-        ModalBottomSheet(
-            sheetState = sheetState,
+        ZarinaModalBottomSheet(
             onDismissRequest = { isZarinaClubBottomSheetVisible = false },
-            shape = ZarinaBottomSheetDefaults.Shape,
-            containerColor = UiKitTheme.colors.background.general.regular.default,
-            contentColor = UiKitTheme.colors.text.general.regular.default,
-            tonalElevation = 0.dp,
-            scrimColor = ZarinaBottomSheetDefaults.ScrimColor,
-            dragHandle = {},
+            sheetState = sheetState,
+            windowInsets = { WindowInsets.navigationBars },
         ) {
             // TODO: [High] Extract
             Row(
