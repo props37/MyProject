@@ -53,7 +53,6 @@ import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularL
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.screen.cityselector.CitySelectorViewModel.CityListItem
 import ru.livetyping.zarina.presentation.screen.cityselector.CitySelectorViewModel.CityListState
@@ -90,7 +89,7 @@ object CitySelectorScreenComponents {
                     overflow = TextOverflow.Ellipsis,
                 )
             },
-            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
+            contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,
         )
     }

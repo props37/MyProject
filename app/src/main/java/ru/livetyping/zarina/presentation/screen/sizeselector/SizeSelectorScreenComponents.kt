@@ -41,7 +41,6 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDef
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.screen.sizeselector.SizeSelectorViewModel.Size
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -124,7 +123,7 @@ object SizeSelectorScreenComponents {
                     modifier = Modifier.padding(end = 2.dp),
                 )
             },
-            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
+            contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,
         )
     }

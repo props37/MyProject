@@ -39,7 +39,6 @@ import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPasswo
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPhoneNumberTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.screen.signin.SignInViewModel.SignInType
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -55,7 +54,6 @@ object SignInScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         ZarinaTopBar(
-            modifier = modifier,
             startContent = {
                 ZarinaBackIconButton(
                     onClick = onBackClicked,
@@ -70,7 +68,8 @@ object SignInScreenComponents {
                     overflow = TextOverflow.Ellipsis,
                 )
             },
-            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
+            contentPadding = PaddingValues(vertical = 4.dp),
+            modifier = modifier,
         )
     }
 

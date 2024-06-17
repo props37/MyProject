@@ -40,7 +40,6 @@ import ru.livetyping.zarina.presentation.common.component.color.ZarinaColorIcon
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.icon.ZarinaCheckmarkAnimatedIcon
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.util.domain.nameResId
 import ru.livetyping.zarina.presentation.common.util.domain.toComposeColor
@@ -91,7 +90,7 @@ object ListFilterScreenComponents {
                     }
                 }
             },
-            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
+            contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,
         )
     }

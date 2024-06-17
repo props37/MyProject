@@ -222,6 +222,9 @@
     <string name="expected_bonuses">Ожидаемые бонусы</string>
     <string name="accrual">Начисление</string>
     <string name="write_off">Списание</string>
+    <string name="for_zarina_club_members">Для участников Zarina Club</string>
+    <string name="zarina_club_program_description_1">Количество бонусов к начислению для уровня Prime. 1 бонус = 1 рубль</string>
+    <string name="zarina_club_program_description_2">Копи бонусы и оплачивай до 30% от стоимости покупки</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

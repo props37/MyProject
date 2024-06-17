@@ -63,7 +63,6 @@ import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleto
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.presentation.common.component.switchh.ZarinaSwitch
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.util.domain.nameResId
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -117,7 +116,7 @@ object FiltersScreenComponents {
                     }
                 }
             },
-            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
+            contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,
         )
     }

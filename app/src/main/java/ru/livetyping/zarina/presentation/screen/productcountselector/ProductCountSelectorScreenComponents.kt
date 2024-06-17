@@ -19,7 +19,6 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.presentation.common.component.icon.ZarinaCheckmarkAnimatedIcon
 import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.screen.productcountselector.ProductCountSelectorViewModel.CountItem
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -48,7 +47,7 @@ object ProductCountSelectorScreenComponents {
                     modifier = Modifier.padding(end = 2.dp),
                 )
             },
-            contentPadding = PaddingValues(TopBarDefaults.VerticalPadding),
+            contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,
         )
     }

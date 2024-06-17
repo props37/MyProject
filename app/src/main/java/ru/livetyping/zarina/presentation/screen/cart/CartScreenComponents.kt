@@ -83,7 +83,6 @@ import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleto
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
 import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.CartState
@@ -133,7 +132,7 @@ object CartScreenComponents {
                     }
                 }
             },
-            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
+            contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,
         )
     }
