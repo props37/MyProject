@@ -66,6 +66,7 @@ import ru.livetyping.zarina.presentation.common.component.ProductPrice
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaLikeIconButton
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaExpandableItem
@@ -203,6 +204,59 @@ object ProductScreenComponents {
                     )
                 }
             }
+        }
+    }
+
+    @Composable
+    fun ZarinaClubBottomSheetContent(
+        onCloseClicked: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            Row(
+                modifier = Modifier
+                    .heightIn(min = TopBarDefaults.MinHeight)
+                    .padding(
+                        start = 16.dp,
+                        top = 4.dp,
+                        end = 2.dp,
+                        bottom = 4.dp,
+                    ),
+            ) {
+                Text(
+                    text = stringResource(R.string.for_zarina_club_members),
+                    style = UiKitTheme.typography.primary.bold,
+                    color = UiKitTheme.colors.text.general.regular.default,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .weight(1f),
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                ZarinaCloseIconButton(
+                    onClick = onCloseClicked,
+                    iconSize = 20.dp,
+                )
+            }
+
+            Text(
+                text = stringResource(R.string.zarina_club_program_description_1),
+                style = UiKitTheme.typography.secondary.regular,
+                color = UiKitTheme.colors.text.general.regular.default,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = stringResource(R.string.zarina_club_program_description_2),
+                style = UiKitTheme.typography.secondary.regular,
+                color = UiKitTheme.colors.text.general.regular.default,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 20.dp),
+            )
         }
     }
 

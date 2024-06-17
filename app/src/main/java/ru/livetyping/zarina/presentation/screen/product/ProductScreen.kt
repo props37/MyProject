@@ -1,21 +1,17 @@
 package ru.livetyping.zarina.presentation.screen.product
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -24,31 +20,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaModalBottomSheet
-import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIconButton
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.product.ProductScreenComponents.ProductDetails
 import ru.livetyping.zarina.presentation.screen.product.ProductScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.product.ProductScreenComponents.TopBarMode
+import ru.livetyping.zarina.presentation.screen.product.ProductScreenComponents.ZarinaClubBottomSheetContent
 import ru.livetyping.zarina.presentation.screen.product.ProductScreenComponents.topBarModeAsState
 import ru.livetyping.zarina.presentation.screen.product.ProductViewModel.ProductState
 import ru.livetyping.zarina.presentation.screen.product.ProductViewModel.SideEffect
@@ -112,62 +103,23 @@ private fun ScreenContent(
     )
 
     var isZarinaClubBottomSheetVisible by rememberSaveable { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState()
+    val zarinaClubBottomSheetState = rememberModalBottomSheetState()
     if (isZarinaClubBottomSheetVisible) {
         ZarinaModalBottomSheet(
             onDismissRequest = { isZarinaClubBottomSheetVisible = false },
-            sheetState = sheetState,
-            windowInsets = { WindowInsets.navigationBars },
+            sheetState = zarinaClubBottomSheetState,
+            windowInsets = {
+                WindowInsets.navigationBars
+                    .union(WindowInsets.displayCutout)
+                    .only(WindowInsetsSides.Bottom)
+            },
         ) {
-            // TODO: [High] Extract
-            Row(
-                modifier = Modifier
-                    .heightIn(min = TopBarDefaults.MinHeight)
-                    .padding(
-                        start = 16.dp,
-                        top = 4.dp,
-                        end = 2.dp,
-                        bottom = 4.dp,
-                    ),
-            ) {
-                Text(
-                    text = stringResource(R.string.for_zarina_club_members),
-                    style = UiKitTheme.typography.primary.bold,
-                    color = UiKitTheme.colors.text.general.regular.default,
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .weight(1f),
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                ZarinaCloseIconButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            sheetState.hide()
-                            isZarinaClubBottomSheetVisible = false
-                        }
-                    },
-                    iconSize = 20.dp,
-                )
-            }
-
-            Text(
-                text = stringResource(R.string.zarina_club_program_description_1),
-                style = UiKitTheme.typography.secondary.regular,
-                color = UiKitTheme.colors.text.general.regular.default,
-                modifier = Modifier.padding(horizontal = 16.dp),
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = stringResource(R.string.zarina_club_program_description_2),
-                style = UiKitTheme.typography.secondary.regular,
-                color = UiKitTheme.colors.text.general.regular.default,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 20.dp),
+            ZarinaClubBottomSheetContent(
+                onCloseClicked = {
+                    coroutineScope
+                        .launch { zarinaClubBottomSheetState.hide() }
+                        .invokeOnCompletion { isZarinaClubBottomSheetVisible = false }
+                },
             )
         }
     }
