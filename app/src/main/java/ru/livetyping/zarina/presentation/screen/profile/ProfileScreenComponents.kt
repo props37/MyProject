@@ -38,7 +38,6 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButto
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
-import ru.livetyping.zarina.presentation.common.component.topbar.TopBarDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.screen.profile.ProfileViewModel.InfoItem
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -106,7 +105,7 @@ object ProfileScreenComponents {
                     }
                 }
             },
-            contentPadding = PaddingValues(vertical = TopBarDefaults.VerticalPadding),
+            contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,
         )
     }
