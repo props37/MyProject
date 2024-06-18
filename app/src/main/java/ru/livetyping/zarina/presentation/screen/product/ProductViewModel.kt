@@ -15,9 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
@@ -31,7 +29,6 @@ import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.presentation.base.text.Text
-import ru.livetyping.zarina.presentation.common.datafetchinginfo.DataFetchingInfoHolder
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
@@ -45,6 +42,7 @@ import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUse
 import ru.livetyping.zarina.usecase.product.GetProductFlowUseCase
 import ru.livetyping.zarina.usecase.product.GetProductSimilarFlowUseCase
 import ru.livetyping.zarina.usecase.product.GetProductTotalLookFlowUseCase
+import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import timber.log.Timber
@@ -76,57 +74,52 @@ class ProductViewModel @AssistedInject constructor(
 
     private val productId = MutableStateFlow(initialProductId.value)
 
-    private val productFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
-    private val productTotalLookFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
-    private val productSimilarFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val productRequester = FlowRequester(ProductRequest.GENERAL) {
+        productId.flatMapLatest { productId ->
+            val params = GetProductFlowUseCase.Params(productId)
+            interactor.getProductFlow(params)
+        }
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val productResult: StateFlow<Result<ProductDetails>?> = combine(
-        productFetchingInfoHolder.fetchingRequests,
-        productId,
-    ) { _, productId ->
-        val params = GetProductFlowUseCase.Params(productId)
-        interactor.getProductFlow(params)
+    private val productTotalLookRequester = FlowRequester(ProductRequest.GENERAL) {
+        productId.flatMapLatest { productId ->
+            val params = GetProductTotalLookFlowUseCase.Params(productId)
+            interactor.getProductTotalLookFlow(params)
+        }
     }
-        .flatMapLatest { it }
-        .onEach { productFetchingInfoHolder.completeFetching() }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val productSimilarRequester = FlowRequester(ProductRequest.GENERAL) {
+        productId.flatMapLatest { productId ->
+            val params = GetProductSimilarFlowUseCase.Params(productId)
+            interactor.getProductSimilarFlow(params)
+        }
+    }
+
+    private val productResult: StateFlow<Result<ProductDetails>?> = productRequester.flow
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
             initialValue = null,
         )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val productTotalLookResult: StateFlow<Result<List<ProductItem>>?> = combine(
-        productTotalLookFetchingInfoHolder.fetchingRequests,
-        productId,
-    ) { _, productId ->
-        val params = GetProductTotalLookFlowUseCase.Params(productId)
-        interactor.getProductTotalLookFlow(params)
-    }
-        .flatMapLatest { it }
-        .onEach { productTotalLookFetchingInfoHolder.completeFetching() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null,
-        )
+    private val productTotalLookResult: StateFlow<Result<List<ProductItem>>?> =
+        productTotalLookRequester.flow
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = null,
+            )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val productSimilarResult: StateFlow<Result<List<ProductItem>>?> = combine(
-        productSimilarFetchingInfoHolder.fetchingRequests,
-        productId,
-    ) { _, productId ->
-        val params = GetProductSimilarFlowUseCase.Params(productId)
-        interactor.getProductSimilarFlow(params)
-    }
-        .flatMapLatest { it }
-        .onEach { productSimilarFetchingInfoHolder.completeFetching() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null,
-        )
+    private val productSimilarResult: StateFlow<Result<List<ProductItem>>?> =
+        productSimilarRequester.flow
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = null,
+            )
 
     val productState: StateFlow<ProductState> = productResult.mapState(
         scope = viewModelScope,
@@ -176,10 +169,6 @@ class ProductViewModel @AssistedInject constructor(
     }
 
     init {
-        productFetchingInfoHolder.requestFetching(Unit)
-        productTotalLookFetchingInfoHolder.requestFetching(Unit)
-        productSimilarFetchingInfoHolder.requestFetching(Unit)
-
         handleSizeSelectorResult()
     }
 
@@ -204,9 +193,9 @@ class ProductViewModel @AssistedInject constructor(
     }
 
     fun onProductErrorRefreshClicked() {
-        productFetchingInfoHolder.requestFetching(Unit)
+        productRequester.request(ProductRequest.GENERAL)
         if (productTotalLookResult.value?.isSuccess != true) {
-            productTotalLookFetchingInfoHolder.requestFetching(Unit)
+            productTotalLookRequester.request(ProductRequest.GENERAL)
         }
     }
 
@@ -264,11 +253,11 @@ class ProductViewModel @AssistedInject constructor(
     }
 
     fun onProductTotalLookErrorRefreshClicked() {
-        productTotalLookFetchingInfoHolder.requestFetching(Unit)
+        productTotalLookRequester.request(ProductRequest.GENERAL)
     }
 
     fun onProductSimilarErrorRefreshClicked() {
-        productSimilarFetchingInfoHolder.requestFetching(Unit)
+        productSimilarRequester.request(ProductRequest.GENERAL)
     }
 
     fun onUrlClicked(url: Url) {
@@ -344,6 +333,8 @@ class ProductViewModel @AssistedInject constructor(
 
         data object Empty : SuggestedProductListState()
     }
+
+    private enum class ProductRequest : FlowRequester.Request { GENERAL }
 
     @AssistedFactory
     interface Factory {
