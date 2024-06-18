@@ -88,7 +88,7 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val categoryProductInfoRequester = FlowRequester(CategoryProductInfoFetchRequest.GENERAL) {
+    private val categoryProductInfoRequester = FlowRequester(CategoryProductInfoRequest.GENERAL) {
         combine(searchQuery, filters) { query, filters ->
             val params = SearchProductsFlowUseCase.Params(
                 query = query,
@@ -201,7 +201,7 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
     }
 
     fun onFilterListErrorRefreshClicked() {
-        categoryProductInfoRequester.request(CategoryProductInfoFetchRequest.GENERAL)
+        categoryProductInfoRequester.request(CategoryProductInfoRequest.GENERAL)
     }
 
     private fun handleListFilterResult() {
@@ -223,7 +223,7 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
         data class NavigateBackward(val result: ProductSearchFiltersScreenResult) : SideEffect
     }
 
-    private enum class CategoryProductInfoFetchRequest : FlowRequester.Request { GENERAL }
+    private enum class CategoryProductInfoRequest : FlowRequester.Request { GENERAL }
 
     @AssistedFactory
     interface Factory {
