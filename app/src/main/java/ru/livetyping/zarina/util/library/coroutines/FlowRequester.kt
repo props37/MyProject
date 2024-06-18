@@ -43,15 +43,11 @@ class FlowRequester<T, R : FlowRequester.Request>(
     }
 
     sealed class LoadingState {
-        abstract val isLoading: Boolean
+        val isLoading: Boolean get() = this is Loading
 
-        data object NotLoading : LoadingState() {
-            override val isLoading: Boolean get() = false
-        }
+        data object NotLoading : LoadingState()
 
-        data class Loading<R : Request>(val request: R) : LoadingState() {
-            override val isLoading: Boolean get() = true
-        }
+        data class Loading(val request: Request) : LoadingState()
     }
 
     interface Request
