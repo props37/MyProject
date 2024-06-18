@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -143,16 +142,13 @@ private fun ScreenContent(
                 productName = (productState as? ProductState.Success)?.product?.name,
                 onShareClicked = onShareClicked,
                 mode = mode,
+                windowInsets = WindowInsets.statusBars.union(WindowInsets.displayCutout),
             )
         },
         scrollBehavior = topBarScrollBehavior,
         modifier = Modifier
             .fillMaxSize()
             .background(UiKitTheme.colors.background.general.regular.default)
-            .windowInsetsPadding(
-                WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout),
-            )
             .bottomNavBarPadding()
             .clipToBounds(),
     ) { padding ->

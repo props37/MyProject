@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListState
@@ -29,11 +31,12 @@ import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -97,17 +100,17 @@ object ProductScreenComponents {
         productName: String?,
         onShareClicked: () -> Unit,
         mode: TopBarMode,
+        windowInsets: WindowInsets,
         modifier: Modifier = Modifier,
     ) {
-        val contentAlpha by animateFloatAsState(
+        val backgroundAlpha = animateFloatAsState(
             targetValue = when (mode) {
                 TopBarMode.Transparent -> 0f
                 TopBarMode.Filled -> 1f
             },
             label = "content alpha",
         )
-        val backgroundColor =
-            UiKitTheme.colors.background.general.regular.default.copy(alpha = contentAlpha)
+        val backgroundColor = UiKitTheme.colors.background.general.regular.default
 
         ZarinaTopBar(
             startContent = {
@@ -118,9 +121,11 @@ object ProductScreenComponents {
                 )
             },
             centerContent = {
+                val color = UiKitTheme.colors.text.general.regular.default
+                    .copy(alpha = backgroundAlpha.value)
                 Text(
                     text = productName.orEmpty(),
-                    color = UiKitTheme.colors.text.general.regular.default.copy(alpha = contentAlpha),
+                    color = color,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -138,9 +143,13 @@ object ProductScreenComponents {
                     )
                 }
             },
-            backgroundColor = backgroundColor,
+            backgroundColor = Color.Unspecified,
             contentPadding = PaddingValues(vertical = 4.dp),
-            modifier = modifier,
+            modifier = modifier
+                .drawBehind {
+                    drawRect(color = backgroundColor, alpha = backgroundAlpha.value)
+                }
+                .windowInsetsPadding(windowInsets),
         )
     }
 
