@@ -9,17 +9,15 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
@@ -37,6 +35,7 @@ import ru.livetyping.zarina.presentation.screen.favorites.FavoritesViewModel.Sid
 import ru.livetyping.zarina.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import timber.log.Timber
 
@@ -48,13 +47,17 @@ class FavoritesViewModel @AssistedInject constructor(
     private val interactor: FavoritesInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
+    private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
+
     private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private var clearFavoriteProductsJob: Job? = null
 
-    private val favoriteProductFetchRequests = Channel<Unit>(Channel.CONFLATED)
+    private val favoriteProductsRequester = FlowRequester(FavoriteProductsRequest.GENERAL) {
+        interactor.favoriteProductPager.getFavoriteProductPagingDataFlow()
+    }
 
     val isClearFavoritesButtonVisible: StateFlow<Boolean> = interactor.getFavoriteProductIdsFlow()
         .map { result ->
@@ -67,24 +70,20 @@ class FavoritesViewModel @AssistedInject constructor(
             initialValue = false,
         )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val productPagingDataFlow: Flow<PagingData<ProductItem>> = favoriteProductFetchRequests.receiveAsFlow()
-        .flatMapLatest {
-            interactor.favoriteProductPager.getFavoriteProductPagingDataFlow()
-        }
-        .cachedIn(viewModelScope)
+    val productPagingDataFlow: Flow<PagingData<ProductItem>> = favoriteProductsRequester.flow
+        .cachedIn(viewModelScopeDefault)
         .mapProducts(
             favoriteProductIdsResultFlow = interactor.getFavoriteProductIdsFlow(),
             cartProductIdsResultFlow = interactor.getCartProductIdsFlow(),
         )
-        .cachedIn(viewModelScope)
+        .cachedIn(viewModelScopeDefault)
 
     init {
         handleSizeSelectorResult()
     }
 
     fun onScreenCreated() {
-        favoriteProductFetchRequests.trySend(Unit)
+        favoriteProductsRequester.request(FavoriteProductsRequest.GENERAL)
     }
 
     fun onProductClicked(product: Product) {
@@ -145,7 +144,7 @@ class FavoritesViewModel @AssistedInject constructor(
         clearFavoriteProductsJob = viewModelScope.launch {
             interactor.clearFavoriteProducts()
                 .onSuccess {
-                    favoriteProductFetchRequests.trySend(Unit)
+                    favoriteProductsRequester.request(FavoriteProductsRequest.GENERAL)
                 }
                 .onFailure {
                     val text = Text.Resource(R.string.favorites_clearing_error)
@@ -209,6 +208,8 @@ class FavoritesViewModel @AssistedInject constructor(
             sizeSelectorResultFlow: StateFlow<SizeSelectorGraph.Result?>,
         ): FavoritesViewModel
     }
+
+    private enum class FavoriteProductsRequest : FlowRequester.Request { GENERAL }
 
     companion object {
         private const val KEY_SIZE_SELECTOR_RESULT = "size_selector_result"
