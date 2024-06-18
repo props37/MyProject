@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
@@ -22,7 +21,6 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderDetails
-import ru.livetyping.zarina.presentation.common.datafetchinginfo.DataFetchingInfoHolder
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
@@ -30,6 +28,7 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.presentation.screen.order.OrderViewModel.SideEffect
 import ru.livetyping.zarina.usecase.order.GetOrderFlowUseCase
+import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 
@@ -58,18 +57,15 @@ class OrderViewModel @AssistedInject constructor(
             Order.Id(value)
         }
 
-    private val orderFetchingInfoHolder = DataFetchingInfoHolder<OrderFetchingType>()
-
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val orderResult: StateFlow<Result<OrderDetails>?> = combine(
-        orderId,
-        orderFetchingInfoHolder.fetchingRequests,
-    ) { orderId, _ ->
-        val params = GetOrderFlowUseCase.Params(orderId)
-        interactor.getOrderFlow(params)
+    private val orderRequester = FlowRequester(OrderRequest.LOADING) {
+        orderId.flatMapLatest { orderId ->
+            val params = GetOrderFlowUseCase.Params(orderId)
+            interactor.getOrderFlow(params)
+        }
     }
-        .flatMapLatest { it }
-        .onEach { orderFetchingInfoHolder.completeFetching() }
+
+    private val orderResult: StateFlow<Result<OrderDetails>?> = orderRequester.flow
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileUiSubscribed,
@@ -77,10 +73,12 @@ class OrderViewModel @AssistedInject constructor(
         )
 
     val orderState: StateFlow<OrderState> = combine(
-        orderFetchingInfoHolder.fetchingType,
+        orderRequester.loadingState,
         orderResult,
-    ) { orderFetchingType, orderResult ->
-        if (orderFetchingType == OrderFetchingType.LOADING || orderResult == null) {
+    ) { loadingState, orderResult ->
+        val isLoading = loadingState is FlowRequester.LoadingState.Loading
+                && loadingState.request == OrderRequest.LOADING
+        if (isLoading || orderResult == null) {
             OrderState.Loading
         } else {
             orderResult.fold(
@@ -99,14 +97,14 @@ class OrderViewModel @AssistedInject constructor(
         initialValue = OrderState.Loading,
     )
 
-    val isRefreshing: StateFlow<Boolean> = orderFetchingInfoHolder.fetchingType.mapState(
+    val isRefreshing: StateFlow<Boolean> = orderRequester.loadingState.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
-    ) { it == OrderFetchingType.REFRESHING }
+    ) {
+        it is FlowRequester.LoadingState.Loading && it.request == OrderRequest.REFRESHING
+    }
 
     init {
-        orderFetchingInfoHolder.requestFetching(OrderFetchingType.LOADING)
-
         handleOrderCancellationResult()
     }
 
@@ -118,11 +116,11 @@ class OrderViewModel @AssistedInject constructor(
     }
 
     fun onRefreshTriggered() {
-        orderFetchingInfoHolder.requestFetching(OrderFetchingType.REFRESHING)
+        orderRequester.request(OrderRequest.REFRESHING)
     }
 
     fun onOrderErrorRefreshClicked() {
-        orderFetchingInfoHolder.requestFetching(OrderFetchingType.LOADING)
+        orderRequester.request(OrderRequest.LOADING)
     }
 
     fun onCancelOrderClicked() {
@@ -138,7 +136,7 @@ class OrderViewModel @AssistedInject constructor(
                 resultFlow = orderCancellationResultFlow,
                 key = KEY_RESULT_ORDER_CANCELLATION,
             ) {
-                orderFetchingInfoHolder.requestFetching(OrderFetchingType.LOADING)
+                orderRequester.request(OrderRequest.LOADING)
             }
         }
     }
@@ -158,7 +156,7 @@ class OrderViewModel @AssistedInject constructor(
         data class Error(val state: ErrorState) : OrderState()
     }
 
-    private enum class OrderFetchingType { LOADING, REFRESHING }
+    private enum class OrderRequest : FlowRequester.Request { LOADING, REFRESHING }
 
     @AssistedFactory
     interface Factory {
