@@ -26,6 +26,10 @@ class UserRepository @Inject constructor(
         return localDataSource.getUserFlow()
     }
 
+    fun getRemoteUserFlow(): Flow<User> {
+        return remoteDataSource.getUserFlow()
+    }
+
     suspend fun setUser(user: User) {
         localDataSource.setUser(user)
     }

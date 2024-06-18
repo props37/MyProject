@@ -19,6 +19,7 @@ import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendSmsOtpRequestB
 import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignOutDto
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpRequestBody
+import ru.livetyping.zarina.data.user.remote.api.dto.UserDto
 import ru.livetyping.zarina.data.user.remote.api.exception.ConfirmSignUpApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.RequestPasswordResetApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.SignInApiExceptionConverter
@@ -41,6 +42,10 @@ class UserApi @Inject constructor(
     private val signInApiExceptionConverter: SignInApiExceptionConverter,
     private val requestPasswordResetApiExceptionConverter: RequestPasswordResetApiExceptionConverter,
 ) {
+    suspend fun getUser(): UserDto {
+        return httpClient.get("/api/v1/profile").body()
+    }
+
     suspend fun getLoyaltyCard(): GetLoyaltyCardDto {
         return httpClient.get("/api/card").body()
     }

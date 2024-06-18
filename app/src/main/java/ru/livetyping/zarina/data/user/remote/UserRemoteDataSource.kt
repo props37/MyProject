@@ -12,12 +12,18 @@ import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.domain.user.LoyaltyProgramBonusAction
+import ru.livetyping.zarina.domain.user.User
 import java.time.LocalDate
 import javax.inject.Inject
 
 class UserRemoteDataSource @Inject constructor(
     private val api: UserApi,
 ) {
+    fun getUserFlow(): Flow<User> = flow {
+        val user = api.getUser().toUser()
+        emit(user)
+    }
+
     fun getLoyaltyCardFlow(): Flow<LoyaltyCard> = flow {
         val dto = api.getLoyaltyCard()
         emit(dto.toLoyaltyCard())
