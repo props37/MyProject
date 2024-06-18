@@ -5,11 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.receiveAsFlow
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
@@ -20,23 +16,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyOrdersViewModel @Inject constructor(
-    private val interactor: MyOrdersInteractor,
+    interactor: MyOrdersInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val orderFetchRequests = Channel<Unit>(Channel.CONFLATED)
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val orderPagingDataFlow: Flow<PagingData<OrderItem>> = orderFetchRequests.receiveAsFlow()
-        .flatMapLatest {
-            interactor.orderPager.getOrderPagingDataFlow()
-        }
+    val orderPagingDataFlow: Flow<PagingData<OrderItem>> = interactor.orderPager
+        .getOrderPagingDataFlow()
         .cachedIn(viewModelScope)
-
-    init {
-        orderFetchRequests.trySend(Unit)
-    }
 
     fun onBackClicked() {
         navigationThrottler.throttle {
