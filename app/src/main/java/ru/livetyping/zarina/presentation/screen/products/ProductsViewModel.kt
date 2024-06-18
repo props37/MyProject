@@ -15,7 +15,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,7 +23,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -53,6 +51,7 @@ import ru.livetyping.zarina.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.usecase.category.GetCategoryFlowUseCase
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import timber.log.Timber
@@ -86,17 +85,15 @@ class ProductsViewModel @AssistedInject constructor(
             Category.Id(value)
         }
 
-    private val categoryFetchRequests = Channel<Unit>(Channel.CONFLATED)
-
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val categoryResult: StateFlow<Result<Category>?> = combine(
-        categoryId,
-        categoryFetchRequests.receiveAsFlow(),
-    ) { id, _ ->
-        val params = GetCategoryFlowUseCase.Params(id)
-        interactor.getCategoryFlow(params)
+    private val categoryRequester = FlowRequester(CategoryRequest.GENERAL) {
+        categoryId.flatMapLatest { categoryId ->
+            val params = GetCategoryFlowUseCase.Params(categoryId)
+            interactor.getCategoryFlow(params)
+        }
     }
-        .flatMapLatest { it }
+
+    private val categoryResult: StateFlow<Result<Category>?> = categoryRequester.flow
         .stateIn(
             scope = viewModelScopeDefault,
             started = SharingStarted.WhileSubscribed(),
@@ -192,8 +189,6 @@ class ProductsViewModel @AssistedInject constructor(
     ) { it.appliedFilterCount }
 
     init {
-        categoryFetchRequests.trySend(Unit)
-
         handleFiltersResult()
         handleSizeSelectorResult()
     }
@@ -311,7 +306,7 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     private fun fetchCategory() {
-        categoryFetchRequests.trySend(Unit)
+        categoryRequester.request(CategoryRequest.GENERAL)
     }
 
     private fun addProductToCart(productId: Product.Id, barcode: Barcode) {
@@ -375,6 +370,8 @@ class ProductsViewModel @AssistedInject constructor(
         @Immutable
         data class TagList(val tags: ImmutableList<Category>) : TagListState()
     }
+
+    private enum class CategoryRequest : FlowRequester.Request { GENERAL }
 
     @AssistedFactory
     interface Factory {
