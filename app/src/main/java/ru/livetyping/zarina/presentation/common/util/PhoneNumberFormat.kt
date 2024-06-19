@@ -24,7 +24,7 @@ fun formatPhoneNumber(
     useNonBreakingSpaces: Boolean = false,
     defaultCountryIso: String = Locale.getDefault().country,
 ): String? {
-    var formatted = PhoneNumberUtils.formatNumber(phoneNumber, defaultCountryIso)
+    var formatted = PhoneNumberUtils.formatNumber(phoneNumber, defaultCountryIso) ?: return null
     if (useNonBreakingSpaces) {
         formatted = formatted.replace(' ', nbsp)
     }
