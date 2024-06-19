@@ -235,6 +235,8 @@
     <string name="contacts">Контакты</string>
     <string name="settings">Настройки</string>
     <string name="last_name">Фамилия</string>
+    <string name="change_password">Изменить пароль</string>
+    <string name="notifications_about_order_statuses_will_continue_to_arrive">Оповещения о статусах заказов продолжат поступать</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

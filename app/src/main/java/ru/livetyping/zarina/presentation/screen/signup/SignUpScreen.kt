@@ -255,12 +255,7 @@ private fun ScreenContent(
                 placeholder = {
                     Text(text = stringResource(R.string.birth_date_text_field_placeholder))
                 },
-                colors = ZarinaTextFieldDefaults.colors(
-                    disabledLabelColor = UiKitTheme.colors.text.general.regular.muted,
-                    disabledPlaceholderColor = UiKitTheme.colors.text.general.regular.muted,
-                    disabledIndicationLineColor = UiKitTheme.colors.border.general.default,
-                    disabledErrorIndicationLineColor = UiKitTheme.colors.border.general.error,
-                ),
+                colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()

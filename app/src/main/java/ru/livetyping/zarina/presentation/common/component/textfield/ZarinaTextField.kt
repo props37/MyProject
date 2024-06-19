@@ -587,6 +587,23 @@ object ZarinaTextFieldDefaults {
     )
 
     @Composable
+    fun colorsIgnoringDisabled(
+        baseColors: ZarinaTextFieldColors = colors(),
+    ): ZarinaTextFieldColors {
+        return baseColors.copy(
+            disabledTextColor = baseColors.textColor,
+            disabledPlaceholderColor = baseColors.placeholderColor,
+            disabledLabelColor = baseColors.labelColor,
+            disabledLeadingContentColor = baseColors.leadingContentColor,
+            disabledInnerTrailingContentColor = baseColors.innerTrailingContentColor,
+            disabledOuterTrailingContentColor = baseColors.outerTrailingContentColor,
+            disabledDescriptionColor = baseColors.descriptionColor,
+            disabledIndicationLineColor = baseColors.indicationLineColor,
+            disabledErrorIndicationLineColor = baseColors.errorIndicationLineColor,
+        )
+    }
+
+    @Composable
     fun textStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
         ZarinaTextFieldSize.Large -> UiKitTheme.typography.primary.light
         ZarinaTextFieldSize.Small -> UiKitTheme.typography.secondary.light

@@ -1,24 +1,41 @@
 package ru.livetyping.zarina.presentation.screen.profile.details
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
+import ru.livetyping.zarina.presentation.common.component.switchh.ZarinaSwitch
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
+import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
+import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldSize
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
+import ru.livetyping.zarina.presentation.common.datetime.DateTimeUtils
+import ru.livetyping.zarina.presentation.common.util.rememberFormattedLocalDate
+import ru.livetyping.zarina.presentation.common.util.rememberFormattedPhoneNumber
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
 
 object ProfileDetailsScreenComponents {
 
@@ -51,6 +68,8 @@ object ProfileDetailsScreenComponents {
     fun PersonalDataBlock(
         lastNameTextFieldState: TextFieldState,
         firstNameTextFieldState: TextFieldState,
+        birthDateMillis: Long?,
+        onBirthDateClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
@@ -63,8 +82,11 @@ object ProfileDetailsScreenComponents {
                 modifier = itemModifier,
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             ZarinaTextField(
                 state = lastNameTextFieldState,
+                size = ZarinaTextFieldSize.Small,
                 label = {
                     Text(text = stringResource(R.string.last_name))
                 },
@@ -74,8 +96,12 @@ object ProfileDetailsScreenComponents {
                 modifier = itemModifier,
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             ZarinaTextField(
                 state = firstNameTextFieldState,
+                size = ZarinaTextFieldSize.Small,
+                textStyle = ItemBodyTextStyle,
                 label = {
                     Text(text = stringResource(R.string.first_name))
                 },
@@ -85,21 +111,43 @@ object ProfileDetailsScreenComponents {
                 modifier = itemModifier,
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            val formattedDate = if (birthDateMillis != null) {
+                rememberFormattedLocalDate(
+                    localDate = remember(birthDateMillis) {
+                        LocalDateUtil.fromMillis(birthDateMillis)
+                    },
+                    formatterPattern = DateTimeUtils.DATE_FORMAT_PATTERN,
+                )
+            } else ""
             ZarinaTextField(
-                state = rememberTextFieldState(),
+                value = formattedDate,
+                onValueChanged = {},
+                isEnabled = false,
+                size = ZarinaTextFieldSize.Small,
+                textStyle = ItemBodyTextStyle,
                 label = {
                     Text(text = stringResource(R.string.birth_date_text_field_label))
                 },
                 placeholder = {
                     Text(text = stringResource(R.string.birth_date_text_field_placeholder))
                 },
-                modifier = itemModifier,
+                colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = onBirthDateClicked)
+                    .padding(horizontal = 16.dp),
             )
         }
     }
 
     @Composable
     fun ContactsBlock(
+        phoneNumber: String?,
+        onPhoneNumberClicked: () -> Unit,
+        email: String,
+        onEmailClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
@@ -112,27 +160,103 @@ object ProfileDetailsScreenComponents {
                 modifier = itemModifier,
             )
 
-            ZarinaTextField(
-                state = rememberTextFieldState(),
-                label = {
-                    Text(text = stringResource(R.string.phone))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            val phoneTitle = if (phoneNumber != null) stringResource(R.string.phone) else null
+            val phoneBody = if (phoneNumber != null) {
+                rememberFormattedPhoneNumber(phoneNumber) ?: phoneNumber
+            } else {
+                stringResource(R.string.phone)
+            }
+            BlockItem(
+                title = phoneTitle,
+                body = phoneBody,
+                onClick = onPhoneNumberClicked,
+                endContent = {
+                    BlockItemEndArrow()
                 },
-                placeholder = {
-                    Text(text = stringResource(R.string.phone_text_field_placeholder))
-                },
-                modifier = itemModifier,
+                modifier = Modifier.fillMaxWidth(),
             )
 
-            ZarinaTextField(
-                state = rememberTextFieldState(),
-                label = {
-                    Text(text = stringResource(R.string.email))
+            ZarinaDivider(modifier = itemModifier)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            BlockItem(
+                title = stringResource(R.string.email),
+                body = email,
+                onClick = onEmailClicked,
+                endContent = {
+                    BlockItemEndArrow()
                 },
-                placeholder = {
-                    Text(text = stringResource(R.string.email_text_field_placeholder))
-                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+
+    @Composable
+    fun SettingsBlock(
+        onChangePasswordClicked: () -> Unit,
+        receiveNewsByEmail: Boolean,
+        onReceiveNewsByEmailChanged: (Boolean) -> Unit,
+        receiveSmsNotifications: Boolean,
+        onReceiveSmsNotificationsChanged: (Boolean) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            val itemModifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+
+            BlockTitle(
+                text = stringResource(R.string.settings),
                 modifier = itemModifier,
             )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            BlockItem(
+                title = null,
+                body = stringResource(R.string.change_password),
+                onClick = onChangePasswordClicked,
+                endContent = {
+                    BlockItemEndArrow()
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            ZarinaDivider(modifier = itemModifier)
+
+            BlockItem(
+                title = null,
+                body = stringResource(R.string.receive_news_by_email),
+                onClick = { onReceiveNewsByEmailChanged(!receiveNewsByEmail) },
+                endContent = {
+                    ZarinaSwitch(
+                        isChecked = receiveNewsByEmail,
+                        onCheckedChanged = onReceiveNewsByEmailChanged,
+                    )
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            ZarinaDivider(modifier = itemModifier)
+
+            BlockItem(
+                title = null,
+                body = stringResource(R.string.receive_sms_notifications),
+                description = stringResource(
+                    id = R.string.notifications_about_order_statuses_will_continue_to_arrive,
+                ),
+                onClick = { onReceiveSmsNotificationsChanged(!receiveSmsNotifications) },
+                endContent = {
+                    ZarinaSwitch(
+                        isChecked = receiveSmsNotifications,
+                        onCheckedChanged = onReceiveSmsNotificationsChanged,
+                    )
+                },
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            // TODO: [High] Add policies
         }
     }
 
@@ -155,27 +279,67 @@ object ProfileDetailsScreenComponents {
 
     @Composable
     private fun BlockItem(
-        title: String,
+        title: String?,
         body: String,
+        endContent: @Composable () -> Unit,
         modifier: Modifier = Modifier,
+        description: String? = null,
+        onClick: (() -> Unit)? = null,
+        contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
     ) {
         ZarinaItem(
-            modifier = modifier,
-            contentPadding = PaddingValues(),
-        ) {
-            Column {
-                Text(
-                    text = title,
-                    style = UiKitTheme.typography.tertiary.light,
-                    color = UiKitTheme.colors.text.general.regular.muted,
-                )
+            onClick = onClick,
+            startContent = {
+                Column {
+                    if (title != null) {
+                        Text(
+                            text = title,
+                            style = UiKitTheme.typography.footnote.light,
+                            color = UiKitTheme.colors.text.general.regular.muted,
+                        )
 
-                Text(
-                    text = body,
-                    style = UiKitTheme.typography.secondary.light,
-                    color = UiKitTheme.colors.text.general.regular.default,
-                )
-            }
-        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                    }
+
+                    Text(
+                        text = body,
+                        style = ItemBodyTextStyle,
+                        color = UiKitTheme.colors.text.general.regular.default,
+                    )
+
+                    if (description != null) {
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        Text(
+                            text = description,
+                            style = UiKitTheme.typography.footnote.light,
+                            color = UiKitTheme.colors.text.general.regular.muted,
+                        )
+                    }
+                }
+            },
+            endContent = {
+                endContent()
+            },
+            contentPadding = contentPadding,
+            modifier = modifier,
+        )
     }
+
+    @Composable
+    private fun BlockItemEndArrow(
+        modifier: Modifier = Modifier,
+    ) {
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
+            contentDescription = null,
+            modifier = modifier
+                .size(16.dp)
+                .rotate(degrees = 90f),
+        )
+    }
+
+    private val ItemBodyTextStyle: TextStyle
+        @Composable
+        get() = UiKitTheme.typography.secondary.light
 }

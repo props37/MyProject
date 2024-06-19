@@ -10,8 +10,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
@@ -28,6 +30,7 @@ import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.clear
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
+import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -70,10 +73,22 @@ class ProfileDetailsViewModel @Inject constructor(
 
     val birthDateMillis: StateFlow<Long?> = birthDateMillisValueHolder.stateFlow
 
+    private val _phoneNumber = MutableStateFlow<String?>(null)
+    val phoneNumber: StateFlow<String?> = _phoneNumber.asStateFlow()
+
+    private val _email = MutableStateFlow("")
+    val email: StateFlow<String> = _email.asStateFlow()
+
+    private val _receiveNewsByEmail = MutableStateFlow(false)
+    val receiveNewsByEmail: StateFlow<Boolean> = _receiveNewsByEmail.asStateFlow()
+
+    private val _receiveSmsNotifications = MutableStateFlow(false)
+    val receiveSmsNotifications: StateFlow<Boolean> = _receiveSmsNotifications.asStateFlow()
+
     val state: StateFlow<State> = combine(
         remoteUserResult.onEach {
             val user = it?.getOrNull()
-            if (user != null) updateTextFieldStates(user)
+            if (user != null) updateUserInfo(user)
         },
         remoteUserRequester.loadingState,
     ) { result, loadingState ->
@@ -105,6 +120,38 @@ class ProfileDetailsViewModel @Inject constructor(
         remoteUserRequester.request(RemoteUserRequest.GENERAL)
     }
 
+    fun onBirthDateMillisChanged(millis: Long) {
+        birthDateMillisValueHolder.set(millis)
+    }
+
+    fun onPhoneNumberClicked() {
+        navigationThrottler.throttle {
+            // TODO: [High] Implement
+        }
+    }
+
+    fun onEmailClicked() {
+        navigationThrottler.throttle {
+            // TODO: [High] Implement
+        }
+    }
+
+    fun onReceiveNewsByEmailChanged(value: Boolean) {
+        _receiveNewsByEmail.value = value
+        // TODO: [High] Implement
+    }
+
+    fun onReceiveSmsNotificationsChanged(value: Boolean) {
+        _receiveSmsNotifications.value = value
+        // TODO: [High] Implement
+    }
+
+    fun onChangePasswordClicked() {
+        navigationThrottler.throttle {
+            // TODO: [High] Implement
+        }
+    }
+
     fun onSignOutClicked() {
         navigationThrottler.throttle {
             val action = ProfileDetailsScreenAction.SignOutClicked
@@ -119,7 +166,7 @@ class ProfileDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun updateTextFieldStates(user: User) {
+    private fun updateUserInfo(user: User) {
         lastNameTextFieldState.edit {
             clear()
             append(user.lastName?.trim())
@@ -130,6 +177,14 @@ class ProfileDetailsViewModel @Inject constructor(
             append(user.firstName?.trim())
             placeCursorAtEnd()
         }
+        val birthDateMillis = user.birthDate
+            ?.atStartOfDay(ZoneId.systemDefault())
+            ?.toInstant()
+            ?.toEpochMilli()
+        birthDateMillisValueHolder.set(birthDateMillis)
+        _phoneNumber.value = user.phone?.value
+        _email.value = user.email.value
+        // TODO: [High] Set up notifications
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

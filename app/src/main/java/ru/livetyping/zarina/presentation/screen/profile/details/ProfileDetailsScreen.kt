@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -39,6 +40,7 @@ import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScre
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsScreenComponents.ContactsBlock
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsScreenComponents.PersonalDataBlock
+import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsScreenComponents.SettingsBlock
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsViewModel.SideEffect
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsViewModel.State
@@ -51,11 +53,26 @@ fun ProfileDetailsScreen(
     viewModel: ProfileDetailsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val birthDateMillis by viewModel.birthDateMillis.collectAsStateWithLifecycle()
+    val phoneNumber by viewModel.phoneNumber.collectAsStateWithLifecycle()
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    val receiveNewsByEmail by viewModel.receiveNewsByEmail.collectAsStateWithLifecycle()
+    val receiveSmsNotifications by viewModel.receiveSmsNotifications.collectAsStateWithLifecycle()
 
     ScreenContent(
         state = state,
         lastNameTextFieldState = viewModel.lastNameTextFieldState,
         firstNameTextFieldState = viewModel.firstNameTextFieldState,
+        birthDateMillis = birthDateMillis,
+        phoneNumber = phoneNumber,
+        onPhoneNumberClicked = viewModel::onPhoneNumberClicked,
+        email = email,
+        onEmailClicked = viewModel::onEmailClicked,
+        receiveNewsByEmail = receiveNewsByEmail,
+        onReceiveNewsByEmailChanged = viewModel::onReceiveNewsByEmailChanged,
+        receiveSmsNotifications = receiveSmsNotifications,
+        onReceiveSmsNotificationsChanged = viewModel::onReceiveSmsNotificationsChanged,
+        onChangePasswordClicked = viewModel::onChangePasswordClicked,
         onRemoteUserErrorRefreshClicked = viewModel::onRemoteUserErrorRefreshClicked,
         onSignOutClicked = viewModel::onSignOutClicked,
         onDeleteAccountClicked = viewModel::onDeleteAccountClicked,
@@ -70,6 +87,16 @@ private fun ScreenContent(
     state: State,
     lastNameTextFieldState: TextFieldState,
     firstNameTextFieldState: TextFieldState,
+    birthDateMillis: Long?,
+    phoneNumber: String?,
+    onPhoneNumberClicked: () -> Unit,
+    email: String,
+    onEmailClicked: () -> Unit,
+    receiveNewsByEmail: Boolean,
+    onReceiveNewsByEmailChanged: (Boolean) -> Unit,
+    receiveSmsNotifications: Boolean,
+    onReceiveSmsNotificationsChanged: (Boolean) -> Unit,
+    onChangePasswordClicked: () -> Unit,
     onRemoteUserErrorRefreshClicked: () -> Unit,
     onSignOutClicked: () -> Unit,
     onDeleteAccountClicked: () -> Unit,
@@ -88,30 +115,60 @@ private fun ScreenContent(
             .background(UiKitTheme.colors.background.general.regular.default)
             .windowInsetsPadding(
                 WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout),
+                    .union(WindowInsets.displayCutout)
+                    .union(WindowInsets.ime),
             )
-            .bottomNavBarPadding(),
+            .bottomNavBarPadding(WindowInsets.ime),
     ) {
         TopBar(onBackClicked = onBackClicked)
 
         Crossfade(
             targetState = state,
             contentKey = {
+                // TODO: [High] Extract
                 when (it) {
                     is State.Success -> "Success"
                     State.Loading, is State.Error -> it
                 }
             },
+            modifier = Modifier.fillMaxSize(),
         ) { state ->
             when (state) {
                 is State.Success -> {
-                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState()),
+                    ) {
+                        Spacer(modifier = Modifier.height(8.dp))
+
                         PersonalDataBlock(
                             lastNameTextFieldState = lastNameTextFieldState,
                             firstNameTextFieldState = firstNameTextFieldState,
+                            birthDateMillis = birthDateMillis,
+                            onBirthDateClicked = {}, // TODO: [High] Implement
                         )
 
-                        ContactsBlock()
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        ContactsBlock(
+                            phoneNumber = phoneNumber,
+                            onPhoneNumberClicked = onPhoneNumberClicked,
+                            email = email,
+                            onEmailClicked = onEmailClicked,
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        SettingsBlock(
+                            onChangePasswordClicked = onChangePasswordClicked,
+                            receiveNewsByEmail = receiveNewsByEmail,
+                            onReceiveNewsByEmailChanged = onReceiveNewsByEmailChanged,
+                            receiveSmsNotifications = receiveSmsNotifications,
+                            onReceiveSmsNotificationsChanged = onReceiveSmsNotificationsChanged,
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
 
                         ZarinaButton(
                             onClick = onSignOutClicked,
