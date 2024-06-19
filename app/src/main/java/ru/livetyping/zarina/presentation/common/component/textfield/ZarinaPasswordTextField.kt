@@ -45,7 +45,7 @@ fun ZarinaPasswordTextField(
     isEnabled: Boolean = true,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
-    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Large,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: String = stringResource(R.string.password),
     placeholder: String = stringResource(R.string.password_text_field_placeholder_eight_symbolds),

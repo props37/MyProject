@@ -82,7 +82,7 @@ fun ZarinaTextField(
     isEnabled: Boolean = true,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
-    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Large,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
     inputTransformation: InputTransformation? = null,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: (@Composable () -> Unit)? = null,
@@ -148,7 +148,7 @@ fun ZarinaTextField(
     isEnabled: Boolean = true,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
-    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Large,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: (@Composable () -> Unit)? = null,
     placeholder: (@Composable () -> Unit)? = null,
@@ -216,7 +216,7 @@ fun ZarinaTextField(
     isEnabled: Boolean = true,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
-    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Large,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: (@Composable () -> Unit)? = null,
     placeholder: (@Composable () -> Unit)? = null,
@@ -469,7 +469,7 @@ data class ZarinaTextFieldColors(
     }
 }
 
-enum class ZarinaTextFieldSize { Large, Small }
+enum class ZarinaTextFieldSize { Small }
 
 object ZarinaTextFieldDefaults {
     val IconSizeLarge: Dp get() = 20.dp
@@ -605,37 +605,31 @@ object ZarinaTextFieldDefaults {
 
     @Composable
     fun textStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Large -> UiKitTheme.typography.primary.light
         ZarinaTextFieldSize.Small -> UiKitTheme.typography.secondary.light
     }
 
     @Composable
     fun labelTextStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Large -> UiKitTheme.typography.tertiary.light
         ZarinaTextFieldSize.Small -> UiKitTheme.typography.footnote.light
     }
 
     @Composable
     fun descriptionTextStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Large -> UiKitTheme.typography.tertiary.light
         ZarinaTextFieldSize.Small -> UiKitTheme.typography.footnote.light
     }
 
     @Stable
     fun textVerticalPaddingFromSize(size: ZarinaTextFieldSize): Dp = when (size) {
-        ZarinaTextFieldSize.Large -> 8.dp
         ZarinaTextFieldSize.Small -> 6.dp
     }
 
     @Stable
     fun labelPaddingFromSize(size: ZarinaTextFieldSize): Dp = when (size) {
-        ZarinaTextFieldSize.Large -> 4.dp
         ZarinaTextFieldSize.Small -> 2.dp
     }
 
     @Stable
     fun descriptionPaddingFromSize(size: ZarinaTextFieldSize): Dp = when (size) {
-        ZarinaTextFieldSize.Large -> 12.dp
         ZarinaTextFieldSize.Small -> 8.dp
     }
 }
