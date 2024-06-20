@@ -35,6 +35,7 @@ import ru.livetyping.zarina.presentation.common.datetime.DateTimeUtils
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedLocalDate
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPhoneNumber
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
 import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
 
 object ProfileDetailsScreenComponents {
@@ -201,6 +202,7 @@ object ProfileDetailsScreenComponents {
         onReceiveEmailsChanged: (Boolean) -> Unit,
         receiveSms: Boolean,
         onReceiveSmsChanged: (Boolean) -> Unit,
+        onUrlClicked: (String) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
@@ -255,8 +257,12 @@ object ProfileDetailsScreenComponents {
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                 modifier = Modifier.fillMaxWidth(),
             )
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // TODO: [High] Add policies
+            SubscriptionPolicy(
+                onUrlClicked = onUrlClicked,
+                modifier = itemModifier,
+            )
         }
     }
 
@@ -336,6 +342,37 @@ object ProfileDetailsScreenComponents {
             modifier = modifier
                 .size(16.dp)
                 .rotate(degrees = 90f),
+        )
+    }
+
+    @Composable
+    private fun SubscriptionPolicy(
+        onUrlClicked: (String) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        val baseString =
+            stringResource(R.string.by_subscribing_to_newsletter_you_agree_to_personal_data_policies)
+        val personalDataPolicyText =
+            stringResource(R.string.by_subscribing_to_newsletter_you_agree_to_personal_data_policies_policy_text)
+        val personalDataPolicyUrl =
+            stringResource(R.string.personal_data_policy_url)
+
+        val substringToUrl = remember(personalDataPolicyText, personalDataPolicyUrl) {
+            mapOf(personalDataPolicyText to personalDataPolicyUrl)
+        }
+
+        val text = rememberStringWithLinks(
+            baseString = baseString,
+            substringToUrl = substringToUrl,
+            urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle(),
+            onUrlClicked = onUrlClicked,
+        )
+
+        Text(
+            text = text,
+            style = UiKitTheme.typography.footnote.light,
+            color = UiKitTheme.colors.text.general.regular.default,
+            modifier = modifier,
         )
     }
 

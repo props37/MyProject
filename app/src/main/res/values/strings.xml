@@ -237,6 +237,8 @@
     <string name="last_name">Фамилия</string>
     <string name="change_password">Изменить пароль</string>
     <string name="notifications_about_order_statuses_will_continue_to_arrive">Оповещения о статусах заказов продолжат поступать</string>
+    <string name="by_subscribing_to_newsletter_you_agree_to_personal_data_policies">Подписываясь на рассылку, ты соглашаешься с политикой обработки персональных данных</string>
+    <string name="by_subscribing_to_newsletter_you_agree_to_personal_data_policies_policy_text">политикой обработки персональных данных</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

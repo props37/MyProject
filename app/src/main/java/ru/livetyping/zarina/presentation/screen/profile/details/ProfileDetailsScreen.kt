@@ -77,6 +77,7 @@ fun ProfileDetailsScreen(
         onSignOutClicked = viewModel::onSignOutClicked,
         onDeleteAccountClicked = viewModel::onDeleteAccountClicked,
         onBackClicked = viewModel::onBackClicked,
+        onUrlClicked = viewModel::onUrlClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -101,6 +102,7 @@ private fun ScreenContent(
     onSignOutClicked: () -> Unit,
     onDeleteAccountClicked: () -> Unit,
     onBackClicked: () -> Unit,
+    onUrlClicked: (String) -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProfileDetailsScreenAction) -> Unit,
 ) {
@@ -166,9 +168,10 @@ private fun ScreenContent(
                             onReceiveEmailsChanged = onReceiveEmailsChanged,
                             receiveSms = receiveSms,
                             onReceiveSmsChanged = onReceiveSmsChanged,
+                            onUrlClicked = onUrlClicked,
                         )
 
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(32.dp))
 
                         ZarinaButton(
                             onClick = onSignOutClicked,

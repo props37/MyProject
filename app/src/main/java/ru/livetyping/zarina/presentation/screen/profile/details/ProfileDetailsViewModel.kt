@@ -166,6 +166,12 @@ class ProfileDetailsViewModel @Inject constructor(
         }
     }
 
+    fun onUrlClicked(url: String) {
+        navigationThrottler.throttle {
+            emitSideEffect(SideEffect.OpenUrl(url))
+        }
+    }
+
     private fun updateUserInfo(user: User) {
         lastNameTextFieldState.edit {
             clear()
@@ -189,6 +195,8 @@ class ProfileDetailsViewModel @Inject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: ProfileDetailsScreenAction) : SideEffect
+
+        data class OpenUrl(val url: String) : SideEffect
     }
 
     @Stable
