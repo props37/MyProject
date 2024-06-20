@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.util.DATE_BACKEND_PATTERN
 import ru.livetyping.zarina.domain.common.Email
+import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.user.User
 import java.time.LocalDate
@@ -45,6 +46,7 @@ data class UserDto(
             birthDate = birthDate?.let {
                 LocalDate.parse(it, DateTimeFormatter.ofPattern(DATE_BACKEND_PATTERN))
             },
+            gender = Gender.FEMALE,
             notificationSettings = User.NotificationSettings(false, false),
         )
     }

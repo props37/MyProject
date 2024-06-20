@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.domain.user
 
 import ru.livetyping.zarina.domain.common.Email
+import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import java.time.LocalDate
 
@@ -11,6 +12,7 @@ data class User(
     val firstName: String?,
     val lastName: String?,
     val birthDate: LocalDate?,
+    val gender: Gender,
     val notificationSettings: NotificationSettings,
 ) {
     @JvmInline
