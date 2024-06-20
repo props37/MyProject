@@ -1,19 +1,24 @@
 package ru.livetyping.zarina.presentation.screen.profile.details
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -24,8 +29,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
+import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
+import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.switchh.ZarinaSwitch
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
@@ -34,10 +43,13 @@ import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.datetime.DateTimeUtils
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedLocalDate
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPhoneNumber
+import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsViewModel.State
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
 import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
 
+@Suppress("ConstPropertyName")
 object ProfileDetailsScreenComponents {
 
     @Composable
@@ -66,7 +78,160 @@ object ProfileDetailsScreenComponents {
     }
 
     @Composable
-    fun PersonalDataBlock(
+    fun ProfileDetails(
+        state: State,
+        lastNameTextFieldState: TextFieldState,
+        firstNameTextFieldState: TextFieldState,
+        birthDateMillis: Long?,
+        phoneNumber: String?,
+        onPhoneNumberClicked: () -> Unit,
+        email: String,
+        onEmailClicked: () -> Unit,
+        receiveEmails: Boolean,
+        onReceiveEmailsChanged: (Boolean) -> Unit,
+        receiveSms: Boolean,
+        onReceiveSmsChanged: (Boolean) -> Unit,
+        onChangePasswordClicked: () -> Unit,
+        onRemoteUserErrorRefreshClicked: () -> Unit,
+        onSignOutClicked: () -> Unit,
+        onDeleteAccountClicked: () -> Unit,
+        onUrlClicked: (String) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        @Suppress("NAME_SHADOWING")
+        Crossfade(
+            targetState = state,
+            contentKey = {
+                when (it) {
+                    is State.Success -> ProfileDetailsContentKeySuccess
+                    State.Loading, is State.Error -> it
+                }
+            },
+            modifier = modifier,
+        ) { state ->
+            when (state) {
+                is State.Success -> {
+                    ProfileDetailsImpl(
+                        lastNameTextFieldState = lastNameTextFieldState,
+                        firstNameTextFieldState = firstNameTextFieldState,
+                        birthDateMillis = birthDateMillis,
+                        phoneNumber = phoneNumber,
+                        onPhoneNumberClicked = onPhoneNumberClicked,
+                        email = email,
+                        onEmailClicked = onEmailClicked,
+                        receiveEmails = receiveEmails,
+                        onReceiveEmailsChanged = onReceiveEmailsChanged,
+                        receiveSms = receiveSms,
+                        onReceiveSmsChanged = onReceiveSmsChanged,
+                        onChangePasswordClicked = onChangePasswordClicked,
+                        onSignOutClicked = onSignOutClicked,
+                        onDeleteAccountClicked = onDeleteAccountClicked,
+                        onUrlClicked = onUrlClicked,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+
+                State.Loading -> {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
+                        ZarinaCircularLoader(modifier = Modifier.size(40.dp))
+                    }
+                }
+
+                is State.Error -> {
+                    ZarinaErrorScreen(
+                        state = state.state,
+                        onButtonClicked = onRemoteUserErrorRefreshClicked,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun ProfileDetailsImpl(
+        lastNameTextFieldState: TextFieldState,
+        firstNameTextFieldState: TextFieldState,
+        birthDateMillis: Long?,
+        phoneNumber: String?,
+        onPhoneNumberClicked: () -> Unit,
+        email: String,
+        onEmailClicked: () -> Unit,
+        receiveEmails: Boolean,
+        onReceiveEmailsChanged: (Boolean) -> Unit,
+        receiveSms: Boolean,
+        onReceiveSmsChanged: (Boolean) -> Unit,
+        onChangePasswordClicked: () -> Unit,
+        onSignOutClicked: () -> Unit,
+        onDeleteAccountClicked: () -> Unit,
+        onUrlClicked: (String) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+            Spacer(modifier = Modifier.height(8.dp))
+
+            PersonalDataBlock(
+                lastNameTextFieldState = lastNameTextFieldState,
+                firstNameTextFieldState = firstNameTextFieldState,
+                birthDateMillis = birthDateMillis,
+                onBirthDateClicked = {}, // TODO: [High] Implement
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ContactsBlock(
+                phoneNumber = phoneNumber,
+                onPhoneNumberClicked = onPhoneNumberClicked,
+                email = email,
+                onEmailClicked = onEmailClicked,
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            SettingsBlock(
+                onChangePasswordClicked = onChangePasswordClicked,
+                receiveEmails = receiveEmails,
+                onReceiveEmailsChanged = onReceiveEmailsChanged,
+                receiveSms = receiveSms,
+                onReceiveSmsChanged = onReceiveSmsChanged,
+                onUrlClicked = onUrlClicked,
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            ZarinaButton(
+                onClick = onSignOutClicked,
+                colors = ZarinaButtonDefaults.outlineColors(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            ) {
+                Text(text = stringResource(R.string.sign_out).uppercase())
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            ZarinaButton(
+                onClick = onDeleteAccountClicked,
+                colors = ZarinaButtonDefaults.backlessErrorColors(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            ) {
+                Text(text = stringResource(R.string.delete_account).uppercase())
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+    }
+
+    @Composable
+    private fun PersonalDataBlock(
         lastNameTextFieldState: TextFieldState,
         firstNameTextFieldState: TextFieldState,
         birthDateMillis: Long?,
@@ -144,7 +309,7 @@ object ProfileDetailsScreenComponents {
     }
 
     @Composable
-    fun ContactsBlock(
+    private fun ContactsBlock(
         phoneNumber: String?,
         onPhoneNumberClicked: () -> Unit,
         email: String,
@@ -196,7 +361,7 @@ object ProfileDetailsScreenComponents {
     }
 
     @Composable
-    fun SettingsBlock(
+    private fun SettingsBlock(
         onChangePasswordClicked: () -> Unit,
         receiveEmails: Boolean,
         onReceiveEmailsChanged: (Boolean) -> Unit,
@@ -375,6 +540,8 @@ object ProfileDetailsScreenComponents {
             modifier = modifier,
         )
     }
+
+    private const val ProfileDetailsContentKeySuccess = "ProfileDetailsContentKeySuccess"
 
     private val ItemBodyTextStyle: TextStyle
         @Composable

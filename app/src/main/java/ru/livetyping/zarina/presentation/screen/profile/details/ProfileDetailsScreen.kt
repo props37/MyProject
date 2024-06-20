@@ -1,51 +1,31 @@
 package ru.livetyping.zarina.presentation.screen.profile.details
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
-import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
-import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
-import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
-import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsScreenComponents.ContactsBlock
-import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsScreenComponents.PersonalDataBlock
-import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsScreenComponents.SettingsBlock
+import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsScreenComponents.ProfileDetails
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsViewModel.SideEffect
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsViewModel.State
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
-import ru.livetyping.zarina.util.compose.animation.Crossfade
 
 @Composable
 fun ProfileDetailsScreen(
@@ -124,101 +104,26 @@ private fun ScreenContent(
     ) {
         TopBar(onBackClicked = onBackClicked)
 
-        Crossfade(
-            targetState = state,
-            contentKey = {
-                // TODO: [High] Extract
-                when (it) {
-                    is State.Success -> "Success"
-                    State.Loading, is State.Error -> it
-                }
-            },
+        ProfileDetails(
+            state = state,
+            lastNameTextFieldState = lastNameTextFieldState,
+            firstNameTextFieldState = firstNameTextFieldState,
+            birthDateMillis = birthDateMillis,
+            phoneNumber = phoneNumber,
+            onPhoneNumberClicked = onPhoneNumberClicked,
+            email = email,
+            onEmailClicked = onEmailClicked,
+            receiveEmails = receiveEmails,
+            onReceiveEmailsChanged = onReceiveEmailsChanged,
+            receiveSms = receiveSms,
+            onReceiveSmsChanged = onReceiveSmsChanged,
+            onChangePasswordClicked = onChangePasswordClicked,
+            onRemoteUserErrorRefreshClicked = onRemoteUserErrorRefreshClicked,
+            onSignOutClicked = onSignOutClicked,
+            onDeleteAccountClicked = onDeleteAccountClicked,
+            onUrlClicked = onUrlClicked,
             modifier = Modifier.fillMaxSize(),
-        ) { state ->
-            when (state) {
-                is State.Success -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState()),
-                    ) {
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        PersonalDataBlock(
-                            lastNameTextFieldState = lastNameTextFieldState,
-                            firstNameTextFieldState = firstNameTextFieldState,
-                            birthDateMillis = birthDateMillis,
-                            onBirthDateClicked = {}, // TODO: [High] Implement
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        ContactsBlock(
-                            phoneNumber = phoneNumber,
-                            onPhoneNumberClicked = onPhoneNumberClicked,
-                            email = email,
-                            onEmailClicked = onEmailClicked,
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        SettingsBlock(
-                            onChangePasswordClicked = onChangePasswordClicked,
-                            receiveEmails = receiveEmails,
-                            onReceiveEmailsChanged = onReceiveEmailsChanged,
-                            receiveSms = receiveSms,
-                            onReceiveSmsChanged = onReceiveSmsChanged,
-                            onUrlClicked = onUrlClicked,
-                        )
-
-                        Spacer(modifier = Modifier.height(32.dp))
-
-                        ZarinaButton(
-                            onClick = onSignOutClicked,
-                            colors = ZarinaButtonDefaults.outlineColors(),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                        ) {
-                            Text(text = stringResource(R.string.sign_out).uppercase())
-                        }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        ZarinaButton(
-                            onClick = onDeleteAccountClicked,
-                            colors = ZarinaButtonDefaults.backlessErrorColors(),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                        ) {
-                            Text(text = stringResource(R.string.delete_account).uppercase())
-                        }
-
-                        Spacer(modifier = Modifier.height(20.dp))
-                    }
-                }
-
-                State.Loading -> {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize(),
-                    ) {
-                        ZarinaCircularLoader(modifier = Modifier.size(40.dp))
-                    }
-                }
-
-                is State.Error -> {
-                    ZarinaErrorScreen(
-                        state = state.state,
-                        onButtonClicked = onRemoteUserErrorRefreshClicked,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                    )
-                }
-            }
-        }
+        )
     }
 }
 
