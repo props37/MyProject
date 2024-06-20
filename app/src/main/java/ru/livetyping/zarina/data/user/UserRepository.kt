@@ -79,8 +79,8 @@ class UserRepository @Inject constructor(
         email: Email,
         phone: PhoneNumber,
         password: String,
-        receiveNewsByEmail: Boolean,
-        receiveSmsNotifications: Boolean,
+        receiveEmails: Boolean,
+        receiveSms: Boolean,
         recaptchaToken: Token,
     ) {
         remoteDataSource.signUp(
@@ -89,8 +89,8 @@ class UserRepository @Inject constructor(
             email = email,
             phone = phone,
             password = password,
-            receiveNewsByEmail = receiveNewsByEmail,
-            receiveSmsNotifications = receiveSmsNotifications,
+            receiveNews = receiveEmails,
+            receiveSms = receiveSms,
             recaptchaToken = recaptchaToken,
         )
     }

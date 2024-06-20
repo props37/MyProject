@@ -197,10 +197,10 @@ object ProfileDetailsScreenComponents {
     @Composable
     fun SettingsBlock(
         onChangePasswordClicked: () -> Unit,
-        receiveNewsByEmail: Boolean,
-        onReceiveNewsByEmailChanged: (Boolean) -> Unit,
-        receiveSmsNotifications: Boolean,
-        onReceiveSmsNotificationsChanged: (Boolean) -> Unit,
+        receiveEmails: Boolean,
+        onReceiveEmailsChanged: (Boolean) -> Unit,
+        receiveSms: Boolean,
+        onReceiveSmsChanged: (Boolean) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
@@ -228,11 +228,11 @@ object ProfileDetailsScreenComponents {
             BlockItem(
                 title = null,
                 body = stringResource(R.string.receive_news_by_email),
-                onClick = { onReceiveNewsByEmailChanged(!receiveNewsByEmail) },
+                onClick = { onReceiveEmailsChanged(!receiveEmails) },
                 endContent = {
                     ZarinaSwitch(
-                        isChecked = receiveNewsByEmail,
-                        onCheckedChanged = onReceiveNewsByEmailChanged,
+                        isChecked = receiveEmails,
+                        onCheckedChanged = onReceiveEmailsChanged,
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -245,11 +245,11 @@ object ProfileDetailsScreenComponents {
                 description = stringResource(
                     id = R.string.notifications_about_order_statuses_will_continue_to_arrive,
                 ),
-                onClick = { onReceiveSmsNotificationsChanged(!receiveSmsNotifications) },
+                onClick = { onReceiveSmsChanged(!receiveSms) },
                 endContent = {
                     ZarinaSwitch(
-                        isChecked = receiveSmsNotifications,
-                        onCheckedChanged = onReceiveSmsNotificationsChanged,
+                        isChecked = receiveSms,
+                        onCheckedChanged = onReceiveSmsChanged,
                     )
                 },
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),

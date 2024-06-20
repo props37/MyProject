@@ -79,11 +79,11 @@ class ProfileDetailsViewModel @Inject constructor(
     private val _email = MutableStateFlow("")
     val email: StateFlow<String> = _email.asStateFlow()
 
-    private val _receiveNewsByEmail = MutableStateFlow(false)
-    val receiveNewsByEmail: StateFlow<Boolean> = _receiveNewsByEmail.asStateFlow()
+    private val _receiveEmails = MutableStateFlow(false)
+    val receiveEmails: StateFlow<Boolean> = _receiveEmails.asStateFlow()
 
-    private val _receiveSmsNotifications = MutableStateFlow(false)
-    val receiveSmsNotifications: StateFlow<Boolean> = _receiveSmsNotifications.asStateFlow()
+    private val _receiveSms = MutableStateFlow(false)
+    val receiveSms: StateFlow<Boolean> = _receiveSms.asStateFlow()
 
     val state: StateFlow<State> = combine(
         remoteUserResult.onEach {
@@ -136,13 +136,13 @@ class ProfileDetailsViewModel @Inject constructor(
         }
     }
 
-    fun onReceiveNewsByEmailChanged(value: Boolean) {
-        _receiveNewsByEmail.value = value
+    fun onReceiveEmailsChanged(value: Boolean) {
+        _receiveEmails.value = value
         // TODO: [High] Implement
     }
 
-    fun onReceiveSmsNotificationsChanged(value: Boolean) {
-        _receiveSmsNotifications.value = value
+    fun onReceiveSmsChanged(value: Boolean) {
+        _receiveSms.value = value
         // TODO: [High] Implement
     }
 

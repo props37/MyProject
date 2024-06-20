@@ -78,8 +78,8 @@ class UserApi @Inject constructor(
         email: Email,
         phone: PhoneNumber,
         password: String,
-        receiveNewsByEmail: Boolean,
-        receiveSmsNotifications: Boolean,
+        receiveEmails: Boolean,
+        receiveSms: Boolean,
         recaptchaToken: Token,
     ) {
         val body = SignUpRequestBody(
@@ -88,8 +88,8 @@ class UserApi @Inject constructor(
             email = email.value,
             phone = phone.value,
             password = password,
-            receiveNewsByEmail = receiveNewsByEmail,
-            receiveSmsNotifications = receiveSmsNotifications,
+            receiveEmails = receiveEmails,
+            receiveSms = receiveSms,
             recaptchaToken = recaptchaToken.value,
         )
         signUpApiExceptionConverter {

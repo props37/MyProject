@@ -91,8 +91,8 @@ fun SignUpScreen(
         context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
     )
     val isPasswordInvalid by viewModel.isPasswordInvalid.collectAsStateWithLifecycle()
-    val receiveNewsNyEmail by viewModel.receiveNewsByEmail.collectAsStateWithLifecycle()
-    val receiveSmsNotifications by viewModel.receiveSmsNotifications.collectAsStateWithLifecycle()
+    val receiveEmails by viewModel.receiveEmails.collectAsStateWithLifecycle()
+    val receiveSms by viewModel.receiveSms.collectAsStateWithLifecycle()
     val arePoliciesAccepted by viewModel.arePoliciesAccepted.collectAsStateWithLifecycle()
     val isPoliciesErrorVisible by viewModel.isPoliciesErrorVisible.collectAsStateWithLifecycle()
     val isSignUpButtonLoading by viewModel.isSignUpButtonLoading.collectAsStateWithLifecycle()
@@ -114,10 +114,10 @@ fun SignUpScreen(
         password = password,
         onPasswordChanged = viewModel::onPasswordChanged,
         isPasswordInvalid = isPasswordInvalid,
-        receiveNewsNyEmail = receiveNewsNyEmail,
-        onReceiveNewsNyEmailChanged = viewModel::onReceiveNewsNyEmailChanged,
-        receiveSmsNotifications = receiveSmsNotifications,
-        onReceiveSmsNotificationsChanged = viewModel::onReceiveSmsNotificationsChanged,
+        receiveEmails = receiveEmails,
+        onReceiveEmailsChanged = viewModel::onReceiveEmailsChanged,
+        receiveSms = receiveSms,
+        onReceiveSmsChanged = viewModel::onReceiveSmsChanged,
         arePoliciesAccepted = arePoliciesAccepted,
         onPoliciesAcceptedChanged = viewModel::onPoliciesAcceptedChanged,
         isPoliciesErrorVisible = isPoliciesErrorVisible,
@@ -148,10 +148,10 @@ private fun ScreenContent(
     password: String,
     onPasswordChanged: (String) -> Unit,
     isPasswordInvalid: Boolean,
-    receiveNewsNyEmail: Boolean,
-    onReceiveNewsNyEmailChanged: (Boolean) -> Unit,
-    receiveSmsNotifications: Boolean,
-    onReceiveSmsNotificationsChanged: (Boolean) -> Unit,
+    receiveEmails: Boolean,
+    onReceiveEmailsChanged: (Boolean) -> Unit,
+    receiveSms: Boolean,
+    onReceiveSmsChanged: (Boolean) -> Unit,
     arePoliciesAccepted: Boolean,
     onPoliciesAcceptedChanged: (Boolean) -> Unit,
     isPoliciesErrorVisible: Boolean,
@@ -340,8 +340,8 @@ private fun ScreenContent(
                 },
                 endContent = {
                     ZarinaSwitch(
-                        isChecked = receiveNewsNyEmail,
-                        onCheckedChanged = onReceiveNewsNyEmailChanged,
+                        isChecked = receiveEmails,
+                        onCheckedChanged = onReceiveEmailsChanged,
                     )
                 },
             )
@@ -363,8 +363,8 @@ private fun ScreenContent(
                 },
                 endContent = {
                     ZarinaSwitch(
-                        isChecked = receiveSmsNotifications,
-                        onCheckedChanged = onReceiveSmsNotificationsChanged,
+                        isChecked = receiveSms,
+                        onCheckedChanged = onReceiveSmsChanged,
                     )
                 },
             )
@@ -433,10 +433,10 @@ private fun Preview() {
             password = "",
             onPasswordChanged = {},
             isPasswordInvalid = false,
-            receiveNewsNyEmail = false,
-            onReceiveNewsNyEmailChanged = {},
-            receiveSmsNotifications = false,
-            onReceiveSmsNotificationsChanged = {},
+            receiveEmails = false,
+            onReceiveEmailsChanged = {},
+            receiveSms = false,
+            onReceiveSmsChanged = {},
             arePoliciesAccepted = false,
             onPoliciesAcceptedChanged = {},
             isPoliciesErrorVisible = false,

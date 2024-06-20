@@ -56,8 +56,8 @@ fun ProfileDetailsScreen(
     val birthDateMillis by viewModel.birthDateMillis.collectAsStateWithLifecycle()
     val phoneNumber by viewModel.phoneNumber.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
-    val receiveNewsByEmail by viewModel.receiveNewsByEmail.collectAsStateWithLifecycle()
-    val receiveSmsNotifications by viewModel.receiveSmsNotifications.collectAsStateWithLifecycle()
+    val receiveEmails by viewModel.receiveEmails.collectAsStateWithLifecycle()
+    val receiveSms by viewModel.receiveSms.collectAsStateWithLifecycle()
 
     ScreenContent(
         state = state,
@@ -68,10 +68,10 @@ fun ProfileDetailsScreen(
         onPhoneNumberClicked = viewModel::onPhoneNumberClicked,
         email = email,
         onEmailClicked = viewModel::onEmailClicked,
-        receiveNewsByEmail = receiveNewsByEmail,
-        onReceiveNewsByEmailChanged = viewModel::onReceiveNewsByEmailChanged,
-        receiveSmsNotifications = receiveSmsNotifications,
-        onReceiveSmsNotificationsChanged = viewModel::onReceiveSmsNotificationsChanged,
+        receiveEmails = receiveEmails,
+        onReceiveEmailsChanged = viewModel::onReceiveEmailsChanged,
+        receiveSms = receiveSms,
+        onReceiveSmsChanged = viewModel::onReceiveSmsChanged,
         onChangePasswordClicked = viewModel::onChangePasswordClicked,
         onRemoteUserErrorRefreshClicked = viewModel::onRemoteUserErrorRefreshClicked,
         onSignOutClicked = viewModel::onSignOutClicked,
@@ -92,10 +92,10 @@ private fun ScreenContent(
     onPhoneNumberClicked: () -> Unit,
     email: String,
     onEmailClicked: () -> Unit,
-    receiveNewsByEmail: Boolean,
-    onReceiveNewsByEmailChanged: (Boolean) -> Unit,
-    receiveSmsNotifications: Boolean,
-    onReceiveSmsNotificationsChanged: (Boolean) -> Unit,
+    receiveEmails: Boolean,
+    onReceiveEmailsChanged: (Boolean) -> Unit,
+    receiveSms: Boolean,
+    onReceiveSmsChanged: (Boolean) -> Unit,
     onChangePasswordClicked: () -> Unit,
     onRemoteUserErrorRefreshClicked: () -> Unit,
     onSignOutClicked: () -> Unit,
@@ -162,10 +162,10 @@ private fun ScreenContent(
 
                         SettingsBlock(
                             onChangePasswordClicked = onChangePasswordClicked,
-                            receiveNewsByEmail = receiveNewsByEmail,
-                            onReceiveNewsByEmailChanged = onReceiveNewsByEmailChanged,
-                            receiveSmsNotifications = receiveSmsNotifications,
-                            onReceiveSmsNotificationsChanged = onReceiveSmsNotificationsChanged,
+                            receiveEmails = receiveEmails,
+                            onReceiveEmailsChanged = onReceiveEmailsChanged,
+                            receiveSms = receiveSms,
+                            onReceiveSmsChanged = onReceiveSmsChanged,
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))

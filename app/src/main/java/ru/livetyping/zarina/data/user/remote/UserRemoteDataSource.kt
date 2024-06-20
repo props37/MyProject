@@ -53,8 +53,8 @@ class UserRemoteDataSource @Inject constructor(
         email: Email,
         phone: PhoneNumber,
         password: String,
-        receiveNewsByEmail: Boolean,
-        receiveSmsNotifications: Boolean,
+        receiveNews: Boolean,
+        receiveSms: Boolean,
         recaptchaToken: Token,
     ) {
         api.signUp(
@@ -63,8 +63,8 @@ class UserRemoteDataSource @Inject constructor(
             email = email,
             phone = phone,
             password = password,
-            receiveNewsByEmail = receiveNewsByEmail,
-            receiveSmsNotifications = receiveSmsNotifications,
+            receiveEmails = receiveNews,
+            receiveSms = receiveSms,
             recaptchaToken = recaptchaToken,
         )
     }
