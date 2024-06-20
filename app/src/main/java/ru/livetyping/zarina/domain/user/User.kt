@@ -11,7 +11,13 @@ data class User(
     val firstName: String?,
     val lastName: String?,
     val birthDate: LocalDate?,
+    val notificationSettings: NotificationSettings,
 ) {
     @JvmInline
     value class Id(val value: String)
+
+    data class NotificationSettings(
+        val receiveSms: Boolean,
+        val receiveEmails: Boolean,
+    )
 }

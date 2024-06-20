@@ -45,6 +45,7 @@ data class UserDto(
             birthDate = birthDate?.let {
                 LocalDate.parse(it, DateTimeFormatter.ofPattern(DATE_BACKEND_PATTERN))
             },
+            notificationSettings = User.NotificationSettings(false, false),
         )
     }
 }

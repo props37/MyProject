@@ -28,10 +28,20 @@ data class UserDto(
 
     @SerialName("birthday")
     val birthDate: String? = null,
+
+    @SerialName("email_subscribe")
+    val receiveEmails: Boolean? = null,
+
+    @SerialName("sms_subscribe")
+    val receiveSms: Boolean? = null,
 ) {
     fun toUser(): User {
         checkNotNull(id) { "id is null" }
         checkNotNull(email) { "email is null" }
+        val notificationSettings = User.NotificationSettings(
+            receiveSms = receiveSms ?: false,
+            receiveEmails = receiveEmails ?: false,
+        )
         return User(
             id = User.Id(id),
             email = Email.create(email),
@@ -41,6 +51,7 @@ data class UserDto(
             birthDate = birthDate?.let {
                 LocalDate.parse(it, DateTimeFormatter.ofPattern(DATE_BACKEND_PATTERN))
             },
+            notificationSettings = notificationSettings,
         )
     }
 }

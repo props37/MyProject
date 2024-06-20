@@ -77,6 +77,10 @@ object FakeDataGenerator {
         firstName: String = "Артём",
         lastName: String = "Сидоров",
         birthDate: LocalDate = LocalDate.of(1998, 2, 26),
+        notificationSettings: User.NotificationSettings = User.NotificationSettings(
+            receiveSms = true,
+            receiveEmails = true,
+        ),
     ): User = User(
         id = id,
         email = email,
@@ -84,6 +88,7 @@ object FakeDataGenerator {
         firstName = firstName,
         lastName = lastName,
         birthDate = birthDate,
+        notificationSettings = notificationSettings,
     )
 
     fun getCategories(

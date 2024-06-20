@@ -42,6 +42,7 @@ class UserApi @Inject constructor(
     private val signInApiExceptionConverter: SignInApiExceptionConverter,
     private val requestPasswordResetApiExceptionConverter: RequestPasswordResetApiExceptionConverter,
 ) {
+    // TODO: [Backend] Change return type
     suspend fun getUser(): UserDto {
         return httpClient.get("/api/v1/profile").body()
     }
