@@ -83,6 +83,7 @@ object ProfileDetailsScreenComponents {
         lastNameTextFieldState: TextFieldState,
         firstNameTextFieldState: TextFieldState,
         birthDateMillis: Long?,
+        onBirthDateMillisClicked: () -> Unit,
         phoneNumber: String?,
         onPhoneNumberClicked: () -> Unit,
         email: String,
@@ -115,6 +116,7 @@ object ProfileDetailsScreenComponents {
                         lastNameTextFieldState = lastNameTextFieldState,
                         firstNameTextFieldState = firstNameTextFieldState,
                         birthDateMillis = birthDateMillis,
+                        onBirthDateMillisClicked = onBirthDateMillisClicked,
                         phoneNumber = phoneNumber,
                         onPhoneNumberClicked = onPhoneNumberClicked,
                         email = email,
@@ -158,6 +160,7 @@ object ProfileDetailsScreenComponents {
         lastNameTextFieldState: TextFieldState,
         firstNameTextFieldState: TextFieldState,
         birthDateMillis: Long?,
+        onBirthDateMillisClicked: () -> Unit,
         phoneNumber: String?,
         onPhoneNumberClicked: () -> Unit,
         email: String,
@@ -179,7 +182,7 @@ object ProfileDetailsScreenComponents {
                 lastNameTextFieldState = lastNameTextFieldState,
                 firstNameTextFieldState = firstNameTextFieldState,
                 birthDateMillis = birthDateMillis,
-                onBirthDateClicked = {}, // TODO: [High] Implement
+                onBirthDateClicked = onBirthDateMillisClicked,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -540,6 +543,8 @@ object ProfileDetailsScreenComponents {
             modifier = modifier,
         )
     }
+
+    const val DatePickerMinYear = 1900
 
     private const val ProfileDetailsContentKeySuccess = "ProfileDetailsContentKeySuccess"
 

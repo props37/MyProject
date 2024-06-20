@@ -44,8 +44,8 @@ import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
-import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePicker
+import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePickerDefaults
 import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePickerDialog
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
@@ -182,15 +182,12 @@ private fun ScreenContent(
         ZarinaDatePickerDialog(
             onDismissRequest = { isDatePickerVisible = false },
             confirmButton = {
-                ZarinaButton(
+                ZarinaDatePickerDefaults.ConfirmButton(
                     onClick = {
                         onBirthDateMillisChanged(datePickerState.selectedDateMillis)
                         isDatePickerVisible = false
                     },
-                    colors = ZarinaButtonDefaults.backlessColors(),
-                ) {
-                    Text(text = stringResource(R.string.select).uppercase())
-                }
+                )
             },
         ) {
             ZarinaDatePicker(state = datePickerState)

@@ -120,7 +120,7 @@ class ProfileDetailsViewModel @Inject constructor(
         remoteUserRequester.request(RemoteUserRequest.GENERAL)
     }
 
-    fun onBirthDateMillisChanged(millis: Long) {
+    fun onBirthDateMillisChanged(millis: Long?) {
         birthDateMillisValueHolder.set(millis)
     }
 

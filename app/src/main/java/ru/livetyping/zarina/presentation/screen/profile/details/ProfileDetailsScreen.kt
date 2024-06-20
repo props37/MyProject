@@ -10,8 +10,13 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
@@ -20,12 +25,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePicker
+import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePickerDefaults
+import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePickerDialog
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsScreenComponents.DatePickerMinYear
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsScreenComponents.ProfileDetails
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsViewModel.SideEffect
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsViewModel.State
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import java.time.LocalDate
 
 @Composable
 fun ProfileDetailsScreen(
@@ -44,6 +54,7 @@ fun ProfileDetailsScreen(
         lastNameTextFieldState = viewModel.lastNameTextFieldState,
         firstNameTextFieldState = viewModel.firstNameTextFieldState,
         birthDateMillis = birthDateMillis,
+        onBirthDateMillisChanged = viewModel::onBirthDateMillisChanged,
         phoneNumber = phoneNumber,
         onPhoneNumberClicked = viewModel::onPhoneNumberClicked,
         email = email,
@@ -63,12 +74,14 @@ fun ProfileDetailsScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
     state: State,
     lastNameTextFieldState: TextFieldState,
     firstNameTextFieldState: TextFieldState,
     birthDateMillis: Long?,
+    onBirthDateMillisChanged: (Long?) -> Unit,
     phoneNumber: String?,
     onPhoneNumberClicked: () -> Unit,
     email: String,
@@ -91,6 +104,28 @@ private fun ScreenContent(
         navigate = navigate,
     )
 
+    var isDatePickerVisible by remember { mutableStateOf(false) }
+    if (isDatePickerVisible) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = birthDateMillis,
+            yearRange = remember { DatePickerMinYear..LocalDate.now().year },
+        )
+
+        ZarinaDatePickerDialog(
+            onDismissRequest = { isDatePickerVisible = false },
+            confirmButton = {
+                ZarinaDatePickerDefaults.ConfirmButton(
+                    onClick = {
+                        onBirthDateMillisChanged(datePickerState.selectedDateMillis)
+                        isDatePickerVisible = false
+                    },
+                )
+            },
+        ) {
+            ZarinaDatePicker(state = datePickerState)
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -109,6 +144,7 @@ private fun ScreenContent(
             lastNameTextFieldState = lastNameTextFieldState,
             firstNameTextFieldState = firstNameTextFieldState,
             birthDateMillis = birthDateMillis,
+            onBirthDateMillisClicked = { isDatePickerVisible = true },
             phoneNumber = phoneNumber,
             onPhoneNumberClicked = onPhoneNumberClicked,
             email = email,
