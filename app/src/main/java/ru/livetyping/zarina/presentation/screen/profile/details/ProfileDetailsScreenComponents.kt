@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.profile.details
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
@@ -25,12 +27,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
@@ -45,6 +49,8 @@ import ru.livetyping.zarina.presentation.common.util.rememberFormattedLocalDate
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPhoneNumber
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsViewModel.State
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
+import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
 import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
@@ -54,6 +60,8 @@ object ProfileDetailsScreenComponents {
 
     @Composable
     fun TopBar(
+        isSaveUserInfoButtonVisible: Boolean,
+        onSaveUserInfoClicked: () -> Unit,
         onBackClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -72,6 +80,24 @@ object ProfileDetailsScreenComponents {
                     overflow = TextOverflow.Ellipsis,
                 )
             },
+            endContent = {
+                AnimatedVisibility(
+                    visible = isSaveUserInfoButtonVisible,
+                    enter = AnimatedContentDefaultEnterTransition,
+                    exit = AnimatedContentDefaultExitTransition,
+                ) {
+                    ZarinaButton(
+                        onClick = onSaveUserInfoClicked,
+                        size = ZarinaButtonSize.Medium,
+                        colors = ZarinaButtonDefaults.backlessColors(),
+                        modifier = Modifier
+                            .heightIn(min = 40.dp)
+                            .padding(end = 8.dp),
+                    ) {
+                        Text(text = stringResource(R.string.save).uppercase())
+                    }
+                }
+            },
             contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,
         )
@@ -80,8 +106,8 @@ object ProfileDetailsScreenComponents {
     @Composable
     fun ProfileDetails(
         state: State,
-        lastNameTextFieldState: TextFieldState,
         firstNameTextFieldState: TextFieldState,
+        lastNameTextFieldState: TextFieldState,
         birthDateMillis: Long?,
         onBirthDateMillisClicked: () -> Unit,
         phoneNumber: String?,
@@ -113,8 +139,8 @@ object ProfileDetailsScreenComponents {
             when (state) {
                 is State.Success -> {
                     ProfileDetailsImpl(
-                        lastNameTextFieldState = lastNameTextFieldState,
                         firstNameTextFieldState = firstNameTextFieldState,
+                        lastNameTextFieldState = lastNameTextFieldState,
                         birthDateMillis = birthDateMillis,
                         onBirthDateMillisClicked = onBirthDateMillisClicked,
                         phoneNumber = phoneNumber,
@@ -157,8 +183,8 @@ object ProfileDetailsScreenComponents {
 
     @Composable
     private fun ProfileDetailsImpl(
-        lastNameTextFieldState: TextFieldState,
         firstNameTextFieldState: TextFieldState,
+        lastNameTextFieldState: TextFieldState,
         birthDateMillis: Long?,
         onBirthDateMillisClicked: () -> Unit,
         phoneNumber: String?,
@@ -179,8 +205,8 @@ object ProfileDetailsScreenComponents {
             Spacer(modifier = Modifier.height(8.dp))
 
             PersonalDataBlock(
-                lastNameTextFieldState = lastNameTextFieldState,
                 firstNameTextFieldState = firstNameTextFieldState,
+                lastNameTextFieldState = lastNameTextFieldState,
                 birthDateMillis = birthDateMillis,
                 onBirthDateClicked = onBirthDateMillisClicked,
             )
@@ -235,8 +261,8 @@ object ProfileDetailsScreenComponents {
 
     @Composable
     private fun PersonalDataBlock(
-        lastNameTextFieldState: TextFieldState,
         firstNameTextFieldState: TextFieldState,
+        lastNameTextFieldState: TextFieldState,
         birthDateMillis: Long?,
         onBirthDateClicked: () -> Unit,
         modifier: Modifier = Modifier,
@@ -262,6 +288,9 @@ object ProfileDetailsScreenComponents {
                 placeholder = {
                     Text(text = stringResource(R.string.last_name_text_field_placeholder))
                 },
+                keyboardOptions = remember {
+                    KeyboardOptions(capitalization = KeyboardCapitalization.Words)
+                },
                 modifier = itemModifier,
             )
 
@@ -276,6 +305,9 @@ object ProfileDetailsScreenComponents {
                 },
                 placeholder = {
                     Text(text = stringResource(R.string.first_name_text_field_placeholder))
+                },
+                keyboardOptions = remember {
+                    KeyboardOptions(capitalization = KeyboardCapitalization.Words)
                 },
                 modifier = itemModifier,
             )
@@ -544,7 +576,7 @@ object ProfileDetailsScreenComponents {
         )
     }
 
-    const val DatePickerMinYear = 1900
+    const val DatePickerMinYear = 1901
 
     private const val ProfileDetailsContentKeySuccess = "ProfileDetailsContentKeySuccess"
 

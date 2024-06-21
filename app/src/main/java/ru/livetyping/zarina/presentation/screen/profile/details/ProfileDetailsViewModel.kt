@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,19 +18,30 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.common.Email
+import ru.livetyping.zarina.domain.common.PhoneNumber
+import ru.livetyping.zarina.domain.user.USER_BIRTH_DATE_DEFAULT
 import ru.livetyping.zarina.domain.user.User
+import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsViewModel.SideEffect
+import ru.livetyping.zarina.usecase.user.UpdateUserInfoUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.clear
+import ru.livetyping.zarina.util.compose.text.textAsFlow
+import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
+import timber.log.Timber
 import java.time.ZoneId
 import javax.inject.Inject
 
@@ -45,6 +57,10 @@ class ProfileDetailsViewModel @Inject constructor(
         interactor.getRemoteUserFlow()
     }
 
+    private var saveUserInfoJob: Job? = null
+
+    private var currentUser = MutableStateFlow<User?>(null)
+
     private val remoteUserResult: StateFlow<Result<User>?> = remoteUserRequester.flow
         .stateIn(
             scope = viewModelScope,
@@ -53,18 +69,16 @@ class ProfileDetailsViewModel @Inject constructor(
         )
 
     @OptIn(SavedStateHandleSaveableApi::class)
-    val lastNameTextFieldState: TextFieldState by savedStateHandle.saveable(
-        saver = TextFieldState.Saver,
-    ) {
-        TextFieldState()
-    }
-
-    @OptIn(SavedStateHandleSaveableApi::class)
     val firstNameTextFieldState: TextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
-    ) {
-        TextFieldState()
-    }
+        init = { TextFieldState() },
+    )
+
+    @OptIn(SavedStateHandleSaveableApi::class)
+    val lastNameTextFieldState: TextFieldState by savedStateHandle.saveable(
+        saver = TextFieldState.Saver,
+        init = { TextFieldState() },
+    )
 
     private val birthDateMillisValueHolder = savedStateHandle.createValueHolder<Long?>(
         key = KEY_BIRTH_DATE_MILLIS,
@@ -88,7 +102,10 @@ class ProfileDetailsViewModel @Inject constructor(
     val state: StateFlow<State> = combine(
         remoteUserResult.onEach {
             val user = it?.getOrNull()
-            if (user != null) updateUserInfo(user)
+            if (user != null) {
+                currentUser.value = user
+                updateUserInfo(user)
+            }
         },
         remoteUserRequester.loadingState,
     ) { result, loadingState ->
@@ -109,10 +126,67 @@ class ProfileDetailsViewModel @Inject constructor(
         initialValue = State.Loading,
     )
 
+    val isSaveUserInfoButtonVisible: StateFlow<Boolean> = combine(
+        currentUser,
+        firstNameTextFieldState.textAsFlow(),
+        lastNameTextFieldState.textAsFlow(),
+        birthDateMillis,
+    ) { currentUser, firstName, lastName, birthDateMillis ->
+        if (currentUser != null) {
+            val firstNameChanged = firstName.toString().trim() != currentUser.firstName
+            val lastNameChanged = lastName.toString().trim() != currentUser.lastName
+            val birthDate = birthDateMillis?.let { LocalDateUtil.fromMillis(it) }
+            val birthDateChanged = birthDate != currentUser.birthDate
+            firstNameChanged || lastNameChanged || birthDateChanged
+        } else {
+            false
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = false,
+    )
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = ProfileDetailsScreenAction.ScreenClosed
             emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
+    fun onSaveUserInfoClicked() {
+        if (saveUserInfoJob?.isActive == true) return
+
+        val currentUser = currentUser.value
+        if (currentUser == null) {
+            Timber.e("Current user is null")
+            return
+        }
+
+        saveUserInfoJob = viewModelScope.launch {
+            val birthDate = birthDateMillis.value
+                ?.let { LocalDateUtil.fromMillis(it) } ?: USER_BIRTH_DATE_DEFAULT
+            val params = UpdateUserInfoUseCase.Params(
+                firstName = firstNameTextFieldState.text.toString().trim(),
+                lastName = lastNameTextFieldState.text.toString().trim(),
+                birthDate = birthDate,
+                email = Email.create(email.value),
+                phone = PhoneNumber.create(phoneNumber.value ?: ""),
+                gender = currentUser.gender,
+            )
+            interactor.updateUserInfo(params)
+                .onSuccess {
+                    val text = Text.Resource(R.string.personal_data_changed)
+                    val message = ZarinaToastMessage(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+
+                    remoteUserRequester.request(RemoteUserRequest.GENERAL)
+                }
+                .onFailure {
+                    val text = Text.Resource(R.string.something_went_wrong)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                }
         }
     }
 
@@ -197,6 +271,8 @@ class ProfileDetailsViewModel @Inject constructor(
         data class Navigate(val action: ProfileDetailsScreenAction) : SideEffect
 
         data class OpenUrl(val url: String) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 
     @Stable

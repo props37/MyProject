@@ -34,22 +34,28 @@ class UserRepository @Inject constructor(
         localDataSource.setUser(user)
     }
 
-    fun getLoyaltyCardFlow(): Flow<LoyaltyCard?> {
-        return localDataSource.getLoyaltyCardFlow()
-    }
-
-    fun getLoyaltyCardBonusHistoryPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
-        return remoteDataSource.getLoyaltyCardBonusHistoryPageFlow(page)
-    }
-
-    fun getLoyaltyCardExpectedBonusesPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
-        return remoteDataSource.getLoyaltyCardExpectedBonusesFlow(page)
-    }
-
-    suspend fun fetchLoyaltyCard() {
-        val card = remoteDataSource.getLoyaltyCardFlow().firstOrNull()
-        checkNotNull(card) { "Failed to fetch loyalty card" }
-        localDataSource.setLoyaltyCard(card)
+    suspend fun updateUserInfo(
+        firstName: String,
+        middleName: String?,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender,
+        oldPassword: String?,
+        newPassword: String?,
+    ) {
+        remoteDataSource.updateUserInfo(
+            firstName = firstName,
+            middleName = middleName,
+            lastName = lastName,
+            birthDate = birthDate,
+            email = email,
+            phone = phone,
+            gender = gender,
+            oldPassword = oldPassword,
+            newPassword = newPassword,
+        )
     }
 
     fun getUserCityFlow(): Flow<City?> {
@@ -71,6 +77,24 @@ class UserRepository @Inject constructor(
 
     suspend fun setUserContentGender(gender: Gender) {
         localDataSource.setUserContentGender(gender)
+    }
+
+    fun getLoyaltyCardFlow(): Flow<LoyaltyCard?> {
+        return localDataSource.getLoyaltyCardFlow()
+    }
+
+    fun getLoyaltyCardBonusHistoryPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
+        return remoteDataSource.getLoyaltyCardBonusHistoryPageFlow(page)
+    }
+
+    fun getLoyaltyCardExpectedBonusesPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
+        return remoteDataSource.getLoyaltyCardExpectedBonusesFlow(page)
+    }
+
+    suspend fun fetchLoyaltyCard() {
+        val card = remoteDataSource.getLoyaltyCardFlow().firstOrNull()
+        checkNotNull(card) { "Failed to fetch loyalty card" }
+        localDataSource.setLoyaltyCard(card)
     }
 
     suspend fun signUp(

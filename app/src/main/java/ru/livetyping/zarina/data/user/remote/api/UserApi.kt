@@ -7,6 +7,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.put
+import ru.livetyping.zarina.data.common.remote.api.zarina.dto.GenderDto
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.util.DATE_BACKEND_PATTERN
 import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
@@ -19,6 +20,7 @@ import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendSmsOtpRequestB
 import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignOutDto
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpRequestBody
+import ru.livetyping.zarina.data.user.remote.api.dto.UpdateUserInfoRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.UserDto
 import ru.livetyping.zarina.data.user.remote.api.exception.ConfirmSignUpApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.RequestPasswordResetApiExceptionConverter
@@ -26,6 +28,7 @@ import ru.livetyping.zarina.data.user.remote.api.exception.SignInApiExceptionCon
 import ru.livetyping.zarina.data.user.remote.api.exception.SignUpApiExceptionConverter
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.common.Email
+import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
@@ -47,6 +50,40 @@ class UserApi @Inject constructor(
         return httpClient.get("/api/v1/profile").body()
     }
 
+    suspend fun updateUserInfo(
+        firstName: String,
+        middleName: String?,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender,
+        oldPassword: String?,
+        newPassword: String?,
+    ) {
+        val body = UpdateUserInfoRequestBody(
+            firstName = firstName,
+            middleName = middleName,
+            lastName = lastName,
+            birthDate = birthDate.format(DateTimeFormatter.ofPattern(DATE_BACKEND_PATTERN)),
+            email = email.value,
+            phone = phone.value,
+            gender = GenderDto.from(gender),
+            oldPassword = oldPassword,
+            newPassword = newPassword,
+        )
+        httpClient.post("/api/profile") {
+            setJsonBody(body)
+        }
+    }
+
+    suspend fun setUserCity(city: City) {
+        val body = SetUserCityRequestBody(city.kladrId.value)
+        httpClient.put("/api/location/city") {
+            setJsonBody(body)
+        }
+    }
+
     suspend fun getLoyaltyCard(): GetLoyaltyCardDto {
         return httpClient.get("/api/card").body()
     }
@@ -63,13 +100,6 @@ class UserApi @Inject constructor(
             parameter("page", page)
             parameter("page_size", LOYALTY_PROGRAM_BONUS_HISTORY_PAGE_SIZE)
         }.body()
-    }
-
-    suspend fun setUserCity(city: City) {
-        val body = SetUserCityRequestBody(city.kladrId.value)
-        httpClient.put("/api/location/city") {
-            setJsonBody(body)
-        }
     }
 
     suspend fun signUp(

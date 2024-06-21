@@ -37,6 +37,9 @@ import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsVi
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import java.time.LocalDate
 
+// TODO: [High] Field validation
+// TODO: [High] Close screen if the user is not logged in
+
 @Composable
 fun ProfileDetailsScreen(
     navigate: (ProfileDetailsScreenAction) -> Unit,
@@ -48,11 +51,14 @@ fun ProfileDetailsScreen(
     val email by viewModel.email.collectAsStateWithLifecycle()
     val receiveEmails by viewModel.receiveEmails.collectAsStateWithLifecycle()
     val receiveSms by viewModel.receiveSms.collectAsStateWithLifecycle()
+    val isSaveUserInfoButtonVisible by viewModel.isSaveUserInfoButtonVisible.collectAsStateWithLifecycle()
 
     ScreenContent(
+        isSaveUserInfoButtonVisible = isSaveUserInfoButtonVisible,
+        onSaveUserInfoClicked = viewModel::onSaveUserInfoClicked,
         state = state,
-        lastNameTextFieldState = viewModel.lastNameTextFieldState,
         firstNameTextFieldState = viewModel.firstNameTextFieldState,
+        lastNameTextFieldState = viewModel.lastNameTextFieldState,
         birthDateMillis = birthDateMillis,
         onBirthDateMillisChanged = viewModel::onBirthDateMillisChanged,
         phoneNumber = phoneNumber,
@@ -77,9 +83,11 @@ fun ProfileDetailsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
+    isSaveUserInfoButtonVisible: Boolean,
+    onSaveUserInfoClicked: () -> Unit,
     state: State,
-    lastNameTextFieldState: TextFieldState,
     firstNameTextFieldState: TextFieldState,
+    lastNameTextFieldState: TextFieldState,
     birthDateMillis: Long?,
     onBirthDateMillisChanged: (Long?) -> Unit,
     phoneNumber: String?,
@@ -137,12 +145,16 @@ private fun ScreenContent(
             )
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
-        TopBar(onBackClicked = onBackClicked)
+        TopBar(
+            isSaveUserInfoButtonVisible = isSaveUserInfoButtonVisible,
+            onSaveUserInfoClicked = onSaveUserInfoClicked,
+            onBackClicked = onBackClicked,
+        )
 
         ProfileDetails(
             state = state,
-            lastNameTextFieldState = lastNameTextFieldState,
             firstNameTextFieldState = firstNameTextFieldState,
+            lastNameTextFieldState = lastNameTextFieldState,
             birthDateMillis = birthDateMillis,
             onBirthDateMillisClicked = { isDatePickerVisible = true },
             phoneNumber = phoneNumber,

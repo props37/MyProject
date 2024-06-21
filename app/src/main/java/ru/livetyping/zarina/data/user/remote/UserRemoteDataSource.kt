@@ -6,6 +6,7 @@ import ru.livetyping.zarina.data.user.remote.api.UserApi
 import ru.livetyping.zarina.domain.authorization.AuthorizationResult
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
 import ru.livetyping.zarina.domain.common.Email
+import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Token
@@ -22,6 +23,34 @@ class UserRemoteDataSource @Inject constructor(
     fun getUserFlow(): Flow<User> = flow {
         val user = api.getUser().toUser()
         emit(user)
+    }
+
+    suspend fun updateUserInfo(
+        firstName: String,
+        middleName: String?,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender,
+        oldPassword: String?,
+        newPassword: String?,
+    ) {
+        api.updateUserInfo(
+            firstName = firstName,
+            middleName = middleName,
+            lastName = lastName,
+            birthDate = birthDate,
+            email = email,
+            phone = phone,
+            gender = gender,
+            oldPassword = oldPassword,
+            newPassword = newPassword,
+        )
+    }
+
+    suspend fun setUserCity(city: City) {
+        api.setUserCity(city)
     }
 
     fun getLoyaltyCardFlow(): Flow<LoyaltyCard> = flow {
@@ -42,10 +71,6 @@ class UserRemoteDataSource @Inject constructor(
             val expectedBonusesPage = dto.toLoyaltyProgramBonusActionPage()
             emit(expectedBonusesPage)
         }
-
-    suspend fun setUserCity(city: City) {
-        api.setUserCity(city)
-    }
 
     suspend fun signUp(
         firstName: String,
