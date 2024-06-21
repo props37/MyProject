@@ -137,7 +137,8 @@ class ProfileDetailsViewModel @Inject constructor(
             val lastNameChanged = lastName.toString().trim() != currentUser.lastName
             val birthDate = birthDateMillis?.let { LocalDateUtil.fromMillis(it) }
             val birthDateChanged = birthDate != currentUser.birthDate
-            firstNameChanged || lastNameChanged || birthDateChanged
+            (firstName.isNotBlank() && lastName.isNotBlank() && birthDate != null)
+                    && (firstNameChanged || lastNameChanged || birthDateChanged)
         } else {
             false
         }
