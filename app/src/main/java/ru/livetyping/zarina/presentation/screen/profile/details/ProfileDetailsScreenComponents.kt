@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -23,6 +25,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -53,6 +57,7 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTr
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
+import ru.livetyping.zarina.util.compose.tryRequestFocus
 import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
 
 @Suppress("ConstPropertyName")
@@ -279,6 +284,7 @@ object ProfileDetailsScreenComponents {
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            val lastNameFocusRequester = remember { FocusRequester() }
             ZarinaTextField(
                 state = lastNameTextFieldState,
                 size = ZarinaTextFieldSize.Small,
@@ -288,14 +294,25 @@ object ProfileDetailsScreenComponents {
                 placeholder = {
                     Text(text = stringResource(R.string.last_name_text_field_placeholder))
                 },
+                innerTrailingContent = {
+                    ZarinaTextFieldDefaults.ClearButton(
+                        isVisible = lastNameTextFieldState.text.isNotEmpty(),
+                        onClick = {
+                            lastNameTextFieldState.clearText()
+                            lastNameFocusRequester.tryRequestFocus()
+                        },
+                    )
+                },
                 keyboardOptions = remember {
                     KeyboardOptions(capitalization = KeyboardCapitalization.Words)
                 },
-                modifier = itemModifier,
+                lineLimits = TextFieldLineLimits.SingleLine,
+                modifier = itemModifier.focusRequester(lastNameFocusRequester),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            val firstNameFocusRequester = remember { FocusRequester() }
             ZarinaTextField(
                 state = firstNameTextFieldState,
                 size = ZarinaTextFieldSize.Small,
@@ -306,10 +323,20 @@ object ProfileDetailsScreenComponents {
                 placeholder = {
                     Text(text = stringResource(R.string.first_name_text_field_placeholder))
                 },
+                innerTrailingContent = {
+                    ZarinaTextFieldDefaults.ClearButton(
+                        isVisible = firstNameTextFieldState.text.isNotEmpty(),
+                        onClick = {
+                            firstNameTextFieldState.clearText()
+                            firstNameFocusRequester.tryRequestFocus()
+                        },
+                    )
+                },
                 keyboardOptions = remember {
                     KeyboardOptions(capitalization = KeyboardCapitalization.Words)
                 },
-                modifier = itemModifier,
+                lineLimits = TextFieldLineLimits.SingleLine,
+                modifier = itemModifier.focusRequester(firstNameFocusRequester),
             )
 
             Spacer(modifier = Modifier.height(16.dp))

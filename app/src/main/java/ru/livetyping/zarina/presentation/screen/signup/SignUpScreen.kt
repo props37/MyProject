@@ -31,6 +31,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
@@ -225,7 +226,12 @@ private fun ScreenContent(
                         },
                     )
                 },
-                keyboardOptions = remember { KeyboardOptions(imeAction = ImeAction.Next) },
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Words,
+                        imeAction = ImeAction.Next,
+                    )
+                },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
