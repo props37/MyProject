@@ -8,6 +8,7 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.GenderDto
+import ru.livetyping.zarina.data.common.remote.api.zarina.dto.UserDto
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.util.DATE_BACKEND_PATTERN
 import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
@@ -15,13 +16,13 @@ import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignInByPhoneRequest
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.GetLoyaltyCardDto
 import ru.livetyping.zarina.data.user.remote.api.dto.LoyaltyProgramBonusHistoryDto
+import ru.livetyping.zarina.data.user.remote.api.dto.NotificationSettingsDto
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestPasswordResetRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendSmsOtpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignOutDto
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.UpdateUserInfoRequestBody
-import ru.livetyping.zarina.data.user.remote.api.dto.UserDto
 import ru.livetyping.zarina.data.user.remote.api.exception.ConfirmSignUpApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.RequestPasswordResetApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.SignInApiExceptionConverter
@@ -45,7 +46,6 @@ class UserApi @Inject constructor(
     private val signInApiExceptionConverter: SignInApiExceptionConverter,
     private val requestPasswordResetApiExceptionConverter: RequestPasswordResetApiExceptionConverter,
 ) {
-    // TODO: [Backend] Change return type
     suspend fun getUser(): UserDto {
         return httpClient.get("/api/v1/profile").body()
     }
@@ -73,6 +73,25 @@ class UserApi @Inject constructor(
             newPassword = newPassword,
         )
         httpClient.post("/api/profile") {
+            setJsonBody(body)
+        }
+    }
+
+    suspend fun updateUserNotificationSettings(
+        receiveSms: Boolean,
+        receiveEmails: Boolean,
+    ) {
+        val body = listOf(
+            NotificationSettingsDto(
+                name = NotificationSettingsDto.NAME_RECEIVE_SMS,
+                receiveSms,
+            ),
+            NotificationSettingsDto(
+                name = NotificationSettingsDto.NAME_RECEIVE_EMAILS,
+                receiveEmails,
+            ),
+        )
+        httpClient.post("/api/notifications") {
             setJsonBody(body)
         }
     }

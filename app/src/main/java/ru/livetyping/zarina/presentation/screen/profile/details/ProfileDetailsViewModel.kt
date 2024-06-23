@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -35,6 +36,7 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.UpdateUserInfoUseCase
+import ru.livetyping.zarina.usecase.user.UpdateUserNotificationSettingsUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.clear
 import ru.livetyping.zarina.util.compose.text.textAsFlow
@@ -44,6 +46,7 @@ import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import timber.log.Timber
 import java.time.ZoneId
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class ProfileDetailsViewModel @Inject constructor(
@@ -53,7 +56,7 @@ class ProfileDetailsViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val remoteUserRequester = FlowRequester(RemoteUserRequest.GENERAL) {
+    private val remoteUserRequester = FlowRequester(RemoteUserRequest.LOADING) {
         interactor.getRemoteUserFlow()
     }
 
@@ -62,6 +65,13 @@ class ProfileDetailsViewModel @Inject constructor(
     private var currentUser = MutableStateFlow<User?>(null)
 
     private val remoteUserResult: StateFlow<Result<User>?> = remoteUserRequester.flow
+        .onEach {
+            val user = it.getOrNull()
+            if (user != null) {
+                currentUser.value = user
+                updateUserInfo(user)
+            }
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
@@ -100,16 +110,12 @@ class ProfileDetailsViewModel @Inject constructor(
     val receiveSms: StateFlow<Boolean> = _receiveSms.asStateFlow()
 
     val state: StateFlow<State> = combine(
-        remoteUserResult.onEach {
-            val user = it?.getOrNull()
-            if (user != null) {
-                currentUser.value = user
-                updateUserInfo(user)
-            }
-        },
+        remoteUserResult,
         remoteUserRequester.loadingState,
     ) { result, loadingState ->
-        if (result == null || loadingState.isLoading) {
+        val isLoading = loadingState is FlowRequester.LoadingState.Loading
+                && loadingState.request == RemoteUserRequest.LOADING
+        if (result == null || isLoading) {
             State.Loading
         } else {
             result.fold(
@@ -181,10 +187,10 @@ class ProfileDetailsViewModel @Inject constructor(
                     val message = ZarinaToastMessage(text)
                     emitSideEffect(SideEffect.ShowZarinaToast(message))
 
-                    remoteUserRequester.request(RemoteUserRequest.GENERAL)
+                    remoteUserRequester.request(RemoteUserRequest.REFRESHING)
                 }
                 .onFailure {
-                    val text = Text.Resource(R.string.something_went_wrong)
+                    val text = Text.Resource(R.string.user_info_updating_error)
                     val message = ZarinaToastMessage.error(text)
                     emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
@@ -192,7 +198,7 @@ class ProfileDetailsViewModel @Inject constructor(
     }
 
     fun onRemoteUserErrorRefreshClicked() {
-        remoteUserRequester.request(RemoteUserRequest.GENERAL)
+        remoteUserRequester.request(RemoteUserRequest.LOADING)
     }
 
     fun onBirthDateMillisChanged(millis: Long?) {
@@ -212,13 +218,25 @@ class ProfileDetailsViewModel @Inject constructor(
     }
 
     fun onReceiveEmailsChanged(value: Boolean) {
-        _receiveEmails.value = value
-        // TODO: [High] Implement
+        updateUserNotificationSettings(
+            receiveSms = receiveSms.value,
+            receiveEmails = value,
+            onFailure = {
+                delay(50.milliseconds)
+                _receiveEmails.value = !value
+            },
+        )
     }
 
     fun onReceiveSmsChanged(value: Boolean) {
-        _receiveSms.value = value
-        // TODO: [High] Implement
+        updateUserNotificationSettings(
+            receiveSms = value,
+            receiveEmails = receiveEmails.value,
+            onFailure = {
+                delay(50.milliseconds)
+                _receiveSms.value = !value
+            },
+        )
     }
 
     fun onChangePasswordClicked() {
@@ -247,6 +265,30 @@ class ProfileDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun updateUserNotificationSettings(
+        receiveSms: Boolean,
+        receiveEmails: Boolean,
+        onFailure: suspend () -> Unit,
+    ) {
+        if (receiveSms == this.receiveSms.value && receiveEmails == this.receiveEmails.value) return
+
+        _receiveSms.value = receiveSms
+        _receiveEmails.value = receiveEmails
+        viewModelScope.launch {
+            val params = UpdateUserNotificationSettingsUseCase.Params(
+                receiveSms = receiveSms,
+                receiveEmails = receiveEmails,
+            )
+            interactor.updateUserNotificationSettings(params)
+                .onFailure {
+                    val text = Text.Resource(R.string.notification_settings_updating_error)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                    onFailure()
+                }
+        }
+    }
+
     private fun updateUserInfo(user: User) {
         lastNameTextFieldState.edit {
             clear()
@@ -265,7 +307,8 @@ class ProfileDetailsViewModel @Inject constructor(
         birthDateMillisValueHolder.set(birthDateMillis)
         _phoneNumber.value = user.phone?.value
         _email.value = user.email.value
-        // TODO: [High] Set up notifications
+        _receiveSms.value = user.notificationSettings.receiveSms
+        _receiveEmails.value = user.notificationSettings.receiveEmails
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -287,7 +330,7 @@ class ProfileDetailsViewModel @Inject constructor(
         data class Error(val state: ErrorState) : State()
     }
 
-    private enum class RemoteUserRequest : FlowRequester.Request { GENERAL }
+    private enum class RemoteUserRequest : FlowRequester.Request { LOADING, REFRESHING }
 
     companion object {
         private const val KEY_BIRTH_DATE_MILLIS = "birth_date_millis"

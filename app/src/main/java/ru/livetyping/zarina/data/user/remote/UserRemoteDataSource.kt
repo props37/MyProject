@@ -49,6 +49,13 @@ class UserRemoteDataSource @Inject constructor(
         )
     }
 
+    suspend fun updateUserNotificationSettings(
+        receiveSms: Boolean,
+        receiveEmails: Boolean,
+    ) {
+        api.updateUserNotificationSettings(receiveSms, receiveEmails)
+    }
+
     suspend fun setUserCity(city: City) {
         api.setUserCity(city)
     }

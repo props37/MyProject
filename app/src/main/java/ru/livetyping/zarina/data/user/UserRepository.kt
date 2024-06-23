@@ -58,6 +58,13 @@ class UserRepository @Inject constructor(
         )
     }
 
+    suspend fun updateUserNotificationSettings(
+        receiveSms: Boolean,
+        receiveEmails: Boolean,
+    ) {
+        remoteDataSource.updateUserNotificationSettings(receiveSms, receiveEmails)
+    }
+
     fun getUserCityFlow(): Flow<City?> {
         return localDataSource.getUserCityFlow()
     }

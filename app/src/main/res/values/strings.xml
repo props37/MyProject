@@ -241,6 +241,8 @@
     <string name="by_subscribing_to_newsletter_you_agree_to_personal_data_policies_policy_text">политикой обработки персональных данных</string>
     <string name="save">Сохранить</string>
     <string name="personal_data_changed">Личные данные изменены</string>
+    <string name="notification_settings_updating_error">Не удалось обновить настройки уведомлений</string>
+    <string name="user_info_updating_error">Не удалось обновить профиль</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
