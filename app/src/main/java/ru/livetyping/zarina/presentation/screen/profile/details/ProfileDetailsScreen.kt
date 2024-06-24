@@ -70,7 +70,7 @@ fun ProfileDetailsScreen(
         receiveSms = receiveSms,
         onReceiveSmsChanged = viewModel::onReceiveSmsChanged,
         onChangePasswordClicked = viewModel::onChangePasswordClicked,
-        onRemoteUserErrorRefreshClicked = viewModel::onRemoteUserErrorRefreshClicked,
+        onRemoteUserErrorRefreshClicked = viewModel::onUserErrorRefreshClicked,
         onSignOutClicked = viewModel::onSignOutClicked,
         onDeleteAccountClicked = viewModel::onDeleteAccountClicked,
         onBackClicked = viewModel::onBackClicked,

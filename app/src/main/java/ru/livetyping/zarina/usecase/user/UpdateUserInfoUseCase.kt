@@ -7,6 +7,8 @@ import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.PhoneNumber
+import ru.livetyping.zarina.domain.common.exception.ValidationException
+import ru.livetyping.zarina.domain.validation.OldPasswordValidator
 import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
@@ -14,6 +16,9 @@ import javax.inject.Inject
 class UpdateUserInfoUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
+    private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validatePhoneNumberUseCase: ValidatePhoneNumberUseCase,
+    private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val userRepository: UserRepository,
 ) : UseCase<UpdateUserInfoUseCase.Params, Unit>(dispatcher) {
 
@@ -33,6 +38,26 @@ class UpdateUserInfoUseCase @Inject constructor(
                     "phone: $phone, gender: $gender, old password: $oldPassword, " +
                     "new password: $newPassword"
         )
+
+        val emailValidationException =
+            validateEmailUseCase(ValidateEmailUseCase.Params(email)).exceptionOrNull()
+        val phoneValidationException =
+            validatePhoneNumberUseCase(ValidatePhoneNumberUseCase.Params(phone)).exceptionOrNull()
+        val oldPasswordValidationException = oldPassword?.let {
+            val validator = OldPasswordValidator()
+            runCatching { validator.validate(it) }.exceptionOrNull()
+        }
+        val newPasswordValidationException = newPassword?.let {
+            validatePasswordUseCase(ValidatePasswordUseCase.Params(it)).exceptionOrNull()
+        }
+
+        val validationException = ValidationException.from(
+            emailValidationException,
+            phoneValidationException,
+            oldPasswordValidationException,
+            newPasswordValidationException,
+        )
+        if (validationException != null) throw validationException
 
         userRepository.updateUserInfo(
             firstName = firstName,

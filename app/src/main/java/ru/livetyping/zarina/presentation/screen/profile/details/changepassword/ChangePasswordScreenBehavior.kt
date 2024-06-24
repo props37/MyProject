@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
+import ru.livetyping.zarina.presentation.common.zarinatoast.controller.LocalZarinaToastController
 import ru.livetyping.zarina.presentation.screen.profile.details.changepassword.ChangePasswordViewModel.SideEffect
 
 @Composable
@@ -16,6 +17,7 @@ fun ChangePasswordScreenBehavior(
     navigate: (ChangePasswordScreenAction) -> Unit,
 ) {
     val updatedNavigate by rememberUpdatedState(navigate)
+    val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
 
     ForcedBottomNavBarBehavior(isVisible = true)
 
@@ -24,6 +26,9 @@ fun ChangePasswordScreenBehavior(
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
                     is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
+                    is SideEffect.ShowZarinaToast -> {
+                        updatedZarinaToastController.show(sideEffect.message)
+                    }
                 }
             }
         }

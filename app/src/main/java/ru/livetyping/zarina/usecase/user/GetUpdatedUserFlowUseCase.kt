@@ -8,13 +8,13 @@ import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.user.User
 import javax.inject.Inject
 
-class GetRemoteUserFlowUseCase @Inject constructor(
+class GetUpdatedUserFlowUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val userRepository: UserRepository,
 ) : FlowUseCase<Unit, User>(dispatcher) {
 
     override fun execute(params: Unit): Flow<User> {
-        return userRepository.getRemoteUserFlow()
+        return userRepository.getUpdatedUserFlow()
     }
 }

@@ -2,6 +2,7 @@ package ru.livetyping.zarina.data.user
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.data.user.local.UserLocalDataSource
 import ru.livetyping.zarina.data.user.remote.UserRemoteDataSource
 import ru.livetyping.zarina.domain.authorization.AuthorizationResult
@@ -26,8 +27,9 @@ class UserRepository @Inject constructor(
         return localDataSource.getUserFlow()
     }
 
-    fun getRemoteUserFlow(): Flow<User> {
+    fun getUpdatedUserFlow(): Flow<User> {
         return remoteDataSource.getUserFlow()
+            .onEach(::setUser)
     }
 
     suspend fun setUser(user: User) {

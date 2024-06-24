@@ -246,6 +246,13 @@
     <string name="email_change">Смена электронной почты</string>
     <string name="enter_new_email">Введи новый адрес электронной почты</string>
     <string name="password_change">Смена пароля</string>
+    <string name="old_password">Старый пароль</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="password_changed">Пароль изменён</string>
+    <string name="password_changing_error">Не удалось сменить пароль</string>
+    <string name="password_does_not_meet_requirements">Пароль не соотвествует требованиям</string>
+    <string name="enter_valid_password">Введите действительный пароль</string>
+    <string name="invalid_old_password">Неверный старый пароль</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

@@ -56,15 +56,15 @@ class ProfileDetailsViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val remoteUserRequester = FlowRequester(RemoteUserRequest.LOADING) {
-        interactor.getRemoteUserFlow()
+    private val userRequester = FlowRequester(UserRequest.LOADING) {
+        interactor.getUpdatedUserFlow()
     }
 
     private var saveUserInfoJob: Job? = null
 
     private var currentUser = MutableStateFlow<User?>(null)
 
-    private val remoteUserResult: StateFlow<Result<User>?> = remoteUserRequester.flow
+    private val userResult: StateFlow<Result<User>?> = userRequester.flow
         .onEach {
             val user = it.getOrNull()
             if (user != null) {
@@ -110,11 +110,11 @@ class ProfileDetailsViewModel @Inject constructor(
     val receiveSms: StateFlow<Boolean> = _receiveSms.asStateFlow()
 
     val state: StateFlow<State> = combine(
-        remoteUserResult,
-        remoteUserRequester.loadingState,
+        userResult,
+        userRequester.loadingState,
     ) { result, loadingState ->
         val isLoading = loadingState is FlowRequester.LoadingState.Loading
-                && loadingState.request == RemoteUserRequest.LOADING
+                && loadingState.request == UserRequest.LOADING
         if (result == null || isLoading) {
             State.Loading
         } else {
@@ -187,7 +187,7 @@ class ProfileDetailsViewModel @Inject constructor(
                     val message = ZarinaToastMessage(text)
                     emitSideEffect(SideEffect.ShowZarinaToast(message))
 
-                    remoteUserRequester.request(RemoteUserRequest.REFRESHING)
+                    userRequester.request(UserRequest.REFRESHING)
                 }
                 .onFailure {
                     val text = Text.Resource(R.string.user_info_updating_error)
@@ -197,8 +197,8 @@ class ProfileDetailsViewModel @Inject constructor(
         }
     }
 
-    fun onRemoteUserErrorRefreshClicked() {
-        remoteUserRequester.request(RemoteUserRequest.LOADING)
+    fun onUserErrorRefreshClicked() {
+        userRequester.request(UserRequest.LOADING)
     }
 
     fun onBirthDateMillisChanged(millis: Long?) {
@@ -331,7 +331,7 @@ class ProfileDetailsViewModel @Inject constructor(
         data class Error(val state: ErrorState) : State()
     }
 
-    private enum class RemoteUserRequest : FlowRequester.Request { LOADING, REFRESHING }
+    private enum class UserRequest : FlowRequester.Request { LOADING, REFRESHING }
 
     companion object {
         private const val KEY_BIRTH_DATE_MILLIS = "birth_date_millis"
