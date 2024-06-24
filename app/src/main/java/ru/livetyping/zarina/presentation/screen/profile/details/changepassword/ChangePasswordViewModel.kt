@@ -113,9 +113,7 @@ class ChangePasswordViewModel @Inject constructor(
                         gender = user.gender,
                     )
                     interactor.updateUserInfo(params)
-                        .onSuccess {
-                            // TODO: [High] Navigate back with result
-                        }
+                        .onSuccess { onChangePasswordSuccess() }
                         .onFailure(::onChangePasswordFailure)
                 } else {
                     Timber.e("Failed to change password because the user is null")
@@ -125,6 +123,15 @@ class ChangePasswordViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun onChangePasswordSuccess() {
+        val text = Text.Resource(R.string.password_changed)
+        val message = ZarinaToastMessage(text)
+        emitSideEffect(SideEffect.ShowZarinaToast(message))
+
+        val action = ChangePasswordScreenAction.PasswordChanged
+        emitSideEffect(SideEffect.Navigate(action))
     }
 
     private fun onChangePasswordFailure(throwable: Throwable) {

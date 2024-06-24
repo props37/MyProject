@@ -34,6 +34,13 @@ fun NavGraphBuilder.changePasswordScreen(navController: NavHostController) {
                             inclusive = true,
                         )
                     }
+
+                    ChangePasswordScreenAction.PasswordChanged -> {
+                        navController.popBackStack(
+                            route = ProfileGraph.ChangePassword.routeSchema,
+                            inclusive = true,
+                        )
+                    }
                 }
             },
         )
