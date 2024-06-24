@@ -241,7 +241,8 @@ class ProfileDetailsViewModel @Inject constructor(
 
     fun onChangePasswordClicked() {
         navigationThrottler.throttle {
-            // TODO: [High] Implement
+            val action = ProfileDetailsScreenAction.ChangePasswordClicked
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 

@@ -237,6 +237,9 @@
     <string name="personal_data_changed">Личные данные изменены</string>
     <string name="notification_settings_updating_error">Не удалось обновить настройки уведомлений</string>
     <string name="user_info_updating_error">Не удалось обновить профиль</string>
+    <string name="email_change">Смена электронной почты</string>
+    <string name="enter_new_email">Введи новый адрес электронной почты</string>
+    <string name="password_change">Смена пароля</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
