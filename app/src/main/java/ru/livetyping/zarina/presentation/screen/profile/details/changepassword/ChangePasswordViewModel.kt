@@ -117,8 +117,7 @@ class ChangePasswordViewModel @Inject constructor(
                         .onFailure(::onChangePasswordFailure)
                 } else {
                     Timber.e("Failed to change password because the user is null")
-                    val text = Text.Resource(R.string.password_changing_error)
-                    val message = ZarinaToastMessage.error(text)
+                    val message = ZarinaToastMessage.error(PASSWORD_CHANGE_ERROR_DEFAULT_TEXT)
                     emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
             }
@@ -147,7 +146,7 @@ class ChangePasswordViewModel @Inject constructor(
                         Text.Resource(R.string.password_does_not_meet_requirements)
                     }
 
-                    else -> Text.Resource(R.string.password_changing_error)
+                    else -> PASSWORD_CHANGE_ERROR_DEFAULT_TEXT
                 }
                 val message = ZarinaToastMessage.error(text)
                 emitSideEffect(SideEffect.ShowZarinaToast(message))
@@ -161,8 +160,7 @@ class ChangePasswordViewModel @Inject constructor(
             }
 
             else -> {
-                val text = Text.Resource(R.string.password_changing_error)
-                val message = ZarinaToastMessage.error(text)
+                val message = ZarinaToastMessage.error(PASSWORD_CHANGE_ERROR_DEFAULT_TEXT)
                 emitSideEffect(SideEffect.ShowZarinaToast(message))
             }
         }
@@ -179,5 +177,8 @@ class ChangePasswordViewModel @Inject constructor(
     companion object {
         private const val KEY_OLD_PASSWORD = "old_password"
         private const val KEY_NEW_PASSWORD = "new_password"
+
+        private val PASSWORD_CHANGE_ERROR_DEFAULT_TEXT: Text
+            get() = Text.Resource(R.string.password_changing_error)
     }
 }

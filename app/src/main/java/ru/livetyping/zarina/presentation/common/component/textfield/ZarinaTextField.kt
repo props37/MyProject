@@ -35,11 +35,13 @@ import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,6 +63,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
@@ -70,6 +74,7 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
+import ru.livetyping.zarina.util.compose.text.textAsFlow
 
 // TODO: [High] Add label animation
 // TODO: [High] Apply error color to description
@@ -79,6 +84,7 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTra
 fun ZarinaTextField(
     state: TextFieldState,
     modifier: Modifier = Modifier,
+    onTextChanged: ((String) -> Unit)? = null,
     isEnabled: Boolean = true,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
@@ -100,6 +106,13 @@ fun ZarinaTextField(
     outputTransformation: OutputTransformation? = null,
     scrollState: ScrollState = rememberScrollState(),
 ) {
+    val updatedOnTextChanged by rememberUpdatedState(onTextChanged)
+    LaunchedEffect(state) {
+        state.textAsFlow()
+            .onEach { updatedOnTextChanged?.invoke(it.toString()) }
+            .launchIn(this)
+    }
+
     var focusState by remember { mutableStateOf<FocusState?>(null) }
 
     BasicTextField(

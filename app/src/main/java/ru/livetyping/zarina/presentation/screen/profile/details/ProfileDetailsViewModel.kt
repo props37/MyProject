@@ -213,7 +213,8 @@ class ProfileDetailsViewModel @Inject constructor(
 
     fun onEmailClicked() {
         navigationThrottler.throttle {
-            // TODO: [High] Implement
+            val action = ProfileDetailsScreenAction.ChangeEmailClicked
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
