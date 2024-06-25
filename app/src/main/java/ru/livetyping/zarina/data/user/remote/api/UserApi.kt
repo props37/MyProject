@@ -27,6 +27,7 @@ import ru.livetyping.zarina.data.user.remote.api.exception.ConfirmSignUpApiExcep
 import ru.livetyping.zarina.data.user.remote.api.exception.RequestPasswordResetApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.SignInApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.SignUpApiExceptionConverter
+import ru.livetyping.zarina.data.user.remote.api.exception.UpdateUserInfoApiExceptionConverter
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Gender
@@ -41,6 +42,7 @@ import javax.inject.Inject
 class UserApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
+    private val updateUserInfoApiExceptionConverter: UpdateUserInfoApiExceptionConverter,
     private val signUpApiExceptionConverter: SignUpApiExceptionConverter,
     private val confirmSignUpApiExceptionConverter: ConfirmSignUpApiExceptionConverter,
     private val signInApiExceptionConverter: SignInApiExceptionConverter,
@@ -72,8 +74,10 @@ class UserApi @Inject constructor(
             oldPassword = oldPassword,
             newPassword = newPassword,
         )
-        httpClient.post("/api/profile") {
-            setJsonBody(body)
+        updateUserInfoApiExceptionConverter {
+            httpClient.post("/api/profile") {
+                setJsonBody(body)
+            }
         }
     }
 
