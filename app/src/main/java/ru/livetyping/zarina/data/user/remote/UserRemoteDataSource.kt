@@ -49,6 +49,10 @@ class UserRemoteDataSource @Inject constructor(
         )
     }
 
+    suspend fun changePhoneNumber(phone: PhoneNumber) {
+        api.changePhoneNumber(phone)
+    }
+
     suspend fun updateUserNotificationSettings(
         receiveSms: Boolean,
         receiveEmails: Boolean,

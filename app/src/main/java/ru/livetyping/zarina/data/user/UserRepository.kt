@@ -60,6 +60,10 @@ class UserRepository @Inject constructor(
         )
     }
 
+    suspend fun changePhoneNumber(phone: PhoneNumber) {
+        remoteDataSource.changePhoneNumber(phone)
+    }
+
     suspend fun updateUserNotificationSettings(
         receiveSms: Boolean,
         receiveEmails: Boolean,

@@ -12,6 +12,7 @@ import ru.livetyping.zarina.data.common.remote.api.zarina.dto.UserDto
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.util.DATE_BACKEND_PATTERN
 import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
+import ru.livetyping.zarina.data.user.remote.api.dto.ChangePhoneNumberRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignInByPhoneRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.GetLoyaltyCardDto
@@ -23,6 +24,7 @@ import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignOutDto
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.UpdateUserInfoRequestBody
+import ru.livetyping.zarina.data.user.remote.api.exception.ChangePhoneNumberApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.ConfirmSignUpApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.RequestPasswordResetApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.SignInApiExceptionConverter
@@ -43,6 +45,7 @@ class UserApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
     private val updateUserInfoApiExceptionConverter: UpdateUserInfoApiExceptionConverter,
+    private val changePhoneNumberApiExceptionConverter: ChangePhoneNumberApiExceptionConverter,
     private val signUpApiExceptionConverter: SignUpApiExceptionConverter,
     private val confirmSignUpApiExceptionConverter: ConfirmSignUpApiExceptionConverter,
     private val signInApiExceptionConverter: SignInApiExceptionConverter,
@@ -76,6 +79,15 @@ class UserApi @Inject constructor(
         )
         updateUserInfoApiExceptionConverter {
             httpClient.post("/api/profile") {
+                setJsonBody(body)
+            }
+        }
+    }
+
+    suspend fun changePhoneNumber(phone: PhoneNumber) {
+        val body = ChangePhoneNumberRequestBody(phone.value)
+        changePhoneNumberApiExceptionConverter {
+            httpClient.post("/api/phone/verification") {
                 setJsonBody(body)
             }
         }

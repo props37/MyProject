@@ -11,15 +11,24 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.operationtracker.OperationKey
 import ru.livetyping.zarina.base.operationtracker.OperationTracker
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Url
+import ru.livetyping.zarina.domain.common.exception.ValidationException
+import ru.livetyping.zarina.domain.user.exception.InvalidPhoneNumberException
+import ru.livetyping.zarina.domain.user.exception.PhoneNumberAlreadyInUseException
+import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
+import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.ChangePhoneNumberViewModel.SideEffect
+import ru.livetyping.zarina.usecase.user.ChangePhoneNumberUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
 
@@ -62,6 +71,7 @@ class ChangePhoneNumberViewModel @Inject constructor(
 
     fun onPhoneChanged(phone: String) {
         phoneValueHolder.set(phone)
+        _isPhoneInvalid.value = false
     }
 
     fun onPhoneEntered() {
@@ -73,7 +83,11 @@ class ChangePhoneNumberViewModel @Inject constructor(
 
         changePhoneJob = viewModelScope.launch {
             operationTracker.track(Operation.CHANGE_PHONE) {
-                // TODO: [High] Implement
+                val phone = PhoneNumber.create(phone.value)
+                val params = ChangePhoneNumberUseCase.Params(phone)
+                interactor.changePhoneNumber(params)
+                    .onSuccess { onChangePhoneSuccess() }
+                    .onFailure(::onChangePhoneFailure)
             }
         }
     }
@@ -84,10 +98,49 @@ class ChangePhoneNumberViewModel @Inject constructor(
         }
     }
 
+    private fun onChangePhoneSuccess() {
+        // TODO: [High] Implement
+    }
+
+    private fun onChangePhoneFailure(throwable: Throwable) {
+        when (throwable) {
+            is ValidationException -> {
+                val exceptions = listOf(throwable) + throwable.suppressedExceptions
+                val text = when {
+                    exceptions.any { it is PhoneNumberAlreadyInUseException } -> {
+                        Text.Resource(R.string.sign_up_phone_number_already_in_use_error)
+                    }
+
+                    exceptions.any { it is InvalidPhoneNumberException } -> {
+                        Text.Resource(R.string.enter_valid_phone_number)
+                    }
+
+                    else -> {
+                        Text.Resource(R.string.something_went_wrong)
+                    }
+                }
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+
+                if (exceptions.any { it is PhoneNumberException }) {
+                    _isPhoneInvalid.value = true
+                }
+            }
+
+            else -> {
+                val text = Text.Resource(R.string.something_went_wrong)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: ChangePhoneNumberScreenAction) : SideEffect
 
         data class OpenUrl(val url: Url) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 
     private enum class Operation : OperationKey { CHANGE_PHONE }
