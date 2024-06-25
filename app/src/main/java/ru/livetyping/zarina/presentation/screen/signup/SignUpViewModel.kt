@@ -51,7 +51,7 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val interactor: SignUpInteractor,
-) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+) : ViewModel(interactor.smsCodeRetriever), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
