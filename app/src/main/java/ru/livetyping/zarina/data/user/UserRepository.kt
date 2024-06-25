@@ -148,8 +148,8 @@ class UserRepository @Inject constructor(
         return remoteDataSource.confirmSignInByPhone(phone, otp)
     }
 
-    suspend fun requestResendSmsOtp(phone: PhoneNumber) {
-        remoteDataSource.requestResendSmsOtp(phone)
+    suspend fun requestResendAuthorizationSmsOtp(phone: PhoneNumber) {
+        remoteDataSource.requestResendAuthorizationSmsOtp(phone)
     }
 
     suspend fun requestPasswordReset(email: Email) {

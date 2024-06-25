@@ -200,7 +200,7 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun requestResendSmsOtp(phone: PhoneNumber) {
+    suspend fun requestResendAuthorizationSmsOtp(phone: PhoneNumber) {
         val body = RequestResendSmsOtpRequestBody(phone.value)
         httpClient.post("/api/auth/phone/sms") {
             setJsonBody(body)
