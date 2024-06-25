@@ -50,6 +50,7 @@ import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDateP
 import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePickerDialog
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
+import ru.livetyping.zarina.presentation.common.component.policy.RecaptchaPolicy
 import ru.livetyping.zarina.presentation.common.component.switchh.ZarinaSwitch
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPasswordTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPhoneNumberTextField
@@ -60,7 +61,6 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedLocalDate
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.DatePickerMinYear
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.Policies
-import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.RecaptchaPolicies
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.signup.SignUpViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -398,7 +398,7 @@ private fun ScreenContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            RecaptchaPolicies(
+            RecaptchaPolicy(
                 onUrlClicked = onUrlClicked,
                 modifier = Modifier
                     .fillMaxWidth()

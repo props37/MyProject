@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.profile.details.changeemail
+package ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -14,9 +14,8 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -34,28 +33,33 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
-import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
+import ru.livetyping.zarina.presentation.common.component.policy.RecaptchaPolicy
+import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPhoneNumberTextField
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.presentation.screen.profile.details.changeemail.ChangeEmailScreenComponents.TopBar
-import ru.livetyping.zarina.presentation.screen.profile.details.changeemail.ChangeEmailViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.ChangePhoneNumberScreenComponents.TopBar
+import ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.ChangePhoneNumberViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable
-fun ChangeEmailScreen(
-    navigate: (ChangeEmailScreenAction) -> Unit,
-    viewModel: ChangeEmailViewModel = hiltViewModel(),
+fun ChangePhoneNumberScreen(
+    navigate: (ChangePhoneNumberScreenAction) -> Unit,
+    viewModel: ChangePhoneNumberViewModel = hiltViewModel(),
 ) {
-    val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
-    val isChangeEmailButtonLoading by viewModel.isChangeEmailButtonLoading.collectAsStateWithLifecycle()
+    val phone by viewModel.phone.collectAsStateWithLifecycle()
+    val isPhoneInvalid by viewModel.isPhoneInvalid.collectAsStateWithLifecycle()
+    val isChangePhoneButtonLoading by viewModel.isChangePhoneButtonLoading.collectAsStateWithLifecycle()
 
     ScreenContent(
-        onEmailChanged = viewModel::onEmailChanged,
-        isEmailInvalid = isEmailInvalid,
-        onEmailEntered = viewModel::onEmailEntered,
-        onChangeEmailClicked = viewModel::onChangeEmailClicked,
-        isChangeEmailButtonLoading = isChangeEmailButtonLoading,
+        phone = phone,
+        onPhoneChanged = viewModel::onPhoneChanged,
+        onPhoneEntered = viewModel::onPhoneEntered,
+        isPhoneInvalid = isPhoneInvalid,
+        onChangePhoneClicked = viewModel::onChangePhoneClicked,
+        isChangePhoneButtonLoading = isChangePhoneButtonLoading,
+        onUrlClicked = viewModel::onUrlClicked,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
@@ -64,16 +68,18 @@ fun ChangeEmailScreen(
 
 @Composable
 private fun ScreenContent(
-    onEmailChanged: (String) -> Unit,
-    isEmailInvalid: Boolean,
-    onEmailEntered: () -> Unit,
-    onChangeEmailClicked: () -> Unit,
-    isChangeEmailButtonLoading: Boolean,
+    phone: String,
+    onPhoneChanged: (String) -> Unit,
+    onPhoneEntered: () -> Unit,
+    isPhoneInvalid: Boolean,
+    onChangePhoneClicked: () -> Unit,
+    isChangePhoneButtonLoading: Boolean,
+    onUrlClicked: (Url) -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigate: (ChangeEmailScreenAction) -> Unit,
+    navigate: (ChangePhoneNumberScreenAction) -> Unit,
 ) {
-    ChangeEmailScreenBehavior(
+    ChangePhoneNumberScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
     )
@@ -95,31 +101,28 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = stringResource(R.string.enter_new_email),
-                style = UiKitTheme.typography.secondary.bold,
+                text = stringResource(R.string.we_will_send_code_to_entered_phone_number),
+                style = UiKitTheme.typography.tertiary.light,
                 color = UiKitTheme.colors.text.general.regular.default,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            ZarinaTextField(
-                state = rememberTextFieldState(),
-                onTextChanged = onEmailChanged,
-                isError = isEmailInvalid,
-                label = {
-                    Text(text = stringResource(R.string.email))
-                },
-                placeholder = {
-                    Text(text = stringResource(R.string.email_text_field_placeholder))
-                },
+            ZarinaPhoneNumberTextField(
+                phoneNumber = phone,
+                onPhoneNumberChanged = onPhoneChanged,
+                isError = isPhoneInvalid,
                 keyboardOptions = remember {
                     KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
+                        keyboardType = KeyboardType.Phone,
                         imeAction = ImeAction.Done,
                     )
                 },
-                onKeyboardAction = { onEmailEntered() },
-                lineLimits = TextFieldLineLimits.SingleLine,
+                keyboardActions = remember(onPhoneEntered) {
+                    KeyboardActions(
+                        onDone = { onPhoneEntered() },
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
@@ -127,14 +130,20 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             ZarinaButton(
-                onClick = onChangeEmailClicked,
-                isLoading = isChangeEmailButtonLoading,
+                onClick = onChangePhoneClicked,
+                isLoading = isChangePhoneButtonLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
             ) {
-                Text(text = stringResource(R.string.change).uppercase())
+                Text(text = stringResource(R.string.continue_).uppercase())
             }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            RecaptchaPolicy(
+                onUrlClicked = onUrlClicked,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
         }

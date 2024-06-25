@@ -7,6 +7,8 @@ sealed class ProfileDetailsScreenAction {
 
     data object ChangeEmailClicked : ProfileDetailsScreenAction()
 
+    data object ChangePhoneNumberClicked : ProfileDetailsScreenAction()
+
     data object SignOutClicked : ProfileDetailsScreenAction()
 
     data object DeleteAccountClicked : ProfileDetailsScreenAction()

@@ -250,6 +250,9 @@
     <string name="enter_valid_password">Введите действительный пароль</string>
     <string name="invalid_old_password">Неверный старый пароль</string>
     <string name="invalid_email_try_again">Адрес электронной почты некорректный. Введи другой</string>
+    <string name="phone_change">Смена телефона</string>
+    <string name="enter_new_phone_number">Введи новый номер телефона</string>
+    <string name="we_will_send_code_to_entered_phone_number">Мы отправим СМС-код для смены пароля на указанный телефон</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

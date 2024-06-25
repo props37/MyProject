@@ -103,7 +103,7 @@ fun ZarinaPasswordTextField(
         colors = colors,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        singleLine = true,
+        singleLine = singleLine,
         maxLines = maxLines,
         minLines = minLines,
         visualTransformation = visualTransformation,

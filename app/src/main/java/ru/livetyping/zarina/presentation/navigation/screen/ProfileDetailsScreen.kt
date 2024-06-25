@@ -23,7 +23,8 @@ fun NavGraphBuilder.profileDetailsScreen(navController: NavHostController) {
         exitTransition = {
             when (targetState.destination.route) {
                 ProfileGraph.ChangePassword.routeSchema,
-                ProfileGraph.ChangeEmail.routeSchema -> slideExitTransition()
+                ProfileGraph.ChangeEmail.routeSchema,
+                ProfileGraph.ChangePhoneNumber.routeSchema -> slideExitTransition()
 
                 else -> null
             }
@@ -31,7 +32,8 @@ fun NavGraphBuilder.profileDetailsScreen(navController: NavHostController) {
         popEnterTransition = {
             when (initialState.destination.route) {
                 ProfileGraph.ChangePassword.routeSchema,
-                ProfileGraph.ChangeEmail.routeSchema -> slidePopEnterTransition()
+                ProfileGraph.ChangeEmail.routeSchema,
+                ProfileGraph.ChangePhoneNumber.routeSchema -> slidePopEnterTransition()
 
                 else -> null
             }
@@ -59,6 +61,10 @@ fun NavGraphBuilder.profileDetailsScreen(navController: NavHostController) {
 
                     ProfileDetailsScreenAction.ChangeEmailClicked -> {
                         navController.navigateToChangeEmailScreen()
+                    }
+
+                    ProfileDetailsScreenAction.ChangePhoneNumberClicked -> {
+                        navController.navigateToChangePhoneNumberScreen()
                     }
 
                     ProfileDetailsScreenAction.SignOutClicked -> {

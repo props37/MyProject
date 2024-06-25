@@ -27,6 +27,8 @@ data object ProfileGraph : SimpleGraph(
 
     data object ChangeEmail : SimpleDestination(BaseRoute.CHANGE_EMAIL)
 
+    data object ChangePhoneNumber : SimpleDestination(BaseRoute.CHANGE_PHONE_NUMBER)
+
     data object SignOutConfirmation : SimpleDestination(BaseRoute.SIGN_OUT_CONFIRMATION)
 
     data object AccountDeletionConfirmation :
