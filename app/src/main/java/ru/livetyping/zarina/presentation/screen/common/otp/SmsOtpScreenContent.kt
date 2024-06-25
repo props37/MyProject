@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import ru.livetyping.zarina.domain.common.PhoneNumber
+import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.component.SmsOtp
 import ru.livetyping.zarina.presentation.common.otp.OtpResendState
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
@@ -63,7 +64,8 @@ fun SmsOtpScreenContent(
                 WindowInsets.systemBars
                     .union(WindowInsets.displayCutout)
                     .union(WindowInsets.ime),
-            ),
+            )
+            .bottomNavBarPadding(WindowInsets.ime),
     ) {
         TopBar(
             title = topBarTitle,

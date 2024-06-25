@@ -92,7 +92,7 @@ class ChangePhoneNumberViewModel @Inject constructor(
                 val phone = PhoneNumber.create(phone.value)
                 val params = ChangePhoneNumberUseCase.Params(phone)
                 interactor.changePhoneNumber(params)
-                    .onSuccess { onChangePhoneSuccess() }
+                    .onSuccess { onChangePhoneSuccess(phone) }
                     .onFailure(::onChangePhoneFailure)
             }
         }
@@ -104,8 +104,9 @@ class ChangePhoneNumberViewModel @Inject constructor(
         }
     }
 
-    private fun onChangePhoneSuccess() {
-        // TODO: [High] Implement
+    private fun onChangePhoneSuccess(phone: PhoneNumber) {
+        val action = ChangePhoneNumberScreenAction.PhoneChangeRequested(phone)
+        emitSideEffect(SideEffect.Navigate(action))
     }
 
     private fun onChangePhoneFailure(throwable: Throwable) {

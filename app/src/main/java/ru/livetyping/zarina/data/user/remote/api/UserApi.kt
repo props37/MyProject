@@ -13,6 +13,7 @@ import ru.livetyping.zarina.data.common.remote.api.zarina.dto.util.DATE_BACKEND_
 import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
 import ru.livetyping.zarina.data.user.remote.api.dto.ChangePhoneNumberRequestBody
+import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmPhoneNumberChangeRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignInByPhoneRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.GetLoyaltyCardDto
@@ -88,6 +89,18 @@ class UserApi @Inject constructor(
         val body = ChangePhoneNumberRequestBody(phone.value)
         changePhoneNumberApiExceptionConverter {
             httpClient.post("/api/phone/verification") {
+                setJsonBody(body)
+            }
+        }
+    }
+
+    suspend fun confirmPhoneNumberChange(phone: PhoneNumber, code: String) {
+        val body = ConfirmPhoneNumberChangeRequestBody(
+            phone = phone.value,
+            code = code,
+        )
+        confirmSignUpApiExceptionConverter {
+            httpClient.post("/api/phone/verification/sms/confirmation") {
                 setJsonBody(body)
             }
         }
