@@ -25,6 +25,7 @@ import ru.livetyping.zarina.domain.user.exception.PhoneNumberAlreadyInUseExcepti
 import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
+import ru.livetyping.zarina.presentation.common.sms.SmsConstants
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.ChangePhoneNumberViewModel.SideEffect
@@ -36,7 +37,7 @@ import javax.inject.Inject
 class ChangePhoneNumberViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val interactor: ChangePhoneNumberInteractor,
-) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+) : ViewModel(interactor.smsCodeRetriever), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -80,6 +81,11 @@ class ChangePhoneNumberViewModel @Inject constructor(
 
     fun onChangePhoneClicked() {
         if (changePhoneJob?.isActive == true) return
+
+        interactor.smsCodeRetriever.start(
+            sender = SmsConstants.SENDER_ZARINA,
+            codeRegexPattern = SmsConstants.CODE_PATTERN_ZARINA,
+        )
 
         changePhoneJob = viewModelScope.launch {
             operationTracker.track(Operation.CHANGE_PHONE) {
