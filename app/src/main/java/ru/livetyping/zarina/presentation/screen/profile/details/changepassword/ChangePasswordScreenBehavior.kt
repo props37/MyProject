@@ -3,6 +3,7 @@ package ru.livetyping.zarina.presentation.screen.profile.details.changepassword
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +19,7 @@ fun ChangePasswordScreenBehavior(
 ) {
     val updatedNavigate by rememberUpdatedState(navigate)
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+    val updatedKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
 
     ForcedBottomNavBarBehavior(isVisible = true)
 
@@ -25,7 +27,11 @@ fun ChangePasswordScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
+                    is SideEffect.Navigate -> {
+                        updatedKeyboardController?.hide()
+                        updatedNavigate(sideEffect.action)
+                    }
+
                     is SideEffect.ShowZarinaToast -> {
                         updatedZarinaToastController.show(sideEffect.message)
                     }
