@@ -83,6 +83,9 @@ class RecaptchaManager @Inject constructor() {
         val ACTION_SIGN_IN_BY_PHONE: RecaptchaAction
             get() = RecaptchaAction.custom("auth_phone_android")
 
+        val ACTION_CHANGE_PHONE_NUMBER: RecaptchaAction
+            get() = RecaptchaAction.custom("change_phone_number_android")
+
         private const val TAG = "RecaptchaManager"
 
         private val TIMEOUT = 10.seconds

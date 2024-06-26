@@ -25,13 +25,17 @@ fun NavGraphBuilder.signInScreen(navController: NavHostController) {
         },
         exitTransition = {
             when (targetState.destination.route) {
-                SignInGraph.PasswordRecovery.routeSchema -> slideExitTransition()
+                SignInGraph.PasswordRecovery.routeSchema,
+                SignInGraph.Otp.routeSchema -> slideExitTransition()
+
                 else -> null
             }
         },
         popEnterTransition = {
             when (initialState.destination.route) {
-                SignInGraph.PasswordRecovery.routeSchema -> slidePopEnterTransition()
+                SignInGraph.PasswordRecovery.routeSchema,
+                SignInGraph.Otp.routeSchema -> slidePopEnterTransition()
+
                 else -> null
             }
         },

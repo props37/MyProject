@@ -35,11 +35,13 @@ import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,6 +63,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
@@ -70,6 +74,7 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
+import ru.livetyping.zarina.util.compose.text.textAsFlow
 
 // TODO: [High] Add label animation
 // TODO: [High] Apply error color to description
@@ -79,10 +84,11 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTra
 fun ZarinaTextField(
     state: TextFieldState,
     modifier: Modifier = Modifier,
+    onTextChanged: ((String) -> Unit)? = null,
     isEnabled: Boolean = true,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
-    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Large,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
     inputTransformation: InputTransformation? = null,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: (@Composable () -> Unit)? = null,
@@ -100,6 +106,13 @@ fun ZarinaTextField(
     outputTransformation: OutputTransformation? = null,
     scrollState: ScrollState = rememberScrollState(),
 ) {
+    val updatedOnTextChanged by rememberUpdatedState(onTextChanged)
+    LaunchedEffect(state) {
+        state.textAsFlow()
+            .onEach { updatedOnTextChanged?.invoke(it.toString()) }
+            .launchIn(this)
+    }
+
     var focusState by remember { mutableStateOf<FocusState?>(null) }
 
     BasicTextField(
@@ -148,7 +161,7 @@ fun ZarinaTextField(
     isEnabled: Boolean = true,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
-    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Large,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: (@Composable () -> Unit)? = null,
     placeholder: (@Composable () -> Unit)? = null,
@@ -216,7 +229,7 @@ fun ZarinaTextField(
     isEnabled: Boolean = true,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
-    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Large,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: (@Composable () -> Unit)? = null,
     placeholder: (@Composable () -> Unit)? = null,
@@ -469,7 +482,7 @@ data class ZarinaTextFieldColors(
     }
 }
 
-enum class ZarinaTextFieldSize { Large, Small }
+enum class ZarinaTextFieldSize { Small }
 
 object ZarinaTextFieldDefaults {
     val IconSizeLarge: Dp get() = 20.dp
@@ -587,38 +600,49 @@ object ZarinaTextFieldDefaults {
     )
 
     @Composable
+    fun colorsIgnoringDisabled(
+        baseColors: ZarinaTextFieldColors = colors(),
+    ): ZarinaTextFieldColors {
+        return baseColors.copy(
+            disabledTextColor = baseColors.textColor,
+            disabledPlaceholderColor = baseColors.placeholderColor,
+            disabledLabelColor = baseColors.labelColor,
+            disabledLeadingContentColor = baseColors.leadingContentColor,
+            disabledInnerTrailingContentColor = baseColors.innerTrailingContentColor,
+            disabledOuterTrailingContentColor = baseColors.outerTrailingContentColor,
+            disabledDescriptionColor = baseColors.descriptionColor,
+            disabledIndicationLineColor = baseColors.indicationLineColor,
+            disabledErrorIndicationLineColor = baseColors.errorIndicationLineColor,
+        )
+    }
+
+    @Composable
     fun textStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Large -> UiKitTheme.typography.primary.light
         ZarinaTextFieldSize.Small -> UiKitTheme.typography.secondary.light
     }
 
     @Composable
     fun labelTextStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Large -> UiKitTheme.typography.tertiary.light
         ZarinaTextFieldSize.Small -> UiKitTheme.typography.footnote.light
     }
 
     @Composable
     fun descriptionTextStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Large -> UiKitTheme.typography.tertiary.light
         ZarinaTextFieldSize.Small -> UiKitTheme.typography.footnote.light
     }
 
     @Stable
     fun textVerticalPaddingFromSize(size: ZarinaTextFieldSize): Dp = when (size) {
-        ZarinaTextFieldSize.Large -> 8.dp
         ZarinaTextFieldSize.Small -> 6.dp
     }
 
     @Stable
     fun labelPaddingFromSize(size: ZarinaTextFieldSize): Dp = when (size) {
-        ZarinaTextFieldSize.Large -> 4.dp
         ZarinaTextFieldSize.Small -> 2.dp
     }
 
     @Stable
     fun descriptionPaddingFromSize(size: ZarinaTextFieldSize): Dp = when (size) {
-        ZarinaTextFieldSize.Large -> 12.dp
         ZarinaTextFieldSize.Small -> 8.dp
     }
 }

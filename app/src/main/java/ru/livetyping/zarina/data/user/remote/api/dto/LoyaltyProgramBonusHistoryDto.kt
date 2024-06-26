@@ -5,26 +5,29 @@ import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.PaginationInfoDto
 import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.user.LoyaltyProgramBonusAction
-import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
+import java.time.LocalDate
 
 @Serializable
 data class LoyaltyProgramBonusHistoryDto(
     @SerialName("items")
     val items: List<Item>? = null,
 
+    @SerialName("items_count")
+    val itemTotalCount: Int? = null,
+
     @SerialName("pagination")
     val paginationInfo: PaginationInfoDto? = null,
 ) {
     fun toLoyaltyProgramBonusActionPage(): Page<List<LoyaltyProgramBonusAction>> {
         checkNotNull(items) { "items is null" }
+        checkNotNull(itemTotalCount) { "itemTotalCount is null" }
         checkNotNull(paginationInfo) { "paginationInfo is null" }
         val data = items.map {
             it.toLoyaltyProgramBonusAction()
         }
         return Page(
             data = data,
-            // TODO: [High] Implement when itemTotalCount is added to response
-            paginationInfo = paginationInfo.toPaginationInfo(Int.MAX_VALUE),
+            paginationInfo = paginationInfo.toPaginationInfo(itemTotalCount),
         )
     }
 
@@ -49,13 +52,12 @@ data class LoyaltyProgramBonusHistoryDto(
             checkNotNull(bonusCount) { "bonusCount is null" }
             checkNotNull(title) { "title is null" }
             checkNotNull(type) { "type is null" }
-            checkNotNull(date) { "date is null" }
             val date = date
-                .takeIf { it.isNotBlank() }
-                ?.let { LocalDateUtil.parseRussianDate(it) }
+                ?.takeIf { it.isNotBlank() }
+                ?.let { LocalDate.parse(it) }
             val expirationDate = expirationDate
                 ?.takeIf { it.isNotBlank() }
-                ?.let { LocalDateUtil.parseRussianDate(it) }
+                ?.let { LocalDate.parse(it) }
             return LoyaltyProgramBonusAction(
                 bonusCount = bonusCount,
                 title = title,

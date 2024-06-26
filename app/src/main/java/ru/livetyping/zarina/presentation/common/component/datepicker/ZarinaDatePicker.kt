@@ -19,6 +19,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonColors
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.platform.locale
 import java.util.Locale
@@ -87,6 +90,22 @@ object ZarinaDatePickerDefaults {
             maxLines = 1,
             modifier = modifier,
         )
+    }
+
+    @Composable
+    fun ConfirmButton(
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+        text: String = stringResource(R.string.select).uppercase(),
+        colors: ZarinaButtonColors = ZarinaButtonDefaults.backlessColors(),
+    ) {
+        ZarinaButton(
+            onClick = onClick,
+            colors = colors,
+            modifier = modifier,
+        ) {
+            Text(text = text)
+        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)

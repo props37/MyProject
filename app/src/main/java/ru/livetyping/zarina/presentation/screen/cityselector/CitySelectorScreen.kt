@@ -46,7 +46,7 @@ fun CitySelectorScreen(
 ) {
     val title by viewModel.title.collectAsStateWithLifecycle()
     val cityNameQuery by viewModel.cityNameQuery.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val cityListState by viewModel.cityListState.collectAsStateWithLifecycle()
     val isCitySearchBarVisible by viewModel.isCitySearchBarVisible.collectAsStateWithLifecycle()

@@ -43,6 +43,7 @@ fun ZarinaModalBottomSheet(
         scrimColor = scrimColor,
         dragHandle = null,
         contentWindowInsets = windowInsets,
+        properties = properties,
         modifier = modifier,
         content = content,
     )

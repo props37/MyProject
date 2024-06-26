@@ -31,6 +31,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
@@ -44,11 +45,12 @@ import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
-import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePicker
+import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePickerDefaults
 import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePickerDialog
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
+import ru.livetyping.zarina.presentation.common.component.policy.RecaptchaPolicy
 import ru.livetyping.zarina.presentation.common.component.switchh.ZarinaSwitch
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPasswordTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPhoneNumberTextField
@@ -59,7 +61,6 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedLocalDate
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.DatePickerMinYear
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.Policies
-import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.RecaptchaPolicies
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.signup.SignUpViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -74,25 +75,25 @@ fun SignUpScreen(
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val firstName by viewModel.firstName.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val birthDateMillis by viewModel.birthDateMillis.collectAsStateWithLifecycle()
     val isBirthDateInvalid by viewModel.isBirthDateInvalid.collectAsStateWithLifecycle()
     val isFirstNameInvalid by viewModel.isFirstNameInvalid.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
     val phone by viewModel.phone.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val isPhoneInvalid by viewModel.isPhoneInvalid.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val isPasswordInvalid by viewModel.isPasswordInvalid.collectAsStateWithLifecycle()
-    val receiveNewsNyEmail by viewModel.receiveNewsByEmail.collectAsStateWithLifecycle()
-    val receiveSmsNotifications by viewModel.receiveSmsNotifications.collectAsStateWithLifecycle()
+    val receiveEmails by viewModel.receiveEmails.collectAsStateWithLifecycle()
+    val receiveSms by viewModel.receiveSms.collectAsStateWithLifecycle()
     val arePoliciesAccepted by viewModel.arePoliciesAccepted.collectAsStateWithLifecycle()
     val isPoliciesErrorVisible by viewModel.isPoliciesErrorVisible.collectAsStateWithLifecycle()
     val isSignUpButtonLoading by viewModel.isSignUpButtonLoading.collectAsStateWithLifecycle()
@@ -114,10 +115,10 @@ fun SignUpScreen(
         password = password,
         onPasswordChanged = viewModel::onPasswordChanged,
         isPasswordInvalid = isPasswordInvalid,
-        receiveNewsNyEmail = receiveNewsNyEmail,
-        onReceiveNewsNyEmailChanged = viewModel::onReceiveNewsNyEmailChanged,
-        receiveSmsNotifications = receiveSmsNotifications,
-        onReceiveSmsNotificationsChanged = viewModel::onReceiveSmsNotificationsChanged,
+        receiveEmails = receiveEmails,
+        onReceiveEmailsChanged = viewModel::onReceiveEmailsChanged,
+        receiveSms = receiveSms,
+        onReceiveSmsChanged = viewModel::onReceiveSmsChanged,
         arePoliciesAccepted = arePoliciesAccepted,
         onPoliciesAcceptedChanged = viewModel::onPoliciesAcceptedChanged,
         isPoliciesErrorVisible = isPoliciesErrorVisible,
@@ -148,10 +149,10 @@ private fun ScreenContent(
     password: String,
     onPasswordChanged: (String) -> Unit,
     isPasswordInvalid: Boolean,
-    receiveNewsNyEmail: Boolean,
-    onReceiveNewsNyEmailChanged: (Boolean) -> Unit,
-    receiveSmsNotifications: Boolean,
-    onReceiveSmsNotificationsChanged: (Boolean) -> Unit,
+    receiveEmails: Boolean,
+    onReceiveEmailsChanged: (Boolean) -> Unit,
+    receiveSms: Boolean,
+    onReceiveSmsChanged: (Boolean) -> Unit,
     arePoliciesAccepted: Boolean,
     onPoliciesAcceptedChanged: (Boolean) -> Unit,
     isPoliciesErrorVisible: Boolean,
@@ -182,15 +183,12 @@ private fun ScreenContent(
         ZarinaDatePickerDialog(
             onDismissRequest = { isDatePickerVisible = false },
             confirmButton = {
-                ZarinaButton(
+                ZarinaDatePickerDefaults.ConfirmButton(
                     onClick = {
                         onBirthDateMillisChanged(datePickerState.selectedDateMillis)
                         isDatePickerVisible = false
                     },
-                    colors = ZarinaButtonDefaults.backlessColors(),
-                ) {
-                    Text(text = stringResource(R.string.select).uppercase())
-                }
+                )
             },
         ) {
             ZarinaDatePicker(state = datePickerState)
@@ -228,7 +226,12 @@ private fun ScreenContent(
                         },
                     )
                 },
-                keyboardOptions = remember { KeyboardOptions(imeAction = ImeAction.Next) },
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Words,
+                        imeAction = ImeAction.Next,
+                    )
+                },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -255,12 +258,7 @@ private fun ScreenContent(
                 placeholder = {
                     Text(text = stringResource(R.string.birth_date_text_field_placeholder))
                 },
-                colors = ZarinaTextFieldDefaults.colors(
-                    disabledLabelColor = UiKitTheme.colors.text.general.regular.muted,
-                    disabledPlaceholderColor = UiKitTheme.colors.text.general.regular.muted,
-                    disabledIndicationLineColor = UiKitTheme.colors.border.general.default,
-                    disabledErrorIndicationLineColor = UiKitTheme.colors.border.general.error,
-                ),
+                colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -345,8 +343,8 @@ private fun ScreenContent(
                 },
                 endContent = {
                     ZarinaSwitch(
-                        isChecked = receiveNewsNyEmail,
-                        onCheckedChanged = onReceiveNewsNyEmailChanged,
+                        isChecked = receiveEmails,
+                        onCheckedChanged = onReceiveEmailsChanged,
                     )
                 },
             )
@@ -368,8 +366,8 @@ private fun ScreenContent(
                 },
                 endContent = {
                     ZarinaSwitch(
-                        isChecked = receiveSmsNotifications,
-                        onCheckedChanged = onReceiveSmsNotificationsChanged,
+                        isChecked = receiveSms,
+                        onCheckedChanged = onReceiveSmsChanged,
                     )
                 },
             )
@@ -400,7 +398,7 @@ private fun ScreenContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            RecaptchaPolicies(
+            RecaptchaPolicy(
                 onUrlClicked = onUrlClicked,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -438,10 +436,10 @@ private fun Preview() {
             password = "",
             onPasswordChanged = {},
             isPasswordInvalid = false,
-            receiveNewsNyEmail = false,
-            onReceiveNewsNyEmailChanged = {},
-            receiveSmsNotifications = false,
-            onReceiveSmsNotificationsChanged = {},
+            receiveEmails = false,
+            onReceiveEmailsChanged = {},
+            receiveSms = false,
+            onReceiveSmsChanged = {},
             arePoliciesAccepted = false,
             onPoliciesAcceptedChanged = {},
             isPoliciesErrorVisible = false,

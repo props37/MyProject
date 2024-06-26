@@ -8,15 +8,12 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
@@ -24,7 +21,6 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.location.Location
 import ru.livetyping.zarina.domain.store.Store
-import ru.livetyping.zarina.presentation.common.datafetchinginfo.DataFetchingInfoHolder
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.permissionmanager.isGranted
@@ -32,6 +28,7 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.stores.StoresViewModel.SideEffect
 import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
 
@@ -50,14 +47,15 @@ class StoresViewModel @Inject constructor(
     private val _currentViewMode = MutableStateFlow(ViewMode.MAP)
     val currentViewMode: StateFlow<ViewMode> = _currentViewMode.asStateFlow()
 
-    private val currentLocationFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
-    private val storesFetchingInfoHolder = DataFetchingInfoHolder<Unit>()
+    private val currentLocationRequester = FlowRequester(LocationRequest.GENERAL) {
+        interactor.getCurrentLocationFlow()
+    }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val currentLocation: StateFlow<Location?> = currentLocationFetchingInfoHolder.fetchingRequests
-        .flatMapLatest {
-            interactor.getCurrentLocationFlow()
-        }
+    private val storesRequester = FlowRequester(StoresRequest.GENERAL) {
+        interactor.getStoresFlow()
+    }
+
+    val currentLocation: StateFlow<Location?> = currentLocationRequester.flow
         .map { result ->
             result.getOrNull()
         }
@@ -67,24 +65,18 @@ class StoresViewModel @Inject constructor(
             initialValue = null,
         )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val storesResult: StateFlow<Result<List<Store>>?> =
-        storesFetchingInfoHolder.fetchingRequests
-            .flatMapLatest {
-                interactor.getStoresFlow()
-            }
-            .onEach { storesFetchingInfoHolder.completeFetching() }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                initialValue = null,
-            )
+    private val storesResult: StateFlow<Result<List<Store>>?> = storesRequester.flow
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
 
     val storeMapState: StateFlow<StoreListState> = combine(
         storesResult,
-        storesFetchingInfoHolder.fetchingType,
-    ) { storesResult, fetchingType ->
-        if (storesResult == null || fetchingType != null) {
+        storesRequester.loadingState,
+    ) { storesResult, loadingState->
+        if (storesResult == null || loadingState.isLoading) {
             StoreListState.Loading
         } else {
             storesResult.fold(
@@ -106,9 +98,9 @@ class StoresViewModel @Inject constructor(
     val storeListState: StateFlow<StoreListState> = combine(
         storesResult,
         interactor.getUserCityFlow(),
-        storesFetchingInfoHolder.fetchingType,
-    ) { storesResult, userCityResult, fetchingType ->
-        if (storesResult == null || fetchingType != null) {
+        storesRequester.loadingState,
+    ) { storesResult, userCityResult, loadingState ->
+        if (storesResult == null || loadingState.isLoading) {
             StoreListState.Loading
         } else {
             storesResult.fold(
@@ -133,11 +125,6 @@ class StoresViewModel @Inject constructor(
         initialValue = StoreListState.Loading,
     )
 
-    init {
-        currentLocationFetchingInfoHolder.requestFetching(Unit)
-        storesFetchingInfoHolder.requestFetching(Unit)
-    }
-
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = StoresScreenAction.ScreenClosed
@@ -154,12 +141,12 @@ class StoresViewModel @Inject constructor(
             val fineLocationPermissionState =
                 permissionManager.getPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
             if (fineLocationPermissionState.isGranted) {
-                currentLocationFetchingInfoHolder.requestFetching(Unit)
+                currentLocationRequester.request(LocationRequest.GENERAL)
             } else {
                 val newPermissionsState =
                     permissionManager.requestMultiplePermissions(LOCATION_PERMISSIONS)
                 if (newPermissionsState.any { it.value.isGranted }) {
-                    currentLocationFetchingInfoHolder.requestFetching(Unit)
+                    currentLocationRequester.request(LocationRequest.GENERAL)
                 } else {
                     val action = StoresScreenAction.LocationPermissionRequired
                     emitSideEffect(SideEffect.Navigate(action))
@@ -169,7 +156,7 @@ class StoresViewModel @Inject constructor(
     }
 
     fun onStoresErrorRefreshClicked() {
-        storesFetchingInfoHolder.requestFetching(Unit)
+        storesRequester.request(StoresRequest.GENERAL)
     }
 
     fun onStoreClicked(store: Store) {
@@ -198,6 +185,10 @@ class StoresViewModel @Inject constructor(
         @Immutable
         data class Error(val state: ErrorState) : StoreListState()
     }
+
+    private enum class LocationRequest : FlowRequester.Request { GENERAL }
+
+    private enum class StoresRequest : FlowRequester.Request { GENERAL }
 
     companion object {
         private val LOCATION_PERMISSIONS: List<String>

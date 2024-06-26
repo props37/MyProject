@@ -65,11 +65,11 @@ fun ProductSubscriptionScreen(
     val product by viewModel.product.collectAsStateWithLifecycle()
     val productOffer by viewModel.productOffer.collectAsStateWithLifecycle()
     val firstName by viewModel.firstName.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val isFirstNameInvalid by viewModel.isFirstNameInvalid.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
     val arePoliciesAccepted by viewModel.arePoliciesAccepted.collectAsStateWithLifecycle()

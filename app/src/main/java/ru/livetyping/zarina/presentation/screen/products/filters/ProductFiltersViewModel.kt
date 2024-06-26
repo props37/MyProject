@@ -8,12 +8,10 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
@@ -36,6 +34,7 @@ import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinat
 import ru.livetyping.zarina.presentation.screen.filters.FilterListState
 import ru.livetyping.zarina.presentation.screen.products.filters.ProductFiltersViewModel.SideEffect
 import ru.livetyping.zarina.usecase.product.GetCategoryProductInfoFlowUseCase
+import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import timber.log.Timber
@@ -89,23 +88,22 @@ class ProductFiltersViewModel @AssistedInject constructor(
             parcelable?.toFilters() ?: initialFilters.value
         }
 
-    private val categoryProductInfoFetchRequests = Channel<Unit>(Channel.CONFLATED)
-
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val categoryProductInfoResult: StateFlow<Result<CategoryProductInfo>?> = combine(
-        categoryId,
-        filters,
-        categoryProductInfoFetchRequests.receiveAsFlow(),
-    ) { categoryId, filters, _ ->
-        val params = GetCategoryProductInfoFlowUseCase.Params(categoryId, filters)
-        interactor.getCategoryProductInfoFlow(params)
+    private val categoryProductInfoRequester = FlowRequester(CategoryProductInfoRequest.GENERAL) {
+        combine(categoryId, filters) { categoryId, filters ->
+            val params = GetCategoryProductInfoFlowUseCase.Params(categoryId, filters)
+            interactor.getCategoryProductInfoFlow(params)
+        }
+            .flatMapLatest { it }
     }
-        .flatMapLatest { it }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null,
-        )
+
+    private val categoryProductInfoResult: StateFlow<Result<CategoryProductInfo>?> =
+        categoryProductInfoRequester.flow
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = null,
+            )
 
     val filterListState: StateFlow<FilterListState> = combine(
         filters,
@@ -147,8 +145,6 @@ class ProductFiltersViewModel @AssistedInject constructor(
     ) { it?.hasAppliedIgnoringSorting == true }
 
     init {
-        categoryProductInfoFetchRequests.trySend(Unit)
-
         handleListFilterResult()
     }
 
@@ -201,7 +197,7 @@ class ProductFiltersViewModel @AssistedInject constructor(
     }
 
     fun onFilterListErrorRefreshClicked() {
-        categoryProductInfoFetchRequests.trySend(Unit)
+        categoryProductInfoRequester.request(CategoryProductInfoRequest.GENERAL)
     }
 
     private fun handleListFilterResult() {
@@ -222,6 +218,8 @@ class ProductFiltersViewModel @AssistedInject constructor(
 
         data class NavigateBackward(val result: ProductFiltersScreenResult) : SideEffect
     }
+
+    private enum class CategoryProductInfoRequest : FlowRequester.Request { GENERAL }
 
     @AssistedFactory
     interface Factory {

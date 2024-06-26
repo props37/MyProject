@@ -31,7 +31,8 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
                 LoyaltyProgramGraph.LoyaltyProgram.routeSchema,
                 ProfileGraph.MyOrders.routeSchema,
                 ProfileGraph.ProfileDetails.routeSchema,
-                ProfileGraph.Stores.routeSchema -> slideExitTransition()
+                ProfileGraph.Stores.routeSchema,
+                UnscopedDestinations.CitySelector.routeSchema -> slideExitTransition()
 
                 else -> null
             }
@@ -45,7 +46,8 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
                 LoyaltyProgramGraph.LoyaltyProgram.routeSchema,
                 ProfileGraph.MyOrders.routeSchema,
                 ProfileGraph.ProfileDetails.routeSchema,
-                ProfileGraph.Stores.routeSchema -> slidePopEnterTransition()
+                ProfileGraph.Stores.routeSchema,
+                UnscopedDestinations.CitySelector.routeSchema -> slidePopEnterTransition()
 
                 else -> null
             }
