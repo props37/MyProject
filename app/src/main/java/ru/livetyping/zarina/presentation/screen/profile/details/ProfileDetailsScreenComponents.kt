@@ -538,6 +538,8 @@ object ProfileDetailsScreenComponents {
                         text = body,
                         style = ItemBodyTextStyle,
                         color = UiKitTheme.colors.text.general.regular.default,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
 
                     if (description != null) {
@@ -603,7 +605,7 @@ object ProfileDetailsScreenComponents {
         )
     }
 
-    const val DatePickerMinYear = 1901
+    const val DatePickerMinYear = 1900
 
     private const val ProfileDetailsContentKeySuccess = "ProfileDetailsContentKeySuccess"
 

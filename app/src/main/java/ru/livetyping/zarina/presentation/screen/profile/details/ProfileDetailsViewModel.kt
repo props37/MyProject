@@ -44,6 +44,7 @@ import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import timber.log.Timber
+import java.time.LocalTime
 import java.time.ZoneId
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
@@ -304,7 +305,8 @@ class ProfileDetailsViewModel @Inject constructor(
             placeCursorAtEnd()
         }
         val birthDateMillis = user.birthDate
-            ?.atStartOfDay(ZoneId.systemDefault())
+            ?.atTime(LocalTime.of(NOON_HOURS, 0))
+            ?.atZone(ZoneId.systemDefault())
             ?.toInstant()
             ?.toEpochMilli()
         birthDateMillisValueHolder.set(birthDateMillis)
@@ -336,6 +338,8 @@ class ProfileDetailsViewModel @Inject constructor(
     private enum class UserRequest : FlowRequester.Request { LOADING, REFRESHING }
 
     companion object {
+        private const val NOON_HOURS = 12
+
         private const val KEY_BIRTH_DATE_MILLIS = "birth_date_millis"
     }
 }
