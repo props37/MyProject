@@ -39,7 +39,7 @@ import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import timber.log.Timber
 
-// TODO: [High] DRY!
+// TODO: [Medium] DRY!
 
 @HiltViewModel(assistedFactory = ProductFiltersViewModel.Factory::class)
 class ProductFiltersViewModel @AssistedInject constructor(

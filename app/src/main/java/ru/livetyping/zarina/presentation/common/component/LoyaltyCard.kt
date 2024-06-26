@@ -118,7 +118,6 @@ fun LoyaltyCard(
         label = "contentColor",
     )
 
-    // TODO: [High] Test!
     var side by rememberSaveable { mutableStateOf(initialSide) }
     val rotation = animateFloatAsState(
         targetValue = when (side) {

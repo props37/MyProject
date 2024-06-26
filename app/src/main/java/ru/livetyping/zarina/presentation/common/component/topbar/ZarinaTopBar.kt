@@ -28,8 +28,7 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIcon
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
-// TODO: [High] Rework, ensure all available usage options work properly
-// TODO: [Medium] Add spacers between contents
+// TODO: [Medium] Rework, ensure all available usage options work properly
 
 @Composable
 fun ZarinaTopBar(

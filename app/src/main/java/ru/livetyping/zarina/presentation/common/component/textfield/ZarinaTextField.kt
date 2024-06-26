@@ -76,9 +76,9 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTr
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.util.compose.text.textAsFlow
 
-// TODO: [High] Add label animation
-// TODO: [High] Apply error color to description
-// TODO: [High] Migrate to BasicTextField2
+// TODO: [Medium] Add label animation
+// TODO: [Medium] Apply error color to description
+// TODO: [Medium] Migrate to BasicTextField2
 
 @Composable
 fun ZarinaTextField(

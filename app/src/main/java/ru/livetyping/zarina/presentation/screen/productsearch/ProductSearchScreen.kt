@@ -47,8 +47,6 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.tryRequestFocus
 import kotlin.time.Duration.Companion.milliseconds
 
-// TODO: [High] Add search history
-
 @Composable
 fun ProductSearchScreen(
     navigate: (ProductSearchScreenAction) -> Unit,

@@ -11,8 +11,6 @@ import ru.livetyping.zarina.util.base.usecase.invoke
 import timber.log.Timber
 import javax.inject.Inject
 
-// TODO: [Medium] Is synchronization needed?
-
 class RefreshAuthorizationTokensUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,

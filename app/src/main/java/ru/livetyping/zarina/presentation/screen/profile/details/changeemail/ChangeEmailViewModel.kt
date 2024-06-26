@@ -64,8 +64,6 @@ class ChangeEmailViewModel @Inject constructor(
     }
 
     fun onEmailChanged(email: String) {
-        // TODO: [High] Implement
-        Timber.d("<3 email: $email")
         this.email = email
         _isEmailInvalid.value = false
     }
