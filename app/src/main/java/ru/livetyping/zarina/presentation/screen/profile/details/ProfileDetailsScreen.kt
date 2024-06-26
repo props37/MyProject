@@ -37,9 +37,6 @@ import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsVi
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import java.time.LocalDate
 
-// TODO: [High] Field validation
-// TODO: [High] Close screen if the user is not logged in
-
 @Composable
 fun ProfileDetailsScreen(
     navigate: (ProfileDetailsScreenAction) -> Unit,

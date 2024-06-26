@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +23,7 @@ fun ProfileDetailsScreenBehavior(
 ) {
     val updatedContext by rememberUpdatedState(LocalContext.current)
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+    val updatedKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
     val updatedOnScreenOpen by rememberUpdatedState(onScreenOpen)
     val updatedNavigate by rememberUpdatedState(navigate)
 
@@ -36,7 +38,11 @@ fun ProfileDetailsScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
+                    is SideEffect.Navigate -> {
+                        updatedKeyboardController?.hide()
+                        updatedNavigate(sideEffect.action)
+                    }
+
                     is SideEffect.OpenUrl -> {
                         val intent = CustomTabsIntent.Builder()
                             .setShowTitle(true)
