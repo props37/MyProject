@@ -175,6 +175,7 @@ class ProfileDetailsViewModel @Inject constructor(
             return
         }
 
+        emitSideEffect(SideEffect.HideKeyboard)
         saveUserInfoJob = viewModelScope.launch {
             val birthDate = birthDateMillis.value
                 ?.let { LocalDateUtil.fromMillis(it) } ?: USER_BIRTH_DATE_DEFAULT
@@ -324,6 +325,8 @@ class ProfileDetailsViewModel @Inject constructor(
         data class Navigate(val action: ProfileDetailsScreenAction) : SideEffect
 
         data class OpenUrl(val url: String) : SideEffect
+
+        data object HideKeyboard : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }

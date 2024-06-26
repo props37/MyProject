@@ -50,6 +50,10 @@ fun ProfileDetailsScreenBehavior(
                         intent.launchUrl(updatedContext, sideEffect.url.toUri())
                     }
 
+                    SideEffect.HideKeyboard -> {
+                        updatedKeyboardController?.hide()
+                    }
+
                     is SideEffect.ShowZarinaToast -> {
                         updatedZarinaToastController.show(sideEffect.message)
                     }
