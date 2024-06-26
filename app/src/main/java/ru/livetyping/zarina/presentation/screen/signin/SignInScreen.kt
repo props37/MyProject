@@ -45,15 +45,15 @@ fun SignInScreen(
     val signInTypes by viewModel.signInTypes.collectAsStateWithLifecycle()
     val currentSignInType by viewModel.currentSignInType.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val isPasswordInvalid by viewModel.isPasswordInvalid.collectAsStateWithLifecycle()
     val phone by viewModel.phone.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val isPhoneInvalid by viewModel.isPhoneInvalid.collectAsStateWithLifecycle()
     val isSignInButtonLoading by viewModel.isSignInButtonLoading.collectAsStateWithLifecycle()

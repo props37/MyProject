@@ -53,7 +53,7 @@ fun PasswordRecoveryScreen(
     viewModel: PasswordRecoveryViewModel = hiltViewModel(),
 ) {
     val email by viewModel.email.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
     val isSendButtonLoading by viewModel.isSendButtonLoading.collectAsStateWithLifecycle()

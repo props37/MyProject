@@ -75,21 +75,21 @@ fun SignUpScreen(
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val firstName by viewModel.firstName.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val birthDateMillis by viewModel.birthDateMillis.collectAsStateWithLifecycle()
     val isBirthDateInvalid by viewModel.isBirthDateInvalid.collectAsStateWithLifecycle()
     val isFirstNameInvalid by viewModel.isFirstNameInvalid.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
     val phone by viewModel.phone.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val isPhoneInvalid by viewModel.isPhoneInvalid.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val isPasswordInvalid by viewModel.isPasswordInvalid.collectAsStateWithLifecycle()
     val receiveEmails by viewModel.receiveEmails.collectAsStateWithLifecycle()
