@@ -75,6 +75,7 @@ private fun ScreenContent(
         otp = otp,
         onOtpChanged = onOtpChanged,
         onOtpEntered = { onOtpEntered() },
+        onImeDoneClicked = onOtpEntered,
         isOtpInvalid = isOtpInvalid,
         isOtpLoading = isOtpLoading,
         otpResendState = otpResendState,

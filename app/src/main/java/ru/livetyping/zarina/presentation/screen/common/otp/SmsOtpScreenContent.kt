@@ -14,9 +14,12 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -43,6 +46,7 @@ fun SmsOtpScreenContent(
     otp: String,
     onOtpChanged: (String) -> Unit,
     onOtpEntered: (String) -> Unit,
+    onImeDoneClicked: () -> Unit,
     isOtpInvalid: Boolean,
     isOtpLoading: Boolean,
     otpResendState: OtpResendState,
@@ -75,6 +79,10 @@ fun SmsOtpScreenContent(
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(24.dp))
 
+            val updatedOnImeDoneClicked by rememberUpdatedState(onImeDoneClicked)
+            val keyboardActions = remember {
+                KeyboardActions(onDone = { updatedOnImeDoneClicked() })
+            }
             SmsOtp(
                 phone = phone,
                 otp = otp,
@@ -84,6 +92,7 @@ fun SmsOtpScreenContent(
                 isOtpLoading = isOtpLoading,
                 resendState = otpResendState,
                 onResendClicked = onResendOtpClicked,
+                keyboardActions = keyboardActions,
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -108,6 +117,7 @@ private fun Preview() {
             otp = "",
             onOtpChanged = {},
             onOtpEntered = {},
+            onImeDoneClicked = {},
             isOtpInvalid = false,
             isOtpLoading = false,
             otpResendState = remember { OtpResendState.TimeoutCountdown(1.minutes) },

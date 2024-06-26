@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -205,7 +206,10 @@ private val TextStyleDefault: TextStyle
 
 @Stable
 private val KeyboardOptionsDefault: KeyboardOptions
-    get() = KeyboardOptions(keyboardType = KeyboardType.Number)
+    get() = KeyboardOptions(
+        keyboardType = KeyboardType.Number,
+        imeAction = ImeAction.Done,
+    )
 
 @Stable
 private val CellMinWidth: Dp get() = 40.dp
