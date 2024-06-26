@@ -57,7 +57,7 @@ class ProfileDetailsViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val userRequester = FlowRequester(UserRequest.LOADING) {
+    private val userRequester = FlowRequester<Result<User>, UserRequest>(initialRequest = null) {
         interactor.getUpdatedUserFlow()
     }
 
@@ -154,6 +154,10 @@ class ProfileDetailsViewModel @Inject constructor(
         started = SharingStarted.WhileUiSubscribed,
         initialValue = false,
     )
+
+    fun onScreenOpen() {
+        userRequester.request(UserRequest.LOADING)
+    }
 
     fun onBackClicked() {
         navigationThrottler.throttle {

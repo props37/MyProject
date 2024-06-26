@@ -75,6 +75,7 @@ fun ProfileDetailsScreen(
         onDeleteAccountClicked = viewModel::onDeleteAccountClicked,
         onBackClicked = viewModel::onBackClicked,
         onUrlClicked = viewModel::onUrlClicked,
+        onScreenOpen = viewModel::onScreenOpen,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -104,10 +105,12 @@ private fun ScreenContent(
     onDeleteAccountClicked: () -> Unit,
     onBackClicked: () -> Unit,
     onUrlClicked: (String) -> Unit,
+    onScreenOpen: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProfileDetailsScreenAction) -> Unit,
 ) {
     ProfileDetailsScreenBehavior(
+        onScreenOpen = onScreenOpen,
         sideEffects = sideEffects,
         navigate = navigate,
     )
