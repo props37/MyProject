@@ -58,6 +58,10 @@ class UserRepository @Inject constructor(
             oldPassword = oldPassword,
             newPassword = newPassword,
         )
+
+        // TODO: [Backend] Refactor when backend starts to return a user as a response
+        val user = remoteDataSource.getUserFlow().firstOrNull()
+        if (user != null) setUser(user)
     }
 
     suspend fun changePhoneNumber(phone: PhoneNumber, recaptchaToken: Token) {
