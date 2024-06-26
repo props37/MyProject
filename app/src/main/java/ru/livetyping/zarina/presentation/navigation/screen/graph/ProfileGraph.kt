@@ -7,6 +7,7 @@ import ru.livetyping.zarina.presentation.navigation.destination.graph.ProfileGra
 import ru.livetyping.zarina.presentation.navigation.screen.accountDeletionConfirmationDialog
 import ru.livetyping.zarina.presentation.navigation.screen.changeEmailScreen
 import ru.livetyping.zarina.presentation.navigation.screen.changePasswordScreen
+import ru.livetyping.zarina.presentation.navigation.screen.changePhoneNumberOtpScreen
 import ru.livetyping.zarina.presentation.navigation.screen.changePhoneNumberScreen
 import ru.livetyping.zarina.presentation.navigation.screen.myOrdersScreen
 import ru.livetyping.zarina.presentation.navigation.screen.orderCancellationDialog
@@ -23,6 +24,7 @@ fun NavGraphBuilder.profileGraph(navController: NavHostController) {
         changePasswordScreen(navController)
         changeEmailScreen(navController)
         changePhoneNumberScreen(navController)
+        changePhoneNumberOtpScreen(navController)
         signOutConfirmationDialog(navController)
         accountDeletionConfirmationDialog(navController)
         myOrdersScreen(navController)
