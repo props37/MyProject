@@ -7,4 +7,7 @@ import kotlinx.serialization.Serializable
 data class ChangePhoneNumberRequestBody(
     @SerialName("phone")
     val phone: String,
+
+    @SerialName("reCaptchaKey")
+    val recaptchaToken: String,
 )

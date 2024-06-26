@@ -52,8 +52,8 @@ class UserRemoteDataSource @Inject constructor(
         )
     }
 
-    suspend fun changePhoneNumber(phone: PhoneNumber) {
-        api.changePhoneNumber(phone)
+    suspend fun changePhoneNumber(phone: PhoneNumber, recaptchaToken: Token) {
+        api.changePhoneNumber(phone, recaptchaToken)
     }
 
     suspend fun confirmPhoneNumberChange(phone: PhoneNumber, code: String) {

@@ -85,8 +85,8 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun changePhoneNumber(phone: PhoneNumber) {
-        val body = ChangePhoneNumberRequestBody(phone.value)
+    suspend fun changePhoneNumber(phone: PhoneNumber, recaptchaToken: Token) {
+        val body = ChangePhoneNumberRequestBody(phone.value, recaptchaToken.value)
         changePhoneNumberApiExceptionConverter {
             httpClient.post("/api/phone/verification") {
                 setJsonBody(body)
