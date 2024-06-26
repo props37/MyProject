@@ -35,8 +35,6 @@ import ru.livetyping.zarina.presentation.screen.signin.SignInViewModel.SignInTyp
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.pager.PagerTabRowIntegration
 
-// TODO: [High] Request TextField focus automatically
-
 @Composable
 fun SignInScreen(
     navigate: (SignInScreenAction) -> Unit,
