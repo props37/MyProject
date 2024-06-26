@@ -20,9 +20,12 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,6 +44,7 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.profile.details.changeemail.ChangeEmailScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.profile.details.changeemail.ChangeEmailViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.tryRequestFocus
 
 @Composable
 fun ChangeEmailScreen(
@@ -77,6 +81,11 @@ private fun ScreenContent(
         sideEffects = sideEffects,
         navigate = navigate,
     )
+
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        focusRequester.tryRequestFocus()
+    }
 
     Column(
         modifier = Modifier
@@ -122,7 +131,8 @@ private fun ScreenContent(
                 lineLimits = TextFieldLineLimits.SingleLine,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .focusRequester(focusRequester),
             )
             Spacer(modifier = Modifier.height(32.dp))
 
