@@ -106,6 +106,13 @@ class UserApi @Inject constructor(
         }
     }
 
+    suspend fun requestResendPhoneNumberChangeSmsOtp(phone: PhoneNumber) {
+        val body = RequestResendSmsOtpRequestBody(phone.value)
+        httpClient.post("/api/phone/verification/sms") {
+            setJsonBody(body)
+        }
+    }
+
     suspend fun updateUserNotificationSettings(
         receiveSms: Boolean,
         receiveEmails: Boolean,

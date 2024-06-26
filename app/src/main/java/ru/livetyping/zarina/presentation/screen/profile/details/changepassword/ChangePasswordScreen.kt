@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
@@ -163,6 +164,19 @@ private fun ScreenContent(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        ScreenContent(
+            oldPassword = "",
+            isOldPasswordInvalid = false,
+            onOldPasswordChanged = {},
+            newPassword = "",
+            isNewPasswordInvalid = false,
+            onNewPasswordChanged = {},
+            onNewPasswordEntered = {},
+            onChangePasswordClicked = {},
+            isChangePasswordButtonLoading = false,
+            onBackClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigate = {},
+        )
     }
 }

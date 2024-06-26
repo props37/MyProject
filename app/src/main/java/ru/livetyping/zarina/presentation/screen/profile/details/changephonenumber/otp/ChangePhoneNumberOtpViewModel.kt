@@ -20,6 +20,7 @@ import ru.livetyping.zarina.presentation.navigation.destination.graph.ProfileGra
 import ru.livetyping.zarina.presentation.screen.common.otp.OtpViewModelComponent
 import ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.otp.ChangePhoneNumberOtpViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.ConfirmPhoneNumberChangeUseCase
+import ru.livetyping.zarina.usecase.user.RequestResendPhoneNumberChangeSmsOtpUseCase
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
@@ -75,7 +76,10 @@ class ChangePhoneNumberOtpViewModel @Inject constructor(
             val params = ConfirmPhoneNumberChangeUseCase.Params(phone.value, otp.value)
             interactor.confirmPhoneNumberChange(params)
                 .onSuccess {
-                    // TODO: [High] Show toast
+                    val text = Text.Resource(R.string.phone_number_changed)
+                    val message = ZarinaToastMessage(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+
                     val action = ChangePhoneNumberOtpScreenAction.PhoneNumberChanged
                     emitSideEffect(SideEffect.Navigate(action))
                 }
@@ -85,7 +89,13 @@ class ChangePhoneNumberOtpViewModel @Inject constructor(
 
     fun onResendOtpClicked() {
         otpComponent.onResendOtpClicked {
-            TODO()
+            val params = RequestResendPhoneNumberChangeSmsOtpUseCase.Params(phone.value)
+            interactor.requestResendPhoneNumberChangeSmsOtp(params)
+                .onFailure {
+                    val text = Text.Resource(R.string.code_resend_error)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                }
         }
     }
 

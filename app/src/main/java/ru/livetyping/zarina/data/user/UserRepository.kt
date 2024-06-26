@@ -68,6 +68,10 @@ class UserRepository @Inject constructor(
         remoteDataSource.confirmPhoneNumberChange(phone, code)
     }
 
+    suspend fun requestResendPhoneNumberChangeSmsOtp(phone: PhoneNumber) {
+        remoteDataSource.requestResendPhoneNumberChangeSmsOtp(phone)
+    }
+
     suspend fun updateUserNotificationSettings(
         receiveSms: Boolean,
         receiveEmails: Boolean,

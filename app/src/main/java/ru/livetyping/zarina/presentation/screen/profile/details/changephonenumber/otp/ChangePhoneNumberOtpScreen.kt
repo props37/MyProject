@@ -2,6 +2,7 @@ package ru.livetyping.zarina.presentation.screen.profile.details.changephonenumb
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
@@ -10,12 +11,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.presentation.common.otp.OtpResendState
+import ru.livetyping.zarina.presentation.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.common.otp.SmsOtpScreenContent
 import ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.otp.ChangePhoneNumberOtpViewModel.SideEffect
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun ChangePhoneNumberOtpScreen(
@@ -85,5 +89,18 @@ private fun ScreenContent(
 private fun Preview() {
     ZarinaPreview {
         // TODO: [Low] Add preview
+        ScreenContent(
+            phone = remember { FakeDataGenerator.getPhoneNumber() },
+            otp = "",
+            onOtpChanged = {},
+            onOtpEntered = {},
+            isOtpLoading = false,
+            isOtpInvalid = false,
+            otpResendState = remember { OtpResendState.TimeoutCountdown(60.seconds) },
+            onResendOtpClicked = {},
+            onBackClicked = {},
+            sideEffects = remember { emptyFlow() },
+            navigate = {},
+        )
     }
 }

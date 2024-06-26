@@ -1,8 +1,10 @@
 package ru.livetyping.zarina.data.user.remote
 
+import io.ktor.client.request.post
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.data.user.remote.api.UserApi
+import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendSmsOtpRequestBody
 import ru.livetyping.zarina.domain.authorization.AuthorizationResult
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
 import ru.livetyping.zarina.domain.common.Email
@@ -14,6 +16,7 @@ import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.domain.user.LoyaltyProgramBonusAction
 import ru.livetyping.zarina.domain.user.User
+import ru.livetyping.zarina.util.library.ktor.setJsonBody
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -55,6 +58,10 @@ class UserRemoteDataSource @Inject constructor(
 
     suspend fun confirmPhoneNumberChange(phone: PhoneNumber, code: String) {
         api.confirmPhoneNumberChange(phone, code)
+    }
+
+    suspend fun requestResendPhoneNumberChangeSmsOtp(phone: PhoneNumber) {
+        api.requestResendPhoneNumberChangeSmsOtp(phone)
     }
 
     suspend fun updateUserNotificationSettings(
