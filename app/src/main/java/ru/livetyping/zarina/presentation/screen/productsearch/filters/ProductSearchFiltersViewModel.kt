@@ -8,12 +8,10 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
@@ -36,11 +34,12 @@ import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinat
 import ru.livetyping.zarina.presentation.screen.filters.FilterListState
 import ru.livetyping.zarina.presentation.screen.productsearch.filters.ProductSearchFiltersViewModel.SideEffect
 import ru.livetyping.zarina.usecase.productsearch.SearchProductsFlowUseCase
+import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import timber.log.Timber
 
-// TODO: [High] DRY!
+// TODO: [Medium] DRY!
 
 @HiltViewModel(assistedFactory = ProductSearchFiltersViewModel.Factory::class)
 class ProductSearchFiltersViewModel @AssistedInject constructor(
@@ -88,29 +87,27 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
             parcelable?.toFilters() ?: initialFilters.value
         }
 
-    private val categoryProductInfoFetchRequests = Channel<Unit>(Channel.CONFLATED)
-
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val productSearchResult: StateFlow<Result<ProductSearchResult>?> = combine(
-        searchQuery,
-        filters,
-        categoryProductInfoFetchRequests.receiveAsFlow(),
-    ) { searchQuery, filters, _ ->
-        // TODO: [High] Add filters parameter
-        val params = SearchProductsFlowUseCase.Params(
-            query = searchQuery,
-            sorting = Sorting.NEW,
-            filters = filters,
-            offset = 0,
-        )
-        interactor.searchProductsFlow(params)
+    private val categoryProductInfoRequester = FlowRequester(CategoryProductInfoRequest.GENERAL) {
+        combine(searchQuery, filters) { query, filters ->
+            val params = SearchProductsFlowUseCase.Params(
+                query = query,
+                sorting = Sorting.NEW,
+                filters = filters,
+                offset = 0,
+            )
+            interactor.searchProductsFlow(params)
+        }
+            .flatMapLatest { it }
     }
-        .flatMapLatest { it }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null,
-        )
+
+    private val productSearchResult: StateFlow<Result<ProductSearchResult>?> =
+        categoryProductInfoRequester.flow
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = null,
+            )
 
     val filterListState: StateFlow<FilterListState> = combine(
         filters,
@@ -152,8 +149,6 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
     ) { it?.hasAppliedIgnoringSorting == true }
 
     init {
-        categoryProductInfoFetchRequests.trySend(Unit)
-
         handleListFilterResult()
     }
 
@@ -206,7 +201,7 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
     }
 
     fun onFilterListErrorRefreshClicked() {
-        categoryProductInfoFetchRequests.trySend(Unit)
+        categoryProductInfoRequester.request(CategoryProductInfoRequest.GENERAL)
     }
 
     private fun handleListFilterResult() {
@@ -227,6 +222,8 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
 
         data class NavigateBackward(val result: ProductSearchFiltersScreenResult) : SideEffect
     }
+
+    private enum class CategoryProductInfoRequest : FlowRequester.Request { GENERAL }
 
     @AssistedFactory
     interface Factory {

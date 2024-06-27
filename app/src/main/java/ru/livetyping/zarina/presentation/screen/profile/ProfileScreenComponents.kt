@@ -151,7 +151,7 @@ object ProfileScreenComponents {
     @Composable
     fun LoyaltyCard(
         loyaltyCard: LoyaltyCard?,
-        onLevelInfoClicked: () -> Unit,
+        onLoyaltyCardInfoClicked: () -> Unit,
         onSideChanged: (LoyaltyCardSide?) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -167,7 +167,7 @@ object ProfileScreenComponents {
             if (card != null) {
                 LoyaltyCardImpl(
                     card = card,
-                    onLevelInfoClicked = onLevelInfoClicked,
+                    onInfoClicked = onLoyaltyCardInfoClicked,
                     onSideChanged = onSideChanged,
                 )
             } else {

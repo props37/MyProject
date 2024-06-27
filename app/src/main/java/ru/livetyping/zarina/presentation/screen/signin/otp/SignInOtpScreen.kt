@@ -27,7 +27,7 @@ fun SignInOtpScreen(
 ) {
     val phone by viewModel.phone.collectAsStateWithLifecycle()
     val otp by viewModel.otp.collectAsStateWithLifecycle(
-        context = Dispatchers.Main.immediate, // TODO: [Low] remove after migration to BasicTextField2
+        context = Dispatchers.Main.immediate,
     )
     val isOtpLoading by viewModel.isOtpLoading.collectAsStateWithLifecycle()
     val isOtpInvalid by viewModel.isOtpInvalid.collectAsStateWithLifecycle()
@@ -74,6 +74,7 @@ private fun ScreenContent(
         otp = otp,
         onOtpChanged = onOtpChanged,
         onOtpEntered = { onOtpEntered() },
+        onImeDoneClicked = onOtpEntered,
         isOtpInvalid = isOtpInvalid,
         isOtpLoading = isOtpLoading,
         otpResendState = otpResendState,

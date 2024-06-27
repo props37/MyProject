@@ -5,6 +5,10 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.presentation.navigation.base.navigationGraph
 import ru.livetyping.zarina.presentation.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.presentation.navigation.screen.accountDeletionConfirmationDialog
+import ru.livetyping.zarina.presentation.navigation.screen.changeEmailScreen
+import ru.livetyping.zarina.presentation.navigation.screen.changePasswordScreen
+import ru.livetyping.zarina.presentation.navigation.screen.changePhoneNumberOtpScreen
+import ru.livetyping.zarina.presentation.navigation.screen.changePhoneNumberScreen
 import ru.livetyping.zarina.presentation.navigation.screen.myOrdersScreen
 import ru.livetyping.zarina.presentation.navigation.screen.orderCancellationDialog
 import ru.livetyping.zarina.presentation.navigation.screen.orderScreen
@@ -17,6 +21,10 @@ fun NavGraphBuilder.profileGraph(navController: NavHostController) {
     navigationGraph(ProfileGraph) {
         profileScreen(navController)
         profileDetailsScreen(navController)
+        changePasswordScreen(navController)
+        changeEmailScreen(navController)
+        changePhoneNumberScreen(navController)
+        changePhoneNumberOtpScreen(navController)
         signOutConfirmationDialog(navController)
         accountDeletionConfirmationDialog(navController)
         myOrdersScreen(navController)

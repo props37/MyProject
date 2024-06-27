@@ -2,12 +2,14 @@ package ru.livetyping.zarina.presentation.screen.product
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,28 +18,32 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
@@ -63,6 +69,7 @@ import ru.livetyping.zarina.presentation.common.component.ProductPrice
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaLikeIconButton
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaExpandableItem
@@ -93,17 +100,17 @@ object ProductScreenComponents {
         productName: String?,
         onShareClicked: () -> Unit,
         mode: TopBarMode,
+        windowInsets: WindowInsets,
         modifier: Modifier = Modifier,
     ) {
-        val contentAlpha by animateFloatAsState(
+        val backgroundAlpha = animateFloatAsState(
             targetValue = when (mode) {
                 TopBarMode.Transparent -> 0f
                 TopBarMode.Filled -> 1f
             },
             label = "content alpha",
         )
-        val backgroundColor =
-            UiKitTheme.colors.background.general.regular.default.copy(alpha = contentAlpha)
+        val backgroundColor = UiKitTheme.colors.background.general.regular.default
 
         ZarinaTopBar(
             startContent = {
@@ -114,9 +121,11 @@ object ProductScreenComponents {
                 )
             },
             centerContent = {
+                val color = UiKitTheme.colors.text.general.regular.default
+                    .copy(alpha = backgroundAlpha.value)
                 Text(
                     text = productName.orEmpty(),
-                    color = UiKitTheme.colors.text.general.regular.default.copy(alpha = contentAlpha),
+                    color = color,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -134,15 +143,20 @@ object ProductScreenComponents {
                     )
                 }
             },
-            backgroundColor = backgroundColor,
+            backgroundColor = Color.Unspecified,
             contentPadding = PaddingValues(vertical = 4.dp),
-            modifier = modifier,
+            modifier = modifier
+                .drawBehind {
+                    drawRect(color = backgroundColor, alpha = backgroundAlpha.value)
+                }
+                .windowInsetsPadding(windowInsets),
         )
     }
 
     @Composable
     fun ProductDetails(
         productState: ProductState,
+        onBonusCountForPurchaseClicked: () -> Unit,
         onProductColorClicked: (ProductColor) -> Unit,
         onAddProductToCartClicked: (Product) -> Unit,
         onAddProductToFavoritesClicked: (Product) -> Unit,
@@ -170,6 +184,7 @@ object ProductScreenComponents {
                 is ProductState.Success -> {
                     ProductDetailsImpl(
                         product = state.product,
+                        onBonusCountForPurchaseClicked = onBonusCountForPurchaseClicked,
                         onProductColorClicked = onProductColorClicked,
                         onAddProductToCartClicked = onAddProductToCartClicked,
                         onAddProductToFavoritesClicked = onAddProductToFavoritesClicked,
@@ -201,8 +216,60 @@ object ProductScreenComponents {
     }
 
     @Composable
+    fun ZarinaClubBottomSheetContent(
+        onCloseClicked: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            ZarinaTopBar(
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    top = 4.dp,
+                    end = 2.dp,
+                    bottom = 4.dp,
+                ),
+            ) {
+                Text(
+                    text = stringResource(R.string.for_zarina_club_members),
+                    style = UiKitTheme.typography.primary.bold,
+                    color = UiKitTheme.colors.text.general.regular.default,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .weight(1f),
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                ZarinaCloseIconButton(
+                    onClick = onCloseClicked,
+                    iconSize = 20.dp,
+                )
+            }
+
+            Text(
+                text = stringResource(R.string.zarina_club_program_description_1),
+                style = UiKitTheme.typography.secondary.regular,
+                color = UiKitTheme.colors.text.general.regular.default,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = stringResource(R.string.zarina_club_program_description_2),
+                style = UiKitTheme.typography.secondary.regular,
+                color = UiKitTheme.colors.text.general.regular.default,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 20.dp),
+            )
+        }
+    }
+
+    @Composable
     private fun ProductDetailsImpl(
         product: ProductDetails,
+        onBonusCountForPurchaseClicked: () -> Unit,
         onProductColorClicked: (ProductColor) -> Unit,
         onAddProductToCartClicked: (Product) -> Unit,
         onAddProductToFavoritesClicked: (Product) -> Unit,
@@ -218,6 +285,7 @@ object ProductScreenComponents {
         Column(modifier = modifier) {
             ProductDetailsList(
                 product = product,
+                onBonusCountForPurchaseClicked = onBonusCountForPurchaseClicked,
                 onProductColorClicked = onProductColorClicked,
                 productTotalLookState = productTotalLookState,
                 onProductTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
@@ -246,6 +314,7 @@ object ProductScreenComponents {
     @Composable
     private fun ProductDetailsList(
         product: ProductDetails,
+        onBonusCountForPurchaseClicked: () -> Unit,
         onProductColorClicked: (ProductColor) -> Unit,
         productTotalLookState: SuggestedProductListState,
         onProductTotalLookErrorRefreshClicked: () -> Unit,
@@ -284,6 +353,7 @@ object ProductScreenComponents {
             ) {
                 ProductGeneralInfo(
                     product = product,
+                    onBonusCountForPurchaseClicked = onBonusCountForPurchaseClicked,
                     onProductColorClicked = onProductColorClicked,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -425,6 +495,7 @@ object ProductScreenComponents {
     @Composable
     private fun ProductGeneralInfo(
         product: ProductDetails,
+        onBonusCountForPurchaseClicked: () -> Unit,
         onProductColorClicked: (ProductColor) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -454,10 +525,24 @@ object ProductScreenComponents {
 
             Spacer(modifier = Modifier.height(2.dp))
 
-            ProductPrice(
-                price = product.price,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(horizontal = 16.dp),
-            )
+            ) {
+                ProductPrice(
+                    price = product.price,
+                    modifier = Modifier.weight(1f),
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                if (product.bonusCountForPurchase > 0) {
+                    Bonuses(
+                        bonusCount = product.bonusCountForPurchase,
+                        onClick = onBonusCountForPurchaseClicked,
+                    )
+                }
+            }
 
             ProductColorSelector(
                 productId = product.id,
@@ -489,7 +574,6 @@ object ProductScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalTextApi::class)
     @Composable
     private fun ProductDeliveryAndPayment(
         freeDeliveryTotalPriceThreshold: Int,
@@ -661,6 +745,37 @@ object ProductScreenComponents {
     }
 
     @Composable
+    private fun Bonuses(
+        bonusCount: Int,
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .heightIn(min = 28.dp)
+                .clip(RoundedCornerShape(2.dp))
+                .clickable(onClick = onClick),
+        ) {
+            val bonusCountString = pluralStringResource(R.plurals.d_bonuses, bonusCount, bonusCount)
+            Text(
+                text = "+$bonusCountString",
+                style = UiKitTheme.typography.caption1.regular,
+                color = UiKitTheme.colors.text.general.regular.muted,
+            )
+
+            Spacer(modifier = Modifier.width(4.dp))
+
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_question_mark_shaped_24),
+                contentDescription = stringResource(R.string.for_zarina_club_members),
+                tint = UiKitTheme.colors.icon.regular.muted,
+                modifier = Modifier.size(16.dp),
+            )
+        }
+    }
+
+    @Composable
     private fun ProductDetailsSkeleton(
         modifier: Modifier = Modifier,
     ) {
@@ -719,7 +834,7 @@ object ProductScreenComponents {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.light,
                         shimmer = shimmer,
-                        modifier = Modifier.fillMaxWidth(0.5f),
+                        modifier = Modifier.fillMaxWidth(fraction = 0.5f),
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     ZarinaSkeleton(

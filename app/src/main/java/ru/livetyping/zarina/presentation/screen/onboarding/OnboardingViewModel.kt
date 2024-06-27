@@ -188,7 +188,6 @@ class OnboardingViewModel @AssistedInject constructor(
                         skipCityDetection()
                     }
                 } else if (
-                    // TODO: [High] Make sure this works correctly
                     newPermissionsState.all { it.value.isDenied }
                     && newPermissionsState.any { !it.value.shouldShowRequestRationale }
                 ) {

@@ -286,9 +286,6 @@ class ProductSearchViewModel @AssistedInject constructor(
             val availableFilters = availableFilters
             val combinedFilters =
                 availableFilters?.let { filters.value.coerceInAvailable(it) } ?: filters.value
-            Timber.d("<3 filters: ${filters.value}")
-            Timber.d("<3 availableFilters: $availableFilters")
-            Timber.d("<3 combinedFilters: $combinedFilters")
             val action = ProductSearchScreenAction.FiltersClicked(
                 searchQuery = searchQueryValueHolder.stateFlow.value,
                 filters = combinedFilters,

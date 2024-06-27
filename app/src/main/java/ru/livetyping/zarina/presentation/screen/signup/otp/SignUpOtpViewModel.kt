@@ -20,7 +20,7 @@ import ru.livetyping.zarina.presentation.navigation.destination.graph.SignUpGrap
 import ru.livetyping.zarina.presentation.screen.common.otp.OtpViewModelComponent
 import ru.livetyping.zarina.presentation.screen.signup.otp.SignUpOtpViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.ConfirmSignUpUseCase
-import ru.livetyping.zarina.usecase.user.RequestResendSmsOtpUseCase
+import ru.livetyping.zarina.usecase.user.RequestResendAuthorizationSmsOtpUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
@@ -89,7 +89,7 @@ class SignUpOtpViewModel @Inject constructor(
 
     fun onResendOtpClicked() {
         otpComponent.onResendOtpClicked {
-            val params = RequestResendSmsOtpUseCase.Params(phone.value)
+            val params = RequestResendAuthorizationSmsOtpUseCase.Params(phone.value)
             interactor.requestResendSmsOtp(params)
                 .onFailure {
                     val text = Text.Resource(R.string.code_resend_error)

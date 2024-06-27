@@ -134,6 +134,7 @@
     <string name="password_text_field_placeholder_eight_symbolds">Минимум 8 символов</string>
     <string name="password_text_field_placeholder_nine_symbolds">Минимум 8 символов</string>
     <string name="promotional_code_text_field_placeholder">Вставь или введи промокод</string>
+    <string name="birth_date_text_field_label">Дата рождения</string>
     <string name="birth_date_text_field_placeholder">ДД.ММ.ГГГГ</string>
     <string name="payment_placeholder">Один из предложенных вариантов</string>
     <string name="street_text_field_placeholder">Название улицы</string>
@@ -217,6 +218,49 @@
     <string name="categories">Категории</string>
     <string name="nothing_found">Ничего не нашлось</string>
     <string name="write_different_search_query">Напиши по‑другому или измени запрос</string>
+    <string name="loyalty_program">Программа лояльности</string>
+    <string name="loyalty_program_level">Уровень в программе лояльности</string>
+    <string name="my_bonuses">Мои бонусы</string>
+    <string name="expected_arrival">Ожидается поступление</string>
+    <string name="loyalty_program_policies">Условия программы лояльности</string>
+    <string name="bonus_account_history">История бонусного счёта</string>
+    <string name="bonus_history">История бонусов</string>
+    <string name="expected_bonuses">Ожидаемые бонусы</string>
+    <string name="accrual">Начисление</string>
+    <string name="write_off">Списание</string>
+    <string name="for_zarina_club_members">Для участников Zarina Club</string>
+    <string name="zarina_club_program_description_1">Количество бонусов к начислению для уровня Prime. 1 бонус = 1 рубль</string>
+    <string name="zarina_club_program_description_2">Копи бонусы и оплачивай до 30% от стоимости покупки</string>
+    <string name="personal_data">Личные данные</string>
+    <string name="contacts">Контакты</string>
+    <string name="settings">Настройки</string>
+    <string name="last_name">Фамилия</string>
+    <string name="change_password">Изменить пароль</string>
+    <string name="notifications_about_order_statuses_will_continue_to_arrive">Оповещения о статусах заказов продолжат поступать</string>
+    <string name="by_subscribing_to_newsletter_you_agree_to_personal_data_policies">Подписываясь на рассылку, ты соглашаешься с политикой обработки персональных данных</string>
+    <string name="by_subscribing_to_newsletter_you_agree_to_personal_data_policies_policy_text">политикой обработки персональных данных</string>
+    <string name="save">Сохранить</string>
+    <string name="personal_data_changed">Личные данные изменены</string>
+    <string name="notification_settings_updating_error">Не удалось обновить настройки уведомлений</string>
+    <string name="user_info_updating_error">Не удалось обновить профиль</string>
+    <string name="email_change">Смена электронной почты</string>
+    <string name="enter_new_email">Введи новый адрес электронной почты</string>
+    <string name="password_change">Смена пароля</string>
+    <string name="old_password">Старый пароль</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="password_changed">Пароль изменён</string>
+    <string name="email_changed">Адрес электронной почты изменён</string>
+    <string name="password_changing_error">Не удалось сменить пароль</string>
+    <string name="email_changing_error">Не удалось сменить электронную почту</string>
+    <string name="password_does_not_meet_requirements">Пароль не соотвествует требованиям</string>
+    <string name="enter_valid_password">Введи действительный пароль</string>
+    <string name="invalid_old_password">Неверный старый пароль</string>
+    <string name="invalid_email_try_again">Адрес электронной почты некорректный. Введи другой</string>
+    <string name="phone_change">Смена телефона</string>
+    <string name="enter_new_phone_number">Введи новый номер телефона</string>
+    <string name="we_will_send_code_to_entered_phone_number">Мы отправим СМС-код для смены пароля на указанный телефон</string>
+    <string name="enter_valid_phone_number">Введи действительный номер телефона</string>
+    <string name="phone_number_changed">Номер телефона изменён</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
@@ -281,7 +325,7 @@
     <string name="sign_up_recaptcha_policies_privacy">конфиденциальность</string>
     <string name="sign_up_recaptcha_policies_terms">условия использования</string>
     <string name="sign_up_agreement_error">Ознакомься с политикой конфиденциальности и правилами работы интернет-магазина и подтверди согласие с правилами бонусной программы</string>
-    <string name="sign_up_empty_fields_error">Поля ввода пусты. Для регистрации введи имя, адрес электронной почты, номер телефона и пароль</string>
+    <string name="sign_up_empty_fields_error">Поля ввода пусты. Для регистрации введи имя, дату рождения, адрес электронной почты, номер телефона и пароль</string>
     <string name="sign_up_email_already_in_use_error">Пользователь с таким адресом электронной почты уже существует. Повтори попытку</string>
     <string name="sign_up_phone_number_already_in_use_error">Пользователь с таким номером телефона уже существует. Повтори попытку</string>
     <string name="sign_up_otp_timeout_error">Прошло недостаточно времени с предыдущей попытки получить код на номер телефона. Попробуй снова позже</string>
@@ -312,7 +356,7 @@
         <item quantity="other">Показать %1$d товаров</item>
     </plurals>
 
-    <plurals name="products">
+    <plurals name="d_products">
         <item quantity="zero">%1$d товаров</item>
         <item quantity="one">%1$d товар</item>
         <item quantity="two">%1$d товара</item>
@@ -328,6 +372,15 @@
         <item quantity="few">бонуса</item>
         <item quantity="many">бонусов</item>
         <item quantity="other">бонусов</item>
+    </plurals>
+
+    <plurals name="d_bonuses">
+        <item quantity="zero">%1$d бонусов</item>
+        <item quantity="one">%1$d бонус</item>
+        <item quantity="two">%1$d бонуса</item>
+        <item quantity="few">%1$d бонуса</item>
+        <item quantity="many">%1$d бонусов</item>
+        <item quantity="other">%1$d бонусов</item>
     </plurals>
 
 </resources>

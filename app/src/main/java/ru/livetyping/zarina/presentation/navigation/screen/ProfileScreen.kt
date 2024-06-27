@@ -7,9 +7,11 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
+import ru.livetyping.zarina.presentation.navigation.destination.graph.LoyaltyProgramGraph
 import ru.livetyping.zarina.presentation.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.presentation.navigation.destination.graph.SignInGraph
 import ru.livetyping.zarina.presentation.navigation.destination.graph.SignUpGraph
+import ru.livetyping.zarina.presentation.navigation.screen.graph.navigateToLoyaltyProgramGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.navigateToSignInGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.navigateToSignUpGraph
 import ru.livetyping.zarina.presentation.navigation.util.BottomNavBarItemSecondaryStartDestinationBackHandler
@@ -26,9 +28,11 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
             when (targetState.destination.route) {
                 SignInGraph.SignIn.routeSchema,
                 SignUpGraph.SignUp.routeSchema,
+                LoyaltyProgramGraph.LoyaltyProgram.routeSchema,
                 ProfileGraph.MyOrders.routeSchema,
                 ProfileGraph.ProfileDetails.routeSchema,
-                ProfileGraph.Stores.routeSchema -> slideExitTransition()
+                ProfileGraph.Stores.routeSchema,
+                UnscopedDestinations.CitySelector.routeSchema -> slideExitTransition()
 
                 else -> null
             }
@@ -39,9 +43,11 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
                 SignInGraph.Otp.routeSchema,
                 SignUpGraph.SignUp.routeSchema,
                 SignUpGraph.Otp.routeSchema,
+                LoyaltyProgramGraph.LoyaltyProgram.routeSchema,
                 ProfileGraph.MyOrders.routeSchema,
                 ProfileGraph.ProfileDetails.routeSchema,
-                ProfileGraph.Stores.routeSchema -> slidePopEnterTransition()
+                ProfileGraph.Stores.routeSchema,
+                UnscopedDestinations.CitySelector.routeSchema -> slidePopEnterTransition()
 
                 else -> null
             }
@@ -66,6 +72,11 @@ fun NavGraphBuilder.profileScreen(navController: NavHostController) {
 
                     ProfileScreenAction.SignInClicked -> navController.navigateToSignInGraph()
                     ProfileScreenAction.SignUpClicked -> navController.navigateToSignUpGraph()
+
+                    ProfileScreenAction.LoyaltyCardInfoClicked -> {
+                        navController.navigateToLoyaltyProgramGraph()
+                    }
+
                     is ProfileScreenAction.CityClicked -> {
                         navController.navigateToCitySelectorScreen(
                             currentCity = action.currentCity,

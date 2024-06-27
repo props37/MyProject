@@ -68,7 +68,7 @@ data class OrderDto(
         checkNotNull(paymentMethod.method) { "paymentMethod method is null" }
         checkNotNull(contactInfo) { "contactInfo is null" }
         checkNotNull(address) { "address is null" }
-        // TODO: [High] Migrate to separate field when it is available
+        // TODO: [Backend] Migrate to separate field when it is available
         val deliveryPrice = deliveryInfo.method.price ?: 0
         val price = OrderPrice(
             orderPrice = totalPrice - deliveryPrice,

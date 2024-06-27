@@ -103,6 +103,13 @@ class ProfileViewModel @AssistedInject constructor(
         }
     }
 
+    fun onLoyaltyCardInfoClicked() {
+        navigationThrottler.throttle {
+            val action = ProfileScreenAction.LoyaltyCardInfoClicked
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
     fun onSignInClicked() {
         navigationThrottler.throttle {
             val action = ProfileScreenAction.SignInClicked

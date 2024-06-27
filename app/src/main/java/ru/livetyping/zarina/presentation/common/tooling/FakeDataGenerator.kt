@@ -4,6 +4,7 @@ import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.common.Color
 import ru.livetyping.zarina.domain.common.Email
+import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.Media
 import ru.livetyping.zarina.domain.common.MediaType
 import ru.livetyping.zarina.domain.common.PhoneNumber
@@ -77,6 +78,11 @@ object FakeDataGenerator {
         firstName: String = "Артём",
         lastName: String = "Сидоров",
         birthDate: LocalDate = LocalDate.of(1998, 2, 26),
+        gender: Gender = Gender.MALE,
+        notificationSettings: User.NotificationSettings = User.NotificationSettings(
+            receiveSms = true,
+            receiveEmails = true,
+        ),
     ): User = User(
         id = id,
         email = email,
@@ -84,6 +90,8 @@ object FakeDataGenerator {
         firstName = firstName,
         lastName = lastName,
         birthDate = birthDate,
+        gender = gender,
+        notificationSettings = notificationSettings,
     )
 
     fun getCategories(

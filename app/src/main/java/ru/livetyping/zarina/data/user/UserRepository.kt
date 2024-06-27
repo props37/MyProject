@@ -2,16 +2,19 @@ package ru.livetyping.zarina.data.user
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.data.user.local.UserLocalDataSource
 import ru.livetyping.zarina.data.user.remote.UserRemoteDataSource
 import ru.livetyping.zarina.domain.authorization.AuthorizationResult
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Gender
+import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.LoyaltyCard
+import ru.livetyping.zarina.domain.user.LoyaltyProgramBonusAction
 import ru.livetyping.zarina.domain.user.User
 import java.time.LocalDate
 import javax.inject.Inject
@@ -24,18 +27,60 @@ class UserRepository @Inject constructor(
         return localDataSource.getUserFlow()
     }
 
+    fun getUpdatedUserFlow(): Flow<User> {
+        return remoteDataSource.getUserFlow()
+            .onEach(::setUser)
+    }
+
     suspend fun setUser(user: User) {
         localDataSource.setUser(user)
     }
 
-    fun getLoyaltyCardFlow(): Flow<LoyaltyCard?> {
-        return localDataSource.getLoyaltyCardFlow()
+    suspend fun updateUserInfo(
+        firstName: String,
+        middleName: String?,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender,
+        oldPassword: String?,
+        newPassword: String?,
+    ) {
+        remoteDataSource.updateUserInfo(
+            firstName = firstName,
+            middleName = middleName,
+            lastName = lastName,
+            birthDate = birthDate,
+            email = email,
+            phone = phone,
+            gender = gender,
+            oldPassword = oldPassword,
+            newPassword = newPassword,
+        )
+
+        // TODO: [Backend] Refactor when backend starts to return a user as a response
+        val user = remoteDataSource.getUserFlow().firstOrNull()
+        if (user != null) setUser(user)
     }
 
-    suspend fun fetchLoyaltyCard() {
-        val card = remoteDataSource.getLoyaltyCardFlow().firstOrNull()
-        checkNotNull(card) { "Failed to fetch loyalty card" }
-        localDataSource.setLoyaltyCard(card)
+    suspend fun changePhoneNumber(phone: PhoneNumber, recaptchaToken: Token) {
+        remoteDataSource.changePhoneNumber(phone, recaptchaToken)
+    }
+
+    suspend fun confirmPhoneNumberChange(phone: PhoneNumber, code: String) {
+        remoteDataSource.confirmPhoneNumberChange(phone, code)
+    }
+
+    suspend fun requestResendPhoneNumberChangeSmsOtp(phone: PhoneNumber) {
+        remoteDataSource.requestResendPhoneNumberChangeSmsOtp(phone)
+    }
+
+    suspend fun updateUserNotificationSettings(
+        receiveSms: Boolean,
+        receiveEmails: Boolean,
+    ) {
+        remoteDataSource.updateUserNotificationSettings(receiveSms, receiveEmails)
     }
 
     fun getUserCityFlow(): Flow<City?> {
@@ -59,14 +104,32 @@ class UserRepository @Inject constructor(
         localDataSource.setUserContentGender(gender)
     }
 
+    fun getLoyaltyCardFlow(): Flow<LoyaltyCard?> {
+        return localDataSource.getLoyaltyCardFlow()
+    }
+
+    fun getLoyaltyCardBonusHistoryPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
+        return remoteDataSource.getLoyaltyCardBonusHistoryPageFlow(page)
+    }
+
+    fun getLoyaltyCardExpectedBonusesPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
+        return remoteDataSource.getLoyaltyCardExpectedBonusesFlow(page)
+    }
+
+    suspend fun fetchLoyaltyCard() {
+        val card = remoteDataSource.getLoyaltyCardFlow().firstOrNull()
+        checkNotNull(card) { "Failed to fetch loyalty card" }
+        localDataSource.setLoyaltyCard(card)
+    }
+
     suspend fun signUp(
         firstName: String,
         birthDate: LocalDate,
         email: Email,
         phone: PhoneNumber,
         password: String,
-        receiveNewsByEmail: Boolean,
-        receiveSmsNotifications: Boolean,
+        receiveEmails: Boolean,
+        receiveSms: Boolean,
         recaptchaToken: Token,
     ) {
         remoteDataSource.signUp(
@@ -75,8 +138,8 @@ class UserRepository @Inject constructor(
             email = email,
             phone = phone,
             password = password,
-            receiveNewsByEmail = receiveNewsByEmail,
-            receiveSmsNotifications = receiveSmsNotifications,
+            receiveNews = receiveEmails,
+            receiveSms = receiveSms,
             recaptchaToken = recaptchaToken,
         )
     }
@@ -97,8 +160,8 @@ class UserRepository @Inject constructor(
         return remoteDataSource.confirmSignInByPhone(phone, otp)
     }
 
-    suspend fun requestResendSmsOtp(phone: PhoneNumber) {
-        remoteDataSource.requestResendSmsOtp(phone)
+    suspend fun requestResendAuthorizationSmsOtp(phone: PhoneNumber) {
+        remoteDataSource.requestResendAuthorizationSmsOtp(phone)
     }
 
     suspend fun requestPasswordReset(email: Email) {

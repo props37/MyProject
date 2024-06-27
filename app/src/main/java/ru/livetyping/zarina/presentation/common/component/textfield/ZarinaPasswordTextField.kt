@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.common.component.textfield
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -45,7 +47,7 @@ fun ZarinaPasswordTextField(
     isEnabled: Boolean = true,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
-    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Large,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: String = stringResource(R.string.password),
     placeholder: String = stringResource(R.string.password_text_field_placeholder_eight_symbolds),
@@ -64,7 +66,8 @@ fun ZarinaPasswordTextField(
     interactionSource: MutableInteractionSource? = null,
     cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
 ) {
-    var isPasswordHidden by remember { mutableStateOf(true) }
+    val isPasswordVisibilityButtonVisible = password.isNotEmpty()
+    var isPasswordHidden by remember(password.isEmpty()) { mutableStateOf(true) }
     val visualTransformation = remember(isPasswordHidden) {
         if (isPasswordHidden) PasswordVisualTransformation() else VisualTransformation.None
     }
@@ -81,43 +84,26 @@ fun ZarinaPasswordTextField(
         placeholder = { Text(text = placeholder) },
         leadingContent = leadingContent,
         innerTrailingContent = {
-            AnimatedContent(
-                targetState = isPasswordHidden,
-                transitionSpec = {
-                    AnimatedContentDefaultTransitionSpec().using(sizeTransform = null)
-                },
-                contentAlignment = Alignment.Center,
-                label = "PasswordTextField eye icon",
-            ) { isPasswordHiddenValue ->
-                ZarinaIconButton(
-                    onClick = { isPasswordHidden = !isPasswordHidden },
-                    indication = ripple(bounded = false, radius = 16.dp),
-                    modifier = Modifier.size(36.dp),
-                ) {
-                    val iconResId: Int
-                    val contentDescriptionResId: Int
-                    if (isPasswordHiddenValue) {
-                        iconResId = R.drawable.ic_eye_open_24
-                        contentDescriptionResId = R.string.show_password
-                    } else {
-                        iconResId = R.drawable.ic_eye_closed_24
-                        contentDescriptionResId = R.string.hide_password
-                    }
+            val alpha = animateFloatAsState(
+                targetValue = if (isPasswordVisibilityButtonVisible) 1f else 0f,
+                label = "PasswordVisibilityButton alpha",
+            )
 
-                    Icon(
-                        imageVector = ImageVector.vectorResource(iconResId),
-                        contentDescription = stringResource(contentDescriptionResId),
-                        modifier = Modifier.size(16.dp),
-                    )
-                }
-            }
+            PasswordVisibilityButton(
+                isPasswordHidden = isPasswordHidden,
+                onPasswordHiddenChanged = { isPasswordHidden = it },
+                isEnabled = isPasswordVisibilityButtonVisible,
+                modifier = Modifier.graphicsLayer {
+                    this.alpha = alpha.value
+                },
+            )
         },
         outerTrailingContent = outerTrailingContent,
         description = description,
         colors = colors,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        singleLine = true,
+        singleLine = singleLine,
         maxLines = maxLines,
         minLines = minLines,
         visualTransformation = visualTransformation,
@@ -126,6 +112,48 @@ fun ZarinaPasswordTextField(
         cursorBrush = cursorBrush,
         modifier = modifier,
     )
+}
+
+@Composable
+private fun PasswordVisibilityButton(
+    isPasswordHidden: Boolean,
+    onPasswordHiddenChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    isEnabled: Boolean = true,
+) {
+    val iconSize = 16.dp
+
+    ZarinaIconButton(
+        onClick = { onPasswordHiddenChanged(!isPasswordHidden) },
+        indication = ripple(bounded = false, radius = iconSize),
+        isEnabled = isEnabled,
+        modifier = modifier.size(36.dp),
+    ) {
+        AnimatedContent(
+            targetState = isPasswordHidden,
+            transitionSpec = {
+                AnimatedContentDefaultTransitionSpec().using(sizeTransform = null)
+            },
+            contentAlignment = Alignment.Center,
+            label = "PasswordVisibilityButton",
+        ) { isPasswordHidden ->
+            val iconResId: Int
+            val contentDescriptionResId: Int
+            if (isPasswordHidden) {
+                iconResId = R.drawable.ic_eye_open_24
+                contentDescriptionResId = R.string.show_password
+            } else {
+                iconResId = R.drawable.ic_eye_closed_24
+                contentDescriptionResId = R.string.hide_password
+            }
+
+            Icon(
+                imageVector = ImageVector.vectorResource(iconResId),
+                contentDescription = stringResource(contentDescriptionResId),
+                modifier = Modifier.size(iconSize),
+            )
+        }
+    }
 }
 
 @Preview

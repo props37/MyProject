@@ -15,17 +15,23 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Url
@@ -54,7 +60,6 @@ object SignInScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         ZarinaTopBar(
-            modifier = modifier,
             startContent = {
                 ZarinaBackIconButton(
                     onClick = onBackClicked,
@@ -70,6 +75,7 @@ object SignInScreenComponents {
                 )
             },
             contentPadding = PaddingValues(vertical = 4.dp),
+            modifier = modifier,
         )
     }
 
@@ -173,10 +179,24 @@ object SignInScreenComponents {
         onUrlClicked: (Url) -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        val emailFocusRequester = remember { FocusRequester() }
+        val passwordFocusRequester = remember { FocusRequester() }
+        var lastFocusTarget by rememberSaveable {
+            mutableStateOf(SignInByEmailFocusTarget.Email)
+        }
+
+        LifecycleStartEffect(Unit) {
+            val focusRequester = when (lastFocusTarget) {
+                SignInByEmailFocusTarget.Email -> emailFocusRequester
+                SignInByEmailFocusTarget.Password -> passwordFocusRequester
+            }
+            focusRequester.tryRequestFocus()
+            onStopOrDispose {}
+        }
+
         Column(modifier = modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(TopPadding))
 
-            val emailFocusRequester = remember { FocusRequester() }
             ZarinaTextField(
                 value = email,
                 onValueChanged = onEmailChanged,
@@ -204,7 +224,10 @@ object SignInScreenComponents {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .focusRequester(emailFocusRequester),
+                    .focusRequester(emailFocusRequester)
+                    .onFocusChanged {
+                        if (it.isFocused) lastFocusTarget = SignInByEmailFocusTarget.Email
+                    },
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -221,7 +244,11 @@ object SignInScreenComponents {
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .focusRequester(passwordFocusRequester)
+                    .onFocusChanged {
+                        if (it.isFocused) lastFocusTarget = SignInByEmailFocusTarget.Password
+                    },
             )
 
             ZarinaButton(
@@ -260,6 +287,12 @@ object SignInScreenComponents {
         onUrlClicked: (Url) -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        val focusRequester = remember { FocusRequester() }
+        LifecycleStartEffect(Unit) {
+            focusRequester.tryRequestFocus()
+            onStopOrDispose {}
+        }
+
         Column(modifier = modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -275,7 +308,8 @@ object SignInScreenComponents {
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .focusRequester(focusRequester),
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -379,5 +413,7 @@ object SignInScreenComponents {
         )
     }
 
-    val TopPadding: Dp get() = 32.dp
+    private val TopPadding: Dp get() = 32.dp
+
+    private enum class SignInByEmailFocusTarget { Email, Password }
 }

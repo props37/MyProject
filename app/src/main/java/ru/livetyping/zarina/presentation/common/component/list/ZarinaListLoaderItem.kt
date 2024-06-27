@@ -20,12 +20,14 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 fun ZarinaListLoaderItem(
     modifier: Modifier = Modifier,
     color: Color = ColorDefault,
+    backgroundColor: Color = BackgroundColor,
     contentPadding: PaddingValues = ContentPadding,
 ) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxWidth()
+            .background(backgroundColor)
             .padding(contentPadding),
     ) {
         ZarinaCircularLoader(
@@ -39,14 +41,16 @@ fun ZarinaListLoaderItem(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        ZarinaListLoaderItem(
-            modifier = Modifier.background(Color.White),
-        )
+        ZarinaListLoaderItem()
     }
 }
 
 private val ColorDefault: Color
     @Composable
     get() = UiKitTheme.colors.icon.regular.default
+
+private val BackgroundColor: Color
+    @Composable
+    get() = UiKitTheme.colors.background.general.regular.default
 
 private val ContentPadding: PaddingValues get() = PaddingValues(vertical = 24.dp)

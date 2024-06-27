@@ -8,16 +8,16 @@ import ru.livetyping.zarina.domain.common.PhoneNumber
 import timber.log.Timber
 import javax.inject.Inject
 
-class RequestResendSmsOtpUseCase @Inject constructor(
+class RequestResendAuthorizationSmsOtpUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val userRepository: UserRepository,
-) : UseCase<RequestResendSmsOtpUseCase.Params, Unit>(dispatcher) {
+) : UseCase<RequestResendAuthorizationSmsOtpUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
         val phone = params.phone
         Timber.v("Request SMS OTP resend for phone $phone")
-        userRepository.requestResendSmsOtp(phone)
+        userRepository.requestResendAuthorizationSmsOtp(phone)
     }
 
     data class Params(val phone: PhoneNumber)

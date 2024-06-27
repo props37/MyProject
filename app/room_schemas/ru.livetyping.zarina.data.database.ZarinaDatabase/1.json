@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "076fdd946c581e0e5e7ae02cfc0e8ff4",
+    "identityHash": "32520b1972ffca03d9227eb683ab8ff7",
     "entities": [
       {
         "tableName": "user",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` TEXT NOT NULL, `user_email` TEXT NOT NULL, `user_phone` TEXT, `user_first_name` TEXT, `user_last_name` TEXT, `user_birth_date` TEXT, PRIMARY KEY(`user_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` TEXT NOT NULL, `user_email` TEXT NOT NULL, `user_phone` TEXT, `user_first_name` TEXT, `user_last_name` TEXT, `user_birth_date` TEXT, `user_gender` TEXT NOT NULL, `user_receive_sms` INTEGER NOT NULL, `user_receive_emails` INTEGER NOT NULL, PRIMARY KEY(`user_id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -43,6 +43,24 @@
             "columnName": "user_birth_date",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "gender",
+            "columnName": "user_gender",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notificationSettings.receiveSms",
+            "columnName": "user_receive_sms",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notificationSettings.receiveEmails",
+            "columnName": "user_receive_emails",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -96,7 +114,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '076fdd946c581e0e5e7ae02cfc0e8ff4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '32520b1972ffca03d9227eb683ab8ff7')"
     ]
   }
 }

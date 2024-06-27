@@ -47,7 +47,7 @@ import ru.livetyping.zarina.util.compose.animateFastScrollToItem
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.library.paging3.PagingErrorTimberLogger
 
-// TODO: [Medium] Migrate to ZarinaPagingPullRefreshContainer
+// TODO: [Low] Migrate to ZarinaPagingPullRefreshContainer
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

@@ -43,16 +43,15 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.signup.SignUpViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.SignUpUseCase
+import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
-import java.time.Instant
-import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val interactor: SignUpInteractor,
-) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+) : ViewModel(interactor.smsCodeRetriever), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -85,13 +84,13 @@ class SignUpViewModel @Inject constructor(
         initialValue = "",
     )
 
-    private val receiveNewsByEmailValueHolder = savedStateHandle.createValueHolder(
-        key = KEY_RECEIVE_NEWS_BE_EMAIL,
+    private val receiveEmailsValueHolder = savedStateHandle.createValueHolder(
+        key = KEY_RECEIVE_EMAILS,
         initialValue = false,
     )
 
-    private val receiveSmsNotificationsValueHolder = savedStateHandle.createValueHolder(
-        key = KEY_RECEIVE_SMS_NOTIFICATIONS,
+    private val receiveSmsValueHolder = savedStateHandle.createValueHolder(
+        key = KEY_RECEIVE_SMS,
         initialValue = false,
     )
 
@@ -130,9 +129,9 @@ class SignUpViewModel @Inject constructor(
     private val _isPasswordInvalid = MutableStateFlow(false)
     val isPasswordInvalid = _isPasswordInvalid.asStateFlow()
 
-    val receiveNewsByEmail: StateFlow<Boolean> = receiveNewsByEmailValueHolder.stateFlow
+    val receiveEmails: StateFlow<Boolean> = receiveEmailsValueHolder.stateFlow
 
-    val receiveSmsNotifications: StateFlow<Boolean> = receiveSmsNotificationsValueHolder.stateFlow
+    val receiveSms: StateFlow<Boolean> = receiveSmsValueHolder.stateFlow
 
     val arePoliciesAccepted: StateFlow<Boolean> = arePoliciesAcceptedValueHolder.stateFlow
 
@@ -179,12 +178,12 @@ class SignUpViewModel @Inject constructor(
         _isPasswordInvalid.value = false
     }
 
-    fun onReceiveNewsNyEmailChanged(value: Boolean) {
-        receiveNewsByEmailValueHolder.set(value)
+    fun onReceiveEmailsChanged(value: Boolean) {
+        receiveEmailsValueHolder.set(value)
     }
 
-    fun onReceiveSmsNotificationsChanged(value: Boolean) {
-        receiveSmsNotificationsValueHolder.set(value)
+    fun onReceiveSmsChanged(value: Boolean) {
+        receiveSmsValueHolder.set(value)
     }
 
     fun onPoliciesAcceptedChanged(areAccepted: Boolean) {
@@ -220,7 +219,7 @@ class SignUpViewModel @Inject constructor(
             operationTracker.track(Operation.SIGN_UP) {
                 val phone = PhoneNumber.create(phone.value)
                 val birthDate = birthDateMillis.value?.let {
-                    Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+                    LocalDateUtil.fromMillis(it)
                 }
                 val params = SignUpUseCase.Params(
                     firstName = firstName.value,
@@ -228,8 +227,8 @@ class SignUpViewModel @Inject constructor(
                     email = Email.create(email.value),
                     phone = phone,
                     password = password.value,
-                    receiveNewsByEmail = receiveNewsByEmail.value,
-                    receiveSmsNotifications = receiveSmsNotifications.value,
+                    receiveEmails = receiveEmails.value,
+                    receiveSms = receiveSms.value,
                 )
                 interactor.signUp(params)
                     .onSuccess {
@@ -324,8 +323,8 @@ class SignUpViewModel @Inject constructor(
         private const val KEY_EMAIL = "email"
         private const val KEY_PHONE = "phone"
         private const val KEY_PASSWORD = "password"
-        private const val KEY_RECEIVE_NEWS_BE_EMAIL = "receive_new_by_email"
-        private const val KEY_RECEIVE_SMS_NOTIFICATIONS = "receive_sms_notifications"
+        private const val KEY_RECEIVE_EMAILS = "receive_emails"
+        private const val KEY_RECEIVE_SMS = "receive_sms"
         private const val KEY_ARE_POLICIES_ACCEPTED = "are_policies_accepted"
         private const val KEY_IS_POLICIES_ERROR_VISIBLE = "is_policies_error_visible"
 

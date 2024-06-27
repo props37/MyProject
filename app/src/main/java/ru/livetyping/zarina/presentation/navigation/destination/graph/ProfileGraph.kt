@@ -6,6 +6,7 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import kotlinx.parcelize.Parcelize
+import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.presentation.navigation.BaseRoute
 import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.base.RouteUtils
@@ -22,6 +23,43 @@ data object ProfileGraph : SimpleGraph(
     data object Profile : SimpleDestination(BaseRoute.PROFILE)
 
     data object ProfileDetails : SimpleDestination(BaseRoute.PROFILE_DETAILS)
+
+    data object ChangePassword : SimpleDestination(BaseRoute.CHANGE_PASSWORD)
+
+    data object ChangeEmail : SimpleDestination(BaseRoute.CHANGE_EMAIL)
+
+    data object ChangePhoneNumber : SimpleDestination(BaseRoute.CHANGE_PHONE_NUMBER)
+
+    data object ChangePhoneNumberOtp : Destination<ChangePhoneNumberOtp.Args>() {
+        const val ARG_KEY_PHONE = "arg_phone"
+
+        private val routeBase: String
+            get() = BaseRoute.CHANGE_PHONE_NUMBER_OTP.route
+
+        override val routeSchema: String
+            get() = RouteUtils.generateRouteSchema(
+                routeBase = routeBase,
+                argNames = arrayOf(ARG_KEY_PHONE),
+            )
+
+        override fun createRoute(args: Args): String {
+            return RouteUtils.generateRoute(
+                routeBase = routeBase,
+                args = arrayOf(args.phone.value),
+            )
+        }
+
+        override val arguments: List<NamedNavArgument>
+            get() = listOf(
+                navArgument(ARG_KEY_PHONE) { type = NavType.StringType },
+            )
+
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            putString(ARG_KEY_PHONE, args.phone.value)
+        }
+
+        data class Args(val phone: PhoneNumber)
+    }
 
     data object SignOutConfirmation : SimpleDestination(BaseRoute.SIGN_OUT_CONFIRMATION)
 

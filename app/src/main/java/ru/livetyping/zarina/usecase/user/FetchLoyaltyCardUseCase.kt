@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.usecase.user
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.base.usecase.UseCase
 import ru.livetyping.zarina.data.user.UserRepository
 import ru.livetyping.zarina.di.Qualifiers
@@ -15,6 +16,11 @@ class FetchLoyaltyCardUseCase @Inject constructor(
 
     override suspend fun execute(params: Unit) {
         Timber.v("Fetch loyalty card")
-        userRepository.fetchLoyaltyCard()
+        val user = userRepository.getUserFlow().firstOrNull()
+        if (user != null) {
+            userRepository.fetchLoyaltyCard()
+        } else {
+            Timber.v("Do not fetch loyalty card because user is not logged in")
+        }
     }
 }

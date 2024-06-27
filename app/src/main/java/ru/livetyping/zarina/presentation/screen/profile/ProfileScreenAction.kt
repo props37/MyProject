@@ -9,6 +9,8 @@ sealed class ProfileScreenAction {
 
     data object SignUpClicked : ProfileScreenAction()
 
+    data object LoyaltyCardInfoClicked : ProfileScreenAction()
+
     data class CityClicked(val currentCity: City?) : ProfileScreenAction()
 
     data object MyOrdersClicked : ProfileScreenAction()

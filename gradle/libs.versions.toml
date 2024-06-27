@@ -1,8 +1,8 @@
 [versions]
 # Plugins
-androidGradlePlugin = "8.4.2"
+androidGradlePlugin = "8.5.0"
 googlePlayServices-plugin = "4.4.2"
-firebase-crashlyticsPlugin = "3.0.1"
+firebase-crashlyticsPlugin = "3.0.2"
 androidGitVersion = "0.4.14"
 checkDependencyUpdates = "1.5.0"
 
@@ -14,7 +14,7 @@ kotlin-immutableCollections = "0.3.7"
 
 jetpack-core = "1.13.1"
 jetpack-appcompat = "1.7.0"
-jetpack-lifecycle = "2.8.1"
+jetpack-lifecycle = "2.8.2"
 jetpack-activity = "1.9.0"
 jetpack-navigation = "2.7.7"
 jetpack-datastore = "1.1.1"
@@ -29,12 +29,12 @@ jetpack-uiAutomator = "2.3.0"
 jetpack-espresso = "3.5.1"
 jetpack-benchmark = "1.2.4"
 
-jetpack-compose-bom = "2024.05.00"
-jetpack-compose = "1.7.0-beta02"
-jetpack-compose-media3 = "1.3.0-beta02"
+jetpack-compose-bom = "2024.06.00"
+jetpack-compose = "1.7.0-beta03"
+jetpack-compose-media3 = "1.3.0-beta03"
 jetpack-compose-compiler = "1.5.14"
 
-ktor = "2.3.11"
+ktor = "2.3.12"
 
 hilt = "2.51.1"
 hilt-navigationCompose = "1.2.0"
@@ -57,7 +57,7 @@ googlePlayServices-auth-api-phone = "18.1.0"
 
 recaptcha = "18.5.1"
 
-firebase-bom = "33.1.0"
+firebase-bom = "33.1.1"
 
 firebase-performance = "1.4.2"
 mindbox = "2.10.0"

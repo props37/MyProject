@@ -13,17 +13,12 @@ import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -42,6 +37,7 @@ import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.usecase.user.SetUserContentGenderUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
 
@@ -67,15 +63,11 @@ class CatalogViewModel @Inject constructor(
         },
     )
 
-    private val categoriesFetchRequests = Channel<Unit>(Channel.CONFLATED)
+    private val categoriesRequester = FlowRequester(CategoriesRequest.GENERAL) {
+        interactor.getCategoriesFlow()
+    }
 
-    private val isFetchingCategories = MutableStateFlow(false)
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val categoriesResult: StateFlow<Result<Categories>?> = categoriesFetchRequests
-        .receiveAsFlow()
-        .flatMapLatest { interactor.getCategoriesFlow() }
-        .onEach { isFetchingCategories.value = false }
+    private val categoriesResult: StateFlow<Result<Categories>?> = categoriesRequester.flow
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
@@ -83,10 +75,10 @@ class CatalogViewModel @Inject constructor(
         )
 
     val categoryListState: StateFlow<CategoryListState> = combine(
-        isFetchingCategories,
+        categoriesRequester.loadingState,
         categoriesResult,
-    ) { isFetchingCategories, categoriesResult ->
-        if (isFetchingCategories || categoriesResult == null) {
+    ) { categoriesLoadingState, categoriesResult ->
+        if (categoriesLoadingState.isLoading || categoriesResult == null) {
             CategoryListState.Loading
         } else {
             categoriesResult.fold(
@@ -138,10 +130,6 @@ class CatalogViewModel @Inject constructor(
         initialValue = CategoryListItemsState(persistentSetOf(), persistentSetOf()),
     )
 
-    init {
-        categoriesFetchRequests.trySend(Unit)
-    }
-
     fun onSearchBarClicked() {
         navigationThrottler.throttle {
             val action = CatalogScreenAction.SearchClicked
@@ -165,8 +153,7 @@ class CatalogViewModel @Inject constructor(
     }
 
     fun onCategoryListErrorRefreshClicked() {
-        categoriesFetchRequests.trySend(Unit)
-        isFetchingCategories.value = true
+        categoriesRequester.request(CategoriesRequest.GENERAL)
     }
 
     private fun onCategoryItemClicked(item: CategoryListItem.CategoryItem) {
@@ -332,6 +319,8 @@ class CatalogViewModel @Inject constructor(
             }
         }
     }
+
+    private enum class CategoriesRequest : FlowRequester.Request { GENERAL }
 
     companion object {
         private const val KEY_CURRENT_GENDER_TAB = "current_gender_tab"

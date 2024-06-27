@@ -84,10 +84,7 @@ object CatalogScreenComponents {
                         modifier = Modifier.size(20.dp),
                     )
                 },
-                colors = ZarinaTextFieldDefaults.colors(
-                    disabledPlaceholderColor = UiKitTheme.colors.text.general.regular.muted,
-                    disabledIndicationLineColor = UiKitTheme.colors.border.general.default,
-                )
+                colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
             )
         }
     }

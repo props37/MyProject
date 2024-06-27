@@ -9,6 +9,7 @@ import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.exception.EmptyDateException
 import ru.livetyping.zarina.domain.common.exception.ValidationException
+import ru.livetyping.zarina.domain.user.USER_BIRTH_DATE_DEFAULT
 import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
@@ -31,12 +32,11 @@ class SignUpUseCase @Inject constructor(
         val email = params.email
         val phone = params.phone
         val password = params.password
-        val receiveNewsByEmail = params.receiveNewsByEmail
-        val receiveSmsNotifications = params.receiveSmsNotifications
+        val receiveEmails = params.receiveEmails
+        val receiveSms = params.receiveSms
         Timber.v(
             "Sign up. First name: $firstName, birth date: $birthDate, email: $email, phone: $phone, " +
-                    "password: $password, receive news by email: $receiveNewsByEmail, " +
-                    "receive SMS notifications: $receiveSmsNotifications"
+                    "password: $password, receive emails: $receiveEmails, receive SMS: $receiveSms"
         )
 
         val firstNameValidationException =
@@ -66,13 +66,12 @@ class SignUpUseCase @Inject constructor(
 
         userRepository.signUp(
             firstName = firstName,
-            // `LocalDate.now()` is impossible scenario needed to avoid false nullability
-            birthDate = birthDate ?: LocalDate.now(),
+            birthDate = birthDate ?: USER_BIRTH_DATE_DEFAULT,
             email = email,
             phone = phone,
             password = password,
-            receiveNewsByEmail = receiveNewsByEmail,
-            receiveSmsNotifications = receiveSmsNotifications,
+            receiveEmails = receiveEmails,
+            receiveSms = receiveSms,
             recaptchaToken = recaptchaToken,
         )
     }
@@ -83,7 +82,7 @@ class SignUpUseCase @Inject constructor(
         val email: Email,
         val phone: PhoneNumber,
         val password: String,
-        val receiveNewsByEmail: Boolean,
-        val receiveSmsNotifications: Boolean,
+        val receiveEmails: Boolean,
+        val receiveSms: Boolean,
     )
 }

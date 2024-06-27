@@ -1,6 +1,12 @@
 package ru.livetyping.zarina.presentation.screen.productsearch.filters
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -15,6 +21,7 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.filters.FilterListState
 import ru.livetyping.zarina.presentation.screen.filters.FiltersScreenContent
 import ru.livetyping.zarina.presentation.screen.productsearch.filters.ProductSearchFiltersViewModel.SideEffect
+import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable
 fun ProductSearchFiltersScreen(
@@ -77,7 +84,13 @@ private fun ScreenContent(
         productCount = productCount,
         onShowProductsClicked = onShowProductsClicked,
         onFilterListErrorRefreshClicked = onFilterListErrorRefreshClicked,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme.colors.background.general.regular.default)
+            .windowInsetsPadding(
+                WindowInsets.systemBars
+                    .union(WindowInsets.displayCutout),
+            ),
     )
 }
 

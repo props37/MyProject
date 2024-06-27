@@ -6,15 +6,12 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -23,11 +20,8 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.common.media.exoplayer.LocalExoPlayerCacheHolder
@@ -130,6 +124,7 @@ fun ZarinaVideoPlayer(
     modifier: Modifier = Modifier,
     resizeMode: Int = AspectRatioFrameLayout.RESIZE_MODE_ZOOM,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val playerViewState = remember { mutableStateOf<PlayerView?>(null) }
 
     LifecycleResumeEffect(Unit) {
@@ -145,24 +140,24 @@ fun ZarinaVideoPlayer(
 
     // Workaround for PlayerView bug due to which the video sometimes doesn't occupy the whole
     // PlayerView size
+    val xOffsetJob = remember { mutableStateOf<Job?>(null) }
     val xOffset = remember { mutableIntStateOf(0) }
-    val placedEvents = remember {
-        MutableSharedFlow<Unit>(
-            extraBufferCapacity = 1,
-            onBufferOverflow = BufferOverflow.DROP_OLDEST,
-        )
-    }
-    LifecycleResumeEffect(Unit) {
-        lifecycleScope.launch(Dispatchers.Default) {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                placedEvents.first()
-                delay(100.milliseconds)
-                xOffset.intValue = 1
-                delay(50.milliseconds)
-                xOffset.intValue = 0
+    DisposableEffect(exoPlayer) {
+        val listener = object : Player.Listener {
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                if (playbackState == Player.STATE_READY) {
+                    xOffsetJob.value?.cancel()
+                    xOffsetJob.value = coroutineScope.launch {
+                        Timber.tag(TAG).v("Adjust offset to fix scaling")
+                        xOffset.intValue = 1
+                        delay(50.milliseconds)
+                        xOffset.intValue = 0
+                    }
+                }
             }
         }
-        onPauseOrDispose {}
+        exoPlayer.addListener(listener)
+        onDispose {}
     }
 
     AndroidView(
@@ -189,9 +184,7 @@ fun ZarinaVideoPlayer(
             Timber.tag(TAG).v("AndroidView onRelease")
             playerView.player = null
         },
-        modifier = modifier
-            .offset { IntOffset(xOffset.intValue, 0) }
-            .onPlaced { placedEvents.tryEmit(Unit) },
+        modifier = modifier.offset { IntOffset(xOffset.intValue, 0) },
     )
 }
 

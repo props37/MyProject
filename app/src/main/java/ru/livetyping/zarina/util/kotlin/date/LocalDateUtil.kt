@@ -1,9 +1,15 @@
 package ru.livetyping.zarina.util.kotlin.date
 
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Locale
 
 object LocalDateUtil {
+    fun fromMillis(millis: Long): LocalDate {
+        return Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+    }
+
     fun parseRussianDate(date: String): LocalDate {
         val parts = date.split(' ')
         val day = parts[0]

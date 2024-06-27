@@ -40,7 +40,7 @@ data class FiltersDto(
         val materials = if (!materials.isNullOrEmpty()) {
             val items = materials
                 .mapNotNull { it.toMaterialFilterItem() }
-                .distinctBy { it.id } // TODO: [High] Remove when ID is fixed on backend
+                .distinctBy { it.id } // TODO: [Backend] Remove when ID is fixed on backend
             if (items.isNotEmpty()) {
                 ListFilter(
                     items = items,
@@ -52,7 +52,7 @@ data class FiltersDto(
         val sizes = if (!sizes.isNullOrEmpty()) {
             val items = sizes
                 .mapNotNull { it.toSizeFilterItem() }
-                .distinctBy { it.id } // TODO: [High] Remove when ID is fixed on backend
+                .distinctBy { it.id } // TODO: [Backend] Remove when ID is fixed on backend
             if (items.isNotEmpty()) {
                 ListFilter(
                     items = items,
@@ -64,7 +64,7 @@ data class FiltersDto(
         val colors = if (!colors.isNullOrEmpty()) {
             val items = colors
                 .mapNotNull { it.toColorFilterItem() }
-                .distinctBy { it.id } // TODO: [High] Remove when ID is fixed on backend
+                .distinctBy { it.id } // TODO: [Backend] Remove when ID is fixed on backend
             if (items.isNotEmpty()) {
                 ListFilter(
                     items = items,

@@ -9,6 +9,7 @@ import ru.livetyping.zarina.presentation.model.geography.CityParcelable
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CartGraph
+import ru.livetyping.zarina.presentation.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopExitTransition
 import ru.livetyping.zarina.presentation.screen.cityselector.CitySelectorScreen
@@ -26,7 +27,8 @@ fun NavGraphBuilder.citySelectorScreen(navController: NavHostController) {
                     )
                 }
 
-                CartGraph.Cart.routeSchema -> slideEnterTransition()
+                CartGraph.Cart.routeSchema,
+                ProfileGraph.Profile.routeSchema -> slideEnterTransition()
 
                 else -> null
             }
@@ -39,7 +41,8 @@ fun NavGraphBuilder.citySelectorScreen(navController: NavHostController) {
                     )
                 }
 
-                CartGraph.Cart.routeSchema -> slidePopExitTransition()
+                CartGraph.Cart.routeSchema,
+                ProfileGraph.Profile.routeSchema -> slidePopExitTransition()
 
                 else -> null
             }
