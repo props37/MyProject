@@ -51,8 +51,8 @@ timber = "5.0.1"
 leakCanary = "2.14"
 
 googlePlayServices-location = "21.3.0"
-googlePlayServices-maps = "18.2.0"
-googlePlayServices-maps-compose = "5.0.3"
+googlePlayServices-maps = "19.0.0"
+googlePlayServices-maps-compose = "5.0.4"
 googlePlayServices-auth-api-phone = "18.1.0"
 
 recaptcha = "18.5.1"
