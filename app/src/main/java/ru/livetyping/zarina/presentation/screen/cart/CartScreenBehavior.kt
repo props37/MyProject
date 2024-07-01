@@ -23,7 +23,6 @@ fun CartScreenBehavior(
 
     ForcedBottomNavBarBehavior(isVisible = true)
 
-    // TODO: [High] Consider refactoring
     LifecycleStartEffect(Unit) {
         updatedOnScreenOpened()
         onStopOrDispose {}

@@ -135,7 +135,6 @@ class CartViewModel @AssistedInject constructor(
         handleProductCountSelectorResult()
     }
 
-    // TODO: [High] Consider refactoring
     fun onScreenOpened() {
         cartFetchRequests.trySend(Unit)
     }
