@@ -150,6 +150,9 @@ class CartViewModel @AssistedInject constructor(
     fun onScreenOpened() {
         deliveryCartRequester.request(CartRequest.LOADING)
         pickUpFromStoreCartRequester.request(CartRequest.LOADING)
+        viewModelScope.launch {
+            interactor.fetchCartProductIds()
+        }
     }
 
     fun onClearCartClicked() {

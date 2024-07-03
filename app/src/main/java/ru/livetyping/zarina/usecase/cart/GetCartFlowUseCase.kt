@@ -5,7 +5,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.base.usecase.FlowUseCase
 import ru.livetyping.zarina.data.cart.CartRepository
 import ru.livetyping.zarina.data.favorite.FavoriteRepository
@@ -29,9 +28,6 @@ class GetCartFlowUseCase @Inject constructor(
         return userRepository.getUserCityFlow()
             .flatMapLatest { city ->
                 cartRepository.getCartFlow(deliveryType, city?.kladrId)
-            }
-            .onEach { cart ->
-                cartRepository.setCartSize(cart.size)
             }
             .combine(favoriteRepository.favoriteProductIds) { cart, favoriteProductIds ->
                 val products = cart.products.map { product ->

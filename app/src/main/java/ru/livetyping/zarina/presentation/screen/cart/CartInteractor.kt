@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.cart
 
 import ru.livetyping.zarina.usecase.cart.ClearCartUseCase
+import ru.livetyping.zarina.usecase.cart.FetchCartProductIdsUseCase
 import ru.livetyping.zarina.usecase.cart.GetCartFlowUseCase
 import ru.livetyping.zarina.usecase.cart.GetCartSizeFlowUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveProductFromCartUseCase
@@ -10,6 +11,7 @@ import ru.livetyping.zarina.usecase.user.SetUserCityUseCase
 import javax.inject.Inject
 
 class CartInteractor @Inject constructor(
+    val fetchCartProductIds: FetchCartProductIdsUseCase,
     val getCartSizeFlow: GetCartSizeFlowUseCase,
     val getUserCityFlow: GetUserCityFlowUseCase,
     val setUserCity: SetUserCityUseCase,
