@@ -39,6 +39,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,11 +61,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.coroutines.flow.StateFlow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartSize
@@ -82,6 +80,7 @@ import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScre
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
+import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
@@ -145,9 +144,11 @@ object CartScreenComponents {
         deliveryTypes: ImmutableList<DeliveryType>,
         currentDeliveryType: DeliveryType,
         onDeliveryTypeChanged: (DeliveryType) -> Unit,
-        deliveryTypeToCartState: ImmutableMap<DeliveryType, StateFlow<CartState>>,
-        productCardActions: ProductCardActions,
+        deliveryCartState: State<CartState>,
+        pickUpFromStoreCartState: State<CartState>,
+        onCartErrorRefreshClicked: () -> Unit,
         onGoToCatalogClicked: () -> Unit,
+        productCardActions: ProductCardActions,
         modifier: Modifier = Modifier,
     ) {
         val cityScrollBehavior = CollapsingTopBarDefaults.rememberExitUntilCollapsedScrollBehavior()
@@ -186,9 +187,11 @@ object CartScreenComponents {
                 DeliveryTypeContentPager(
                     pagerState = pagerState,
                     deliveryTypes = deliveryTypes,
-                    deliveryTypeToCartState = deliveryTypeToCartState,
-                    productCardActions = productCardActions,
+                    deliveryCartState = deliveryCartState,
+                    pickUpFromStoreCartState = pickUpFromStoreCartState,
                     onGoToCatalogClicked = onGoToCatalogClicked,
+                    onCartErrorRefreshClicked = onCartErrorRefreshClicked,
+                    productCardActions = productCardActions,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -266,13 +269,12 @@ object CartScreenComponents {
             selectedTabIndex = selectedTabIndex,
             modifier = modifier,
         ) {
-            // TODO: [Low] Migrate to ZarinaTab
             types.forEach { type ->
                 val productCount = when (type) {
                     DeliveryType.DELIVERY -> cartSize.deliveryProductCount
                     DeliveryType.PICK_UP_FROM_STORE -> cartSize.pickUpFromStoreProductCount
                 }
-                DeliveryTypeButton(
+                DeliveryTypeTab(
                     type = type,
                     onClick = { onTypeChanged(type) },
                     isSelected = type == currentType,
@@ -283,18 +285,16 @@ object CartScreenComponents {
     }
 
     @Composable
-    private fun DeliveryTypeButton(
+    private fun DeliveryTypeTab(
         type: DeliveryType,
         onClick: () -> Unit,
         isSelected: Boolean,
         productCount: Int,
         modifier: Modifier = Modifier,
     ) {
-        ZarinaButton(
+        ZarinaTab(
             onClick = onClick,
-            size = ZarinaButtonSize.Medium,
-            colors = ZarinaButtonDefaults.backlessColors(),
-            contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
+            isSelected = isSelected,
             modifier = modifier,
         ) {
             val textResId = when (type) {
@@ -336,9 +336,11 @@ object CartScreenComponents {
     private fun DeliveryTypeContentPager(
         pagerState: PagerState,
         deliveryTypes: ImmutableList<DeliveryType>,
-        deliveryTypeToCartState: ImmutableMap<DeliveryType, StateFlow<CartState>>,
-        productCardActions: ProductCardActions,
+        deliveryCartState: State<CartState>,
+        pickUpFromStoreCartState: State<CartState>,
         onGoToCatalogClicked: () -> Unit,
+        onCartErrorRefreshClicked: () -> Unit,
+        productCardActions: ProductCardActions,
         modifier: Modifier = Modifier,
     ) {
         HorizontalPager(
@@ -347,9 +349,10 @@ object CartScreenComponents {
             modifier = modifier,
         ) { page ->
             val deliveryType = deliveryTypes[page]
-            val cartState = deliveryTypeToCartState[deliveryType]
-                ?.collectAsStateWithLifecycle()?.value
-                ?: CartState.Skeleton
+            val cartState = when (deliveryType) {
+                DeliveryType.DELIVERY -> deliveryCartState
+                DeliveryType.PICK_UP_FROM_STORE -> pickUpFromStoreCartState
+            }.value
 
             Crossfade(
                 targetState = cartState,
@@ -365,7 +368,7 @@ object CartScreenComponents {
                         )
                     }
 
-                    CartState.Skeleton -> {
+                    CartState.Loading -> {
                         CartSkeleton()
                     }
 
@@ -383,7 +386,7 @@ object CartScreenComponents {
                     is CartState.Error -> {
                         ZarinaErrorScreen(
                             state = state.state,
-                            onButtonClicked = { /*TODO*/ },
+                            onButtonClicked = onCartErrorRefreshClicked,
                             modifier = Modifier.padding(16.dp),
                         )
                     }
@@ -691,7 +694,7 @@ object CartScreenComponents {
 
     private fun getDeliveryTypePagerContentKey(cartState: CartState): Any = when (cartState) {
         is CartState.Cart -> DeliveryTypePagerContentKeyCart
-        CartState.EmptyCart, is CartState.Error, CartState.Skeleton -> cartState
+        CartState.EmptyCart, is CartState.Error, CartState.Loading -> cartState
     }
 
     @Stable

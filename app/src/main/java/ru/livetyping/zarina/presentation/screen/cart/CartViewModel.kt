@@ -10,19 +10,14 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
@@ -49,6 +44,7 @@ import ru.livetyping.zarina.usecase.cart.RemoveProductFromCartUseCase
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.livetyping.zarina.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 
@@ -99,44 +95,61 @@ class CartViewModel @AssistedInject constructor(
     private val _currentDeliveryType = MutableStateFlow(DeliveryType.DELIVERY)
     val currentDeliveryType: StateFlow<DeliveryType> = _currentDeliveryType.asStateFlow()
 
-    private val cartFetchRequests = Channel<Unit>(Channel.CONFLATED)
+    private val deliveryCartRequester = FlowRequester<Result<Cart>, CartRequest> {
+        val params = GetCartFlowUseCase.Params(DeliveryType.DELIVERY)
+        interactor.getCartFlow(params)
+    }
 
-    private val deliveryTypeToCartResult: StateFlow<Map<DeliveryType, StateFlow<Result<Cart>?>>> =
-        combine(
-            cartFetchRequests.receiveAsFlow(),
-            deliveryTypes,
-        ) { _, deliveryTypes ->
-            createDeliveryTypeToCartResult(deliveryTypes)
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = mapOf(),
-        )
+    private val pickUpFromStoreCartRequester = FlowRequester<Result<Cart>, CartRequest> {
+        val params = GetCartFlowUseCase.Params(DeliveryType.PICK_UP_FROM_STORE)
+        interactor.getCartFlow(params)
+    }
 
-    val deliveryTypeToCartState: StateFlow<ImmutableMap<DeliveryType, StateFlow<CartState>>> =
-        combine(
-            flowOf(Unit),
-            deliveryTypeToCartResult,
-        ) { _, deliveryTypeToCartResult ->
-            createDeliveryTypeToCartState(deliveryTypeToCartResult)
-        }
+    private val deliveryCartResult: StateFlow<Result<Cart>?> = deliveryCartRequester.flow
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileUiSubscribed,
-            initialValue = deliveryTypes.value
-                .associateWith { MutableStateFlow(CartState.Skeleton) }
-                .toImmutableMap(),
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
         )
 
-    init {
-        cartFetchRequests.trySend(Unit)
+    private val pickUpFromStoreCartResult: StateFlow<Result<Cart>?> =
+        pickUpFromStoreCartRequester.flow
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = null,
+            )
 
+    val deliveryCartState: StateFlow<CartState> = combine(
+        deliveryCartResult,
+        deliveryCartRequester.loadingState,
+    ) { result, loadingState ->
+        createCartState(result, loadingState, DeliveryType.DELIVERY)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = CartState.Loading,
+    )
+
+    val pickUpFromStoreCartState = combine(
+        pickUpFromStoreCartResult,
+        pickUpFromStoreCartRequester.loadingState,
+    ) { result, loadingState ->
+        createCartState(result, loadingState, DeliveryType.PICK_UP_FROM_STORE)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = CartState.Loading,
+    )
+
+    init {
         handleCitySelectorResult()
         handleProductCountSelectorResult()
     }
 
     fun onScreenOpened() {
-        cartFetchRequests.trySend(Unit)
+        deliveryCartRequester.request(CartRequest.LOADING)
+        pickUpFromStoreCartRequester.request(CartRequest.LOADING)
     }
 
     fun onClearCartClicked() {
@@ -145,7 +158,8 @@ class CartViewModel @AssistedInject constructor(
         clearCartJob = viewModelScope.launch {
             interactor.clearCart()
                 .onSuccess {
-                    cartFetchRequests.trySend(Unit)
+                    deliveryCartRequester.request(CartRequest.LOADING)
+                    pickUpFromStoreCartRequester.request(CartRequest.LOADING)
                 }
                 .onFailure {
                     val text = Text.Resource(R.string.cart_clearing_error)
@@ -211,8 +225,8 @@ class CartViewModel @AssistedInject constructor(
             val params = RemoveProductFromCartUseCase.Params(product.productId, product.barcode)
             interactor.removeProductFromCart(params)
                 .onSuccess {
-                    cartFetchRequests.trySend(Unit)
-                    // TODO: [High] Display temp card that user can use to undo the deletion
+                    deliveryCartRequester.request(CartRequest.LOADING)
+                    pickUpFromStoreCartRequester.request(CartRequest.LOADING)
                 }
                 .onFailure {
                     val text = Text.Resource(R.string.product_removing_from_cart_error)
@@ -227,6 +241,11 @@ class CartViewModel @AssistedInject constructor(
             val action = CartScreenAction.GoToCatalogClicked
             emitSideEffect(SideEffect.Navigate(action))
         }
+    }
+
+    fun onCartErrorRefreshClicked() {
+        deliveryCartRequester.request(CartRequest.LOADING)
+        pickUpFromStoreCartRequester.request(CartRequest.LOADING)
     }
 
     private fun handleCitySelectorResult() {
@@ -257,62 +276,45 @@ class CartViewModel @AssistedInject constructor(
                 key = KEY_RESULT_PRODUCT_COUNT_SELECTOR,
             ) { result ->
                 if (result.countChanged) {
-                    cartFetchRequests.trySend(Unit)
+                    deliveryCartRequester.request(CartRequest.LOADING)
+                    pickUpFromStoreCartRequester.request(CartRequest.LOADING)
                 }
             }
         }
     }
 
-    private fun createDeliveryTypeToCartResult(
-        deliveryTypes: List<DeliveryType>,
-    ): Map<DeliveryType, StateFlow<Result<Cart>?>> {
-        return deliveryTypes
-            .associateWith { type ->
-                val params = GetCartFlowUseCase.Params(type)
-                interactor.getCartFlow(params)
-                    .stateIn(
-                        scope = viewModelScope,
-                        started = SharingStarted.WhileSubscribed(),
-                        initialValue = null,
-                    )
-            }
-    }
-
-    private fun createDeliveryTypeToCartState(
-        deliveryTypeToCartResult: Map<DeliveryType, StateFlow<Result<Cart>?>>,
-    ): ImmutableMap<DeliveryType, StateFlow<CartState>> {
-        return deliveryTypeToCartResult
-            .mapValues { (deliveryType, cartResult) ->
-                cartResult.mapState(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileUiSubscribed,
-                ) { result ->
-                    result?.fold(
-                        onSuccess = { cart ->
-                            if (cart.products.isNotEmpty()) {
-                                val productItems = cart.products
-                                    .map { product ->
-                                        val availableCount =
-                                            product.getAvailableCountForDeliveryType(deliveryType)
-                                        CartProductItem.Product(
-                                            product = product,
-                                            availableCount = availableCount,
-                                        )
-                                    }
-                                    .toImmutableList()
-                                CartState.Cart(productItems)
-                            } else {
-                                CartState.EmptyCart
+    private fun createCartState(
+        cartResult: Result<Cart>?,
+        cartLoadingState: FlowRequester.LoadingState,
+        deliveryType: DeliveryType,
+    ): CartState {
+        return if (cartResult == null || cartLoadingState.isLoading) {
+            CartState.Loading
+        } else {
+            cartResult.fold(
+                onSuccess = { cart ->
+                    if (cart.products.isNotEmpty()) {
+                        val productItems = cart.products
+                            .map { product ->
+                                val availableCount =
+                                    product.getAvailableCountForDeliveryType(deliveryType)
+                                CartProductItem.Product(
+                                    product = product,
+                                    availableCount = availableCount,
+                                )
                             }
-                        },
-                        onFailure = { throwable ->
-                            val errorState = ErrorState.from(throwable)
-                            CartState.Error(errorState)
-                        },
-                    ) ?: CartState.Skeleton
-                }
-            }
-            .toImmutableMap()
+                            .toImmutableList()
+                        CartState.Cart(productItems)
+                    } else {
+                        CartState.EmptyCart
+                    }
+                },
+                onFailure = { throwable ->
+                    val errorState = ErrorState.from(throwable)
+                    CartState.Error(errorState)
+                },
+            )
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -323,7 +325,7 @@ class CartViewModel @AssistedInject constructor(
 
     @Stable
     sealed class CartState {
-        data object Skeleton : CartState()
+        data object Loading : CartState()
 
         @Immutable
         data class Cart(
@@ -351,6 +353,8 @@ class CartViewModel @AssistedInject constructor(
             productCountSelectorResultFlow: StateFlow<CartGraph.ProductCountSelector.Result?>,
         ): CartViewModel
     }
+
+    private enum class CartRequest : FlowRequester.Request { LOADING }
 
     companion object {
         private const val KEY_RESULT_CITY_SELECTOR_RESULT = "result_city_selector"

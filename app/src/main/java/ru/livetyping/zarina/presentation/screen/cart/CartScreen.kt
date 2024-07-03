@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -26,9 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.domain.cart.DeliveryType
@@ -57,7 +56,8 @@ fun CartScreen(
     val isClearCartButtonVisible by viewModel.isClearCartButtonVisible.collectAsStateWithLifecycle()
     val deliveryTypes by viewModel.deliveryTypes.collectAsStateWithLifecycle()
     val currentDeliveryType by viewModel.currentDeliveryType.collectAsStateWithLifecycle()
-    val deliveryTypeToCartState by viewModel.deliveryTypeToCartState.collectAsStateWithLifecycle()
+    val deliveryCartState = viewModel.deliveryCartState.collectAsStateWithLifecycle()
+    val pickUpFromStoreCartState = viewModel.pickUpFromStoreCartState.collectAsStateWithLifecycle()
     val productCardActions = remember(viewModel) {
         ProductCardActions(
             onCountClicked = viewModel::onProductCountClicked,
@@ -76,7 +76,9 @@ fun CartScreen(
         deliveryTypes = deliveryTypes,
         currentDeliveryType = currentDeliveryType,
         onDeliveryTypeChanged = viewModel::onDeliveryTypeChanged,
-        deliveryTypeToCartState = deliveryTypeToCartState,
+        deliveryCartState = deliveryCartState,
+        pickUpFromStoreCartState = pickUpFromStoreCartState,
+        onCartErrorRefreshClicked = viewModel::onCartErrorRefreshClicked,
         productCardActions = productCardActions,
         onScreenOpened = viewModel::onScreenOpened,
         sideEffects = viewModel.sideEffects,
@@ -95,7 +97,9 @@ private fun ScreenContent(
     deliveryTypes: ImmutableList<DeliveryType>,
     currentDeliveryType: DeliveryType,
     onDeliveryTypeChanged: (DeliveryType) -> Unit,
-    deliveryTypeToCartState: ImmutableMap<DeliveryType, StateFlow<CartState>>,
+    deliveryCartState: State<CartState>,
+    pickUpFromStoreCartState: State<CartState>,
+    onCartErrorRefreshClicked: () -> Unit,
     productCardActions: ProductCardActions,
     onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -136,9 +140,11 @@ private fun ScreenContent(
                     deliveryTypes = deliveryTypes,
                     currentDeliveryType = currentDeliveryType,
                     onDeliveryTypeChanged = onDeliveryTypeChanged,
-                    deliveryTypeToCartState = deliveryTypeToCartState,
-                    productCardActions = productCardActions,
+                    deliveryCartState = deliveryCartState,
+                    pickUpFromStoreCartState = pickUpFromStoreCartState,
+                    onCartErrorRefreshClicked = onCartErrorRefreshClicked,
                     onGoToCatalogClicked = onGoToCatalogClicked,
+                    productCardActions = productCardActions,
                 )
             } else {
                 val errorState = rememberErrorState(
