@@ -90,11 +90,11 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTr
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.compose.animation.Crossfade
+import ru.livetyping.zarina.util.compose.coercedOffset
 import ru.livetyping.zarina.util.compose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.util.compose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.util.compose.pager.PagerTabRowIntegration
 import ru.livetyping.zarina.util.compose.rememberAnchoredDraggableState
-import ru.livetyping.zarina.util.compose.requireCoercedOffset
 import kotlin.math.roundToInt
 
 @Suppress("ConstPropertyName")
@@ -538,13 +538,11 @@ object CartScreenComponents {
                 modifier = Modifier
                     .zIndex(1f)
                     .offset {
-                        IntOffset(
-                            x = anchoredDraggableState
-                                .requireCoercedOffset()
-                                .roundToInt(),
-                            y = 0,
-                        )
+                        val xOffset =
+                            anchoredDraggableState.coercedOffset.takeIf { !it.isNaN() } ?: 0f
+                        IntOffset(x = xOffset.roundToInt(), y = 0)
                     }
+                    // TODO: [Medium] Add overscoll effect
                     .anchoredDraggable(
                         state = anchoredDraggableState,
                         orientation = Orientation.Horizontal,
