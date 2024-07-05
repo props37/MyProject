@@ -1,8 +1,17 @@
 package ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.otp
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
@@ -14,11 +23,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.PhoneNumber
+import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.otp.OtpResendState
 import ru.livetyping.zarina.presentation.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.common.otp.SmsOtpScreenContent
 import ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.otp.ChangePhoneNumberOtpViewModel.SideEffect
+import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -80,6 +91,15 @@ private fun ScreenContent(
         isOtpLoading = isOtpLoading,
         otpResendState = otpResendState,
         onResendOtpClicked = onResendOtpClicked,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme.colors.background.general.regular.default)
+            .windowInsetsPadding(
+                WindowInsets.systemBars
+                    .union(WindowInsets.displayCutout)
+                    .union(WindowInsets.ime),
+            )
+            .bottomNavBarPadding(WindowInsets.ime),
     )
 }
 
