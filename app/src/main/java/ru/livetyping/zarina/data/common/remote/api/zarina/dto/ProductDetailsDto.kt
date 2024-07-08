@@ -32,7 +32,7 @@ data class ProductDetailsDto(
     val description: List<DescriptionEntry>? = null,
 
     @SerialName("bonus")
-    val bonusCountForPurchase: Int? = null,
+    val bonusAccrualForPurchase: Int? = null,
 
     @SerialName("label")
     val label: Label? = null,
@@ -63,7 +63,7 @@ data class ProductDetailsDto(
             isInCart = false,
             label = label?.toLabel(),
             description = description.mapNotNull { it.toDescriptionEntry() },
-            bonusCountForPurchase = bonusCountForPurchase ?: 0,
+            bonusAccrualForPurchase = bonusAccrualForPurchase ?: 0,
             freeDeliveryTotalPriceThreshold = freeDeliveryTotalPriceThreshold ?: 0,
             shareUrl = shareUrl?.let { Url(it) },
         )

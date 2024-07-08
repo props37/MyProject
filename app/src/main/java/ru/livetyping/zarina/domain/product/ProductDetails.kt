@@ -15,7 +15,7 @@ data class ProductDetails(
     override val isInCart: Boolean,
     val label: Label?,
     val description: List<DescriptionEntry>,
-    val bonusCountForPurchase: Int,
+    val bonusAccrualForPurchase: Int,
     val freeDeliveryTotalPriceThreshold: Int,
     val shareUrl: Url?,
 ) : Product(

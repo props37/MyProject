@@ -24,12 +24,12 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
-import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartPrice
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.domain.cart.DeliveryType
 import ru.livetyping.zarina.domain.cart.getAvailableCountForDeliveryType
+import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
@@ -253,6 +253,12 @@ class CartViewModel @AssistedInject constructor(
         pickUpFromStoreCartRequester.request(CartRequest.LOADING)
     }
 
+    fun onUrlClicked(url: Url) {
+        navigationThrottler.throttle {
+            emitSideEffect(SideEffect.OpenUrl(url))
+        }
+    }
+
     private fun handleCitySelectorResult() {
         viewModelScope.launch {
             screenResultHandler.handle<UnscopedDestinations.CitySelector.Result>(
@@ -304,6 +310,7 @@ class CartViewModel @AssistedInject constructor(
                         CartState.Cart(
                             productItems = productItems,
                             price = cart.price,
+                            bonuses = cart.bonuses,
                         )
                     } else {
                         CartState.EmptyCart
@@ -318,7 +325,7 @@ class CartViewModel @AssistedInject constructor(
     }
 
     private fun createCartProductItems(
-        cart: Cart,
+        cart: DomainCart,
         deliveryType: DeliveryType,
     ): List<CartProductItem> {
         return cart.products
@@ -334,6 +341,8 @@ class CartViewModel @AssistedInject constructor(
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CartScreenAction) : SideEffect
 
+        data class OpenUrl(val url: Url) : SideEffect
+
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 
@@ -345,6 +354,7 @@ class CartViewModel @AssistedInject constructor(
         data class Cart(
             val productItems: ImmutableList<CartProductItem>,
             val price: CartPrice,
+            val bonuses: DomainCart.Bonuses,
         ) : CartState()
 
         data object EmptyCart : CartState()

@@ -28,6 +28,15 @@ data class CartDto(
 
     @SerialName("discount")
     val cartPrice: Int? = null,
+
+    @SerialName("bonus_balance")
+    val availableBonusCount: Int? = null,
+
+    @SerialName("max_bonuses_to_charge_off")
+    val maxBonusWriteOff: Int? = null,
+
+    @SerialName("bonus_action")
+    val bonusAction: BonusAction? = null,
 ) {
     fun toCart(): Cart {
         checkNotNull(products) { "products is null" }
@@ -35,6 +44,7 @@ data class CartDto(
             products = products.map { it.toCartProduct() },
             size = getCartSize(),
             price = getCartPrice(),
+            bonuses = getBonuses(),
         )
     }
 
@@ -59,4 +69,35 @@ data class CartDto(
             totalPrice = totalPrice,
         )
     }
+
+    private fun getBonuses(): Cart.Bonuses {
+        checkNotNull(availableBonusCount) { "availableBonusCount is null" }
+        checkNotNull(bonusAction) { "bonusAction is null" }
+        checkNotNull(bonusAction.bonusAccrualForPurchase) { "bonusAccrualForPurchase is null" }
+        checkNotNull(bonusAction.isBonusWriteOffApplied) { "isBonusWriteOffApplied is null" }
+        checkNotNull(bonusAction.bonusWriteOff) { "bonusWriteOff is null" }
+        checkNotNull(maxBonusWriteOff) { "maxBonusWriteOff is null" }
+        val writeOff = Cart.Bonuses.WriteOff(
+            isApplied = bonusAction.isBonusWriteOffApplied,
+            value = bonusAction.bonusWriteOff,
+            max = maxBonusWriteOff,
+        )
+        return Cart.Bonuses(
+            available = availableBonusCount,
+            accrualForPurchase = bonusAction.bonusAccrualForPurchase,
+            writeOff = writeOff,
+        )
+    }
+
+    @Serializable
+    data class BonusAction(
+        @SerialName("bonus_charge")
+        val bonusAccrualForPurchase: Int? = null,
+
+        @SerialName("is_charging_off_applied")
+        val isBonusWriteOffApplied: Boolean? = null,
+
+        @SerialName("bonus_charge_off")
+        val bonusWriteOff: Int? = null,
+    )
 }

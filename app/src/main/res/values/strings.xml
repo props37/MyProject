@@ -278,6 +278,8 @@
     <string name="order_status_cancelled">Отменён</string>
     <string name="order_status_refund">Возврат</string>
     <string name="order_status_not_refundable">Не подлежит возврату</string>
+    <string name="we_will_award_you_for_purchase">За покупку начислим</string>
+    <string name="learn_more">Узнать больше</string>
 
     <string name="order_delivery_method_express_delivery">Курьерская доставка</string>
     <string name="order_delivery_method_post">Почта России</string>

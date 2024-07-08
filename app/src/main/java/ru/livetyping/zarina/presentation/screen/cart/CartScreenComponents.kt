@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.cart
 
+import android.os.Parcelable
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
@@ -39,9 +40,13 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.Text
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
@@ -59,16 +64,20 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartSize
@@ -81,6 +90,7 @@ import ru.livetyping.zarina.presentation.common.component.ProductOrderCardSkelet
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.presentation.common.component.counter.ZarinaCounter
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
@@ -157,6 +167,7 @@ object CartScreenComponents {
         onCartErrorRefreshClicked: () -> Unit,
         onGoToCatalogClicked: () -> Unit,
         productCardActions: ProductCardActions,
+        onBonusAccrualClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val cityScrollBehavior = CollapsingTopBarDefaults.rememberExitUntilCollapsedScrollBehavior()
@@ -200,6 +211,7 @@ object CartScreenComponents {
                     onGoToCatalogClicked = onGoToCatalogClicked,
                     onCartErrorRefreshClicked = onCartErrorRefreshClicked,
                     productCardActions = productCardActions,
+                    onBonusAccrualClicked = onBonusAccrualClicked,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -349,6 +361,7 @@ object CartScreenComponents {
         onGoToCatalogClicked: () -> Unit,
         onCartErrorRefreshClicked: () -> Unit,
         productCardActions: ProductCardActions,
+        onBonusAccrualClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         HorizontalPager(
@@ -372,6 +385,7 @@ object CartScreenComponents {
                         Cart(
                             cartState = state,
                             productCardActions = productCardActions,
+                            onBonusAccrualClicked = onBonusAccrualClicked,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
@@ -407,6 +421,7 @@ object CartScreenComponents {
     private fun Cart(
         cartState: CartState.Cart,
         productCardActions: ProductCardActions,
+        onBonusAccrualClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
@@ -415,6 +430,7 @@ object CartScreenComponents {
             CartList(
                 cartState = cartState,
                 productCardActions = productCardActions,
+                onBonusAccrualClicked = onBonusAccrualClicked,
                 lazyListState = lazyListState,
                 modifier = Modifier.matchParentSize(),
             )
@@ -422,7 +438,7 @@ object CartScreenComponents {
             val isCheckoutBlockVisible by remember {
                 derivedStateOf {
                     val visibleItems = lazyListState.layoutInfo.visibleItemsInfo
-                    visibleItems.any { it.contentType == CartContentTypeCheckoutBlock }
+                    visibleItems.any { it.contentType == CartContentType.CheckoutBlock }
                 }
             }
 
@@ -438,6 +454,7 @@ object CartScreenComponents {
     private fun CartList(
         cartState: CartState.Cart,
         productCardActions: ProductCardActions,
+        onBonusAccrualClicked: () -> Unit,
         lazyListState: LazyListState,
         modifier: Modifier = Modifier,
     ) {
@@ -481,8 +498,22 @@ object CartScreenComponents {
             }
 
             item(
-                key = CartKeyPrice,
-                contentType = CartContentTypePrice,
+                key = CartKey.BonusAccrual,
+                contentType = CartContentType.BonusAccrual,
+            ) {
+                BonusAccrual(
+                    bonusCount = cartState.bonuses.accrualForPurchase,
+                    onClick = onBonusAccrualClicked,
+                    modifier = Modifier
+                        .padding(top = 32.dp)
+                        .padding(start = 16.dp, end = 8.dp)
+                        .animateItem(),
+                )
+            }
+
+            item(
+                key = CartKey.Price,
+                contentType = CartContentType.Price,
             ) {
                 CartPrice(
                     cartPrice = cartState.price.cartPrice,
@@ -495,8 +526,8 @@ object CartScreenComponents {
             }
 
             item(
-                key = CartKeyCheckoutBlock,
-                contentType = CartContentTypeCheckoutBlock,
+                key = CartKey.CheckoutBlock,
+                contentType = CartContentType.CheckoutBlock,
             ) {
                 ZarinaButton(
                     onClick = { /*TODO*/ },
@@ -671,7 +702,6 @@ object CartScreenComponents {
                             anchoredDraggableState.coercedOffset.takeIf { !it.isNaN() } ?: 0f
                         IntOffset(x = xOffset.roundToInt(), y = 0)
                     }
-                    // TODO: [Medium] Add overscoll effect
                     .anchoredDraggable(
                         state = anchoredDraggableState,
                         orientation = Orientation.Horizontal,
@@ -819,22 +849,78 @@ object CartScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    private fun BonusAccrual(
+        bonusCount: Int,
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier.clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = onClick,
+            ),
+        ) {
+            val baseText = stringResource(R.string.we_will_award_you_for_purchase)
+            val bonusText = pluralStringResource(R.plurals.d_bonuses, bonusCount, bonusCount)
+            val baseTextStyle = UiKitTheme.typography.secondary.light
+            val bonusTextStyle = UiKitTheme.typography.secondary.regular
+            val text = remember(baseText, bonusText, baseTextStyle, bonusTextStyle) {
+                buildAnnotatedString {
+                    withStyle(baseTextStyle.toSpanStyle()) {
+                        append(baseText)
+                    }
+                    append(" ")
+                    withStyle(bonusTextStyle.toSpanStyle()) {
+                        append(bonusText)
+                    }
+                }
+            }
+
+            Text(
+                text = text,
+                style = baseTextStyle,
+                modifier = Modifier.weight(1f),
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+                val iconSize = 16.dp
+                ZarinaIconButton(
+                    onClick = onClick,
+                    indication = ripple(bounded = false, radius = iconSize),
+                    modifier = Modifier.size(32.dp),
+                ) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_question_mark_shaped_24),
+                        contentDescription = stringResource(R.string.for_zarina_club_members),
+                        modifier = Modifier.size(iconSize),
+                    )
+                }
+            }
+        }
+    }
+
     private fun getDeliveryTypePagerContentKey(cartState: CartState): Any = when (cartState) {
         is CartState.Cart -> DeliveryTypePagerContentKeyCart
         CartState.EmptyCart, is CartState.Error, CartState.Loading -> cartState
     }
 
-    private fun getCartProductItemKey(productItem: CartViewModel.CartProductItem): String {
+    private fun getCartProductItemKey(productItem: CartViewModel.CartProductItem): CartKey.Product {
         return when (productItem) {
             is CartViewModel.CartProductItem.Product ->
-                "$CartKeyProductPrefix ${productItem.product.id.value}"
+                CartKey.Product(productItem.product.productId.value)
         }
     }
 
-    private fun getCartProductItemContentType(productItem: CartViewModel.CartProductItem): String {
-        return when (productItem) {
-            is CartViewModel.CartProductItem.Product -> CartContentTypeProduct
-        }
+    private fun getCartProductItemContentType(
+        productItem: CartViewModel.CartProductItem,
+    ): CartContentType = when (productItem) {
+        is CartViewModel.CartProductItem.Product -> CartContentType.Product
     }
 
     @Stable
@@ -870,13 +956,24 @@ object CartScreenComponents {
 
     private const val DeliveryTypePagerContentKeyCart = "DeliveryTypePagerContentKeyCart"
 
-    private const val CartKeyProductPrefix = "CartKeyProductPrefix"
-    private const val CartKeyPrice = "CartKeyPrice"
-    private const val CartKeyCheckoutBlock = "CartKeyCheckoutBlock"
+    @Stable
+    @Parcelize
+    private sealed class CartKey : Parcelable {
+        data class Product(val productId: String) : CartKey()
 
-    private const val CartContentTypeProduct = "CartContentTypeProduct"
-    private const val CartContentTypePrice = "CartContentTypePrice"
-    private const val CartContentTypeCheckoutBlock = "CartContentTypeCheckoutBlock"
+        data object Price : CartKey()
+
+        data object BonusAccrual : CartKey()
+
+        data object CheckoutBlock : CartKey()
+    }
+
+    private enum class CartContentType {
+        Product,
+        Price,
+        BonusAccrual,
+        CheckoutBlock,
+    }
 
     private val ProductOrderCardSwipeDistance: Dp get() = 120.dp
 }

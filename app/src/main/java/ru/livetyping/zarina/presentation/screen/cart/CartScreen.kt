@@ -3,21 +3,29 @@ package ru.livetyping.zarina.presentation.screen.cart
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,11 +36,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.domain.cart.DeliveryType
+import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaClubBottomSheetContent
+import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaModalBottomSheet
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
@@ -44,7 +56,7 @@ import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 
-// TODO: [High] Add pull refresh
+// TODO: [Medium] Add pull refresh
 
 @Composable
 fun CartScreen(
@@ -80,12 +92,14 @@ fun CartScreen(
         pickUpFromStoreCartState = pickUpFromStoreCartState,
         onCartErrorRefreshClicked = viewModel::onCartErrorRefreshClicked,
         productCardActions = productCardActions,
+        onUrlClicked = viewModel::onUrlClicked,
         onScreenOpened = viewModel::onScreenOpened,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
     cartSize: CartSize,
@@ -101,15 +115,37 @@ private fun ScreenContent(
     pickUpFromStoreCartState: State<CartState>,
     onCartErrorRefreshClicked: () -> Unit,
     productCardActions: ProductCardActions,
+    onUrlClicked: (Url) -> Unit,
     onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CartScreenAction) -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     CartScreenBehavior(
         onScreenOpened = onScreenOpened,
         sideEffects = sideEffects,
         navigate = navigate,
     )
+
+    var isZarinaClubBottomSheetVisible by remember { mutableStateOf(false) }
+    val zarinaClubBottomSheetState = rememberModalBottomSheetState()
+    if (isZarinaClubBottomSheetVisible) {
+        ZarinaModalBottomSheet(
+            onDismissRequest = { isZarinaClubBottomSheetVisible = false },
+            sheetState = zarinaClubBottomSheetState,
+            windowInsets = { WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom) },
+        ) {
+            ZarinaClubBottomSheetContent(
+                onCloseClicked = {
+                    coroutineScope
+                        .launch { zarinaClubBottomSheetState.hide() }
+                        .invokeOnCompletion { isZarinaClubBottomSheetVisible = false }
+                },
+                onLearnMoreClicked = onUrlClicked,
+            )
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -145,6 +181,7 @@ private fun ScreenContent(
                     onCartErrorRefreshClicked = onCartErrorRefreshClicked,
                     onGoToCatalogClicked = onGoToCatalogClicked,
                     productCardActions = productCardActions,
+                    onBonusAccrualClicked = { isZarinaClubBottomSheetVisible = true },
                 )
             } else {
                 val errorState = rememberErrorState(

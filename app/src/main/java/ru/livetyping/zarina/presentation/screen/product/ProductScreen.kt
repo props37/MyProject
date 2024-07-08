@@ -16,8 +16,8 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -33,12 +33,12 @@ import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaClubBottomSheetContent
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaModalBottomSheet
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.product.ProductScreenComponents.ProductDetails
 import ru.livetyping.zarina.presentation.screen.product.ProductScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.product.ProductScreenComponents.TopBarMode
-import ru.livetyping.zarina.presentation.screen.product.ProductScreenComponents.ZarinaClubBottomSheetContent
 import ru.livetyping.zarina.presentation.screen.product.ProductScreenComponents.topBarModeAsState
 import ru.livetyping.zarina.presentation.screen.product.ProductViewModel.ProductState
 import ru.livetyping.zarina.presentation.screen.product.ProductViewModel.SideEffect
@@ -101,7 +101,7 @@ private fun ScreenContent(
         navigate = navigate,
     )
 
-    var isZarinaClubBottomSheetVisible by rememberSaveable { mutableStateOf(false) }
+    var isZarinaClubBottomSheetVisible by remember { mutableStateOf(false) }
     val zarinaClubBottomSheetState = rememberModalBottomSheetState()
     if (isZarinaClubBottomSheetVisible) {
         ZarinaModalBottomSheet(
@@ -119,6 +119,7 @@ private fun ScreenContent(
                         .launch { zarinaClubBottomSheetState.hide() }
                         .invokeOnCompletion { isZarinaClubBottomSheetVisible = false }
                 },
+                onLearnMoreClicked = onUrlClicked,
             )
         }
     }
@@ -160,7 +161,7 @@ private fun ScreenContent(
 
         ProductDetails(
             productState = productState,
-            onBonusCountForPurchaseClicked = { isZarinaClubBottomSheetVisible = true },
+            onBonusAccrualForPurchaseClicked = { isZarinaClubBottomSheetVisible = true },
             onProductColorClicked = onProductColorClicked,
             onAddProductToCartClicked = onAddProductToCartClicked,
             onAddProductToFavoritesClicked = onAddProductToFavoritesClicked,
