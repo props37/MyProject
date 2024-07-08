@@ -3,7 +3,10 @@ package ru.livetyping.zarina.presentation.screen.cart
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -28,7 +31,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -40,6 +45,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,6 +74,7 @@ import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.domain.cart.DeliveryType
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.presentation.common.component.CartPrice
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCard
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCardCountStyle
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCardSkeleton
@@ -84,6 +91,7 @@ import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
+import ru.livetyping.zarina.presentation.common.util.rememberFormattedPrice
 import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.CartState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
@@ -401,32 +409,153 @@ object CartScreenComponents {
         productCardActions: ProductCardActions,
         modifier: Modifier = Modifier,
     ) {
+        Box(modifier = modifier) {
+            val lazyListState = rememberLazyListState()
+
+            CartList(
+                cartState = cartState,
+                productCardActions = productCardActions,
+                lazyListState = lazyListState,
+                modifier = Modifier.matchParentSize(),
+            )
+
+            val isCheckoutBlockVisible by remember {
+                derivedStateOf {
+                    val visibleItems = lazyListState.layoutInfo.visibleItemsInfo
+                    visibleItems.any { it.contentType == CartContentTypeCheckoutBlock }
+                }
+            }
+
+            FloatingCheckoutBlock(
+                isVisible = !isCheckoutBlockVisible,
+                totalPrice = cartState.price.totalPrice,
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
+        }
+    }
+
+    @Composable
+    private fun CartList(
+        cartState: CartState.Cart,
+        productCardActions: ProductCardActions,
+        lazyListState: LazyListState,
+        modifier: Modifier = Modifier,
+    ) {
         var lastDraggedProductId by remember { mutableStateOf<CartProduct.Id?>(null) }
 
-        LazyColumn(modifier = modifier) {
-            // TODO: [High] Implement contentType
+        LazyColumn(
+            state = lazyListState,
+            modifier = modifier,
+        ) {
             itemsIndexed(
                 items = cartState.productItems,
-                key = { _, item ->
-                    when (item) {
-                        is CartViewModel.CartProductItem.Product -> item.product.id.value
-                    }
-                },
+                key = { _, item -> getCartProductItemKey(item) },
+                contentType = { _, item -> getCartProductItemContentType(item) },
             ) { index, item ->
                 when (item) {
                     is CartViewModel.CartProductItem.Product -> {
-                        SwipeableProductOrderCard(
-                            productItem = item,
-                            productCardActions = productCardActions,
-                            isDividerVisible = index < cartState.productItems.lastIndex,
-                            onDragStarted = { lastDraggedProductId = it },
-                            lastDraggedProductId = lastDraggedProductId,
-                            onResetSwipeState = { lastDraggedProductId = null },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .animateItem(),
-                        )
+                        Column {
+                            SwipeableProductOrderCard(
+                                productItem = item,
+                                productCardActions = productCardActions,
+                                isDividerVisible = index < cartState.productItems.lastIndex,
+                                onDragStarted = { lastDraggedProductId = it },
+                                lastDraggedProductId = lastDraggedProductId,
+                                onResetSwipeState = { lastDraggedProductId = null },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .animateItem(),
+                            )
+
+                            val isDividerVisible = index < cartState.productItems.lastIndex
+                            if (isDividerVisible) {
+                                ZarinaDivider(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp),
+                                )
+                            }
+                        }
                     }
+                }
+            }
+
+            item(
+                key = CartKeyPrice,
+                contentType = CartContentTypePrice,
+            ) {
+                CartPrice(
+                    cartPrice = cartState.price.cartPrice,
+                    discountSize = cartState.price.discountSize,
+                    totalPrice = cartState.price.totalPrice,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
+                )
+            }
+
+            item(
+                key = CartKeyCheckoutBlock,
+                contentType = CartContentTypeCheckoutBlock,
+            ) {
+                ZarinaButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 12.dp, bottom = 20.dp)
+                        .animateItem(),
+                ) {
+                    Text(text = stringResource(R.string.checkout).uppercase())
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun FloatingCheckoutBlock(
+        isVisible: Boolean,
+        totalPrice: Int,
+        modifier: Modifier = Modifier,
+    ) {
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = slideInVertically { it },
+            exit = slideOutVertically { it },
+            modifier = modifier,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(UiKitTheme.colors.background.general.regular.default)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+            ) {
+                Column(Modifier.weight(1f)) {
+                    val textColor = UiKitTheme.colors.text.general.regular.default
+                    Text(
+                        text = stringResource(R.string.total),
+                        style = UiKitTheme.typography.tertiary.light,
+                        color = textColor,
+                    )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    val formattedPrice = rememberFormattedPrice(totalPrice)
+                    Text(
+                        text = stringResource(R.string.price_in_rubles_string, formattedPrice),
+                        style = UiKitTheme.typography.primary.bold,
+                        color = textColor,
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                ZarinaButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Text(text = stringResource(R.string.checkout).uppercase())
                 }
             }
         }
@@ -695,6 +824,19 @@ object CartScreenComponents {
         CartState.EmptyCart, is CartState.Error, CartState.Loading -> cartState
     }
 
+    private fun getCartProductItemKey(productItem: CartViewModel.CartProductItem): String {
+        return when (productItem) {
+            is CartViewModel.CartProductItem.Product ->
+                "$CartKeyProductPrefix ${productItem.product.id.value}"
+        }
+    }
+
+    private fun getCartProductItemContentType(productItem: CartViewModel.CartProductItem): String {
+        return when (productItem) {
+            is CartViewModel.CartProductItem.Product -> CartContentTypeProduct
+        }
+    }
+
     @Stable
     class ProductCardActions(
         val onCountClicked: (CartProduct) -> Unit,
@@ -727,6 +869,14 @@ object CartScreenComponents {
     private enum class ProductOrderCardSwipeableState { Default, SwipedLeft }
 
     private const val DeliveryTypePagerContentKeyCart = "DeliveryTypePagerContentKeyCart"
+
+    private const val CartKeyProductPrefix = "CartKeyProductPrefix"
+    private const val CartKeyPrice = "CartKeyPrice"
+    private const val CartKeyCheckoutBlock = "CartKeyCheckoutBlock"
+
+    private const val CartContentTypeProduct = "CartContentTypeProduct"
+    private const val CartContentTypePrice = "CartContentTypePrice"
+    private const val CartContentTypeCheckoutBlock = "CartContentTypeCheckoutBlock"
 
     private val ProductOrderCardSwipeDistance: Dp get() = 120.dp
 }

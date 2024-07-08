@@ -44,6 +44,7 @@
     <string name="price_in_rubles_string">%1$s ₽</string>
     <string name="price_rubles">Цена, ₽</string>
     <string name="discount_percent">-%1$d%%</string>
+    <string name="leading_minus">-%1$s</string>
     <string name="checkmark_checked">Выбрано</string>
     <string name="checkmark_unchecked">Не выбрано</string>
     <string name="from">От</string>
@@ -261,6 +262,9 @@
     <string name="we_will_send_code_to_entered_phone_number">Мы отправим СМС-код для смены пароля на указанный телефон</string>
     <string name="enter_valid_phone_number">Введи действительный номер телефона</string>
     <string name="phone_number_changed">Номер телефона изменён</string>
+    <string name="discount">Скидка</string>
+    <string name="excluding_delivery">Без учёта доставки</string>
+    <string name="checkout">Оформить</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

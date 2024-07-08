@@ -25,6 +25,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.cart.Cart
+import ru.livetyping.zarina.domain.cart.CartPrice
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.domain.cart.DeliveryType
@@ -47,6 +48,7 @@ import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
+import ru.livetyping.zarina.domain.cart.Cart as DomainCart
 
 @HiltViewModel(assistedFactory = CartViewModel.Factory::class)
 class CartViewModel @AssistedInject constructor(
@@ -95,24 +97,24 @@ class CartViewModel @AssistedInject constructor(
     private val _currentDeliveryType = MutableStateFlow(DeliveryType.DELIVERY)
     val currentDeliveryType: StateFlow<DeliveryType> = _currentDeliveryType.asStateFlow()
 
-    private val deliveryCartRequester = FlowRequester<Result<Cart>, CartRequest> {
+    private val deliveryCartRequester = FlowRequester<Result<DomainCart>, CartRequest> {
         val params = GetCartFlowUseCase.Params(DeliveryType.DELIVERY)
         interactor.getCartFlow(params)
     }
 
-    private val pickUpFromStoreCartRequester = FlowRequester<Result<Cart>, CartRequest> {
+    private val pickUpFromStoreCartRequester = FlowRequester<Result<DomainCart>, CartRequest> {
         val params = GetCartFlowUseCase.Params(DeliveryType.PICK_UP_FROM_STORE)
         interactor.getCartFlow(params)
     }
 
-    private val deliveryCartResult: StateFlow<Result<Cart>?> = deliveryCartRequester.flow
+    private val deliveryCartResult: StateFlow<Result<DomainCart>?> = deliveryCartRequester.flow
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
             initialValue = null,
         )
 
-    private val pickUpFromStoreCartResult: StateFlow<Result<Cart>?> =
+    private val pickUpFromStoreCartResult: StateFlow<Result<DomainCart>?> =
         pickUpFromStoreCartRequester.flow
             .stateIn(
                 scope = viewModelScope,
@@ -287,7 +289,7 @@ class CartViewModel @AssistedInject constructor(
     }
 
     private fun createCartState(
-        cartResult: Result<Cart>?,
+        cartResult: Result<DomainCart>?,
         cartLoadingState: FlowRequester.LoadingState,
         deliveryType: DeliveryType,
     ): CartState {
@@ -297,17 +299,12 @@ class CartViewModel @AssistedInject constructor(
             cartResult.fold(
                 onSuccess = { cart ->
                     if (cart.products.isNotEmpty()) {
-                        val productItems = cart.products
-                            .map { product ->
-                                val availableCount =
-                                    product.getAvailableCountForDeliveryType(deliveryType)
-                                CartProductItem.Product(
-                                    product = product,
-                                    availableCount = availableCount,
-                                )
-                            }
-                            .toImmutableList()
-                        CartState.Cart(productItems)
+                        val productItems =
+                            createCartProductItems(cart, deliveryType).toImmutableList()
+                        CartState.Cart(
+                            productItems = productItems,
+                            price = cart.price,
+                        )
                     } else {
                         CartState.EmptyCart
                     }
@@ -318,6 +315,20 @@ class CartViewModel @AssistedInject constructor(
                 },
             )
         }
+    }
+
+    private fun createCartProductItems(
+        cart: Cart,
+        deliveryType: DeliveryType,
+    ): List<CartProductItem> {
+        return cart.products
+            .map { product ->
+                val availableCount = product.getAvailableCountForDeliveryType(deliveryType)
+                CartProductItem.Product(
+                    product = product,
+                    availableCount = availableCount,
+                )
+            }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -333,6 +344,7 @@ class CartViewModel @AssistedInject constructor(
         @Immutable
         data class Cart(
             val productItems: ImmutableList<CartProductItem>,
+            val price: CartPrice,
         ) : CartState()
 
         data object EmptyCart : CartState()
@@ -343,6 +355,8 @@ class CartViewModel @AssistedInject constructor(
 
     @Stable
     sealed class CartProductItem {
+
+        @Immutable
         data class Product(
             val product: CartProduct,
             val availableCount: Int,
