@@ -8,6 +8,7 @@ data class Cart(
     val price: CartPrice,
     val bonuses: Bonuses,
     val myCard: MyCard?,
+    val promoCode: PromoCode?,
 ) {
     data class Bonuses(
         val available: Int,
@@ -26,5 +27,10 @@ data class Cart(
         val info: String?,
         val isApplied: Boolean,
         val productsFirstPriceSum: Int,
+    )
+
+    data class PromoCode(
+        val isApplied: Boolean,
+        val value: String,
     )
 }

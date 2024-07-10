@@ -41,6 +41,12 @@ data class CartDto(
     
     @SerialName("myCard")
     val myCard: MyCard? = null,
+
+    @SerialName("is_promocode_applied")
+    val isPromoCodeApplied: Boolean? = null,
+    
+    @SerialName("promocode")
+    val promoCode: PromoCode? = null,
 ) {
     fun toCart(): Cart {
         checkNotNull(products) { "products is null" }
@@ -50,6 +56,7 @@ data class CartDto(
             price = getCartPrice(),
             bonuses = getBonuses(),
             myCard = getMyCard(),
+            promoCode = getPromoCode(),
         )
     }
 
@@ -95,7 +102,6 @@ data class CartDto(
 
     private fun getMyCard(): Cart.MyCard? {
         if (myCard?.number == null) return null
-
         checkNotNull(myCard.isApplied) { "isApplied is null" }
         checkNotNull(myCard.productsFirstPriceSum) { "productsFirstPriceSum is null" }
         return Cart.MyCard(
@@ -103,6 +109,15 @@ data class CartDto(
             info = myCard.info,
             isApplied = myCard.isApplied,
             productsFirstPriceSum = myCard.productsFirstPriceSum,
+        )
+    }
+
+    private fun getPromoCode(): Cart.PromoCode? {
+        if (promoCode?.value == null) return null
+        checkNotNull(isPromoCodeApplied) { "isPromoCodeApplied is null" }
+        return Cart.PromoCode(
+            isApplied = isPromoCodeApplied,
+            value = promoCode.value,
         )
     }
 
@@ -131,5 +146,11 @@ data class CartDto(
 
         @SerialName("productsFirstPriceSum")
         val productsFirstPriceSum: Int? = null,
+    )
+
+    @Serializable
+    data class PromoCode(
+        @SerialName("code")
+        val value: String? = null,
     )
 }

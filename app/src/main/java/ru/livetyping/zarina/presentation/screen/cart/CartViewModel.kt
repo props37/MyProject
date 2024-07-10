@@ -1,10 +1,15 @@
 package ru.livetyping.zarina.presentation.screen.cart
 
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.placeCursorAtEnd
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
+import androidx.lifecycle.viewmodel.compose.saveable
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -24,6 +29,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartPrice
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartSize
@@ -41,12 +47,14 @@ import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinat
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CartGraph
 import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.SideEffect
 import ru.livetyping.zarina.usecase.cart.ApplyMyCardToCartUseCase
+import ru.livetyping.zarina.usecase.cart.ApplyPromoCodeUseCase
 import ru.livetyping.zarina.usecase.cart.GetCartFlowUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveMyCardFromCartUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveProductFromCartUseCase
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.livetyping.zarina.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.util.compose.text.clear
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
@@ -68,6 +76,7 @@ class CartViewModel @AssistedInject constructor(
 
     private var clearCartJob: Job? = null
     private var applyMyCardJob: Job? = null
+    private var promoCodeJob: Job? = null
 
     val cartSize: StateFlow<CartSize> = interactor.getCartSizeFlow()
         .map { result ->
@@ -133,6 +142,8 @@ class CartViewModel @AssistedInject constructor(
         deliveryCartRequester.loadingState,
         isMyCardApplied,
     ) { result, loadingState, isMyCardApplied ->
+        val cart = result?.getOrNull()
+        if (cart != null) updatePromoCode(cart)
         createCartState(result, loadingState, DeliveryType.DELIVERY, isMyCardApplied)
     }.stateIn(
         scope = viewModelScope,
@@ -140,11 +151,13 @@ class CartViewModel @AssistedInject constructor(
         initialValue = CartState.Loading,
     )
 
-    val pickUpFromStoreCartState = combine(
+    val pickUpFromStoreCartState: StateFlow<CartState> = combine(
         pickUpFromStoreCartResult,
         pickUpFromStoreCartRequester.loadingState,
         isMyCardApplied,
     ) { result, loadingState, isMyCardApplied ->
+        val cart = result?.getOrNull()
+        if (cart != null) updatePromoCode(cart)
         createCartState(result, loadingState, DeliveryType.PICK_UP_FROM_STORE, isMyCardApplied)
     }.stateIn(
         scope = viewModelScope,
@@ -163,6 +176,12 @@ class CartViewModel @AssistedInject constructor(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
         initialValue = false,
+    )
+
+    @OptIn(SavedStateHandleSaveableApi::class)
+    val promoCodeTextFieldState: TextFieldState by savedStateHandle.saveable(
+        saver = TextFieldState.Saver,
+        init = { TextFieldState() },
     )
 
     init {
@@ -290,6 +309,52 @@ class CartViewModel @AssistedInject constructor(
         }
     }
 
+    fun onApplyPromoCodeClicked() {
+        if (promoCodeJob?.isActive == true) return
+
+        promoCodeJob = viewModelScope.launch {
+            val promoCode = promoCodeTextFieldState.text.toString()
+            val params = ApplyPromoCodeUseCase.Params(promoCode)
+            interactor.applyPromoCode(params)
+                .onSuccess {
+                    // TODO: [High] Show toasts if needed
+                    emitSideEffect(SideEffect.HideKeyboard)
+                    requestCarts(CartRequest.REFRESHING)
+                }
+                .onFailure {
+                    val messageText = Text.Resource(R.string.promo_code_applying_error)
+                    val message = ZarinaToastMessage.error(messageText)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                }
+        }
+    }
+
+    fun onRemovePromoCodeClicked() {
+        if (promoCodeJob?.isActive == true) return
+
+        val isPromoCodeApplied =
+            (deliveryCartState.value as? CartState.Cart)?.isPromoCodeApplied == true
+        if (isPromoCodeApplied) {
+            emitSideEffect(SideEffect.HideKeyboard)
+            promoCodeJob = viewModelScope.launch {
+                interactor.removePromoCode()
+                    .onSuccess {
+                        // TODO: [High] Show toasts if needed
+                        requestCarts(CartRequest.REFRESHING)
+                    }
+                    .onFailure {
+                        val messageText = Text.Resource(R.string.promo_code_removing_error)
+                        val message = ZarinaToastMessage.error(messageText)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
+                    }
+            }
+        } else {
+            promoCodeTextFieldState.clearText()
+        }
+    }
+
+    // TODO: [High] Handle promo code TF IME action
+
     fun onUrlClicked(url: Url) {
         navigationThrottler.throttle {
             emitSideEffect(SideEffect.OpenUrl(url))
@@ -387,6 +452,7 @@ class CartViewModel @AssistedInject constructor(
                             price = cart.price,
                             bonuses = cart.bonuses,
                             myCardState = myCardState,
+                            isPromoCodeApplied = cart.promoCode?.isApplied == true,
                         )
                     } else {
                         CartState.EmptyCart
@@ -397,6 +463,16 @@ class CartViewModel @AssistedInject constructor(
                     CartState.Error(errorState)
                 },
             )
+        }
+    }
+
+    private fun updatePromoCode(cart: Cart) {
+        promoCodeTextFieldState.edit {
+            clear()
+            if (cart.promoCode != null) {
+                append(cart.promoCode.value)
+                placeCursorAtEnd()
+            }
         }
     }
 
@@ -425,6 +501,8 @@ class CartViewModel @AssistedInject constructor(
         data class OpenUrl(val url: Url) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
+
+        data object HideKeyboard : SideEffect
     }
 
     @Stable
@@ -437,6 +515,7 @@ class CartViewModel @AssistedInject constructor(
             val price: CartPrice,
             val bonuses: DomainCart.Bonuses,
             val myCardState: MyCardState?,
+            val isPromoCodeApplied: Boolean,
         ) : CartState()
 
         data object EmptyCart : CartState()

@@ -270,6 +270,8 @@
     <string name="my_card_canceling_error">Не удалось отменить действие MyCard</string>
     <string name="promo_code_is_applied">Промокод применён</string>
     <string name="promo_code">Промокод</string>
+    <string name="promo_code_applying_error">Не удалось применить промокод</string>
+    <string name="promo_code_removing_error">Не удалось отменить действие промокода</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -100,6 +101,9 @@ fun CartScreen(
         productCardActions = productCardActions,
         isRefreshing = isRefreshing,
         onIsMyCardAppliedChanged = viewModel::onIsMyCardAppliedChanged,
+        promoCodeTextFieldState = viewModel.promoCodeTextFieldState,
+        onApplyPromoCodeClicked = viewModel::onApplyPromoCodeClicked,
+        onRemovePromoCodeClicked = viewModel::onRemovePromoCodeClicked,
         onUrlClicked = viewModel::onUrlClicked,
         onScreenOpened = viewModel::onScreenOpened,
         sideEffects = viewModel.sideEffects,
@@ -125,6 +129,9 @@ private fun ScreenContent(
     productCardActions: ProductCardActions,
     isRefreshing: Boolean,
     onIsMyCardAppliedChanged: (Boolean) -> Unit,
+    promoCodeTextFieldState: TextFieldState,
+    onApplyPromoCodeClicked: () -> Unit,
+    onRemovePromoCodeClicked: () -> Unit,
     onUrlClicked: (Url) -> Unit,
     onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -194,6 +201,9 @@ private fun ScreenContent(
                         productCardActions = productCardActions,
                         onBonusAccrualClicked = { isZarinaClubBottomSheetVisible = true },
                         onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
+                        promoCodeTextFieldState = promoCodeTextFieldState,
+                        onApplyPromoCodeClicked = onApplyPromoCodeClicked,
+                        onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                     )
                 } else {
                     val errorState = rememberErrorState(

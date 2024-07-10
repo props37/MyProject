@@ -42,7 +42,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -176,6 +176,9 @@ object CartScreenComponents {
         productCardActions: ProductCardActions,
         onBonusAccrualClicked: () -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
+        promoCodeTextFieldState: TextFieldState,
+        onApplyPromoCodeClicked: () -> Unit,
+        onRemovePromoCodeClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val cityScrollBehavior = CollapsingTopBarDefaults.rememberExitUntilCollapsedScrollBehavior()
@@ -221,6 +224,9 @@ object CartScreenComponents {
                     productCardActions = productCardActions,
                     onBonusAccrualClicked = onBonusAccrualClicked,
                     onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
+                    promoCodeTextFieldState = promoCodeTextFieldState,
+                    onApplyPromoCodeClicked = onApplyPromoCodeClicked,
+                    onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -372,6 +378,9 @@ object CartScreenComponents {
         productCardActions: ProductCardActions,
         onBonusAccrualClicked: () -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
+        promoCodeTextFieldState: TextFieldState,
+        onApplyPromoCodeClicked: () -> Unit,
+        onRemovePromoCodeClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         HorizontalPager(
@@ -397,6 +406,9 @@ object CartScreenComponents {
                             productCardActions = productCardActions,
                             onBonusAccrualClicked = onBonusAccrualClicked,
                             onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
+                            promoCodeTextFieldState = promoCodeTextFieldState,
+                            onApplyPromoCodeClicked = onApplyPromoCodeClicked,
+                            onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
@@ -435,6 +447,9 @@ object CartScreenComponents {
         productCardActions: ProductCardActions,
         onBonusAccrualClicked: () -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
+        promoCodeTextFieldState: TextFieldState,
+        onApplyPromoCodeClicked: () -> Unit,
+        onRemovePromoCodeClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
@@ -446,6 +461,9 @@ object CartScreenComponents {
                 lazyListState = lazyListState,
                 onBonusAccrualClicked = onBonusAccrualClicked,
                 onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
+                promoCodeTextFieldState = promoCodeTextFieldState,
+                onApplyPromoCodeClicked = onApplyPromoCodeClicked,
+                onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                 modifier = Modifier.matchParentSize(),
             )
 
@@ -471,6 +489,9 @@ object CartScreenComponents {
         lazyListState: LazyListState,
         onBonusAccrualClicked: () -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
+        promoCodeTextFieldState: TextFieldState,
+        onApplyPromoCodeClicked: () -> Unit,
+        onRemovePromoCodeClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         var lastDraggedProductId by remember { mutableStateOf<CartProduct.Id?>(null) }
@@ -535,12 +556,11 @@ object CartScreenComponents {
                 key = CartKey.PromoCode,
                 contentType = CartContentType.PromoCode,
             ) {
-                // TODO: [High] Implement
                 ZarinaPromoCodeTextField(
-                    state = rememberTextFieldState(),
-                    isApplied = false,
-                    onApplyClicked = {  },
-                    onRemoveClicked = {  },
+                    state = promoCodeTextFieldState,
+                    isApplied = cartState.isPromoCodeApplied,
+                    onApplyClicked = onApplyPromoCodeClicked,
+                    onRemoveClicked = onRemovePromoCodeClicked,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp)

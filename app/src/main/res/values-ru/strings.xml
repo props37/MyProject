@@ -279,6 +279,8 @@
     <string name="my_card_canceling_error">Не удалось отменить действие MyCard</string>
     <string name="promo_code_is_applied">Промокод применён</string>
     <string name="promo_code">Промокод</string>
+    <string name="promo_code_applying_error">Не удалось применить промокод</string>
+    <string name="promo_code_removing_error">Не удалось отменить действие промокода</string>
 
     <string name="order_delivery_method_express_delivery">Курьерская доставка</string>
     <string name="order_delivery_method_post">Почта России</string>
