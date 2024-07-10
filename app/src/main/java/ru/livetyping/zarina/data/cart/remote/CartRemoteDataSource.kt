@@ -24,8 +24,8 @@ class CartRemoteDataSource @Inject constructor(
         emit(cart)
     }
 
-    suspend fun addMyCardToCart(deliveryType: DeliveryType, productsFirstPriceSum: Int) {
-        api.addMyCardToCart(deliveryType, productsFirstPriceSum)
+    suspend fun applyMyCardToCart(deliveryType: DeliveryType, productsFirstPriceSum: Int) {
+        api.applyMyCardToCart(deliveryType, productsFirstPriceSum)
     }
 
     suspend fun removeMyCardFromCart(deliveryType: DeliveryType) {

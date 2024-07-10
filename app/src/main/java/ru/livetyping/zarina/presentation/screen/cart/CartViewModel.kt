@@ -40,7 +40,7 @@ import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CartGraph
 import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.SideEffect
-import ru.livetyping.zarina.usecase.cart.AddMyCardToCartUseCase
+import ru.livetyping.zarina.usecase.cart.ApplyMyCardToCartUseCase
 import ru.livetyping.zarina.usecase.cart.GetCartFlowUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveMyCardFromCartUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveProductFromCartUseCase
@@ -283,7 +283,7 @@ class CartViewModel @AssistedInject constructor(
                     DeliveryType.PICK_UP_FROM_STORE -> pickUpFromStoreCartResult.value
                 }?.getOrNull()
                 val productsFirstPriceSum = cart?.myCard?.productsFirstPriceSum ?: return@launch
-                addMyCardToCart(deliveryType, productsFirstPriceSum)
+                applyMyCardToCart(deliveryType, productsFirstPriceSum)
             } else {
                 removeMyCardFromCart(deliveryType)
             }
@@ -296,9 +296,9 @@ class CartViewModel @AssistedInject constructor(
         }
     }
 
-    private suspend fun addMyCardToCart(deliveryType: DeliveryType, productsFirstPriceSum: Int) {
-        val params = AddMyCardToCartUseCase.Params(deliveryType, productsFirstPriceSum)
-        interactor.addMyCardToCart(params)
+    private suspend fun applyMyCardToCart(deliveryType: DeliveryType, productsFirstPriceSum: Int) {
+        val params = ApplyMyCardToCartUseCase.Params(deliveryType, productsFirstPriceSum)
+        interactor.applyMyCardToCart(params)
             .onSuccess {
                 // TODO: [High] Show toast if MyCard replaces bonuses
                 // TODO: [High] Show toast if MyCard replaces promo code

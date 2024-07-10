@@ -8,17 +8,17 @@ import ru.livetyping.zarina.domain.cart.DeliveryType
 import timber.log.Timber
 import javax.inject.Inject
 
-class AddMyCardToCartUseCase @Inject constructor(
+class ApplyMyCardToCartUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val cartRepository: CartRepository,
-) : UseCase<AddMyCardToCartUseCase.Params, Unit>(dispatcher) {
+) : UseCase<ApplyMyCardToCartUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
         val deliveryType = params.deliveryType
         val productsFirstPriceSum = params.productsFirstPriceSum
-        Timber.v("Add MyCard to cart $deliveryType. Product first price sum: $productsFirstPriceSum")
-        cartRepository.addMyCardToCart(deliveryType, productsFirstPriceSum)
+        Timber.v("Apply MyCard to cart $deliveryType. Product first price sum: $productsFirstPriceSum")
+        cartRepository.applyMyCardToCart(deliveryType, productsFirstPriceSum)
     }
 
     data class Params(

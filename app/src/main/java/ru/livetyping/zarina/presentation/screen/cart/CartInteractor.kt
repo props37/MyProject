@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.cart
 
-import ru.livetyping.zarina.usecase.cart.AddMyCardToCartUseCase
+import ru.livetyping.zarina.usecase.cart.ApplyMyCardToCartUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveMyCardFromCartUseCase
 import ru.livetyping.zarina.usecase.cart.ClearCartUseCase
 import ru.livetyping.zarina.usecase.cart.FetchCartProductIdsUseCase
@@ -21,6 +21,6 @@ class CartInteractor @Inject constructor(
     val clearCart: ClearCartUseCase,
     val toggleProductPresenceInFavorites: ToggleProductPresenceInFavoritesUseCase,
     val removeProductFromCart: RemoveProductFromCartUseCase,
-    val addMyCardToCart: AddMyCardToCartUseCase,
+    val applyMyCardToCart: ApplyMyCardToCartUseCase,
     val removeMyCardFromCart: RemoveMyCardFromCartUseCase,
 )

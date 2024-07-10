@@ -35,8 +35,8 @@ class CartRepository @Inject constructor(
         return remoteDataSource.getCartFlow(deliveryType, cityKladrId)
     }
 
-    suspend fun addMyCardToCart(deliveryType: DeliveryType, productsFirstPriceSum: Int) {
-        remoteDataSource.addMyCardToCart(deliveryType, productsFirstPriceSum)
+    suspend fun applyMyCardToCart(deliveryType: DeliveryType, productsFirstPriceSum: Int) {
+        remoteDataSource.applyMyCardToCart(deliveryType, productsFirstPriceSum)
     }
 
     suspend fun removeMyCardFromCart(deliveryType: DeliveryType) {

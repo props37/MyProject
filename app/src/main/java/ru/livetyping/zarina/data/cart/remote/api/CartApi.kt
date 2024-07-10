@@ -7,7 +7,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import ru.livetyping.zarina.data.cart.remote.api.dto.AddProductToCartRequestBody
-import ru.livetyping.zarina.data.cart.remote.api.dto.AddMyCardToCartRequestBody
+import ru.livetyping.zarina.data.cart.remote.api.dto.ApplyMyCardToCartRequestBody
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartDto
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartProductCountDto
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartProductIdsDto
@@ -34,8 +34,8 @@ class CartApi @Inject constructor(
         }.body()
     }
 
-    suspend fun addMyCardToCart(deliveryType: DeliveryType, productsFirstPriceSum: Int) {
-        val body = AddMyCardToCartRequestBody(
+    suspend fun applyMyCardToCart(deliveryType: DeliveryType, productsFirstPriceSum: Int) {
+        val body = ApplyMyCardToCartRequestBody(
             deliveryType = DeliveryTypeDto.fromDeliveryType(deliveryType),
             productsFirstPriceSum = productsFirstPriceSum,
         )

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AddMyCardToCartRequestBody(
+data class ApplyMyCardToCartRequestBody(
     @SerialName("cart_type") 
     val deliveryType: DeliveryTypeDto,
     
