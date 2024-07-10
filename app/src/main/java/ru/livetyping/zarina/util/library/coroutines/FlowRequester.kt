@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 class FlowRequester<T, R : FlowRequester.Request>(
     initialRequest: R? = null,
@@ -40,7 +42,17 @@ class FlowRequester<T, R : FlowRequester.Request>(
     }
 
     sealed class LoadingState {
-        val isLoading: Boolean get() = this is Loading
+        @OptIn(ExperimentalContracts::class)
+        fun isLoading(): Boolean {
+            contract {
+                returns(true) implies (this@LoadingState is Loading)
+            }
+
+            return this is Loading
+        }
+
+        val loadingRequest: Request?
+            get() = if (this is Loading) this.request else null
 
         data object NotLoading : LoadingState()
 

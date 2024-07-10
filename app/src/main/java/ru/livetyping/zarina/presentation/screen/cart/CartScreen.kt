@@ -1,6 +1,10 @@
 package ru.livetyping.zarina.presentation.screen.cart
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -45,6 +49,7 @@ import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaClubBottomSheetContent
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaModalBottomSheet
+import ru.livetyping.zarina.presentation.common.component.overlay.ZarinaRefreshingOverlay
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
@@ -77,6 +82,7 @@ fun CartScreen(
             onDeleteFromCartClicked = viewModel::onDeleteProductFromCartClicked,
         )
     }
+    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     ScreenContent(
         cartSize = cartSize,
@@ -92,6 +98,8 @@ fun CartScreen(
         pickUpFromStoreCartState = pickUpFromStoreCartState,
         onCartErrorRefreshClicked = viewModel::onCartErrorRefreshClicked,
         productCardActions = productCardActions,
+        isRefreshing = isRefreshing,
+        onIsMyCardAppliedChanged = viewModel::onIsMyCardAppliedChanged,
         onUrlClicked = viewModel::onUrlClicked,
         onScreenOpened = viewModel::onScreenOpened,
         sideEffects = viewModel.sideEffects,
@@ -115,6 +123,8 @@ private fun ScreenContent(
     pickUpFromStoreCartState: State<CartState>,
     onCartErrorRefreshClicked: () -> Unit,
     productCardActions: ProductCardActions,
+    isRefreshing: Boolean,
+    onIsMyCardAppliedChanged: (Boolean) -> Unit,
     onUrlClicked: (Url) -> Unit,
     onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -147,58 +157,70 @@ private fun ScreenContent(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
-            .windowInsetsPadding(
-                WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout),
+    Box {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(UiKitTheme.colors.background.general.regular.default)
+                .windowInsetsPadding(
+                    WindowInsets.statusBars
+                        .union(WindowInsets.displayCutout),
+                )
+                .imePadding()
+                .bottomNavBarPadding(WindowInsets.ime),
+        ) {
+            TopBar(
+                isClearButtonVisible = isClearCartButtonVisible,
+                onClearClicked = onClearCartClicked,
+                modifier = Modifier.fillMaxWidth(),
             )
-            .imePadding()
-            .bottomNavBarPadding(WindowInsets.ime),
-    ) {
-        TopBar(
-            isClearButtonVisible = isClearCartButtonVisible,
-            onClearClicked = onClearCartClicked,
-            modifier = Modifier.fillMaxWidth(),
-        )
 
-        Crossfade(
-            targetState = cartSize.isEmpty,
-            modifier = Modifier.fillMaxSize(),
-        ) { isCartEmpty ->
-            if (!isCartEmpty) {
-                CartContent(
-                    city = city,
-                    onCityClicked = onCityClicked,
-                    cartSize = cartSize,
-                    deliveryTypes = deliveryTypes,
-                    currentDeliveryType = currentDeliveryType,
-                    onDeliveryTypeChanged = onDeliveryTypeChanged,
-                    deliveryCartState = deliveryCartState,
-                    pickUpFromStoreCartState = pickUpFromStoreCartState,
-                    onCartErrorRefreshClicked = onCartErrorRefreshClicked,
-                    onGoToCatalogClicked = onGoToCatalogClicked,
-                    productCardActions = productCardActions,
-                    onBonusAccrualClicked = { isZarinaClubBottomSheetVisible = true },
-                )
-            } else {
-                val errorState = rememberErrorState(
-                    iconResId = R.drawable.ic_shopper_outline_64,
-                    title = stringResource(R.string.cart_empty_cart_placeholder_title),
-                    body = stringResource(R.string.cart_empty_cart_placeholder_description),
-                    buttonText = stringResource(R.string.go_to_catalog),
-                )
-                ZarinaErrorScreen(
-                    state = errorState,
-                    onButtonClicked = onGoToCatalogClicked,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(16.dp),
-                )
+            Crossfade(
+                targetState = cartSize.isEmpty,
+                modifier = Modifier.fillMaxSize(),
+            ) { isCartEmpty ->
+                if (!isCartEmpty) {
+                    CartContent(
+                        city = city,
+                        onCityClicked = onCityClicked,
+                        cartSize = cartSize,
+                        deliveryTypes = deliveryTypes,
+                        currentDeliveryType = currentDeliveryType,
+                        onDeliveryTypeChanged = onDeliveryTypeChanged,
+                        deliveryCartState = deliveryCartState,
+                        pickUpFromStoreCartState = pickUpFromStoreCartState,
+                        onCartErrorRefreshClicked = onCartErrorRefreshClicked,
+                        onGoToCatalogClicked = onGoToCatalogClicked,
+                        productCardActions = productCardActions,
+                        onBonusAccrualClicked = { isZarinaClubBottomSheetVisible = true },
+                        onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
+                    )
+                } else {
+                    val errorState = rememberErrorState(
+                        iconResId = R.drawable.ic_shopper_outline_64,
+                        title = stringResource(R.string.cart_empty_cart_placeholder_title),
+                        body = stringResource(R.string.cart_empty_cart_placeholder_description),
+                        buttonText = stringResource(R.string.go_to_catalog),
+                    )
+                    ZarinaErrorScreen(
+                        state = errorState,
+                        onButtonClicked = onGoToCatalogClicked,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(16.dp),
+                    )
+                }
             }
+        }
+
+        AnimatedVisibility(
+            visible = isRefreshing,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier.matchParentSize(),
+        ) {
+            ZarinaRefreshingOverlay(modifier = Modifier.fillMaxSize())
         }
     }
 }

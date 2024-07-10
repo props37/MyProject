@@ -274,6 +274,9 @@
     <string name="order_status_not_refundable">Не подлежит возврату</string>
     <string name="we_will_award_you_for_purchase">За покупку начислим</string>
     <string name="learn_more">Узнать больше</string>
+    <string name="apply_my_card">Применить MyCard</string>
+    <string name="my_card_applying_error">Не удалось применить MyCard</string>
+    <string name="my_card_canceling_error">Не удалось отменить действие MyCard</string>
 
     <string name="order_delivery_method_express_delivery">Курьерская доставка</string>
     <string name="order_delivery_method_post">Почта России</string>

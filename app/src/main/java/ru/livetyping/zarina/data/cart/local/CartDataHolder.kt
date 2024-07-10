@@ -18,6 +18,7 @@ class CartDataHolder @Inject constructor() {
     private val _areCartProductIdsFetched = MutableStateFlow(false)
     val areCartProductIdsFetched: StateFlow<Boolean> = _areCartProductIdsFetched.asStateFlow()
 
+    // TODO: [High] Rework
     private val _cartSize = MutableStateFlow(CartSize.EMPTY)
     val cartSize: StateFlow<CartSize> = _cartSize.asStateFlow()
 

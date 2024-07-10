@@ -265,6 +265,9 @@
     <string name="discount">Скидка</string>
     <string name="excluding_delivery">Без учёта доставки</string>
     <string name="checkout">Оформить</string>
+    <string name="apply_my_card">Применить MyCard</string>
+    <string name="my_card_applying_error">Не удалось применить MyCard</string>
+    <string name="my_card_canceling_error">Не удалось отменить действие MyCard</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

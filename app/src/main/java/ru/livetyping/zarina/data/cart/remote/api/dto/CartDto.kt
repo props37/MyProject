@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartPrice
 import ru.livetyping.zarina.domain.cart.CartSize
+import ru.livetyping.zarina.domain.user.MyCard as DomainMyCard
 
 @Serializable
 data class CartDto(
@@ -37,6 +38,9 @@ data class CartDto(
 
     @SerialName("bonus_action")
     val bonusAction: BonusAction? = null,
+    
+    @SerialName("myCard")
+    val myCard: MyCard? = null,
 ) {
     fun toCart(): Cart {
         checkNotNull(products) { "products is null" }
@@ -45,6 +49,7 @@ data class CartDto(
             size = getCartSize(),
             price = getCartPrice(),
             bonuses = getBonuses(),
+            myCard = getMyCard(),
         )
     }
 
@@ -71,7 +76,6 @@ data class CartDto(
     }
 
     private fun getBonuses(): Cart.Bonuses {
-        checkNotNull(availableBonusCount) { "availableBonusCount is null" }
         checkNotNull(bonusAction) { "bonusAction is null" }
         checkNotNull(bonusAction.bonusAccrualForPurchase) { "bonusAccrualForPurchase is null" }
         checkNotNull(bonusAction.isBonusWriteOffApplied) { "isBonusWriteOffApplied is null" }
@@ -83,9 +87,22 @@ data class CartDto(
             max = maxBonusWriteOff,
         )
         return Cart.Bonuses(
-            available = availableBonusCount,
+            available = availableBonusCount ?: 0,
             accrualForPurchase = bonusAction.bonusAccrualForPurchase,
             writeOff = writeOff,
+        )
+    }
+
+    private fun getMyCard(): Cart.MyCard? {
+        if (myCard?.number == null) return null
+
+        checkNotNull(myCard.isApplied) { "isApplied is null" }
+        checkNotNull(myCard.productsFirstPriceSum) { "productsFirstPriceSum is null" }
+        return Cart.MyCard(
+            number = DomainMyCard.Number(myCard.number),
+            info = myCard.info,
+            isApplied = myCard.isApplied,
+            productsFirstPriceSum = myCard.productsFirstPriceSum,
         )
     }
 
@@ -99,5 +116,20 @@ data class CartDto(
 
         @SerialName("bonus_charge_off")
         val bonusWriteOff: Int? = null,
+    )
+
+    @Serializable
+    data class MyCard(
+        @SerialName("value") 
+        val number: String? = null,
+        
+        @SerialName("info") 
+        val info: String? = null,
+        
+        @SerialName("isApplied") 
+        val isApplied: Boolean? = null,
+
+        @SerialName("productsFirstPriceSum")
+        val productsFirstPriceSum: Int? = null,
     )
 }

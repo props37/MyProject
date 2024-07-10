@@ -78,7 +78,7 @@ class CatalogViewModel @Inject constructor(
         categoriesRequester.loadingState,
         categoriesResult,
     ) { categoriesLoadingState, categoriesResult ->
-        if (categoriesLoadingState.isLoading || categoriesResult == null) {
+        if (categoriesLoadingState.isLoading() || categoriesResult == null) {
             CategoryListState.Loading
         } else {
             categoriesResult.fold(
