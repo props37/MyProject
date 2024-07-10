@@ -43,6 +43,14 @@ class CartRepository @Inject constructor(
         remoteDataSource.removeMyCardFromCart(deliveryType)
     }
 
+    suspend fun applyPromoCode(promoCode: String) {
+        remoteDataSource.applyPromoCode(promoCode)
+    }
+
+    suspend fun removePromoCode() {
+        remoteDataSource.removePromoCode()
+    }
+
     suspend fun addProductToCart(
         productId: Product.Id,
         barcode: Barcode,

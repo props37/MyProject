@@ -8,6 +8,7 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import ru.livetyping.zarina.data.cart.remote.api.dto.AddProductToCartRequestBody
 import ru.livetyping.zarina.data.cart.remote.api.dto.ApplyMyCardToCartRequestBody
+import ru.livetyping.zarina.data.cart.remote.api.dto.ApplyPromoCodeRequestBody
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartDto
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartProductCountDto
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartProductIdsDto
@@ -48,6 +49,17 @@ class CartApi @Inject constructor(
         httpClient.delete("/api/cart/my-card") {
             parameter("cart_type", DeliveryTypeDto.fromDeliveryType(deliveryType).value)
         }
+    }
+
+    suspend fun applyPromoCode(promoCode: String) {
+        val body = ApplyPromoCodeRequestBody(promoCode)
+        httpClient.post("/api/cart/promocode") {
+            setJsonBody(body)
+        }
+    }
+
+    suspend fun removePromoCode() {
+        httpClient.delete("/api/cart/promocode")
     }
 
     suspend fun addProductToCard(barcode: Barcode, count: Int): CartProductCountDto {

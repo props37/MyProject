@@ -18,15 +18,18 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -39,6 +42,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -100,6 +104,7 @@ import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarin
 import ru.livetyping.zarina.presentation.common.component.switchh.ZarinaSwitch
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
+import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPromoCodeTextField
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPrice
@@ -423,6 +428,7 @@ object CartScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     private fun Cart(
         cartState: CartState.Cart,
@@ -451,7 +457,7 @@ object CartScreenComponents {
             }
 
             FloatingCheckoutBlock(
-                isVisible = !isCheckoutBlockVisible,
+                isVisible = !isCheckoutBlockVisible && !WindowInsets.isImeVisible,
                 totalPrice = cartState.price.totalPrice,
                 modifier = Modifier.align(Alignment.BottomCenter),
             )
@@ -518,10 +524,29 @@ object CartScreenComponents {
                         onIsAppliedChanged = onIsMyCardAppliedChanged,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp)
-                            .padding(start = 16.dp, end = 8.dp),
+                            .padding(top = 24.dp)
+                            .padding(start = 16.dp, end = 8.dp)
+                            .animateItem(),
                     )
                 }
+            }
+
+            item(
+                key = CartKey.PromoCode,
+                contentType = CartContentType.PromoCode,
+            ) {
+                // TODO: [High] Implement
+                ZarinaPromoCodeTextField(
+                    state = rememberTextFieldState(),
+                    isApplied = false,
+                    onApplyClicked = {  },
+                    onRemoveClicked = {  },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp)
+                        .padding(horizontal = 16.dp)
+                        .animateItem(),
+                )
             }
 
             item(
@@ -534,7 +559,7 @@ object CartScreenComponents {
                     totalPrice = cartState.price.totalPrice,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp)
+                        .padding(top = 24.dp)
                         .animateItem(),
                 )
             }
@@ -1014,6 +1039,8 @@ object CartScreenComponents {
 
         data object MyCard : CartKey()
 
+        data object PromoCode : CartKey()
+
         data object Price : CartKey()
 
         data object CheckoutBlock : CartKey()
@@ -1023,6 +1050,7 @@ object CartScreenComponents {
         Product,
         BonusAccrual,
         MyCard,
+        PromoCode,
         Price,
         CheckoutBlock,
     }
