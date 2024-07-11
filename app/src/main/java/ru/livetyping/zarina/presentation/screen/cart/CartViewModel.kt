@@ -443,6 +443,7 @@ class CartViewModel @AssistedInject constructor(
                             createProductItems(cart, deliveryType).toImmutableList()
                         val myCardState = cart.myCard?.let {
                             MyCardState(
+                                // TODO: [High] Set based on backend model?
                                 isApplied = isMyCardApplied || it.isApplied,
                                 info = it.info,
                             )
