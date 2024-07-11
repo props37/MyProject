@@ -22,7 +22,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
@@ -55,6 +57,7 @@ import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUse
 import ru.livetyping.zarina.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.clear
+import ru.livetyping.zarina.util.compose.text.textAsFlow
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
@@ -123,6 +126,10 @@ class CartViewModel @AssistedInject constructor(
     }
 
     private val deliveryCartResult: StateFlow<Result<DomainCart>?> = deliveryCartRequester.flow
+        .onEach { result ->
+            val cart = result.getOrNull()
+            if (cart != null) updatePromoCode(cart)
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
@@ -131,20 +138,34 @@ class CartViewModel @AssistedInject constructor(
 
     private val pickUpFromStoreCartResult: StateFlow<Result<DomainCart>?> =
         pickUpFromStoreCartRequester.flow
+            .onEach { result ->
+                val cart = result.getOrNull()
+                if (cart != null) updatePromoCode(cart)
+            }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = null,
             )
 
+    private val isPromoCodeInvalid = MutableStateFlow(false)
+    private val promoCodeDescription = MutableStateFlow<Text?>(null)
+
     val deliveryCartState: StateFlow<CartState> = combine(
         deliveryCartResult,
         deliveryCartRequester.loadingState,
         isMyCardApplied,
-    ) { result, loadingState, isMyCardApplied ->
-        val cart = result?.getOrNull()
-        if (cart != null) updatePromoCode(cart)
-        createCartState(result, loadingState, DeliveryType.DELIVERY, isMyCardApplied)
+        isPromoCodeInvalid,
+        promoCodeDescription,
+    ) { result, loadingState, isMyCardApplied, isPromoCodeInvalid, promoCodeDescription ->
+        createCartState(
+            cartResult = result,
+            cartLoadingState = loadingState,
+            deliveryType = DeliveryType.DELIVERY,
+            isMyCardApplied = isMyCardApplied,
+            isPromoCodeInvalid = isPromoCodeInvalid,
+            promoCodeDescription = promoCodeDescription,
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
@@ -155,10 +176,17 @@ class CartViewModel @AssistedInject constructor(
         pickUpFromStoreCartResult,
         pickUpFromStoreCartRequester.loadingState,
         isMyCardApplied,
-    ) { result, loadingState, isMyCardApplied ->
-        val cart = result?.getOrNull()
-        if (cart != null) updatePromoCode(cart)
-        createCartState(result, loadingState, DeliveryType.PICK_UP_FROM_STORE, isMyCardApplied)
+        isPromoCodeInvalid,
+        promoCodeDescription,
+    ) { result, loadingState, isMyCardApplied, isPromoCodeInvalid, promoCodeDescription ->
+        createCartState(
+            cartResult = result,
+            cartLoadingState = loadingState,
+            deliveryType = DeliveryType.PICK_UP_FROM_STORE,
+            isMyCardApplied = isMyCardApplied,
+            isPromoCodeInvalid = isPromoCodeInvalid,
+            promoCodeDescription = promoCodeDescription,
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
@@ -185,6 +213,7 @@ class CartViewModel @AssistedInject constructor(
     )
 
     init {
+        resetPromoCodeErrorsOnChange()
         handleCitySelectorResult()
         handleProductCountSelectorResult()
     }
@@ -325,6 +354,11 @@ class CartViewModel @AssistedInject constructor(
                     val messageText = Text.Resource(R.string.promo_code_applying_error)
                     val message = ZarinaToastMessage.error(messageText)
                     emitSideEffect(SideEffect.ShowZarinaToast(message))
+
+                    // TODO: [High] Do only if PromoCodeNotFoundException is caught
+                    isPromoCodeInvalid.value = true
+                    promoCodeDescription.value =
+                        Text.Resource(R.string.promo_code_applying_error_description)
                 }
         }
     }
@@ -333,7 +367,7 @@ class CartViewModel @AssistedInject constructor(
         if (promoCodeJob?.isActive == true) return
 
         val isPromoCodeApplied =
-            (deliveryCartState.value as? CartState.Cart)?.isPromoCodeApplied == true
+            (deliveryCartState.value as? CartState.Cart)?.promoCodeState?.isApplied == true
         if (isPromoCodeApplied) {
             emitSideEffect(SideEffect.HideKeyboard)
             promoCodeJob = viewModelScope.launch {
@@ -391,6 +425,15 @@ class CartViewModel @AssistedInject constructor(
             }
     }
 
+    private fun resetPromoCodeErrorsOnChange() {
+        promoCodeTextFieldState.textAsFlow()
+            .onEach {
+                isPromoCodeInvalid.value = false
+                promoCodeDescription.value = null
+            }
+            .launchIn(viewModelScope)
+    }
+
     private fun handleCitySelectorResult() {
         viewModelScope.launch {
             screenResultHandler.handle<UnscopedDestinations.CitySelector.Result>(
@@ -430,6 +473,8 @@ class CartViewModel @AssistedInject constructor(
         cartLoadingState: FlowRequester.LoadingState,
         deliveryType: DeliveryType,
         isMyCardApplied: Boolean,
+        isPromoCodeInvalid: Boolean,
+        promoCodeDescription: Text?,
     ): CartState {
         val isLoading = cartLoadingState is FlowRequester.LoadingState.Loading
                 && cartLoadingState.request == CartRequest.LOADING
@@ -448,12 +493,17 @@ class CartViewModel @AssistedInject constructor(
                                 info = it.info,
                             )
                         }
+                        val promoCodeState = PromoCodeState(
+                            isApplied = cart.promoCode?.isApplied == true,
+                            isInvalid = isPromoCodeInvalid,
+                            description = promoCodeDescription,
+                        )
                         CartState.Cart(
                             productItems = productItems,
                             price = cart.price,
                             bonuses = cart.bonuses,
                             myCardState = myCardState,
-                            isPromoCodeApplied = cart.promoCode?.isApplied == true,
+                            promoCodeState = promoCodeState,
                         )
                     } else {
                         CartState.EmptyCart
@@ -516,7 +566,7 @@ class CartViewModel @AssistedInject constructor(
             val price: CartPrice,
             val bonuses: DomainCart.Bonuses,
             val myCardState: MyCardState?,
-            val isPromoCodeApplied: Boolean,
+            val promoCodeState: PromoCodeState,
         ) : CartState()
 
         data object EmptyCart : CartState()
@@ -533,6 +583,13 @@ class CartViewModel @AssistedInject constructor(
 
     @Immutable
     data class MyCardState(val isApplied: Boolean, val info: String?)
+
+    @Immutable
+    data class PromoCodeState(
+        val isApplied: Boolean,
+        val isInvalid: Boolean,
+        val description: Text?,
+    )
 
     @AssistedFactory
     interface Factory {

@@ -87,6 +87,7 @@ import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.domain.cart.DeliveryType
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.component.CartPrice
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCard
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCardCountStyle
@@ -558,9 +559,24 @@ object CartScreenComponents {
             ) {
                 ZarinaPromoCodeTextField(
                     state = promoCodeTextFieldState,
-                    isApplied = cartState.isPromoCodeApplied,
+                    isApplied = cartState.promoCodeState.isApplied,
                     onApplyClicked = onApplyPromoCodeClicked,
                     onRemoveClicked = onRemovePromoCodeClicked,
+                    isError = cartState.promoCodeState.isInvalid,
+                    description = {
+                        AnimatedContent(
+                            targetState = cartState.promoCodeState.description,
+                            transitionSpec = {
+                                AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                            },
+                            contentAlignment = Alignment.Center,
+                            label = "PromoCode description",
+                        ) { text ->
+                            if (text != null) {
+                                Text(text = textString(text))
+                            }
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp)

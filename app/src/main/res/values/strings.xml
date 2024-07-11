@@ -271,6 +271,7 @@
     <string name="promo_code_is_applied">Промокод применён</string>
     <string name="promo_code">Промокод</string>
     <string name="promo_code_applying_error">Не удалось применить промокод</string>
+    <string name="promo_code_applying_error_description">Такого промокода нет, или срок его действия истёк. Введи промокод заново</string>
     <string name="promo_code_removing_error">Не удалось отменить действие промокода</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
