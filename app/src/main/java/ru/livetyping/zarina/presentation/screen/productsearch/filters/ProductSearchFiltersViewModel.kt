@@ -95,7 +95,10 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val categoryProductInfoRequester = FlowRequester(CategoryProductInfoRequest.GENERAL) {
-        combine(searchQuery, filters) { query, filters ->
+        combine(
+            searchQuery,
+            filters.onEach { _isRefreshing.value = true },
+        ) { query, filters ->
             val params = SearchProductsFlowUseCase.Params(
                 query = query,
                 sorting = Sorting.NEW,
@@ -225,7 +228,6 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
     }
 
     private fun setFilters(filters: Filters?) {
-        _isRefreshing.value = true
         savedStateHandle[KEY_FILTERS] = filters?.let { FiltersParcelable.from(it) }
     }
 

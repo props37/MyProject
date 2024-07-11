@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -96,7 +97,10 @@ class ProductFiltersViewModel @AssistedInject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val categoryProductInfoRequester = FlowRequester(CategoryProductInfoRequest.GENERAL) {
-        combine(categoryId, filters) { categoryId, filters ->
+        combine(
+            categoryId,
+            filters.onEach { _isRefreshing.value = true },
+        ) { categoryId, filters ->
             val params = GetCategoryProductInfoFlowUseCase.Params(categoryId, filters)
             interactor.getCategoryProductInfoFlow(params)
         }
@@ -221,7 +225,6 @@ class ProductFiltersViewModel @AssistedInject constructor(
     }
 
     private fun setFilters(filters: Filters?) {
-        _isRefreshing.value = true
         savedStateHandle[KEY_FILTERS] = filters?.let { FiltersParcelable.from(it) }
     }
 
