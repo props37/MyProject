@@ -8,7 +8,6 @@ import ru.livetyping.zarina.data.cart.remote.CartRemoteDataSource
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartProductCount
 import ru.livetyping.zarina.domain.cart.CartProductIds
-import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.domain.cart.DeliveryType
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.geography.KladrId
@@ -21,12 +20,12 @@ class CartRepository @Inject constructor(
 ) {
     val cartProductIds: StateFlow<Set<Product.Id>> = localDataSource.cartProductIds
     val areCartProductIdsFetched: StateFlow<Boolean> = localDataSource.areCartProductIdsFetched
-    val cartSize: StateFlow<CartSize> = localDataSource.cartSize
+    val cartProductCount: StateFlow<Int> = localDataSource.cartProductCount
 
     suspend fun fetchCartProductIds(): CartProductIds {
         val cartProductIds = remoteDataSource.getCartProductIdsFlow().first()
         localDataSource.setCartProductIds(cartProductIds.cartProductIds)
-        localDataSource.setCartTotalProductCount(cartProductIds.cartProductCount)
+        localDataSource.setCartProductCount(cartProductIds.cartProductCount)
         localDataSource.setAreCartProductIdsFetched(true)
         return cartProductIds
     }
@@ -74,18 +73,14 @@ class CartRepository @Inject constructor(
         remoteDataSource.changeProductCountInCart(barcode, count, deliveryType)
     }
 
-    fun setCartSize(size: CartSize) {
-        localDataSource.setCartSize(size)
-    }
-
     fun setCartTotalProductCount(count: Int) {
-        localDataSource.setCartTotalProductCount(count)
+        localDataSource.setCartProductCount(count)
     }
 
     suspend fun clearCart() {
         remoteDataSource.clearCart()
         localDataSource.setCartProductIds(emptySet())
-        localDataSource.setCartSize(CartSize.EMPTY)
+        localDataSource.setCartProductCount(0)
     }
 
     fun clear() {

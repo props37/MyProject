@@ -81,14 +81,14 @@ class CartViewModel @AssistedInject constructor(
     private var applyMyCardJob: Job? = null
     private var promoCodeJob: Job? = null
 
-    val cartSize: StateFlow<CartSize> = interactor.getCartSizeFlow()
+    val cartProductCount: StateFlow<Int> = interactor.getCartProductCountFlow()
         .map { result ->
-            result.getOrDefault(CartSize.EMPTY)
+            result.getOrDefault(0)
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileUiSubscribed,
-            initialValue = CartSize.EMPTY,
+            initialValue = 0,
         )
 
     val city: StateFlow<City?> = interactor.getUserCityFlow()
@@ -101,10 +101,11 @@ class CartViewModel @AssistedInject constructor(
             initialValue = null,
         )
 
-    val isClearCartButtonVisible: StateFlow<Boolean> = cartSize.mapState(
+    val isClearCartButtonVisible: StateFlow<Boolean> = cartProductCount.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
-    ) { cartSize -> !cartSize.isEmpty }
+        transform = { it != 0 },
+    )
 
     val deliveryTypes: StateFlow<ImmutableList<DeliveryType>> =
         MutableStateFlow(DeliveryType.entries.toImmutableList()).asStateFlow()
@@ -147,6 +148,15 @@ class CartViewModel @AssistedInject constructor(
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = null,
             )
+
+    val cartSize: StateFlow<CartSize> = deliveryCartResult.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        transform = { result ->
+            val cart = result?.getOrNull()
+            cart?.size ?: CartSize.EMPTY
+        },
+    )
 
     private val isPromoCodeInvalid = MutableStateFlow(false)
     private val promoCodeDescription = MutableStateFlow<Text?>(null)

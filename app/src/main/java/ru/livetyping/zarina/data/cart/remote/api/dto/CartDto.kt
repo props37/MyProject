@@ -61,11 +61,9 @@ data class CartDto(
     }
 
     private fun getCartSize(): CartSize {
-        checkNotNull(totalProductCount) { "totalProductCount is null" }
         checkNotNull(deliveryProductCount) { "deliveryProductCount is null" }
         checkNotNull(pickUpFromStoresProductCount) { "pickUpFromStoresProductCount is null" }
         return CartSize(
-            totalProductCount = totalProductCount,
             deliveryProductCount = deliveryProductCount,
             pickUpFromStoreProductCount = pickUpFromStoresProductCount,
         )

@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.data.cart.local
 
 import kotlinx.coroutines.flow.StateFlow
-import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.domain.product.Product
 import javax.inject.Inject
 
@@ -10,7 +9,7 @@ class CartLocalDataSource @Inject constructor(
 ) {
     val cartProductIds: StateFlow<Set<Product.Id>> = dataHolder.cartProductIds
     val areCartProductIdsFetched: StateFlow<Boolean> = dataHolder.areCartProductIdsFetched
-    val cartSize: StateFlow<CartSize> = dataHolder.cartSize
+    val cartProductCount: StateFlow<Int> = dataHolder.cartProductCount
 
     fun setCartProductIds(ids: Set<Product.Id>) {
         dataHolder.setCartProductIds(ids)
@@ -28,12 +27,8 @@ class CartLocalDataSource @Inject constructor(
         dataHolder.removeProductFromCart(productId)
     }
 
-    fun setCartSize(size: CartSize) {
-        dataHolder.setCartSize(size)
-    }
-
-    fun setCartTotalProductCount(count: Int) {
-        dataHolder.setCartTotalProductCount(count)
+    fun setCartProductCount(count: Int) {
+        dataHolder.setCartProductCount(count)
     }
 
     fun clear() {

@@ -69,6 +69,7 @@ fun CartScreen(
     navigate: (CartScreenAction) -> Unit,
     viewModel: CartViewModel = hiltViewModel(),
 ) {
+    val cartProductCount by viewModel.cartProductCount.collectAsStateWithLifecycle()
     val cartSize by viewModel.cartSize.collectAsStateWithLifecycle()
     val city by viewModel.city.collectAsStateWithLifecycle()
     val isClearCartButtonVisible by viewModel.isClearCartButtonVisible.collectAsStateWithLifecycle()
@@ -86,6 +87,7 @@ fun CartScreen(
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     ScreenContent(
+        cartProductCount = cartProductCount,
         cartSize = cartSize,
         city = city,
         onCityClicked = viewModel::onCityClicked,
@@ -115,6 +117,7 @@ fun CartScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
+    cartProductCount: Int,
     cartSize: CartSize,
     city: City?,
     onCityClicked: () -> Unit,
@@ -185,7 +188,7 @@ private fun ScreenContent(
             )
 
             Crossfade(
-                targetState = cartSize.isEmpty,
+                targetState = cartProductCount == 0,
                 modifier = Modifier.fillMaxSize(),
             ) { isCartEmpty ->
                 if (!isCartEmpty) {
