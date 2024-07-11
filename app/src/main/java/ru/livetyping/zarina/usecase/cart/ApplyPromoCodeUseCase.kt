@@ -14,7 +14,7 @@ class ApplyPromoCodeUseCase @Inject constructor(
 ) : UseCase<ApplyPromoCodeUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
-        val promoCode = params.promoCode
+        val promoCode = params.promoCode.trim()
         Timber.v("Apply promo code: $promoCode")
         cartRepository.applyPromoCode(promoCode)
     }

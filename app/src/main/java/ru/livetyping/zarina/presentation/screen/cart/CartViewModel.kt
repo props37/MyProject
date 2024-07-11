@@ -387,7 +387,11 @@ class CartViewModel @AssistedInject constructor(
         }
     }
 
-    // TODO: [High] Handle promo code TF IME action
+    fun onPromoCodeImeDoneClicked() {
+        if (promoCodeTextFieldState.text.isNotBlank()) {
+            onApplyPromoCodeClicked()
+        }
+    }
 
     fun onUrlClicked(url: Url) {
         navigationThrottler.throttle {

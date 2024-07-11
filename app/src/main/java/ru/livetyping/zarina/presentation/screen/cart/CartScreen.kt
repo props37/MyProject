@@ -104,6 +104,7 @@ fun CartScreen(
         promoCodeTextFieldState = viewModel.promoCodeTextFieldState,
         onApplyPromoCodeClicked = viewModel::onApplyPromoCodeClicked,
         onRemovePromoCodeClicked = viewModel::onRemovePromoCodeClicked,
+        onPromoCodeImeDoneClicked = viewModel::onPromoCodeImeDoneClicked,
         onUrlClicked = viewModel::onUrlClicked,
         onScreenOpened = viewModel::onScreenOpened,
         sideEffects = viewModel.sideEffects,
@@ -132,6 +133,7 @@ private fun ScreenContent(
     promoCodeTextFieldState: TextFieldState,
     onApplyPromoCodeClicked: () -> Unit,
     onRemovePromoCodeClicked: () -> Unit,
+    onPromoCodeImeDoneClicked: () -> Unit,
     onUrlClicked: (Url) -> Unit,
     onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -204,6 +206,7 @@ private fun ScreenContent(
                         promoCodeTextFieldState = promoCodeTextFieldState,
                         onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                         onRemovePromoCodeClicked = onRemovePromoCodeClicked,
+                        onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
                     )
                 } else {
                     val errorState = rememberErrorState(

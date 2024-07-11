@@ -180,6 +180,7 @@ object CartScreenComponents {
         promoCodeTextFieldState: TextFieldState,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
+        onPromoCodeImeDoneClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val cityScrollBehavior = CollapsingTopBarDefaults.rememberExitUntilCollapsedScrollBehavior()
@@ -228,6 +229,7 @@ object CartScreenComponents {
                     promoCodeTextFieldState = promoCodeTextFieldState,
                     onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                     onRemovePromoCodeClicked = onRemovePromoCodeClicked,
+                    onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -382,6 +384,7 @@ object CartScreenComponents {
         promoCodeTextFieldState: TextFieldState,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
+        onPromoCodeImeDoneClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         HorizontalPager(
@@ -410,6 +413,7 @@ object CartScreenComponents {
                             promoCodeTextFieldState = promoCodeTextFieldState,
                             onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                             onRemovePromoCodeClicked = onRemovePromoCodeClicked,
+                            onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
@@ -451,6 +455,7 @@ object CartScreenComponents {
         promoCodeTextFieldState: TextFieldState,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
+        onPromoCodeImeDoneClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
@@ -465,6 +470,7 @@ object CartScreenComponents {
                 promoCodeTextFieldState = promoCodeTextFieldState,
                 onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                 onRemovePromoCodeClicked = onRemovePromoCodeClicked,
+                onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
                 modifier = Modifier.matchParentSize(),
             )
 
@@ -493,6 +499,7 @@ object CartScreenComponents {
         promoCodeTextFieldState: TextFieldState,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
+        onPromoCodeImeDoneClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         var lastDraggedProductId by remember { mutableStateOf<CartProduct.Id?>(null) }
@@ -577,6 +584,7 @@ object CartScreenComponents {
                             }
                         }
                     },
+                    onKeyboardAction = { onPromoCodeImeDoneClicked() },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp)
