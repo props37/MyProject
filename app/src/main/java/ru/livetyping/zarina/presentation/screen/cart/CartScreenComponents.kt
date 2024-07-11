@@ -42,7 +42,10 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.byValue
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -72,6 +75,8 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
@@ -106,9 +111,12 @@ import ru.livetyping.zarina.presentation.common.component.switchh.ZarinaSwitch
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPromoCodeTextField
+import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
+import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPrice
+import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.BonusState
 import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.CartState
 import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.MyCardState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -176,6 +184,9 @@ object CartScreenComponents {
         onGoToCatalogClicked: () -> Unit,
         productCardActions: ProductCardActions,
         onBonusAccrualClicked: () -> Unit,
+        deliveryBonusWriteOffTextFieldState: TextFieldState,
+        pickUpFromStoreBonusWriteOffTextFieldState: TextFieldState,
+        onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
         promoCodeTextFieldState: TextFieldState,
         onApplyPromoCodeClicked: () -> Unit,
@@ -225,6 +236,9 @@ object CartScreenComponents {
                     onCartErrorRefreshClicked = onCartErrorRefreshClicked,
                     productCardActions = productCardActions,
                     onBonusAccrualClicked = onBonusAccrualClicked,
+                    deliveryBonusWriteOffTextFieldState = deliveryBonusWriteOffTextFieldState,
+                    pickUpFromStoreBonusWriteOffTextFieldState = pickUpFromStoreBonusWriteOffTextFieldState,
+                    onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
                     onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
                     promoCodeTextFieldState = promoCodeTextFieldState,
                     onApplyPromoCodeClicked = onApplyPromoCodeClicked,
@@ -380,6 +394,9 @@ object CartScreenComponents {
         onCartErrorRefreshClicked: () -> Unit,
         productCardActions: ProductCardActions,
         onBonusAccrualClicked: () -> Unit,
+        deliveryBonusWriteOffTextFieldState: TextFieldState,
+        pickUpFromStoreBonusWriteOffTextFieldState: TextFieldState,
+        onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
         promoCodeTextFieldState: TextFieldState,
         onApplyPromoCodeClicked: () -> Unit,
@@ -407,8 +424,12 @@ object CartScreenComponents {
                     is CartState.Cart -> {
                         Cart(
                             cartState = state,
+                            deliveryType = deliveryType,
                             productCardActions = productCardActions,
                             onBonusAccrualClicked = onBonusAccrualClicked,
+                            deliveryBonusWriteOffTextFieldState = deliveryBonusWriteOffTextFieldState,
+                            pickUpFromStoreBonusWriteOffTextFieldState = pickUpFromStoreBonusWriteOffTextFieldState,
+                            onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
                             onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
                             promoCodeTextFieldState = promoCodeTextFieldState,
                             onApplyPromoCodeClicked = onApplyPromoCodeClicked,
@@ -449,8 +470,12 @@ object CartScreenComponents {
     @Composable
     private fun Cart(
         cartState: CartState.Cart,
+        deliveryType: DeliveryType,
         productCardActions: ProductCardActions,
         onBonusAccrualClicked: () -> Unit,
+        deliveryBonusWriteOffTextFieldState: TextFieldState,
+        pickUpFromStoreBonusWriteOffTextFieldState: TextFieldState,
+        onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
         promoCodeTextFieldState: TextFieldState,
         onApplyPromoCodeClicked: () -> Unit,
@@ -463,9 +488,13 @@ object CartScreenComponents {
 
             CartList(
                 cartState = cartState,
+                deliveryType = deliveryType,
                 productCardActions = productCardActions,
                 lazyListState = lazyListState,
                 onBonusAccrualClicked = onBonusAccrualClicked,
+                deliveryBonusWriteOffTextFieldState = deliveryBonusWriteOffTextFieldState,
+                pickUpFromStoreBonusWriteOffTextFieldState = pickUpFromStoreBonusWriteOffTextFieldState,
+                onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
                 onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
                 promoCodeTextFieldState = promoCodeTextFieldState,
                 onApplyPromoCodeClicked = onApplyPromoCodeClicked,
@@ -493,9 +522,13 @@ object CartScreenComponents {
     @Composable
     private fun CartList(
         cartState: CartState.Cart,
+        deliveryType: DeliveryType,
         productCardActions: ProductCardActions,
         lazyListState: LazyListState,
         onBonusAccrualClicked: () -> Unit,
+        deliveryBonusWriteOffTextFieldState: TextFieldState,
+        pickUpFromStoreBonusWriteOffTextFieldState: TextFieldState,
+        onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
         promoCodeTextFieldState: TextFieldState,
         onApplyPromoCodeClicked: () -> Unit,
@@ -527,17 +560,38 @@ object CartScreenComponents {
                 )
             }
 
-            if (cartState.bonuses.accrualForPurchase != 0) {
+            if (cartState.bonusState.bonuses.accrualForPurchase != 0) {
                 item(
                     key = CartKey.BonusAccrual,
                     contentType = CartContentType.BonusAccrual,
                 ) {
                     BonusAccrual(
-                        bonusCount = cartState.bonuses.accrualForPurchase,
+                        bonusCount = cartState.bonusState.bonuses.accrualForPurchase,
                         onClick = onBonusAccrualClicked,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 32.dp)
+                            .padding(start = 16.dp, end = 8.dp)
+                            .animateItem(),
+                    )
+                }
+            }
+
+            if (cartState.bonusState.isWriteOffAvailable) {
+                item(
+                    key = CartKey.BonusWriteOff,
+                    contentType = CartContentType.BonusWriteOff,
+                ) {
+                    BonusWriteOff(
+                        state = cartState.bonusState,
+                        onIsAppliedChanged = onIsBonusWriteOffAppliedChanged,
+                        bonusWriteOffTextFieldState = when (deliveryType) {
+                            DeliveryType.DELIVERY -> deliveryBonusWriteOffTextFieldState
+                            DeliveryType.PICK_UP_FROM_STORE -> pickUpFromStoreBonusWriteOffTextFieldState
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 24.dp)
                             .padding(start = 16.dp, end = 8.dp)
                             .animateItem(),
                     )
@@ -1035,6 +1089,91 @@ object CartScreenComponents {
     }
 
     @Composable
+    private fun BonusWriteOff(
+        state: BonusState,
+        onIsAppliedChanged: (Boolean) -> Unit,
+        bonusWriteOffTextFieldState: TextFieldState,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.write_off_bonuses),
+                        style = UiKitTheme.typography.secondary.light,
+                        color = UiKitTheme.colors.text.general.regular.default,
+                    )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    val formattedAvailable = rememberFormattedPrice(state.bonuses.available)
+                    Text(
+                        text = pluralStringResource(
+                            id = R.plurals.you_have_s_bonuses,
+                            state.bonuses.available,
+                            formattedAvailable
+                        ),
+                        style = UiKitTheme.typography.footnote.light,
+                        color = UiKitTheme.colors.text.general.regular.muted,
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                ZarinaSwitch(
+                    isChecked = state.isWriteOffApplied,
+                    onCheckedChanged = onIsAppliedChanged,
+                )
+            }
+
+            AnimatedContent(
+                targetState = state.isWriteOffApplied,
+                transitionSpec = {
+                    AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                },
+                contentAlignment = Alignment.Center,
+                label = "Bonus write off text field",
+                modifier = Modifier.fillMaxWidth(),
+            ) { isVisible ->
+                if (isVisible) {
+                    ZarinaTextField(
+                        state = bonusWriteOffTextFieldState,
+                        innerTrailingContent = {
+                            ZarinaTextFieldDefaults.ClearButton(
+                                isVisible = bonusWriteOffTextFieldState.text.isNotBlank(),
+                                onClick = { /*TODO*/ },
+                            )
+                        },
+                        description = {
+                            val formattedMaxWriteOff = rememberFormattedPrice(state.bonuses.writeOff.max)
+                            Text(
+                                text = pluralStringResource(
+                                    id = R.plurals.you_can_write_off_s_bonuses,
+                                    state.bonuses.writeOff.max,
+                                    formattedMaxWriteOff,
+                                ),
+                            )
+                        },
+                        inputTransformation = InputTransformation.byValue { _, proposed ->
+                            proposed.filter { it.isDigit() }
+                        },
+                        keyboardOptions = remember {
+                            KeyboardOptions(
+                                keyboardType = KeyboardType.Decimal,
+                                imeAction = ImeAction.Done,
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                            .padding(end = 8.dp),
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
     private fun MyCard(
         state: MyCardState,
         onIsAppliedChanged: (Boolean) -> Unit,
@@ -1065,7 +1204,7 @@ object CartScreenComponents {
 
             ZarinaSwitch(
                 isChecked = state.isApplied,
-                onCheckedChanged = { onIsAppliedChanged(it) },
+                onCheckedChanged = onIsAppliedChanged,
             )
         }
     }
@@ -1119,6 +1258,8 @@ object CartScreenComponents {
 
         data object BonusAccrual : CartKey()
 
+        data object BonusWriteOff : CartKey()
+
         data object MyCard : CartKey()
 
         data object PromoCode : CartKey()
@@ -1133,6 +1274,7 @@ object CartScreenComponents {
     private enum class CartContentType {
         Product,
         BonusAccrual,
+        BonusWriteOff,
         MyCard,
         PromoCode,
         Price,

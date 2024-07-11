@@ -40,6 +40,14 @@ class CartRemoteDataSource @Inject constructor(
         api.removePromoCode()
     }
 
+    suspend fun applyBonusWriteOff(deliveryType: DeliveryType, bonusCount: Int) {
+        api.applyBonusWriteOff(deliveryType, bonusCount)
+    }
+
+    suspend fun removeBonusWriteOff(deliveryType: DeliveryType) {
+        api.removeBonusWriteOff(deliveryType)
+    }
+
     suspend fun addProductToCart(barcode: Barcode, count: Int): CartProductCount {
         return api.addProductToCard(barcode, count).toCartProductCount()
     }

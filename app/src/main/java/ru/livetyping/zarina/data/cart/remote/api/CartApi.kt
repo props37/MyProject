@@ -9,6 +9,7 @@ import io.ktor.client.request.post
 import ru.livetyping.zarina.data.cart.remote.api.dto.AddProductToCartRequestBody
 import ru.livetyping.zarina.data.cart.remote.api.dto.ApplyMyCardToCartRequestBody
 import ru.livetyping.zarina.data.cart.remote.api.dto.ApplyPromoCodeRequestBody
+import ru.livetyping.zarina.data.cart.remote.api.dto.BonusWriteOffRequestBody
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartDto
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartProductCountDto
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartProductIdsDto
@@ -60,6 +61,28 @@ class CartApi @Inject constructor(
 
     suspend fun removePromoCode() {
         httpClient.delete("/api/cart/promocode")
+    }
+
+    suspend fun applyBonusWriteOff(deliveryType: DeliveryType, bonusCount: Int) {
+        val body = BonusWriteOffRequestBody(
+            deliveryType = DeliveryTypeDto.fromDeliveryType(deliveryType),
+            bonusCountToWriteOff = bonusCount,
+            isWriteOffApplied = true,
+        )
+        httpClient.post("/api/cart/bonuses") {
+            setJsonBody(body)
+        }
+    }
+
+    suspend fun removeBonusWriteOff(deliveryType: DeliveryType) {
+        val body = BonusWriteOffRequestBody(
+            deliveryType = DeliveryTypeDto.fromDeliveryType(deliveryType),
+            isWriteOffApplied = false,
+            bonusCountToWriteOff = 0,
+        )
+        httpClient.post("/api/cart/bonuses") {
+            setJsonBody(body)
+        }
     }
 
     suspend fun addProductToCard(barcode: Barcode, count: Int): CartProductCountDto {

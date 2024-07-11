@@ -265,6 +265,9 @@
     <string name="discount">Скидка</string>
     <string name="excluding_delivery">Без учёта доставки</string>
     <string name="checkout">Оформить</string>
+    <string name="write_off_bonuses">Списать бонусы</string>
+    <string name="we_will_award_you_for_purchase">За покупку начислим</string>
+    <string name="learn_more">Узнать больше</string>
     <string name="apply_my_card">Применить MyCard</string>
     <string name="my_card_applying_error">Не удалось применить MyCard</string>
     <string name="my_card_canceling_error">Не удалось отменить действие MyCard</string>
@@ -275,6 +278,8 @@
     <string name="promo_code_removing_error">Не удалось отменить действие промокода</string>
     <string name="cart_product_limit_exceeded_error_content_description">Превышен лимит числа товаров в корзине</string>
     <string name="cart_product_limit_exceeded_error_text">Оформление заказа возможно при количестве товаров не более %1$d. Добавь товары в Избранное, чтобы заказать их позже</string>
+    <string name="bonus_write_off_applying_error">Не удалось использовать бонусы</string>
+    <string name="bonus_write_off_removing_error">Не удалось отменить действие бонусов</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
@@ -288,8 +293,6 @@
     <string name="order_status_cancelled">Отменён</string>
     <string name="order_status_refund">Возврат</string>
     <string name="order_status_not_refundable">Не подлежит возврату</string>
-    <string name="we_will_award_you_for_purchase">За покупку начислим</string>
-    <string name="learn_more">Узнать больше</string>
 
     <string name="order_delivery_method_express_delivery">Курьерская доставка</string>
     <string name="order_delivery_method_post">Почта России</string>
@@ -397,6 +400,24 @@
         <item quantity="few">%1$d бонуса</item>
         <item quantity="many">%1$d бонусов</item>
         <item quantity="other">%1$d бонусов</item>
+    </plurals>
+
+    <plurals name="you_have_s_bonuses">
+        <item quantity="zero">У тебя нет бонусов</item>
+        <item quantity="one">У тебя %1$s бонус</item>
+        <item quantity="two">У тебя %1$s бонуса</item>
+        <item quantity="few">У тебя %1$s бонуса</item>
+        <item quantity="many">У тебя %1$s бонусов</item>
+        <item quantity="other">У тебя %1$s бонусов</item>
+    </plurals>
+
+    <plurals name="you_can_write_off_s_bonuses">
+        <item quantity="zero">Нельзя списать бонусы</item>
+        <item quantity="one">Можно списать %1$s бонус</item>
+        <item quantity="two">Можно списать %1$s бонуса</item>
+        <item quantity="few">Можно списать %1$s бонуса</item>
+        <item quantity="many">Можно списать %1$s бонусов</item>
+        <item quantity="other">Можно списать %1$s бонусов</item>
     </plurals>
 
 </resources>
