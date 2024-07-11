@@ -20,7 +20,7 @@ class CartRemoteDataSource @Inject constructor(
     }
 
     fun getCartFlow(deliveryType: DeliveryType, cityKladrId: KladrId?): Flow<Cart> = flow {
-        val cart = api.getCart(deliveryType, cityKladrId).toCart()
+        val cart = api.getCart(deliveryType, cityKladrId).toCart(deliveryType)
         emit(cart)
     }
 

@@ -9,6 +9,7 @@ data class Cart(
     val bonuses: Bonuses,
     val myCard: MyCard?,
     val promoCode: PromoCode?,
+    val productLimit: ProductLimit,
 ) {
     data class Bonuses(
         val available: Int,
@@ -32,5 +33,10 @@ data class Cart(
     data class PromoCode(
         val isApplied: Boolean,
         val value: String,
+    )
+
+    data class ProductLimit(
+        val limit: Int,
+        val isExceeded: Boolean,
     )
 }

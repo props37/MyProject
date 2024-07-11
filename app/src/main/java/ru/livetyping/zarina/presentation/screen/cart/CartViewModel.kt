@@ -518,6 +518,7 @@ class CartViewModel @AssistedInject constructor(
                             bonuses = cart.bonuses,
                             myCardState = myCardState,
                             promoCodeState = promoCodeState,
+                            productLimit = cart.productLimit,
                         )
                     } else {
                         CartState.EmptyCart
@@ -581,6 +582,7 @@ class CartViewModel @AssistedInject constructor(
             val bonuses: DomainCart.Bonuses,
             val myCardState: MyCardState?,
             val promoCodeState: PromoCodeState,
+            val productLimit: DomainCart.ProductLimit,
         ) : CartState()
 
         data object EmptyCart : CartState()

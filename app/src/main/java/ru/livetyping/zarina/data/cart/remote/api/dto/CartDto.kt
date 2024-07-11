@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartPrice
 import ru.livetyping.zarina.domain.cart.CartSize
+import ru.livetyping.zarina.domain.cart.DeliveryType
 import ru.livetyping.zarina.domain.user.MyCard as DomainMyCard
 
 @Serializable
@@ -47,8 +48,11 @@ data class CartDto(
     
     @SerialName("promocode")
     val promoCode: PromoCode? = null,
+
+    @SerialName("limit")
+    val productLimit: ProductLimit? = null,
 ) {
-    fun toCart(): Cart {
+    fun toCart(deliveryType: DeliveryType): Cart {
         checkNotNull(products) { "products is null" }
         return Cart(
             products = products.map { it.toCartProduct() },
@@ -57,6 +61,7 @@ data class CartDto(
             bonuses = getBonuses(),
             myCard = getMyCard(),
             promoCode = getPromoCode(),
+            productLimit = getProductLimit(deliveryType),
         )
     }
 
@@ -119,6 +124,21 @@ data class CartDto(
         )
     }
 
+    private fun getProductLimit(deliveryType: DeliveryType): Cart.ProductLimit {
+        checkNotNull(productLimit) { "productLimit is null" }
+        checkNotNull(productLimit.limit) { "productLimit.limit is null" }
+        val productCount = when (deliveryType) {
+            DeliveryType.DELIVERY -> deliveryProductCount
+            DeliveryType.PICK_UP_FROM_STORE -> pickUpFromStoresProductCount
+        }
+        checkNotNull(productCount) { "productCount is null" }
+        val limit = productLimit.limit
+        return Cart.ProductLimit(
+            limit = limit,
+            isExceeded = productCount > limit,
+        )
+    }
+
     @Serializable
     data class BonusAction(
         @SerialName("bonus_charge")
@@ -150,5 +170,11 @@ data class CartDto(
     data class PromoCode(
         @SerialName("code")
         val value: String? = null,
+    )
+
+    @Serializable
+    data class ProductLimit(
+        @SerialName("max") 
+        val limit: Int? = null,
     )
 }

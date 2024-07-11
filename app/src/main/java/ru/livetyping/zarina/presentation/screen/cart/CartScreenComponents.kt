@@ -484,6 +484,7 @@ object CartScreenComponents {
             FloatingCheckoutBlock(
                 isVisible = !isCheckoutBlockVisible && !WindowInsets.isImeVisible,
                 totalPrice = cartState.price.totalPrice,
+                isOrderButtonEnabled = !cartState.productLimit.isExceeded,
                 modifier = Modifier.align(Alignment.BottomCenter),
             )
         }
@@ -608,16 +609,51 @@ object CartScreenComponents {
                 )
             }
 
+            if (cartState.productLimit.isExceeded) {
+                item(
+                    key = CartKey.ProductLimitExceededError,
+                    contentType = CartContentType.ProductLimitExceededError,
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                            .padding(horizontal = 16.dp)
+                            .animateItem(),
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_question_mark_shaped_24),
+                            contentDescription = stringResource(R.string.cart_product_limit_exceeded_error_content_description),
+                            tint = UiKitTheme.colors.icon.regular.error,
+                            modifier = Modifier.size(16.dp),
+                        )
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Text(
+                            text = stringResource(
+                                id = R.string.cart_product_limit_exceeded_error_text,
+                                cartState.productLimit.limit
+                            ),
+                            style = UiKitTheme.typography.footnote.light,
+                            color = UiKitTheme.colors.text.general.accent.red,
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                }
+            }
+
             item(
                 key = CartKey.CheckoutBlock,
                 contentType = CartContentType.CheckoutBlock,
             ) {
                 ZarinaButton(
                     onClick = { /*TODO*/ },
+                    isEnabled = !cartState.productLimit.isExceeded,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
-                        .padding(top = 12.dp, bottom = 20.dp)
+                        .padding(top = 16.dp, bottom = 20.dp)
                         .animateItem(),
                 ) {
                     Text(text = stringResource(R.string.checkout).uppercase())
@@ -630,6 +666,7 @@ object CartScreenComponents {
     private fun FloatingCheckoutBlock(
         isVisible: Boolean,
         totalPrice: Int,
+        isOrderButtonEnabled: Boolean,
         modifier: Modifier = Modifier,
     ) {
         AnimatedVisibility(
@@ -667,6 +704,7 @@ object CartScreenComponents {
 
                 ZarinaButton(
                     onClick = { /*TODO*/ },
+                    isEnabled = isOrderButtonEnabled,
                     modifier = Modifier.weight(1f),
                 ) {
                     Text(text = stringResource(R.string.checkout).uppercase())
@@ -1087,6 +1125,8 @@ object CartScreenComponents {
 
         data object Price : CartKey()
 
+        data object ProductLimitExceededError : CartKey()
+
         data object CheckoutBlock : CartKey()
     }
 
@@ -1096,6 +1136,7 @@ object CartScreenComponents {
         MyCard,
         PromoCode,
         Price,
+        ProductLimitExceededError,
         CheckoutBlock,
     }
 

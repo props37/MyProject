@@ -273,6 +273,8 @@
     <string name="promo_code_applying_error">Не удалось применить промокод</string>
     <string name="promo_code_applying_error_description">Такого промокода нет, или срок его действия истёк. Введи промокод заново</string>
     <string name="promo_code_removing_error">Не удалось отменить действие промокода</string>
+    <string name="cart_product_limit_exceeded_error_content_description">Превышен лимит числа товаров в корзине</string>
+    <string name="cart_product_limit_exceeded_error_text">Оформление заказа возможно при количестве товаров не более %1$d. Добавь товары в Избранное, чтобы заказать их позже</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
