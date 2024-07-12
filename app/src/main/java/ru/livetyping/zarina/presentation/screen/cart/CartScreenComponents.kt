@@ -420,7 +420,6 @@ object CartScreenComponents {
                     is CartState.Cart -> {
                         Cart(
                             cartState = state,
-                            cartType = cartType,
                             productCardActions = productCardActions,
                             onBonusAccrualClicked = onBonusAccrualClicked,
                             onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
@@ -464,7 +463,6 @@ object CartScreenComponents {
     @Composable
     private fun Cart(
         cartState: CartState.Cart,
-        cartType: CartType,
         productCardActions: ProductCardActions,
         onBonusAccrualClicked: () -> Unit,
         onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
