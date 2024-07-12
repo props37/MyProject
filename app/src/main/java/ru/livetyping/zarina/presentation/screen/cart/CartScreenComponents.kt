@@ -1,9 +1,13 @@
 package ru.livetyping.zarina.presentation.screen.cart
 
+import android.os.Parcelable
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -14,88 +18,119 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.byValue
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.Text
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartSize
-import ru.livetyping.zarina.domain.cart.DeliveryType
+import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.presentation.base.text.textString
+import ru.livetyping.zarina.presentation.common.component.CartPrice
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCard
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCardCountStyle
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCardSkeleton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.presentation.common.component.counter.ZarinaCounter
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
+import ru.livetyping.zarina.presentation.common.component.switchh.ZarinaSwitch
+import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
+import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPromoCodeTextField
+import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
+import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
+import ru.livetyping.zarina.presentation.common.util.rememberFormattedPrice
+import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.BonusState
 import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.CartState
+import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.MyCardState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.compose.animation.Crossfade
+import ru.livetyping.zarina.util.compose.coercedOffset
 import ru.livetyping.zarina.util.compose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.util.compose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.util.compose.pager.PagerTabRowIntegration
 import ru.livetyping.zarina.util.compose.rememberAnchoredDraggableState
-import ru.livetyping.zarina.util.compose.requireCoercedOffset
+import ru.livetyping.zarina.util.kotlin.removePrefix
 import kotlin.math.roundToInt
 
 @Suppress("ConstPropertyName")
@@ -142,12 +177,21 @@ object CartScreenComponents {
         city: City?,
         onCityClicked: () -> Unit,
         cartSize: CartSize,
-        deliveryTypes: ImmutableList<DeliveryType>,
-        currentDeliveryType: DeliveryType,
-        onDeliveryTypeChanged: (DeliveryType) -> Unit,
-        deliveryTypeToCartState: ImmutableMap<DeliveryType, StateFlow<CartState>>,
-        productCardActions: ProductCardActions,
+        cartTypes: ImmutableList<CartType>,
+        currentCartType: CartType,
+        onCartTypeChanged: (CartType) -> Unit,
+        deliveryCartState: State<CartState>,
+        pickupCartState: State<CartState>,
+        onCartErrorRefreshClicked: () -> Unit,
         onGoToCatalogClicked: () -> Unit,
+        productCardActions: ProductCardActions,
+        onBonusAccrualClicked: () -> Unit,
+        onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
+        onBonusCountToWriteOffChanged: (Int) -> Unit,
+        onIsMyCardAppliedChanged: (Boolean) -> Unit,
+        onApplyPromoCodeClicked: () -> Unit,
+        onRemovePromoCodeClicked: () -> Unit,
+        onPromoCodeImeDoneClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val cityScrollBehavior = CollapsingTopBarDefaults.rememberExitUntilCollapsedScrollBehavior()
@@ -167,28 +211,37 @@ object CartScreenComponents {
                     .padding(padding)
                     .nestedScroll(cityScrollBehavior.nestedScrollConnection),
             ) {
-                val pagerState = rememberPagerState { deliveryTypes.size }
+                val pagerState = rememberPagerState { cartTypes.size }
                 PagerTabRowIntegration(
                     pagerState = pagerState,
-                    tabs = deliveryTypes,
-                    currentTab = currentDeliveryType,
-                    onCurrentTabChanged = onDeliveryTypeChanged,
+                    tabs = cartTypes,
+                    currentTab = currentCartType,
+                    onCurrentTabChanged = onCartTypeChanged,
                 )
 
-                DeliveryTypePicker(
-                    types = deliveryTypes,
-                    currentType = currentDeliveryType,
-                    onTypeChanged = onDeliveryTypeChanged,
+                CartTypePicker(
+                    types = cartTypes,
+                    currentType = currentCartType,
+                    onTypeChanged = onCartTypeChanged,
                     cartSize = cartSize,
                     modifier = Modifier.padding(horizontal = 16.dp),
                 )
 
-                DeliveryTypeContentPager(
+                CartTypeContentPager(
                     pagerState = pagerState,
-                    deliveryTypes = deliveryTypes,
-                    deliveryTypeToCartState = deliveryTypeToCartState,
-                    productCardActions = productCardActions,
+                    cartTypes = cartTypes,
+                    deliveryCartState = deliveryCartState,
+                    pickupCartState = pickupCartState,
                     onGoToCatalogClicked = onGoToCatalogClicked,
+                    onCartErrorRefreshClicked = onCartErrorRefreshClicked,
+                    productCardActions = productCardActions,
+                    onBonusAccrualClicked = onBonusAccrualClicked,
+                    onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
+                    onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
+                    onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
+                    onApplyPromoCodeClicked = onApplyPromoCodeClicked,
+                    onRemovePromoCodeClicked = onRemovePromoCodeClicked,
+                    onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -251,10 +304,10 @@ object CartScreenComponents {
     }
 
     @Composable
-    private fun DeliveryTypePicker(
-        types: ImmutableList<DeliveryType>,
-        currentType: DeliveryType,
-        onTypeChanged: (DeliveryType) -> Unit,
+    private fun CartTypePicker(
+        types: ImmutableList<CartType>,
+        currentType: CartType,
+        onTypeChanged: (CartType) -> Unit,
         cartSize: CartSize,
         modifier: Modifier = Modifier,
     ) {
@@ -266,13 +319,12 @@ object CartScreenComponents {
             selectedTabIndex = selectedTabIndex,
             modifier = modifier,
         ) {
-            // TODO: [Low] Migrate to ZarinaTab
             types.forEach { type ->
                 val productCount = when (type) {
-                    DeliveryType.DELIVERY -> cartSize.deliveryProductCount
-                    DeliveryType.PICK_UP_FROM_STORE -> cartSize.pickUpFromStoreProductCount
+                    CartType.DELIVERY -> cartSize.deliveryProductCount
+                    CartType.PICKUP -> cartSize.pickupProductCount
                 }
-                DeliveryTypeButton(
+                CartTypeTab(
                     type = type,
                     onClick = { onTypeChanged(type) },
                     isSelected = type == currentType,
@@ -283,23 +335,21 @@ object CartScreenComponents {
     }
 
     @Composable
-    private fun DeliveryTypeButton(
-        type: DeliveryType,
+    private fun CartTypeTab(
+        type: CartType,
         onClick: () -> Unit,
         isSelected: Boolean,
         productCount: Int,
         modifier: Modifier = Modifier,
     ) {
-        ZarinaButton(
+        ZarinaTab(
             onClick = onClick,
-            size = ZarinaButtonSize.Medium,
-            colors = ZarinaButtonDefaults.backlessColors(),
-            contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
+            isSelected = isSelected,
             modifier = modifier,
         ) {
             val textResId = when (type) {
-                DeliveryType.DELIVERY -> R.string.delivery
-                DeliveryType.PICK_UP_FROM_STORE -> R.string.from_store
+                CartType.DELIVERY -> R.string.delivery
+                CartType.PICKUP -> R.string.from_store
             }
 
             val style = if (isSelected) {
@@ -320,7 +370,7 @@ object CartScreenComponents {
                     AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
                 },
                 contentAlignment = Alignment.Center,
-                label = "DeliveryTypeButton product count",
+                label = "CartTypeButton product count",
             ) { count ->
                 if (count > 0) {
                     ZarinaCounter(
@@ -333,12 +383,21 @@ object CartScreenComponents {
     }
 
     @Composable
-    private fun DeliveryTypeContentPager(
+    private fun CartTypeContentPager(
         pagerState: PagerState,
-        deliveryTypes: ImmutableList<DeliveryType>,
-        deliveryTypeToCartState: ImmutableMap<DeliveryType, StateFlow<CartState>>,
-        productCardActions: ProductCardActions,
+        cartTypes: ImmutableList<CartType>,
+        deliveryCartState: State<CartState>,
+        pickupCartState: State<CartState>,
         onGoToCatalogClicked: () -> Unit,
+        onCartErrorRefreshClicked: () -> Unit,
+        productCardActions: ProductCardActions,
+        onBonusAccrualClicked: () -> Unit,
+        onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
+        onBonusCountToWriteOffChanged: (Int) -> Unit,
+        onIsMyCardAppliedChanged: (Boolean) -> Unit,
+        onApplyPromoCodeClicked: () -> Unit,
+        onRemovePromoCodeClicked: () -> Unit,
+        onPromoCodeImeDoneClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         HorizontalPager(
@@ -346,32 +405,41 @@ object CartScreenComponents {
             userScrollEnabled = false,
             modifier = modifier,
         ) { page ->
-            val deliveryType = deliveryTypes[page]
-            val cartState = deliveryTypeToCartState[deliveryType]
-                ?.collectAsStateWithLifecycle()?.value
-                ?: CartState.Skeleton
+            val cartType = cartTypes[page]
+            val cartState = when (cartType) {
+                CartType.DELIVERY -> deliveryCartState
+                CartType.PICKUP -> pickupCartState
+            }.value
 
             Crossfade(
                 targetState = cartState,
-                contentKey = ::getDeliveryTypePagerContentKey,
+                contentKey = ::getCartTypePagerContentKey,
                 modifier = Modifier.fillMaxSize(),
             ) { state ->
                 when (state) {
                     is CartState.Cart -> {
                         Cart(
                             cartState = state,
+                            cartType = cartType,
                             productCardActions = productCardActions,
+                            onBonusAccrualClicked = onBonusAccrualClicked,
+                            onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
+                            onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
+                            onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
+                            onApplyPromoCodeClicked = onApplyPromoCodeClicked,
+                            onRemovePromoCodeClicked = onRemovePromoCodeClicked,
+                            onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
 
-                    CartState.Skeleton -> {
+                    CartState.Loading -> {
                         CartSkeleton()
                     }
 
                     CartState.EmptyCart -> {
                         EmptyCartPlaceholder(
-                            deliveryType = deliveryType,
+                            cartType = cartType,
                             onGoToCatalogClicked = onGoToCatalogClicked,
                             modifier = Modifier
                                 .fillMaxSize()
@@ -383,7 +451,7 @@ object CartScreenComponents {
                     is CartState.Error -> {
                         ZarinaErrorScreen(
                             state = state.state,
-                            onButtonClicked = { /*TODO*/ },
+                            onButtonClicked = onCartErrorRefreshClicked,
                             modifier = Modifier.padding(16.dp),
                         )
                     }
@@ -392,38 +460,291 @@ object CartScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     private fun Cart(
         cartState: CartState.Cart,
+        cartType: CartType,
         productCardActions: ProductCardActions,
+        onBonusAccrualClicked: () -> Unit,
+        onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
+        onBonusCountToWriteOffChanged: (Int) -> Unit,
+        onIsMyCardAppliedChanged: (Boolean) -> Unit,
+        onApplyPromoCodeClicked: () -> Unit,
+        onRemovePromoCodeClicked: () -> Unit,
+        onPromoCodeImeDoneClicked: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Box(modifier = modifier) {
+            val lazyListState = rememberLazyListState()
+
+            CartList(
+                cartState = cartState,
+                productCardActions = productCardActions,
+                lazyListState = lazyListState,
+                onBonusAccrualClicked = onBonusAccrualClicked,
+                onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
+                onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
+                onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
+                onApplyPromoCodeClicked = onApplyPromoCodeClicked,
+                onRemovePromoCodeClicked = onRemovePromoCodeClicked,
+                onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
+                modifier = Modifier.matchParentSize(),
+            )
+
+            val isCheckoutBlockVisible by remember {
+                derivedStateOf {
+                    val visibleItems = lazyListState.layoutInfo.visibleItemsInfo
+                    visibleItems.any { it.contentType == CartContentType.CheckoutBlock }
+                }
+            }
+
+            FloatingCheckoutBlock(
+                isVisible = !isCheckoutBlockVisible && !WindowInsets.isImeVisible,
+                totalPrice = cartState.price.totalPrice,
+                isOrderButtonEnabled = !cartState.productLimit.isExceeded,
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
+        }
+    }
+
+    @Composable
+    private fun CartList(
+        cartState: CartState.Cart,
+        productCardActions: ProductCardActions,
+        lazyListState: LazyListState,
+        onBonusAccrualClicked: () -> Unit,
+        onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
+        onBonusCountToWriteOffChanged: (Int) -> Unit,
+        onIsMyCardAppliedChanged: (Boolean) -> Unit,
+        onApplyPromoCodeClicked: () -> Unit,
+        onRemovePromoCodeClicked: () -> Unit,
+        onPromoCodeImeDoneClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         var lastDraggedProductId by remember { mutableStateOf<CartProduct.Id?>(null) }
 
-        LazyColumn(modifier = modifier) {
-            // TODO: [High] Implement contentType
+        LazyColumn(
+            state = lazyListState,
+            modifier = modifier,
+        ) {
             itemsIndexed(
                 items = cartState.productItems,
-                key = { _, item ->
-                    when (item) {
-                        is CartViewModel.CartProductItem.Product -> item.product.id.value
-                    }
-                },
+                key = { _, item -> getCartProductItemKey(item) },
+                contentType = { _, _ -> CartContentType.Product },
             ) { index, item ->
-                when (item) {
-                    is CartViewModel.CartProductItem.Product -> {
-                        SwipeableProductOrderCard(
-                            productItem = item,
-                            productCardActions = productCardActions,
-                            isDividerVisible = index < cartState.productItems.lastIndex,
-                            onDragStarted = { lastDraggedProductId = it },
-                            lastDraggedProductId = lastDraggedProductId,
-                            onResetSwipeState = { lastDraggedProductId = null },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .animateItem(),
+                SwipeableProductOrderCard(
+                    productItem = item,
+                    productCardActions = productCardActions,
+                    isDividerVisible = index < cartState.productItems.lastIndex,
+                    onDragStarted = { lastDraggedProductId = it },
+                    lastDraggedProductId = lastDraggedProductId,
+                    onResetSwipeState = { lastDraggedProductId = null },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem(),
+                )
+            }
+
+            if (cartState.bonusState.bonuses.accrualForPurchase != 0) {
+                item(
+                    key = CartKey.BonusAccrual,
+                    contentType = CartContentType.BonusAccrual,
+                ) {
+                    BonusAccrual(
+                        bonusCount = cartState.bonusState.bonuses.accrualForPurchase,
+                        onClick = onBonusAccrualClicked,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 32.dp)
+                            .padding(start = 16.dp, end = 8.dp)
+                            .animateItem(),
+                    )
+                }
+            }
+
+            if (cartState.bonusState.isWriteOffAvailable) {
+                item(
+                    key = CartKey.BonusWriteOff,
+                    contentType = CartContentType.BonusWriteOff,
+                ) {
+                    BonusWriteOff(
+                        state = cartState.bonusState,
+                        onIsAppliedChanged = onIsBonusWriteOffAppliedChanged,
+                        onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 24.dp)
+                            .padding(start = 16.dp, end = 8.dp)
+                            .animateItem(),
+                    )
+                }
+            }
+
+            if (cartState.myCardState != null) {
+                item(
+                    key = CartKey.MyCard,
+                    contentType = CartContentType.MyCard,
+                ) {
+                    MyCard(
+                        state = cartState.myCardState,
+                        onIsAppliedChanged = onIsMyCardAppliedChanged,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 24.dp)
+                            .padding(start = 16.dp, end = 8.dp)
+                            .animateItem(),
+                    )
+                }
+            }
+
+            item(
+                key = CartKey.PromoCode,
+                contentType = CartContentType.PromoCode,
+            ) {
+                ZarinaPromoCodeTextField(
+                    state = cartState.promoCodeState.textFieldState,
+                    isApplied = cartState.promoCodeState.isApplied,
+                    onApplyClicked = onApplyPromoCodeClicked,
+                    onRemoveClicked = onRemovePromoCodeClicked,
+                    isError = cartState.promoCodeState.isInvalid,
+                    description = {
+                        AnimatedContent(
+                            targetState = cartState.promoCodeState.description,
+                            transitionSpec = {
+                                AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                            },
+                            contentAlignment = Alignment.Center,
+                            label = "PromoCode description",
+                        ) { text ->
+                            if (text != null) {
+                                Text(text = textString(text))
+                            }
+                        }
+                    },
+                    onKeyboardAction = { onPromoCodeImeDoneClicked() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp)
+                        .padding(horizontal = 16.dp)
+                        .animateItem(),
+                )
+            }
+
+            item(
+                key = CartKey.Price,
+                contentType = CartContentType.Price,
+            ) {
+                CartPrice(
+                    cartPrice = cartState.price.cartPrice,
+                    discountSize = cartState.price.discountSize,
+                    totalPrice = cartState.price.totalPrice,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp)
+                        .animateItem(),
+                )
+            }
+
+            if (cartState.productLimit.isExceeded) {
+                item(
+                    key = CartKey.ProductLimitExceededError,
+                    contentType = CartContentType.ProductLimitExceededError,
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                            .padding(horizontal = 16.dp)
+                            .animateItem(),
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_question_mark_shaped_24),
+                            contentDescription = stringResource(R.string.cart_product_limit_exceeded_error_content_description),
+                            tint = UiKitTheme.colors.icon.regular.error,
+                            modifier = Modifier.size(16.dp),
+                        )
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Text(
+                            text = stringResource(
+                                id = R.string.cart_product_limit_exceeded_error_text,
+                                cartState.productLimit.limit
+                            ),
+                            style = UiKitTheme.typography.footnote.light,
+                            color = UiKitTheme.colors.text.general.accent.red,
+                            modifier = Modifier.weight(1f),
                         )
                     }
+                }
+            }
+
+            item(
+                key = CartKey.CheckoutBlock,
+                contentType = CartContentType.CheckoutBlock,
+            ) {
+                ZarinaButton(
+                    onClick = { /*TODO*/ },
+                    isEnabled = !cartState.productLimit.isExceeded,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 16.dp, bottom = 20.dp)
+                        .animateItem(),
+                ) {
+                    Text(text = stringResource(R.string.checkout).uppercase())
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun FloatingCheckoutBlock(
+        isVisible: Boolean,
+        totalPrice: Int,
+        isOrderButtonEnabled: Boolean,
+        modifier: Modifier = Modifier,
+    ) {
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = slideInVertically { it },
+            exit = slideOutVertically { it },
+            modifier = modifier,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(UiKitTheme.colors.background.general.regular.default)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+            ) {
+                Column(Modifier.weight(1f)) {
+                    val textColor = UiKitTheme.colors.text.general.regular.default
+                    Text(
+                        text = stringResource(R.string.total),
+                        style = UiKitTheme.typography.tertiary.light,
+                        color = textColor,
+                    )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    val formattedPrice = rememberFormattedPrice(totalPrice)
+                    Text(
+                        text = stringResource(R.string.price_in_rubles_string, formattedPrice),
+                        style = UiKitTheme.typography.primary.bold,
+                        color = textColor,
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                ZarinaButton(
+                    onClick = { /*TODO*/ },
+                    isEnabled = isOrderButtonEnabled,
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Text(text = stringResource(R.string.checkout).uppercase())
                 }
             }
         }
@@ -452,21 +773,21 @@ object CartScreenComponents {
 
     @Composable
     private fun EmptyCartPlaceholder(
-        deliveryType: DeliveryType,
+        cartType: CartType,
         onGoToCatalogClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val iconResId: Int
         val titleResId: Int
         val bodyResId: Int
-        when (deliveryType) {
-            DeliveryType.DELIVERY -> {
+        when (cartType) {
+            CartType.DELIVERY -> {
                 iconResId = R.drawable.ic_scooter_64
                 titleResId = R.string.cart_empty_delivery_cart_placeholder_title
                 bodyResId = R.string.cart_empty_delivery_cart_placeholder_body
             }
 
-            DeliveryType.PICK_UP_FROM_STORE -> {
+            CartType.PICKUP -> {
                 iconResId = R.drawable.ic_store_64
                 titleResId = R.string.cart_empty_pick_up_from_store_cart_placeholder_title
                 bodyResId = R.string.cart_empty_pick_up_from_store_cart_placeholder_body
@@ -489,7 +810,7 @@ object CartScreenComponents {
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun SwipeableProductOrderCard(
-        productItem: CartViewModel.CartProductItem.Product,
+        productItem: CartViewModel.ProductItem,
         productCardActions: ProductCardActions,
         isDividerVisible: Boolean,
         onDragStarted: (CartProduct.Id) -> Unit,
@@ -535,12 +856,9 @@ object CartScreenComponents {
                 modifier = Modifier
                     .zIndex(1f)
                     .offset {
-                        IntOffset(
-                            x = anchoredDraggableState
-                                .requireCoercedOffset()
-                                .roundToInt(),
-                            y = 0,
-                        )
+                        val xOffset =
+                            anchoredDraggableState.coercedOffset.takeIf { !it.isNaN() } ?: 0f
+                        IntOffset(x = xOffset.roundToInt(), y = 0)
                     }
                     .anchoredDraggable(
                         state = anchoredDraggableState,
@@ -572,11 +890,19 @@ object CartScreenComponents {
                 )
 
                 if (isDividerVisible) {
-                    ZarinaDivider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                    )
+                    Box {
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .background(UiKitTheme.colors.background.general.regular.default),
+                        )
+
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
 
@@ -689,9 +1015,209 @@ object CartScreenComponents {
         }
     }
 
-    private fun getDeliveryTypePagerContentKey(cartState: CartState): Any = when (cartState) {
-        is CartState.Cart -> DeliveryTypePagerContentKeyCart
-        CartState.EmptyCart, is CartState.Error, CartState.Skeleton -> cartState
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    private fun BonusAccrual(
+        bonusCount: Int,
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier.clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = onClick,
+            ),
+        ) {
+            val baseText = stringResource(R.string.we_will_award_you_for_purchase)
+            val bonusText = pluralStringResource(R.plurals.d_bonuses, bonusCount, bonusCount)
+            val baseTextStyle = UiKitTheme.typography.secondary.light
+            val bonusTextStyle = UiKitTheme.typography.secondary.regular
+            val text = remember(baseText, bonusText, baseTextStyle, bonusTextStyle) {
+                buildAnnotatedString {
+                    withStyle(baseTextStyle.toSpanStyle()) {
+                        append(baseText)
+                    }
+                    append(" ")
+                    withStyle(bonusTextStyle.toSpanStyle()) {
+                        append(bonusText)
+                    }
+                }
+            }
+
+            Text(
+                text = text,
+                style = baseTextStyle,
+                modifier = Modifier.weight(1f),
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+                val iconSize = 16.dp
+                ZarinaIconButton(
+                    onClick = onClick,
+                    indication = ripple(bounded = false, radius = iconSize),
+                    modifier = Modifier.size(32.dp),
+                ) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_question_mark_shaped_24),
+                        contentDescription = stringResource(R.string.for_zarina_club_members),
+                        modifier = Modifier.size(iconSize),
+                    )
+                }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalLayoutApi::class)
+    @Composable
+    private fun BonusWriteOff(
+        state: BonusState,
+        onIsAppliedChanged: (Boolean) -> Unit,
+        onBonusCountToWriteOffChanged: (Int) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.write_off_bonuses),
+                        style = UiKitTheme.typography.secondary.light,
+                        color = UiKitTheme.colors.text.general.regular.default,
+                    )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    val formattedAvailable = rememberFormattedPrice(state.bonuses.available)
+                    Text(
+                        text = pluralStringResource(
+                            id = R.plurals.you_have_s_bonuses,
+                            state.bonuses.available,
+                            formattedAvailable
+                        ),
+                        style = UiKitTheme.typography.footnote.light,
+                        color = UiKitTheme.colors.text.general.regular.muted,
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                ZarinaSwitch(
+                    isChecked = state.isWriteOffApplied,
+                    onCheckedChanged = onIsAppliedChanged,
+                )
+            }
+
+            AnimatedContent(
+                targetState = state.isWriteOffApplied,
+                transitionSpec = {
+                    AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                },
+                contentAlignment = Alignment.Center,
+                label = "Bonus write off text field",
+                modifier = Modifier.fillMaxWidth(),
+            ) { isVisible ->
+                if (isVisible) {
+                    var isFocused by remember { mutableStateOf(false) }
+                    val updatedIsImeVisible by rememberUpdatedState(WindowInsets.isImeVisible)
+                    val updatedOnBonusCountToWriteOffChanged by rememberUpdatedState(onBonusCountToWriteOffChanged)
+                    LaunchedEffect(Unit) {
+                        snapshotFlow { updatedIsImeVisible }.collect { isImeVisible ->
+                            if (!isImeVisible && isFocused) {
+                                val bonusCount =
+                                    state.writeOffTextFieldState.text.toString().toIntOrNull()
+                                if (bonusCount != null) {
+                                    updatedOnBonusCountToWriteOffChanged(bonusCount)
+                                }
+                            }
+                        }
+                    }
+
+                    ZarinaTextField(
+                        state = state.writeOffTextFieldState,
+                        innerTrailingContent = {
+                            ZarinaTextFieldDefaults.ClearButton(
+                                isVisible = state.writeOffTextFieldState.text.isNotBlank(),
+                                onClick = { /*TODO*/ },
+                            )
+                        },
+                        description = {
+                            val formattedMaxWriteOff = rememberFormattedPrice(state.bonuses.writeOff.max)
+                            Text(
+                                text = pluralStringResource(
+                                    id = R.plurals.you_can_write_off_s_bonuses,
+                                    state.bonuses.writeOff.max,
+                                    formattedMaxWriteOff,
+                                ),
+                            )
+                        },
+                        inputTransformation = InputTransformation.byValue { _, proposed ->
+                            proposed
+                                .removePrefix { it == '0' }
+                                .filter { it.isDigit() }
+                        },
+                        keyboardOptions = remember {
+                            KeyboardOptions(
+                                keyboardType = KeyboardType.Decimal,
+                                imeAction = ImeAction.Done,
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                            .padding(end = 8.dp)
+                            .onFocusChanged { isFocused = it.isFocused },
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun MyCard(
+        state: MyCardState,
+        onIsAppliedChanged: (Boolean) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier,
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = stringResource(R.string.apply_my_card),
+                    style = UiKitTheme.typography.secondary.light,
+                    color = UiKitTheme.colors.text.general.regular.default,
+                )
+
+                if (state.info != null) {
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = state.info,
+                        style = UiKitTheme.typography.footnote.light,
+                        color = UiKitTheme.colors.text.general.regular.muted,
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            ZarinaSwitch(
+                isChecked = state.isApplied,
+                onCheckedChanged = onIsAppliedChanged,
+            )
+        }
+    }
+
+    private fun getCartTypePagerContentKey(cartState: CartState): Any = when (cartState) {
+        is CartState.Cart -> CartTypePagerContentKeyCart
+        CartState.EmptyCart, is CartState.Error, CartState.Loading -> cartState
+    }
+
+    private fun getCartProductItemKey(productItem: CartViewModel.ProductItem): CartKey.Product {
+        return CartKey.Product(productItem.product.productId.value)
     }
 
     @Stable
@@ -725,7 +1251,38 @@ object CartScreenComponents {
 
     private enum class ProductOrderCardSwipeableState { Default, SwipedLeft }
 
-    private const val DeliveryTypePagerContentKeyCart = "DeliveryTypePagerContentKeyCart"
+    private const val CartTypePagerContentKeyCart = "CartTypePagerContentKeyCart"
+
+    @Stable
+    @Parcelize
+    private sealed class CartKey : Parcelable {
+        data class Product(val productId: String) : CartKey()
+
+        data object BonusAccrual : CartKey()
+
+        data object BonusWriteOff : CartKey()
+
+        data object MyCard : CartKey()
+
+        data object PromoCode : CartKey()
+
+        data object Price : CartKey()
+
+        data object ProductLimitExceededError : CartKey()
+
+        data object CheckoutBlock : CartKey()
+    }
+
+    private enum class CartContentType {
+        Product,
+        BonusAccrual,
+        BonusWriteOff,
+        MyCard,
+        PromoCode,
+        Price,
+        ProductLimitExceededError,
+        CheckoutBlock,
+    }
 
     private val ProductOrderCardSwipeDistance: Dp get() = 120.dp
 }

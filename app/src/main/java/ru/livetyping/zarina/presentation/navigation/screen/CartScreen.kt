@@ -63,7 +63,7 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
                             barcode = action.barcode,
                             initialCount = action.initialCount,
                             availableCount = action.availableCount,
-                            deliveryType = action.deliveryType,
+                            cartType = action.cartType,
                         )
                     }
                 }

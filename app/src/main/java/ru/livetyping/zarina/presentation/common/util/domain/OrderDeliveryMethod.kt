@@ -10,7 +10,7 @@ val OrderDeliveryMethod.nameResId: Int
         }
 
         OrderDeliveryMethod.POST -> R.string.order_delivery_method_post
-        OrderDeliveryMethod.PICK_UP -> R.string.order_delivery_method_pick_up_point
+        OrderDeliveryMethod.PICKUP -> R.string.order_delivery_method_pick_up_point
         OrderDeliveryMethod.RETAIL -> R.string.order_delivery_method_pick_up_from_store
         OrderDeliveryMethod.YANDEX -> R.string.order_delivery_method_yandex_express
     }

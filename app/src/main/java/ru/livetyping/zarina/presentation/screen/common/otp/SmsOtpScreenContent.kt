@@ -1,18 +1,10 @@
 package ru.livetyping.zarina.presentation.screen.common.otp
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
@@ -29,12 +21,10 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import ru.livetyping.zarina.domain.common.PhoneNumber
-import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.component.SmsOtp
 import ru.livetyping.zarina.presentation.common.otp.OtpResendState
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.common.otp.OtpScreenComponents.TopBar
-import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.tryRequestFocus
 import kotlin.time.Duration.Companion.minutes
 
@@ -60,17 +50,7 @@ fun SmsOtpScreenContent(
         onStopOrDispose {}
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
-            .windowInsetsPadding(
-                WindowInsets.systemBars
-                    .union(WindowInsets.displayCutout)
-                    .union(WindowInsets.ime),
-            )
-            .bottomNavBarPadding(WindowInsets.ime),
-    ) {
+    Column(modifier = modifier) {
         TopBar(
             title = topBarTitle,
             onBackClicked = onBackClicked,

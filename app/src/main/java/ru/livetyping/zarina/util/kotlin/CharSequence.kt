@@ -9,3 +9,14 @@ fun CharSequence.findSubstringBounds(substring: String, ignoreCase: Boolean = fa
         null
     }
 }
+
+fun CharSequence.removePrefix(predicate: (Char) -> Boolean): CharSequence {
+    if (this.isEmpty() || !predicate(this.first())) return this
+
+    var prefixEndIndex = 1
+    for (index in prefixEndIndex until this.length) {
+        if (!predicate(this[index])) break
+        prefixEndIndex = index
+    }
+    return StringBuilder(this).removeRange(0, prefixEndIndex)
+}

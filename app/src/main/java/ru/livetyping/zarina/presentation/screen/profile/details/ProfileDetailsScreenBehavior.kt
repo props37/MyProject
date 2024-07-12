@@ -17,20 +17,20 @@ import ru.livetyping.zarina.presentation.screen.profile.details.ProfileDetailsVi
 
 @Composable
 fun ProfileDetailsScreenBehavior(
-    onScreenOpen: () -> Unit,
+    onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProfileDetailsScreenAction) -> Unit,
 ) {
     val updatedContext by rememberUpdatedState(LocalContext.current)
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
-    val updatedOnScreenOpen by rememberUpdatedState(onScreenOpen)
+    val updatedOnScreenOpened by rememberUpdatedState(onScreenOpened)
     val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = true)
 
     LifecycleStartEffect(Unit) {
-        updatedOnScreenOpen()
+        updatedOnScreenOpened()
         onStopOrDispose {}
     }
 

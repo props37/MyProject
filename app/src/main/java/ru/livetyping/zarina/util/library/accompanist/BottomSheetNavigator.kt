@@ -14,13 +14,13 @@ import com.google.accompanist.navigation.material.ExperimentalMaterialNavigation
 @Composable
 fun rememberBottomSheetNavigator(
     animationSpec: AnimationSpec<Float> = spring(),
-    confirmValueChange: () -> Boolean = { true },
+    confirmValueChange: (ModalBottomSheetValue) -> Boolean = { true },
     skipHalfExpanded: Boolean = true,
 ): BottomSheetNavigator {
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         animationSpec = animationSpec,
-        confirmValueChange = { confirmValueChange() },
+        confirmValueChange = confirmValueChange,
         skipHalfExpanded = skipHalfExpanded,
     )
     return remember(sheetState) { BottomSheetNavigator(sheetState) }

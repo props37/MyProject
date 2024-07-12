@@ -77,8 +77,6 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTra
 import ru.livetyping.zarina.util.compose.text.textAsFlow
 
 // TODO: [Medium] Add label animation
-// TODO: [Medium] Apply error color to description
-// TODO: [Medium] Migrate to BasicTextField2
 
 @Composable
 fun ZarinaTextField(
@@ -414,7 +412,7 @@ private fun Decoration(
             val descriptionTextStyle =
                 ZarinaTextFieldDefaults.descriptionTextStyleFromSize(size)
             val descriptionColor by animateColorAsState(
-                targetValue = colors.getDescriptionColor(isEnabled),
+                targetValue = colors.getDescriptionColor(isEnabled, isError),
                 label = "Description color",
             )
             CompositionLocalProvider(
@@ -439,6 +437,7 @@ data class ZarinaTextFieldColors(
     val indicationLineColor: Color,
     val activeIndicationLineColor: Color,
     val errorIndicationLineColor: Color,
+    val errorDescriptionColor: Color,
     val disabledTextColor: Color,
     val disabledPlaceholderColor: Color,
     val disabledLabelColor: Color,
@@ -466,8 +465,11 @@ data class ZarinaTextFieldColors(
     fun getOuterTrailingContentColor(isEnabled: Boolean): Color =
         if (isEnabled) outerTrailingContentColor else disabledOuterTrailingContentColor
 
-    fun getDescriptionColor(isEnabled: Boolean): Color =
-        if (isEnabled) descriptionColor else disabledDescriptionColor
+    fun getDescriptionColor(isEnabled: Boolean, isError: Boolean): Color = when {
+        isError -> errorDescriptionColor
+        isEnabled -> descriptionColor
+        else -> disabledDescriptionColor
+    }
 
     fun getIndicationLineColor(
         isEnabled: Boolean,
@@ -565,6 +567,7 @@ object ZarinaTextFieldDefaults {
         indicationLineColor: Color = UiKitTheme.colors.border.general.default,
         activeIndicationLineColor: Color = UiKitTheme.colors.border.general.active,
         errorIndicationLineColor: Color = UiKitTheme.colors.border.general.error,
+        errorDescriptionColor: Color = UiKitTheme.colors.text.general.accent.red,
         disabledTextColor: Color = UiKitTheme.colors.text.general.regular.disabled,
         disabledPlaceholderColor: Color = UiKitTheme.colors.text.general.regular.disabled,
         disabledLabelColor: Color = UiKitTheme.colors.text.general.regular.disabled,
@@ -587,6 +590,7 @@ object ZarinaTextFieldDefaults {
         indicationLineColor = indicationLineColor,
         activeIndicationLineColor = activeIndicationLineColor,
         errorIndicationLineColor = errorIndicationLineColor,
+        errorDescriptionColor = errorDescriptionColor,
         disabledTextColor = disabledTextColor,
         disabledPlaceholderColor = disabledPlaceholderColor,
         disabledLabelColor = disabledLabelColor,

@@ -9,7 +9,7 @@ value class OrderDeliveryMethodDto(val value: String) {
     fun toOrderDeliveryMethod(): OrderDeliveryMethod = when (value) {
         "delivery_service" -> OrderDeliveryMethod.DELIVERY_SERVICE
         "post" -> OrderDeliveryMethod.POST
-        "pickup" -> OrderDeliveryMethod.PICK_UP
+        "pickup" -> OrderDeliveryMethod.PICKUP
         "retail" -> OrderDeliveryMethod.RETAIL
         "yandex" -> OrderDeliveryMethod.YANDEX
         "express" -> OrderDeliveryMethod.EXPRESS

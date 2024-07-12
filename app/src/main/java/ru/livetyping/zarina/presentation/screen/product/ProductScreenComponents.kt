@@ -69,7 +69,6 @@ import ru.livetyping.zarina.presentation.common.component.ProductPrice
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
-import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaLikeIconButton
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaExpandableItem
@@ -156,7 +155,7 @@ object ProductScreenComponents {
     @Composable
     fun ProductDetails(
         productState: ProductState,
-        onBonusCountForPurchaseClicked: () -> Unit,
+        onBonusAccrualForPurchaseClicked: () -> Unit,
         onProductColorClicked: (ProductColor) -> Unit,
         onAddProductToCartClicked: (Product) -> Unit,
         onAddProductToFavoritesClicked: (Product) -> Unit,
@@ -184,7 +183,7 @@ object ProductScreenComponents {
                 is ProductState.Success -> {
                     ProductDetailsImpl(
                         product = state.product,
-                        onBonusCountForPurchaseClicked = onBonusCountForPurchaseClicked,
+                        onBonusAccrualForPurchaseClicked = onBonusAccrualForPurchaseClicked,
                         onProductColorClicked = onProductColorClicked,
                         onAddProductToCartClicked = onAddProductToCartClicked,
                         onAddProductToFavoritesClicked = onAddProductToFavoritesClicked,
@@ -216,60 +215,9 @@ object ProductScreenComponents {
     }
 
     @Composable
-    fun ZarinaClubBottomSheetContent(
-        onCloseClicked: () -> Unit,
-        modifier: Modifier = Modifier,
-    ) {
-        Column(modifier = modifier) {
-            ZarinaTopBar(
-                contentPadding = PaddingValues(
-                    start = 16.dp,
-                    top = 4.dp,
-                    end = 2.dp,
-                    bottom = 4.dp,
-                ),
-            ) {
-                Text(
-                    text = stringResource(R.string.for_zarina_club_members),
-                    style = UiKitTheme.typography.primary.bold,
-                    color = UiKitTheme.colors.text.general.regular.default,
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .weight(1f),
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                ZarinaCloseIconButton(
-                    onClick = onCloseClicked,
-                    iconSize = 20.dp,
-                )
-            }
-
-            Text(
-                text = stringResource(R.string.zarina_club_program_description_1),
-                style = UiKitTheme.typography.secondary.regular,
-                color = UiKitTheme.colors.text.general.regular.default,
-                modifier = Modifier.padding(horizontal = 16.dp),
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = stringResource(R.string.zarina_club_program_description_2),
-                style = UiKitTheme.typography.secondary.regular,
-                color = UiKitTheme.colors.text.general.regular.default,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 20.dp),
-            )
-        }
-    }
-
-    @Composable
     private fun ProductDetailsImpl(
         product: ProductDetails,
-        onBonusCountForPurchaseClicked: () -> Unit,
+        onBonusAccrualForPurchaseClicked: () -> Unit,
         onProductColorClicked: (ProductColor) -> Unit,
         onAddProductToCartClicked: (Product) -> Unit,
         onAddProductToFavoritesClicked: (Product) -> Unit,
@@ -285,7 +233,7 @@ object ProductScreenComponents {
         Column(modifier = modifier) {
             ProductDetailsList(
                 product = product,
-                onBonusCountForPurchaseClicked = onBonusCountForPurchaseClicked,
+                onBonusAccrualForPurchaseClicked = onBonusAccrualForPurchaseClicked,
                 onProductColorClicked = onProductColorClicked,
                 productTotalLookState = productTotalLookState,
                 onProductTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
@@ -314,7 +262,7 @@ object ProductScreenComponents {
     @Composable
     private fun ProductDetailsList(
         product: ProductDetails,
-        onBonusCountForPurchaseClicked: () -> Unit,
+        onBonusAccrualForPurchaseClicked: () -> Unit,
         onProductColorClicked: (ProductColor) -> Unit,
         productTotalLookState: SuggestedProductListState,
         onProductTotalLookErrorRefreshClicked: () -> Unit,
@@ -353,7 +301,7 @@ object ProductScreenComponents {
             ) {
                 ProductGeneralInfo(
                     product = product,
-                    onBonusCountForPurchaseClicked = onBonusCountForPurchaseClicked,
+                    onBonusAccrualForPurchaseClicked = onBonusAccrualForPurchaseClicked,
                     onProductColorClicked = onProductColorClicked,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -495,7 +443,7 @@ object ProductScreenComponents {
     @Composable
     private fun ProductGeneralInfo(
         product: ProductDetails,
-        onBonusCountForPurchaseClicked: () -> Unit,
+        onBonusAccrualForPurchaseClicked: () -> Unit,
         onProductColorClicked: (ProductColor) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -536,10 +484,10 @@ object ProductScreenComponents {
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                if (product.bonusCountForPurchase > 0) {
+                if (product.bonusAccrualForPurchase > 0) {
                     Bonuses(
-                        bonusCount = product.bonusCountForPurchase,
-                        onClick = onBonusCountForPurchaseClicked,
+                        bonusCount = product.bonusAccrualForPurchase,
+                        onClick = onBonusAccrualForPurchaseClicked,
                     )
                 }
             }
@@ -813,7 +761,7 @@ object ProductScreenComponents {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.light,
                         shimmer = shimmer,
-                        modifier = Modifier.fillMaxWidth(0.5f),
+                        modifier = Modifier.fillMaxWidth(fraction = 0.5f),
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     ZarinaSkeleton(

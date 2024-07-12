@@ -76,7 +76,7 @@ class StoresViewModel @Inject constructor(
         storesResult,
         storesRequester.loadingState,
     ) { storesResult, loadingState->
-        if (storesResult == null || loadingState.isLoading) {
+        if (storesResult == null || loadingState.isLoading()) {
             StoreListState.Loading
         } else {
             storesResult.fold(
@@ -100,7 +100,7 @@ class StoresViewModel @Inject constructor(
         interactor.getUserCityFlow(),
         storesRequester.loadingState,
     ) { storesResult, userCityResult, loadingState ->
-        if (storesResult == null || loadingState.isLoading) {
+        if (storesResult == null || loadingState.isLoading()) {
             StoreListState.Loading
         } else {
             storesResult.fold(

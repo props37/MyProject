@@ -38,9 +38,9 @@ class AppViewModel @Inject constructor(
         }
     }
 
-    val cartProductCount: StateFlow<Int> = interactor.getCartSizeFlow()
+    val cartProductCount: StateFlow<Int> = interactor.getCartProductCountFlow()
         .map { result ->
-            result.getOrDefault(CartSize.EMPTY).totalProductCount
+            result.getOrDefault(0)
         }
         .stateIn(
             scope = viewModelScope,

@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.domain.product.Product
 import timber.log.Timber
 import javax.inject.Inject
@@ -18,8 +17,8 @@ class CartDataHolder @Inject constructor() {
     private val _areCartProductIdsFetched = MutableStateFlow(false)
     val areCartProductIdsFetched: StateFlow<Boolean> = _areCartProductIdsFetched.asStateFlow()
 
-    private val _cartSize = MutableStateFlow(CartSize.EMPTY)
-    val cartSize: StateFlow<CartSize> = _cartSize.asStateFlow()
+    private val _cartProductCount = MutableStateFlow(0)
+    val cartProductCount: StateFlow<Int> = _cartProductCount.asStateFlow()
 
     fun setCartProductIds(ids: Set<Product.Id>) {
         Timber.v("Set cart product IDs: $ids")
@@ -41,20 +40,15 @@ class CartDataHolder @Inject constructor() {
         _cartProductIds.update { it - productId }
     }
 
-    fun setCartSize(size: CartSize) {
-        Timber.v("Set cart size: $size")
-        _cartSize.value = size
-    }
-
-    fun setCartTotalProductCount(count: Int) {
-        Timber.v("Set cart total product count: $count")
-        _cartSize.update { it.copy(totalProductCount = count) }
+    fun setCartProductCount(count: Int) {
+        Timber.v("Set cart product count: $count")
+        _cartProductCount.value = count
     }
 
     fun clear() {
         Timber.v("Clear cart data")
         _cartProductIds.value = emptySet()
         _areCartProductIdsFetched.value = false
-        _cartSize.value = CartSize.EMPTY
+        _cartProductCount.value = 0
     }
 }

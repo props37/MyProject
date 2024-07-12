@@ -8,10 +8,13 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
@@ -87,9 +90,15 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
             parcelable?.toFilters() ?: initialFilters.value
         }
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
     @OptIn(ExperimentalCoroutinesApi::class)
     private val categoryProductInfoRequester = FlowRequester(CategoryProductInfoRequest.GENERAL) {
-        combine(searchQuery, filters) { query, filters ->
+        combine(
+            searchQuery,
+            filters.onEach { _isRefreshing.value = true },
+        ) { query, filters ->
             val params = SearchProductsFlowUseCase.Params(
                 query = query,
                 sorting = Sorting.NEW,
@@ -99,6 +108,7 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
             interactor.searchProductsFlow(params)
         }
             .flatMapLatest { it }
+            .onEach { _isRefreshing.value = false }
     }
 
     private val productSearchResult: StateFlow<Result<ProductSearchResult>?> =
@@ -168,7 +178,7 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
         val filters = filters.value
         if (filters != null) {
             val newFilters = filters.reset()
-            savedStateHandle[KEY_FILTERS] = FiltersParcelable.from(newFilters)
+            setFilters(newFilters)
         } else {
             Timber.w("Could not reset filters since it is null")
         }
@@ -176,7 +186,7 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
 
     fun onFilterChanged(filter: Filter) {
         val newFilters = filters.value?.updateWith(filter)
-        savedStateHandle[KEY_FILTERS] = newFilters?.let { FiltersParcelable.from(it) }
+        setFilters(newFilters)
     }
 
     fun onFilterClicked(filter: Filter) {
@@ -212,9 +222,13 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
             ) { result ->
                 val filter = result.filter.toListFilter()
                 val newFilters = filters.value?.updateWith(filter)
-                savedStateHandle[KEY_FILTERS] = newFilters?.let { FiltersParcelable.from(it) }
+                setFilters(newFilters)
             }
         }
+    }
+
+    private fun setFilters(filters: Filters?) {
+        savedStateHandle[KEY_FILTERS] = filters?.let { FiltersParcelable.from(it) }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

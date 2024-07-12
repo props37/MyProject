@@ -155,7 +155,7 @@ class ProfileDetailsViewModel @Inject constructor(
         initialValue = false,
     )
 
-    fun onScreenOpen() {
+    fun onScreenOpened() {
         userRequester.request(UserRequest.LOADING)
     }
 

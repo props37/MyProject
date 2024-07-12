@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.cart
 
-import ru.livetyping.zarina.domain.cart.DeliveryType
+import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.product.Product
@@ -15,6 +15,6 @@ sealed class CartScreenAction {
         val barcode: Barcode,
         val initialCount: Int,
         val availableCount: Int,
-        val deliveryType: DeliveryType,
+        val cartType: CartType,
     ) : CartScreenAction()
 }

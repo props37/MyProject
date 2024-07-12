@@ -30,12 +30,14 @@ fun ProductSearchFiltersScreen(
     viewModel: ProductSearchFiltersViewModel = hiltViewModel(),
 ) {
     val filterListState by viewModel.filterListState.collectAsStateWithLifecycle()
+    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val isPickupStoresFilterVisible by viewModel.isPickupStoresFilterVisible.collectAsStateWithLifecycle()
     val isResetFiltersButtonVisible by viewModel.isResetFiltersButtonVisible.collectAsStateWithLifecycle()
     val productCount by viewModel.productCount.collectAsStateWithLifecycle()
 
     ScreenContent(
         filterListState = filterListState,
+        isRefreshing = isRefreshing,
         isPickupStoresFilterVisible = isPickupStoresFilterVisible,
         isResetFiltersButtonVisible = isResetFiltersButtonVisible,
         onResetFiltersClicked = viewModel::onResetFiltersClicked,
@@ -54,6 +56,7 @@ fun ProductSearchFiltersScreen(
 @Composable
 private fun ScreenContent(
     filterListState: FilterListState,
+    isRefreshing: Boolean,
     isPickupStoresFilterVisible: Boolean,
     isResetFiltersButtonVisible: Boolean,
     onResetFiltersClicked: () -> Unit,
@@ -75,6 +78,7 @@ private fun ScreenContent(
 
     FiltersScreenContent(
         filterListState = filterListState,
+        isRefreshing = isRefreshing,
         isResetFiltersButtonVisible = isResetFiltersButtonVisible,
         onResetFiltersClicked = onResetFiltersClicked,
         onBackClicked = onBackClicked,

@@ -93,9 +93,11 @@ fun <T> AnchoredDraggableState<T>.requireCoercedOffset(): Float {
 @OptIn(ExperimentalFoundationApi::class)
 val <T> AnchoredDraggableState<T>.coercedOffset: Float
     get() {
+        val offset = this.offset
+        if (offset.isNaN()) return offset
         val minOffset = this.anchors.minAnchor()
         val maxOffset = this.anchors.maxAnchor()
-        return this.offset.coerceIn(minOffset, maxOffset)
+        return offset.coerceIn(minOffset, maxOffset)
     }
 
 @Stable

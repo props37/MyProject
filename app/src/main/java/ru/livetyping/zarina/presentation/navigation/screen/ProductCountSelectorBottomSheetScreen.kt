@@ -2,7 +2,7 @@ package ru.livetyping.zarina.presentation.navigation.screen
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import ru.livetyping.zarina.domain.cart.DeliveryType
+import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.presentation.navigation.base.bottomSheetDestination
@@ -43,14 +43,14 @@ fun NavHostController.navigateToProductCountSelector(
     barcode: Barcode,
     initialCount: Int,
     availableCount: Int,
-    deliveryType: DeliveryType,
+    cartType: CartType,
 ) {
     val args = CartGraph.ProductCountSelector.Args(
         productId = productId,
         barcode = barcode,
         initialCount = initialCount,
         availableCount = availableCount,
-        deliveryType = deliveryType,
+        cartType = cartType,
     )
     this.navigate(
         route = CartGraph.ProductCountSelector.routeSchema,
