@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.base.usecase
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -41,6 +42,8 @@ abstract class UseCase<in P, out R>(private val dispatcher: CoroutineDispatcher)
             }.milliseconds
             Timber.tag(className).v("Execution of $className took $executionDuration")
             result
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Timber
                 .tag(className)
