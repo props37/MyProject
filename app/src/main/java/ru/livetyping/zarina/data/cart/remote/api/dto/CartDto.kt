@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartPrice
 import ru.livetyping.zarina.domain.cart.CartSize
-import ru.livetyping.zarina.domain.cart.DeliveryType
+import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.user.MyCard as DomainMyCard
 
 @Serializable
@@ -20,7 +20,7 @@ data class CartDto(
     val deliveryProductCount: Int? = null,
 
     @SerialName("retail_count")
-    val pickUpFromStoresProductCount: Int? = null,
+    val pickupProductCount: Int? = null,
 
     @SerialName("total_sum")
     val totalPrice: Int? = null,
@@ -39,20 +39,20 @@ data class CartDto(
 
     @SerialName("bonus_action")
     val bonusAction: BonusAction? = null,
-    
+
     @SerialName("myCard")
     val myCard: MyCard? = null,
 
     @SerialName("is_promocode_applied")
     val isPromoCodeApplied: Boolean? = null,
-    
+
     @SerialName("promocode")
     val promoCode: PromoCode? = null,
 
     @SerialName("limit")
     val productLimit: ProductLimit? = null,
 ) {
-    fun toCart(deliveryType: DeliveryType): Cart {
+    fun toCart(cartType: CartType): Cart {
         checkNotNull(products) { "products is null" }
         return Cart(
             products = products.map { it.toCartProduct() },
@@ -61,16 +61,16 @@ data class CartDto(
             bonuses = getBonuses(),
             myCard = getMyCard(),
             promoCode = getPromoCode(),
-            productLimit = getProductLimit(deliveryType),
+            productLimit = getProductLimit(cartType),
         )
     }
 
     private fun getCartSize(): CartSize {
         checkNotNull(deliveryProductCount) { "deliveryProductCount is null" }
-        checkNotNull(pickUpFromStoresProductCount) { "pickUpFromStoresProductCount is null" }
+        checkNotNull(pickupProductCount) { "pickupProductCount is null" }
         return CartSize(
             deliveryProductCount = deliveryProductCount,
-            pickUpFromStoreProductCount = pickUpFromStoresProductCount,
+            pickupProductCount = pickupProductCount,
         )
     }
 
@@ -124,12 +124,12 @@ data class CartDto(
         )
     }
 
-    private fun getProductLimit(deliveryType: DeliveryType): Cart.ProductLimit {
+    private fun getProductLimit(cartType: CartType): Cart.ProductLimit {
         checkNotNull(productLimit) { "productLimit is null" }
         checkNotNull(productLimit.limit) { "productLimit.limit is null" }
-        val productCount = when (deliveryType) {
-            DeliveryType.DELIVERY -> deliveryProductCount
-            DeliveryType.PICK_UP_FROM_STORE -> pickUpFromStoresProductCount
+        val productCount = when (cartType) {
+            CartType.DELIVERY -> deliveryProductCount
+            CartType.PICKUP -> pickupProductCount
         }
         checkNotNull(productCount) { "productCount is null" }
         val limit = productLimit.limit

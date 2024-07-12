@@ -13,9 +13,9 @@ import ru.livetyping.zarina.data.cart.remote.api.dto.BonusWriteOffRequestBody
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartDto
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartProductCountDto
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartProductIdsDto
-import ru.livetyping.zarina.data.cart.remote.api.dto.DeliveryTypeDto
+import ru.livetyping.zarina.data.cart.remote.api.dto.CartTypeDto
 import ru.livetyping.zarina.di.Qualifiers
-import ru.livetyping.zarina.domain.cart.DeliveryType
+import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.geography.KladrId
 import ru.livetyping.zarina.util.library.ktor.setJsonBody
@@ -29,16 +29,16 @@ class CartApi @Inject constructor(
         return httpClient.get("/api/v1/cart-list").body()
     }
 
-    suspend fun getCart(deliveryType: DeliveryType, cityKladrId: KladrId?): CartDto {
+    suspend fun getCart(cartType: CartType, cityKladrId: KladrId?): CartDto {
         return httpClient.get("/api/cart") {
-            parameter("cart_type", DeliveryTypeDto.fromDeliveryType(deliveryType).value)
+            parameter("cart_type", CartTypeDto.from(cartType).value)
             parameter("city_kladr_id", cityKladrId?.value)
         }.body()
     }
 
-    suspend fun applyMyCardToCart(deliveryType: DeliveryType, productsFirstPriceSum: Int) {
+    suspend fun applyMyCardToCart(cartType: CartType, productsFirstPriceSum: Int) {
         val body = ApplyMyCardToCartRequestBody(
-            deliveryType = DeliveryTypeDto.fromDeliveryType(deliveryType),
+            cartType = CartTypeDto.from(cartType),
             productsFirstPriceSum = productsFirstPriceSum,
         )
         httpClient.post("/api/cart/my-card") {
@@ -46,9 +46,9 @@ class CartApi @Inject constructor(
         }
     }
 
-    suspend fun removeMyCardFromCart(deliveryType: DeliveryType) {
+    suspend fun removeMyCardFromCart(cartType: CartType) {
         httpClient.delete("/api/cart/my-card") {
-            parameter("cart_type", DeliveryTypeDto.fromDeliveryType(deliveryType).value)
+            parameter("cart_type", CartTypeDto.from(cartType).value)
         }
     }
 
@@ -63,9 +63,9 @@ class CartApi @Inject constructor(
         httpClient.delete("/api/cart/promocode")
     }
 
-    suspend fun applyBonusWriteOff(deliveryType: DeliveryType, bonusCount: Int) {
+    suspend fun applyBonusWriteOff(cartType: CartType, bonusCount: Int) {
         val body = BonusWriteOffRequestBody(
-            deliveryType = DeliveryTypeDto.fromDeliveryType(deliveryType),
+            cartType = CartTypeDto.from(cartType),
             bonusCountToWriteOff = bonusCount,
             isWriteOffApplied = true,
         )
@@ -74,9 +74,9 @@ class CartApi @Inject constructor(
         }
     }
 
-    suspend fun removeBonusWriteOff(deliveryType: DeliveryType) {
+    suspend fun removeBonusWriteOff(cartType: CartType) {
         val body = BonusWriteOffRequestBody(
-            deliveryType = DeliveryTypeDto.fromDeliveryType(deliveryType),
+            cartType = CartTypeDto.from(cartType),
             isWriteOffApplied = false,
             bonusCountToWriteOff = 0,
         )
@@ -96,11 +96,11 @@ class CartApi @Inject constructor(
         return httpClient.delete("/api/cart/item/${barcode.value}").body()
     }
 
-    suspend fun changeProductCountInCart(barcode: Barcode, count: Int, deliveryType: DeliveryType) {
+    suspend fun changeProductCountInCart(barcode: Barcode, count: Int, cartType: CartType) {
         httpClient.post("/api/cart/item/update") {
             parameter("barcode", barcode.value)
             parameter("quantity", count)
-            parameter("cart_type", DeliveryTypeDto.fromDeliveryType(deliveryType).value)
+            parameter("cart_type", CartTypeDto.from(cartType).value)
         }
     }
 

@@ -22,13 +22,13 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
-import ru.livetyping.zarina.domain.cart.DeliveryType
+import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
-import ru.livetyping.zarina.presentation.model.cart.DeliveryTypeParcelable
+import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CartGraph
 import ru.livetyping.zarina.presentation.screen.productcountselector.ProductCountSelectorViewModel.SideEffect
 import ru.livetyping.zarina.usecase.cart.ChangeProductCountInCartUseCase
@@ -97,8 +97,8 @@ class ProductCountSelectorViewModel @Inject constructor(
             count.coerceAtMost(AVAILABLE_COUNT_MAX_VALUE)
         }
 
-    private val deliveryType: StateFlow<DeliveryType> = savedStateHandle
-        .getStateFlow<DeliveryTypeParcelable?>(
+    private val cartType: StateFlow<CartType> = savedStateHandle
+        .getStateFlow<CartTypeParcelable?>(
             key = CartGraph.ProductCountSelector.ARG_KEY_DELIVERY_TYPE,
             initialValue = null,
         )
@@ -106,8 +106,8 @@ class ProductCountSelectorViewModel @Inject constructor(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
         ) { parcelable ->
-            checkNotNull(parcelable) { "deliveryType is null" }
-            parcelable.toDeliveryType()
+            checkNotNull(parcelable) { "cartType is null" }
+            parcelable.toCartType()
         }
 
     private val currentCount = MutableStateFlow(initialCount.value)
@@ -157,7 +157,7 @@ class ProductCountSelectorViewModel @Inject constructor(
                 productId = productId.value,
                 barcode = barcode.value,
                 count = count,
-                deliveryType = deliveryType.value,
+                cartType = cartType.value,
             )
             interactor.changeProductCountInCart(params)
                 .onSuccess {

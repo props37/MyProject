@@ -44,7 +44,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.byValue
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
@@ -63,10 +62,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -90,7 +91,7 @@ import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartSize
-import ru.livetyping.zarina.domain.cart.DeliveryType
+import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.component.CartPrice
@@ -129,6 +130,7 @@ import ru.livetyping.zarina.util.compose.collapsingtopbar.CollapsingTopBarDefaul
 import ru.livetyping.zarina.util.compose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.util.compose.pager.PagerTabRowIntegration
 import ru.livetyping.zarina.util.compose.rememberAnchoredDraggableState
+import ru.livetyping.zarina.util.kotlin.removePrefix
 import kotlin.math.roundToInt
 
 @Suppress("ConstPropertyName")
@@ -175,20 +177,18 @@ object CartScreenComponents {
         city: City?,
         onCityClicked: () -> Unit,
         cartSize: CartSize,
-        deliveryTypes: ImmutableList<DeliveryType>,
-        currentDeliveryType: DeliveryType,
-        onDeliveryTypeChanged: (DeliveryType) -> Unit,
+        cartTypes: ImmutableList<CartType>,
+        currentCartType: CartType,
+        onCartTypeChanged: (CartType) -> Unit,
         deliveryCartState: State<CartState>,
-        pickUpFromStoreCartState: State<CartState>,
+        pickupCartState: State<CartState>,
         onCartErrorRefreshClicked: () -> Unit,
         onGoToCatalogClicked: () -> Unit,
         productCardActions: ProductCardActions,
         onBonusAccrualClicked: () -> Unit,
-        deliveryBonusWriteOffTextFieldState: TextFieldState,
-        pickUpFromStoreBonusWriteOffTextFieldState: TextFieldState,
         onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
+        onBonusCountToWriteOffChanged: (Int) -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
-        promoCodeTextFieldState: TextFieldState,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
@@ -211,36 +211,34 @@ object CartScreenComponents {
                     .padding(padding)
                     .nestedScroll(cityScrollBehavior.nestedScrollConnection),
             ) {
-                val pagerState = rememberPagerState { deliveryTypes.size }
+                val pagerState = rememberPagerState { cartTypes.size }
                 PagerTabRowIntegration(
                     pagerState = pagerState,
-                    tabs = deliveryTypes,
-                    currentTab = currentDeliveryType,
-                    onCurrentTabChanged = onDeliveryTypeChanged,
+                    tabs = cartTypes,
+                    currentTab = currentCartType,
+                    onCurrentTabChanged = onCartTypeChanged,
                 )
 
-                DeliveryTypePicker(
-                    types = deliveryTypes,
-                    currentType = currentDeliveryType,
-                    onTypeChanged = onDeliveryTypeChanged,
+                CartTypePicker(
+                    types = cartTypes,
+                    currentType = currentCartType,
+                    onTypeChanged = onCartTypeChanged,
                     cartSize = cartSize,
                     modifier = Modifier.padding(horizontal = 16.dp),
                 )
 
-                DeliveryTypeContentPager(
+                CartTypeContentPager(
                     pagerState = pagerState,
-                    deliveryTypes = deliveryTypes,
+                    cartTypes = cartTypes,
                     deliveryCartState = deliveryCartState,
-                    pickUpFromStoreCartState = pickUpFromStoreCartState,
+                    pickupCartState = pickupCartState,
                     onGoToCatalogClicked = onGoToCatalogClicked,
                     onCartErrorRefreshClicked = onCartErrorRefreshClicked,
                     productCardActions = productCardActions,
                     onBonusAccrualClicked = onBonusAccrualClicked,
-                    deliveryBonusWriteOffTextFieldState = deliveryBonusWriteOffTextFieldState,
-                    pickUpFromStoreBonusWriteOffTextFieldState = pickUpFromStoreBonusWriteOffTextFieldState,
                     onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
+                    onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
                     onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
-                    promoCodeTextFieldState = promoCodeTextFieldState,
                     onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                     onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                     onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
@@ -306,10 +304,10 @@ object CartScreenComponents {
     }
 
     @Composable
-    private fun DeliveryTypePicker(
-        types: ImmutableList<DeliveryType>,
-        currentType: DeliveryType,
-        onTypeChanged: (DeliveryType) -> Unit,
+    private fun CartTypePicker(
+        types: ImmutableList<CartType>,
+        currentType: CartType,
+        onTypeChanged: (CartType) -> Unit,
         cartSize: CartSize,
         modifier: Modifier = Modifier,
     ) {
@@ -323,10 +321,10 @@ object CartScreenComponents {
         ) {
             types.forEach { type ->
                 val productCount = when (type) {
-                    DeliveryType.DELIVERY -> cartSize.deliveryProductCount
-                    DeliveryType.PICK_UP_FROM_STORE -> cartSize.pickUpFromStoreProductCount
+                    CartType.DELIVERY -> cartSize.deliveryProductCount
+                    CartType.PICKUP -> cartSize.pickupProductCount
                 }
-                DeliveryTypeTab(
+                CartTypeTab(
                     type = type,
                     onClick = { onTypeChanged(type) },
                     isSelected = type == currentType,
@@ -337,8 +335,8 @@ object CartScreenComponents {
     }
 
     @Composable
-    private fun DeliveryTypeTab(
-        type: DeliveryType,
+    private fun CartTypeTab(
+        type: CartType,
         onClick: () -> Unit,
         isSelected: Boolean,
         productCount: Int,
@@ -350,8 +348,8 @@ object CartScreenComponents {
             modifier = modifier,
         ) {
             val textResId = when (type) {
-                DeliveryType.DELIVERY -> R.string.delivery
-                DeliveryType.PICK_UP_FROM_STORE -> R.string.from_store
+                CartType.DELIVERY -> R.string.delivery
+                CartType.PICKUP -> R.string.from_store
             }
 
             val style = if (isSelected) {
@@ -372,7 +370,7 @@ object CartScreenComponents {
                     AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
                 },
                 contentAlignment = Alignment.Center,
-                label = "DeliveryTypeButton product count",
+                label = "CartTypeButton product count",
             ) { count ->
                 if (count > 0) {
                     ZarinaCounter(
@@ -385,20 +383,18 @@ object CartScreenComponents {
     }
 
     @Composable
-    private fun DeliveryTypeContentPager(
+    private fun CartTypeContentPager(
         pagerState: PagerState,
-        deliveryTypes: ImmutableList<DeliveryType>,
+        cartTypes: ImmutableList<CartType>,
         deliveryCartState: State<CartState>,
-        pickUpFromStoreCartState: State<CartState>,
+        pickupCartState: State<CartState>,
         onGoToCatalogClicked: () -> Unit,
         onCartErrorRefreshClicked: () -> Unit,
         productCardActions: ProductCardActions,
         onBonusAccrualClicked: () -> Unit,
-        deliveryBonusWriteOffTextFieldState: TextFieldState,
-        pickUpFromStoreBonusWriteOffTextFieldState: TextFieldState,
         onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
+        onBonusCountToWriteOffChanged: (Int) -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
-        promoCodeTextFieldState: TextFieldState,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
@@ -409,29 +405,27 @@ object CartScreenComponents {
             userScrollEnabled = false,
             modifier = modifier,
         ) { page ->
-            val deliveryType = deliveryTypes[page]
-            val cartState = when (deliveryType) {
-                DeliveryType.DELIVERY -> deliveryCartState
-                DeliveryType.PICK_UP_FROM_STORE -> pickUpFromStoreCartState
+            val cartType = cartTypes[page]
+            val cartState = when (cartType) {
+                CartType.DELIVERY -> deliveryCartState
+                CartType.PICKUP -> pickupCartState
             }.value
 
             Crossfade(
                 targetState = cartState,
-                contentKey = ::getDeliveryTypePagerContentKey,
+                contentKey = ::getCartTypePagerContentKey,
                 modifier = Modifier.fillMaxSize(),
             ) { state ->
                 when (state) {
                     is CartState.Cart -> {
                         Cart(
                             cartState = state,
-                            deliveryType = deliveryType,
+                            cartType = cartType,
                             productCardActions = productCardActions,
                             onBonusAccrualClicked = onBonusAccrualClicked,
-                            deliveryBonusWriteOffTextFieldState = deliveryBonusWriteOffTextFieldState,
-                            pickUpFromStoreBonusWriteOffTextFieldState = pickUpFromStoreBonusWriteOffTextFieldState,
                             onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
+                            onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
                             onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
-                            promoCodeTextFieldState = promoCodeTextFieldState,
                             onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                             onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                             onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
@@ -445,7 +439,7 @@ object CartScreenComponents {
 
                     CartState.EmptyCart -> {
                         EmptyCartPlaceholder(
-                            deliveryType = deliveryType,
+                            cartType = cartType,
                             onGoToCatalogClicked = onGoToCatalogClicked,
                             modifier = Modifier
                                 .fillMaxSize()
@@ -470,14 +464,12 @@ object CartScreenComponents {
     @Composable
     private fun Cart(
         cartState: CartState.Cart,
-        deliveryType: DeliveryType,
+        cartType: CartType,
         productCardActions: ProductCardActions,
         onBonusAccrualClicked: () -> Unit,
-        deliveryBonusWriteOffTextFieldState: TextFieldState,
-        pickUpFromStoreBonusWriteOffTextFieldState: TextFieldState,
         onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
+        onBonusCountToWriteOffChanged: (Int) -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
-        promoCodeTextFieldState: TextFieldState,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
@@ -488,15 +480,12 @@ object CartScreenComponents {
 
             CartList(
                 cartState = cartState,
-                deliveryType = deliveryType,
                 productCardActions = productCardActions,
                 lazyListState = lazyListState,
                 onBonusAccrualClicked = onBonusAccrualClicked,
-                deliveryBonusWriteOffTextFieldState = deliveryBonusWriteOffTextFieldState,
-                pickUpFromStoreBonusWriteOffTextFieldState = pickUpFromStoreBonusWriteOffTextFieldState,
                 onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
+                onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
                 onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
-                promoCodeTextFieldState = promoCodeTextFieldState,
                 onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                 onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                 onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
@@ -522,15 +511,12 @@ object CartScreenComponents {
     @Composable
     private fun CartList(
         cartState: CartState.Cart,
-        deliveryType: DeliveryType,
         productCardActions: ProductCardActions,
         lazyListState: LazyListState,
         onBonusAccrualClicked: () -> Unit,
-        deliveryBonusWriteOffTextFieldState: TextFieldState,
-        pickUpFromStoreBonusWriteOffTextFieldState: TextFieldState,
         onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
+        onBonusCountToWriteOffChanged: (Int) -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
-        promoCodeTextFieldState: TextFieldState,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
@@ -585,10 +571,7 @@ object CartScreenComponents {
                     BonusWriteOff(
                         state = cartState.bonusState,
                         onIsAppliedChanged = onIsBonusWriteOffAppliedChanged,
-                        bonusWriteOffTextFieldState = when (deliveryType) {
-                            DeliveryType.DELIVERY -> deliveryBonusWriteOffTextFieldState
-                            DeliveryType.PICK_UP_FROM_STORE -> pickUpFromStoreBonusWriteOffTextFieldState
-                        },
+                        onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 24.dp)
@@ -620,7 +603,7 @@ object CartScreenComponents {
                 contentType = CartContentType.PromoCode,
             ) {
                 ZarinaPromoCodeTextField(
-                    state = promoCodeTextFieldState,
+                    state = cartState.promoCodeState.textFieldState,
                     isApplied = cartState.promoCodeState.isApplied,
                     onApplyClicked = onApplyPromoCodeClicked,
                     onRemoveClicked = onRemovePromoCodeClicked,
@@ -790,21 +773,21 @@ object CartScreenComponents {
 
     @Composable
     private fun EmptyCartPlaceholder(
-        deliveryType: DeliveryType,
+        cartType: CartType,
         onGoToCatalogClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val iconResId: Int
         val titleResId: Int
         val bodyResId: Int
-        when (deliveryType) {
-            DeliveryType.DELIVERY -> {
+        when (cartType) {
+            CartType.DELIVERY -> {
                 iconResId = R.drawable.ic_scooter_64
                 titleResId = R.string.cart_empty_delivery_cart_placeholder_title
                 bodyResId = R.string.cart_empty_delivery_cart_placeholder_body
             }
 
-            DeliveryType.PICK_UP_FROM_STORE -> {
+            CartType.PICKUP -> {
                 iconResId = R.drawable.ic_store_64
                 titleResId = R.string.cart_empty_pick_up_from_store_cart_placeholder_title
                 bodyResId = R.string.cart_empty_pick_up_from_store_cart_placeholder_body
@@ -1088,11 +1071,12 @@ object CartScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     private fun BonusWriteOff(
         state: BonusState,
         onIsAppliedChanged: (Boolean) -> Unit,
-        bonusWriteOffTextFieldState: TextFieldState,
+        onBonusCountToWriteOffChanged: (Int) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
@@ -1136,11 +1120,26 @@ object CartScreenComponents {
                 modifier = Modifier.fillMaxWidth(),
             ) { isVisible ->
                 if (isVisible) {
+                    var isFocused by remember { mutableStateOf(false) }
+                    val updatedIsImeVisible by rememberUpdatedState(WindowInsets.isImeVisible)
+                    val updatedOnBonusCountToWriteOffChanged by rememberUpdatedState(onBonusCountToWriteOffChanged)
+                    LaunchedEffect(Unit) {
+                        snapshotFlow { updatedIsImeVisible }.collect { isImeVisible ->
+                            if (!isImeVisible && isFocused) {
+                                val bonusCount =
+                                    state.writeOffTextFieldState.text.toString().toIntOrNull()
+                                if (bonusCount != null) {
+                                    updatedOnBonusCountToWriteOffChanged(bonusCount)
+                                }
+                            }
+                        }
+                    }
+
                     ZarinaTextField(
-                        state = bonusWriteOffTextFieldState,
+                        state = state.writeOffTextFieldState,
                         innerTrailingContent = {
                             ZarinaTextFieldDefaults.ClearButton(
-                                isVisible = bonusWriteOffTextFieldState.text.isNotBlank(),
+                                isVisible = state.writeOffTextFieldState.text.isNotBlank(),
                                 onClick = { /*TODO*/ },
                             )
                         },
@@ -1155,7 +1154,9 @@ object CartScreenComponents {
                             )
                         },
                         inputTransformation = InputTransformation.byValue { _, proposed ->
-                            proposed.filter { it.isDigit() }
+                            proposed
+                                .removePrefix { it == '0' }
+                                .filter { it.isDigit() }
                         },
                         keyboardOptions = remember {
                             KeyboardOptions(
@@ -1166,7 +1167,8 @@ object CartScreenComponents {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 16.dp)
-                            .padding(end = 8.dp),
+                            .padding(end = 8.dp)
+                            .onFocusChanged { isFocused = it.isFocused },
                     )
                 }
             }
@@ -1209,8 +1211,8 @@ object CartScreenComponents {
         }
     }
 
-    private fun getDeliveryTypePagerContentKey(cartState: CartState): Any = when (cartState) {
-        is CartState.Cart -> DeliveryTypePagerContentKeyCart
+    private fun getCartTypePagerContentKey(cartState: CartState): Any = when (cartState) {
+        is CartState.Cart -> CartTypePagerContentKeyCart
         CartState.EmptyCart, is CartState.Error, CartState.Loading -> cartState
     }
 
@@ -1249,7 +1251,7 @@ object CartScreenComponents {
 
     private enum class ProductOrderCardSwipeableState { Default, SwipedLeft }
 
-    private const val DeliveryTypePagerContentKeyCart = "DeliveryTypePagerContentKeyCart"
+    private const val CartTypePagerContentKeyCart = "CartTypePagerContentKeyCart"
 
     @Stable
     @Parcelize

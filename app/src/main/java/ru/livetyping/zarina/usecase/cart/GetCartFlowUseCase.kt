@@ -11,7 +11,7 @@ import ru.livetyping.zarina.data.favorite.FavoriteRepository
 import ru.livetyping.zarina.data.user.UserRepository
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.cart.Cart
-import ru.livetyping.zarina.domain.cart.DeliveryType
+import ru.livetyping.zarina.domain.cart.CartType
 import javax.inject.Inject
 
 class GetCartFlowUseCase @Inject constructor(
@@ -24,10 +24,10 @@ class GetCartFlowUseCase @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun execute(params: Params): Flow<Cart> {
-        val deliveryType = params.deliveryType
+        val cartType = params.cartType
         return userRepository.getUserCityFlow()
             .flatMapLatest { city ->
-                cartRepository.getCartFlow(deliveryType, city?.kladrId)
+                cartRepository.getCartFlow(cartType, city?.kladrId)
             }
             .combine(favoriteRepository.favoriteProductIds) { cart, favoriteProductIds ->
                 val products = cart.products.map { product ->
@@ -37,5 +37,5 @@ class GetCartFlowUseCase @Inject constructor(
             }
     }
 
-    data class Params(val deliveryType: DeliveryType)
+    data class Params(val cartType: CartType)
 }

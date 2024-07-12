@@ -12,5 +12,5 @@ data class BonusWriteOffRequestBody(
     val bonusCountToWriteOff: Int,
 
     @SerialName("cart_type")
-    val deliveryType: DeliveryTypeDto,
+    val cartType: CartTypeDto,
 )

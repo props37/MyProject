@@ -35,8 +35,8 @@ import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartPrice
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartSize
-import ru.livetyping.zarina.domain.cart.DeliveryType
-import ru.livetyping.zarina.domain.cart.getAvailableCountForDeliveryType
+import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.cart.getAvailableCountForCartType
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.base.text.Text
@@ -111,24 +111,23 @@ class CartViewModel @AssistedInject constructor(
         transform = { it != 0 },
     )
 
-    val deliveryTypes: StateFlow<ImmutableList<DeliveryType>> =
-        MutableStateFlow(DeliveryType.entries.toImmutableList()).asStateFlow()
+    val cartTypes: StateFlow<ImmutableList<CartType>> =
+        MutableStateFlow(CartType.entries.toImmutableList()).asStateFlow()
 
-    private val _currentDeliveryType = MutableStateFlow(DeliveryType.DELIVERY)
-    val currentDeliveryType: StateFlow<DeliveryType> = _currentDeliveryType.asStateFlow()
+    private val _currentCartType = MutableStateFlow(CartType.DELIVERY)
+    val currentCartType: StateFlow<CartType> = _currentCartType.asStateFlow()
 
-    // TODO: [High] Does it affect both carts? Or should we hold separate values for each one?
     private val isMyCardApplied = MutableStateFlow(false)
 
     private val isBonusWriteOffApplied = MutableStateFlow(false)
 
     private val deliveryCartRequester = FlowRequester<Result<DomainCart>, CartRequest> {
-        val params = GetCartFlowUseCase.Params(DeliveryType.DELIVERY)
+        val params = GetCartFlowUseCase.Params(CartType.DELIVERY)
         interactor.getCartFlow(params)
     }
 
-    private val pickUpFromStoreCartRequester = FlowRequester<Result<DomainCart>, CartRequest> {
-        val params = GetCartFlowUseCase.Params(DeliveryType.PICK_UP_FROM_STORE)
+    private val pickupCartRequester = FlowRequester<Result<DomainCart>, CartRequest> {
+        val params = GetCartFlowUseCase.Params(CartType.PICKUP)
         interactor.getCartFlow(params)
     }
 
@@ -136,8 +135,9 @@ class CartViewModel @AssistedInject constructor(
         .onEach { result ->
             val cart = result.getOrNull()
             if (cart != null) {
-                updatePromoCodeTextField(cart)
-                updateBonusTextFields(cart, DeliveryType.DELIVERY)
+                updatePromoCodeState(cart)
+                updateBonusWriteOffState(cart, CartType.DELIVERY)
+                updateMyCardState(cart)
             }
         }
         .stateIn(
@@ -146,20 +146,20 @@ class CartViewModel @AssistedInject constructor(
             initialValue = null,
         )
 
-    private val pickUpFromStoreCartResult: StateFlow<Result<DomainCart>?> =
-        pickUpFromStoreCartRequester.flow
-            .onEach { result ->
-                val cart = result.getOrNull()
-                if (cart != null) {
-                    updatePromoCodeTextField(cart)
-                    updateBonusTextFields(cart, DeliveryType.PICK_UP_FROM_STORE)
-                }
+    private val pickupCartResult: StateFlow<Result<DomainCart>?> = pickupCartRequester.flow
+        .onEach { result ->
+            val cart = result.getOrNull()
+            if (cart != null) {
+                updatePromoCodeState(cart)
+                updateBonusWriteOffState(cart, CartType.PICKUP)
+                updateMyCardState(cart)
             }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                initialValue = null,
-            )
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
 
     val cartSize: StateFlow<CartSize> = deliveryCartResult.mapState(
         scope = viewModelScope,
@@ -184,7 +184,7 @@ class CartViewModel @AssistedInject constructor(
         createCartState(
             cartResult = result,
             cartLoadingState = loadingState,
-            deliveryType = DeliveryType.DELIVERY,
+            cartType = CartType.DELIVERY,
             isBonusWriteOffApplied = isBonusWriteOffApplied,
             isMyCardApplied = isMyCardApplied,
             isPromoCodeInvalid = isPromoCodeInvalid,
@@ -196,9 +196,9 @@ class CartViewModel @AssistedInject constructor(
         initialValue = CartState.Loading,
     )
 
-    val pickUpFromStoreCartState: StateFlow<CartState> = combineMore(
-        pickUpFromStoreCartResult,
-        pickUpFromStoreCartRequester.loadingState,
+    val pickupCartState: StateFlow<CartState> = combineMore(
+        pickupCartResult,
+        pickupCartRequester.loadingState,
         isBonusWriteOffApplied,
         isMyCardApplied,
         isPromoCodeInvalid,
@@ -207,7 +207,7 @@ class CartViewModel @AssistedInject constructor(
         createCartState(
             cartResult = result,
             cartLoadingState = loadingState,
-            deliveryType = DeliveryType.PICK_UP_FROM_STORE,
+            cartType = CartType.PICKUP,
             isBonusWriteOffApplied = isBonusWriteOffApplied,
             isMyCardApplied = isMyCardApplied,
             isPromoCodeInvalid = isPromoCodeInvalid,
@@ -221,7 +221,7 @@ class CartViewModel @AssistedInject constructor(
 
     val isRefreshing: StateFlow<Boolean> = combine(
         deliveryCartRequester.loadingState,
-        pickUpFromStoreCartRequester.loadingState,
+        pickupCartRequester.loadingState,
     ) { deliveryLoadingState, pickUpLoadingState ->
         val isDeliveryCartRefreshing = deliveryLoadingState.loadingRequest == CartRequest.REFRESHING
         val isPickUpCartRefreshing = pickUpLoadingState.loadingRequest == CartRequest.REFRESHING
@@ -233,19 +233,19 @@ class CartViewModel @AssistedInject constructor(
     )
 
     @OptIn(SavedStateHandleSaveableApi::class)
-    val promoCodeTextFieldState: TextFieldState by savedStateHandle.saveable(
+    private val promoCodeTextFieldState: TextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
     )
 
     @OptIn(SavedStateHandleSaveableApi::class)
-    val deliveryBonusWriteOffTextFieldState: TextFieldState by savedStateHandle.saveable(
+    private val deliveryBonusWriteOffTextFieldState: TextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
     )
 
     @OptIn(SavedStateHandleSaveableApi::class)
-    val pickUpFromStoreBonusWriteOffTextFieldState: TextFieldState by savedStateHandle.saveable(
+    private val pickupBonusWriteOffTextFieldState: TextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
     )
@@ -287,22 +287,22 @@ class CartViewModel @AssistedInject constructor(
         }
     }
 
-    fun onDeliveryTypeChanged(type: DeliveryType) {
-        _currentDeliveryType.value = type
+    fun onCartTypeChanged(type: CartType) {
+        _currentCartType.value = type
     }
 
     fun onProductCountClicked(product: CartProduct) {
         navigationThrottler.throttle {
-            val availableCount = when (currentDeliveryType.value) {
-                DeliveryType.DELIVERY -> product.availableCount.delivery
-                DeliveryType.PICK_UP_FROM_STORE -> product.availableCount.pickUpFromStore
+            val availableCount = when (currentCartType.value) {
+                CartType.DELIVERY -> product.availableCount.delivery
+                CartType.PICKUP -> product.availableCount.pickup
             }
             val action = CartScreenAction.ProductCountClicked(
                 productId = product.productId,
                 barcode = product.barcode,
                 initialCount = product.count,
                 availableCount = availableCount,
-                deliveryType = currentDeliveryType.value,
+                cartType = currentCartType.value,
             )
             emitSideEffect(SideEffect.Navigate(action))
         }
@@ -362,27 +362,16 @@ class CartViewModel @AssistedInject constructor(
 
         isBonusWriteOffApplied.value = isApplied
         bonusJob = viewModelScope.launch {
-            val deliveryType = currentDeliveryType.value
+            val cartType = currentCartType.value
             if (isApplied) {
-                val cart = getCart(deliveryType)
+                val cart = getCart(cartType)
                 val maxBonusCountToWriteOff = cart?.bonuses?.writeOff?.max ?: return@launch
-                val params = ApplyBonusWriteOffUseCase.Params(deliveryType, maxBonusCountToWriteOff)
-                interactor.applyBonusWriteOff(params)
-                    .onSuccess {
-                        // TODO: [High] Show toasts if needed
-                        emitSideEffect(SideEffect.HideKeyboard)
-                        requestCarts(CartRequest.REFRESHING)
-                    }
-                    .onFailure {
-                        val messageText = Text.Resource(R.string.bonus_write_off_applying_error)
-                        val message = ZarinaToastMessage.error(messageText)
-                        emitSideEffect(SideEffect.ShowZarinaToast(message))
-                    }
+                applyBonusWriteOff(cartType, maxBonusCountToWriteOff)
             } else {
-                val params = RemoveBonusWriteOffUseCase.Params(deliveryType)
+                val params = RemoveBonusWriteOffUseCase.Params(cartType)
                 interactor.removeBonusWriteOff(params)
                     .onSuccess {
-                        // TODO: [High] Show toasts if needed
+                        // TODO: [High] Show toasts
                         emitSideEffect(SideEffect.HideKeyboard)
                         requestCarts(CartRequest.REFRESHING)
                     }
@@ -395,18 +384,28 @@ class CartViewModel @AssistedInject constructor(
         }
     }
 
+    fun onBonusCountToWriteOffChanged(bonusCount: Int) {
+        if (bonusJob?.isActive == true) return
+
+        val cartType = currentCartType.value
+        val maxBonusCount = getCart(cartType)?.bonuses?.writeOff?.max ?: return
+        bonusJob = viewModelScope.launch {
+            applyBonusWriteOff(cartType, bonusCount.coerceAtMost(maxBonusCount))
+        }
+    }
+
     fun onIsMyCardAppliedChanged(isApplied: Boolean) {
         if (myCardJob?.isActive == true) return
 
         isMyCardApplied.value = isApplied
         myCardJob = viewModelScope.launch {
-            val deliveryType = currentDeliveryType.value
+            val cartType = currentCartType.value
             if (isApplied) {
-                val cart = getCart(deliveryType)
+                val cart = getCart(cartType)
                 val productsFirstPriceSum = cart?.myCard?.productsFirstPriceSum ?: return@launch
-                applyMyCardToCart(deliveryType, productsFirstPriceSum)
+                applyMyCardToCart(cartType, productsFirstPriceSum)
             } else {
-                removeMyCardFromCart(deliveryType)
+                removeMyCardFromCart(cartType)
             }
         }
     }
@@ -419,7 +418,7 @@ class CartViewModel @AssistedInject constructor(
             val params = ApplyPromoCodeUseCase.Params(promoCode)
             interactor.applyPromoCode(params)
                 .onSuccess {
-                    // TODO: [High] Show toasts if needed
+                    // TODO: [High] Show toasts
                     emitSideEffect(SideEffect.HideKeyboard)
                     requestCarts(CartRequest.REFRESHING)
                 }
@@ -446,7 +445,7 @@ class CartViewModel @AssistedInject constructor(
             promoCodeJob = viewModelScope.launch {
                 interactor.removePromoCode()
                     .onSuccess {
-                        // TODO: [High] Show toasts if needed
+                        // TODO: [High] Show toasts
                         requestCarts(CartRequest.REFRESHING)
                     }
                     .onFailure {
@@ -472,12 +471,26 @@ class CartViewModel @AssistedInject constructor(
         }
     }
 
-    private suspend fun applyMyCardToCart(deliveryType: DeliveryType, productsFirstPriceSum: Int) {
-        val params = ApplyMyCardToCartUseCase.Params(deliveryType, productsFirstPriceSum)
+    private suspend fun applyBonusWriteOff(cartType: CartType, bonusCount: Int) {
+        val params = ApplyBonusWriteOffUseCase.Params(cartType, bonusCount)
+        interactor.applyBonusWriteOff(params)
+            .onSuccess {
+                // TODO: [High] Show toasts
+                emitSideEffect(SideEffect.HideKeyboard)
+                requestCarts(CartRequest.REFRESHING)
+            }
+            .onFailure {
+                val messageText = Text.Resource(R.string.bonus_write_off_applying_error)
+                val message = ZarinaToastMessage.error(messageText)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+    }
+
+    private suspend fun applyMyCardToCart(cartType: CartType, productsFirstPriceSum: Int) {
+        val params = ApplyMyCardToCartUseCase.Params(cartType, productsFirstPriceSum)
         interactor.applyMyCardToCart(params)
             .onSuccess {
-                // TODO: [High] Show toast if MyCard replaces bonuses
-                // TODO: [High] Show toast if MyCard replaces promo code
+                // TODO: [High] Show toasts
                 requestCarts(CartRequest.REFRESHING)
             }
             .onFailure {
@@ -488,8 +501,8 @@ class CartViewModel @AssistedInject constructor(
             }
     }
 
-    private suspend fun removeMyCardFromCart(deliveryType: DeliveryType) {
-        val params = RemoveMyCardFromCartUseCase.Params(deliveryType)
+    private suspend fun removeMyCardFromCart(cartType: CartType) {
+        val params = RemoveMyCardFromCartUseCase.Params(cartType)
         interactor.removeMyCardFromCart(params)
             .onSuccess {
                 requestCarts(CartRequest.REFRESHING)
@@ -548,7 +561,7 @@ class CartViewModel @AssistedInject constructor(
     private fun createCartState(
         cartResult: Result<DomainCart>?,
         cartLoadingState: FlowRequester.LoadingState,
-        deliveryType: DeliveryType,
+        cartType: CartType,
         isBonusWriteOffApplied: Boolean,
         isMyCardApplied: Boolean,
         isPromoCodeInvalid: Boolean,
@@ -563,18 +576,21 @@ class CartViewModel @AssistedInject constructor(
                 onSuccess = { cart ->
                     if (cart.products.isNotEmpty()) {
                         val productItems =
-                            createProductItems(cart, deliveryType).toImmutableList()
+                            createProductItems(cart, cartType).toImmutableList()
                         val isBonusWriteOffAvailable =
                             cart.bonuses.available > 0 && cart.myCard?.isApplied != true
                         val bonusState = BonusState(
                             bonuses = cart.bonuses,
                             isWriteOffAvailable = isBonusWriteOffAvailable,
                             isWriteOffApplied = isBonusWriteOffApplied || cart.bonuses.writeOff.isApplied,
+                            writeOffTextFieldState = when (cartType) {
+                                CartType.DELIVERY -> deliveryBonusWriteOffTextFieldState
+                                CartType.PICKUP -> pickupBonusWriteOffTextFieldState
+                            },
                         )
                         val myCardState = cart.myCard?.let {
                             MyCardState(
-                                // TODO: [High] Set based on backend model?
-                                isApplied = isMyCardApplied || it.isApplied,
+                                isApplied = isMyCardApplied,
                                 info = it.info,
                             )
                         }
@@ -582,6 +598,7 @@ class CartViewModel @AssistedInject constructor(
                             isApplied = cart.promoCode?.isApplied == true,
                             isInvalid = isPromoCodeInvalid,
                             description = promoCodeDescription,
+                            textFieldState = promoCodeTextFieldState,
                         )
                         CartState.Cart(
                             productItems = productItems,
@@ -603,7 +620,7 @@ class CartViewModel @AssistedInject constructor(
         }
     }
 
-    private fun updatePromoCodeTextField(cart: Cart) {
+    private fun updatePromoCodeState(cart: Cart) {
         promoCodeTextFieldState.edit {
             clear()
             if (cart.promoCode != null) {
@@ -613,10 +630,10 @@ class CartViewModel @AssistedInject constructor(
         }
     }
 
-    private fun updateBonusTextFields(cart: Cart, deliveryType: DeliveryType) {
-        val textFieldState = when (deliveryType) {
-            DeliveryType.DELIVERY -> deliveryBonusWriteOffTextFieldState
-            DeliveryType.PICK_UP_FROM_STORE -> pickUpFromStoreBonusWriteOffTextFieldState
+    private fun updateBonusWriteOffState(cart: Cart, cartType: CartType) {
+        val textFieldState = when (cartType) {
+            CartType.DELIVERY -> deliveryBonusWriteOffTextFieldState
+            CartType.PICKUP -> pickupBonusWriteOffTextFieldState
         }
         textFieldState.edit {
             clear()
@@ -627,13 +644,17 @@ class CartViewModel @AssistedInject constructor(
         }
     }
 
+    private fun updateMyCardState(cart: Cart) {
+        isMyCardApplied.value = cart.myCard?.isApplied == true
+    }
+
     private fun createProductItems(
         cart: DomainCart,
-        deliveryType: DeliveryType,
+        cartType: CartType,
     ): List<ProductItem> {
         return cart.products
             .map { product ->
-                val availableCount = product.getAvailableCountForDeliveryType(deliveryType)
+                val availableCount = product.getAvailableCountForCartType(cartType)
                 ProductItem(
                     product = product,
                     availableCount = availableCount,
@@ -643,13 +664,13 @@ class CartViewModel @AssistedInject constructor(
 
     private fun requestCarts(request: CartRequest) {
         deliveryCartRequester.request(request)
-        pickUpFromStoreCartRequester.request(request)
+        pickupCartRequester.request(request)
     }
 
-    private fun getCart(deliveryType: DeliveryType): Cart? {
-        return when (deliveryType) {
-            DeliveryType.DELIVERY -> deliveryCartResult.value
-            DeliveryType.PICK_UP_FROM_STORE -> pickUpFromStoreCartResult.value
+    private fun getCart(cartType: CartType): Cart? {
+        return when (cartType) {
+            CartType.DELIVERY -> deliveryCartResult.value
+            CartType.PICKUP -> pickupCartResult.value
         }?.getOrNull()
     }
 
@@ -689,21 +710,26 @@ class CartViewModel @AssistedInject constructor(
         val availableCount: Int,
     )
 
-    @Immutable
+    @Stable
     data class BonusState(
         val bonuses: DomainCart.Bonuses,
         val isWriteOffAvailable: Boolean,
         val isWriteOffApplied: Boolean,
+        val writeOffTextFieldState: TextFieldState,
     )
 
     @Immutable
-    data class MyCardState(val isApplied: Boolean, val info: String?)
+    data class MyCardState(
+        val isApplied: Boolean,
+        val info: String?,
+    )
 
-    @Immutable
+    @Stable
     data class PromoCodeState(
         val isApplied: Boolean,
         val isInvalid: Boolean,
         val description: Text?,
+        val textFieldState: TextFieldState,
     )
 
     @AssistedFactory

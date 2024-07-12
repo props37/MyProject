@@ -8,7 +8,7 @@ import ru.livetyping.zarina.data.cart.remote.CartRemoteDataSource
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartProductCount
 import ru.livetyping.zarina.domain.cart.CartProductIds
-import ru.livetyping.zarina.domain.cart.DeliveryType
+import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.geography.KladrId
 import ru.livetyping.zarina.domain.product.Product
@@ -30,16 +30,16 @@ class CartRepository @Inject constructor(
         return cartProductIds
     }
 
-    fun getCartFlow(deliveryType: DeliveryType, cityKladrId: KladrId?): Flow<Cart> {
-        return remoteDataSource.getCartFlow(deliveryType, cityKladrId)
+    fun getCartFlow(cartType: CartType, cityKladrId: KladrId?): Flow<Cart> {
+        return remoteDataSource.getCartFlow(cartType, cityKladrId)
     }
 
-    suspend fun applyMyCardToCart(deliveryType: DeliveryType, productsFirstPriceSum: Int) {
-        remoteDataSource.applyMyCardToCart(deliveryType, productsFirstPriceSum)
+    suspend fun applyMyCardToCart(cartType: CartType, productsFirstPriceSum: Int) {
+        remoteDataSource.applyMyCardToCart(cartType, productsFirstPriceSum)
     }
 
-    suspend fun removeMyCardFromCart(deliveryType: DeliveryType) {
-        remoteDataSource.removeMyCardFromCart(deliveryType)
+    suspend fun removeMyCardFromCart(cartType: CartType) {
+        remoteDataSource.removeMyCardFromCart(cartType)
     }
 
     suspend fun applyPromoCode(promoCode: String) {
@@ -50,12 +50,12 @@ class CartRepository @Inject constructor(
         remoteDataSource.removePromoCode()
     }
 
-    suspend fun applyBonusWriteOff(deliveryType: DeliveryType, bonusCount: Int) {
-        remoteDataSource.applyBonusWriteOff(deliveryType, bonusCount)
+    suspend fun applyBonusWriteOff(cartType: CartType, bonusCount: Int) {
+        remoteDataSource.applyBonusWriteOff(cartType, bonusCount)
     }
 
-    suspend fun removeBonusWriteOff(deliveryType: DeliveryType) {
-        remoteDataSource.removeBonusWriteOff(deliveryType)
+    suspend fun removeBonusWriteOff(cartType: CartType) {
+        remoteDataSource.removeBonusWriteOff(cartType)
     }
 
     suspend fun addProductToCart(
@@ -77,8 +77,8 @@ class CartRepository @Inject constructor(
         return cartProductCount
     }
 
-    suspend fun changeProductCountInCart(barcode: Barcode, count: Int, deliveryType: DeliveryType) {
-        remoteDataSource.changeProductCountInCart(barcode, count, deliveryType)
+    suspend fun changeProductCountInCart(barcode: Barcode, count: Int, cartType: CartType) {
+        remoteDataSource.changeProductCountInCart(barcode, count, cartType)
     }
 
     fun setCartTotalProductCount(count: Int) {

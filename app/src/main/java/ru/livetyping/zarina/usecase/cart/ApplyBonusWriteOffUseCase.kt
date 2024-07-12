@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.livetyping.zarina.base.usecase.UseCase
 import ru.livetyping.zarina.data.cart.CartRepository
 import ru.livetyping.zarina.di.Qualifiers
-import ru.livetyping.zarina.domain.cart.DeliveryType
+import ru.livetyping.zarina.domain.cart.CartType
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -15,14 +15,14 @@ class ApplyBonusWriteOffUseCase @Inject constructor(
 ) : UseCase<ApplyBonusWriteOffUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
-        val deliveryType = params.deliveryType
+        val cartType = params.cartType
         val bonusCount = params.bonusCount
-        Timber.v("Apply bonus write off for cart $deliveryType. Bonus count: $bonusCount")
-        cartRepository.applyBonusWriteOff(deliveryType, bonusCount)
+        Timber.v("Apply bonus write off for cart $cartType. Bonus count: $bonusCount")
+        cartRepository.applyBonusWriteOff(cartType, bonusCount)
     }
 
     data class Params(
-        val deliveryType: DeliveryType,
+        val cartType: CartType,
         val bonusCount: Int,
     )
 }

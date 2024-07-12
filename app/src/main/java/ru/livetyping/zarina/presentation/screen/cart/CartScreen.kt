@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -44,7 +43,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.cart.CartSize
-import ru.livetyping.zarina.domain.cart.DeliveryType
+import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
@@ -73,10 +72,10 @@ fun CartScreen(
     val cartSize by viewModel.cartSize.collectAsStateWithLifecycle()
     val city by viewModel.city.collectAsStateWithLifecycle()
     val isClearCartButtonVisible by viewModel.isClearCartButtonVisible.collectAsStateWithLifecycle()
-    val deliveryTypes by viewModel.deliveryTypes.collectAsStateWithLifecycle()
-    val currentDeliveryType by viewModel.currentDeliveryType.collectAsStateWithLifecycle()
+    val cartTypes by viewModel.cartTypes.collectAsStateWithLifecycle()
+    val currentCartType by viewModel.currentCartType.collectAsStateWithLifecycle()
     val deliveryCartState = viewModel.deliveryCartState.collectAsStateWithLifecycle()
-    val pickUpFromStoreCartState = viewModel.pickUpFromStoreCartState.collectAsStateWithLifecycle()
+    val pickupCartState = viewModel.pickupCartState.collectAsStateWithLifecycle()
     val productCardActions = remember(viewModel) {
         ProductCardActions(
             onCountClicked = viewModel::onProductCountClicked,
@@ -94,19 +93,17 @@ fun CartScreen(
         onGoToCatalogClicked = viewModel::onGoToCatalogClicked,
         isClearCartButtonVisible = isClearCartButtonVisible,
         onClearCartClicked = viewModel::onClearCartClicked,
-        deliveryTypes = deliveryTypes,
-        currentDeliveryType = currentDeliveryType,
-        onDeliveryTypeChanged = viewModel::onDeliveryTypeChanged,
+        cartTypes = cartTypes,
+        currentCartType = currentCartType,
+        onCartTypeChanged = viewModel::onCartTypeChanged,
         deliveryCartState = deliveryCartState,
-        pickUpFromStoreCartState = pickUpFromStoreCartState,
+        pickupCartState = pickupCartState,
         onCartErrorRefreshClicked = viewModel::onCartErrorRefreshClicked,
         productCardActions = productCardActions,
         isRefreshing = isRefreshing,
-        deliveryBonusWriteOffTextFieldState = viewModel.deliveryBonusWriteOffTextFieldState,
-        pickUpFromStoreBonusWriteOffTextFieldState = viewModel.pickUpFromStoreBonusWriteOffTextFieldState,
         onIsBonusWriteOffAppliedChanged = viewModel::onIsBonusWriteOffAppliedChanged,
+        onBonusCountToWriteOffChanged = viewModel::onBonusCountToWriteOffChanged,
         onIsMyCardAppliedChanged = viewModel::onIsMyCardAppliedChanged,
-        promoCodeTextFieldState = viewModel.promoCodeTextFieldState,
         onApplyPromoCodeClicked = viewModel::onApplyPromoCodeClicked,
         onRemovePromoCodeClicked = viewModel::onRemovePromoCodeClicked,
         onPromoCodeImeDoneClicked = viewModel::onPromoCodeImeDoneClicked,
@@ -127,19 +124,17 @@ private fun ScreenContent(
     onGoToCatalogClicked: () -> Unit,
     isClearCartButtonVisible: Boolean,
     onClearCartClicked: () -> Unit,
-    deliveryTypes: ImmutableList<DeliveryType>,
-    currentDeliveryType: DeliveryType,
-    onDeliveryTypeChanged: (DeliveryType) -> Unit,
+    cartTypes: ImmutableList<CartType>,
+    currentCartType: CartType,
+    onCartTypeChanged: (CartType) -> Unit,
     deliveryCartState: State<CartState>,
-    pickUpFromStoreCartState: State<CartState>,
+    pickupCartState: State<CartState>,
     onCartErrorRefreshClicked: () -> Unit,
     productCardActions: ProductCardActions,
     isRefreshing: Boolean,
-    deliveryBonusWriteOffTextFieldState: TextFieldState,
-    pickUpFromStoreBonusWriteOffTextFieldState: TextFieldState,
     onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
+    onBonusCountToWriteOffChanged: (Int) -> Unit,
     onIsMyCardAppliedChanged: (Boolean) -> Unit,
-    promoCodeTextFieldState: TextFieldState,
     onApplyPromoCodeClicked: () -> Unit,
     onRemovePromoCodeClicked: () -> Unit,
     onPromoCodeImeDoneClicked: () -> Unit,
@@ -202,20 +197,18 @@ private fun ScreenContent(
                         city = city,
                         onCityClicked = onCityClicked,
                         cartSize = cartSize,
-                        deliveryTypes = deliveryTypes,
-                        currentDeliveryType = currentDeliveryType,
-                        onDeliveryTypeChanged = onDeliveryTypeChanged,
+                        cartTypes = cartTypes,
+                        currentCartType = currentCartType,
+                        onCartTypeChanged = onCartTypeChanged,
                         deliveryCartState = deliveryCartState,
-                        pickUpFromStoreCartState = pickUpFromStoreCartState,
+                        pickupCartState = pickupCartState,
                         onCartErrorRefreshClicked = onCartErrorRefreshClicked,
                         onGoToCatalogClicked = onGoToCatalogClicked,
                         productCardActions = productCardActions,
                         onBonusAccrualClicked = { isZarinaClubBottomSheetVisible = true },
-                        deliveryBonusWriteOffTextFieldState = deliveryBonusWriteOffTextFieldState,
-                        pickUpFromStoreBonusWriteOffTextFieldState = pickUpFromStoreBonusWriteOffTextFieldState,
                         onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
+                        onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
                         onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
-                        promoCodeTextFieldState = promoCodeTextFieldState,
                         onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                         onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                         onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,

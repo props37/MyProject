@@ -6,10 +6,10 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import kotlinx.parcelize.Parcelize
-import ru.livetyping.zarina.domain.cart.DeliveryType
+import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.product.Product
-import ru.livetyping.zarina.presentation.model.cart.DeliveryTypeParcelable
+import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.BaseRoute
 import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.base.RouteUtils
@@ -56,7 +56,7 @@ data object CartGraph : SimpleGraph(
                     args.barcode.value,
                     args.initialCount,
                     args.availableCount,
-                    DeliveryTypeParcelable.from(args.deliveryType),
+                    CartTypeParcelable.from(args.cartType),
                 ),
             )
         }
@@ -68,7 +68,7 @@ data object CartGraph : SimpleGraph(
                 navArgument(ARG_KEY_INITIAL_COUNT) { type = NavType.IntType },
                 navArgument(ARG_KEY_AVAILABLE_COUNT) { type = NavType.IntType },
                 navArgument(ARG_KEY_DELIVERY_TYPE) {
-                    type = NavType.EnumType(DeliveryTypeParcelable::class.java)
+                    type = NavType.EnumType(CartTypeParcelable::class.java)
                 },
             )
 
@@ -77,7 +77,7 @@ data object CartGraph : SimpleGraph(
             putString(ARG_KEY_BARCODE, args.barcode.value)
             putInt(ARG_KEY_INITIAL_COUNT, args.initialCount)
             putInt(ARG_KEY_AVAILABLE_COUNT, args.availableCount)
-            putParcelable(ARG_KEY_DELIVERY_TYPE, DeliveryTypeParcelable.from(args.deliveryType))
+            putParcelable(ARG_KEY_DELIVERY_TYPE, CartTypeParcelable.from(args.cartType))
         }
 
         data class Args(
@@ -85,7 +85,7 @@ data object CartGraph : SimpleGraph(
             val barcode: Barcode,
             val initialCount: Int,
             val availableCount: Int,
-            val deliveryType: DeliveryType,
+            val cartType: CartType,
         )
 
         @Parcelize

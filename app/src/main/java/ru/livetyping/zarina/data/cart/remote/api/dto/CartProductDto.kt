@@ -52,7 +52,7 @@ data class CartProductDto(
             isInFavorites = offer.isInFavorites ?: false,
             availableCount = CartProduct.AvailableCount(
                 delivery = offer.deliveryAvailableCount ?: 0,
-                pickUpFromStore = offer.pickUpFromStoreAvailableCount ?: 0,
+                pickup = offer.pickupAvailableCount ?: 0,
             ),
         )
     }
@@ -93,7 +93,7 @@ data class CartProductDto(
         val deliveryAvailableCount: Int? = null,
 
         @SerialName("retail_amount")
-        val pickUpFromStoreAvailableCount: Int? = null,
+        val pickupAvailableCount: Int? = null,
     ) {
         @Serializable
         data class ProductColor(
