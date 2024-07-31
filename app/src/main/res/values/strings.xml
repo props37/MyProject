@@ -280,6 +280,10 @@
     <string name="cart_product_limit_exceeded_error_text">Оформление заказа возможно при количестве товаров не более %1$d. Добавь товары в Избранное, чтобы заказать их позже</string>
     <string name="bonus_write_off_applying_error">Не удалось использовать бонусы</string>
     <string name="bonus_write_off_removing_error">Не удалось отменить действие бонусов</string>
+    <string name="bonus_history_is_empty">В истории бонусов пусто</string>
+    <string name="expected_bonuses_list_is_empty">В ожидаемых бонусах пусто</string>
+    <string name="bonus_history_will_be_displayed_here">Здесь будут отображаться начисления и списания бонусов при заказах на сайте и в мобильном приложении</string>
+    <string name="expected_bonuses_will_be_displayed_here">Здесь будут отображаться бонусы, которые скоро поступят на твой бонусный счёт</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
