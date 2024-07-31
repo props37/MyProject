@@ -1,6 +1,6 @@
 [versions]
 # Plugins
-androidGradlePlugin = "8.5.0"
+androidGradlePlugin = "8.5.1"
 googlePlayServices-plugin = "4.4.2"
 firebase-crashlyticsPlugin = "3.0.2"
 androidGitVersion = "0.4.14"
@@ -14,14 +14,14 @@ kotlin-immutableCollections = "0.3.7"
 
 jetpack-core = "1.13.1"
 jetpack-appcompat = "1.7.0"
-jetpack-lifecycle = "2.8.3"
-jetpack-activity = "1.9.0"
+jetpack-lifecycle = "2.8.4"
+jetpack-activity = "1.9.1"
 jetpack-navigation = "2.7.7"
 jetpack-datastore = "1.1.1"
 jetpack-room = "2.6.1"
 jetpack-splashScreen = "1.0.1"
-jetpack-media3 = "1.3.1"
-jetpack-paging = "3.3.0"
+jetpack-media3 = "1.4.0"
+jetpack-paging = "3.3.1"
 jetpack-security-cripto = "1.0.0"
 jetpack-browser = "1.8.0"
 jetpack-junit = "1.2.1"
@@ -30,8 +30,8 @@ jetpack-espresso = "3.6.1"
 jetpack-benchmark = "1.2.4"
 
 jetpack-compose-bom = "2024.06.00"
-jetpack-compose = "1.7.0-beta05"
-jetpack-compose-media3 = "1.3.0-beta04"
+jetpack-compose = "1.7.0-beta06"
+jetpack-compose-material3 = "1.3.0-beta05"
 jetpack-compose-compiler = "1.5.14"
 
 ktor = "2.3.12"
@@ -41,7 +41,7 @@ hilt-navigationCompose = "1.2.0"
 
 accompanist = "0.34.0"
 
-coil = "2.6.0"
+coil = "2.7.0"
 composeShimmer = "1.3.0"
 qrcode = "4.1.1"
 
@@ -52,12 +52,12 @@ leakCanary = "2.14"
 
 googlePlayServices-location = "21.3.0"
 googlePlayServices-maps = "19.0.0"
-googlePlayServices-maps-compose = "6.1.0"
+googlePlayServices-maps-compose = "6.1.1"
 googlePlayServices-auth-api-phone = "18.1.0"
 
 recaptcha = "18.5.1"
 
-firebase-bom = "33.1.1"
+firebase-bom = "33.1.2"
 
 firebase-performance = "1.4.2"
 mindbox = "2.10.1"
@@ -95,7 +95,7 @@ jetpack-benchmark = { group = "androidx.benchmark", name = "benchmark-macro-juni
 jetpack-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "jetpack-compose-bom" }
 jetpack-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "jetpack-compose" }
 jetpack-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "jetpack-compose" }
-jetpack-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "jetpack-compose-media3" }
+jetpack-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "jetpack-compose-material3" }
 jetpack-compose-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "jetpack-compose" }
 jetpack-compose-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "jetpack-compose" }
 jetpack-compose-testManifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "jetpack-compose" }
