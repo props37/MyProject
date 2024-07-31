@@ -242,7 +242,7 @@ private fun ScreenContent(
                     .focusRequester(firstNameFocusRequester)
                     .autofill(
                         autofillType = AutofillType.PersonFirstName,
-                        onFilled = { (it) },
+                        onFilled = { onFirstNameChanged(it) },
                     ),
             )
 
