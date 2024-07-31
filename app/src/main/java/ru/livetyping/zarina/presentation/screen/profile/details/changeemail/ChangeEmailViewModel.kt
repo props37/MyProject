@@ -20,7 +20,7 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.exception.ValidationException
-import ru.livetyping.zarina.domain.user.USER_BIRTH_DATE_DEFAULT
+import ru.livetyping.zarina.domain.user.User
 import ru.livetyping.zarina.domain.user.exception.EmailException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
@@ -83,7 +83,7 @@ class ChangeEmailViewModel @Inject constructor(
                         email = Email.create(email),
                         firstName = user.firstName.orEmpty(),
                         lastName = user.lastName.orEmpty(),
-                        birthDate = user.birthDate ?: USER_BIRTH_DATE_DEFAULT,
+                        birthDate = user.birthDate ?: User.BIRTH_DATE_DEFAULT,
                         phone = user.phone ?: PhoneNumber.create(""),
                         gender = user.gender,
                     )

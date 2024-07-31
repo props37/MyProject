@@ -20,7 +20,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.exception.ValidationException
-import ru.livetyping.zarina.domain.user.USER_BIRTH_DATE_DEFAULT
+import ru.livetyping.zarina.domain.user.User
 import ru.livetyping.zarina.domain.user.exception.OldPasswordException
 import ru.livetyping.zarina.domain.user.exception.PasswordException
 import ru.livetyping.zarina.presentation.base.text.Text
@@ -107,7 +107,7 @@ class ChangePasswordViewModel @Inject constructor(
                         newPassword = newPassword.value,
                         firstName = user.firstName.orEmpty(),
                         lastName = user.lastName.orEmpty(),
-                        birthDate = user.birthDate ?: USER_BIRTH_DATE_DEFAULT,
+                        birthDate = user.birthDate ?: User.BIRTH_DATE_DEFAULT,
                         email = user.email,
                         phone = user.phone ?: PhoneNumber.create(""),
                         gender = user.gender,

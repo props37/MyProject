@@ -44,6 +44,7 @@ fun ProfileDetailsScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val birthDateMillis by viewModel.birthDateMillis.collectAsStateWithLifecycle()
+    val isBrithDateChangeable by viewModel.isBirthDateChangeable.collectAsStateWithLifecycle()
     val phoneNumber by viewModel.phoneNumber.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
     val receiveEmails by viewModel.receiveEmails.collectAsStateWithLifecycle()
@@ -57,6 +58,7 @@ fun ProfileDetailsScreen(
         firstNameTextFieldState = viewModel.firstNameTextFieldState,
         lastNameTextFieldState = viewModel.lastNameTextFieldState,
         birthDateMillis = birthDateMillis,
+        isBrithDateChangeable = isBrithDateChangeable,
         onBirthDateMillisChanged = viewModel::onBirthDateMillisChanged,
         phoneNumber = phoneNumber,
         onPhoneNumberClicked = viewModel::onPhoneNumberClicked,
@@ -87,6 +89,7 @@ private fun ScreenContent(
     firstNameTextFieldState: TextFieldState,
     lastNameTextFieldState: TextFieldState,
     birthDateMillis: Long?,
+    isBrithDateChangeable: Boolean,
     onBirthDateMillisChanged: (Long?) -> Unit,
     phoneNumber: String?,
     onPhoneNumberClicked: () -> Unit,
@@ -156,6 +159,7 @@ private fun ScreenContent(
             firstNameTextFieldState = firstNameTextFieldState,
             lastNameTextFieldState = lastNameTextFieldState,
             birthDateMillis = birthDateMillis,
+            isBrithDateChangeable = isBrithDateChangeable,
             onBirthDateMillisClicked = { isDatePickerVisible = true },
             phoneNumber = phoneNumber,
             onPhoneNumberClicked = onPhoneNumberClicked,

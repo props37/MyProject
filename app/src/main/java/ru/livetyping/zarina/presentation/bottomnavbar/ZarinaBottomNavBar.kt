@@ -43,7 +43,9 @@ import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -81,6 +83,7 @@ import ru.livetyping.zarina.util.compose.text.unscalable
 @Composable
 fun ZarinaBottomNavBar(
     navController: NavHostController,
+    favoriteProductCount: Int,
     cartProductCount: Int,
     modifier: Modifier = Modifier,
     windowInsets: WindowInsets = DefaultWindowInsets,
@@ -169,13 +172,21 @@ fun ZarinaBottomNavBar(
             val backStack by navController.currentBackStack.collectAsStateWithLifecycle()
 
             BottomNavBarItem.ITEMS.forEach { item ->
-                Item(
-                    title = stringResource(item.titleResId),
-                    iconResId = item.iconResId,
-                    isSelected = isItemSelected(item, backStack),
-                    onClick = { navController.navigateToBottomNavBarItem(item) },
-                    counterValue = if (item is BottomNavBarItem.Cart) cartProductCount else null,
-                )
+                key(item) {
+                    val counterValue = when (item) {
+                        BottomNavBarItem.Favorites -> favoriteProductCount
+                        BottomNavBarItem.Cart -> cartProductCount
+                        else -> null
+                    }
+
+                    Item(
+                        title = stringResource(item.titleResId),
+                        iconResId = item.iconResId,
+                        isSelected = isItemSelected(item, backStack),
+                        onClick = { navController.navigateToBottomNavBarItem(item) },
+                        counterValue = counterValue,
+                    )
+                }
             }
         }
     }
@@ -291,6 +302,7 @@ private fun Preview() {
     ZarinaPreview {
         ZarinaBottomNavBar(
             navController = rememberNavController(),
+            favoriteProductCount = 17,
             cartProductCount = 5,
             modifier = Modifier.fillMaxWidth(),
         )
@@ -305,12 +317,14 @@ private val DefaultWindowInsets: WindowInsets
 
 private const val BottomNavBarAnimationSpringStiffness = Spring.StiffnessMedium
 
+@Stable
 private val BottomNavBarAnimationSpec: SpringSpec<IntSize>
     get() = spring(
         stiffness = BottomNavBarAnimationSpringStiffness,
         visibilityThreshold = IntSize.VisibilityThreshold,
     )
 
+@Stable
 private val BottomNavBarContentAnimationSpec: SpringSpec<IntOffset>
     get() = spring(
         stiffness = BottomNavBarAnimationSpringStiffness,

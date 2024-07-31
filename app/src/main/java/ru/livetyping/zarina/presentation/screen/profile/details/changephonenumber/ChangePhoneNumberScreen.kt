@@ -22,7 +22,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
@@ -45,6 +47,7 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.ChangePhoneNumberScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.ChangePhoneNumberViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.autofill.autofill
 import ru.livetyping.zarina.util.compose.tryRequestFocus
 
 @Composable
@@ -70,6 +73,7 @@ fun ChangePhoneNumberScreen(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ScreenContent(
     phone: String,
@@ -110,7 +114,7 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = stringResource(R.string.we_will_send_code_to_entered_phone_number),
+                text = stringResource(R.string.we_will_send_code_for_changing_phone_number),
                 style = UiKitTheme.typography.tertiary.light,
                 color = UiKitTheme.colors.text.general.regular.default,
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -135,7 +139,11 @@ private fun ScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .focusRequester(focusRequester),
+                    .focusRequester(focusRequester)
+                    .autofill(
+                        autofillType = AutofillType.PhoneNumber,
+                        onFilled = { onPhoneChanged(it) },
+                    ),
             )
             Spacer(modifier = Modifier.height(32.dp))
 

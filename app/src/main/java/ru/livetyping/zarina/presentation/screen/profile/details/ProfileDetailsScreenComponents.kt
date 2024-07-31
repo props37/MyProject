@@ -114,6 +114,7 @@ object ProfileDetailsScreenComponents {
         firstNameTextFieldState: TextFieldState,
         lastNameTextFieldState: TextFieldState,
         birthDateMillis: Long?,
+        isBrithDateChangeable: Boolean,
         onBirthDateMillisClicked: () -> Unit,
         phoneNumber: String?,
         onPhoneNumberClicked: () -> Unit,
@@ -147,6 +148,7 @@ object ProfileDetailsScreenComponents {
                         firstNameTextFieldState = firstNameTextFieldState,
                         lastNameTextFieldState = lastNameTextFieldState,
                         birthDateMillis = birthDateMillis,
+                        isBrithDateChangeable = isBrithDateChangeable,
                         onBirthDateMillisClicked = onBirthDateMillisClicked,
                         phoneNumber = phoneNumber,
                         onPhoneNumberClicked = onPhoneNumberClicked,
@@ -191,6 +193,7 @@ object ProfileDetailsScreenComponents {
         firstNameTextFieldState: TextFieldState,
         lastNameTextFieldState: TextFieldState,
         birthDateMillis: Long?,
+        isBrithDateChangeable: Boolean,
         onBirthDateMillisClicked: () -> Unit,
         phoneNumber: String?,
         onPhoneNumberClicked: () -> Unit,
@@ -213,6 +216,7 @@ object ProfileDetailsScreenComponents {
                 firstNameTextFieldState = firstNameTextFieldState,
                 lastNameTextFieldState = lastNameTextFieldState,
                 birthDateMillis = birthDateMillis,
+                isBrithDateChangeable = isBrithDateChangeable,
                 onBirthDateClicked = onBirthDateMillisClicked,
             )
 
@@ -269,6 +273,7 @@ object ProfileDetailsScreenComponents {
         firstNameTextFieldState: TextFieldState,
         lastNameTextFieldState: TextFieldState,
         birthDateMillis: Long?,
+        isBrithDateChangeable: Boolean,
         onBirthDateClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -364,7 +369,10 @@ object ProfileDetailsScreenComponents {
                 colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable(onClick = onBirthDateClicked)
+                    .clickable(
+                        onClick = onBirthDateClicked,
+                        enabled = isBrithDateChangeable,
+                    )
                     .padding(horizontal = 16.dp),
             )
         }

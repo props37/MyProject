@@ -21,7 +21,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
@@ -48,6 +50,7 @@ import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFi
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.screen.signin.SignInViewModel.SignInType
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.autofill.autofill
 import ru.livetyping.zarina.util.compose.navigationBarsOrIme
 import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
 import ru.livetyping.zarina.util.compose.tryRequestFocus
@@ -164,6 +167,7 @@ object SignInScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalComposeUiApi::class)
     @Composable
     private fun SignInByEmail(
         email: String,
@@ -227,7 +231,11 @@ object SignInScreenComponents {
                     .focusRequester(emailFocusRequester)
                     .onFocusChanged {
                         if (it.isFocused) lastFocusTarget = SignInByEmailFocusTarget.Email
-                    },
+                    }
+                    .autofill(
+                        autofillType = AutofillType.EmailAddress,
+                        onFilled = { onEmailChanged(it) },
+                    ),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -248,7 +256,11 @@ object SignInScreenComponents {
                     .focusRequester(passwordFocusRequester)
                     .onFocusChanged {
                         if (it.isFocused) lastFocusTarget = SignInByEmailFocusTarget.Password
-                    },
+                    }
+                    .autofill(
+                        autofillType = AutofillType.Password,
+                        onFilled = { onPasswordChanged(it) },
+                    ),
             )
 
             ZarinaButton(
@@ -276,6 +288,7 @@ object SignInScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalComposeUiApi::class)
     @Composable
     private fun SignInByPhone(
         phone: String,
@@ -309,7 +322,11 @@ object SignInScreenComponents {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .focusRequester(focusRequester),
+                    .focusRequester(focusRequester)
+                    .autofill(
+                        autofillType = AutofillType.PhoneNumber,
+                        onFilled = { onPhoneChanged(it) },
+                    ),
             )
 
             Spacer(modifier = Modifier.height(32.dp))

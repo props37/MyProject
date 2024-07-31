@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.runBlocking
-import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.HomeGraph
@@ -37,6 +36,16 @@ class AppViewModel @Inject constructor(
             UnscopedDestinations.Onboarding
         }
     }
+
+    val favoriteProductCount: StateFlow<Int> = interactor.getFavoriteProductIdsFlow()
+        .map { result ->
+            result.getOrDefault(emptySet()).size
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = 0,
+        )
 
     val cartProductCount: StateFlow<Int> = interactor.getCartProductCountFlow()
         .map { result ->

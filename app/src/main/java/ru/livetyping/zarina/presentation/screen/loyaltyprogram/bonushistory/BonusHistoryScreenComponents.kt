@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.loyaltyprogram.bonushistory
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -133,7 +135,7 @@ object BonusHistoryScreenComponents {
             BonusHistoryList(
                 pagingItems = pagingItems,
                 noBonusHistoryPlaceholder = {
-                    // TODO: [High] Implement
+                    BonusHistoryListEmptyPlaceholder(tab)
                 },
                 modifier = Modifier.fillMaxSize(),
             )
@@ -275,6 +277,44 @@ object BonusHistoryScreenComponents {
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun BonusHistoryListEmptyPlaceholder(
+        tab: Tab,
+        modifier: Modifier = Modifier,
+    ) {
+        val titleResId = when (tab) {
+            Tab.BONUS_HISTORY -> R.string.bonus_history_is_empty
+            Tab.EXPECTED_BONUSES -> R.string.expected_bonuses_list_is_empty
+        }
+        val bodyResId = when (tab) {
+            Tab.BONUS_HISTORY -> R.string.bonus_history_will_be_displayed_here
+            Tab.EXPECTED_BONUSES -> R.string.expected_bonuses_will_be_displayed_here
+        }
+        val textColor = UiKitTheme.colors.text.general.regular.default
+
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp),
+        ) {
+            Text(
+                text = stringResource(titleResId),
+                style = UiKitTheme.typography.primary.bold,
+                color = textColor,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(bodyResId),
+                style = UiKitTheme.typography.secondary.regular,
+                color = textColor,
+                textAlign = TextAlign.Center,
+            )
         }
     }
 
