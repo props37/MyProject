@@ -9,7 +9,7 @@ import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.exception.EmptyDateException
 import ru.livetyping.zarina.domain.common.exception.ValidationException
-import ru.livetyping.zarina.domain.user.USER_BIRTH_DATE_DEFAULT
+import ru.livetyping.zarina.domain.user.User
 import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
@@ -66,7 +66,7 @@ class SignUpUseCase @Inject constructor(
 
         userRepository.signUp(
             firstName = firstName,
-            birthDate = birthDate ?: USER_BIRTH_DATE_DEFAULT,
+            birthDate = birthDate ?: User.BIRTH_DATE_DEFAULT,
             email = email,
             phone = phone,
             password = password,

@@ -22,4 +22,9 @@ data class User(
         val receiveSms: Boolean,
         val receiveEmails: Boolean,
     )
+
+    companion object {
+        val BIRTH_DATE_DEFAULT: LocalDate
+            get() = LocalDate.of(1900, 1, 1)
+    }
 }

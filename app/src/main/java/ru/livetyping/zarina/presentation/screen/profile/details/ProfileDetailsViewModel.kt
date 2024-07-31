@@ -26,7 +26,6 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
-import ru.livetyping.zarina.domain.user.USER_BIRTH_DATE_DEFAULT
 import ru.livetyping.zarina.domain.user.User
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
@@ -41,11 +40,10 @@ import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.clear
 import ru.livetyping.zarina.util.compose.text.textAsFlow
 import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
+import ru.livetyping.zarina.util.kotlin.date.toMillis
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import timber.log.Timber
-import java.time.LocalTime
-import java.time.ZoneId
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -155,6 +153,23 @@ class ProfileDetailsViewModel @Inject constructor(
         initialValue = false,
     )
 
+    val isBirthDateChangeable: StateFlow<Boolean> = combine(
+        birthDateMillis,
+        userResult,
+    ) { birthDateMillis, userResult ->
+        if (birthDateMillis != null) {
+            val currentBirthDate = LocalDateUtil.fromMillis(birthDateMillis)
+            val user = userResult?.getOrNull()
+            currentBirthDate == User.BIRTH_DATE_DEFAULT || currentBirthDate != user?.birthDate
+        } else {
+            false
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = false,
+    )
+
     fun onScreenOpened() {
         userRequester.request(UserRequest.LOADING)
     }
@@ -178,7 +193,7 @@ class ProfileDetailsViewModel @Inject constructor(
         emitSideEffect(SideEffect.HideKeyboard)
         saveUserInfoJob = viewModelScope.launch {
             val birthDate = birthDateMillis.value
-                ?.let { LocalDateUtil.fromMillis(it) } ?: USER_BIRTH_DATE_DEFAULT
+                ?.let { LocalDateUtil.fromMillis(it) } ?: User.BIRTH_DATE_DEFAULT
             val params = UpdateUserInfoUseCase.Params(
                 firstName = firstNameTextFieldState.text.toString().trim(),
                 lastName = lastNameTextFieldState.text.toString().trim(),
@@ -309,11 +324,7 @@ class ProfileDetailsViewModel @Inject constructor(
             append(user.firstName?.trim())
             placeCursorAtEnd()
         }
-        val birthDateMillis = user.birthDate
-            ?.atTime(LocalTime.of(NOON_HOURS, 0))
-            ?.atZone(ZoneId.systemDefault())
-            ?.toInstant()
-            ?.toEpochMilli()
+        val birthDateMillis = user.birthDate?.toMillis()
         birthDateMillisValueHolder.set(birthDateMillis)
         _phoneNumber.value = user.phone?.value
         _email.value = user.email.value
@@ -345,8 +356,6 @@ class ProfileDetailsViewModel @Inject constructor(
     private enum class UserRequest : FlowRequester.Request { LOADING, REFRESHING }
 
     companion object {
-        private const val NOON_HOURS = 12
-
         private const val KEY_BIRTH_DATE_MILLIS = "birth_date_millis"
     }
 }

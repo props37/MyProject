@@ -3,11 +3,12 @@ package ru.livetyping.zarina.util.kotlin.date
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.util.Locale
 
 object LocalDateUtil {
-    fun fromMillis(millis: Long): LocalDate {
-        return Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+    fun fromMillis(millis: Long, zoneId: ZoneId = ZoneOffset.UTC): LocalDate {
+        return Instant.ofEpochMilli(millis).atZone(zoneId).toLocalDate()
     }
 
     fun parseRussianDate(date: String): LocalDate {
