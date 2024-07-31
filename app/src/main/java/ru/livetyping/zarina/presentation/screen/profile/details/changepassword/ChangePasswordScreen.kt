@@ -22,7 +22,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
@@ -43,6 +45,7 @@ import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPasswo
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.profile.details.changepassword.ChangePasswordScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.autofill.autofill
 import ru.livetyping.zarina.util.compose.tryRequestFocus
 
 @Composable
@@ -72,6 +75,7 @@ fun ChangePasswordScreen(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ScreenContent(
     oldPassword: String,
@@ -127,7 +131,11 @@ private fun ScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .focusRequester(oldPasswordFocusRequester),
+                    .focusRequester(oldPasswordFocusRequester)
+                    .autofill(
+                        autofillType = AutofillType.Password,
+                        onFilled = { onOldPasswordChanged(it) },
+                    ),
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -149,7 +157,11 @@ private fun ScreenContent(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .autofill(
+                        autofillType = AutofillType.NewPassword,
+                        onFilled = { onNewPasswordChanged(it) },
+                    ),
             )
             Spacer(modifier = Modifier.height(32.dp))
 

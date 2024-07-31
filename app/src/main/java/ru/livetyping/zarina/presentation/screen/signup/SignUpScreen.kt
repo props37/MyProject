@@ -26,7 +26,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
@@ -64,6 +66,7 @@ import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.Po
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.signup.SignUpViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.autofill.autofill
 import ru.livetyping.zarina.util.compose.navigationBarsOrIme
 import ru.livetyping.zarina.util.compose.tryRequestFocus
 import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
@@ -130,7 +133,7 @@ fun SignUpScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun ScreenContent(
     onBackClicked: () -> Unit,
@@ -236,7 +239,11 @@ private fun ScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .focusRequester(firstNameFocusRequester),
+                    .focusRequester(firstNameFocusRequester)
+                    .autofill(
+                        autofillType = AutofillType.PersonFirstName,
+                        onFilled = { (it) },
+                    ),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -294,7 +301,11 @@ private fun ScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .focusRequester(emailFocusRequester),
+                    .focusRequester(emailFocusRequester)
+                    .autofill(
+                        autofillType = AutofillType.EmailAddress,
+                        onFilled = { onEmailChanged(it) },
+                    ),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -311,7 +322,11 @@ private fun ScreenContent(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .autofill(
+                        autofillType = AutofillType.PhoneNumber,
+                        onFilled = { onPhoneChanged(it) },
+                    ),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -328,7 +343,11 @@ private fun ScreenContent(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .autofill(
+                        autofillType = AutofillType.NewPassword,
+                        onFilled = { onPasswordChanged(it) },
+                    ),
             )
 
             Spacer(modifier = Modifier.height(24.dp))
