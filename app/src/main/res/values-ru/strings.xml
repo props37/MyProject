@@ -253,7 +253,7 @@
     <string name="invalid_email_try_again">Адрес электронной почты некорректный. Введи другой</string>
     <string name="phone_change">Смена телефона</string>
     <string name="enter_new_phone_number">Введи новый номер телефона</string>
-    <string name="we_will_send_code_for_changing_phone_number">Мы отправим СМС-код для смены номера телефона</string>
+    <string name="we_will_send_code_for_changing_phone_number">Мы отправим СМС-код для смены телефона на указанный номер</string>
     <string name="enter_valid_phone_number">Введи действительный номер телефона</string>
     <string name="phone_number_changed">Номер телефона изменён</string>
     <string name="discount">Скидка</string>
