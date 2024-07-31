@@ -81,7 +81,7 @@ private class AutofillNode(
     private var coordinates: LayoutCoordinates? = null
 
     override fun onAttach() {
-        addAutofillNodeToAutofillTree(composeAutofillNode)
+        addAutofillNodeToAutofillTree()
     }
 
     @SuppressLint("SuspiciousCompositionLocalModifierRead")
@@ -115,12 +115,12 @@ private class AutofillNode(
             onFill = onFilled,
         )
         updateAutofillNodeBoundingBox()
-        addAutofillNodeToAutofillTree(composeAutofillNode)
+        addAutofillNodeToAutofillTree()
     }
 
-    private fun addAutofillNodeToAutofillTree(node: ComposeAutofillNode) {
+    private fun addAutofillNodeToAutofillTree() {
         val autofillTree = currentValueOf(LocalAutofillTree)
-        autofillTree += node
+        autofillTree += composeAutofillNode
     }
 
     private fun updateAutofillNodeBoundingBox() {
