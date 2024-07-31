@@ -110,7 +110,7 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = stringResource(R.string.we_will_send_code_to_entered_phone_number),
+                text = stringResource(R.string.we_will_send_code_for_changing_phone_number),
                 style = UiKitTheme.typography.tertiary.light,
                 color = UiKitTheme.colors.text.general.regular.default,
                 modifier = Modifier.padding(horizontal = 16.dp),
