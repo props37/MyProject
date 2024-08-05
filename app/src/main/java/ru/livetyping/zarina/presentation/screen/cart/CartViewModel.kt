@@ -260,6 +260,8 @@ class CartViewModel @AssistedInject constructor(
         requestCarts(CartRequest.LOADING)
         viewModelScope.launch {
             interactor.fetchCartProductIds()
+        }
+        viewModelScope.launch {
             interactor.fetchUserCity()
         }
     }
