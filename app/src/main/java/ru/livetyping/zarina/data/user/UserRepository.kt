@@ -83,6 +83,12 @@ class UserRepository @Inject constructor(
         remoteDataSource.updateUserNotificationSettings(receiveSms, receiveEmails)
     }
 
+    suspend fun fetchUserCity() {
+        val city = remoteDataSource.getUserCityFlow().firstOrNull()
+        checkNotNull(city) { "Failed to fetch user city" }
+        localDataSource.setUserCity(city)
+    }
+
     fun getUserCityFlow(): Flow<City?> {
         return localDataSource.getUserCityFlow()
     }

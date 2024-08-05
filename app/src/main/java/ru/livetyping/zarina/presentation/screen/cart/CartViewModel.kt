@@ -258,9 +258,9 @@ class CartViewModel @AssistedInject constructor(
 
     fun onScreenOpened() {
         requestCarts(CartRequest.LOADING)
-        // TODO: [High] Is it needed?
         viewModelScope.launch {
             interactor.fetchCartProductIds()
+            interactor.fetchUserCity()
         }
     }
 
