@@ -17,4 +17,6 @@ sealed class CartScreenAction {
         val availableCount: Int,
         val cartType: CartType,
     ) : CartScreenAction()
+
+    data class CheckoutClicked(val cartType: CartType) : CartScreenAction()
 }

@@ -473,6 +473,13 @@ class CartViewModel @AssistedInject constructor(
         }
     }
 
+    fun onCheckoutClicked() {
+        navigationThrottler.throttle {
+            val action = CartScreenAction.CheckoutClicked(currentCartType.value)
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
     private suspend fun applyBonusWriteOff(cartType: CartType, bonusCount: Int) {
         val params = ApplyBonusWriteOffUseCase.Params(cartType, bonusCount)
         interactor.applyBonusWriteOff(params)

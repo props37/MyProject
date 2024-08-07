@@ -8,6 +8,8 @@ import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CartGraph
+import ru.livetyping.zarina.presentation.navigation.destination.graph.OrderPlacementGraph
+import ru.livetyping.zarina.presentation.navigation.screen.graph.navigateToOrderPlacementGraph
 import ru.livetyping.zarina.presentation.navigation.util.BottomNavBarItemSecondaryStartDestinationBackHandler
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
@@ -20,13 +22,17 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
         destination = CartGraph.Cart,
         exitTransition = {
             when (targetState.destination.route) {
-                UnscopedDestinations.CitySelector.routeSchema -> slideExitTransition()
+                UnscopedDestinations.CitySelector.routeSchema,
+                OrderPlacementGraph.Recipient.routeSchema -> slideExitTransition()
+
                 else -> null
             }
         },
         popEnterTransition = {
             when (initialState.destination.route) {
-                UnscopedDestinations.CitySelector.routeSchema -> slidePopEnterTransition()
+                UnscopedDestinations.CitySelector.routeSchema,
+                OrderPlacementGraph.Recipient.routeSchema -> slidePopEnterTransition()
+
                 else -> null
             }
         },
@@ -65,6 +71,10 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
                             availableCount = action.availableCount,
                             cartType = action.cartType,
                         )
+                    }
+
+                    is CartScreenAction.CheckoutClicked -> {
+                        navController.navigateToOrderPlacementGraph(action.cartType)
                     }
                 }
             },

@@ -54,6 +54,10 @@ enum class BaseRoute {
     LOYALTY_PROGRAM,
     BONUS_HISTORY,
 
+    // Order placement graph
+    ORDER_PLACEMENT_GRAPH,
+    RECIPIENT,
+
     // Unscoped destinations
     ONBOARDING,
     CITY_SELECTOR,

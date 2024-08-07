@@ -278,6 +278,7 @@
     <string name="expected_bonuses_list_is_empty">В ожидаемых бонусах пусто</string>
     <string name="bonus_history_will_be_displayed_here">Здесь будут отображаться начисления и списания бонусов при заказах на сайте и в мобильном приложении</string>
     <string name="expected_bonuses_will_be_displayed_here">Здесь будут отображаться бонусы, которые скоро поступят на твой бонусный счёт</string>
+    <string name="step_number">Шаг %1$d из %2$d</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

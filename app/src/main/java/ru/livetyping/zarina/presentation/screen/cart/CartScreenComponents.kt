@@ -192,6 +192,7 @@ object CartScreenComponents {
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
+        onCheckoutClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val cityScrollBehavior = CollapsingTopBarDefaults.rememberExitUntilCollapsedScrollBehavior()
@@ -242,6 +243,7 @@ object CartScreenComponents {
                     onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                     onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                     onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
+                    onCheckoutClicked = onCheckoutClicked,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -398,6 +400,7 @@ object CartScreenComponents {
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
+        onCheckoutClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         HorizontalPager(
@@ -428,6 +431,7 @@ object CartScreenComponents {
                             onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                             onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                             onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
+                            onCheckoutClicked = onCheckoutClicked,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
@@ -471,6 +475,7 @@ object CartScreenComponents {
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
+        onCheckoutClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
@@ -487,6 +492,7 @@ object CartScreenComponents {
                 onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                 onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                 onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
+                onCheckoutClicked = onCheckoutClicked,
                 modifier = Modifier.matchParentSize(),
             )
 
@@ -500,7 +506,8 @@ object CartScreenComponents {
             FloatingCheckoutBlock(
                 isVisible = !isCheckoutBlockVisible && !WindowInsets.isImeVisible,
                 totalPrice = cartState.price.totalPrice,
-                isOrderButtonEnabled = !cartState.productLimit.isExceeded,
+                isCheckoutButtonEnabled = !cartState.productLimit.isExceeded,
+                onCheckoutClicked = onCheckoutClicked,
                 modifier = Modifier.align(Alignment.BottomCenter),
             )
         }
@@ -518,6 +525,7 @@ object CartScreenComponents {
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
+        onCheckoutClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         var lastDraggedProductId by remember { mutableStateOf<CartProduct.Id?>(null) }
@@ -683,7 +691,7 @@ object CartScreenComponents {
                 contentType = CartContentType.CheckoutBlock,
             ) {
                 ZarinaButton(
-                    onClick = { /*TODO*/ },
+                    onClick = onCheckoutClicked,
                     isEnabled = !cartState.productLimit.isExceeded,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -701,7 +709,8 @@ object CartScreenComponents {
     private fun FloatingCheckoutBlock(
         isVisible: Boolean,
         totalPrice: Int,
-        isOrderButtonEnabled: Boolean,
+        isCheckoutButtonEnabled: Boolean,
+        onCheckoutClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         AnimatedVisibility(
@@ -738,8 +747,8 @@ object CartScreenComponents {
                 Spacer(modifier = Modifier.width(12.dp))
 
                 ZarinaButton(
-                    onClick = { /*TODO*/ },
-                    isEnabled = isOrderButtonEnabled,
+                    onClick = onCheckoutClicked,
+                    isEnabled = isCheckoutButtonEnabled,
                     modifier = Modifier.weight(1f),
                 ) {
                     Text(text = stringResource(R.string.checkout).uppercase())

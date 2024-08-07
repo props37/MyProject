@@ -15,6 +15,7 @@ import ru.livetyping.zarina.presentation.navigation.screen.graph.catalogGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.favoritesGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.homeGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.loyaltyProgramGraph
+import ru.livetyping.zarina.presentation.navigation.screen.graph.orderPlacementGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.profileGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.signInGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.signUpGraph
@@ -58,6 +59,7 @@ fun ZarinaNavigation(
         signInGraph(navController)
         sizeSelectorGraph(navController)
         loyaltyProgramGraph(navController)
+        orderPlacementGraph(navController)
 
         onboardingScreen(navController)
         citySelectorScreen(navController)
