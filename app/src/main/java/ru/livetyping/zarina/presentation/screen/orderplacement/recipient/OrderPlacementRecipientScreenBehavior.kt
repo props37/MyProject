@@ -3,6 +3,7 @@ package ru.livetyping.zarina.presentation.screen.orderplacement.recipient
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +18,7 @@ fun OrderPlacementRecipientScreenBehavior(
     navigate: (OrderPlacementRecipientScreenAction) -> Unit,
 ) {
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+    val updatedKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
     val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = false)
@@ -25,7 +27,11 @@ fun OrderPlacementRecipientScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is SideEffect.Navigate -> updatedNavigate(sideEffect.action)
+                    is SideEffect.Navigate -> {
+                        updatedKeyboardController?.hide()
+                        updatedNavigate(sideEffect.action)
+                    }
+
                     is SideEffect.ShowZarinaToast -> {
                         updatedZarinaToastController.show(sideEffect.message)
                     }
