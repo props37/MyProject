@@ -36,7 +36,7 @@ jetpack-compose-compiler = "1.5.15"
 
 ktor = "2.3.12"
 
-hilt = "2.51.1"
+hilt = "2.52"
 hilt-navigationCompose = "1.2.0"
 
 accompanist = "0.34.0"
