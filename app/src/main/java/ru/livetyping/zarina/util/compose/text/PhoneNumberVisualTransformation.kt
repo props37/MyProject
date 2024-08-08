@@ -71,7 +71,7 @@ class PhoneNumberVisualTransformation(
         formatted?.forEachIndexed { index, char ->
             if (!PhoneNumberUtils.isNonSeparator(char)) {
                 specialCharsCount++
-                transformedToOriginal.add(index - specialCharsCount)
+                transformedToOriginal.add((index - specialCharsCount).coerceAtLeast(0))
             } else {
                 originalToTransformed.add(index)
                 transformedToOriginal.add(index - specialCharsCount)
