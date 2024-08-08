@@ -14,16 +14,24 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
@@ -41,6 +49,7 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.orderplacement.common.OrderPlacementComponents
 import ru.livetyping.zarina.presentation.screen.orderplacement.recipient.OrderPlacementRecipientViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.autofill.autofill
 
 @Composable
 fun OrderPlacementRecipientScreen(
@@ -62,6 +71,7 @@ fun OrderPlacementRecipientScreen(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ScreenContent(
     firstNameTextFieldState: TextFieldState,
@@ -121,7 +131,19 @@ private fun ScreenContent(
                         onClick = { lastNameTextFieldState.clearText() },
                     )
                 },
-                modifier = Modifier.padding(horizontal = 16.dp),
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Words,
+                        imeAction = ImeAction.Next,
+                    )
+                },
+                lineLimits = TextFieldLineLimits.SingleLine,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .autofill(
+                        autofillType = AutofillType.PersonLastName,
+                        onFilled = { lastNameTextFieldState.setTextAndPlaceCursorAtEnd(it) },
+                    ),
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -139,7 +161,19 @@ private fun ScreenContent(
                         onClick = { firstNameTextFieldState.clearText() },
                     )
                 },
-                modifier = Modifier.padding(horizontal = 16.dp),
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Words,
+                        imeAction = ImeAction.Next,
+                    )
+                },
+                lineLimits = TextFieldLineLimits.SingleLine,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .autofill(
+                        autofillType = AutofillType.PersonFirstName,
+                        onFilled = { firstNameTextFieldState.setTextAndPlaceCursorAtEnd(it) },
+                    ),
             )
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -154,7 +188,18 @@ private fun ScreenContent(
             ZarinaPhoneNumberTextField(
                 phoneNumber = phone,
                 onPhoneNumberChanged = onPhoneChanged,
-                modifier = Modifier.padding(horizontal = 16.dp),
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Phone,
+                        imeAction = ImeAction.Next,
+                    )
+                },
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .autofill(
+                        autofillType = AutofillType.PhoneNumber,
+                        onFilled = { onPhoneChanged(it) },
+                    ),
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -172,6 +217,14 @@ private fun ScreenContent(
                         onClick = { firstNameTextFieldState.clearText() },
                     )
                 },
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Done,
+                    )
+                },
+                onKeyboardAction = {}, // TODO: [High] Implement
+                lineLimits = TextFieldLineLimits.SingleLine,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
             Spacer(modifier = Modifier.height(32.dp))
