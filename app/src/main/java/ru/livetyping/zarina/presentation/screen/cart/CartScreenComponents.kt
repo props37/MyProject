@@ -890,7 +890,9 @@ object CartScreenComponents {
                     count = product.count,
                     countStyle = countStyle,
                     price = product.price,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { productCardActions.onProductClicked(product) },
                 )
 
                 if (isDividerVisible) {
@@ -1226,6 +1228,7 @@ object CartScreenComponents {
 
     @Stable
     class ProductCardActions(
+        val onProductClicked: (CartProduct) -> Unit,
         val onCountClicked: (CartProduct) -> Unit,
         val onAddToFavoritesClicked: (CartProduct) -> Unit,
         val onDeleteFromCartClicked: (CartProduct) -> Unit,

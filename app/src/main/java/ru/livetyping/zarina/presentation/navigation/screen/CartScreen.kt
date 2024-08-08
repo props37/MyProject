@@ -23,6 +23,7 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
         exitTransition = {
             when (targetState.destination.route) {
                 UnscopedDestinations.CitySelector.routeSchema,
+                UnscopedDestinations.Product.routeSchema,
                 OrderPlacementGraph.Recipient.routeSchema -> slideExitTransition()
 
                 else -> null
@@ -31,6 +32,7 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
         popEnterTransition = {
             when (initialState.destination.route) {
                 UnscopedDestinations.CitySelector.routeSchema,
+                UnscopedDestinations.Product.routeSchema,
                 OrderPlacementGraph.Recipient.routeSchema -> slidePopEnterTransition()
 
                 else -> null
@@ -61,6 +63,10 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
                             currentCity = action.currentCity,
                             title = Text.Resource(R.string.city_change),
                         )
+                    }
+
+                    is CartScreenAction.ProductClicked -> {
+                        navController.navigateToProductScreen(action.product.productId)
                     }
 
                     is CartScreenAction.ProductCountClicked -> {

@@ -293,6 +293,13 @@ class CartViewModel @AssistedInject constructor(
         _currentCartType.value = type
     }
 
+    fun onProductClicked(product: CartProduct) {
+        navigationThrottler.throttle {
+            val action = CartScreenAction.ProductClicked(product)
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
     fun onProductCountClicked(product: CartProduct) {
         navigationThrottler.throttle {
             val availableCount = when (currentCartType.value) {

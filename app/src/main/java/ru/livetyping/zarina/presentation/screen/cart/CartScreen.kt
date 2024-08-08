@@ -78,6 +78,7 @@ fun CartScreen(
     val pickupCartState = viewModel.pickupCartState.collectAsStateWithLifecycle()
     val productCardActions = remember(viewModel) {
         ProductCardActions(
+            onProductClicked = viewModel::onProductClicked,
             onCountClicked = viewModel::onProductCountClicked,
             onAddToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
             onDeleteFromCartClicked = viewModel::onDeleteProductFromCartClicked,
