@@ -873,10 +873,7 @@ object CartScreenComponents {
                         interactionSource = anchoredDraggableInteractionSource,
                     ),
             ) {
-                val countStyle = remember(
-                    productItem.availableCount,
-                    productCardActions.onCountClicked,
-                ) {
+                val countStyle = remember(productItem, productCardActions.onCountClicked) {
                     ProductOrderCardCountStyle.Selector(
                         isEditable = productItem.availableCount > 1,
                         onClick = { productCardActions.onCountClicked(product) },
