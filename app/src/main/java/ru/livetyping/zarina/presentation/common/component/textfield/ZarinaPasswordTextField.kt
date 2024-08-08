@@ -132,7 +132,7 @@ private fun PasswordVisibilityButton(
         AnimatedContent(
             targetState = isPasswordHidden,
             transitionSpec = {
-                AnimatedContentDefaultTransitionSpec().using(sizeTransform = null)
+                AnimatedContentDefaultTransitionSpec.using(sizeTransform = null)
             },
             contentAlignment = Alignment.Center,
             label = "PasswordVisibilityButton",

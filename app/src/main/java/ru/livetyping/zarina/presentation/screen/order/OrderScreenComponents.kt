@@ -86,7 +86,7 @@ object OrderScreenComponents {
                 AnimatedContent(
                     targetState = orderNumber,
                     transitionSpec = {
-                        AnimatedContentCrossfadeTransitionSpec().using(sizeTransform = null)
+                        AnimatedContentCrossfadeTransitionSpec.using(sizeTransform = null)
                     },
                     contentAlignment = Alignment.Center,
                     label = "Order number",

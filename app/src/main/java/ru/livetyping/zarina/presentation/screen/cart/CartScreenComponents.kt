@@ -369,7 +369,7 @@ object CartScreenComponents {
             AnimatedContent(
                 targetState = productCount,
                 transitionSpec = {
-                    AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                    AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
                 },
                 contentAlignment = Alignment.Center,
                 label = "CartTypeButton product count",
@@ -618,7 +618,7 @@ object CartScreenComponents {
                         AnimatedContent(
                             targetState = cartState.promoCodeState.description,
                             transitionSpec = {
-                                AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                                AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
                             },
                             contentAlignment = Alignment.Center,
                             label = "PromoCode description",
@@ -1120,7 +1120,7 @@ object CartScreenComponents {
             AnimatedContent(
                 targetState = state.isWriteOffApplied,
                 transitionSpec = {
-                    AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                    AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
                 },
                 contentAlignment = Alignment.Center,
                 label = "Bonus write off text field",

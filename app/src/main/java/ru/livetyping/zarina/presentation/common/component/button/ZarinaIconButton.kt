@@ -67,7 +67,7 @@ fun ZarinaIconButton(
             AnimatedContent(
                 targetState = isLoading,
                 transitionSpec = {
-                    AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                    AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
                 },
                 contentAlignment = Alignment.Center,
                 label = "ZarinaIconButton content",

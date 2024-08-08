@@ -132,7 +132,7 @@ object CitySelectorScreenComponents {
                 AnimatedContent(
                     targetState = isCancelButtonVisible,
                     transitionSpec = {
-                        AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                        AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
                     },
                     contentAlignment = Alignment.Center,
                     label = "CitySearchBar Cancel button",

@@ -69,7 +69,7 @@ fun ZarinaErrorScreen(
         AnimatedContent(
             targetState = state.isButtonVisible,
             transitionSpec = {
-                AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
             },
             label = "ZarinaErrorScreen Refresh button",
         ) { isVisible ->

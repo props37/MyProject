@@ -68,7 +68,7 @@ object ProfileScreenComponents {
                     AnimatedContent(
                         targetState = userFirstName,
                         transitionSpec = {
-                            AnimatedContentDefaultTransitionSpec()
+                            AnimatedContentDefaultTransitionSpec
                                 .using(SizeTransform(clip = false))
                         },
                         contentAlignment = Alignment.Center,
@@ -158,7 +158,7 @@ object ProfileScreenComponents {
         AnimatedContent(
             targetState = loyaltyCard,
             transitionSpec = {
-                AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
             },
             contentKey = { it != null },
             label = "LoyaltyCard",
@@ -246,7 +246,7 @@ object ProfileScreenComponents {
                     AnimatedContent(
                         targetState = city,
                         transitionSpec = {
-                            AnimatedContentCrossfadeTransitionSpec().using(sizeTransform = null)
+                            AnimatedContentCrossfadeTransitionSpec.using(sizeTransform = null)
                         },
                         contentAlignment = Alignment.CenterStart,
                         label = "City",

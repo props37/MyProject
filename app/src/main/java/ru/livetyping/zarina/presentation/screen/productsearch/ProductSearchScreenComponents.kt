@@ -166,7 +166,7 @@ object ProductSearchScreenComponents {
                     AnimatedContent(
                         targetState = isCancelButtonVisible,
                         transitionSpec = {
-                            AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                            AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
                         },
                         contentAlignment = Alignment.Center,
                         label = "SearchBar Cancel button",
