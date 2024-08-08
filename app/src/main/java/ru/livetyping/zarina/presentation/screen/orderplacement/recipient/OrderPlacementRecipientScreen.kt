@@ -56,14 +56,22 @@ fun OrderPlacementRecipientScreen(
     navigate: (OrderPlacementRecipientScreenAction) -> Unit,
     viewModel: OrderPlacementRecipientViewModel = hiltViewModel(),
 ) {
+    val isFirstNameInvalid by viewModel.isFirstNameInvalid.collectAsStateWithLifecycle()
+    val isLastNameInvalid by viewModel.isLastNameInvalid.collectAsStateWithLifecycle()
     val phone by viewModel.phone.collectAsStateWithLifecycle()
+    val isPhoneInvalid by viewModel.isPhoneInvalid.collectAsStateWithLifecycle()
+    val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
 
     ScreenContent(
         firstNameTextFieldState = viewModel.firstNameTextFieldState,
+        isFirstNameInvalid = isFirstNameInvalid,
         lastNameTextFieldState = viewModel.lastNameTextFieldState,
+        isLastNameInvalid = isLastNameInvalid,
         phone = phone,
+        isPhoneInvalid = isPhoneInvalid,
         onPhoneChanged = viewModel::onPhoneChanged,
         emailTextFieldState = viewModel.emailTextFieldState,
+        isEmailInvalid = isEmailInvalid,
         onContinueClicked = viewModel::onContinueClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
@@ -75,10 +83,14 @@ fun OrderPlacementRecipientScreen(
 @Composable
 private fun ScreenContent(
     firstNameTextFieldState: TextFieldState,
+    isFirstNameInvalid: Boolean,
     lastNameTextFieldState: TextFieldState,
+    isLastNameInvalid: Boolean,
     phone: String,
+    isPhoneInvalid: Boolean,
     onPhoneChanged: (String) -> Unit,
     emailTextFieldState: TextFieldState,
+    isEmailInvalid: Boolean,
     onContinueClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -119,6 +131,7 @@ private fun ScreenContent(
 
             ZarinaTextField(
                 state = lastNameTextFieldState,
+                isError = isLastNameInvalid,
                 label = {
                     Text(text = stringResource(R.string.last_name))
                 },
@@ -149,6 +162,7 @@ private fun ScreenContent(
 
             ZarinaTextField(
                 state = firstNameTextFieldState,
+                isError = isFirstNameInvalid,
                 label = {
                     Text(text = stringResource(R.string.first_name))
                 },
@@ -188,6 +202,7 @@ private fun ScreenContent(
             ZarinaPhoneNumberTextField(
                 phoneNumber = phone,
                 onPhoneNumberChanged = onPhoneChanged,
+                isError = isPhoneInvalid,
                 keyboardOptions = remember {
                     KeyboardOptions(
                         keyboardType = KeyboardType.Phone,
@@ -205,6 +220,7 @@ private fun ScreenContent(
 
             ZarinaTextField(
                 state = emailTextFieldState,
+                isError = isEmailInvalid,
                 label = {
                     Text(text = stringResource(R.string.email))
                 },
@@ -214,7 +230,7 @@ private fun ScreenContent(
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
                         isVisible = emailTextFieldState.text.isNotEmpty(),
-                        onClick = { firstNameTextFieldState.clearText() },
+                        onClick = { emailTextFieldState.clearText() },
                     )
                 },
                 keyboardOptions = remember {
@@ -223,7 +239,7 @@ private fun ScreenContent(
                         imeAction = ImeAction.Done,
                     )
                 },
-                onKeyboardAction = {}, // TODO: [High] Implement
+                onKeyboardAction = { onContinueClicked() },
                 lineLimits = TextFieldLineLimits.SingleLine,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
@@ -251,10 +267,14 @@ private fun Preview() {
     ZarinaPreview {
         ScreenContent(
             firstNameTextFieldState = rememberTextFieldState(),
+            isFirstNameInvalid = false,
             lastNameTextFieldState = rememberTextFieldState(),
+            isLastNameInvalid = false,
             phone = "",
+            isPhoneInvalid = false,
             onPhoneChanged = {},
             emailTextFieldState = rememberTextFieldState(),
+            isEmailInvalid = false,
             onContinueClicked = {},
             onCloseClicked = {},
             sideEffects = remember { emptyFlow() },
