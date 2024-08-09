@@ -57,6 +57,7 @@ fun OrderPlacementRecipientScreen(
     viewModel: OrderPlacementRecipientViewModel = hiltViewModel(),
 ) {
     val step by viewModel.step.collectAsStateWithLifecycle()
+    val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()
     val isFirstNameInvalid by viewModel.isFirstNameInvalid.collectAsStateWithLifecycle()
     val isLastNameInvalid by viewModel.isLastNameInvalid.collectAsStateWithLifecycle()
     val phone by viewModel.phone.collectAsStateWithLifecycle()
@@ -65,6 +66,7 @@ fun OrderPlacementRecipientScreen(
 
     ScreenContent(
         step = step,
+        stepCount = stepCount,
         firstNameTextFieldState = viewModel.firstNameTextFieldState,
         isFirstNameInvalid = isFirstNameInvalid,
         lastNameTextFieldState = viewModel.lastNameTextFieldState,
@@ -85,6 +87,7 @@ fun OrderPlacementRecipientScreen(
 @Composable
 private fun ScreenContent(
     step: Int,
+    stepCount: Int,
     firstNameTextFieldState: TextFieldState,
     isFirstNameInvalid: Boolean,
     lastNameTextFieldState: TextFieldState,
@@ -117,7 +120,7 @@ private fun ScreenContent(
         OrderPlacementComponents.TopBar(
             title = stringResource(R.string.recipient),
             step = step,
-            stepCount = 4, // TODO: [High] Implement
+            stepCount = stepCount,
             isBackButtonVisible = false,
             onCloseClicked = onCloseClicked,
         )
@@ -270,6 +273,7 @@ private fun Preview() {
     ZarinaPreview {
         ScreenContent(
             step = 1,
+            stepCount = 4,
             firstNameTextFieldState = rememberTextFieldState(),
             isFirstNameInvalid = false,
             lastNameTextFieldState = rememberTextFieldState(),

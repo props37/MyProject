@@ -38,6 +38,7 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.OrderPlacementGraph
+import ru.livetyping.zarina.presentation.screen.orderplacement.common.orderPlacementStepCount
 import ru.livetyping.zarina.presentation.screen.orderplacement.recipient.OrderPlacementRecipientViewModel.SideEffect
 import ru.livetyping.zarina.usecase.orderplacement.ValidateRecipientUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
@@ -79,6 +80,9 @@ class OrderPlacementRecipientViewModel @Inject constructor(
         ) {
             checkNotNull(it) { "step is null" }
         }
+
+    val stepCount: StateFlow<Int> =
+        MutableStateFlow(cartType.value.orderPlacementStepCount).asStateFlow()
 
     @OptIn(SavedStateHandleSaveableApi::class)
     val firstNameTextFieldState: TextFieldState by savedStateHandle.saveable(
