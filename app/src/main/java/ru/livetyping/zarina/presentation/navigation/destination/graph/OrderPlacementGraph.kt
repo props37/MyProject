@@ -19,14 +19,14 @@ data object OrderPlacementGraph : Graph<OrderPlacementGraph.Recipient.Args>() {
     override val routeSchema: String
         get() = RouteUtils.generateRouteSchema(
             routeBase = routeBase,
-            argNames = arrayOf(Recipient.ARG_KEY_CART_TYPE),
+            argNames = arrayOf(Recipient.ARG_KEY_CART_TYPE, Recipient.ARG_KEY_STEP),
         )
 
     override fun createRoute(args: Recipient.Args): String {
         val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
         return RouteUtils.generateRoute(
             routeBase = routeBase,
-            args = arrayOf(cartTypeParcelable),
+            args = arrayOf(cartTypeParcelable, args.step),
         )
     }
 
@@ -43,6 +43,7 @@ data object OrderPlacementGraph : Graph<OrderPlacementGraph.Recipient.Args>() {
 
     data object Recipient : Destination<Recipient.Args>() {
         const val ARG_KEY_CART_TYPE = "arg_cart_type"
+        const val ARG_KEY_STEP = "arg_step"
 
         private val routeBase: String
             get() = BaseRoute.RECIPIENT.route
@@ -50,14 +51,14 @@ data object OrderPlacementGraph : Graph<OrderPlacementGraph.Recipient.Args>() {
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(
                 routeBase = routeBase,
-                argNames = arrayOf(ARG_KEY_CART_TYPE),
+                argNames = arrayOf(ARG_KEY_CART_TYPE, ARG_KEY_STEP),
             )
 
         override fun createRoute(args: Args): String {
             val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
             return RouteUtils.generateRoute(
                 routeBase = routeBase,
-                args = arrayOf(cartTypeParcelable),
+                args = arrayOf(cartTypeParcelable, args.step),
             )
         }
 
@@ -66,13 +67,18 @@ data object OrderPlacementGraph : Graph<OrderPlacementGraph.Recipient.Args>() {
                 navArgument(ARG_KEY_CART_TYPE) {
                     type = NavType.EnumType(CartTypeParcelable::class.java)
                 },
+                navArgument(ARG_KEY_STEP) { type = NavType.IntType },
             )
 
         override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
             val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
             putParcelable(ARG_KEY_CART_TYPE, cartTypeParcelable)
+            putInt(ARG_KEY_STEP, args.step)
         }
 
-        data class Args(val cartType: CartType)
+        data class Args(
+            val cartType: CartType,
+            val step: Int = 1,
+        )
     }
 }

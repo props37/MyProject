@@ -68,6 +68,18 @@ class OrderPlacementRecipientViewModel @Inject constructor(
             parcelable.toCartType()
         }
 
+    val step: StateFlow<Int> = savedStateHandle
+        .getStateFlow<Int?>(
+            key = OrderPlacementGraph.Recipient.ARG_KEY_STEP,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) {
+            checkNotNull(it) { "step is null" }
+        }
+
     @OptIn(SavedStateHandleSaveableApi::class)
     val firstNameTextFieldState: TextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,

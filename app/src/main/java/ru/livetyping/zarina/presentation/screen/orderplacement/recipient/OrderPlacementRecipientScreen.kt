@@ -56,6 +56,7 @@ fun OrderPlacementRecipientScreen(
     navigate: (OrderPlacementRecipientScreenAction) -> Unit,
     viewModel: OrderPlacementRecipientViewModel = hiltViewModel(),
 ) {
+    val step by viewModel.step.collectAsStateWithLifecycle()
     val isFirstNameInvalid by viewModel.isFirstNameInvalid.collectAsStateWithLifecycle()
     val isLastNameInvalid by viewModel.isLastNameInvalid.collectAsStateWithLifecycle()
     val phone by viewModel.phone.collectAsStateWithLifecycle()
@@ -63,6 +64,7 @@ fun OrderPlacementRecipientScreen(
     val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
 
     ScreenContent(
+        step = step,
         firstNameTextFieldState = viewModel.firstNameTextFieldState,
         isFirstNameInvalid = isFirstNameInvalid,
         lastNameTextFieldState = viewModel.lastNameTextFieldState,
@@ -82,6 +84,7 @@ fun OrderPlacementRecipientScreen(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ScreenContent(
+    step: Int,
     firstNameTextFieldState: TextFieldState,
     isFirstNameInvalid: Boolean,
     lastNameTextFieldState: TextFieldState,
@@ -113,7 +116,7 @@ private fun ScreenContent(
     ) {
         OrderPlacementComponents.TopBar(
             title = stringResource(R.string.recipient),
-            step = 1, // TODO: [High] Implement
+            step = step,
             stepCount = 4, // TODO: [High] Implement
             isBackButtonVisible = false,
             onCloseClicked = onCloseClicked,
@@ -266,6 +269,7 @@ private fun ScreenContent(
 private fun Preview() {
     ZarinaPreview {
         ScreenContent(
+            step = 1,
             firstNameTextFieldState = rememberTextFieldState(),
             isFirstNameInvalid = false,
             lastNameTextFieldState = rememberTextFieldState(),
