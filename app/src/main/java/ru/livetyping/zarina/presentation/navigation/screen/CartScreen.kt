@@ -33,7 +33,8 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
             when (initialState.destination.route) {
                 UnscopedDestinations.CitySelector.routeSchema,
                 UnscopedDestinations.Product.routeSchema,
-                OrderPlacementGraph.Recipient.routeSchema -> slidePopEnterTransition()
+                OrderPlacementGraph.Recipient.routeSchema,
+                OrderPlacementGraph.StoreSelection.routeSchema -> slidePopEnterTransition()
 
                 else -> null
             }

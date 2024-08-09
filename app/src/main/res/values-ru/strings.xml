@@ -281,6 +281,7 @@
     <string name="step_number">Шаг %1$d из %2$d</string>
     <string name="order_placement_recipient_empty_fields_error">Поля ввода пусты. Для продолжения заполни все поля</string>
     <string name="order_placement_recipient_validation_error">Введи действительные данные</string>
+    <string name="store_selection">Выбор магазина</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

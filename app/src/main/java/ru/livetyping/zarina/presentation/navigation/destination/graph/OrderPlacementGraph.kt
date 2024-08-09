@@ -81,4 +81,45 @@ data object OrderPlacementGraph : Graph<OrderPlacementGraph.Recipient.Args>() {
             val step: Int = 1,
         )
     }
+
+    data object StoreSelection : Destination<StoreSelection.Args>() {
+        const val ARG_KEY_CART_TYPE = "arg_cart_type"
+        const val ARG_KEY_STEP = "arg_step"
+
+        private val routeBase: String
+            get() = BaseRoute.STORE_SELECTION.route
+
+        override val routeSchema: String
+            get() = RouteUtils.generateRouteSchema(
+                routeBase = routeBase,
+                argNames = arrayOf(ARG_KEY_CART_TYPE, ARG_KEY_STEP),
+            )
+
+        override fun createRoute(args: Args): String {
+            val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
+            return RouteUtils.generateRoute(
+                routeBase = routeBase,
+                args = arrayOf(cartTypeParcelable, args.step),
+            )
+        }
+
+        override val arguments: List<NamedNavArgument>
+            get() = listOf(
+                navArgument(Recipient.ARG_KEY_CART_TYPE) {
+                    type = NavType.EnumType(CartTypeParcelable::class.java)
+                },
+                navArgument(Recipient.ARG_KEY_STEP) { type = NavType.IntType },
+            )
+
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
+            putParcelable(Recipient.ARG_KEY_CART_TYPE, cartTypeParcelable)
+            putInt(Recipient.ARG_KEY_STEP, args.step)
+        }
+
+        data class Args(
+            val cartType: CartType,
+            val step: Int,
+        )
+    }
 }

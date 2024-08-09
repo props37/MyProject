@@ -57,6 +57,7 @@ enum class BaseRoute {
     // Order placement graph
     ORDER_PLACEMENT_GRAPH,
     RECIPIENT,
+    STORE_SELECTION,
 
     // Unscoped destinations
     ONBOARDING,

@@ -6,11 +6,23 @@ import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.presentation.navigation.base.navigationGraph
 import ru.livetyping.zarina.presentation.navigation.destination.graph.OrderPlacementGraph
 import ru.livetyping.zarina.presentation.navigation.screen.orderPlacementRecipientScreen
+import ru.livetyping.zarina.presentation.navigation.screen.orderPlacementStoreSelectionScreen
+import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
+import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
+import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
+import ru.livetyping.zarina.presentation.navigation.util.slidePopExitTransition
 import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.orderPlacementGraph(navController: NavHostController) {
-    navigationGraph(OrderPlacementGraph) {
+    navigationGraph(
+        graph = OrderPlacementGraph,
+        enterTransition = { slideEnterTransition() },
+        exitTransition = { slideExitTransition() },
+        popEnterTransition = { slidePopEnterTransition() },
+        popExitTransition = { slidePopExitTransition() },
+    ) {
         orderPlacementRecipientScreen(navController)
+        orderPlacementStoreSelectionScreen(navController)
     }
 }
 

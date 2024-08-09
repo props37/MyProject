@@ -21,6 +21,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.exception.ValidationException
@@ -150,10 +151,24 @@ class OrderPlacementRecipientViewModel @Inject constructor(
                 email = Email.create(emailTextFieldState.text.toString()),
             )
             interactor.validateRecipient(params)
-                .onSuccess {
-                    // TODO: [High] Implement
-                }
+                .onSuccess { onValidateRecipientSuccess() }
                 .onFailure(::onValidateRecipientFailure)
+        }
+    }
+
+    private fun onValidateRecipientSuccess() {
+        when (cartType.value) {
+            CartType.DELIVERY -> {
+                // TODO: [High] Implement
+            }
+
+            CartType.PICKUP -> {
+                val action = OrderPlacementRecipientScreenAction.RecipientValidated(
+                    cartType = cartType.value,
+                    step = step.value + 1,
+                )
+                emitSideEffect(SideEffect.Navigate(action))
+            }
         }
     }
 
