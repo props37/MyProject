@@ -148,7 +148,7 @@ dependencies {
     implementation(libs.jetpack.media3.exoplayer)
     implementation(libs.jetpack.media3.ui)
     implementation(libs.jetpack.paging.compose)
-    implementation(libs.jetpack.security.cripto)
+    implementation(libs.jetpack.security.crypto)
     implementation(libs.jetpack.browser)
 
     implementation(platform(libs.jetpack.compose.bom))

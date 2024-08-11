@@ -83,7 +83,7 @@ jetpack-splashScreen = { group = "androidx.core", name = "core-splashscreen", ve
 jetpack-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "jetpack-media3" }
 jetpack-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "jetpack-media3" }
 jetpack-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "jetpack-paging" }
-jetpack-security-cripto = { group = "androidx.security", name = "security-crypto", version.ref = "jetpack-security-cripto" }
+jetpack-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "jetpack-security-cripto" }
 jetpack-browser = { group = "androidx.browser", name = "browser", version.ref = "jetpack-browser" }
 jetpack-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "jetpack-junit" }
 jetpack-test-uiAutomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "jetpack-uiAutomator" }
