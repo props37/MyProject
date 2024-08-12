@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.orderplacement.common
+package ru.livetyping.zarina.presentation.screen.checkout.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,7 +15,7 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIcon
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
-object OrderPlacementComponents {
+object CheckoutComponents {
 
     @Composable
     fun TopBar(

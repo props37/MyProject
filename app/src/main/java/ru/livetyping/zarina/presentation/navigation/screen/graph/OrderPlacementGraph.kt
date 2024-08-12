@@ -4,32 +4,32 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.presentation.navigation.base.navigationGraph
-import ru.livetyping.zarina.presentation.navigation.destination.graph.OrderPlacementGraph
-import ru.livetyping.zarina.presentation.navigation.screen.orderPlacementRecipientScreen
-import ru.livetyping.zarina.presentation.navigation.screen.orderPlacementStoreSelectionScreen
+import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
+import ru.livetyping.zarina.presentation.navigation.screen.checkoutRecipientScreen
+import ru.livetyping.zarina.presentation.navigation.screen.checkoutStoreSelectionScreen
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopExitTransition
 import ru.livetyping.zarina.util.library.navigation.navigate
 
-fun NavGraphBuilder.orderPlacementGraph(navController: NavHostController) {
+fun NavGraphBuilder.checkoutGraph(navController: NavHostController) {
     navigationGraph(
-        graph = OrderPlacementGraph,
+        graph = CheckoutGraph,
         enterTransition = { slideEnterTransition() },
         exitTransition = { slideExitTransition() },
         popEnterTransition = { slidePopEnterTransition() },
         popExitTransition = { slidePopExitTransition() },
     ) {
-        orderPlacementRecipientScreen(navController)
-        orderPlacementStoreSelectionScreen(navController)
+        checkoutRecipientScreen(navController)
+        checkoutStoreSelectionScreen(navController)
     }
 }
 
-fun NavHostController.navigateToOrderPlacementGraph(cartType: CartType) {
-    val args = OrderPlacementGraph.Recipient.Args(cartType)
+fun NavHostController.navigateToCheckoutGraph(cartType: CartType) {
+    val args = CheckoutGraph.Recipient.Args(cartType)
     this.navigate(
-        route = OrderPlacementGraph.routeSchema,
-        args = OrderPlacementGraph.createArgsBundle(args),
+        route = CheckoutGraph.routeSchema,
+        args = CheckoutGraph.createArgsBundle(args),
     )
 }

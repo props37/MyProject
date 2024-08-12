@@ -11,10 +11,10 @@ import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.base.Graph
 import ru.livetyping.zarina.presentation.navigation.base.RouteUtils
 
-data object OrderPlacementGraph : Graph<OrderPlacementGraph.Recipient.Args>() {
+data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
 
     private val routeBase: String
-        get() = BaseRoute.ORDER_PLACEMENT_GRAPH.route
+        get() = BaseRoute.CHECKOUT_GRAPH.route
 
     override val routeSchema: String
         get() = RouteUtils.generateRouteSchema(

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.orderplacement.storeselection
+package ru.livetyping.zarina.presentation.screen.checkout.storeselection
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -18,14 +18,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.presentation.screen.orderplacement.common.OrderPlacementComponents
-import ru.livetyping.zarina.presentation.screen.orderplacement.storeselection.OrderPlacementStoreSelectionViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
+import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutStoreSelectionViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable
-fun OrderPlacementStoreSelectionScreen(
-    navigate: (OrderPlacementStoreSelectionScreenAction) -> Unit,
-    viewModel: OrderPlacementStoreSelectionViewModel = hiltViewModel(),
+fun CheckoutStoreSelectionScreen(
+    navigate: (CheckoutStoreSelectionScreenAction) -> Unit,
+    viewModel: CheckoutStoreSelectionViewModel = hiltViewModel(),
 ) {
     ScreenContent(
         step = 2, // TODO: [High] Implement
@@ -44,9 +44,9 @@ private fun ScreenContent(
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigate: (OrderPlacementStoreSelectionScreenAction) -> Unit,
+    navigate: (CheckoutStoreSelectionScreenAction) -> Unit,
 ) {
-    OrderPlacementStoreSelectionScreenBehavior(
+    CheckoutStoreSelectionScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
     )
@@ -60,7 +60,7 @@ private fun ScreenContent(
                     .union(WindowInsets.displayCutout),
             ),
     ) {
-        OrderPlacementComponents.TopBar(
+        CheckoutComponents.TopBar(
             title = stringResource(R.string.store_selection),
             step = step,
             stepCount = stepCount,

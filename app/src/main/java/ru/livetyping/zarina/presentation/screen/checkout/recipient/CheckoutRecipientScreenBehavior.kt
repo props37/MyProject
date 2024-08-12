@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.orderplacement.recipient
+package ru.livetyping.zarina.presentation.screen.checkout.recipient
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -10,12 +10,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.livetyping.zarina.presentation.common.zarinatoast.controller.LocalZarinaToastController
-import ru.livetyping.zarina.presentation.screen.orderplacement.recipient.OrderPlacementRecipientViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutRecipientViewModel.SideEffect
 
 @Composable
-fun OrderPlacementRecipientScreenBehavior(
+fun CheckoutRecipientScreenBehavior(
     sideEffects: Flow<SideEffect>,
-    navigate: (OrderPlacementRecipientScreenAction) -> Unit,
+    navigate: (CheckoutRecipientScreenAction) -> Unit,
 ) {
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)

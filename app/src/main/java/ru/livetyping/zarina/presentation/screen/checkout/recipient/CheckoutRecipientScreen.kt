@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.orderplacement.recipient
+package ru.livetyping.zarina.presentation.screen.checkout.recipient
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -46,15 +46,15 @@ import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPhoneN
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.presentation.screen.orderplacement.common.OrderPlacementComponents
-import ru.livetyping.zarina.presentation.screen.orderplacement.recipient.OrderPlacementRecipientViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
+import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutRecipientViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.autofill.autofill
 
 @Composable
-fun OrderPlacementRecipientScreen(
-    navigate: (OrderPlacementRecipientScreenAction) -> Unit,
-    viewModel: OrderPlacementRecipientViewModel = hiltViewModel(),
+fun CheckoutRecipientScreen(
+    navigate: (CheckoutRecipientScreenAction) -> Unit,
+    viewModel: CheckoutRecipientViewModel = hiltViewModel(),
 ) {
     val step by viewModel.step.collectAsStateWithLifecycle()
     val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()
@@ -100,9 +100,9 @@ private fun ScreenContent(
     onContinueClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigate: (OrderPlacementRecipientScreenAction) -> Unit,
+    navigate: (CheckoutRecipientScreenAction) -> Unit,
 ) {
-    OrderPlacementRecipientScreenBehavior(
+    CheckoutRecipientScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
     )
@@ -117,7 +117,7 @@ private fun ScreenContent(
             )
             .imePadding(),
     ) {
-        OrderPlacementComponents.TopBar(
+        CheckoutComponents.TopBar(
             title = stringResource(R.string.recipient),
             step = step,
             stepCount = stepCount,

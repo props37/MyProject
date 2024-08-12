@@ -4,26 +4,26 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
-import ru.livetyping.zarina.presentation.navigation.destination.graph.OrderPlacementGraph
-import ru.livetyping.zarina.presentation.screen.orderplacement.storeselection.OrderPlacementStoreSelectionScreen
-import ru.livetyping.zarina.presentation.screen.orderplacement.storeselection.OrderPlacementStoreSelectionScreenAction
+import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
+import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutStoreSelectionScreen
+import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutStoreSelectionScreenAction
 import ru.livetyping.zarina.util.library.navigation.navigate
 
-fun NavGraphBuilder.orderPlacementStoreSelectionScreen(navController: NavHostController) {
-    composableDestination(OrderPlacementGraph.StoreSelection) {
-        OrderPlacementStoreSelectionScreen(
+fun NavGraphBuilder.checkoutStoreSelectionScreen(navController: NavHostController) {
+    composableDestination(CheckoutGraph.StoreSelection) {
+        CheckoutStoreSelectionScreen(
             navigate = { action ->
                 when (action) {
-                    OrderPlacementStoreSelectionScreenAction.ScreenClosed -> {
+                    CheckoutStoreSelectionScreenAction.ScreenClosed -> {
                         navController.popBackStack(
-                            route = OrderPlacementGraph.StoreSelection.routeSchema,
+                            route = CheckoutGraph.StoreSelection.routeSchema,
                             inclusive = true,
                         )
                     }
 
-                    OrderPlacementStoreSelectionScreenAction.OrderPlacementClosed -> {
+                    CheckoutStoreSelectionScreenAction.CheckoutClosed -> {
                         navController.popBackStack(
-                            route = OrderPlacementGraph.routeSchema,
+                            route = CheckoutGraph.routeSchema,
                             inclusive = true,
                         )
                     }
@@ -33,10 +33,10 @@ fun NavGraphBuilder.orderPlacementStoreSelectionScreen(navController: NavHostCon
     }
 }
 
-fun NavHostController.navigateToOrderPlacementStoreSelectionScreen(cartType: CartType, step: Int) {
-    val args = OrderPlacementGraph.StoreSelection.Args(cartType, step)
+fun NavHostController.navigateToCheckoutStoreSelectionScreen(cartType: CartType, step: Int) {
+    val args = CheckoutGraph.StoreSelection.Args(cartType, step)
     this.navigate(
-        route = OrderPlacementGraph.StoreSelection.routeSchema,
-        args = OrderPlacementGraph.StoreSelection.createArgsBundle(args),
+        route = CheckoutGraph.StoreSelection.routeSchema,
+        args = CheckoutGraph.StoreSelection.createArgsBundle(args),
     )
 }

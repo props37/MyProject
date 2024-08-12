@@ -54,8 +54,8 @@ enum class BaseRoute {
     LOYALTY_PROGRAM,
     BONUS_HISTORY,
 
-    // Order placement graph
-    ORDER_PLACEMENT_GRAPH,
+    // Checkout graph
+    CHECKOUT_GRAPH,
     RECIPIENT,
     STORE_SELECTION,
 

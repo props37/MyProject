@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.usecase.orderplacement
+package ru.livetyping.zarina.usecase.checkout
 
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.livetyping.zarina.base.usecase.UseCase

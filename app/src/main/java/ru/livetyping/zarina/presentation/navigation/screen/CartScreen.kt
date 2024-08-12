@@ -8,8 +8,8 @@ import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CartGraph
-import ru.livetyping.zarina.presentation.navigation.destination.graph.OrderPlacementGraph
-import ru.livetyping.zarina.presentation.navigation.screen.graph.navigateToOrderPlacementGraph
+import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
+import ru.livetyping.zarina.presentation.navigation.screen.graph.navigateToCheckoutGraph
 import ru.livetyping.zarina.presentation.navigation.util.BottomNavBarItemSecondaryStartDestinationBackHandler
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
@@ -24,7 +24,7 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
             when (targetState.destination.route) {
                 UnscopedDestinations.CitySelector.routeSchema,
                 UnscopedDestinations.Product.routeSchema,
-                OrderPlacementGraph.Recipient.routeSchema -> slideExitTransition()
+                CheckoutGraph.Recipient.routeSchema -> slideExitTransition()
 
                 else -> null
             }
@@ -33,8 +33,8 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
             when (initialState.destination.route) {
                 UnscopedDestinations.CitySelector.routeSchema,
                 UnscopedDestinations.Product.routeSchema,
-                OrderPlacementGraph.Recipient.routeSchema,
-                OrderPlacementGraph.StoreSelection.routeSchema -> slidePopEnterTransition()
+                CheckoutGraph.Recipient.routeSchema,
+                CheckoutGraph.StoreSelection.routeSchema -> slidePopEnterTransition()
 
                 else -> null
             }
@@ -81,7 +81,7 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
                     }
 
                     is CartScreenAction.CheckoutClicked -> {
-                        navController.navigateToOrderPlacementGraph(action.cartType)
+                        navController.navigateToCheckoutGraph(action.cartType)
                     }
                 }
             },

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.orderplacement.recipient
+package ru.livetyping.zarina.presentation.screen.checkout.recipient
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
@@ -38,19 +38,19 @@ import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHold
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
-import ru.livetyping.zarina.presentation.navigation.destination.graph.OrderPlacementGraph
-import ru.livetyping.zarina.presentation.screen.orderplacement.common.orderPlacementStepCount
-import ru.livetyping.zarina.presentation.screen.orderplacement.recipient.OrderPlacementRecipientViewModel.SideEffect
-import ru.livetyping.zarina.usecase.orderplacement.ValidateRecipientUseCase
+import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
+import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
+import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutRecipientViewModel.SideEffect
+import ru.livetyping.zarina.usecase.checkout.ValidateRecipientUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.textAsFlow
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
 @HiltViewModel
-class OrderPlacementRecipientViewModel @Inject constructor(
+class CheckoutRecipientViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val interactor: OrderPlacementRecipientInteractor,
+    private val interactor: CheckoutRecipientInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -59,7 +59,7 @@ class OrderPlacementRecipientViewModel @Inject constructor(
 
     private val cartType = savedStateHandle
         .getStateFlow<CartTypeParcelable?>(
-            key = OrderPlacementGraph.Recipient.ARG_KEY_CART_TYPE,
+            key = CheckoutGraph.Recipient.ARG_KEY_CART_TYPE,
             initialValue = null,
         )
         .mapState(
@@ -72,7 +72,7 @@ class OrderPlacementRecipientViewModel @Inject constructor(
 
     val step: StateFlow<Int> = savedStateHandle
         .getStateFlow<Int?>(
-            key = OrderPlacementGraph.Recipient.ARG_KEY_STEP,
+            key = CheckoutGraph.Recipient.ARG_KEY_STEP,
             initialValue = null,
         )
         .mapState(
@@ -83,7 +83,7 @@ class OrderPlacementRecipientViewModel @Inject constructor(
         }
 
     val stepCount: StateFlow<Int> =
-        MutableStateFlow(cartType.value.orderPlacementStepCount).asStateFlow()
+        MutableStateFlow(cartType.value.checkoutStepCount).asStateFlow()
 
     @OptIn(SavedStateHandleSaveableApi::class)
     val firstNameTextFieldState: TextFieldState by savedStateHandle.saveable(
@@ -130,7 +130,7 @@ class OrderPlacementRecipientViewModel @Inject constructor(
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
-            val action = OrderPlacementRecipientScreenAction.OrderPlacementClosed
+            val action = CheckoutRecipientScreenAction.CheckoutClosed
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
@@ -163,7 +163,7 @@ class OrderPlacementRecipientViewModel @Inject constructor(
             }
 
             CartType.PICKUP -> {
-                val action = OrderPlacementRecipientScreenAction.RecipientValidated(
+                val action = CheckoutRecipientScreenAction.RecipientValidated(
                     cartType = cartType.value,
                     step = step.value + 1,
                 )
@@ -247,7 +247,7 @@ class OrderPlacementRecipientViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class Navigate(val action: OrderPlacementRecipientScreenAction) : SideEffect
+        data class Navigate(val action: CheckoutRecipientScreenAction) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
