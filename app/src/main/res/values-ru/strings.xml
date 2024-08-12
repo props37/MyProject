@@ -282,6 +282,8 @@
     <string name="order_placement_recipient_empty_fields_error">Поля ввода пусты. Для продолжения заполни все поля</string>
     <string name="order_placement_recipient_validation_error">Введи действительные данные</string>
     <string name="store_selection">Выбор магазина</string>
+    <string name="all_products_are_available">Доступны все товары</string>
+    <string name="select_store">Выбрать магазин</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
@@ -295,7 +297,6 @@
     <string name="order_status_cancelled">Отменён</string>
     <string name="order_status_refund">Возврат</string>
     <string name="order_status_not_refundable">Не подлежит возврату</string>
-
 
     <string name="order_delivery_method_express_delivery">Курьерская доставка</string>
     <string name="order_delivery_method_post">Почта России</string>
@@ -412,6 +413,24 @@
         <item quantity="few">У тебя %1$d бонуса</item>
         <item quantity="many">У тебя %1$d бонусов</item>
         <item quantity="other">У тебя %1$d бонусов</item>
+    </plurals>
+
+    <plurals name="you_can_write_off_s_bonuses">
+        <item quantity="zero">Нельзя списать бонусы</item>
+        <item quantity="one">Можно списать %1$s бонус</item>
+        <item quantity="two">Можно списать %1$s бонуса</item>
+        <item quantity="few">Можно списать %1$s бонуса</item>
+        <item quantity="many">Можно списать %1$s бонусов</item>
+        <item quantity="other">Можно списать %1$s бонусов</item>
+    </plurals>
+
+    <plurals name="d_out_of_d_products_are_available">
+        <item quantity="zero">Нет доступных товаров</item>
+        <item quantity="one">Доступны %1$d из %2$d товара</item>
+        <item quantity="two">Доступны %1$d из %2$d товаров</item>
+        <item quantity="few">Доступны %1$d из %2$d товаров</item>
+        <item quantity="many">Доступны %1$d из %2$d товаров</item>
+        <item quantity="other">Доступны %1$d из %2$d товаров</item>
     </plurals>
 
 </resources>
