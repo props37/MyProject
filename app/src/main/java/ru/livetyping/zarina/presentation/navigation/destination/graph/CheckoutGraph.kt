@@ -1,9 +1,12 @@
 package ru.livetyping.zarina.presentation.navigation.destination.graph
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
@@ -143,9 +146,10 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
         override fun createRoute(args: Args): String {
             val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
             val storeParcelable = StoreParcelable.from(args.store)
+            val storeParcelableString = Uri.encode(Json.encodeToString(storeParcelable))
             return RouteUtils.generateRoute(
                 routeBase = routeBase,
-                args = arrayOf(cartTypeParcelable, args.step, storeParcelable),
+                args = arrayOf(cartTypeParcelable, args.step, storeParcelableString),
             )
         }
 
