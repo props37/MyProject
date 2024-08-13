@@ -6,6 +6,7 @@ import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.presentation.navigation.base.navigationGraph
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutRecipientScreen
+import ru.livetyping.zarina.presentation.navigation.screen.checkoutSelectedStoreScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutStoreSelectionScreen
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
@@ -23,6 +24,7 @@ fun NavGraphBuilder.checkoutGraph(navController: NavHostController) {
     ) {
         checkoutRecipientScreen(navController)
         checkoutStoreSelectionScreen(navController)
+        checkoutSelectedStoreScreen(navController)
     }
 }
 

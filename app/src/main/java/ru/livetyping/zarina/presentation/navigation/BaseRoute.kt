@@ -58,6 +58,7 @@ enum class BaseRoute {
     CHECKOUT_GRAPH,
     RECIPIENT,
     STORE_SELECTION,
+    SELECTED_STORE,
 
     // Unscoped destinations
     ONBOARDING,

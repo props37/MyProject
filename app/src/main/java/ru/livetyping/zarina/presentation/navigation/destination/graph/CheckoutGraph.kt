@@ -5,11 +5,14 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
+import ru.livetyping.zarina.presentation.model.store.StoreParcelable
 import ru.livetyping.zarina.presentation.navigation.BaseRoute
 import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.base.Graph
 import ru.livetyping.zarina.presentation.navigation.base.RouteUtils
+import ru.livetyping.zarina.presentation.navigation.navtype.StoreParcelableType
 
 data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
 
@@ -105,21 +108,68 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
 
         override val arguments: List<NamedNavArgument>
             get() = listOf(
-                navArgument(Recipient.ARG_KEY_CART_TYPE) {
+                navArgument(ARG_KEY_CART_TYPE) {
                     type = NavType.EnumType(CartTypeParcelable::class.java)
                 },
-                navArgument(Recipient.ARG_KEY_STEP) { type = NavType.IntType },
+                navArgument(ARG_KEY_STEP) { type = NavType.IntType },
             )
 
         override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
             val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
-            putParcelable(Recipient.ARG_KEY_CART_TYPE, cartTypeParcelable)
-            putInt(Recipient.ARG_KEY_STEP, args.step)
+            putParcelable(ARG_KEY_CART_TYPE, cartTypeParcelable)
+            putInt(ARG_KEY_STEP, args.step)
         }
 
         data class Args(
             val cartType: CartType,
             val step: Int,
+        )
+    }
+
+    data object SelectedStore : Destination<SelectedStore.Args>() {
+        const val ARG_KEY_CART_TYPE = "arg_cart_type"
+        const val ARG_KEY_STEP = "arg_step"
+        const val ARG_KEY_STORE = "arg_store"
+
+        private val routeBase: String
+            get() = BaseRoute.SELECTED_STORE.route
+
+        override val routeSchema: String
+            get() = RouteUtils.generateRouteSchema(
+                routeBase = routeBase,
+                argNames = arrayOf(ARG_KEY_CART_TYPE, ARG_KEY_STEP, ARG_KEY_STORE),
+            )
+
+        override fun createRoute(args: Args): String {
+            val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
+            val storeParcelable = StoreParcelable.from(args.store)
+            return RouteUtils.generateRoute(
+                routeBase = routeBase,
+                args = arrayOf(cartTypeParcelable, args.step, storeParcelable),
+            )
+        }
+
+        override val arguments: List<NamedNavArgument>
+            get() = listOf(
+                navArgument(ARG_KEY_CART_TYPE) {
+                    type = NavType.EnumType(CartTypeParcelable::class.java)
+                },
+                navArgument(ARG_KEY_STEP) { type = NavType.IntType },
+                navArgument(ARG_KEY_STORE) { type = NavType.StoreParcelableType },
+            )
+
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
+            val storeParcelable = StoreParcelable.from(args.store)
+            putParcelable(ARG_KEY_CART_TYPE, cartTypeParcelable)
+            putInt(ARG_KEY_STEP, args.step)
+            putParcelable(ARG_KEY_STORE, storeParcelable)
+        }
+
+        data class Args(
+            val cartType: CartType,
+            val step: Int,
+            val store: Store,
         )
     }
 }

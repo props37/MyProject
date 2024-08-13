@@ -27,6 +27,14 @@ fun NavGraphBuilder.checkoutStoreSelectionScreen(navController: NavHostControlle
                             inclusive = true,
                         )
                     }
+
+                    is CheckoutStoreSelectionScreenAction.StoreClicked -> {
+                        navController.navigateToCheckoutSelectedStoreScreen(
+                            cartType = action.cartType,
+                            step = action.step,
+                            store = action.store,
+                        )
+                    }
                 }
             },
         )

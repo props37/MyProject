@@ -144,7 +144,14 @@ class CheckoutStoreSelectionViewModel @Inject constructor(
     }
 
     fun onStoreClicked(store: PickupStore) {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val action = CheckoutStoreSelectionScreenAction.StoreClicked(
+                cartType = cartType.value,
+                step = step.value,
+                store = store.store,
+            )
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     private fun createState(
