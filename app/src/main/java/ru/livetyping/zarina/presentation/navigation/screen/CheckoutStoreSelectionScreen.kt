@@ -33,6 +33,7 @@ fun NavGraphBuilder.checkoutStoreSelectionScreen(navController: NavHostControlle
                             cartType = action.cartType,
                             step = action.step,
                             store = action.store,
+                            availableProducts = action.availableProducts,
                         )
                     }
                 }

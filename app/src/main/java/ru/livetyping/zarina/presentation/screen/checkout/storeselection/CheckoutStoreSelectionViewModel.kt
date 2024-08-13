@@ -34,6 +34,7 @@ import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -144,11 +145,22 @@ class CheckoutStoreSelectionViewModel @Inject constructor(
     }
 
     fun onStoreClicked(store: PickupStore) {
+        val cart = cartResult.value?.getOrNull() ?: run {
+            Timber.v("onStoreClicked skipped because cart is null")
+            return
+        }
+        val availableProducts = cart.products.filter { it.offerId in store.availableItemIds }
+        if (availableProducts.isEmpty()) {
+            Timber.v("onStoreClicked skipped because there are no available products")
+            return
+        }
+
         navigationThrottler.throttle {
             val action = CheckoutStoreSelectionScreenAction.StoreClicked(
                 cartType = cartType.value,
                 step = step.value,
                 store = store.store,
+                availableProducts = availableProducts,
             )
             emitSideEffect(SideEffect.Navigate(action))
         }

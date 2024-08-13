@@ -2,6 +2,7 @@ package ru.livetyping.zarina.presentation.navigation.screen
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
@@ -31,11 +32,13 @@ fun NavHostController.navigateToCheckoutSelectedStoreScreen(
     cartType: CartType,
     step: Int,
     store: Store,
+    availableProducts: List<CartProduct>,
 ) {
     val args = CheckoutGraph.SelectedStore.Args(
         cartType = cartType,
         step = step,
         store = store,
+        availableProducts = availableProducts,
     )
     this.navigate(
         route = CheckoutGraph.SelectedStore.routeSchema,

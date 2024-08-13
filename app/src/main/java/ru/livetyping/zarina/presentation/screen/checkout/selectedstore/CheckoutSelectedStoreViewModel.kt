@@ -9,9 +9,11 @@ import kotlinx.coroutines.flow.StateFlow
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.model.cart.CartProductParcelable
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.store.StoreParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
@@ -65,10 +67,29 @@ class CheckoutSelectedStoreViewModel @Inject constructor(
             it.toStore()
         }
 
+    val availableProducts: StateFlow<List<CartProduct>> = savedStateHandle
+        .getStateFlow<Array<CartProductParcelable>?>(
+            key = CheckoutGraph.SelectedStore.ARG_KEY_AVAILABLE_PRODUCTS,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) { array ->
+            checkNotNull(array) { "availableProducts is null" }
+            array.map { it.toCartProduct() }
+        }
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = CheckoutSelectedStoreScreenAction.ScreenClosed
             emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
+    fun onContinueClicked() {
+        navigationThrottler.throttle {
+            // TODO: [High] Implement
         }
     }
 

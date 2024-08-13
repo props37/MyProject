@@ -253,25 +253,25 @@ object CheckoutStoreSelectionScreenComponents {
             ZarinaTextSkeleton(
                 textStyle = UiKitTheme.typography.secondary.light,
                 shimmer = shimmer,
-                modifier = Modifier.width(120.dp),
+                modifier = Modifier.width(140.dp),
             )
             Spacer(modifier = Modifier.height(12.dp))
             ZarinaTextSkeleton(
                 textStyle = UiKitTheme.typography.tertiary.regular,
                 shimmer = shimmer,
-                modifier = Modifier.width(160.dp),
+                modifier = Modifier.width(170.dp),
             )
             Spacer(modifier = Modifier.height(10.dp))
             ZarinaTextSkeleton(
                 textStyle = UiKitTheme.typography.tertiary.light,
                 shimmer = shimmer,
-                modifier = Modifier.width(140.dp),
+                modifier = Modifier.width(190.dp),
             )
             Spacer(modifier = Modifier.height(6.dp))
             ZarinaTextSkeleton(
                 textStyle = UiKitTheme.typography.tertiary.light,
                 shimmer = shimmer,
-                modifier = Modifier.width(120.dp),
+                modifier = Modifier.width(150.dp),
             )
         }
     }
