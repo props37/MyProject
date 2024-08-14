@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
+import com.valentinilk.shimmer.ShimmerBounds
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.PickupStore
 import ru.livetyping.zarina.domain.geography.City
@@ -162,7 +163,7 @@ object CheckoutStoreSelectionScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier.verticalScroll(rememberScrollState())) {
-            val shimmer = rememberZarinaSkeletonShimmer()
+            val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
             repeat(StoreSkeletonCount) { index ->
                 StoreSkeleton(shimmer = shimmer)
 

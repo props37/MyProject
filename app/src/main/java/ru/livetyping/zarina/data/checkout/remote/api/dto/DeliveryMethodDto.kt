@@ -27,7 +27,7 @@ data class DeliveryMethodDto(
             id = DeliveryMethod.Id(id),
             type = type.toDeliveryMethodType(),
             name = name,
-            description = description,
+            description = description?.takeIf { it.isNotBlank() },
         )
     }
 }

@@ -1,5 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.checkout.deliverymethod
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,15 +10,26 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.checkout.DeliveryMethod
+import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.presentation.common.error.ErrorState
+import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
 import ru.livetyping.zarina.presentation.screen.checkout.deliverymethod.CheckoutDeliveryMethodViewModel.SideEffect
+import ru.livetyping.zarina.usecase.checkout.GetDeliveryMethodsFlowUseCase
+import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.util.library.coroutines.FlowRequester
+import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
@@ -41,6 +54,12 @@ class CheckoutDeliveryMethodViewModel @Inject constructor(
             it.toCartType()
         }
 
+    private val deliveryMethodsRequester = FlowRequester(DeliveryMethodsRequest.GENERAL) {
+        val city = interactor.getUserCityFlow().firstOrNull()?.getOrNull() ?: City.DEFAULT
+        val params = GetDeliveryMethodsFlowUseCase.Params(cartType.value, city.kladrId)
+        interactor.getDeliveryMethodsFlow(params)
+    }
+
     val step: StateFlow<Int> = savedStateHandle
         .getStateFlow<Int?>(
             key = CheckoutGraph.DeliveryMethod.ARG_KEY_STEP,
@@ -54,6 +73,35 @@ class CheckoutDeliveryMethodViewModel @Inject constructor(
         }
 
     val stepCount: StateFlow<Int> = MutableStateFlow(cartType.value.checkoutStepCount).asStateFlow()
+
+    private val deliveryMethodsResult: StateFlow<Result<List<DeliveryMethod>>?> =
+        deliveryMethodsRequester.flow
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = null,
+            )
+
+    val state: StateFlow<State> = combine(
+        deliveryMethodsResult,
+        deliveryMethodsRequester.loadingState,
+    ) { result, loadingState ->
+        if (result == null || loadingState.isLoading()) {
+            State.Loading
+        } else {
+            result.fold(
+                onSuccess = { State.DeliveryMethods(it) },
+                onFailure = {
+                    val errorState = ErrorState.from(it)
+                    State.Error(errorState)
+                },
+            )
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = State.Loading,
+    )
 
     fun onBackClicked() {
         navigationThrottler.throttle {
@@ -69,7 +117,30 @@ class CheckoutDeliveryMethodViewModel @Inject constructor(
         }
     }
 
+    fun onDeliveryMethodClicked(method: DeliveryMethod) {
+        navigationThrottler.throttle {
+            // TODO: [High] Implement
+        }
+    }
+
+    fun onDeliveryMethodsErrorRefreshClicked() {
+        deliveryMethodsRequester.request(DeliveryMethodsRequest.GENERAL)
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutDeliveryMethodScreenAction) : SideEffect
     }
+
+    @Stable
+    sealed class State {
+        data object Loading : State()
+
+        @Immutable
+        data class DeliveryMethods(val methods: List<DeliveryMethod>) : State()
+
+        @Immutable
+        data class Error(val state: ErrorState) : State()
+    }
+
+    private enum class DeliveryMethodsRequest : FlowRequester.Request { GENERAL }
 }

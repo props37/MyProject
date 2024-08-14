@@ -19,9 +19,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
+import ru.livetyping.zarina.presentation.screen.checkout.deliverymethod.CheckoutDeliveryMethodScreenComponents.DeliveryMethods
 import ru.livetyping.zarina.presentation.screen.checkout.deliverymethod.CheckoutDeliveryMethodViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.deliverymethod.CheckoutDeliveryMethodViewModel.State
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable
@@ -31,10 +34,14 @@ fun CheckoutDeliveryMethodScreen(
 ) {
     val step by viewModel.step.collectAsStateWithLifecycle()
     val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = step,
         stepCount = stepCount,
+        state = state,
+        onDeliveryMethodClicked = viewModel::onDeliveryMethodClicked,
+        onDeliveryMethodsErrorRefreshClicked = viewModel::onDeliveryMethodsErrorRefreshClicked,
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
@@ -46,6 +53,9 @@ fun CheckoutDeliveryMethodScreen(
 private fun ScreenContent(
     step: Int,
     stepCount: Int,
+    state: State,
+    onDeliveryMethodClicked: (DeliveryMethod) -> Unit,
+    onDeliveryMethodsErrorRefreshClicked: () -> Unit,
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -72,6 +82,13 @@ private fun ScreenContent(
             isBackButtonVisible = true,
             onBackClicked = onBackClicked,
             onCloseClicked = onCloseClicked,
+        )
+
+        DeliveryMethods(
+            state = state,
+            onMethodClicked = onDeliveryMethodClicked,
+            onErrorRefreshClicked = onDeliveryMethodsErrorRefreshClicked,
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }

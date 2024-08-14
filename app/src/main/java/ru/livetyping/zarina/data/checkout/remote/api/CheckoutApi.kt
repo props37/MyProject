@@ -27,7 +27,7 @@ class CheckoutApi @Inject constructor(
         cityKladrId: KladrId,
     ): List<DeliveryMethodDto> {
         return httpClient.get("/api/shipping-methods") {
-            parameter("cartType", CartTypeDto.from(cartType).value)
+            parameter("cart_type", CartTypeDto.from(cartType).value)
             parameter("address_kladr", cityKladrId.value)
         }.body()
     }
