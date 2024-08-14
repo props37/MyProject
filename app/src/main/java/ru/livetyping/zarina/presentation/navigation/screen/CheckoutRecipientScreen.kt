@@ -2,6 +2,7 @@ package ru.livetyping.zarina.presentation.navigation.screen
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutRecipientScreen
@@ -20,10 +21,21 @@ fun NavGraphBuilder.checkoutRecipientScreen(navController: NavHostController) {
                     }
 
                     is CheckoutRecipientScreenAction.RecipientValidated -> {
-                        navController.navigateToCheckoutStoreSelectionScreen(
-                            cartType = action.cartType,
-                            step = action.step,
-                        )
+                        when (action.cartType) {
+                            CartType.DELIVERY -> {
+                                navController.navigateToCheckoutDeliveryMethodScreen(
+                                    cartType = action.cartType,
+                                    step = action.step,
+                                )
+                            }
+
+                            CartType.PICKUP -> {
+                                navController.navigateToCheckoutStoreSelectionScreen(
+                                    cartType = action.cartType,
+                                    step = action.step,
+                                )
+                            }
+                        }
                     }
                 }
             },

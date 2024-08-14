@@ -21,7 +21,6 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
-import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.exception.ValidationException
@@ -157,19 +156,11 @@ class CheckoutRecipientViewModel @Inject constructor(
     }
 
     private fun onValidateRecipientSuccess() {
-        when (cartType.value) {
-            CartType.DELIVERY -> {
-                // TODO: [High] Implement
-            }
-
-            CartType.PICKUP -> {
-                val action = CheckoutRecipientScreenAction.RecipientValidated(
-                    cartType = cartType.value,
-                    step = step.value + 1,
-                )
-                emitSideEffect(SideEffect.Navigate(action))
-            }
-        }
+        val action = CheckoutRecipientScreenAction.RecipientValidated(
+            cartType = cartType.value,
+            step = step.value + 1,
+        )
+        emitSideEffect(SideEffect.Navigate(action))
     }
 
     private fun onValidateRecipientFailure(t: Throwable) {
