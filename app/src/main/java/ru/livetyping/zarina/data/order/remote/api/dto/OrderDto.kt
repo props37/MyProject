@@ -163,16 +163,16 @@ data class OrderDto(
     ) {
         fun toOrderDeliveryInfo(): OrderDeliveryInfo {
             checkNotNull(method) { "method is null" }
-            checkNotNull(method.method) { "method is null" }
+            checkNotNull(method.type) { "method is null" }
             return OrderDeliveryInfo(
-                method = method.method.toOrderDeliveryMethod(),
+                type = method.type.toDeliveryMethodType(),
             )
         }
 
         @Serializable
         data class Method(
             @SerialName("type")
-            val method: OrderDeliveryMethodDto? = null,
+            val type: DeliveryMethodTypeDto? = null,
 
             @SerialName("price")
             val price: Int? = null,
