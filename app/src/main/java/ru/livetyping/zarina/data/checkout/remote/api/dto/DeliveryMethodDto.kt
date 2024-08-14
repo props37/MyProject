@@ -15,6 +15,9 @@ data class DeliveryMethodDto(
 
     @SerialName("name")
     val name: String? = null,
+
+    @SerialName("description")
+    val description: String? = null,
 ) {
     fun toDeliveryMethod(): DeliveryMethod {
         checkNotNull(id) { "id is null" }
@@ -24,6 +27,7 @@ data class DeliveryMethodDto(
             id = DeliveryMethod.Id(id),
             type = type.toDeliveryMethodType(),
             name = name,
+            description = description,
         )
     }
 }

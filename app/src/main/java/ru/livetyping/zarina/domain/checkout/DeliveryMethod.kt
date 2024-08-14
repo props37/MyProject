@@ -6,6 +6,7 @@ data class DeliveryMethod(
     val id: Id,
     val type: DeliveryMethodType,
     val name: String,
+    val description: String?,
 ) {
     @JvmInline
     value class Id(val value: Int)
