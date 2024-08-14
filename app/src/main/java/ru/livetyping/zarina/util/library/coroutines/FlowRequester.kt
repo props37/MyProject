@@ -14,7 +14,7 @@ import kotlin.contracts.contract
 
 class FlowRequester<T, R : FlowRequester.Request>(
     initialRequest: R? = null,
-    flowBuilder: (R) -> Flow<T>,
+    flowBuilder: suspend (R) -> Flow<T>,
 ) {
     private val requests = Channel<R>(Channel.CONFLATED)
 
