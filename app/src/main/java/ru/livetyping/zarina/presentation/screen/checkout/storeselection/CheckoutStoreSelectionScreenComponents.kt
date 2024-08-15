@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -53,30 +52,13 @@ object CheckoutStoreSelectionScreenComponents {
         city: City?,
         modifier: Modifier = Modifier,
     ) {
-        ZarinaItem(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-            modifier = modifier.heightIn(min = 48.dp),
-        ) {
-            Crossfade(
-                targetState = city,
-                contentKey = { it != null },
-            ) { city ->
-                val textStyle = UiKitTheme.typography.secondary.bold
-                if (city != null) {
-                    Text(
-                        text = city.name,
-                        style = textStyle,
-                    )
-                } else {
-                    ZarinaTextSkeleton(
-                        textStyle = textStyle,
-                        modifier = Modifier.width(100.dp),
-                    )
-                }
-            }
+        ZarinaItem(modifier = modifier) {
+            Text(
+                text = city?.name.orEmpty(),
+                style = UiKitTheme.typography.secondary.bold,
+            )
         }
     }
-
 
     @Composable
     fun Stores(

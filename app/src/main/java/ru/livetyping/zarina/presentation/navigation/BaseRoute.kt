@@ -60,6 +60,7 @@ enum class BaseRoute {
     STORE_SELECTION,
     SELECTED_STORE,
     DELIVERY_METHOD,
+    COURIER_DELIVERY,
 
     // Unscoped destinations
     ONBOARDING,

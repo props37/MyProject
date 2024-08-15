@@ -119,7 +119,12 @@ class CheckoutDeliveryMethodViewModel @Inject constructor(
 
     fun onDeliveryMethodClicked(method: DeliveryMethod) {
         navigationThrottler.throttle {
-            // TODO: [High] Implement
+            val action = CheckoutDeliveryMethodScreenAction.DeliveryMethodSelected(
+                cartType = cartType.value,
+                step = step.value + 1,
+                method = method,
+            )
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 

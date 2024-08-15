@@ -292,6 +292,7 @@
     <string name="select_store">Выбрать магазин</string>
     <string name="these_products_are_available_in_this_store">В магазине доступны следующие товары:</string>
     <string name="select_delivery_method">Выбрать метод доставки</string>
+    <string name="courier_delivery">Курьерская доставка</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

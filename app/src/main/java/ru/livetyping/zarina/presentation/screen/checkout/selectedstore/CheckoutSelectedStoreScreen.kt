@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
@@ -85,7 +84,7 @@ private fun ScreenContent(
             onBackClicked = onBackClicked,
         )
 
-        ZarinaItem(modifier = Modifier.heightIn(min = 48.dp)) {
+        ZarinaItem {
             Text(
                 text = stringResource(R.string.these_products_are_available_in_this_store),
                 style = UiKitTheme.typography.secondary.bold,

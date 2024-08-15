@@ -3,6 +3,7 @@ package ru.livetyping.zarina.presentation.navigation.screen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.deliverymethod.CheckoutDeliveryMethodScreen
@@ -26,6 +27,21 @@ fun NavGraphBuilder.checkoutDeliveryMethodScreen(navController: NavHostControlle
                             route = CheckoutGraph.routeSchema,
                             inclusive = true,
                         )
+                    }
+
+                    is CheckoutDeliveryMethodScreenAction.DeliveryMethodSelected -> {
+                        when (action.method.type) {
+                            DeliveryMethodType.EXPRESS -> {
+                                navController.navigateToCheckoutCourierDeliveryScreen(
+                                    cartType = action.cartType,
+                                    step = action.step,
+                                )
+                            }
+
+                            DeliveryMethodType.POST -> Unit // TODO: [High] Implement
+                            DeliveryMethodType.PICKUP -> Unit // TODO: [High] Implement
+                            else -> Unit
+                        }
                     }
                 }
             },
