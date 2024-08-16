@@ -293,6 +293,9 @@
     <string name="these_products_are_available_in_this_store">В магазине доступны следующие товары:</string>
     <string name="select_delivery_method">Выбрать метод доставки</string>
     <string name="courier_delivery">Курьерская доставка</string>
+    <string name="street">Улица</string>
+    <string name="building">Дом</string>
+    <string name="apartment_slash_office">Квартира/офис</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
