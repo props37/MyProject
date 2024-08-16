@@ -17,7 +17,7 @@ fun CheckoutCourierDeliveryScreenBehavior(
 ) {
     val updatedNavigate by rememberUpdatedState(navigate)
 
-    ForcedBottomNavBarBehavior(isVisible = true)
+    ForcedBottomNavBarBehavior(isVisible = false)
 
     LifecycleStartEffect(sideEffects) {
         val job = lifecycleScope.launch {
