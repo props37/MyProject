@@ -81,7 +81,7 @@ object CatalogScreenComponents {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
                         contentDescription = null,
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(16.dp),
                     )
                 },
                 colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),

@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.checkout.courierdelivery
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,6 +19,7 @@ import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
+import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressViewModelComponent
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel.SideEffect
 import ru.livetyping.zarina.util.base.usecase.invoke
@@ -29,7 +31,8 @@ import javax.inject.Inject
 class CheckoutCourierDeliveryViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val interactor: CheckoutCourierDeliveryInteractor,
-) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+    private val addressComponent: CheckoutAddressViewModelComponent,
+) : ViewModel(addressComponent), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -67,6 +70,13 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
             started = SharingStarted.WhileUiSubscribed,
             initialValue = null,
         )
+
+    val streetTextFieldState: TextFieldState = addressComponent.streetTextFieldState
+    val buildingTextFieldState: TextFieldState = addressComponent.buildingTextFieldState
+    val apartmentTextFieldState: TextFieldState = addressComponent.apartmentTextFieldState
+    val searchStreetTextFieldState: TextFieldState = addressComponent.searchStreetTextFieldState
+    val searchBuildingTextFieldState: TextFieldState = addressComponent.searchBuildingTextFieldState
+    val searchApartmentTextFieldState: TextFieldState = addressComponent.searchApartmentTextFieldState
 
     fun onBackClicked() {
         navigationThrottler.throttle {

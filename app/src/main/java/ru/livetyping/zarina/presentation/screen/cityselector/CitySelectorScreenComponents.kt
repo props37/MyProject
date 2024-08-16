@@ -1,8 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.cityselector
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,7 +57,6 @@ import ru.livetyping.zarina.presentation.screen.cityselector.CitySelectorViewMod
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
-import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.navigationBarsOrIme
 import ru.livetyping.zarina.util.compose.plus
@@ -115,7 +112,7 @@ object CitySelectorScreenComponents {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
                     contentDescription = null,
-                    modifier = Modifier.size(20.dp),
+                    modifier = Modifier.size(16.dp),
                 )
             },
             innerTrailingContent = {
@@ -128,19 +125,10 @@ object CitySelectorScreenComponents {
                 )
             },
             outerTrailingContent = {
-                val isCancelButtonVisible = focusState.value?.isFocused == true
-                AnimatedContent(
-                    targetState = isCancelButtonVisible,
-                    transitionSpec = {
-                        AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
-                    },
-                    contentAlignment = Alignment.Center,
-                    label = "CitySearchBar Cancel button",
-                ) { isVisible ->
-                    if (isVisible) {
-                        ZarinaTextFieldDefaults.CancelButton(onClick = onCancelClicked)
-                    }
-                }
+                ZarinaTextFieldDefaults.CancelButton(
+                    isVisible = focusState.value?.isFocused == true,
+                    onClick = onCancelClicked,
+                )
             },
             singleLine = true,
             modifier = modifier

@@ -1,6 +1,8 @@
 package ru.livetyping.zarina.presentation.common.component.textfield
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.ScrollState
@@ -74,6 +76,7 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
+import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.compose.text.textAsFlow
 
 // TODO: [Medium] Add label animation
@@ -487,7 +490,6 @@ data class ZarinaTextFieldColors(
 enum class ZarinaTextFieldSize { Small }
 
 object ZarinaTextFieldDefaults {
-    val IconSizeLarge: Dp get() = 20.dp
     val IconSizeSmall: Dp get() = 16.dp
 
     @Composable
@@ -495,7 +497,7 @@ object ZarinaTextFieldDefaults {
         isVisible: Boolean,
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
-        iconSize: Dp = IconSizeLarge,
+        iconSize: Dp = IconSizeSmall,
         indication: Indication? = ripple(bounded = false, radius = 8.dp),
     ) {
         AnimatedVisibility(
@@ -517,7 +519,7 @@ object ZarinaTextFieldDefaults {
     private fun ClearButtonImpl(
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
-        iconSize: Dp = IconSizeLarge,
+        iconSize: Dp = IconSizeSmall,
         indication: Indication? = ripple(bounded = false, radius = 8.dp),
     ) {
         CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
@@ -538,6 +540,27 @@ object ZarinaTextFieldDefaults {
 
     @Composable
     fun CancelButton(
+        isVisible: Boolean,
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        AnimatedContent(
+            targetState = isVisible,
+            transitionSpec = {
+                AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
+            },
+            contentAlignment = Alignment.Center,
+            label = "Cancel button",
+            modifier = modifier,
+        ) {
+            if (it) {
+                CancelButton(onClick = onClick)
+            }
+        }
+    }
+
+    @Composable
+    private fun CancelButton(
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -682,7 +705,7 @@ private fun Preview() {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
                         contentDescription = null,
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(16.dp),
                     )
                 },
                 innerTrailingContent = {

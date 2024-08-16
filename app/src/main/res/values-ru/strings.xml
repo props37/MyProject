@@ -290,6 +290,10 @@
     <string name="street">Улица</string>
     <string name="building">Дом</string>
     <string name="apartment_slash_office">Квартира/офис</string>
+    <string name="apartment_or_office">Квартира или офис</string>
+    <string name="search_streets">Поиск по улицам</string>
+    <string name="search_building">Поиск по домам</string>
+    <string name="search_apartments_slash_offices">Поиск по квартирам/офисам</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

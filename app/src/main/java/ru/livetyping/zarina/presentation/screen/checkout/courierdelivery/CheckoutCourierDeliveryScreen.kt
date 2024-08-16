@@ -10,14 +10,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,12 +35,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents
+import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents.AddressSlot
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
@@ -49,6 +59,12 @@ fun CheckoutCourierDeliveryScreen(
         step = step,
         stepCount = stepCount,
         city = city,
+        streetTextFieldState = viewModel.streetTextFieldState,
+        buildingTextFieldState = viewModel.buildingTextFieldState,
+        apartmentTextFieldState = viewModel.apartmentTextFieldState,
+        searchStreetTextFieldState = viewModel.searchStreetTextFieldState,
+        searchBuildingTextFieldState = viewModel.searchBuildingTextFieldState,
+        searchApartmentTextFieldState = viewModel.searchApartmentTextFieldState,
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
@@ -56,11 +72,18 @@ fun CheckoutCourierDeliveryScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
     step: Int,
     stepCount: Int,
     city: City?,
+    streetTextFieldState: TextFieldState,
+    buildingTextFieldState: TextFieldState,
+    apartmentTextFieldState: TextFieldState,
+    searchStreetTextFieldState: TextFieldState,
+    searchBuildingTextFieldState: TextFieldState,
+    searchApartmentTextFieldState: TextFieldState,
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -69,6 +92,28 @@ private fun ScreenContent(
     CheckoutCourierDeliveryScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
+    )
+
+    val coroutineScope = rememberCoroutineScope()
+    var visibleAddressSlotSelectorBottomSheet by remember { mutableStateOf<AddressSlot?>(null) }
+    val addressSelectorBottomSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+        confirmValueChange = { it == SheetValue.Expanded },
+    )
+    CheckoutAddressComponents.AddressSelectorBottomSheet(
+        visibleAddressSlotSelectorBottomSheet = visibleAddressSlotSelectorBottomSheet,
+        onDismissRequest = { visibleAddressSlotSelectorBottomSheet = null },
+        sheetState = addressSelectorBottomSheetState,
+        onCloseClicked = {
+            coroutineScope.launch {
+                addressSelectorBottomSheetState.hide()
+                visibleAddressSlotSelectorBottomSheet = null
+            }
+        },
+        streetTextFieldState = searchStreetTextFieldState,
+        buildingTextFieldState = searchBuildingTextFieldState,
+        apartmentTextFieldState = searchApartmentTextFieldState,
+        modifier = Modifier.statusBarsPadding(),
     )
 
     Column(
@@ -100,14 +145,17 @@ private fun ScreenContent(
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            // TODO: [High] Implement
             CheckoutAddressComponents.AddressBlock(
-                streetTextFieldState = rememberTextFieldState(),
-                buildingTextFieldState = rememberTextFieldState(),
-                apartmentTextFieldState = rememberTextFieldState(),
-                onStreetClicked = {},
-                onBuildingClicked = {},
-                onApartmentClicked = {},
+                streetTextFieldState = streetTextFieldState,
+                buildingTextFieldState = buildingTextFieldState,
+                apartmentTextFieldState = apartmentTextFieldState,
+                onStreetClicked = { visibleAddressSlotSelectorBottomSheet = AddressSlot.Street },
+                onBuildingClicked = {
+                    visibleAddressSlotSelectorBottomSheet = AddressSlot.Building
+                },
+                onApartmentClicked = {
+                    visibleAddressSlotSelectorBottomSheet = AddressSlot.Apartment
+                },
             )
 
             val navigationBarHeight =
