@@ -4,20 +4,22 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.isImeVisible
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
@@ -33,6 +35,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.FocusState
@@ -47,11 +50,19 @@ import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaModalBottomSheet
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIconButton
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
+import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
+import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
+import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
+import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.animation.Crossfade
+import ru.livetyping.zarina.util.compose.navigationBarsOrIme
 import ru.livetyping.zarina.util.compose.tryRequestFocus
 
+@Suppress("ConstPropertyName")
 object CheckoutAddressComponents {
 
     @Composable
@@ -170,15 +181,13 @@ object CheckoutAddressComponents {
         streetTextFieldState: TextFieldState,
         buildingTextFieldState: TextFieldState,
         apartmentTextFieldState: TextFieldState,
+        streetsState: CheckoutAddressViewModelComponent.State,
         modifier: Modifier = Modifier,
     ) {
         if (visibleAddressSlotSelectorBottomSheet != null) {
             ZarinaModalBottomSheet(
                 onDismissRequest = onDismissRequest,
                 sheetState = sheetState,
-                windowInsets = {
-                    WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
-                },
                 properties = remember {
                     ModalBottomSheetProperties(shouldDismissOnBackPress = false)
                 },
@@ -209,6 +218,7 @@ object CheckoutAddressComponents {
                     onCloseClicked = onCloseClicked,
                     textFieldState = textFieldState,
                     textFieldPlaceholder = stringResource(textFieldPlaceholderResId),
+                    addressSelectorState = streetsState, // TODO: [High] Implement
                     sheetState = sheetState,
                 )
             }
@@ -222,6 +232,7 @@ object CheckoutAddressComponents {
         onCloseClicked: () -> Unit,
         textFieldState: TextFieldState,
         textFieldPlaceholder: String,
+        addressSelectorState: CheckoutAddressViewModelComponent.State,
         sheetState: SheetState,
         modifier: Modifier = Modifier,
     ) {
@@ -249,44 +260,146 @@ object CheckoutAddressComponents {
                 contentPadding = PaddingValues(vertical = 4.dp),
             )
 
-            val focusState = remember { mutableStateOf<FocusState?>(null) }
-            ZarinaTextField(
+            AddressSelectorTextField(
                 state = textFieldState,
-                placeholder = {
-                    Text(
-                        text = textFieldPlaceholder,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                leadingContent = {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp),
-                    )
-                },
-                innerTrailingContent = {
-                    ZarinaTextFieldDefaults.ClearButton(
-                        isVisible = textFieldState.text.isNotEmpty(),
-                        onClick = { textFieldState.clearText() },
-                    )
-                },
-                outerTrailingContent = {
-                    val focusManager = LocalFocusManager.current
-                    ZarinaTextFieldDefaults.CancelButton(
-                        isVisible = focusState.value?.isFocused == true,
-                        onClick = { focusManager.clearFocus() },
-                    )
-                },
-                lineLimits = TextFieldLineLimits.SingleLine,
+                placeholder = textFieldPlaceholder,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
-                    .onFocusChanged { focusState.value = it }
                     .focusRequester(focusRequester),
             )
+
+            // TODO: [High] Extract
+            Crossfade(
+                targetState = addressSelectorState,
+                contentKey = {
+                    when (it) {
+                        is CheckoutAddressViewModelComponent.State.Items -> {
+                            AddressSelectorContentKeyItems
+                        }
+
+                        CheckoutAddressViewModelComponent.State.Loading -> it
+                        is CheckoutAddressViewModelComponent.State.Error -> it
+                        CheckoutAddressViewModelComponent.State.Empty -> it
+                    }
+                },
+            ) { state ->
+                when (state) {
+                    is CheckoutAddressViewModelComponent.State.Items -> {
+                        ItemsImpl(
+                            items = state.items,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+
+                    CheckoutAddressViewModelComponent.State.Loading -> {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .windowInsetsPadding(WindowInsets.navigationBarsOrIme),
+                        ) {
+                            ZarinaCircularLoader(modifier = Modifier.size(40.dp))
+                        }
+                    }
+
+                    is CheckoutAddressViewModelComponent.State.Error -> {
+                        ZarinaErrorScreen(
+                            state = state.state,
+                            onButtonClicked = { /*TODO*/ },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .windowInsetsPadding(WindowInsets.navigationBarsOrIme)
+                                .padding(16.dp),
+                        )
+                    }
+
+                    CheckoutAddressViewModelComponent.State.Empty -> Unit
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun AddressSelectorTextField(
+        state: TextFieldState,
+        placeholder: String,
+        modifier: Modifier = Modifier,
+    ) {
+        val focusState = remember { mutableStateOf<FocusState?>(null) }
+        ZarinaTextField(
+            state = state,
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            },
+            leadingContent = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                )
+            },
+            innerTrailingContent = {
+                ZarinaTextFieldDefaults.ClearButton(
+                    isVisible = state.text.isNotEmpty(),
+                    onClick = { state.clearText() },
+                )
+            },
+            outerTrailingContent = {
+                val focusManager = LocalFocusManager.current
+                ZarinaTextFieldDefaults.CancelButton(
+                    isVisible = focusState.value?.isFocused == true,
+                    onClick = { focusManager.clearFocus() },
+                )
+            },
+            lineLimits = TextFieldLineLimits.SingleLine,
+            modifier = modifier.onFocusChanged { focusState.value = it },
+        )
+    }
+
+    @Composable
+    private fun ItemsImpl(
+        items: List<CheckoutAddressViewModelComponent.Item>,
+        modifier: Modifier = Modifier,
+    ) {
+        Box(modifier = modifier) {
+            if (items.isNotEmpty()) {
+                LazyColumn(contentPadding = PaddingValues(bottom = 20.dp)) {
+                    itemsIndexed(
+                        items = items,
+                        key = { _, item -> item.kladrId.value },
+                    ) { index, item ->
+                        Column(modifier = Modifier.animateItem()) {
+                            ZarinaItem(
+                                onClick = {}, // TODO: [High] Implement
+                            ) {
+                                Text(
+                                    text = item.name,
+                                    style = UiKitTheme.typography.secondary.light,
+                                    color = UiKitTheme.colors.text.general.regular.default,
+                                )
+                            }
+                        }
+
+                        if (index < items.lastIndex) {
+                            ZarinaDivider(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                            )
+                        }
+                    }
+                }
+            } else {
+                // TODO: [High] Implement
+            }
         }
     }
 
     enum class AddressSlot { Street, Building, Apartment }
+
+    private const val AddressSelectorContentKeyItems = "AddressSelectorContentKeyItems"
 }

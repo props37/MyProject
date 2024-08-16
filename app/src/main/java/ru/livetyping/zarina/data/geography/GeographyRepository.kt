@@ -5,7 +5,10 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.data.geography.local.GeographyLocalDataSource
 import ru.livetyping.zarina.data.geography.remote.GeographyRemoteDataSource
+import ru.livetyping.zarina.domain.geography.Building
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.geography.KladrId
+import ru.livetyping.zarina.domain.geography.Street
 import ru.livetyping.zarina.domain.location.Location
 import timber.log.Timber
 import javax.inject.Inject
@@ -29,5 +32,13 @@ class GeographyRepository @Inject constructor(
             localDataSource.setCities(nameQuery, cities)
             emit(cities)
         }
+    }
+
+    fun getCityStreetsFlow(cityKladrId: KladrId, nameQuery: String): Flow<List<Street>> {
+        return remoteDataSource.getCityStreetsFlow(cityKladrId, nameQuery)
+    }
+
+    fun getStreetBuildings(streetKladrId: KladrId, nameQuery: String): Flow<List<Building>> {
+        return remoteDataSource.getStreetBuildings(streetKladrId, nameQuery)
     }
 }

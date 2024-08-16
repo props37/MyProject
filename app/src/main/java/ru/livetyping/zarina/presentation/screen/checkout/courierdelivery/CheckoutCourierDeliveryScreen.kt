@@ -43,6 +43,7 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents.AddressSlot
+import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressViewModelComponent
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
@@ -54,6 +55,7 @@ fun CheckoutCourierDeliveryScreen(
     val step by viewModel.step.collectAsStateWithLifecycle()
     val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()
     val city by viewModel.city.collectAsStateWithLifecycle()
+    val streetsState by viewModel.streetsState.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = step,
@@ -65,6 +67,7 @@ fun CheckoutCourierDeliveryScreen(
         searchStreetTextFieldState = viewModel.searchStreetTextFieldState,
         searchBuildingTextFieldState = viewModel.searchBuildingTextFieldState,
         searchApartmentTextFieldState = viewModel.searchApartmentTextFieldState,
+        streetsState = streetsState,
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
@@ -84,6 +87,7 @@ private fun ScreenContent(
     searchStreetTextFieldState: TextFieldState,
     searchBuildingTextFieldState: TextFieldState,
     searchApartmentTextFieldState: TextFieldState,
+    streetsState: CheckoutAddressViewModelComponent.State,
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -113,6 +117,7 @@ private fun ScreenContent(
         streetTextFieldState = searchStreetTextFieldState,
         buildingTextFieldState = searchBuildingTextFieldState,
         apartmentTextFieldState = searchApartmentTextFieldState,
+        streetsState = streetsState,
         modifier = Modifier.statusBarsPadding(),
     )
 
