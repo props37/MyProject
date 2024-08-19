@@ -34,7 +34,7 @@ fun ZarinaMediaHorizontalPager(
     media: List<Media>,
     modifier: Modifier = Modifier,
     quality: ZarinaMediaHorizontalPagerQuality = ZarinaMediaHorizontalPagerQuality.Original,
-    shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
+    shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
 ) {
     val placeholderEnterTransition = remember { fadeIn() }
     val placeholderExitTransition = remember { fadeOut() }

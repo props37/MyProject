@@ -71,7 +71,7 @@ fun ProductCard(
     onAddToCartClicked: (Product) -> Unit,
     onSubscribeClicked: (Product) -> Unit,
     modifier: Modifier = Modifier,
-    shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
+    shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
     backgroundColor: Color = BackgroundColor,
 ) {
     Column(
@@ -164,7 +164,7 @@ fun ProductCardSmall(
     product: Product,
     onClick: (Product) -> Unit,
     modifier: Modifier = Modifier,
-    shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
+    shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
     backgroundColor: Color = BackgroundColor,
 ) {
     Column(
