@@ -20,6 +20,7 @@ import ru.livetyping.zarina.domain.geography.Building
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.geography.KladrId
 import ru.livetyping.zarina.domain.geography.Street
+import ru.livetyping.zarina.domain.geography.exception.AddressNotFoundException
 import ru.livetyping.zarina.presentation.base.viewmodel.ViewModelComponent
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
@@ -125,12 +126,13 @@ class CheckoutAddressViewModelComponent @Inject constructor(
             result.fold(
                 onSuccess = { State.Items(it) },
                 onFailure = {
-                    // TODO: [High] Handle 404
-                    if (it is EmptySearchQueryException) {
-                        State.Empty
-                    } else {
-                        val state = ErrorState.from(it)
-                        State.Error(state)
+                    when (it) {
+                        is EmptySearchQueryException -> State.Empty
+                        is AddressNotFoundException -> State.Empty
+                        else -> {
+                            val state = ErrorState.from(it)
+                            State.Error(state)
+                        }
                     }
                 }
             )
