@@ -30,7 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CheckoutCourierDeliveryViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val interactor: CheckoutCourierDeliveryInteractor,
+    interactor: CheckoutCourierDeliveryInteractor,
     private val addressComponent: CheckoutAddressViewModelComponent,
 ) : ViewModel(addressComponent), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
@@ -72,8 +72,6 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
         )
 
     val isBuildingSelectionEnabled: StateFlow<Boolean> = addressComponent.isBuildingSelectionEnabled
-    val isApartmentSelectionEnabled: StateFlow<Boolean> =
-        addressComponent.isApartmentSelectionEnabled
     val streetTextFieldState: TextFieldState = addressComponent.streetTextFieldState
     val buildingTextFieldState: TextFieldState = addressComponent.buildingTextFieldState
     val apartmentTextFieldState: TextFieldState = addressComponent.apartmentTextFieldState
@@ -109,8 +107,12 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
         addressComponent.onBuildingSelected(building)
     }
 
-    fun onApartmentSelected(apartment: CheckoutAddressViewModelComponent.Item) {
-        addressComponent.onApartmentSelected(apartment)
+    fun onStreetsErrorRefreshClicked() {
+        addressComponent.onStreetsErrorRefreshClicked()
+    }
+
+    fun onBuildingsErrorRefreshClicked() {
+        addressComponent.onBuildingsErrorRefreshClicked()
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

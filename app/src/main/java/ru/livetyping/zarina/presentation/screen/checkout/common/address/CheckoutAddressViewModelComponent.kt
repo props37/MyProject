@@ -181,14 +181,6 @@ class CheckoutAddressViewModelComponent @Inject constructor(
             it != null
         }
 
-    val isApartmentSelectionEnabled: StateFlow<Boolean> = selectedBuildingValueHolder.stateFlow
-        .mapState(
-            scope = scope,
-            started = SharingStarted.WhileUiSubscribed,
-        ) {
-            it != null
-        }
-
     val selectedStreet: StateFlow<Street?> = selectedStreetValueHolder.stateFlow.mapState(
         scope = scope,
         started = SharingStarted.Eagerly,
@@ -203,10 +195,17 @@ class CheckoutAddressViewModelComponent @Inject constructor(
         it?.toBuilding()
     }
 
+    val selectedApartment: StateFlow<String?> = apartmentTextFieldState.textAsFlow()
+        .map { str -> str.toString().takeIf { it.isNotBlank() } }
+        .stateIn(
+            scope = scope,
+            started = SharingStarted.Eagerly,
+            initialValue = null,
+        )
+
     fun onStreetSelected(street: Item) {
         if (street.addressPart.id != selectedStreet.value?.id) {
             clearSelectedBuilding()
-            clearSelectedApartment()
         }
 
         val parcelable = StreetParcelable(
@@ -219,10 +218,6 @@ class CheckoutAddressViewModelComponent @Inject constructor(
     }
 
     fun onBuildingSelected(building: Item) {
-        if (building.addressPart.id != selectedBuilding.value?.id) {
-            clearSelectedApartment()
-        }
-
         val parcelable = BuildingParcelable(
             id = building.addressPart.id.value,
             name = building.addressPart.name,
@@ -232,18 +227,18 @@ class CheckoutAddressViewModelComponent @Inject constructor(
         searchBuildingTextFieldState.setTextAndPlaceCursorAtEnd(building.addressPart.name)
     }
 
-    fun onApartmentSelected(apartment: Item) {
-        // TODO: [High] Implement
+    fun onStreetsErrorRefreshClicked() {
+        streetsRequester.request(AddressRequest.GENERAL)
+    }
+
+    fun onBuildingsErrorRefreshClicked() {
+        buildingsRequester.request(AddressRequest.GENERAL)
     }
 
     private fun clearSelectedBuilding() {
         selectedBuildingValueHolder.set(null)
         buildingTextFieldState.setTextAndPlaceCursorAtEnd("")
         searchBuildingTextFieldState.setTextAndPlaceCursorAtEnd("")
-    }
-
-    private fun clearSelectedApartment() {
-        // TODO: [High] Implement
     }
 
     private fun createState(
@@ -292,6 +287,5 @@ class CheckoutAddressViewModelComponent @Inject constructor(
     companion object {
         private const val KEY_SELECTED_STREET = "selected_street"
         private const val KEY_SELECTED_BUILDING = "selected_building"
-        private const val KEY_SELECTED_APARTMENT = "selected_apartment"
     }
 }

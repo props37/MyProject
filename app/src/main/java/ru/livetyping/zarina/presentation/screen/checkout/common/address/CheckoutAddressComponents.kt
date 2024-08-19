@@ -71,10 +71,8 @@ object CheckoutAddressComponents {
         buildingTextFieldState: TextFieldState,
         apartmentTextFieldState: TextFieldState,
         isBuildingSelectorClickable: Boolean,
-        isApartmentSelectorClickable: Boolean,
         onStreetClicked: () -> Unit,
         onBuildingClicked: () -> Unit,
-        onApartmentClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
@@ -143,21 +141,8 @@ object CheckoutAddressComponents {
                         .padding(horizontal = 16.dp),
                 )
 
-                val apartmentInteractionSource = remember { MutableInteractionSource() }
-                LaunchedEffect(apartmentInteractionSource, isApartmentSelectorClickable) {
-                    apartmentInteractionSource.interactions.collect {
-                        if (it is PressInteraction.Release && isApartmentSelectorClickable) {
-                            onApartmentClicked()
-                        }
-                    }
-                }
-                val apartmentIndicationModifier = if (isApartmentSelectorClickable) {
-                    Modifier.indication(apartmentInteractionSource, ripple())
-                } else Modifier
-
                 ZarinaTextField(
                     state = apartmentTextFieldState,
-                    isEnabled = false,
                     label = {
                         val text = if (apartmentTextFieldState.text.isNotEmpty()) {
                             stringResource(R.string.apartment_slash_office)
@@ -169,10 +154,8 @@ object CheckoutAddressComponents {
                     },
                     colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
                     lineLimits = TextFieldLineLimits.SingleLine,
-                    interactionSource = apartmentInteractionSource,
                     modifier = Modifier
                         .weight(1f)
-                        .then(apartmentIndicationModifier)
                         .padding(horizontal = 16.dp),
                 )
             }
@@ -182,7 +165,7 @@ object CheckoutAddressComponents {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
     @Composable
     fun AddressSelectorBottomSheet(
-        visibleAddressSlotSelectorBottomSheet: AddressSlot?,
+        visibleAddressPartSelectorBottomSheet: AddressPartBottomSheet?,
         onDismissRequest: () -> Unit,
         sheetState: SheetState,
         onCloseClicked: () -> Unit,
@@ -193,10 +176,11 @@ object CheckoutAddressComponents {
         buildingsState: CheckoutAddressViewModelComponent.State,
         onStreetSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,
         onBuildingSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,
-        onApartmentSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,
+        onStreetsErrorRefreshClicked: () -> Unit,
+        onBuildingsErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        if (visibleAddressSlotSelectorBottomSheet != null) {
+        if (visibleAddressPartSelectorBottomSheet != null) {
             ZarinaModalBottomSheet(
                 onDismissRequest = onDismissRequest,
                 sheetState = sheetState,
@@ -209,30 +193,29 @@ object CheckoutAddressComponents {
                     onCloseClicked()
                 }
 
-                val titleResId = when (visibleAddressSlotSelectorBottomSheet) {
-                    AddressSlot.Street -> R.string.street
-                    AddressSlot.Building -> R.string.building
-                    AddressSlot.Apartment -> R.string.apartment_or_office
+                val titleResId = when (visibleAddressPartSelectorBottomSheet) {
+                    AddressPartBottomSheet.Street -> R.string.street
+                    AddressPartBottomSheet.Building -> R.string.building
                 }
-                val textFieldState = when (visibleAddressSlotSelectorBottomSheet) {
-                    AddressSlot.Street -> streetTextFieldState
-                    AddressSlot.Building -> buildingTextFieldState
-                    AddressSlot.Apartment -> apartmentTextFieldState
+                val textFieldState = when (visibleAddressPartSelectorBottomSheet) {
+                    AddressPartBottomSheet.Street -> streetTextFieldState
+                    AddressPartBottomSheet.Building -> buildingTextFieldState
                 }
-                val textFieldPlaceholderResId = when (visibleAddressSlotSelectorBottomSheet) {
-                    AddressSlot.Street -> R.string.search_streets
-                    AddressSlot.Building -> R.string.search_building
-                    AddressSlot.Apartment -> R.string.search_apartments_slash_offices
+                val textFieldPlaceholderResId = when (visibleAddressPartSelectorBottomSheet) {
+                    AddressPartBottomSheet.Street -> R.string.search_streets
+                    AddressPartBottomSheet.Building -> R.string.search_building
                 }
-                val addressSelectorState = when (visibleAddressSlotSelectorBottomSheet) {
-                    AddressSlot.Street -> streetsState
-                    AddressSlot.Building -> buildingsState
-                    AddressSlot.Apartment -> streetsState // TODO: [High] Implement
+                val addressSelectorState = when (visibleAddressPartSelectorBottomSheet) {
+                    AddressPartBottomSheet.Street -> streetsState
+                    AddressPartBottomSheet.Building -> buildingsState
                 }
-                val onAddressItemClicked = when (visibleAddressSlotSelectorBottomSheet) {
-                    AddressSlot.Street -> onStreetSelected
-                    AddressSlot.Building -> onBuildingSelected
-                    AddressSlot.Apartment -> onApartmentSelected
+                val onAddressItemClicked = when (visibleAddressPartSelectorBottomSheet) {
+                    AddressPartBottomSheet.Street -> onStreetSelected
+                    AddressPartBottomSheet.Building -> onBuildingSelected
+                }
+                val onErrorRefreshClicked = when (visibleAddressPartSelectorBottomSheet) {
+                    AddressPartBottomSheet.Street -> onStreetsErrorRefreshClicked
+                    AddressPartBottomSheet.Building -> onBuildingsErrorRefreshClicked
                 }
 
                 AddressSelectorBottomSheetContent(
@@ -245,6 +228,7 @@ object CheckoutAddressComponents {
                         onAddressItemClicked(it)
                         onCloseClicked()
                     },
+                    onErrorRefreshClicked = onErrorRefreshClicked,
                     sheetState = sheetState,
                 )
             }
@@ -260,6 +244,7 @@ object CheckoutAddressComponents {
         textFieldPlaceholder: String,
         addressSelectorState: CheckoutAddressViewModelComponent.State,
         onAddressItemClicked: (CheckoutAddressViewModelComponent.Item) -> Unit,
+        onErrorRefreshClicked: () -> Unit,
         sheetState: SheetState,
         modifier: Modifier = Modifier,
     ) {
@@ -298,6 +283,7 @@ object CheckoutAddressComponents {
             AddressSelectorBottomSheetContentItems(
                 addressSelectorState = addressSelectorState,
                 onAddressItemClicked = onAddressItemClicked,
+                onErrorRefreshClicked = onErrorRefreshClicked,
                 sheetState = sheetState,
             )
         }
@@ -349,6 +335,7 @@ object CheckoutAddressComponents {
     private fun AddressSelectorBottomSheetContentItems(
         addressSelectorState: CheckoutAddressViewModelComponent.State,
         onAddressItemClicked: (CheckoutAddressViewModelComponent.Item) -> Unit,
+        onErrorRefreshClicked: () -> Unit,
         sheetState: SheetState,
         modifier: Modifier = Modifier,
     ) {
@@ -440,7 +427,7 @@ object CheckoutAddressComponents {
         }
     }
 
-    enum class AddressSlot { Street, Building, Apartment }
+    enum class AddressPartBottomSheet { Street, Building }
 
     private const val AddressSelectorContentKeyItems = "AddressSelectorContentKeyItems"
 }

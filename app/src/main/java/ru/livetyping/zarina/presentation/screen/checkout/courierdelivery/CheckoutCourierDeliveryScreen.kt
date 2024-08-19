@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -42,7 +43,7 @@ import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents
-import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents.AddressSlot
+import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents.AddressPartBottomSheet
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressViewModelComponent
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -58,7 +59,6 @@ fun CheckoutCourierDeliveryScreen(
     val streetsState by viewModel.streetsState.collectAsStateWithLifecycle()
     val buildingsState by viewModel.buildingsState.collectAsStateWithLifecycle()
     val isBuildingSelectionEnabled by viewModel.isBuildingSelectionEnabled.collectAsStateWithLifecycle()
-    val isApartmentSelectionEnabled by viewModel.isApartmentSelectionEnabled.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = step,
@@ -71,12 +71,12 @@ fun CheckoutCourierDeliveryScreen(
         searchBuildingTextFieldState = viewModel.searchBuildingTextFieldState,
         searchApartmentTextFieldState = viewModel.searchApartmentTextFieldState,
         isBuildingSelectionEnabled = isBuildingSelectionEnabled,
-        isApartmentSelectionEnabled = isApartmentSelectionEnabled,
         streetsState = streetsState,
         buildingsState = buildingsState,
         onStreetSelected = viewModel::onStreetSelected,
         onBuildingSelected = viewModel::onBuildingSelected,
-        onApartmentSelected = viewModel::onApartmentSelected,
+        onStreetsErrorRefreshClicked = viewModel::onStreetsErrorRefreshClicked,
+        onBuildingsErrorRefreshClicked = viewModel::onBuildingsErrorRefreshClicked,
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
@@ -97,12 +97,12 @@ private fun ScreenContent(
     searchBuildingTextFieldState: TextFieldState,
     searchApartmentTextFieldState: TextFieldState,
     isBuildingSelectionEnabled: Boolean,
-    isApartmentSelectionEnabled: Boolean,
     streetsState: CheckoutAddressViewModelComponent.State,
     buildingsState: CheckoutAddressViewModelComponent.State,
     onStreetSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,
     onBuildingSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,
-    onApartmentSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,
+    onStreetsErrorRefreshClicked: () -> Unit,
+    onBuildingsErrorRefreshClicked: () -> Unit,
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -114,19 +114,19 @@ private fun ScreenContent(
     )
 
     val coroutineScope = rememberCoroutineScope()
-    var visibleAddressSlotSelectorBottomSheet by remember { mutableStateOf<AddressSlot?>(null) }
+    var visibleAddressPartSelectorBottomSheet by remember { mutableStateOf<AddressPartBottomSheet?>(null) }
     val addressSelectorBottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
         confirmValueChange = { it == SheetValue.Expanded },
     )
     CheckoutAddressComponents.AddressSelectorBottomSheet(
-        visibleAddressSlotSelectorBottomSheet = visibleAddressSlotSelectorBottomSheet,
-        onDismissRequest = { visibleAddressSlotSelectorBottomSheet = null },
+        visibleAddressPartSelectorBottomSheet = visibleAddressPartSelectorBottomSheet,
+        onDismissRequest = { visibleAddressPartSelectorBottomSheet = null },
         sheetState = addressSelectorBottomSheetState,
         onCloseClicked = {
             coroutineScope.launch {
                 addressSelectorBottomSheetState.hide()
-                visibleAddressSlotSelectorBottomSheet = null
+                visibleAddressPartSelectorBottomSheet = null
             }
         },
         streetTextFieldState = searchStreetTextFieldState,
@@ -136,7 +136,8 @@ private fun ScreenContent(
         buildingsState = buildingsState,
         onStreetSelected = onStreetSelected,
         onBuildingSelected = onBuildingSelected,
-        onApartmentSelected = onApartmentSelected,
+        onStreetsErrorRefreshClicked = onStreetsErrorRefreshClicked,
+        onBuildingsErrorRefreshClicked = onBuildingsErrorRefreshClicked,
         modifier = Modifier.statusBarsPadding(),
     )
 
@@ -146,7 +147,8 @@ private fun ScreenContent(
             .background(UiKitTheme.colors.background.general.regular.default)
             .windowInsetsPadding(
                 WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout),
+                    .union(WindowInsets.displayCutout)
+                    .union(WindowInsets.ime),
             ),
     ) {
         CheckoutComponents.TopBar(
@@ -174,13 +176,9 @@ private fun ScreenContent(
                 buildingTextFieldState = buildingTextFieldState,
                 apartmentTextFieldState = apartmentTextFieldState,
                 isBuildingSelectorClickable = isBuildingSelectionEnabled,
-                isApartmentSelectorClickable = isApartmentSelectionEnabled,
-                onStreetClicked = { visibleAddressSlotSelectorBottomSheet = AddressSlot.Street },
+                onStreetClicked = { visibleAddressPartSelectorBottomSheet = AddressPartBottomSheet.Street },
                 onBuildingClicked = {
-                    visibleAddressSlotSelectorBottomSheet = AddressSlot.Building
-                },
-                onApartmentClicked = {
-                    visibleAddressSlotSelectorBottomSheet = AddressSlot.Apartment
+                    visibleAddressPartSelectorBottomSheet = AddressPartBottomSheet.Building
                 },
             )
 
