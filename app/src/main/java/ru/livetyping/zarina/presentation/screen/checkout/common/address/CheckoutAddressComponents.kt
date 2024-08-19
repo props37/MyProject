@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
@@ -45,6 +46,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
@@ -75,6 +77,8 @@ object CheckoutAddressComponents {
         onBuildingClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        val focusManager = LocalFocusManager.current
+
         Column(modifier = modifier) {
             val streetInteractionSource = remember { MutableInteractionSource() }
             LaunchedEffect(streetInteractionSource) {
@@ -154,6 +158,13 @@ object CheckoutAddressComponents {
                     },
                     colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
                     lineLimits = TextFieldLineLimits.SingleLine,
+                    keyboardOptions = remember {
+                        KeyboardOptions(keyboardType = KeyboardType.Number)
+                    },
+                    onKeyboardAction = { default ->
+                        focusManager.clearFocus()
+                        default()
+                    },
                     modifier = Modifier
                         .weight(1f)
                         .padding(horizontal = 16.dp),
