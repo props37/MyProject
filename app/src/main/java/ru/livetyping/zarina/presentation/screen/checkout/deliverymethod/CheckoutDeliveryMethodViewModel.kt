@@ -90,7 +90,13 @@ class CheckoutDeliveryMethodViewModel @Inject constructor(
             State.Loading
         } else {
             result.fold(
-                onSuccess = { State.DeliveryMethods(it) },
+                onSuccess = {
+                    if (it.isNotEmpty()) {
+                        State.DeliveryMethods(it)
+                    } else {
+                        State.Error(ErrorState.GENERIC)
+                    }
+                },
                 onFailure = {
                     val errorState = ErrorState.from(it)
                     State.Error(errorState)
