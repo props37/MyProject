@@ -87,7 +87,7 @@ class CheckoutAddressViewModelComponent @Inject constructor(
             .debounce(300.milliseconds)
         combine(city, queryFlow) { city, query ->
             val params = GetCityStreetsFlowUseCase.Params(
-                cityKladrId = city?.kladrId ?: City.DEFAULT.kladrId,
+                cityKladrId = city?.id ?: City.DEFAULT.id,
                 nameQuery = query.toString(),
             )
             getCityStreetsFlow(params)

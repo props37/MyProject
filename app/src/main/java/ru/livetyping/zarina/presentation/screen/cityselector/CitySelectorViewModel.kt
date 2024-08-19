@@ -119,7 +119,7 @@ class CitySelectorViewModel @Inject constructor(
     fun onCityClicked(city: City) {
         val cityParcelable = CityParcelable.from(city)
         savedStateHandle[KEY_SELECTED_CITY] = cityParcelable
-        if (city.kladrId != initialCity.value?.kladrId) {
+        if (city.id != initialCity.value?.id) {
             hasSelectedCityChanged.value = true
         }
     }
@@ -166,7 +166,7 @@ class CitySelectorViewModel @Inject constructor(
             buildList<CityListItem> {
                 // Show main cities at the top
                 val (mainCities, otherCities) = cities.partition { city ->
-                    city.kladrId in MAIN_CITIES_KLADR_IDS
+                    city.id in MAIN_CITIES_KLADR_IDS
                 }
                 val mainCityItems = mainCities.map { CityListItem.CityItem(it) }
                 addAll(mainCityItems)

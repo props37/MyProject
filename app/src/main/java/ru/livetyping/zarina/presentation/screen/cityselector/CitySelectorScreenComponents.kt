@@ -198,7 +198,7 @@ object CitySelectorScreenComponents {
                                                     city = item.city,
                                                     onClick = onCityClicked,
                                                     showFullName = item.showFullName,
-                                                    isSelected = item.city.kladrId == selectedCity?.kladrId,
+                                                    isSelected = item.city.id == selectedCity?.id,
                                                     modifier = Modifier.fillMaxWidth(),
                                                 )
 
@@ -354,7 +354,7 @@ object CitySelectorScreenComponents {
 
     @Stable
     private fun getCityListItemKey(item: CityListItem): String = when (item) {
-        is CityListItem.CityItem -> "$CityListItemKeyPrefixCity ${item.city.kladrId.value}"
+        is CityListItem.CityItem -> "$CityListItemKeyPrefixCity ${item.city.id.value}"
         is CityListItem.CityFirstLetterHeaderItem -> {
             "$CityListItemKeyPrefixCityFirstLetterHeader ${item.letter}"
         }

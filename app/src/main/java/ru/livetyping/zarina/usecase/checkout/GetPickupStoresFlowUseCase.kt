@@ -17,7 +17,7 @@ class GetPickupStoresFlowUseCase @Inject constructor(
 
     override fun execute(params: Params): Flow<List<PickupStore>> {
         val city = params.city
-        return checkoutRepository.getPickupStores(city.kladrId)
+        return checkoutRepository.getPickupStores(city.id)
     }
 
     data class Params(val city: City)

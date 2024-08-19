@@ -548,7 +548,7 @@ class CartViewModel @AssistedInject constructor(
             ) { result ->
                 val newCity = result.city.toCity()
                 val currentCity = city.value
-                if (newCity.kladrId != currentCity?.kladrId) {
+                if (newCity.id != currentCity?.id) {
                     val params = SetUserCityUseCase.Params(newCity)
                     interactor.setUserCity(params)
                         .onFailure {

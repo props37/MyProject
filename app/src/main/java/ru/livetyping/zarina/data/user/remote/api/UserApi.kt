@@ -138,7 +138,7 @@ class UserApi @Inject constructor(
     }
 
     suspend fun setUserCity(city: City) {
-        val body = SetUserCityRequestBody(city.kladrId.value)
+        val body = SetUserCityRequestBody(city.id.value)
         httpClient.put("/api/location/city") {
             setJsonBody(body)
         }

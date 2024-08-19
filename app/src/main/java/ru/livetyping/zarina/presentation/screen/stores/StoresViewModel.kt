@@ -107,7 +107,7 @@ class StoresViewModel @Inject constructor(
                 onSuccess = { stores ->
                     val userCity = userCityResult.getOrNull()
                     val cityStores = if (userCity != null) {
-                        stores.filter { it.cityKladrId == userCity.kladrId }
+                        stores.filter { it.cityKladrId == userCity.id }
                     } else {
                         stores
                     }

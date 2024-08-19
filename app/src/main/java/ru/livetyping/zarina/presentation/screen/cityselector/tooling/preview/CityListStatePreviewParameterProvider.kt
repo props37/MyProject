@@ -19,21 +19,21 @@ class CityListStatePreviewParameterProvider : PreviewParameterProvider<CityListS
     private fun getCityListItems(): List<CityListItem> {
         val saintPetersburg = City(
             name = "Санкт-Петербург",
+            id = KladrId("0"),
             fullName = "Санкт-Петербург",
             region = "Санкт-Петербург",
-            kladrId = KladrId("0"),
         )
         val moscow = City(
             name = "Москва",
+            id = KladrId("1"),
             fullName = "Москва",
             region = "Москва",
-            kladrId = KladrId("1"),
         )
         val anapa = City(
             name = "Анапа",
+            id = KladrId("2"),
             fullName = "Анапа",
             region = "Анапа",
-            kladrId = KladrId("2"),
         )
         return listOf(
             CityListItem.CityItem(saintPetersburg),

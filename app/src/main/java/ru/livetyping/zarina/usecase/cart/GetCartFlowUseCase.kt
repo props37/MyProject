@@ -27,7 +27,7 @@ class GetCartFlowUseCase @Inject constructor(
         val cartType = params.cartType
         return userRepository.getUserCityFlow()
             .flatMapLatest { city ->
-                cartRepository.getCartFlow(cartType, city?.kladrId)
+                cartRepository.getCartFlow(cartType, city?.id)
             }
             .combine(favoriteRepository.favoriteProductIds) { cart, favoriteProductIds ->
                 val products = cart.products.map { product ->

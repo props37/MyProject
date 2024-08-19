@@ -56,7 +56,7 @@ class CheckoutDeliveryMethodViewModel @Inject constructor(
 
     private val deliveryMethodsRequester = FlowRequester(DeliveryMethodsRequest.GENERAL) {
         val city = interactor.getUserCityFlow().firstOrNull()?.getOrNull() ?: City.DEFAULT
-        val params = GetDeliveryMethodsFlowUseCase.Params(cartType.value, city.kladrId)
+        val params = GetDeliveryMethodsFlowUseCase.Params(cartType.value, city.id)
         interactor.getDeliveryMethodsFlow(params)
     }
 
