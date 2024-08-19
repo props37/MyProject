@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.domain.geography
 
 data class Building(
-    val id: KladrId,
-    val name: String,
-)
+    override val id: KladrId,
+    override val name: String,
+) : AddressPart
