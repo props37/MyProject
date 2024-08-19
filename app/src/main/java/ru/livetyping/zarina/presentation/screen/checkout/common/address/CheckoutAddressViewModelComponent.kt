@@ -204,6 +204,11 @@ class CheckoutAddressViewModelComponent @Inject constructor(
     }
 
     fun onStreetSelected(street: Item) {
+        if (street.addressPart.id != selectedStreet.value?.id) {
+            clearSelectedBuilding()
+            clearSelectedApartment()
+        }
+
         val parcelable = StreetParcelable(
             id = street.addressPart.id.value,
             name = street.addressPart.name,
@@ -214,6 +219,10 @@ class CheckoutAddressViewModelComponent @Inject constructor(
     }
 
     fun onBuildingSelected(building: Item) {
+        if (building.addressPart.id != selectedBuilding.value?.id) {
+            clearSelectedApartment()
+        }
+
         val parcelable = BuildingParcelable(
             id = building.addressPart.id.value,
             name = building.addressPart.name,
@@ -224,6 +233,16 @@ class CheckoutAddressViewModelComponent @Inject constructor(
     }
 
     fun onApartmentSelected(apartment: Item) {
+        // TODO: [High] Implement
+    }
+
+    private fun clearSelectedBuilding() {
+        selectedBuildingValueHolder.set(null)
+        buildingTextFieldState.setTextAndPlaceCursorAtEnd("")
+        searchBuildingTextFieldState.setTextAndPlaceCursorAtEnd("")
+    }
+
+    private fun clearSelectedApartment() {
         // TODO: [High] Implement
     }
 
@@ -273,5 +292,6 @@ class CheckoutAddressViewModelComponent @Inject constructor(
     companion object {
         private const val KEY_SELECTED_STREET = "selected_street"
         private const val KEY_SELECTED_BUILDING = "selected_building"
+        private const val KEY_SELECTED_APARTMENT = "selected_apartment"
     }
 }
