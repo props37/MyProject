@@ -56,6 +56,9 @@ fun CheckoutCourierDeliveryScreen(
     val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()
     val city by viewModel.city.collectAsStateWithLifecycle()
     val streetsState by viewModel.streetsState.collectAsStateWithLifecycle()
+    val buildingsState by viewModel.buildingsState.collectAsStateWithLifecycle()
+    val isBuildingSelectionEnabled by viewModel.isBuildingSelectionEnabled.collectAsStateWithLifecycle()
+    val isApartmentSelectionEnabled by viewModel.isApartmentSelectionEnabled.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = step,
@@ -67,7 +70,13 @@ fun CheckoutCourierDeliveryScreen(
         searchStreetTextFieldState = viewModel.searchStreetTextFieldState,
         searchBuildingTextFieldState = viewModel.searchBuildingTextFieldState,
         searchApartmentTextFieldState = viewModel.searchApartmentTextFieldState,
+        isBuildingSelectionEnabled = isBuildingSelectionEnabled,
+        isApartmentSelectionEnabled = isApartmentSelectionEnabled,
         streetsState = streetsState,
+        buildingsState = buildingsState,
+        onStreetSelected = viewModel::onStreetSelected,
+        onBuildingSelected = viewModel::onBuildingSelected,
+        onApartmentSelected = viewModel::onApartmentSelected,
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
@@ -87,7 +96,13 @@ private fun ScreenContent(
     searchStreetTextFieldState: TextFieldState,
     searchBuildingTextFieldState: TextFieldState,
     searchApartmentTextFieldState: TextFieldState,
+    isBuildingSelectionEnabled: Boolean,
+    isApartmentSelectionEnabled: Boolean,
     streetsState: CheckoutAddressViewModelComponent.State,
+    buildingsState: CheckoutAddressViewModelComponent.State,
+    onStreetSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,
+    onBuildingSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,
+    onApartmentSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -118,6 +133,10 @@ private fun ScreenContent(
         buildingTextFieldState = searchBuildingTextFieldState,
         apartmentTextFieldState = searchApartmentTextFieldState,
         streetsState = streetsState,
+        buildingsState = buildingsState,
+        onStreetSelected = onStreetSelected,
+        onBuildingSelected = onBuildingSelected,
+        onApartmentSelected = onApartmentSelected,
         modifier = Modifier.statusBarsPadding(),
     )
 
@@ -154,6 +173,8 @@ private fun ScreenContent(
                 streetTextFieldState = streetTextFieldState,
                 buildingTextFieldState = buildingTextFieldState,
                 apartmentTextFieldState = apartmentTextFieldState,
+                isBuildingSelectorClickable = isBuildingSelectionEnabled,
+                isApartmentSelectorClickable = isApartmentSelectionEnabled,
                 onStreetClicked = { visibleAddressSlotSelectorBottomSheet = AddressSlot.Street },
                 onBuildingClicked = {
                     visibleAddressSlotSelectorBottomSheet = AddressSlot.Building

@@ -70,6 +70,8 @@ object CheckoutAddressComponents {
         streetTextFieldState: TextFieldState,
         buildingTextFieldState: TextFieldState,
         apartmentTextFieldState: TextFieldState,
+        isBuildingSelectorClickable: Boolean,
+        isApartmentSelectorClickable: Boolean,
         onStreetClicked: () -> Unit,
         onBuildingClicked: () -> Unit,
         onApartmentClicked: () -> Unit,
@@ -109,13 +111,16 @@ object CheckoutAddressComponents {
 
             Row {
                 val buildingInteractionSource = remember { MutableInteractionSource() }
-                LaunchedEffect(buildingInteractionSource) {
+                LaunchedEffect(buildingInteractionSource, isBuildingSelectorClickable) {
                     buildingInteractionSource.interactions.collect {
-                        if (it is PressInteraction.Release) {
+                        if (it is PressInteraction.Release && isBuildingSelectorClickable) {
                             onBuildingClicked()
                         }
                     }
                 }
+                val buildingIndicationModifier = if (isBuildingSelectorClickable) {
+                    Modifier.indication(buildingInteractionSource, ripple())
+                } else Modifier
 
                 ZarinaTextField(
                     state = buildingTextFieldState,
@@ -134,18 +139,21 @@ object CheckoutAddressComponents {
                     interactionSource = buildingInteractionSource,
                     modifier = Modifier
                         .weight(1f)
-                        .indication(buildingInteractionSource, ripple())
+                        .then(buildingIndicationModifier)
                         .padding(horizontal = 16.dp),
                 )
 
                 val apartmentInteractionSource = remember { MutableInteractionSource() }
-                LaunchedEffect(apartmentInteractionSource) {
+                LaunchedEffect(apartmentInteractionSource, isApartmentSelectorClickable) {
                     apartmentInteractionSource.interactions.collect {
-                        if (it is PressInteraction.Release) {
+                        if (it is PressInteraction.Release && isApartmentSelectorClickable) {
                             onApartmentClicked()
                         }
                     }
                 }
+                val apartmentIndicationModifier = if (isApartmentSelectorClickable) {
+                    Modifier.indication(apartmentInteractionSource, ripple())
+                } else Modifier
 
                 ZarinaTextField(
                     state = apartmentTextFieldState,
@@ -164,7 +172,7 @@ object CheckoutAddressComponents {
                     interactionSource = apartmentInteractionSource,
                     modifier = Modifier
                         .weight(1f)
-                        .indication(apartmentInteractionSource, ripple())
+                        .then(apartmentIndicationModifier)
                         .padding(horizontal = 16.dp),
                 )
             }
@@ -182,6 +190,10 @@ object CheckoutAddressComponents {
         buildingTextFieldState: TextFieldState,
         apartmentTextFieldState: TextFieldState,
         streetsState: CheckoutAddressViewModelComponent.State,
+        buildingsState: CheckoutAddressViewModelComponent.State,
+        onStreetSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,
+        onBuildingSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,
+        onApartmentSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         if (visibleAddressSlotSelectorBottomSheet != null) {
@@ -212,13 +224,27 @@ object CheckoutAddressComponents {
                     AddressSlot.Building -> R.string.search_building
                     AddressSlot.Apartment -> R.string.search_apartments_slash_offices
                 }
+                val addressSelectorState = when (visibleAddressSlotSelectorBottomSheet) {
+                    AddressSlot.Street -> streetsState
+                    AddressSlot.Building -> buildingsState
+                    AddressSlot.Apartment -> streetsState // TODO: [High] Implement
+                }
+                val onAddressItemClicked = when (visibleAddressSlotSelectorBottomSheet) {
+                    AddressSlot.Street -> onStreetSelected
+                    AddressSlot.Building -> onBuildingSelected
+                    AddressSlot.Apartment -> onApartmentSelected
+                }
 
                 AddressSelectorBottomSheetContent(
                     title = stringResource(titleResId),
                     onCloseClicked = onCloseClicked,
                     textFieldState = textFieldState,
                     textFieldPlaceholder = stringResource(textFieldPlaceholderResId),
-                    addressSelectorState = streetsState, // TODO: [High] Implement
+                    addressSelectorState = addressSelectorState,
+                    onAddressItemClicked = {
+                        onAddressItemClicked(it)
+                        onCloseClicked()
+                    },
                     sheetState = sheetState,
                 )
             }
@@ -233,6 +259,7 @@ object CheckoutAddressComponents {
         textFieldState: TextFieldState,
         textFieldPlaceholder: String,
         addressSelectorState: CheckoutAddressViewModelComponent.State,
+        onAddressItemClicked: (CheckoutAddressViewModelComponent.Item) -> Unit,
         sheetState: SheetState,
         modifier: Modifier = Modifier,
     ) {
@@ -268,54 +295,11 @@ object CheckoutAddressComponents {
                     .focusRequester(focusRequester),
             )
 
-            // TODO: [High] Extract
-            Crossfade(
-                targetState = addressSelectorState,
-                contentKey = {
-                    when (it) {
-                        is CheckoutAddressViewModelComponent.State.Items -> {
-                            AddressSelectorContentKeyItems
-                        }
-
-                        CheckoutAddressViewModelComponent.State.Loading -> it
-                        is CheckoutAddressViewModelComponent.State.Error -> it
-                        CheckoutAddressViewModelComponent.State.Empty -> it
-                    }
-                },
-            ) { state ->
-                when (state) {
-                    is CheckoutAddressViewModelComponent.State.Items -> {
-                        ItemsImpl(
-                            items = state.items,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                    }
-
-                    CheckoutAddressViewModelComponent.State.Loading -> {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .windowInsetsPadding(WindowInsets.navigationBarsOrIme),
-                        ) {
-                            ZarinaCircularLoader(modifier = Modifier.size(40.dp))
-                        }
-                    }
-
-                    is CheckoutAddressViewModelComponent.State.Error -> {
-                        ZarinaErrorScreen(
-                            state = state.state,
-                            onButtonClicked = { /*TODO*/ },
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .windowInsetsPadding(WindowInsets.navigationBarsOrIme)
-                                .padding(16.dp),
-                        )
-                    }
-
-                    CheckoutAddressViewModelComponent.State.Empty -> Unit
-                }
-            }
+            AddressSelectorBottomSheetContentItems(
+                addressSelectorState = addressSelectorState,
+                onAddressItemClicked = onAddressItemClicked,
+                sheetState = sheetState,
+            )
         }
     }
 
@@ -360,41 +344,98 @@ object CheckoutAddressComponents {
         )
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun ItemsImpl(
-        items: List<CheckoutAddressViewModelComponent.Item>,
+    private fun AddressSelectorBottomSheetContentItems(
+        addressSelectorState: CheckoutAddressViewModelComponent.State,
+        onAddressItemClicked: (CheckoutAddressViewModelComponent.Item) -> Unit,
+        sheetState: SheetState,
         modifier: Modifier = Modifier,
     ) {
-        Box(modifier = modifier) {
-            if (items.isNotEmpty()) {
-                LazyColumn(contentPadding = PaddingValues(bottom = 20.dp)) {
-                    itemsIndexed(
-                        items = items,
-                        key = { _, item -> item.kladrId.value },
-                    ) { index, item ->
-                        Column(modifier = Modifier.animateItem()) {
-                            ZarinaItem(
-                                onClick = {}, // TODO: [High] Implement
-                            ) {
-                                Text(
-                                    text = item.name,
-                                    style = UiKitTheme.typography.secondary.light,
-                                    color = UiKitTheme.colors.text.general.regular.default,
-                                )
-                            }
-                        }
+        Crossfade(
+            targetState = addressSelectorState,
+            contentKey = {
+                when (it) {
+                    is CheckoutAddressViewModelComponent.State.Items -> {
+                        AddressSelectorContentKeyItems
+                    }
 
-                        if (index < items.lastIndex) {
-                            ZarinaDivider(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp),
-                            )
-                        }
+                    CheckoutAddressViewModelComponent.State.Loading -> it
+                    is CheckoutAddressViewModelComponent.State.Error -> it
+                    CheckoutAddressViewModelComponent.State.Empty -> it
+                }
+            },
+            modifier = modifier,
+        ) { state ->
+            when (state) {
+                is CheckoutAddressViewModelComponent.State.Items -> {
+                    AddressSelectorBottomSheetContentItemsImpl(
+                        items = state.items,
+                        onItemClicked = onAddressItemClicked,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+
+                CheckoutAddressViewModelComponent.State.Loading -> {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .windowInsetsPadding(WindowInsets.navigationBarsOrIme),
+                    ) {
+                        ZarinaCircularLoader(modifier = Modifier.size(40.dp))
                     }
                 }
-            } else {
-                // TODO: [High] Implement
+
+                is CheckoutAddressViewModelComponent.State.Error -> {
+                    ZarinaErrorScreen(
+                        state = state.state,
+                        onButtonClicked = { /*TODO*/ },
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .windowInsetsPadding(WindowInsets.navigationBarsOrIme)
+                            .padding(16.dp),
+                    )
+                }
+
+                CheckoutAddressViewModelComponent.State.Empty -> Unit
+            }
+        }
+    }
+
+    @Composable
+    private fun AddressSelectorBottomSheetContentItemsImpl(
+        items: List<CheckoutAddressViewModelComponent.Item>,
+        onItemClicked: (CheckoutAddressViewModelComponent.Item) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 20.dp),
+            modifier = modifier,
+        ) {
+            itemsIndexed(
+                items = items,
+                key = { _, item -> item.addressPart.id.value },
+            ) { index, item ->
+                Column(modifier = Modifier.animateItem()) {
+                    ZarinaItem(
+                        onClick = { onItemClicked(item) },
+                    ) {
+                        Text(
+                            text = item.addressPart.name,
+                            style = UiKitTheme.typography.secondary.light,
+                            color = UiKitTheme.colors.text.general.regular.default,
+                        )
+                    }
+                }
+
+                if (index < items.lastIndex) {
+                    ZarinaDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    )
+                }
             }
         }
     }

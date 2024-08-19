@@ -71,6 +71,9 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
             initialValue = null,
         )
 
+    val isBuildingSelectionEnabled: StateFlow<Boolean> = addressComponent.isBuildingSelectionEnabled
+    val isApartmentSelectionEnabled: StateFlow<Boolean> =
+        addressComponent.isApartmentSelectionEnabled
     val streetTextFieldState: TextFieldState = addressComponent.streetTextFieldState
     val buildingTextFieldState: TextFieldState = addressComponent.buildingTextFieldState
     val apartmentTextFieldState: TextFieldState = addressComponent.apartmentTextFieldState
@@ -81,6 +84,8 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
 
     val streetsState: StateFlow<CheckoutAddressViewModelComponent.State> =
         addressComponent.streetsState
+    val buildingsState: StateFlow<CheckoutAddressViewModelComponent.State> =
+        addressComponent.buildingsState
 
     fun onBackClicked() {
         navigationThrottler.throttle {
@@ -94,6 +99,18 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
             val action = CheckoutCourierDeliveryScreenAction.CheckoutClosed
             emitSideEffect(SideEffect.Navigate(action))
         }
+    }
+
+    fun onStreetSelected(street: CheckoutAddressViewModelComponent.Item) {
+        addressComponent.onStreetSelected(street)
+    }
+
+    fun onBuildingSelected(building: CheckoutAddressViewModelComponent.Item) {
+        addressComponent.onBuildingSelected(building)
+    }
+
+    fun onApartmentSelected(apartment: CheckoutAddressViewModelComponent.Item) {
+        addressComponent.onApartmentSelected(apartment)
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
