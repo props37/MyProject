@@ -9,9 +9,11 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.model.cart.CartProductParcelable
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
+import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.model.store.StoreParcelable
 import ru.livetyping.zarina.presentation.navigation.BaseRoute
 import ru.livetyping.zarina.presentation.navigation.base.Destination
@@ -247,6 +249,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
     data object CourierDelivery : Destination<CourierDelivery.Args>() {
         const val ARG_KEY_CART_TYPE = "arg_cart_type"
         const val ARG_KEY_STEP = "arg_step"
+        const val ARG_DELIVERY_METHOD_TYPE = "arg_delivery_method_type"
 
         private val routeBase: String
             get() = BaseRoute.COURIER_DELIVERY.route
@@ -254,14 +257,16 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(
                 routeBase = routeBase,
-                argNames = arrayOf(ARG_KEY_CART_TYPE, ARG_KEY_STEP),
+                argNames = arrayOf(ARG_KEY_CART_TYPE, ARG_KEY_STEP, ARG_DELIVERY_METHOD_TYPE),
             )
 
         override fun createRoute(args: Args): String {
             val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
+            val deliveryMethodTypeParcelable =
+                DeliveryMethodTypeParcelable.from(args.deliveryMethodType)
             return RouteUtils.generateRoute(
                 routeBase = routeBase,
-                args = arrayOf(cartTypeParcelable, args.step),
+                args = arrayOf(cartTypeParcelable, args.step, deliveryMethodTypeParcelable),
             )
         }
 
@@ -271,17 +276,23 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
                     type = NavType.EnumType(CartTypeParcelable::class.java)
                 },
                 navArgument(ARG_KEY_STEP) { type = NavType.IntType },
+                navArgument(ARG_DELIVERY_METHOD_TYPE) {
+                    type = NavType.EnumType(DeliveryMethodTypeParcelable::class.java)
+                },
             )
 
         override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
             val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
+            val deliveryTypeParcelable = DeliveryMethodTypeParcelable.from(args.deliveryMethodType)
             putParcelable(ARG_KEY_CART_TYPE, cartTypeParcelable)
             putInt(ARG_KEY_STEP, args.step)
+            putParcelable(ARG_DELIVERY_METHOD_TYPE, deliveryTypeParcelable)
         }
 
         data class Args(
             val cartType: CartType,
             val step: Int = 1,
+            val deliveryMethodType: DeliveryMethodType,
         )
     }
 }

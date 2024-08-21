@@ -35,6 +35,7 @@ fun NavGraphBuilder.checkoutDeliveryMethodScreen(navController: NavHostControlle
                                 navController.navigateToCheckoutCourierDeliveryScreen(
                                     cartType = action.cartType,
                                     step = action.step,
+                                    deliveryMethodType = action.method.type,
                                 )
                             }
 

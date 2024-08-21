@@ -3,6 +3,7 @@ package ru.livetyping.zarina.presentation.navigation.screen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryScreen
@@ -36,10 +37,12 @@ fun NavGraphBuilder.checkoutCourierDeliveryScreen(navController: NavHostControll
 fun NavHostController.navigateToCheckoutCourierDeliveryScreen(
     cartType: CartType,
     step: Int,
+    deliveryMethodType: DeliveryMethodType,
 ) {
     val args = CheckoutGraph.CourierDelivery.Args(
         cartType = cartType,
         step = step,
+        deliveryMethodType = deliveryMethodType,
     )
     this.navigate(
         route = CheckoutGraph.CourierDelivery.routeSchema,
