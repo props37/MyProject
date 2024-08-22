@@ -36,6 +36,8 @@ import ru.livetyping.zarina.presentation.navigation.ZarinaNavigation
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.util.library.accompanist.rememberBottomSheetNavigator
 
+// TODO: [Medium] Migrate from Accompanist navigation to Material navigation
+
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 fun ZarinaApp(
