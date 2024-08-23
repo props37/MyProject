@@ -11,7 +11,7 @@ data class CityDto(
     @SerialName("name") 
     val name: String? = null,
 
-    @SerialName("id")
+    @SerialName("kladr_id")
     val kladrId: String? = null,
     
     @SerialName("full_name") 
