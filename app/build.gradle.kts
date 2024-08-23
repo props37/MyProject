@@ -173,10 +173,7 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigationCompose)
 
-    implementation(libs.accompanist.systemUi)
     implementation(libs.accompanist.permissions)
-    implementation(libs.accompanist.navigationMaterial)
-    implementation(libs.accompanist.webview)
 
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
