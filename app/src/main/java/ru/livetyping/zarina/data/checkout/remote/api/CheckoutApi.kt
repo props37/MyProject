@@ -5,6 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartTypeDto
+import ru.livetyping.zarina.data.checkout.remote.api.dto.CourierDeliveryOptionsDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryMethodDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.StoreDto
 import ru.livetyping.zarina.di.Qualifiers
@@ -31,4 +32,32 @@ class CheckoutApi @Inject constructor(
             parameter("address_kladr", cityKladrId.value)
         }.body()
     }
+
+    suspend fun getCourierDeliveryOptions(buildingKladrId: KladrId): CourierDeliveryOptionsDto {
+        return httpClient.get("/api/shipping-methods/express") {
+            parameter("address_kladr", buildingKladrId.value)
+        }.body()
+    }
+
+    /*
+    https://zarina.ru/api/cart
+    ?cart_type=delivery
+    &city_kladr_id=7800000000000
+    &shipping={
+        "shipping_method_type":"express",
+        "address":{
+            "city_name":"Санкт-Петербург",
+            "city_kladr_id":"7800000000000",
+            "street_name":"ул.+Ленина",
+            "street_kladr_id":"78000000000069000",
+            "building_number":"10+А",
+            "building_kladr_id":"780000000000690000013",
+            "flat":"123фывыфв"
+        },
+        "payload":{
+            "trying_type_level_name":"economy",
+            "period_id":2992371039
+        }
+    }
+     */
 }

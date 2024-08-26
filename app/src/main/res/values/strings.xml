@@ -300,6 +300,12 @@
     <string name="search_streets">Поиск по улицам</string>
     <string name="search_building">Поиск по домам</string>
     <string name="search_apartments_slash_offices">Поиск по квартирам/офисам</string>
+    <string name="choose_delivery_type">Выбери тип доставки</string>
+    <string name="show_details">Показать подробности</string>
+    <string name="delivery_date">Дата доставки</string>
+    <string name="delivery_time">Время доставки</string>
+    <string name="change_delivery_date">Изменить дату доставки</string>
+    <string name="change_delivery_time">Изменить время доставки</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

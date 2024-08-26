@@ -1,5 +1,8 @@
 package ru.livetyping.zarina.presentation.screen.checkout.courierdelivery
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,9 +10,12 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.union
@@ -38,13 +44,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.checkout.CourierDeliveryOptions
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents.AddressPartBottomSheet
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressViewModelComponent
+import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryScreenComponents.DeliveryOptions
+import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel.DeliveryOptionsState
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
@@ -59,6 +70,8 @@ fun CheckoutCourierDeliveryScreen(
     val streetsState by viewModel.streetsState.collectAsStateWithLifecycle()
     val buildingsState by viewModel.buildingsState.collectAsStateWithLifecycle()
     val isBuildingSelectionEnabled by viewModel.isBuildingSelectionEnabled.collectAsStateWithLifecycle()
+    val deliveryOptionsState by viewModel.deliveryOptionsState.collectAsStateWithLifecycle()
+    val isContinueButtonVisible by viewModel.isContinueButtonVisible.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = step,
@@ -77,6 +90,14 @@ fun CheckoutCourierDeliveryScreen(
         onBuildingSelected = viewModel::onBuildingSelected,
         onStreetsErrorRefreshClicked = viewModel::onStreetsErrorRefreshClicked,
         onBuildingsErrorRefreshClicked = viewModel::onBuildingsErrorRefreshClicked,
+        deliveryOptionsState = deliveryOptionsState,
+        onDeliveryOptionClicked = viewModel::onDeliveryOptionClicked,
+        onDeliveryOptionDateClicked = viewModel::onDeliveryOptionDateClicked,
+        onDeliveryOptionTimeClicked = viewModel::onDeliveryOptionTimeClicked,
+        onDeliveryOptionShowDetailsClicked = viewModel::onDeliveryOptionShowDetailsClicked,
+        isContinueButtonVisible = isContinueButtonVisible,
+        onDeliveryOptionsErrorRefreshClicked = viewModel::onDeliveryOptionsErrorRefreshClicked,
+        onContinueClicked = viewModel::onContinueClicked,
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
@@ -103,6 +124,14 @@ private fun ScreenContent(
     onBuildingSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,
     onStreetsErrorRefreshClicked: () -> Unit,
     onBuildingsErrorRefreshClicked: () -> Unit,
+    deliveryOptionsState: DeliveryOptionsState?,
+    onDeliveryOptionClicked: (CourierDeliveryOptions.Option) -> Unit,
+    onDeliveryOptionDateClicked: (CourierDeliveryOptions.Option) -> Unit,
+    onDeliveryOptionTimeClicked: (CourierDeliveryOptions.Option) -> Unit,
+    onDeliveryOptionShowDetailsClicked: (CourierDeliveryOptions.Option) -> Unit,
+    onDeliveryOptionsErrorRefreshClicked: () -> Unit,
+    isContinueButtonVisible: Boolean,
+    onContinueClicked: () -> Unit,
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -114,7 +143,9 @@ private fun ScreenContent(
     )
 
     val coroutineScope = rememberCoroutineScope()
-    var visibleAddressPartSelectorBottomSheet by remember { mutableStateOf<AddressPartBottomSheet?>(null) }
+    var visibleAddressPartSelectorBottomSheet by remember {
+        mutableStateOf<AddressPartBottomSheet?>(null)
+    }
     val addressSelectorBottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
         confirmValueChange = { it == SheetValue.Expanded },
@@ -168,7 +199,11 @@ private fun ScreenContent(
             )
         }
 
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
+        ) {
             Spacer(modifier = Modifier.height(8.dp))
 
             CheckoutAddressComponents.AddressBlock(
@@ -176,15 +211,49 @@ private fun ScreenContent(
                 buildingTextFieldState = buildingTextFieldState,
                 apartmentTextFieldState = apartmentTextFieldState,
                 isBuildingSelectorClickable = isBuildingSelectionEnabled,
-                onStreetClicked = { visibleAddressPartSelectorBottomSheet = AddressPartBottomSheet.Street },
+                onStreetClicked = {
+                    visibleAddressPartSelectorBottomSheet = AddressPartBottomSheet.Street
+                },
                 onBuildingClicked = {
                     visibleAddressPartSelectorBottomSheet = AddressPartBottomSheet.Building
                 },
             )
 
-            val navigationBarHeight =
+            DeliveryOptions(
+                state = deliveryOptionsState,
+                onDeliveryOptionClicked = onDeliveryOptionClicked,
+                onDeliveryOptionDateClicked = onDeliveryOptionDateClicked,
+                onDeliveryOptionTimeClicked = onDeliveryOptionTimeClicked,
+                onDeliveryOptionShowDetailsClicked = onDeliveryOptionShowDetailsClicked,
+                onDeliveryOptionsErrorRefreshClicked = onDeliveryOptionsErrorRefreshClicked,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+
+            val navigationBarHeight = if (isContinueButtonVisible) {
+                0.dp
+            } else {
                 WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-            Spacer(modifier = Modifier.height(navigationBarHeight + 20.dp))
+            }
+            Spacer(modifier = Modifier.height(20.dp + navigationBarHeight))
+        }
+
+        AnimatedVisibility(
+            visible = isContinueButtonVisible,
+            enter = slideInVertically { it },
+            exit = slideOutVertically { it },
+        ) {
+            Column {
+                ZarinaDivider(modifier = Modifier.fillMaxWidth())
+                ZarinaButton(
+                    onClick = onContinueClicked,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .navigationBarsPadding(),
+                ) {
+                    Text(text = stringResource(R.string.continue_).uppercase())
+                }
+            }
         }
     }
 }

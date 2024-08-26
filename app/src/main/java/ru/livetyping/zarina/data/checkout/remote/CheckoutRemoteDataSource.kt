@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.data.checkout.remote.api.CheckoutApi
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.checkout.CourierDeliveryOptions
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.checkout.PickupStore
 import ru.livetyping.zarina.domain.geography.KladrId
@@ -25,5 +26,13 @@ class CheckoutRemoteDataSource @Inject constructor(
         val dto = api.getDeliveryMethods(cartType, cityKladrId)
         val methods = dto.map { it.toDeliveryMethod() }
         emit(methods)
+    }
+
+    fun getCourierDeliveryOptionsFlow(
+        buildingKladrId: KladrId,
+    ): Flow<CourierDeliveryOptions> = flow {
+        val dto = api.getCourierDeliveryOptions(buildingKladrId)
+        val options = dto.toCourierDeliveryOptions()
+        emit(options)
     }
 }
