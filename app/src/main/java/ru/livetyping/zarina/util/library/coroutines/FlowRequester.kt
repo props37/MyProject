@@ -14,18 +14,24 @@ import kotlin.contracts.contract
 
 class FlowRequester<T, R : FlowRequester.Request>(
     initialRequest: R? = null,
-    flowBuilder: suspend (R) -> Flow<T>,
+    flowBuilder: suspend FlowBuilderScope.(R) -> Flow<T>,
 ) {
     private val requests = Channel<R>(Channel.CONFLATED)
 
     private val _loadingState = MutableStateFlow<LoadingState>(LoadingState.NotLoading)
     val loadingState: StateFlow<LoadingState> = _loadingState.asStateFlow()
 
+    private val flowBuilderScopeImpl = object : FlowBuilderScope {
+        override fun markAsLoading(request: Request) {
+            _loadingState.value = LoadingState.Loading(request)
+        }
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val flow: Flow<T> = requests.receiveAsFlow()
         .flatMapLatest {
             _loadingState.value = LoadingState.Loading(it)
-            flowBuilder(it)
+            flowBuilder(flowBuilderScopeImpl, it)
         }
         .onEach {
             _loadingState.value = LoadingState.NotLoading
@@ -60,4 +66,8 @@ class FlowRequester<T, R : FlowRequester.Request>(
     }
 
     interface Request
+
+    interface FlowBuilderScope {
+        fun markAsLoading(request: Request)
+    }
 }
