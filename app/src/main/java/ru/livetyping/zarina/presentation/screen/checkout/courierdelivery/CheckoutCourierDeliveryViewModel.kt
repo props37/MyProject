@@ -201,10 +201,6 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
         // TODO: [High] Implement
     }
 
-    fun onDeliveryOptionShowDetailsClicked(option: CourierDeliveryOptions.Option) {
-        // TODO: [High] Implement
-    }
-
     fun onDeliveryOptionsErrorRefreshClicked() {
         deliveryOptionsRequester.request(DeliveryOptionsRequest.GENERAL)
     }

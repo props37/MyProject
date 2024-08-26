@@ -15,10 +15,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,8 +35,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.checkout.CourierDeliveryOptions
+import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaModalBottomSheet
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
@@ -84,6 +93,80 @@ object CheckoutComponents {
             contentPadding = PaddingValues(vertical = 4.dp),
             modifier = modifier,
         )
+    }
+
+    @Composable
+    fun DeliveryOptionDetailsBottomSheetContent(
+        text: String,
+        onOkClicked: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                text = text,
+                style = UiKitTheme.typography.secondary.regular,
+                color = UiKitTheme.colors.text.general.regular.default,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            ZarinaButton(
+                onClick = onOkClicked,
+                colors = ZarinaButtonDefaults.outlineColors(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            ) {
+                Text(text = stringResource(R.string.got_id).uppercase())
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun DeliveryOptionDetailsBottomSheet(
+        visibleDeliveryOptionDetails: CourierDeliveryOptions.Option?,
+        onDismissRequest: () -> Unit,
+        modifier: Modifier = Modifier,
+        sheetState: SheetState = rememberModalBottomSheetState(),
+    ) {
+        val coroutineScope = rememberCoroutineScope()
+
+        if (visibleDeliveryOptionDetails != null) {
+            ZarinaModalBottomSheet(
+                onDismissRequest = onDismissRequest,
+                sheetState = sheetState,
+                modifier = modifier,
+            ) {
+                Column {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(
+                        text = visibleDeliveryOptionDetails.description,
+                        style = UiKitTheme.typography.secondary.regular,
+                        color = UiKitTheme.colors.text.general.regular.default,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    ZarinaButton(
+                        onClick = {
+                            coroutineScope
+                                .launch { sheetState.hide() }
+                                .invokeOnCompletion { onDismissRequest() }
+                        },
+                        colors = ZarinaButtonDefaults.outlineColors(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    ) {
+                        Text(text = stringResource(R.string.got_id).uppercase())
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+            }
+        }
     }
 
     @Composable

@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.util.compose.none
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +27,7 @@ fun ZarinaModalBottomSheet(
     containerColor: Color = ZarinaBottomSheetDefaults.ContainerColor,
     contentColor: Color = ZarinaBottomSheetDefaults.ContentColor,
     scrimColor: Color = ZarinaBottomSheetDefaults.ScrimColor,
-    windowInsets: @Composable () -> WindowInsets = { WindowInsets.none },
+    windowInsets: @Composable () -> WindowInsets = { BottomSheetDefaults.windowInsets },
     properties: ModalBottomSheetProperties = ModalBottomSheetDefaults.properties,
     content: @Composable ColumnScope.() -> Unit,
 ) {

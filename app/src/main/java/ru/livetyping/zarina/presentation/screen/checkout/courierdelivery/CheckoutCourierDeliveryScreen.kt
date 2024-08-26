@@ -94,7 +94,6 @@ fun CheckoutCourierDeliveryScreen(
         onDeliveryOptionClicked = viewModel::onDeliveryOptionClicked,
         onDeliveryOptionDateClicked = viewModel::onDeliveryOptionDateClicked,
         onDeliveryOptionTimeClicked = viewModel::onDeliveryOptionTimeClicked,
-        onDeliveryOptionShowDetailsClicked = viewModel::onDeliveryOptionShowDetailsClicked,
         isContinueButtonVisible = isContinueButtonVisible,
         onDeliveryOptionsErrorRefreshClicked = viewModel::onDeliveryOptionsErrorRefreshClicked,
         onContinueClicked = viewModel::onContinueClicked,
@@ -128,7 +127,6 @@ private fun ScreenContent(
     onDeliveryOptionClicked: (CourierDeliveryOptions.Option) -> Unit,
     onDeliveryOptionDateClicked: (CourierDeliveryOptions.Option) -> Unit,
     onDeliveryOptionTimeClicked: (CourierDeliveryOptions.Option) -> Unit,
-    onDeliveryOptionShowDetailsClicked: (CourierDeliveryOptions.Option) -> Unit,
     onDeliveryOptionsErrorRefreshClicked: () -> Unit,
     isContinueButtonVisible: Boolean,
     onContinueClicked: () -> Unit,
@@ -170,6 +168,14 @@ private fun ScreenContent(
         onStreetsErrorRefreshClicked = onStreetsErrorRefreshClicked,
         onBuildingsErrorRefreshClicked = onBuildingsErrorRefreshClicked,
         modifier = Modifier.statusBarsPadding(),
+    )
+
+    var visibleDeliveryOptionDetails by remember {
+        mutableStateOf<CourierDeliveryOptions.Option?>(null)
+    }
+    CheckoutComponents.DeliveryOptionDetailsBottomSheet(
+        visibleDeliveryOptionDetails = visibleDeliveryOptionDetails,
+        onDismissRequest = { visibleDeliveryOptionDetails = null },
     )
 
     Column(
@@ -224,7 +230,7 @@ private fun ScreenContent(
                 onDeliveryOptionClicked = onDeliveryOptionClicked,
                 onDeliveryOptionDateClicked = onDeliveryOptionDateClicked,
                 onDeliveryOptionTimeClicked = onDeliveryOptionTimeClicked,
-                onDeliveryOptionShowDetailsClicked = onDeliveryOptionShowDetailsClicked,
+                onDeliveryOptionShowDetailsClicked = { visibleDeliveryOptionDetails = it },
                 onDeliveryOptionsErrorRefreshClicked = onDeliveryOptionsErrorRefreshClicked,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
