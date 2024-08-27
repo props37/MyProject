@@ -31,9 +31,11 @@ fun NavGraphBuilder.checkoutCourierDeliveryDateTimeSelectorScreen(
 
 fun NavHostController.navigateToCheckoutCourierDeliveryDateTimeSelectorScreen(
     type: CourierDeliveryDateTimeSelectorType,
+    deliveryOptionId: CourierDeliveryOptions.Option.Id,
     dateTimePeriods: List<CourierDeliveryOptions.Option.DateTimePeriod>,
 ) {
     val args = CheckoutGraph.CourierDeliveryDateTimeSelector.Args(
+        deliveryOptionId = deliveryOptionId,
         type = type,
         dateTimePeriods = dateTimePeriods,
     )

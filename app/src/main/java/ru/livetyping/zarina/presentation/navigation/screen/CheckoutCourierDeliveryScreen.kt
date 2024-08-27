@@ -33,6 +33,7 @@ fun NavGraphBuilder.checkoutCourierDeliveryScreen(navController: NavHostControll
                     is CheckoutCourierDeliveryScreenAction.DeliveryDateClicked -> {
                         navController.navigateToCheckoutCourierDeliveryDateTimeSelectorScreen(
                             type = CourierDeliveryDateTimeSelectorType.DATE,
+                            deliveryOptionId = action.deliveryOptionId,
                             dateTimePeriods = action.dateTimePeriods,
                         )
                     }
@@ -40,6 +41,7 @@ fun NavGraphBuilder.checkoutCourierDeliveryScreen(navController: NavHostControll
                     is CheckoutCourierDeliveryScreenAction.DeliveryTimeClicked -> {
                         navController.navigateToCheckoutCourierDeliveryDateTimeSelectorScreen(
                             type = CourierDeliveryDateTimeSelectorType.TIME,
+                            deliveryOptionId = action.deliveryOptionId,
                             dateTimePeriods = action.dateTimePeriods,
                         )
                     }

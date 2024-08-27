@@ -199,7 +199,8 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
     fun onDeliveryOptionDateClicked(option: CourierDeliveryOptions.Option) {
         navigationThrottler.throttle {
             val datePeriods = option.dateTimePeriods.distinctBy { it.date }
-            val action = CheckoutCourierDeliveryScreenAction.DeliveryDateClicked(datePeriods)
+            val action =
+                CheckoutCourierDeliveryScreenAction.DeliveryDateClicked(option.id, datePeriods)
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
@@ -207,11 +208,12 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
     fun onDeliveryOptionTimeClicked(option: CourierDeliveryOptions.Option) {
         navigationThrottler.throttle {
             val selectedDateTimePeriod =
-                deliveryOptionToSelectedDateTimePeriod.value[option.id] ?: option.dateTimePeriods.first()
+                deliveryOptionToSelectedDateTimePeriod.value[option.id] ?: option.dateTimePeriods.getDefault()
             val timePeriods = option.dateTimePeriods.filter {
                 it.date == selectedDateTimePeriod.date
             }
-            val action = CheckoutCourierDeliveryScreenAction.DeliveryTimeClicked(timePeriods)
+            val action =
+                CheckoutCourierDeliveryScreenAction.DeliveryTimeClicked(option.id, timePeriods)
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
@@ -248,7 +250,7 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
                                 selectedOptionId?.let { option.id == it } ?: (index == 0)
                             val selectedDateTimePeriod =
                                 deliveryOptionToSelectedDateTimePeriod[option.id]
-                                    ?: option.dateTimePeriods.first()
+                                    ?: option.dateTimePeriods.getDefault()
                             DeliveryOptionState(
                                 deliveryOption = option,
                                 isSelected = isSelected,
@@ -264,6 +266,11 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    @Suppress("MaxLineLength")
+    private fun List<CourierDeliveryOptions.Option.DateTimePeriod>.getDefault(): CourierDeliveryOptions.Option.DateTimePeriod {
+        return this.first()
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

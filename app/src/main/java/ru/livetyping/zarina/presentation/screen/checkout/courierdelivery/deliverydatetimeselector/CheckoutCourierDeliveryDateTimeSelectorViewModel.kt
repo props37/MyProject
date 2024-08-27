@@ -41,6 +41,20 @@ class CheckoutCourierDeliveryDateTimeSelectorViewModel @Inject constructor(
             checkNotNull(it) { "selectorType is null" }
         }
 
+    private val deliveryOptionId: StateFlow<CourierDeliveryOptions.Option.Id> =
+        savedStateHandle
+            .getStateFlow<String?>(
+                key = CheckoutGraph.CourierDeliveryDateTimeSelector.ARG_DELIVERY_OPTION_ID,
+                initialValue = null,
+            )
+            .mapState(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+            ) {
+                checkNotNull(it) { "deliveryOptionId is null" }
+                CourierDeliveryOptions.Option.Id(it)
+            }
+
     private val dateTimePeriods: StateFlow<List<CourierDeliveryOptions.Option.DateTimePeriod>> =
         savedStateHandle
             .getStateFlow<Array<CourierDeliveryDateTimePeriodParcelable>?>(

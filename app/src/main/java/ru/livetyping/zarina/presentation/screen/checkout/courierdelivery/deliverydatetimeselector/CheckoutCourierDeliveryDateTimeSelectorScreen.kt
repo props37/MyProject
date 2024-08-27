@@ -96,6 +96,7 @@ private fun ScreenContent(
         val navigationBarHeight =
             WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
         val contentPadding = PaddingValues(bottom = navigationBarHeight + 20.dp)
+
         LazyColumn(
             contentPadding = contentPadding,
             modifier = Modifier.weight(1f),

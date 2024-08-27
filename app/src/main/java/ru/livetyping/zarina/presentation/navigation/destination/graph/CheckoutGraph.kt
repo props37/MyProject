@@ -2,9 +2,11 @@ package ru.livetyping.zarina.presentation.navigation.destination.graph
 
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.domain.cart.CartProduct
@@ -21,10 +23,12 @@ import ru.livetyping.zarina.presentation.navigation.BaseRoute
 import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.base.Graph
 import ru.livetyping.zarina.presentation.navigation.base.RouteUtils
+import ru.livetyping.zarina.presentation.navigation.base.ScreenResult
 import ru.livetyping.zarina.presentation.navigation.navtype.CartProductParcelableArrayType
 import ru.livetyping.zarina.presentation.navigation.navtype.CourierDeliveryDateTimePeriodParcelableArrayType
 import ru.livetyping.zarina.presentation.navigation.navtype.StoreParcelableType
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
+import java.util.UUID
 
 data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
 
@@ -304,6 +308,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
         Destination<CourierDeliveryDateTimeSelector.Args>() {
 
         const val ARG_SELECTOR_TYPE = "arg_selector_type"
+        const val ARG_DELIVERY_OPTION_ID = "arg_delivery_option_id"
         const val ARG_DATE_TIME_PERIODS = "arg_date_time_periods"
 
         private val routeBase: String
@@ -312,7 +317,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(
                 routeBase = routeBase,
-                argNames = arrayOf(ARG_SELECTOR_TYPE, ARG_DATE_TIME_PERIODS),
+                argNames = arrayOf(ARG_SELECTOR_TYPE, ARG_DELIVERY_OPTION_ID, ARG_DATE_TIME_PERIODS),
             )
 
         override fun createRoute(args: Args): String {
@@ -323,7 +328,11 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
                 Uri.encode(Json.encodeToString(dateTimePeriodsParcelable))
             return RouteUtils.generateRoute(
                 routeBase = routeBase,
-                args = arrayOf(args.type, dateTimePeriodsParcelableString),
+                args = arrayOf(
+                    args.type,
+                    args.deliveryOptionId.value,
+                    dateTimePeriodsParcelableString,
+                ),
             )
         }
 
@@ -332,6 +341,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
                 navArgument(ARG_SELECTOR_TYPE) {
                     type = NavType.EnumType(CourierDeliveryDateTimeSelectorType::class.java)
                 },
+                navArgument(ARG_DELIVERY_OPTION_ID) { type = NavType.StringType },
                 navArgument(ARG_DATE_TIME_PERIODS) {
                     type = NavType.CourierDeliveryDateTimePeriodParcelableArrayType
                 },
@@ -342,12 +352,20 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
                 CourierDeliveryDateTimePeriodParcelable.from(it)
             }
             putParcelable(ARG_SELECTOR_TYPE, args.type)
+            putString(ARG_DELIVERY_OPTION_ID, args.deliveryOptionId.value)
             putParcelableArray(ARG_DATE_TIME_PERIODS, dateTimePeriodsParcelable.toTypedArray())
         }
 
         data class Args(
             val type: CourierDeliveryDateTimeSelectorType,
+            val deliveryOptionId: CourierDeliveryOptions.Option.Id,
             val dateTimePeriods: List<CourierDeliveryOptions.Option.DateTimePeriod>,
         )
+
+        @Parcelize
+        data class Result(
+            val deliveryOptionId: String,
+            override val id: String = UUID.randomUUID().toString(),
+        ) : ScreenResult, Parcelable
     }
 }

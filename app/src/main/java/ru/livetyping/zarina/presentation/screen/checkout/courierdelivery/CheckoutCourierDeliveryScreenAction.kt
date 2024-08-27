@@ -8,10 +8,12 @@ sealed class CheckoutCourierDeliveryScreenAction {
     data object CheckoutClosed : CheckoutCourierDeliveryScreenAction()
 
     data class DeliveryDateClicked(
+        val deliveryOptionId: CourierDeliveryOptions.Option.Id,
         val dateTimePeriods: List<CourierDeliveryOptions.Option.DateTimePeriod>,
     ) : CheckoutCourierDeliveryScreenAction()
 
     data class DeliveryTimeClicked(
+        val deliveryOptionId: CourierDeliveryOptions.Option.Id,
         val dateTimePeriods: List<CourierDeliveryOptions.Option.DateTimePeriod>,
     ) : CheckoutCourierDeliveryScreenAction()
 }
