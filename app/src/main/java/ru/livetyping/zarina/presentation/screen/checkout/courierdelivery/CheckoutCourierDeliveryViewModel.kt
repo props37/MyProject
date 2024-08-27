@@ -131,20 +131,23 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
             )
 
     private val selectedDeliveryOptionId = MutableStateFlow<CourierDeliveryOptions.Option.Id?>(null)
-    private val selectedDeliveryOptionDateTimePeriodId =
-        MutableStateFlow<CourierDeliveryOptions.Option.DateTimePeriod.Id?>(null)
+
+    private val deliveryOptionToSelectedDateTimePeriod =
+        MutableStateFlow<Map<CourierDeliveryOptions.Option.Id, CourierDeliveryOptions.Option.DateTimePeriod>>(
+            emptyMap()
+        )
 
     val deliveryOptionsState: StateFlow<DeliveryOptionsState?> = combine(
         deliveryOptionsResult,
         deliveryOptionsRequester.loadingState,
         selectedDeliveryOptionId,
-        selectedDeliveryOptionDateTimePeriodId,
-    ) { optionsResult, loadingState, selectedOptionId, selectedOptionDateTimePeriodId ->
+        deliveryOptionToSelectedDateTimePeriod,
+    ) { optionsResult, loadingState, selectedOptionId, deliveryOptionToSelectedDateTimePeriod ->
         createDeliveryOptionState(
             optionsResult = optionsResult,
             loadingState = loadingState,
             selectedOptionId = selectedOptionId,
-            selectedOptionDateTimePeriodId = selectedOptionDateTimePeriodId,
+            deliveryOptionToSelectedDateTimePeriod = deliveryOptionToSelectedDateTimePeriod,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -194,11 +197,23 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
     }
 
     fun onDeliveryOptionDateClicked(option: CourierDeliveryOptions.Option) {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val datePeriods = option.dateTimePeriods.distinctBy { it.date }
+            val action = CheckoutCourierDeliveryScreenAction.DeliveryDateClicked(datePeriods)
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     fun onDeliveryOptionTimeClicked(option: CourierDeliveryOptions.Option) {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val selectedDateTimePeriod =
+                deliveryOptionToSelectedDateTimePeriod.value[option.id] ?: option.dateTimePeriods.first()
+            val timePeriods = option.dateTimePeriods.filter {
+                it.date == selectedDateTimePeriod.date
+            }
+            val action = CheckoutCourierDeliveryScreenAction.DeliveryTimeClicked(timePeriods)
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     fun onDeliveryOptionsErrorRefreshClicked() {
@@ -215,11 +230,12 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
         } else null
     }
 
+    @Suppress("MaxLineLength")
     private fun createDeliveryOptionState(
         optionsResult: Result<CourierDeliveryOptions>?,
         loadingState: FlowRequester.LoadingState,
         selectedOptionId: CourierDeliveryOptions.Option.Id?,
-        selectedOptionDateTimePeriodId: CourierDeliveryOptions.Option.DateTimePeriod.Id?,
+        deliveryOptionToSelectedDateTimePeriod: Map<CourierDeliveryOptions.Option.Id, CourierDeliveryOptions.Option.DateTimePeriod>,
     ): DeliveryOptionsState? {
         return when {
             loadingState.isLoading() -> DeliveryOptionsState.Loading
@@ -230,9 +246,9 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
                         val mappedOptions = options.options.mapIndexed { index, option ->
                             val isSelected =
                                 selectedOptionId?.let { option.id == it } ?: (index == 0)
-                            val selectedDateTimePeriod = option.dateTimePeriods.find {
-                                it.id == selectedOptionDateTimePeriodId
-                            } ?: option.dateTimePeriods.first()
+                            val selectedDateTimePeriod =
+                                deliveryOptionToSelectedDateTimePeriod[option.id]
+                                    ?: option.dateTimePeriods.first()
                             DeliveryOptionState(
                                 deliveryOption = option,
                                 isSelected = isSelected,

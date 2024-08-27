@@ -1,0 +1,44 @@
+package ru.livetyping.zarina.presentation.navigation.screen
+
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+import ru.livetyping.zarina.domain.checkout.CourierDeliveryOptions
+import ru.livetyping.zarina.presentation.navigation.base.composableDestination
+import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
+import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CheckoutCourierDeliveryDateTimeSelectorScreen
+import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CheckoutCourierDeliveryDateTimeSelectorScreenAction
+import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
+import ru.livetyping.zarina.util.library.navigation.navigate
+
+fun NavGraphBuilder.checkoutCourierDeliveryDateTimeSelectorScreen(
+    navController: NavHostController,
+) {
+    composableDestination(CheckoutGraph.CourierDeliveryDateTimeSelector) {
+        CheckoutCourierDeliveryDateTimeSelectorScreen(
+            navigate = { action ->
+                when (action) {
+                    CheckoutCourierDeliveryDateTimeSelectorScreenAction.ScreenClosed -> {
+                        navController.popBackStack(
+                            route = CheckoutGraph.CourierDeliveryDateTimeSelector.routeSchema,
+                            inclusive = true,
+                        )
+                    }
+                }
+            }
+        )
+    }
+}
+
+fun NavHostController.navigateToCheckoutCourierDeliveryDateTimeSelectorScreen(
+    type: CourierDeliveryDateTimeSelectorType,
+    dateTimePeriods: List<CourierDeliveryOptions.Option.DateTimePeriod>,
+) {
+    val args = CheckoutGraph.CourierDeliveryDateTimeSelector.Args(
+        type = type,
+        dateTimePeriods = dateTimePeriods,
+    )
+    this.navigate(
+        route = CheckoutGraph.CourierDeliveryDateTimeSelector.routeSchema,
+        args = CheckoutGraph.CourierDeliveryDateTimeSelector.createArgsBundle(args),
+    )
+}

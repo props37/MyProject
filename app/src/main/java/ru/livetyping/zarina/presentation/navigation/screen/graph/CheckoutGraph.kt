@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.presentation.navigation.base.navigationGraph
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
+import ru.livetyping.zarina.presentation.navigation.screen.checkoutCourierDeliveryDateTimeSelectorScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutCourierDeliveryScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutDeliveryMethodScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutRecipientScreen
@@ -29,6 +30,7 @@ fun NavGraphBuilder.checkoutGraph(navController: NavHostController) {
         checkoutSelectedStoreScreen(navController)
         checkoutDeliveryMethodScreen(navController)
         checkoutCourierDeliveryScreen(navController)
+        checkoutCourierDeliveryDateTimeSelectorScreen(navController)
     }
 }
 

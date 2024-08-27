@@ -9,10 +9,12 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.checkout.CourierDeliveryOptions
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.model.cart.CartProductParcelable
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
+import ru.livetyping.zarina.presentation.model.checkout.CourierDeliveryDateTimePeriodParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.model.store.StoreParcelable
 import ru.livetyping.zarina.presentation.navigation.BaseRoute
@@ -20,7 +22,9 @@ import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.base.Graph
 import ru.livetyping.zarina.presentation.navigation.base.RouteUtils
 import ru.livetyping.zarina.presentation.navigation.navtype.CartProductParcelableArrayType
+import ru.livetyping.zarina.presentation.navigation.navtype.CourierDeliveryDateTimePeriodParcelableArrayType
 import ru.livetyping.zarina.presentation.navigation.navtype.StoreParcelableType
+import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
 
 data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
 
@@ -293,6 +297,57 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
             val cartType: CartType,
             val step: Int = 1,
             val deliveryMethodType: DeliveryMethodType,
+        )
+    }
+
+    data object CourierDeliveryDateTimeSelector :
+        Destination<CourierDeliveryDateTimeSelector.Args>() {
+
+        const val ARG_SELECTOR_TYPE = "arg_selector_type"
+        const val ARG_DATE_TIME_PERIODS = "arg_date_time_periods"
+
+        private val routeBase: String
+            get() = BaseRoute.COURIER_DELIVERY_DATE_TIME_SELECTOR.route
+
+        override val routeSchema: String
+            get() = RouteUtils.generateRouteSchema(
+                routeBase = routeBase,
+                argNames = arrayOf(ARG_SELECTOR_TYPE, ARG_DATE_TIME_PERIODS),
+            )
+
+        override fun createRoute(args: Args): String {
+            val dateTimePeriodsParcelable = args.dateTimePeriods.map {
+                CourierDeliveryDateTimePeriodParcelable.from(it)
+            }
+            val dateTimePeriodsParcelableString =
+                Uri.encode(Json.encodeToString(dateTimePeriodsParcelable))
+            return RouteUtils.generateRoute(
+                routeBase = routeBase,
+                args = arrayOf(args.type, dateTimePeriodsParcelableString),
+            )
+        }
+
+        override val arguments: List<NamedNavArgument>
+            get() = listOf(
+                navArgument(ARG_SELECTOR_TYPE) {
+                    type = NavType.EnumType(CourierDeliveryDateTimeSelectorType::class.java)
+                },
+                navArgument(ARG_DATE_TIME_PERIODS) {
+                    type = NavType.CourierDeliveryDateTimePeriodParcelableArrayType
+                },
+            )
+
+        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
+            val dateTimePeriodsParcelable = args.dateTimePeriods.map {
+                CourierDeliveryDateTimePeriodParcelable.from(it)
+            }
+            putParcelable(ARG_SELECTOR_TYPE, args.type)
+            putParcelableArray(ARG_DATE_TIME_PERIODS, dateTimePeriodsParcelable.toTypedArray())
+        }
+
+        data class Args(
+            val type: CourierDeliveryDateTimeSelectorType,
+            val dateTimePeriods: List<CourierDeliveryOptions.Option.DateTimePeriod>,
         )
     }
 }

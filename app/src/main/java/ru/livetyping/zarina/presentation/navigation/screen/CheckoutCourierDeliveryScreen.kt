@@ -8,6 +8,7 @@ import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryScreen
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryScreenAction
+import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
 import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.checkoutCourierDeliveryScreen(navController: NavHostController) {
@@ -26,6 +27,20 @@ fun NavGraphBuilder.checkoutCourierDeliveryScreen(navController: NavHostControll
                         navController.popBackStack(
                             route = CheckoutGraph.routeSchema,
                             inclusive = true,
+                        )
+                    }
+
+                    is CheckoutCourierDeliveryScreenAction.DeliveryDateClicked -> {
+                        navController.navigateToCheckoutCourierDeliveryDateTimeSelectorScreen(
+                            type = CourierDeliveryDateTimeSelectorType.DATE,
+                            dateTimePeriods = action.dateTimePeriods,
+                        )
+                    }
+
+                    is CheckoutCourierDeliveryScreenAction.DeliveryTimeClicked -> {
+                        navController.navigateToCheckoutCourierDeliveryDateTimeSelectorScreen(
+                            type = CourierDeliveryDateTimeSelectorType.TIME,
+                            dateTimePeriods = action.dateTimePeriods,
                         )
                     }
                 }
