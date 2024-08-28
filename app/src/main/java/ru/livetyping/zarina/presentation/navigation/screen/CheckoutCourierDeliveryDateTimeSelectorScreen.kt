@@ -3,6 +3,7 @@ package ru.livetyping.zarina.presentation.navigation.screen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.checkout.CourierDeliveryOptions
+import ru.livetyping.zarina.presentation.model.checkout.CourierDeliveryDateTimePeriodParcelable
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CheckoutCourierDeliveryDateTimeSelectorScreen
@@ -21,6 +22,22 @@ fun NavGraphBuilder.checkoutCourierDeliveryDateTimeSelectorScreen(
                         navController.popBackStack(
                             route = CheckoutGraph.CourierDeliveryDateTimeSelector.routeSchema,
                             inclusive = true,
+                        )
+                    }
+
+                    is CheckoutCourierDeliveryDateTimeSelectorScreenAction.DateTimePeriodSelected -> {
+                        navController.popBackStack(
+                            route = CheckoutGraph.CourierDeliveryDateTimeSelector.routeSchema,
+                            inclusive = true,
+                        )
+                        val result = CheckoutGraph.CourierDeliveryDateTimeSelector.Result(
+                            deliveryOptionId = action.deliveryOptionId.value,
+                            selectorType = action.selectorType,
+                            dateTimePeriod = CourierDeliveryDateTimePeriodParcelable.from(action.dateTimePeriod),
+                        )
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            key = CheckoutGraph.CourierDeliveryDateTimeSelector.RESULT_KEY,
+                            value = result,
                         )
                     }
                 }

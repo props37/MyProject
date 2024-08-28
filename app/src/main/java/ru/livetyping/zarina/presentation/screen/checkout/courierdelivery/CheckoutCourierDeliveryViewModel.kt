@@ -6,6 +6,9 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +20,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
@@ -26,6 +31,7 @@ import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
+import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
@@ -38,16 +44,19 @@ import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
-import javax.inject.Inject
 
-@HiltViewModel
-class CheckoutCourierDeliveryViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = CheckoutCourierDeliveryViewModel.Factory::class)
+class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
+    @Assisted
+    private val dateTimePeriodSelectorResultFlow: StateFlow<CheckoutGraph.CourierDeliveryDateTimeSelector.Result?>,
     savedStateHandle: SavedStateHandle,
     interactor: CheckoutCourierDeliveryInteractor,
     private val addressComponent: CheckoutAddressViewModelComponent,
 ) : ViewModel(addressComponent), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val cartType: StateFlow<CartType> = savedStateHandle
         .getStateFlow<CartTypeParcelable?>(
@@ -162,6 +171,10 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
         state?.let { it.findSelectedOption() != null } ?: false
     }
 
+    init {
+        handleDateTimePeriodSelectorResult()
+    }
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = CheckoutCourierDeliveryScreenAction.ScreenClosed
@@ -268,6 +281,20 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
         }
     }
 
+    private fun handleDateTimePeriodSelectorResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<CheckoutGraph.CourierDeliveryDateTimeSelector.Result>(
+                resultFlow = dateTimePeriodSelectorResultFlow,
+                key = KEY_RESULT_DATE_TIME_PERIOD_SELECTOR_RESULT,
+            ) { result ->
+                val deliveryOptionId = CourierDeliveryOptions.Option.Id(result.deliveryOptionId)
+                deliveryOptionToSelectedDateTimePeriod.update {
+                    it + (deliveryOptionId to result.dateTimePeriod.toDateTimePeriod())
+                }
+            }
+        }
+    }
+
     @Suppress("MaxLineLength")
     private fun List<CourierDeliveryOptions.Option.DateTimePeriod>.getDefault(): CourierDeliveryOptions.Option.DateTimePeriod {
         return this.first()
@@ -296,4 +323,15 @@ class CheckoutCourierDeliveryViewModel @Inject constructor(
     )
 
     private enum class DeliveryOptionsRequest : FlowRequester.Request { GENERAL }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            dateTimePeriodSelectorResultFlow: StateFlow<CheckoutGraph.CourierDeliveryDateTimeSelector.Result?>,
+        ): CheckoutCourierDeliveryViewModel
+    }
+
+    companion object {
+        private const val KEY_RESULT_DATE_TIME_PERIOD_SELECTOR_RESULT = "result_date_time_period_selector"
+    }
 }

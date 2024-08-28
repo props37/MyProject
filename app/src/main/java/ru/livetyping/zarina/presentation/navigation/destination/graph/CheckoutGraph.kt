@@ -311,6 +311,8 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
         const val ARG_DELIVERY_OPTION_ID = "arg_delivery_option_id"
         const val ARG_DATE_TIME_PERIODS = "arg_date_time_periods"
 
+        const val RESULT_KEY = "courier_delivery_date_time_selector_result"
+
         private val routeBase: String
             get() = BaseRoute.COURIER_DELIVERY_DATE_TIME_SELECTOR.route
 
@@ -365,6 +367,8 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
         @Parcelize
         data class Result(
             val deliveryOptionId: String,
+            val selectorType: CourierDeliveryDateTimeSelectorType,
+            val dateTimePeriod: CourierDeliveryDateTimePeriodParcelable,
             override val id: String = UUID.randomUUID().toString(),
         ) : ScreenResult, Parcelable
     }

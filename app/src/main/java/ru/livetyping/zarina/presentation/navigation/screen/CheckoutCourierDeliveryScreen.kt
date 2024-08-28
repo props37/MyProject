@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.navigation.screen
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.cart.CartType
@@ -8,12 +9,21 @@ import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryScreen
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryScreenAction
+import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
 import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.checkoutCourierDeliveryScreen(navController: NavHostController) {
     composableDestination(CheckoutGraph.CourierDelivery) {
         CheckoutCourierDeliveryScreen(
+            viewModel = hiltViewModel { factory: CheckoutCourierDeliveryViewModel.Factory ->
+                val dateTimePeriodSelectorResultFlow = it.savedStateHandle
+                    .getStateFlow<CheckoutGraph.CourierDeliveryDateTimeSelector.Result?>(
+                        key = CheckoutGraph.CourierDeliveryDateTimeSelector.RESULT_KEY,
+                        initialValue = null,
+                    )
+                factory.create(dateTimePeriodSelectorResultFlow)
+            },
             navigate = { action ->
                 when (action) {
                     CheckoutCourierDeliveryScreenAction.ScreenClosed -> {

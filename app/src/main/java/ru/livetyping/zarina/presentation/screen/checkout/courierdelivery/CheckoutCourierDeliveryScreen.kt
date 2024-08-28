@@ -39,7 +39,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -61,8 +60,8 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable
 fun CheckoutCourierDeliveryScreen(
+    viewModel: CheckoutCourierDeliveryViewModel,
     navigate: (CheckoutCourierDeliveryScreenAction) -> Unit,
-    viewModel: CheckoutCourierDeliveryViewModel = hiltViewModel(),
 ) {
     val step by viewModel.step.collectAsStateWithLifecycle()
     val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()

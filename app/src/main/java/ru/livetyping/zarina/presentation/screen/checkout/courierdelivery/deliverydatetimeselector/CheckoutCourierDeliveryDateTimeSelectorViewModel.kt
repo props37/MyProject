@@ -107,7 +107,17 @@ class CheckoutCourierDeliveryDateTimeSelectorViewModel @Inject constructor(
     }
 
     fun onContinueClicked() {
-        // TODO: [High] Implement
+        navigationThrottler.throttle {
+            val dateTimePeriod = dateTimePeriods.value.find {
+                it.id == selectedDateTimePeriodId.value
+            } ?: return@throttle
+            val action = CheckoutCourierDeliveryDateTimeSelectorScreenAction.DateTimePeriodSelected(
+                deliveryOptionId = deliveryOptionId.value,
+                selectorType = selectorType.value,
+                dateTimePeriod = dateTimePeriod,
+            )
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     private fun createItems(
