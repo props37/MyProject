@@ -156,6 +156,14 @@ private fun ScreenContent(
         modifier = Modifier.statusBarsPadding(),
     )
 
+    var visibleDeliveryOptionDetails by remember {
+        mutableStateOf<DeliveryOptions.Option?>(null)
+    }
+    CheckoutComponents.DeliveryOptionDetailsBottomSheet(
+        visibleDeliveryOptionDetails = visibleDeliveryOptionDetails,
+        onDismissRequest = { visibleDeliveryOptionDetails = null },
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -208,7 +216,7 @@ private fun ScreenContent(
                 onDeliveryOptionClicked = onDeliveryOptionClicked,
                 onDeliveryOptionDateClicked = null,
                 onDeliveryOptionTimeClicked = null,
-                onDeliveryOptionShowDetailsClicked = {}, // TODO: [High] Implement
+                onDeliveryOptionShowDetailsClicked = { visibleDeliveryOptionDetails = it },
                 onDeliveryOptionsErrorRefreshClicked = onDeliveryOptionsErrorRefreshClicked,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
