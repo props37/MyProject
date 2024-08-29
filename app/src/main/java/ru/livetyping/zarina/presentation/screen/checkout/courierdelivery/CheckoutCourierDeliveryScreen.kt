@@ -54,7 +54,6 @@ import ru.livetyping.zarina.presentation.screen.checkout.common.DeliveryOptionsS
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents.AddressPartBottomSheet
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressViewModelComponent
-import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryScreenComponents.DeliveryOptions
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
@@ -224,7 +223,7 @@ private fun ScreenContent(
                 },
             )
 
-            DeliveryOptions(
+            CheckoutComponents.DeliveryOptions(
                 state = deliveryOptionsState,
                 onDeliveryOptionClicked = onDeliveryOptionClicked,
                 onDeliveryOptionDateClicked = onDeliveryOptionDateClicked,
