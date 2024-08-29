@@ -28,4 +28,10 @@ class CheckoutRepository @Inject constructor(
     ): Flow<CourierDeliveryOptions> {
         return remoteDataSource.getCourierDeliveryOptionsFlow(buildingKladrId)
     }
+
+    fun getPostDeliveryOptionsFlow(
+        buildingKladrId: KladrId,
+    ): Flow<CourierDeliveryOptions> {
+        return remoteDataSource.getPostDeliveryOptionsFlow(buildingKladrId)
+    }
 }

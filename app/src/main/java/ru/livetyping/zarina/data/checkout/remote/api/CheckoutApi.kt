@@ -39,6 +39,12 @@ class CheckoutApi @Inject constructor(
         }.body()
     }
 
+    suspend fun getPostDeliveryOptions(buildingKladrId: KladrId): CourierDeliveryOptionsDto {
+        return httpClient.get("/api/shipping-methods/post") {
+            parameter("address_kladr", buildingKladrId.value)
+        }.body()
+    }
+
     /*
     https://zarina.ru/api/cart
     ?cart_type=delivery

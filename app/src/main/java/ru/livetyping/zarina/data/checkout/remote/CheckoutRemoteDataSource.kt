@@ -35,4 +35,12 @@ class CheckoutRemoteDataSource @Inject constructor(
         val options = dto.toCourierDeliveryOptions()
         emit(options)
     }
+
+    fun getPostDeliveryOptionsFlow(
+        buildingKladrId: KladrId,
+    ): Flow<CourierDeliveryOptions> = flow {
+        val dto = api.getPostDeliveryOptions(buildingKladrId)
+        val options = dto.toCourierDeliveryOptions()
+        emit(options)
+    }
 }
