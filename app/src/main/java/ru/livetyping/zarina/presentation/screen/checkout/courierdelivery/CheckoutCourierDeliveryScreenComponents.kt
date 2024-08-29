@@ -20,7 +20,7 @@ import ru.livetyping.zarina.domain.checkout.DeliveryOptions
 import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
-import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel.DeliveryOptionsState
+import ru.livetyping.zarina.presentation.screen.checkout.common.DeliveryOptionsState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 

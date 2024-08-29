@@ -50,11 +50,11 @@ import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
+import ru.livetyping.zarina.presentation.screen.checkout.common.DeliveryOptionsState
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents.AddressPartBottomSheet
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressViewModelComponent
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryScreenComponents.DeliveryOptions
-import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel.DeliveryOptionsState
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 

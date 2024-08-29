@@ -1,8 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.checkout.courierdelivery
 
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -36,6 +34,8 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
+import ru.livetyping.zarina.presentation.screen.checkout.common.DeliveryOptionState
+import ru.livetyping.zarina.presentation.screen.checkout.common.DeliveryOptionsState
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressViewModelComponent
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel.SideEffect
@@ -303,24 +303,6 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutCourierDeliveryScreenAction) : SideEffect
     }
-
-    @Stable
-    sealed class DeliveryOptionsState {
-        data object Loading : DeliveryOptionsState()
-
-        @Immutable
-        data class Success(val options: List<DeliveryOptionState>) : DeliveryOptionsState()
-
-        @Immutable
-        data class Error(val state: ErrorState) : DeliveryOptionsState()
-    }
-
-    @Immutable
-    data class DeliveryOptionState(
-        val deliveryOption: DeliveryOptions.Option,
-        val isSelected: Boolean,
-        val selectedDateTimePeriod: DeliveryOptions.Option.DateTimePeriod,
-    )
 
     private data object DeliveryOptionsRequest : FlowRequester.Request
 
