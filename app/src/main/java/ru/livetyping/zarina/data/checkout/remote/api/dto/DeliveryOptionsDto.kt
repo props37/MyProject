@@ -9,9 +9,9 @@ data class DeliveryOptionsDto(
     @SerialName("trying_types")
     val options: List<Option>? = null,
 ) {
-    fun toDeliveryOptions(): DeliveryOptions {
+    fun toDeliveryOptions(type: DeliveryOptionsDtoType): DeliveryOptions {
         checkNotNull(options) { "options is null" }
-        val options = options.map { it.toOption() }
+        val options = options.map { it.toOption(type) }
         return DeliveryOptions(
             options = options,
         )
@@ -34,13 +34,13 @@ data class DeliveryOptionsDto(
         @SerialName("periods")
         val dateTimePeriods: List<DateTimePeriod>? = null,
     ) {
-        fun toOption(): DeliveryOptions.Option {
+        fun toOption(type: DeliveryOptionsDtoType): DeliveryOptions.Option {
             checkNotNull(id) { "id is null" }
             checkNotNull(title) { "title is null" }
             checkNotNull(description) { "description is null" }
             checkNotNull(price) { "price is null" }
             checkNotNull(dateTimePeriods) { "periods is null" }
-            val dateTimePeriods = dateTimePeriods.map { it.toDateTimePeriod() }
+            val dateTimePeriods = dateTimePeriods.map { it.toDateTimePeriod(type) }
             return DeliveryOptions.Option(
                 id = DeliveryOptions.Option.Id(id),
                 title = title,
@@ -58,11 +58,25 @@ data class DeliveryOptionsDto(
             @SerialName("title")
             val text: String? = null,
         ) {
-            fun toDateTimePeriod(): DeliveryOptions.Option.DateTimePeriod {
+            fun toDateTimePeriod(
+                type: DeliveryOptionsDtoType,
+            ): DeliveryOptions.Option.DateTimePeriod {
                 checkNotNull(id) { "id is null" }
                 checkNotNull(text) { "text is null" }
-                val date = text.substringBeforeLast(DATE_TIME_PERIOD_SEPARATOR)
-                val time = text.substringAfterLast(DATE_TIME_PERIOD_SEPARATOR)
+                val date = when (type) {
+                    DeliveryOptionsDtoType.COURIER -> {
+                        text.substringBeforeLast(DATE_TIME_PERIOD_SEPARATOR)
+                    }
+
+                    DeliveryOptionsDtoType.POST -> text
+                }
+                val time = when (type) {
+                    DeliveryOptionsDtoType.COURIER -> {
+                        text.substringAfterLast(DATE_TIME_PERIOD_SEPARATOR)
+                    }
+
+                    DeliveryOptionsDtoType.POST -> null
+                }
                 return DeliveryOptions.Option.DateTimePeriod(
                     id = DeliveryOptions.Option.DateTimePeriod.Id(id),
                     date = date,
@@ -76,3 +90,5 @@ data class DeliveryOptionsDto(
         }
     }
 }
+
+enum class DeliveryOptionsDtoType { COURIER, POST }

@@ -17,6 +17,12 @@ sealed class DeliveryOptionsState {
     @Immutable
     data class Error(val state: ErrorState) : DeliveryOptionsState()
 
+    fun findSelectedOption(): DeliveryOptionState? {
+        return if (this is Success) {
+            this.options.find { it.isSelected }
+        } else null
+    }
+
     companion object {
         fun create(
             optionsResult: Result<DeliveryOptions>,

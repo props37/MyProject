@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -25,8 +26,10 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
+import ru.livetyping.zarina.presentation.screen.checkout.common.DeliveryOptionsState
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressViewModelComponent
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
+import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel.SideEffect
 import ru.livetyping.zarina.usecase.checkout.GetPostDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
@@ -126,6 +129,38 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
 
     private val selectedDeliveryOptionId = MutableStateFlow<DeliveryOptions.Option.Id?>(null)
 
+    val deliveryOptionsState: StateFlow<DeliveryOptionsState?> = combine(
+        deliveryOptionsResult,
+        deliveryOptionsRequester.loadingState,
+        selectedDeliveryOptionId,
+    ) { optionsResult, loadingState, selectedOptionId ->
+        when {
+            loadingState.isLoading() -> DeliveryOptionsState.Loading
+            optionsResult != null -> {
+                DeliveryOptionsState.create(
+                    optionsResult = optionsResult,
+                    loadingState = loadingState,
+                    selectedOptionId = selectedOptionId,
+                    deliveryOptionToSelectedDateTimePeriod = emptyMap(),
+                    getOptionDefaultDateTimePeriod = { it.dateTimePeriods.first() },
+                )
+            }
+
+            else -> null
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = null,
+    )
+
+    val isContinueButtonVisible: StateFlow<Boolean> = deliveryOptionsState.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+    ) { state ->
+        state?.let { it.findSelectedOption() != null } ?: false
+    }
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = CheckoutPostDeliveryScreenAction.ScreenClosed
@@ -154,6 +189,14 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
 
     fun onBuildingsErrorRefreshClicked() {
         addressComponent.onBuildingsErrorRefreshClicked()
+    }
+
+    fun onDeliveryOptionClicked(option: DeliveryOptions.Option) {
+        selectedDeliveryOptionId.value = option.id
+    }
+
+    fun onDeliveryOptionsErrorRefreshClicked() {
+        deliveryOptionsRequester.request(DeliveryOptionsRequest)
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

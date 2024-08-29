@@ -4,10 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.union
@@ -36,10 +39,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.checkout.DeliveryOptions
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
+import ru.livetyping.zarina.presentation.screen.checkout.common.DeliveryOptionsState
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressComponents.AddressPartBottomSheet
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressViewModelComponent
@@ -57,6 +62,8 @@ fun CheckoutPostDeliveryScreen(
     val streetsState by viewModel.streetsState.collectAsStateWithLifecycle()
     val buildingsState by viewModel.buildingsState.collectAsStateWithLifecycle()
     val isBuildingSelectionEnabled by viewModel.isBuildingSelectionEnabled.collectAsStateWithLifecycle()
+    val deliveryOptionsState by viewModel.deliveryOptionsState.collectAsStateWithLifecycle()
+    val isContinueButtonVisible by viewModel.isContinueButtonVisible.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = step,
@@ -75,6 +82,10 @@ fun CheckoutPostDeliveryScreen(
         onBuildingSelected = viewModel::onBuildingSelected,
         onStreetsErrorRefreshClicked = viewModel::onStreetsErrorRefreshClicked,
         onBuildingsErrorRefreshClicked = viewModel::onBuildingsErrorRefreshClicked,
+        deliveryOptionsState = deliveryOptionsState,
+        onDeliveryOptionClicked = viewModel::onDeliveryOptionClicked,
+        isContinueButtonVisible = isContinueButtonVisible,
+        onDeliveryOptionsErrorRefreshClicked = viewModel::onDeliveryOptionsErrorRefreshClicked,
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
@@ -101,6 +112,10 @@ private fun ScreenContent(
     onBuildingSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,
     onStreetsErrorRefreshClicked: () -> Unit,
     onBuildingsErrorRefreshClicked: () -> Unit,
+    deliveryOptionsState: DeliveryOptionsState?,
+    onDeliveryOptionClicked: (DeliveryOptions.Option) -> Unit,
+    onDeliveryOptionsErrorRefreshClicked: () -> Unit,
+    isContinueButtonVisible: Boolean,
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -187,6 +202,23 @@ private fun ScreenContent(
                     visibleAddressPartSelectorBottomSheet = AddressPartBottomSheet.Building
                 },
             )
+
+            CheckoutComponents.DeliveryOptions(
+                state = deliveryOptionsState,
+                onDeliveryOptionClicked = onDeliveryOptionClicked,
+                onDeliveryOptionDateClicked = null,
+                onDeliveryOptionTimeClicked = null,
+                onDeliveryOptionShowDetailsClicked = {}, // TODO: [High] Implement
+                onDeliveryOptionsErrorRefreshClicked = onDeliveryOptionsErrorRefreshClicked,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+
+            val navigationBarHeight = if (isContinueButtonVisible) {
+                0.dp
+            } else {
+                WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+            }
+            Spacer(modifier = Modifier.height(20.dp + navigationBarHeight))
         }
     }
 }

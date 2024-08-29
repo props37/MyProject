@@ -32,7 +32,6 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
-import ru.livetyping.zarina.presentation.screen.checkout.common.DeliveryOptionState
 import ru.livetyping.zarina.presentation.screen.checkout.common.DeliveryOptionsState
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressViewModelComponent
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
@@ -243,12 +242,6 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
 
     fun onContinueClicked() {
         // TODO: [High] Implement
-    }
-
-    private fun DeliveryOptionsState.findSelectedOption(): DeliveryOptionState? {
-        return if (this is DeliveryOptionsState.Success) {
-            this.options.find { it.isSelected }
-        } else null
     }
 
     private fun handleDateTimePeriodSelectorResult() {

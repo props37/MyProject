@@ -181,8 +181,8 @@ object CheckoutComponents {
     fun DeliveryOptions(
         state: DeliveryOptionsState?,
         onDeliveryOptionClicked: (DeliveryOptions.Option) -> Unit,
-        onDeliveryOptionDateClicked: (DeliveryOptions.Option) -> Unit,
-        onDeliveryOptionTimeClicked: (DeliveryOptions.Option) -> Unit,
+        onDeliveryOptionDateClicked: ((DeliveryOptions.Option) -> Unit)?,
+        onDeliveryOptionTimeClicked: ((DeliveryOptions.Option) -> Unit)?,
         onDeliveryOptionShowDetailsClicked: (DeliveryOptions.Option) -> Unit,
         onDeliveryOptionsErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
@@ -248,8 +248,8 @@ object CheckoutComponents {
     private fun DeliveryOptionsImpl(
         state: DeliveryOptionsState.Success,
         onDeliveryOptionClicked: (DeliveryOptions.Option) -> Unit,
-        onDeliveryOptionDateClicked: (DeliveryOptions.Option) -> Unit,
-        onDeliveryOptionTimeClicked: (DeliveryOptions.Option) -> Unit,
+        onDeliveryOptionDateClicked: ((DeliveryOptions.Option) -> Unit)?,
+        onDeliveryOptionTimeClicked: ((DeliveryOptions.Option) -> Unit)?,
         onDeliveryOptionShowDetailsClicked: (DeliveryOptions.Option) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -267,8 +267,8 @@ object CheckoutComponents {
                         deliveryTime = optionState.selectedDateTimePeriod.time,
                         isSelected = optionState.isSelected,
                         onClick = { onDeliveryOptionClicked(option) },
-                        onDeliveryDateClicked = { onDeliveryOptionDateClicked(option) },
-                        onDeliveryTimeClicked = { onDeliveryOptionTimeClicked(option) },
+                        onDeliveryDateClicked = onDeliveryOptionDateClicked?.let { { it(option) } },
+                        onDeliveryTimeClicked = onDeliveryOptionTimeClicked?.let { { it(option) } },
                         onShowDetailsClicked = { onDeliveryOptionShowDetailsClicked(option) },
                     )
                 }
