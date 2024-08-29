@@ -10,6 +10,7 @@ import io.ktor.client.request.put
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.GenderDto
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.UserDto
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.util.DATE_BACKEND_PATTERN
+import ru.livetyping.zarina.data.geography.remote.api.dto.CityDto
 import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
 import ru.livetyping.zarina.data.user.remote.api.dto.ChangePhoneNumberRequestBody
@@ -132,8 +133,12 @@ class UserApi @Inject constructor(
         }
     }
 
+    suspend fun getUserCity(): CityDto {
+        return httpClient.post("api/v1/location/city").body()
+    }
+
     suspend fun setUserCity(city: City) {
-        val body = SetUserCityRequestBody(city.kladrId.value)
+        val body = SetUserCityRequestBody(city.id.value)
         httpClient.put("/api/location/city") {
             setJsonBody(body)
         }

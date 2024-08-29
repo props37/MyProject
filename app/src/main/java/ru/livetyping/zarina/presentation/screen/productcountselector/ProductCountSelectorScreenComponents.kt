@@ -82,7 +82,7 @@ object ProductCountSelectorScreenComponents {
             AnimatedContent(
                 targetState = state,
                 transitionSpec = {
-                    AnimatedContentDefaultTransitionSpec().using(sizeTransform = null)
+                    AnimatedContentDefaultTransitionSpec.using(sizeTransform = null)
                 },
                 contentAlignment = Alignment.Center,
                 label = "CountItem icon",

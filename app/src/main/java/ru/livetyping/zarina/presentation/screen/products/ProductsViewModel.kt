@@ -86,7 +86,7 @@ class ProductsViewModel @AssistedInject constructor(
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val categoryRequester = FlowRequester(CategoryRequest.GENERAL) {
+    private val categoryRequester = FlowRequester(CategoryRequest) {
         categoryId.flatMapLatest { categoryId ->
             val params = GetCategoryFlowUseCase.Params(categoryId)
             interactor.getCategoryFlow(params)
@@ -306,7 +306,7 @@ class ProductsViewModel @AssistedInject constructor(
     }
 
     private fun fetchCategory() {
-        categoryRequester.request(CategoryRequest.GENERAL)
+        categoryRequester.request(CategoryRequest)
     }
 
     private fun addProductToCart(productId: Product.Id, barcode: Barcode) {
@@ -371,7 +371,7 @@ class ProductsViewModel @AssistedInject constructor(
         data class TagList(val tags: ImmutableList<Category>) : TagListState()
     }
 
-    private enum class CategoryRequest : FlowRequester.Request { GENERAL }
+    private data object CategoryRequest : FlowRequester.Request
 
     @AssistedFactory
     interface Factory {

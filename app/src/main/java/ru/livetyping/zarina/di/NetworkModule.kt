@@ -33,6 +33,7 @@ import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.ktor.clearBearerTokens
 import timber.log.Timber
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.seconds
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -110,7 +111,16 @@ class NetworkModule {
                 }
             }
         }
-        install(HttpTimeout)
+        install(HttpTimeout) {
+            val isDebug = BuildConfig.BUILD_TYPE == "debug"
+            val isQa = BuildConfig.BUILD_TYPE == "qa"
+            if (isDebug || isQa) {
+                val timeoutMillis = 60.seconds.inWholeMilliseconds
+                requestTimeoutMillis = timeoutMillis
+                socketTimeoutMillis = timeoutMillis
+                connectTimeoutMillis = timeoutMillis
+            }
+        }
     }
 
     private fun HttpClientConfig<*>.baseZarinaConfig(

@@ -123,7 +123,7 @@ private fun ScreenContent(
             AnimatedContent(
                 targetState = userState,
                 transitionSpec = {
-                    AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                    AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
                 },
                 contentAlignment = Alignment.Center,
                 label = "AuthorizationSuggestion/LoyaltyCard",

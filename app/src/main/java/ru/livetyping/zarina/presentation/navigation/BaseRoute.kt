@@ -54,6 +54,16 @@ enum class BaseRoute {
     LOYALTY_PROGRAM,
     BONUS_HISTORY,
 
+    // Checkout graph
+    CHECKOUT_GRAPH,
+    RECIPIENT,
+    STORE_SELECTION,
+    SELECTED_STORE,
+    DELIVERY_METHOD,
+    COURIER_DELIVERY,
+    COURIER_DELIVERY_DATE_TIME_SELECTOR,
+    POST_DELIVERY,
+
     // Unscoped destinations
     ONBOARDING,
     CITY_SELECTOR,

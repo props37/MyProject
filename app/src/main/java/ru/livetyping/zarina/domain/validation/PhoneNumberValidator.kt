@@ -4,6 +4,7 @@ import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.user.exception.EmptyPhoneNumberException
 import ru.livetyping.zarina.domain.user.exception.InvalidPhoneNumberException
 
+// TODO: [Medium] Improve
 class PhoneNumberValidator : Validator<PhoneNumber> {
     override fun validate(input: PhoneNumber) {
         val phoneString = input.value.trim()

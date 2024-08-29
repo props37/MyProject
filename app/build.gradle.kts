@@ -5,10 +5,10 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.compose.compiler)
     alias(libs.plugins.hilt)
     alias(libs.plugins.googlePlayServices)
     alias(libs.plugins.firebase.crashlytics)
@@ -21,10 +21,6 @@ plugins {
 androidGitVersion {
     codeFormat = "MNNPPP"
     format = "%tag%%-branch%%-commit%"
-}
-
-kapt {
-    correctErrorTypes = true
 }
 
 android {
@@ -120,10 +116,6 @@ android {
         compose = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.jetpack.compose.compiler.get()
-    }
-
     ksp {
         arg("room.schemaLocation", "$projectDir/room_schemas")
     }
@@ -135,27 +127,9 @@ android {
     }
 }
 
-// Compose compiler setup
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    // Compiler metrics
-    // ./gradlew assembleRelease -P.enableComposeCompilerReports=true --rerun-tasks
-    val buildDir = project.layout.buildDirectory.asFile.get()
-    val metricsDir = "${buildDir.absolutePath}/compose_metrics"
-    kotlinOptions.freeCompilerArgs += listOf(
-        "-P",
-        "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=$metricsDir",
-    )
-    kotlinOptions.freeCompilerArgs += listOf(
-        "-P",
-        "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$metricsDir",
-    )
-
-    // Compiler stability config
-    val stabilityConfigPath = "${project.rootDir.absolutePath}/config/compose/stability_config.txt"
-    kotlinOptions.freeCompilerArgs += listOf(
-        "-P",
-        "plugin:androidx.compose.compiler.plugins.kotlin:stabilityConfigurationPath=$stabilityConfigPath",
-    )
+composeCompiler {
+    reportsDestination = layout.buildDirectory.dir("compose_compiler")
+    stabilityConfigurationFile = rootProject.layout.projectDirectory.file("config/compose/stability_config.txt")
 }
 
 dependencies {
@@ -172,12 +146,13 @@ dependencies {
     implementation(libs.jetpack.media3.exoplayer)
     implementation(libs.jetpack.media3.ui)
     implementation(libs.jetpack.paging.compose)
-    implementation(libs.jetpack.security.cripto)
+    implementation(libs.jetpack.security.crypto)
     implementation(libs.jetpack.browser)
 
     implementation(platform(libs.jetpack.compose.bom))
     implementation(libs.jetpack.compose.ui)
     implementation(libs.jetpack.compose.material)
+    implementation(libs.jetpack.compose.material.navigation)
     implementation(libs.jetpack.compose.material3)
     implementation(libs.jetpack.compose.toolingPreview)
     debugImplementation(libs.jetpack.compose.tooling)
@@ -195,13 +170,10 @@ dependencies {
     implementation(libs.ktor.serialization.json)
 
     implementation(libs.hilt)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigationCompose)
 
-    implementation(libs.accompanist.systemUi)
     implementation(libs.accompanist.permissions)
-    implementation(libs.accompanist.navigationMaterial)
-    implementation(libs.accompanist.webview)
 
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)

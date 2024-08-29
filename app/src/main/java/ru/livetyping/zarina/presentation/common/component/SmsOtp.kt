@@ -101,7 +101,7 @@ fun SmsOtp(
         AnimatedContent(
             targetState = resendState,
             transitionSpec = {
-                AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
             },
             contentAlignment = Alignment.BottomCenter,
             contentKey = {

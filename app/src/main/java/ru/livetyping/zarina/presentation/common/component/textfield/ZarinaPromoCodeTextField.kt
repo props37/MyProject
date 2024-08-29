@@ -230,7 +230,7 @@ object ZarinaPromoCodeTextFieldDefaults {
         AnimatedContent(
             targetState = isVisible,
             transitionSpec = {
-                AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
             },
             contentAlignment = Alignment.Center,
             label = "ApplyButton",

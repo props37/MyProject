@@ -66,7 +66,7 @@ object ProductsScreenComponents {
 
             AnimatedContent(
                 targetState = title,
-                transitionSpec = { AnimatedContentCrossfadeTransitionSpec() },
+                transitionSpec = { AnimatedContentCrossfadeTransitionSpec },
                 contentAlignment = Alignment.CenterStart,
                 label = "TopBar title",
                 modifier = Modifier.weight(1f),
@@ -125,9 +125,9 @@ object ProductsScreenComponents {
             targetState = state,
             transitionSpec = {
                 if (initialState != null && targetState != null) {
-                    AnimatedContentCrossfadeTransitionSpec()
+                    AnimatedContentCrossfadeTransitionSpec
                 } else {
-                    AnimatedContentDefaultTransitionSpec()
+                    AnimatedContentDefaultTransitionSpec
                 }.using(SizeTransform(clip = false))
             },
             contentAlignment = Alignment.CenterStart,

@@ -448,7 +448,7 @@ object FiltersScreenComponents {
             AnimatedContent(
                 targetState = productCount,
                 transitionSpec = {
-                    AnimatedContentDefaultTransitionSpec().using(sizeTransform = null)
+                    AnimatedContentDefaultTransitionSpec.using(sizeTransform = null)
                 },
                 contentAlignment = Alignment.Center,
                 label = "ShowProductsButton",

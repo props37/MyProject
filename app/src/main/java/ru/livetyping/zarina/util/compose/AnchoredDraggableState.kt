@@ -101,8 +101,7 @@ val <T> AnchoredDraggableState<T>.coercedOffset: Float
     }
 
 @Stable
-private val PositionalThreshold: (totalDistance: Float) -> Float
-    get() = { it * 0.5f }
+private val PositionalThreshold: (totalDistance: Float) -> Float = { it * 0.5f }
 
 @Stable
 private val VelocityThreshold: Dp

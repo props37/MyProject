@@ -54,21 +54,19 @@ class RecaptchaManager @Inject constructor() {
                 }
 
                 Timber.tag(TAG).v("Initialize Recaptcha client")
-                val result = Recaptcha.getClient(
-                    application = application,
-                    siteKey = BuildConfig.RECAPTCHA_KEY,
-                    timeout = TIMEOUT.inWholeMilliseconds,
-                )
-                    .onSuccess { client = it }
-                    .onFailure { e ->
-                        val message = if (e is RecaptchaException) {
-                            "Recaptcha client initialization failed. Code: ${e.errorCode}, message: ${e.errorMessage}"
-                        } else {
-                            "Recaptcha client initialization failed"
-                        }
-                        Timber.tag(TAG).e(e, message)
-                    }
-                result.getOrNull()
+                try {
+                    Recaptcha.fetchClient(
+                        application = application,
+                        siteKey = BuildConfig.RECAPTCHA_KEY,
+                    ).also { client = it }
+                } catch (e: RecaptchaException) {
+                    Timber.tag(TAG).e(e, "Recaptcha client initialization failed. " +
+                            "Code: ${e.errorCode}, message: ${e.errorMessage}")
+                    null
+                } catch (e: Exception) {
+                    Timber.tag(TAG).e(e, "Recaptcha client initialization failed")
+                    null
+                }
             }
         }
     }

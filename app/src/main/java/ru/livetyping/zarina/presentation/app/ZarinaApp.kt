@@ -3,6 +3,7 @@ package ru.livetyping.zarina.presentation.app
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.navigation.ModalBottomSheetLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -16,8 +17,6 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import ru.livetyping.zarina.presentation.bottomnavbar.LocalBottomNavBarSizeTracker
 import ru.livetyping.zarina.presentation.bottomnavbar.ZarinaBottomNavBar
 import ru.livetyping.zarina.presentation.bottomnavbar.rememberBottomNavBarSizeTracker
@@ -36,7 +35,6 @@ import ru.livetyping.zarina.presentation.navigation.ZarinaNavigation
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.util.library.accompanist.rememberBottomSheetNavigator
 
-@OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 fun ZarinaApp(
     modifier: Modifier = Modifier,

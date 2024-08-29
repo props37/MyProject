@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.material.navigation.bottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavBackStackEntry
@@ -14,8 +15,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.navigation
-import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import com.google.accompanist.navigation.material.bottomSheet
 
 /**
  * Adds the [Destination] to the [NavGraphBuilder].
@@ -79,7 +78,6 @@ fun NavGraphBuilder.dialogDestination(
     )
 }
 
-@OptIn(ExperimentalMaterialNavigationApi::class)
 fun NavGraphBuilder.bottomSheetDestination(
     destination: Destination<*>,
     content: @Composable ColumnScope.(NavBackStackEntry) -> Unit,

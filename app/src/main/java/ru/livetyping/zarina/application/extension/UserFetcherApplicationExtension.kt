@@ -18,5 +18,6 @@ class UserFetcherApplicationExtension @Inject constructor(
         coroutineScope.launch {
             getUserFlowUseCase().firstOrNull()
         }
+        // TODO: [High] Fetch updated user
     }
 }

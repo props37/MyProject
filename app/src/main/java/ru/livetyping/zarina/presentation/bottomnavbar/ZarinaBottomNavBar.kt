@@ -266,7 +266,7 @@ private fun ItemCounter(
     AnimatedContent(
         targetState = count,
         transitionSpec = {
-            AnimatedContentDefaultTransitionSpec().using(sizeTransform = null)
+            AnimatedContentDefaultTransitionSpec.using(sizeTransform = null)
         },
         contentAlignment = Alignment.TopEnd,
         label = "ItemCounter",

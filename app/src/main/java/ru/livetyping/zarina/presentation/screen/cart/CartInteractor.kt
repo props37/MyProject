@@ -12,6 +12,7 @@ import ru.livetyping.zarina.usecase.cart.RemoveMyCardFromCartUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveProductFromCartUseCase
 import ru.livetyping.zarina.usecase.cart.RemovePromoCodeUseCase
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
+import ru.livetyping.zarina.usecase.user.FetchUserCityUseCase
 import ru.livetyping.zarina.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.usecase.user.SetUserCityUseCase
 import javax.inject.Inject
@@ -31,4 +32,5 @@ class CartInteractor @Inject constructor(
     val removePromoCode: RemovePromoCodeUseCase,
     val applyBonusWriteOff: ApplyBonusWriteOffUseCase,
     val removeBonusWriteOff: RemoveBonusWriteOffUseCase,
+    val fetchUserCity: FetchUserCityUseCase,
 )

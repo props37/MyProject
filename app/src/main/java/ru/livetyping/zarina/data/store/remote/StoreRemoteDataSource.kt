@@ -15,10 +15,9 @@ class StoreRemoteDataSource @Inject constructor(
             .flatMap { country ->
                 checkNotNull(country.name) { "country name is null" }
                 val cities = country.cities
-                checkNotNull(cities) { "cities is null" }
-                cities.flatMap { city ->
+                cities?.flatMap { city ->
                     city.getStores(country.name)
-                }
+                } ?: emptyList()
             }
         emit(stores)
     }

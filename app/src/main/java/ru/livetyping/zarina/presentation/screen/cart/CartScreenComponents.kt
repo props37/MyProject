@@ -192,6 +192,7 @@ object CartScreenComponents {
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
+        onCheckoutClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val cityScrollBehavior = CollapsingTopBarDefaults.rememberExitUntilCollapsedScrollBehavior()
@@ -242,6 +243,7 @@ object CartScreenComponents {
                     onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                     onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                     onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
+                    onCheckoutClicked = onCheckoutClicked,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -367,7 +369,7 @@ object CartScreenComponents {
             AnimatedContent(
                 targetState = productCount,
                 transitionSpec = {
-                    AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                    AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
                 },
                 contentAlignment = Alignment.Center,
                 label = "CartTypeButton product count",
@@ -398,6 +400,7 @@ object CartScreenComponents {
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
+        onCheckoutClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         HorizontalPager(
@@ -428,6 +431,7 @@ object CartScreenComponents {
                             onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                             onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                             onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
+                            onCheckoutClicked = onCheckoutClicked,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
@@ -471,6 +475,7 @@ object CartScreenComponents {
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
+        onCheckoutClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
@@ -487,6 +492,7 @@ object CartScreenComponents {
                 onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                 onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                 onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
+                onCheckoutClicked = onCheckoutClicked,
                 modifier = Modifier.matchParentSize(),
             )
 
@@ -500,7 +506,8 @@ object CartScreenComponents {
             FloatingCheckoutBlock(
                 isVisible = !isCheckoutBlockVisible && !WindowInsets.isImeVisible,
                 totalPrice = cartState.price.totalPrice,
-                isOrderButtonEnabled = !cartState.productLimit.isExceeded,
+                isCheckoutButtonEnabled = !cartState.productLimit.isExceeded,
+                onCheckoutClicked = onCheckoutClicked,
                 modifier = Modifier.align(Alignment.BottomCenter),
             )
         }
@@ -518,6 +525,7 @@ object CartScreenComponents {
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
+        onCheckoutClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         var lastDraggedProductId by remember { mutableStateOf<CartProduct.Id?>(null) }
@@ -610,7 +618,7 @@ object CartScreenComponents {
                         AnimatedContent(
                             targetState = cartState.promoCodeState.description,
                             transitionSpec = {
-                                AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                                AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
                             },
                             contentAlignment = Alignment.Center,
                             label = "PromoCode description",
@@ -683,7 +691,7 @@ object CartScreenComponents {
                 contentType = CartContentType.CheckoutBlock,
             ) {
                 ZarinaButton(
-                    onClick = { /*TODO*/ },
+                    onClick = onCheckoutClicked,
                     isEnabled = !cartState.productLimit.isExceeded,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -701,7 +709,8 @@ object CartScreenComponents {
     private fun FloatingCheckoutBlock(
         isVisible: Boolean,
         totalPrice: Int,
-        isOrderButtonEnabled: Boolean,
+        isCheckoutButtonEnabled: Boolean,
+        onCheckoutClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         AnimatedVisibility(
@@ -738,8 +747,8 @@ object CartScreenComponents {
                 Spacer(modifier = Modifier.width(12.dp))
 
                 ZarinaButton(
-                    onClick = { /*TODO*/ },
-                    isEnabled = isOrderButtonEnabled,
+                    onClick = onCheckoutClicked,
+                    isEnabled = isCheckoutButtonEnabled,
                     modifier = Modifier.weight(1f),
                 ) {
                     Text(text = stringResource(R.string.checkout).uppercase())
@@ -766,6 +775,8 @@ object CartScreenComponents {
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 
@@ -864,10 +875,7 @@ object CartScreenComponents {
                         interactionSource = anchoredDraggableInteractionSource,
                     ),
             ) {
-                val countStyle = remember(
-                    productItem.availableCount,
-                    productCardActions.onCountClicked,
-                ) {
+                val countStyle = remember(productItem, productCardActions.onCountClicked) {
                     ProductOrderCardCountStyle.Selector(
                         isEditable = productItem.availableCount > 1,
                         onClick = { productCardActions.onCountClicked(product) },
@@ -884,7 +892,9 @@ object CartScreenComponents {
                     count = product.count,
                     countStyle = countStyle,
                     price = product.price,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { productCardActions.onProductClicked(product) },
                 )
 
                 if (isDividerVisible) {
@@ -1111,7 +1121,7 @@ object CartScreenComponents {
             AnimatedContent(
                 targetState = state.isWriteOffApplied,
                 transitionSpec = {
-                    AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
+                    AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
                 },
                 contentAlignment = Alignment.Center,
                 label = "Bonus write off text field",
@@ -1220,6 +1230,7 @@ object CartScreenComponents {
 
     @Stable
     class ProductCardActions(
+        val onProductClicked: (CartProduct) -> Unit,
         val onCountClicked: (CartProduct) -> Unit,
         val onAddToFavoritesClicked: (CartProduct) -> Unit,
         val onDeleteFromCartClicked: (CartProduct) -> Unit,

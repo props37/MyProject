@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.domain.order
 
-enum class OrderDeliveryMethod {
+enum class DeliveryMethodType {
     DELIVERY_SERVICE,
     POST,
     PICKUP,

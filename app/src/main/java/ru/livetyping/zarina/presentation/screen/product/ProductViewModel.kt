@@ -75,7 +75,7 @@ class ProductViewModel @AssistedInject constructor(
     private val productId = MutableStateFlow(initialProductId.value)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val productRequester = FlowRequester(ProductRequest.GENERAL) {
+    private val productRequester = FlowRequester(ProductRequest) {
         productId.flatMapLatest { productId ->
             val params = GetProductFlowUseCase.Params(productId)
             interactor.getProductFlow(params)
@@ -83,7 +83,7 @@ class ProductViewModel @AssistedInject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val productTotalLookRequester = FlowRequester(ProductRequest.GENERAL) {
+    private val productTotalLookRequester = FlowRequester(ProductRequest) {
         productId.flatMapLatest { productId ->
             val params = GetProductTotalLookFlowUseCase.Params(productId)
             interactor.getProductTotalLookFlow(params)
@@ -91,7 +91,7 @@ class ProductViewModel @AssistedInject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val productSimilarRequester = FlowRequester(ProductRequest.GENERAL) {
+    private val productSimilarRequester = FlowRequester(ProductRequest) {
         productId.flatMapLatest { productId ->
             val params = GetProductSimilarFlowUseCase.Params(productId)
             interactor.getProductSimilarFlow(params)
@@ -193,9 +193,9 @@ class ProductViewModel @AssistedInject constructor(
     }
 
     fun onProductErrorRefreshClicked() {
-        productRequester.request(ProductRequest.GENERAL)
+        productRequester.request(ProductRequest)
         if (productTotalLookResult.value?.isSuccess != true) {
-            productTotalLookRequester.request(ProductRequest.GENERAL)
+            productTotalLookRequester.request(ProductRequest)
         }
     }
 
@@ -253,11 +253,11 @@ class ProductViewModel @AssistedInject constructor(
     }
 
     fun onProductTotalLookErrorRefreshClicked() {
-        productTotalLookRequester.request(ProductRequest.GENERAL)
+        productTotalLookRequester.request(ProductRequest)
     }
 
     fun onProductSimilarErrorRefreshClicked() {
-        productSimilarRequester.request(ProductRequest.GENERAL)
+        productSimilarRequester.request(ProductRequest)
     }
 
     fun onUrlClicked(url: Url) {
@@ -334,7 +334,7 @@ class ProductViewModel @AssistedInject constructor(
         data object Empty : SuggestedProductListState()
     }
 
-    private enum class ProductRequest : FlowRequester.Request { GENERAL }
+    private data object ProductRequest : FlowRequester.Request
 
     @AssistedFactory
     interface Factory {

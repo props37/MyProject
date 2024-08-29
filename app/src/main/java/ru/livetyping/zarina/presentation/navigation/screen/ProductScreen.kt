@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
+import ru.livetyping.zarina.presentation.navigation.destination.graph.CartGraph
 import ru.livetyping.zarina.presentation.navigation.destination.graph.FavoritesGraph
 import ru.livetyping.zarina.presentation.navigation.destination.graph.SizeSelectorGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.navigateToSizeSelectorGraph
@@ -26,7 +27,8 @@ fun NavGraphBuilder.productScreen(navController: NavHostController) {
                 UnscopedDestinations.Product.routeSchema,
                 UnscopedDestinations.Products.routeSchema,
                 UnscopedDestinations.ProductSearch.routeSchema,
-                FavoritesGraph.Favorites.routeSchema -> slideEnterTransition()
+                FavoritesGraph.Favorites.routeSchema,
+                CartGraph.Cart.routeSchema -> slideEnterTransition()
 
                 else -> null
             }
@@ -48,7 +50,8 @@ fun NavGraphBuilder.productScreen(navController: NavHostController) {
                 UnscopedDestinations.Product.routeSchema,
                 UnscopedDestinations.Products.routeSchema,
                 UnscopedDestinations.ProductSearch.routeSchema,
-                FavoritesGraph.Favorites.routeSchema -> slidePopExitTransition()
+                FavoritesGraph.Favorites.routeSchema,
+                CartGraph.Cart.routeSchema -> slidePopExitTransition()
 
                 else -> null
             }

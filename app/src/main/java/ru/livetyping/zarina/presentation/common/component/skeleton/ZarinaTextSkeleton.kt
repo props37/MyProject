@@ -17,14 +17,15 @@ import ru.livetyping.zarina.util.library.shimmer.shimmerToggleable
 fun ZarinaTextSkeleton(
     textStyle: TextStyle,
     modifier: Modifier = Modifier,
-    shimmer: Shimmer? = rememberZarinaSkeletonShimmer(),
+    shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
+    isShimmerEnabled: Boolean = true,
     color: Color = ZarinaSkeletonDefaults.Color,
     shape: Shape = ZarinaSkeletonDefaults.Shape,
 ) {
     Box(
         modifier = modifier
             .clip(shape)
-            .shimmerToggleable(shimmer = shimmer, isEnabled = shimmer != null)
+            .shimmerToggleable(shimmer = shimmer, isEnabled = isShimmerEnabled)
             .background(color),
     ) {
         // Use default font family as theme font family has huge top and bottom paddings

@@ -258,9 +258,11 @@ class CartViewModel @AssistedInject constructor(
 
     fun onScreenOpened() {
         requestCarts(CartRequest.LOADING)
-        // TODO: [High] Is it needed?
         viewModelScope.launch {
             interactor.fetchCartProductIds()
+        }
+        viewModelScope.launch {
+            interactor.fetchUserCity()
         }
     }
 
@@ -289,6 +291,13 @@ class CartViewModel @AssistedInject constructor(
 
     fun onCartTypeChanged(type: CartType) {
         _currentCartType.value = type
+    }
+
+    fun onProductClicked(product: CartProduct) {
+        navigationThrottler.throttle {
+            val action = CartScreenAction.ProductClicked(product)
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     fun onProductCountClicked(product: CartProduct) {
@@ -471,6 +480,13 @@ class CartViewModel @AssistedInject constructor(
         }
     }
 
+    fun onCheckoutClicked() {
+        navigationThrottler.throttle {
+            val action = CartScreenAction.CheckoutClicked(currentCartType.value)
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
     private suspend fun applyBonusWriteOff(cartType: CartType, bonusCount: Int) {
         val params = ApplyBonusWriteOffUseCase.Params(cartType, bonusCount)
         interactor.applyBonusWriteOff(params)
@@ -532,7 +548,7 @@ class CartViewModel @AssistedInject constructor(
             ) { result ->
                 val newCity = result.city.toCity()
                 val currentCity = city.value
-                if (newCity.kladrId != currentCity?.kladrId) {
+                if (newCity.id != currentCity?.id) {
                     val params = SetUserCityUseCase.Params(newCity)
                     interactor.setUserCity(params)
                         .onFailure {

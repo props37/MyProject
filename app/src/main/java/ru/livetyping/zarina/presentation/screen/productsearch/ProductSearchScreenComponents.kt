@@ -80,7 +80,6 @@ import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewM
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchSuggestionItem
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewModel.SearchSuggestionsState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
-import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.tryRequestFocus
 import ru.livetyping.zarina.util.kotlin.capitalize
@@ -149,7 +148,7 @@ object ProductSearchScreenComponents {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
                         contentDescription = null,
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(16.dp),
                     )
                 },
                 innerTrailingContent = {
@@ -162,21 +161,10 @@ object ProductSearchScreenComponents {
                     )
                 },
                 outerTrailingContent = {
-                    val isCancelButtonVisible = focusState.value?.isFocused == true
-                    AnimatedContent(
-                        targetState = isCancelButtonVisible,
-                        transitionSpec = {
-                            AnimatedContentDefaultTransitionSpec().using(SizeTransform(clip = false))
-                        },
-                        contentAlignment = Alignment.Center,
-                        label = "SearchBar Cancel button",
-                    ) { isVisible ->
-                        if (isVisible) {
-                            ZarinaTextFieldDefaults.CancelButton(
-                                onClick = onSearchTextFieldCancelClicked,
-                            )
-                        }
-                    }
+                    ZarinaTextFieldDefaults.CancelButton(
+                        isVisible = focusState.value?.isFocused == true,
+                        onClick = onSearchTextFieldCancelClicked,
+                    )
                 },
                 keyboardOptions = remember {
                     KeyboardOptions(imeAction = ImeAction.Search)

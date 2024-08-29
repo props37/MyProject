@@ -8,6 +8,8 @@ import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CartGraph
+import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
+import ru.livetyping.zarina.presentation.navigation.screen.graph.navigateToCheckoutGraph
 import ru.livetyping.zarina.presentation.navigation.util.BottomNavBarItemSecondaryStartDestinationBackHandler
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
@@ -20,13 +22,20 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
         destination = CartGraph.Cart,
         exitTransition = {
             when (targetState.destination.route) {
-                UnscopedDestinations.CitySelector.routeSchema -> slideExitTransition()
+                UnscopedDestinations.CitySelector.routeSchema,
+                UnscopedDestinations.Product.routeSchema,
+                CheckoutGraph.Recipient.routeSchema -> slideExitTransition()
+
                 else -> null
             }
         },
         popEnterTransition = {
             when (initialState.destination.route) {
-                UnscopedDestinations.CitySelector.routeSchema -> slidePopEnterTransition()
+                UnscopedDestinations.CitySelector.routeSchema,
+                UnscopedDestinations.Product.routeSchema,
+                CheckoutGraph.Recipient.routeSchema,
+                CheckoutGraph.StoreSelection.routeSchema -> slidePopEnterTransition()
+
                 else -> null
             }
         },
@@ -57,6 +66,10 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
                         )
                     }
 
+                    is CartScreenAction.ProductClicked -> {
+                        navController.navigateToProductScreen(action.product.productId)
+                    }
+
                     is CartScreenAction.ProductCountClicked -> {
                         navController.navigateToProductCountSelector(
                             productId = action.productId,
@@ -65,6 +78,10 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
                             availableCount = action.availableCount,
                             cartType = action.cartType,
                         )
+                    }
+
+                    is CartScreenAction.CheckoutClicked -> {
+                        navController.navigateToCheckoutGraph(action.cartType)
                     }
                 }
             },

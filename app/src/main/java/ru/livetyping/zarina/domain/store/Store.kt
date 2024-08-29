@@ -11,9 +11,9 @@ data class Store(
     val phone: PhoneNumber?,
     val schedule: String?,
     val location: Location,
-    val country: String,
+    val country: String?,
     val cityKladrId: KladrId?,
-    val cityName: String,
+    val cityName: String?,
 ) {
     @JvmInline
     value class Id(val value: String)

@@ -35,9 +35,9 @@ import androidx.compose.ui.zIndex
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderContactInfo
-import ru.livetyping.zarina.domain.order.OrderDeliveryMethod
 import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.order.OrderPaymentMethod
 import ru.livetyping.zarina.presentation.common.component.OrderPrice
@@ -86,7 +86,7 @@ object OrderScreenComponents {
                 AnimatedContent(
                     targetState = orderNumber,
                     transitionSpec = {
-                        AnimatedContentCrossfadeTransitionSpec().using(sizeTransform = null)
+                        AnimatedContentCrossfadeTransitionSpec.using(sizeTransform = null)
                     },
                     contentAlignment = Alignment.Center,
                     label = "Order number",
@@ -258,7 +258,7 @@ object OrderScreenComponents {
                 contentType = OrderListContentTypeInfo,
             ) {
                 OrderInfo(
-                    deliveryMethod = order.deliveryInfo.method,
+                    deliveryMethodType = order.deliveryInfo.type,
                     deliveryAddress = order.deliveryAddress,
                     contactInfo = order.contactInfo,
                     paymentMethod = order.paymentMethod,
@@ -310,7 +310,7 @@ object OrderScreenComponents {
 
     @Composable
     private fun OrderInfo(
-        deliveryMethod: OrderDeliveryMethod,
+        deliveryMethodType: DeliveryMethodType,
         deliveryAddress: String,
         contactInfo: OrderContactInfo,
         paymentMethod: OrderPaymentMethod,
@@ -332,7 +332,7 @@ object OrderScreenComponents {
 
                 OrderInfoItem(
                     name = stringResource(R.string.delivery_method),
-                    value = stringResource(deliveryMethod.nameResId),
+                    value = stringResource(deliveryMethodType.nameResId),
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 

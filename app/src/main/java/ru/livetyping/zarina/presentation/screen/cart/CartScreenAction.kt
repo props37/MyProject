@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.cart
 
+import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.geography.City
@@ -10,6 +11,8 @@ sealed class CartScreenAction {
 
     data class CityClicked(val currentCity: City?) : CartScreenAction()
 
+    data class ProductClicked(val product: CartProduct) : CartScreenAction()
+
     data class ProductCountClicked(
         val productId: Product.Id,
         val barcode: Barcode,
@@ -17,4 +20,6 @@ sealed class CartScreenAction {
         val availableCount: Int,
         val cartType: CartType,
     ) : CartScreenAction()
+
+    data class CheckoutClicked(val cartType: CartType) : CartScreenAction()
 }

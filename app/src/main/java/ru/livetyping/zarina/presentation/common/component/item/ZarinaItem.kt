@@ -34,6 +34,29 @@ fun ZarinaItem(
     endContent: (@Composable RowScope.() -> Unit)? = null,
     startContent: @Composable RowScope.() -> Unit,
 ) {
+    ZarinaItem(
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        contentPadding = contentPadding,
+        startContent = startContent,
+        endContent = endContent,
+        modifier = modifier
+            .clickable(
+                enabled = onClick != null,
+                onClick = { onClick?.invoke() }
+            ),
+    )
+}
+
+@Composable
+fun ZarinaItem(
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = BackgroundColor,
+    contentColor: Color = ContentColor,
+    contentPadding: PaddingValues = ContentPadding,
+    endContent: (@Composable RowScope.() -> Unit)? = null,
+    startContent: @Composable RowScope.() -> Unit,
+) {
     CompositionLocalProvider(
         LocalContentColor provides contentColor,
         LocalTextStyle provides UiKitTheme.typography.primary.regular,
@@ -43,10 +66,6 @@ fun ZarinaItem(
             modifier = modifier
                 .defaultMinSize(minHeight = MinHeight)
                 .background(backgroundColor)
-                .clickable(
-                    enabled = onClick != null,
-                    onClick = { onClick?.invoke() },
-                )
                 .padding(contentPadding),
         ) {
             Row(
