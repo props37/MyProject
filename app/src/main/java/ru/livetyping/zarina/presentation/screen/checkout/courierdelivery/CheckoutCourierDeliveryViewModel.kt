@@ -27,8 +27,6 @@ import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.DeliveryOptions
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
-import ru.livetyping.zarina.presentation.common.error.ErrorState
-import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
@@ -152,12 +150,20 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
         selectedDeliveryOptionId,
         deliveryOptionToSelectedDateTimePeriod,
     ) { optionsResult, loadingState, selectedOptionId, deliveryOptionToSelectedDateTimePeriod ->
-        createDeliveryOptionState(
-            optionsResult = optionsResult,
-            loadingState = loadingState,
-            selectedOptionId = selectedOptionId,
-            deliveryOptionToSelectedDateTimePeriod = deliveryOptionToSelectedDateTimePeriod,
-        )
+        when {
+            loadingState.isLoading() -> DeliveryOptionsState.Loading
+            optionsResult != null -> {
+                DeliveryOptionsState.create(
+                    optionsResult = optionsResult,
+                    loadingState = loadingState,
+                    selectedOptionId = selectedOptionId,
+                    deliveryOptionToSelectedDateTimePeriod = deliveryOptionToSelectedDateTimePeriod,
+                    getOptionDefaultDateTimePeriod = { it.dateTimePeriods.getDefault() },
+                )
+            }
+
+            else -> null
+        }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
@@ -243,42 +249,6 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
         return if (this is DeliveryOptionsState.Success) {
             this.options.find { it.isSelected }
         } else null
-    }
-
-    @Suppress("MaxLineLength")
-    private fun createDeliveryOptionState(
-        optionsResult: Result<DeliveryOptions>?,
-        loadingState: FlowRequester.LoadingState,
-        selectedOptionId: DeliveryOptions.Option.Id?,
-        deliveryOptionToSelectedDateTimePeriod: Map<DeliveryOptions.Option.Id, DeliveryOptions.Option.DateTimePeriod>,
-    ): DeliveryOptionsState? {
-        return when {
-            loadingState.isLoading() -> DeliveryOptionsState.Loading
-            optionsResult == null -> null
-            else -> {
-                optionsResult.fold(
-                    onSuccess = { options ->
-                        val mappedOptions = options.options.mapIndexed { index, option ->
-                            val isSelected =
-                                selectedOptionId?.let { option.id == it } ?: (index == 0)
-                            val selectedDateTimePeriod =
-                                deliveryOptionToSelectedDateTimePeriod[option.id]
-                                    ?: option.dateTimePeriods.getDefault()
-                            DeliveryOptionState(
-                                deliveryOption = option,
-                                isSelected = isSelected,
-                                selectedDateTimePeriod = selectedDateTimePeriod,
-                            )
-                        }
-                        DeliveryOptionsState.Success(mappedOptions)
-                    },
-                    onFailure = {
-                        val errorState = ErrorState.from(it)
-                        DeliveryOptionsState.Error(errorState)
-                    },
-                )
-            }
-        }
     }
 
     private fun handleDateTimePeriodSelectorResult() {

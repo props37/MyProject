@@ -5,16 +5,20 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.checkout.DeliveryOptions
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
@@ -23,7 +27,9 @@ import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelabl
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressViewModelComponent
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
+import ru.livetyping.zarina.usecase.checkout.GetPostDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
@@ -99,6 +105,27 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
     val buildingsState: StateFlow<CheckoutAddressViewModelComponent.State> =
         addressComponent.buildingsState
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val deliveryOptionsRequester = FlowRequester(DeliveryOptionsRequest) {
+        addressComponent.selectedBuilding.flatMapLatest { building ->
+            if (building != null) {
+                markAsLoading(it)
+                val params = GetPostDeliveryOptionsFlowUseCase.Params(building.id)
+                interactor.getPostDeliveryOptionsFlow(params)
+            } else flowOf(null)
+        }
+    }
+
+    private val deliveryOptionsResult: StateFlow<Result<DeliveryOptions>?> =
+        deliveryOptionsRequester.flow
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = null,
+            )
+
+    private val selectedDeliveryOptionId = MutableStateFlow<DeliveryOptions.Option.Id?>(null)
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = CheckoutPostDeliveryScreenAction.ScreenClosed
@@ -132,4 +159,6 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutPostDeliveryScreenAction) : SideEffect
     }
+
+    private data object DeliveryOptionsRequest : FlowRequester.Request
 }
