@@ -132,7 +132,7 @@ class CheckoutCourierDeliveryDateTimeSelectorViewModel @Inject constructor(
             }
             Item(
                 dateTimePeriodId = period.id,
-                text = text,
+                text = text.orEmpty(),
                 isSelected = period.id == selectedDateTimePeriodId,
             )
         }

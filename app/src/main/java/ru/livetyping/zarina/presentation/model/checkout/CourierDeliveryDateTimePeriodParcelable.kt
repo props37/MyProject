@@ -10,7 +10,7 @@ import ru.livetyping.zarina.domain.checkout.CourierDeliveryOptions
 data class CourierDeliveryDateTimePeriodParcelable(
     val id: Long,
     val date: String,
-    val time: String,
+    val time: String?,
 ) : Parcelable {
 
     fun toDateTimePeriod(): CourierDeliveryOptions.Option.DateTimePeriod {

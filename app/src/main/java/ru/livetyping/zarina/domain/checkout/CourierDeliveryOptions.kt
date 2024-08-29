@@ -16,7 +16,7 @@ data class CourierDeliveryOptions(
         data class DateTimePeriod(
             val id: Id,
             val date: String,
-            val time: String,
+            val time: String?,
         ) {
             @JvmInline
             value class Id(val value: Long)
