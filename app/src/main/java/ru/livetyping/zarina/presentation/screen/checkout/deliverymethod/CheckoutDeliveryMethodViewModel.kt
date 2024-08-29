@@ -54,7 +54,7 @@ class CheckoutDeliveryMethodViewModel @Inject constructor(
             it.toCartType()
         }
 
-    private val deliveryMethodsRequester = FlowRequester(DeliveryMethodsRequest.GENERAL) {
+    private val deliveryMethodsRequester = FlowRequester(DeliveryMethodsRequest) {
         val city = interactor.getUserCityFlow().firstOrNull()?.getOrNull() ?: City.DEFAULT
         val params = GetDeliveryMethodsFlowUseCase.Params(cartType.value, city.id)
         interactor.getDeliveryMethodsFlow(params)
@@ -135,7 +135,7 @@ class CheckoutDeliveryMethodViewModel @Inject constructor(
     }
 
     fun onDeliveryMethodsErrorRefreshClicked() {
-        deliveryMethodsRequester.request(DeliveryMethodsRequest.GENERAL)
+        deliveryMethodsRequester.request(DeliveryMethodsRequest)
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -153,5 +153,5 @@ class CheckoutDeliveryMethodViewModel @Inject constructor(
         data class Error(val state: ErrorState) : State()
     }
 
-    private enum class DeliveryMethodsRequest : FlowRequester.Request { GENERAL }
+    private data object DeliveryMethodsRequest : FlowRequester.Request
 }

@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -96,7 +95,7 @@ class ProductFiltersViewModel @AssistedInject constructor(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val categoryProductInfoRequester = FlowRequester(CategoryProductInfoRequest.GENERAL) {
+    private val categoryProductInfoRequester = FlowRequester(CategoryProductInfoRequest) {
         combine(
             categoryId,
             filters.onEach { _isRefreshing.value = true },
@@ -208,7 +207,7 @@ class ProductFiltersViewModel @AssistedInject constructor(
     }
 
     fun onFilterListErrorRefreshClicked() {
-        categoryProductInfoRequester.request(CategoryProductInfoRequest.GENERAL)
+        categoryProductInfoRequester.request(CategoryProductInfoRequest)
     }
 
     private fun handleListFilterResult() {
@@ -234,7 +233,7 @@ class ProductFiltersViewModel @AssistedInject constructor(
         data class NavigateBackward(val result: ProductFiltersScreenResult) : SideEffect
     }
 
-    private enum class CategoryProductInfoRequest : FlowRequester.Request { GENERAL }
+    private data object CategoryProductInfoRequest : FlowRequester.Request
 
     @AssistedFactory
     interface Factory {

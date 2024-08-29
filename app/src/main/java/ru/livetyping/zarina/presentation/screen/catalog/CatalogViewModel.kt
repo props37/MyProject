@@ -63,7 +63,7 @@ class CatalogViewModel @Inject constructor(
         },
     )
 
-    private val categoriesRequester = FlowRequester(CategoriesRequest.GENERAL) {
+    private val categoriesRequester = FlowRequester(CategoriesRequest) {
         interactor.getCategoriesFlow()
     }
 
@@ -153,7 +153,7 @@ class CatalogViewModel @Inject constructor(
     }
 
     fun onCategoryListErrorRefreshClicked() {
-        categoriesRequester.request(CategoriesRequest.GENERAL)
+        categoriesRequester.request(CategoriesRequest)
     }
 
     private fun onCategoryItemClicked(item: CategoryListItem.CategoryItem) {
@@ -320,7 +320,7 @@ class CatalogViewModel @Inject constructor(
         }
     }
 
-    private enum class CategoriesRequest : FlowRequester.Request { GENERAL }
+    private data object CategoriesRequest : FlowRequester.Request
 
     companion object {
         private const val KEY_CURRENT_GENDER_TAB = "current_gender_tab"

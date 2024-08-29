@@ -47,11 +47,11 @@ class StoresViewModel @Inject constructor(
     private val _currentViewMode = MutableStateFlow(ViewMode.MAP)
     val currentViewMode: StateFlow<ViewMode> = _currentViewMode.asStateFlow()
 
-    private val currentLocationRequester = FlowRequester(LocationRequest.GENERAL) {
+    private val currentLocationRequester = FlowRequester(LocationRequest) {
         interactor.getCurrentLocationFlow()
     }
 
-    private val storesRequester = FlowRequester(StoresRequest.GENERAL) {
+    private val storesRequester = FlowRequester(StoresRequest) {
         interactor.getStoresFlow()
     }
 
@@ -141,12 +141,12 @@ class StoresViewModel @Inject constructor(
             val fineLocationPermissionState =
                 permissionManager.getPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
             if (fineLocationPermissionState.isGranted) {
-                currentLocationRequester.request(LocationRequest.GENERAL)
+                currentLocationRequester.request(LocationRequest)
             } else {
                 val newPermissionsState =
                     permissionManager.requestMultiplePermissions(LOCATION_PERMISSIONS)
                 if (newPermissionsState.any { it.value.isGranted }) {
-                    currentLocationRequester.request(LocationRequest.GENERAL)
+                    currentLocationRequester.request(LocationRequest)
                 } else {
                     val action = StoresScreenAction.LocationPermissionRequired
                     emitSideEffect(SideEffect.Navigate(action))
@@ -156,7 +156,7 @@ class StoresViewModel @Inject constructor(
     }
 
     fun onStoresErrorRefreshClicked() {
-        storesRequester.request(StoresRequest.GENERAL)
+        storesRequester.request(StoresRequest)
     }
 
     fun onStoreClicked(store: Store) {
@@ -186,9 +186,9 @@ class StoresViewModel @Inject constructor(
         data class Error(val state: ErrorState) : StoreListState()
     }
 
-    private enum class LocationRequest : FlowRequester.Request { GENERAL }
+    private data object LocationRequest : FlowRequester.Request
 
-    private enum class StoresRequest : FlowRequester.Request { GENERAL }
+    private data object StoresRequest : FlowRequester.Request
 
     companion object {
         private val LOCATION_PERMISSIONS: List<String>

@@ -94,7 +94,7 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val categoryProductInfoRequester = FlowRequester(CategoryProductInfoRequest.GENERAL) {
+    private val categoryProductInfoRequester = FlowRequester(CategoryProductInfoRequest) {
         combine(
             searchQuery,
             filters.onEach { _isRefreshing.value = true },
@@ -211,7 +211,7 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
     }
 
     fun onFilterListErrorRefreshClicked() {
-        categoryProductInfoRequester.request(CategoryProductInfoRequest.GENERAL)
+        categoryProductInfoRequester.request(CategoryProductInfoRequest)
     }
 
     private fun handleListFilterResult() {
@@ -237,7 +237,7 @@ class ProductSearchFiltersViewModel @AssistedInject constructor(
         data class NavigateBackward(val result: ProductSearchFiltersScreenResult) : SideEffect
     }
 
-    private enum class CategoryProductInfoRequest : FlowRequester.Request { GENERAL }
+    private data object CategoryProductInfoRequest : FlowRequester.Request
 
     @AssistedFactory
     interface Factory {

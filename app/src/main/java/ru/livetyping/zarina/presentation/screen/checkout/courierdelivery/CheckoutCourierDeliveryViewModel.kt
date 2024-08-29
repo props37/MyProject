@@ -121,7 +121,7 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
         addressComponent.buildingsState
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val deliveryOptionsRequester = FlowRequester(DeliveryOptionsRequest.GENERAL) {
+    private val deliveryOptionsRequester = FlowRequester(DeliveryOptionsRequest) {
         addressComponent.selectedBuilding.flatMapLatest { building ->
             if (building != null) {
                 markAsLoading(it)
@@ -232,7 +232,7 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
     }
 
     fun onDeliveryOptionsErrorRefreshClicked() {
-        deliveryOptionsRequester.request(DeliveryOptionsRequest.GENERAL)
+        deliveryOptionsRequester.request(DeliveryOptionsRequest)
     }
 
     fun onContinueClicked() {
@@ -322,7 +322,7 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
         val selectedDateTimePeriod: DeliveryOptions.Option.DateTimePeriod,
     )
 
-    private enum class DeliveryOptionsRequest : FlowRequester.Request { GENERAL }
+    private data object DeliveryOptionsRequest : FlowRequester.Request
 
     @AssistedFactory
     interface Factory {

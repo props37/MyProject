@@ -68,7 +68,7 @@ class CheckoutAddressViewModelComponent @Inject constructor(
         )
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    private val streetsRequester = FlowRequester(AddressRequest.GENERAL) {
+    private val streetsRequester = FlowRequester(AddressRequest) {
         val queryFlow = searchStreetTextFieldState
             .textAsFlow()
             .debounce(300.milliseconds)
@@ -83,7 +83,7 @@ class CheckoutAddressViewModelComponent @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    private val buildingsRequester = FlowRequester(AddressRequest.GENERAL) {
+    private val buildingsRequester = FlowRequester(AddressRequest) {
         val queryFlow = searchBuildingTextFieldState
             .textAsFlow()
             .debounce(300.milliseconds)
@@ -228,11 +228,11 @@ class CheckoutAddressViewModelComponent @Inject constructor(
     }
 
     fun onStreetsErrorRefreshClicked() {
-        streetsRequester.request(AddressRequest.GENERAL)
+        streetsRequester.request(AddressRequest)
     }
 
     fun onBuildingsErrorRefreshClicked() {
-        buildingsRequester.request(AddressRequest.GENERAL)
+        buildingsRequester.request(AddressRequest)
     }
 
     private fun clearSelectedBuilding() {
@@ -282,7 +282,7 @@ class CheckoutAddressViewModelComponent @Inject constructor(
         val addressPart: AddressPart,
     )
 
-    private enum class AddressRequest : FlowRequester.Request { GENERAL }
+    private data object AddressRequest : FlowRequester.Request
 
     companion object {
         private const val KEY_SELECTED_STREET = "selected_street"

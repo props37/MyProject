@@ -80,13 +80,13 @@ class CheckoutStoreSelectionViewModel @Inject constructor(
             initialValue = null,
         )
 
-    private val cartRequester = FlowRequester(CartRequest.GENERAL) {
+    private val cartRequester = FlowRequester(CartRequest) {
         val params = GetCartFlowUseCase.Params(cartType.value)
         interactor.getCartFlow(params)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val storesRequester = FlowRequester(StoresRequest.GENERAL) {
+    private val storesRequester = FlowRequester(StoresRequest) {
         city.flatMapLatest {
             val city = it ?: City.DEFAULT
             val params = GetPickupStoresFlowUseCase.Params(city)
@@ -137,10 +137,10 @@ class CheckoutStoreSelectionViewModel @Inject constructor(
 
     fun onStoresErrorRefreshClicked() {
         if (cartResult.value?.isSuccess != true) {
-            cartRequester.request(CartRequest.GENERAL)
+            cartRequester.request(CartRequest)
         }
         if (storesResult.value?.isSuccess != true) {
-            storesRequester.request(StoresRequest.GENERAL)
+            storesRequester.request(StoresRequest)
         }
     }
 
@@ -207,7 +207,7 @@ class CheckoutStoreSelectionViewModel @Inject constructor(
         data class Error(val state: ErrorState) : State()
     }
 
-    private enum class CartRequest : FlowRequester.Request { GENERAL }
+    private data object CartRequest : FlowRequester.Request
 
-    private enum class StoresRequest : FlowRequester.Request { GENERAL }
+    private data object StoresRequest : FlowRequester.Request
 }

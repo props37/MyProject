@@ -55,7 +55,7 @@ class FavoritesViewModel @AssistedInject constructor(
 
     private var clearFavoriteProductsJob: Job? = null
 
-    private val favoriteProductsRequester = FlowRequester(FavoriteProductsRequest.GENERAL) {
+    private val favoriteProductsRequester = FlowRequester(FavoriteProductsRequest) {
         interactor.favoriteProductPager.getFavoriteProductPagingDataFlow()
     }
 
@@ -83,7 +83,7 @@ class FavoritesViewModel @AssistedInject constructor(
     }
 
     fun onScreenCreated() {
-        favoriteProductsRequester.request(FavoriteProductsRequest.GENERAL)
+        favoriteProductsRequester.request(FavoriteProductsRequest)
     }
 
     fun onProductClicked(product: Product) {
@@ -144,7 +144,7 @@ class FavoritesViewModel @AssistedInject constructor(
         clearFavoriteProductsJob = viewModelScope.launch {
             interactor.clearFavoriteProducts()
                 .onSuccess {
-                    favoriteProductsRequester.request(FavoriteProductsRequest.GENERAL)
+                    favoriteProductsRequester.request(FavoriteProductsRequest)
                 }
                 .onFailure {
                     val text = Text.Resource(R.string.favorites_clearing_error)
@@ -209,7 +209,7 @@ class FavoritesViewModel @AssistedInject constructor(
         ): FavoritesViewModel
     }
 
-    private enum class FavoriteProductsRequest : FlowRequester.Request { GENERAL }
+    private data object FavoriteProductsRequest : FlowRequester.Request
 
     companion object {
         private const val KEY_SIZE_SELECTOR_RESULT = "size_selector_result"
