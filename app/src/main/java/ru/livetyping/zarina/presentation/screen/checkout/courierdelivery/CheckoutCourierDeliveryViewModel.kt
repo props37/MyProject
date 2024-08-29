@@ -26,7 +26,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.checkout.CourierDeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOptions
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.common.error.ErrorState
@@ -131,7 +131,7 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
         }
     }
 
-    private val deliveryOptionsResult: StateFlow<Result<CourierDeliveryOptions>?> =
+    private val deliveryOptionsResult: StateFlow<Result<DeliveryOptions>?> =
         deliveryOptionsRequester.flow
             .stateIn(
                 scope = viewModelScope,
@@ -139,10 +139,10 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
                 initialValue = null,
             )
 
-    private val selectedDeliveryOptionId = MutableStateFlow<CourierDeliveryOptions.Option.Id?>(null)
+    private val selectedDeliveryOptionId = MutableStateFlow<DeliveryOptions.Option.Id?>(null)
 
     private val deliveryOptionToSelectedDateTimePeriod =
-        MutableStateFlow<Map<CourierDeliveryOptions.Option.Id, CourierDeliveryOptions.Option.DateTimePeriod>>(
+        MutableStateFlow<Map<DeliveryOptions.Option.Id, DeliveryOptions.Option.DateTimePeriod>>(
             emptyMap()
         )
 
@@ -205,11 +205,11 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
         addressComponent.onBuildingsErrorRefreshClicked()
     }
 
-    fun onDeliveryOptionClicked(option: CourierDeliveryOptions.Option) {
+    fun onDeliveryOptionClicked(option: DeliveryOptions.Option) {
         selectedDeliveryOptionId.value = option.id
     }
 
-    fun onDeliveryOptionDateClicked(option: CourierDeliveryOptions.Option) {
+    fun onDeliveryOptionDateClicked(option: DeliveryOptions.Option) {
         navigationThrottler.throttle {
             val datePeriods = option.dateTimePeriods.distinctBy { it.date }
             val action =
@@ -218,7 +218,7 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
         }
     }
 
-    fun onDeliveryOptionTimeClicked(option: CourierDeliveryOptions.Option) {
+    fun onDeliveryOptionTimeClicked(option: DeliveryOptions.Option) {
         navigationThrottler.throttle {
             val selectedDateTimePeriod =
                 deliveryOptionToSelectedDateTimePeriod.value[option.id] ?: option.dateTimePeriods.getDefault()
@@ -247,10 +247,10 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
 
     @Suppress("MaxLineLength")
     private fun createDeliveryOptionState(
-        optionsResult: Result<CourierDeliveryOptions>?,
+        optionsResult: Result<DeliveryOptions>?,
         loadingState: FlowRequester.LoadingState,
-        selectedOptionId: CourierDeliveryOptions.Option.Id?,
-        deliveryOptionToSelectedDateTimePeriod: Map<CourierDeliveryOptions.Option.Id, CourierDeliveryOptions.Option.DateTimePeriod>,
+        selectedOptionId: DeliveryOptions.Option.Id?,
+        deliveryOptionToSelectedDateTimePeriod: Map<DeliveryOptions.Option.Id, DeliveryOptions.Option.DateTimePeriod>,
     ): DeliveryOptionsState? {
         return when {
             loadingState.isLoading() -> DeliveryOptionsState.Loading
@@ -287,7 +287,7 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
                 resultFlow = dateTimePeriodSelectorResultFlow,
                 key = KEY_RESULT_DATE_TIME_PERIOD_SELECTOR_RESULT,
             ) { result ->
-                val deliveryOptionId = CourierDeliveryOptions.Option.Id(result.deliveryOptionId)
+                val deliveryOptionId = DeliveryOptions.Option.Id(result.deliveryOptionId)
                 deliveryOptionToSelectedDateTimePeriod.update {
                     it + (deliveryOptionId to result.dateTimePeriod.toDateTimePeriod())
                 }
@@ -296,7 +296,7 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
     }
 
     @Suppress("MaxLineLength")
-    private fun List<CourierDeliveryOptions.Option.DateTimePeriod>.getDefault(): CourierDeliveryOptions.Option.DateTimePeriod {
+    private fun List<DeliveryOptions.Option.DateTimePeriod>.getDefault(): DeliveryOptions.Option.DateTimePeriod {
         return this.first()
     }
 
@@ -317,9 +317,9 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
 
     @Immutable
     data class DeliveryOptionState(
-        val deliveryOption: CourierDeliveryOptions.Option,
+        val deliveryOption: DeliveryOptions.Option,
         val isSelected: Boolean,
-        val selectedDateTimePeriod: CourierDeliveryOptions.Option.DateTimePeriod,
+        val selectedDateTimePeriod: DeliveryOptions.Option.DateTimePeriod,
     )
 
     private enum class DeliveryOptionsRequest : FlowRequester.Request { GENERAL }

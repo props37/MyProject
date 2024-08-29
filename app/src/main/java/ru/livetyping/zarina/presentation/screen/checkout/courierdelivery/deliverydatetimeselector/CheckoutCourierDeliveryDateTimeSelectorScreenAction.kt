@@ -1,13 +1,13 @@
 package ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector
 
-import ru.livetyping.zarina.domain.checkout.CourierDeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOptions
 
 sealed class CheckoutCourierDeliveryDateTimeSelectorScreenAction {
     data object ScreenClosed : CheckoutCourierDeliveryDateTimeSelectorScreenAction()
 
     data class DateTimePeriodSelected(
-        val deliveryOptionId: CourierDeliveryOptions.Option.Id,
+        val deliveryOptionId: DeliveryOptions.Option.Id,
         val selectorType: CourierDeliveryDateTimeSelectorType,
-        val dateTimePeriod: CourierDeliveryOptions.Option.DateTimePeriod,
+        val dateTimePeriod: DeliveryOptions.Option.DateTimePeriod,
     ) : CheckoutCourierDeliveryDateTimeSelectorScreenAction()
 }

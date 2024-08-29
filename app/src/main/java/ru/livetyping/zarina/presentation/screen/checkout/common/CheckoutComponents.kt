@@ -37,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
-import ru.livetyping.zarina.domain.checkout.CourierDeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOptions
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaModalBottomSheet
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
@@ -127,7 +127,7 @@ object CheckoutComponents {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun DeliveryOptionDetailsBottomSheet(
-        visibleDeliveryOptionDetails: CourierDeliveryOptions.Option?,
+        visibleDeliveryOptionDetails: DeliveryOptions.Option?,
         onDismissRequest: () -> Unit,
         modifier: Modifier = Modifier,
         sheetState: SheetState = rememberModalBottomSheetState(),

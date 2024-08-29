@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.checkout.courierdelivery
 
-import ru.livetyping.zarina.domain.checkout.CourierDeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOptions
 
 sealed class CheckoutCourierDeliveryScreenAction {
     data object ScreenClosed : CheckoutCourierDeliveryScreenAction()
@@ -8,12 +8,12 @@ sealed class CheckoutCourierDeliveryScreenAction {
     data object CheckoutClosed : CheckoutCourierDeliveryScreenAction()
 
     data class DeliveryDateClicked(
-        val deliveryOptionId: CourierDeliveryOptions.Option.Id,
-        val dateTimePeriods: List<CourierDeliveryOptions.Option.DateTimePeriod>,
+        val deliveryOptionId: DeliveryOptions.Option.Id,
+        val dateTimePeriods: List<DeliveryOptions.Option.DateTimePeriod>,
     ) : CheckoutCourierDeliveryScreenAction()
 
     data class DeliveryTimeClicked(
-        val deliveryOptionId: CourierDeliveryOptions.Option.Id,
-        val dateTimePeriods: List<CourierDeliveryOptions.Option.DateTimePeriod>,
+        val deliveryOptionId: DeliveryOptions.Option.Id,
+        val dateTimePeriods: List<DeliveryOptions.Option.DateTimePeriod>,
     ) : CheckoutCourierDeliveryScreenAction()
 }

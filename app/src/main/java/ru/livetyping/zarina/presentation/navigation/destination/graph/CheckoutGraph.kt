@@ -11,12 +11,12 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.checkout.CourierDeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOptions
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.model.cart.CartProductParcelable
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
-import ru.livetyping.zarina.presentation.model.checkout.CourierDeliveryDateTimePeriodParcelable
+import ru.livetyping.zarina.presentation.model.checkout.DeliveryDateTimePeriodParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.model.store.StoreParcelable
 import ru.livetyping.zarina.presentation.navigation.BaseRoute
@@ -25,7 +25,7 @@ import ru.livetyping.zarina.presentation.navigation.base.Graph
 import ru.livetyping.zarina.presentation.navigation.base.RouteUtils
 import ru.livetyping.zarina.presentation.navigation.base.ScreenResult
 import ru.livetyping.zarina.presentation.navigation.navtype.CartProductParcelableArrayType
-import ru.livetyping.zarina.presentation.navigation.navtype.CourierDeliveryDateTimePeriodParcelableArrayType
+import ru.livetyping.zarina.presentation.navigation.navtype.DeliveryDateTimePeriodParcelableArrayType
 import ru.livetyping.zarina.presentation.navigation.navtype.StoreParcelableType
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
 import java.util.UUID
@@ -324,7 +324,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
 
         override fun createRoute(args: Args): String {
             val dateTimePeriodsParcelable = args.dateTimePeriods.map {
-                CourierDeliveryDateTimePeriodParcelable.from(it)
+                DeliveryDateTimePeriodParcelable.from(it)
             }
             val dateTimePeriodsParcelableString =
                 Uri.encode(Json.encodeToString(dateTimePeriodsParcelable))
@@ -345,13 +345,13 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
                 },
                 navArgument(ARG_DELIVERY_OPTION_ID) { type = NavType.StringType },
                 navArgument(ARG_DATE_TIME_PERIODS) {
-                    type = NavType.CourierDeliveryDateTimePeriodParcelableArrayType
+                    type = NavType.DeliveryDateTimePeriodParcelableArrayType
                 },
             )
 
         override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
             val dateTimePeriodsParcelable = args.dateTimePeriods.map {
-                CourierDeliveryDateTimePeriodParcelable.from(it)
+                DeliveryDateTimePeriodParcelable.from(it)
             }
             putParcelable(ARG_SELECTOR_TYPE, args.type)
             putString(ARG_DELIVERY_OPTION_ID, args.deliveryOptionId.value)
@@ -360,15 +360,15 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
 
         data class Args(
             val type: CourierDeliveryDateTimeSelectorType,
-            val deliveryOptionId: CourierDeliveryOptions.Option.Id,
-            val dateTimePeriods: List<CourierDeliveryOptions.Option.DateTimePeriod>,
+            val deliveryOptionId: DeliveryOptions.Option.Id,
+            val dateTimePeriods: List<DeliveryOptions.Option.DateTimePeriod>,
         )
 
         @Parcelize
         data class Result(
             val deliveryOptionId: String,
             val selectorType: CourierDeliveryDateTimeSelectorType,
-            val dateTimePeriod: CourierDeliveryDateTimePeriodParcelable,
+            val dateTimePeriod: DeliveryDateTimePeriodParcelable,
             override val id: String = UUID.randomUUID().toString(),
         ) : ScreenResult, Parcelable
     }

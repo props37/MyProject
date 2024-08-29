@@ -5,7 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartTypeDto
-import ru.livetyping.zarina.data.checkout.remote.api.dto.CourierDeliveryOptionsDto
+import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryOptionsDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryMethodDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.StoreDto
 import ru.livetyping.zarina.di.Qualifiers
@@ -33,13 +33,13 @@ class CheckoutApi @Inject constructor(
         }.body()
     }
 
-    suspend fun getCourierDeliveryOptions(buildingKladrId: KladrId): CourierDeliveryOptionsDto {
+    suspend fun getCourierDeliveryOptions(buildingKladrId: KladrId): DeliveryOptionsDto {
         return httpClient.get("/api/shipping-methods/express") {
             parameter("address_kladr", buildingKladrId.value)
         }.body()
     }
 
-    suspend fun getPostDeliveryOptions(buildingKladrId: KladrId): CourierDeliveryOptionsDto {
+    suspend fun getPostDeliveryOptions(buildingKladrId: KladrId): DeliveryOptionsDto {
         return httpClient.get("/api/shipping-methods/post") {
             parameter("address_kladr", buildingKladrId.value)
         }.body()

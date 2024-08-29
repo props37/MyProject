@@ -2,8 +2,8 @@ package ru.livetyping.zarina.presentation.navigation.screen
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import ru.livetyping.zarina.domain.checkout.CourierDeliveryOptions
-import ru.livetyping.zarina.presentation.model.checkout.CourierDeliveryDateTimePeriodParcelable
+import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.presentation.model.checkout.DeliveryDateTimePeriodParcelable
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CheckoutCourierDeliveryDateTimeSelectorScreen
@@ -33,7 +33,7 @@ fun NavGraphBuilder.checkoutCourierDeliveryDateTimeSelectorScreen(
                         val result = CheckoutGraph.CourierDeliveryDateTimeSelector.Result(
                             deliveryOptionId = action.deliveryOptionId.value,
                             selectorType = action.selectorType,
-                            dateTimePeriod = CourierDeliveryDateTimePeriodParcelable.from(action.dateTimePeriod),
+                            dateTimePeriod = DeliveryDateTimePeriodParcelable.from(action.dateTimePeriod),
                         )
                         navController.currentBackStackEntry?.savedStateHandle?.set(
                             key = CheckoutGraph.CourierDeliveryDateTimeSelector.RESULT_KEY,
@@ -48,8 +48,8 @@ fun NavGraphBuilder.checkoutCourierDeliveryDateTimeSelectorScreen(
 
 fun NavHostController.navigateToCheckoutCourierDeliveryDateTimeSelectorScreen(
     type: CourierDeliveryDateTimeSelectorType,
-    deliveryOptionId: CourierDeliveryOptions.Option.Id,
-    dateTimePeriods: List<CourierDeliveryOptions.Option.DateTimePeriod>,
+    deliveryOptionId: DeliveryOptions.Option.Id,
+    dateTimePeriods: List<DeliveryOptions.Option.DateTimePeriod>,
 ) {
     val args = CheckoutGraph.CourierDeliveryDateTimeSelector.Args(
         deliveryOptionId = deliveryOptionId,

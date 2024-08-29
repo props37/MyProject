@@ -3,7 +3,7 @@ package ru.livetyping.zarina.data.checkout
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.data.checkout.remote.CheckoutRemoteDataSource
 import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.checkout.CourierDeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOptions
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.checkout.PickupStore
 import ru.livetyping.zarina.domain.geography.KladrId
@@ -25,13 +25,13 @@ class CheckoutRepository @Inject constructor(
 
     fun getCourierDeliveryOptionsFlow(
         buildingKladrId: KladrId,
-    ): Flow<CourierDeliveryOptions> {
+    ): Flow<DeliveryOptions> {
         return remoteDataSource.getCourierDeliveryOptionsFlow(buildingKladrId)
     }
 
     fun getPostDeliveryOptionsFlow(
         buildingKladrId: KladrId,
-    ): Flow<CourierDeliveryOptions> {
+    ): Flow<DeliveryOptions> {
         return remoteDataSource.getPostDeliveryOptionsFlow(buildingKladrId)
     }
 }

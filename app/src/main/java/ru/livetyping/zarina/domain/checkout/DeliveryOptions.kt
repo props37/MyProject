@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.domain.checkout
 
-data class CourierDeliveryOptions(
+data class DeliveryOptions(
     val options: List<Option>,
 ) {
     data class Option(
