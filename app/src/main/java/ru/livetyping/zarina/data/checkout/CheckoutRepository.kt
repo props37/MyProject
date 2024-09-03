@@ -13,8 +13,8 @@ import javax.inject.Inject
 class CheckoutRepository @Inject constructor(
     private val remoteDataSource: CheckoutRemoteDataSource,
 ) {
-    fun getPickupStores(cityKladrId: KladrId): Flow<List<PickupStore>> {
-        return remoteDataSource.getStoresFlow(cityKladrId)
+    fun getPickupStoresFlow(cityKladrId: KladrId): Flow<List<PickupStore>> {
+        return remoteDataSource.getPickupStoresFlow(cityKladrId)
     }
 
     fun getDeliveryMethodsFlow(

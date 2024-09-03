@@ -15,7 +15,7 @@ import javax.inject.Inject
 class CheckoutRemoteDataSource @Inject constructor(
     private val api: CheckoutApi,
 ) {
-    fun getStoresFlow(cityKladrId: KladrId): Flow<List<PickupStore>> = flow {
+    fun getPickupStoresFlow(cityKladrId: KladrId): Flow<List<PickupStore>> = flow {
         val dto = api.getPickupStores(cityKladrId)
         val stores = dto.map { it.toStore() }
         emit(stores)
