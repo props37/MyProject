@@ -3,6 +3,7 @@ package ru.livetyping.zarina.usecase.user
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.livetyping.zarina.base.usecase.UseCase
 import ru.livetyping.zarina.data.cart.CartRepository
+import ru.livetyping.zarina.data.checkout.CheckoutRepository
 import ru.livetyping.zarina.data.favorite.FavoriteRepository
 import ru.livetyping.zarina.data.productsearch.ProductSearchRepository
 import ru.livetyping.zarina.data.store.StoreRepository
@@ -22,6 +23,7 @@ class SignOutCleanupUseCase @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
     private val productSearchRepository: ProductSearchRepository,
     private val storeRepository: StoreRepository,
+    private val checkoutRepository: CheckoutRepository,
 ) : UseCase<SignOutCleanupUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
@@ -34,6 +36,7 @@ class SignOutCleanupUseCase @Inject constructor(
         favoriteRepository.clear()
         productSearchRepository.clear()
         storeRepository.clear()
+        checkoutRepository.clear()
     }
 
     data class Params(

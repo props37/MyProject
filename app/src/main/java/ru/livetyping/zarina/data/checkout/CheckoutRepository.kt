@@ -1,6 +1,10 @@
 package ru.livetyping.zarina.data.checkout
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.onEach
+import ru.livetyping.zarina.data.checkout.local.CheckoutLocalDataSource
 import ru.livetyping.zarina.data.checkout.remote.CheckoutRemoteDataSource
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
@@ -12,6 +16,7 @@ import javax.inject.Inject
 
 class CheckoutRepository @Inject constructor(
     private val remoteDataSource: CheckoutRemoteDataSource,
+    private val localDataSource: CheckoutLocalDataSource,
 ) {
     fun getPickupStoresFlow(cityKladrId: KladrId): Flow<List<PickupStore>> {
         return remoteDataSource.getPickupStoresFlow(cityKladrId)
@@ -37,6 +42,19 @@ class CheckoutRepository @Inject constructor(
     }
 
     fun getPickupPointsFlow(cityKladrId: KladrId): Flow<List<PickupPoint>> {
-        return remoteDataSource.getPickupPointsFlow(cityKladrId)
+        return localDataSource.getPickupPointsFlow(cityKladrId)
+            .onEach { cachedPickupPoints ->
+                if (cachedPickupPoints == null) {
+                    val pickupPoints =
+                        remoteDataSource.getPickupPointsFlow(cityKladrId).firstOrNull()
+                    checkNotNull(pickupPoints) { "Failed to fetch pickup points" }
+                    localDataSource.setPickupPoints(cityKladrId, pickupPoints)
+                }
+            }
+            .filterNotNull()
+    }
+
+    fun clear() {
+        localDataSource.clear()
     }
 }
