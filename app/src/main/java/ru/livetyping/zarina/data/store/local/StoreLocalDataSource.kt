@@ -14,4 +14,8 @@ class StoreLocalDataSource @Inject constructor(
     fun setStores(stores: List<Store>) {
         dataHolder.setStores(stores)
     }
+
+    fun clear() {
+        dataHolder.clear()
+    }
 }

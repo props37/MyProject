@@ -25,4 +25,8 @@ class StoreRepository @Inject constructor(
             emit(stores)
         }
     }
+
+    fun clear() {
+        localDataSource.clear()
+    }
 }

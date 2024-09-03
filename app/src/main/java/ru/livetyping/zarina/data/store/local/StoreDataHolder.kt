@@ -19,4 +19,8 @@ class StoreDataHolder @Inject constructor() {
     fun setStores(stores: List<Store>) {
         this.stores.value = SoftReference(stores)
     }
+
+    fun clear() {
+        stores.value = null
+    }
 }
