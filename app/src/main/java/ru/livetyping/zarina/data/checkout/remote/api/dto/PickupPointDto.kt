@@ -40,7 +40,6 @@ data class PickupPointDto(
             location = location.toLocation(),
             isFittingAvailable = isFittingAvailable ?: false,
             isPaymentByCardAvailable = isPaymentByCardAvailable ?: false,
-            availablePaymentMethods = availablePaymentMethods ?: emptyList(),
         )
     }
 }

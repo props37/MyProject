@@ -9,7 +9,6 @@ data class PickupPoint(
     val location: Location,
     val isFittingAvailable: Boolean,
     val isPaymentByCardAvailable: Boolean,
-    val availablePaymentMethods: List<String>,
 ) {
     @JvmInline
     value class Id(val value: Long)
