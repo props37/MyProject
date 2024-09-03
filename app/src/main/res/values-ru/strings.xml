@@ -302,6 +302,7 @@
     <string name="change_delivery_time">Изменить время доставки</string>
     <string name="got_id">Понятно</string>
     <string name="post_delivery">Доставка Почтой России</string>
+    <string name="pickup_point_delivery">Доставка в пункт самовывоза</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
