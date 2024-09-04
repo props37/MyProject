@@ -5,7 +5,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.data.location.GooglePlayServicesLocationDataSource
 import ru.livetyping.zarina.data.location.LocationDataSource
@@ -30,7 +29,6 @@ abstract class ApplicationModule {
 
     companion object {
 
-        @OptIn(ExperimentalSerializationApi::class)
         @Provides
         @Singleton
         fun provideJson(): Json = Json {
