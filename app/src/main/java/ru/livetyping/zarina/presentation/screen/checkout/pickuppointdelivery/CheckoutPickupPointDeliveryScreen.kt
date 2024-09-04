@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,7 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryComponents.FilterBlock
@@ -34,6 +38,7 @@ import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.Che
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.SideEffect
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.ViewMode
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.animateFastScrollToItem
 import ru.livetyping.zarina.util.compose.pager.PagerTabRowIntegration
 
 @Composable
@@ -55,6 +60,8 @@ fun CheckoutPickupPointDeliveryScreen(
         onViewModeChanged = viewModel::onViewModeChanged,
         nameOrAddressTextFieldState = viewModel.nameOrAddressFilterTextFieldState,
         pickupPointsState = pickupPointsState,
+        onPickupPointClicked = viewModel::onPickupPointClicked,
+        onPickupPointsErrorRefreshClicked = viewModel::onPickupPointsErrorRefreshClicked,
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
@@ -71,11 +78,15 @@ private fun ScreenContent(
     onViewModeChanged: (ViewMode) -> Unit,
     nameOrAddressTextFieldState: TextFieldState,
     pickupPointsState: PickupPointsState,
+    onPickupPointClicked: (PickupPoint) -> Unit,
+    onPickupPointsErrorRefreshClicked: () -> Unit,
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutPickupPointDeliveryScreenAction) -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     CheckoutPickupPointDeliveryScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
@@ -106,6 +117,7 @@ private fun ScreenContent(
         )
 
         val viewModePagerState = rememberPagerState { viewModes.size }
+        val pickupPointsListState = rememberLazyListState()
         PagerTabRowIntegration(
             pagerState = viewModePagerState,
             tabs = viewModes,
@@ -117,6 +129,16 @@ private fun ScreenContent(
             modes = viewModes,
             currentMode = currentViewMode,
             onModeChanged = onViewModeChanged,
+            onCurrentModeClicked = { mode ->
+                if (mode == ViewMode.LIST) {
+                    coroutineScope.launch {
+                        pickupPointsListState.animateFastScrollToItem(
+                            item = 0,
+                            distanceThreshold = 10,
+                        )
+                    }
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -125,6 +147,10 @@ private fun ScreenContent(
         ViewModeHorizontalPager(
             pagerState = viewModePagerState,
             viewModes = viewModes,
+            pickupPointsState = pickupPointsState,
+            onPickupPointClicked = onPickupPointClicked,
+            pickupPointsListState = pickupPointsListState,
+            onPickupPointsErrorRefreshClicked = onPickupPointsErrorRefreshClicked,
             modifier = Modifier.fillMaxSize(),
         )
     }

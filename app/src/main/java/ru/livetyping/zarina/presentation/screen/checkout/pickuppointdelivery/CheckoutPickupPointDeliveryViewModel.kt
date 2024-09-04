@@ -36,6 +36,7 @@ import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCoun
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.SideEffect
 import ru.livetyping.zarina.usecase.checkout.GetPickupPointsFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.util.compose.text.textAsFlow
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
@@ -125,8 +126,9 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
     val pickupPointsState: StateFlow<PickupPointsState> = combine(
         pickupPointsResult,
         pickupPointsRequester.loadingState,
-    ) { result, loadingState ->
-        createPickupPointsState(result, loadingState)
+        nameOrAddressFilterTextFieldState.textAsFlow(),
+    ) { result, loadingState, nameOrAddress ->
+        createPickupPointsState(result, loadingState, nameOrAddress)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
@@ -151,16 +153,32 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
         _currentViewMode.value = mode
     }
 
+    fun onPickupPointsErrorRefreshClicked() {
+        pickupPointsRequester.request(PickupPointsRequest)
+    }
+
+    fun onPickupPointClicked(pickupPoint: PickupPoint) {
+        navigationThrottler.throttle {
+            // TODO: [High] Implement
+        }
+    }
+
     private fun createPickupPointsState(
         pickupPointsResult: Result<List<PickupPoint>>?,
         loadingState: FlowRequester.LoadingState,
+        nameOrAddress: CharSequence,
     ): PickupPointsState {
         return if (pickupPointsResult == null || loadingState.isLoading()) {
             PickupPointsState.Loading
         } else {
             pickupPointsResult.fold(
                 onSuccess = { pickupPoints ->
-                    PickupPointsState.Success(pickupPoints)
+                    val filteredPickupPoints = pickupPoints
+                        .filter {
+                            it.title.contains(nameOrAddress, ignoreCase = true)
+                                    || it.address.contains(nameOrAddress, ignoreCase = true)
+                        }
+                    PickupPointsState.Success(filteredPickupPoints)
                 },
                 onFailure = {
                     val errorState = ErrorState.from(it)
