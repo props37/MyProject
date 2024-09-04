@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
+import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.PickupPointsState
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
@@ -32,10 +33,12 @@ fun CheckoutPickupPointDeliveryScreen(
 ) {
     val step by viewModel.step.collectAsStateWithLifecycle()
     val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()
+    val pickupPointsState by viewModel.pickupPointsState.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = step,
         stepCount = stepCount,
+        pickupPointsState = pickupPointsState,
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
@@ -47,6 +50,7 @@ fun CheckoutPickupPointDeliveryScreen(
 private fun ScreenContent(
     step: Int,
     stepCount: Int,
+    pickupPointsState: PickupPointsState,
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
