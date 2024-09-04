@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +20,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.plus
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
@@ -90,16 +93,30 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
 
     val stepCount: StateFlow<Int> = MutableStateFlow(cartType.value.checkoutStepCount).asStateFlow()
 
-    val viewModes: StateFlow<List<ViewMode>> = MutableStateFlow(ViewMode.entries).asStateFlow()
-
-    private val _currentViewMode = MutableStateFlow(ViewMode.MAP)
-    val currentViewMode: StateFlow<ViewMode> = _currentViewMode.asStateFlow()
-
     @OptIn(SavedStateHandleSaveableApi::class)
     val nameOrAddressFilterTextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
     )
+
+    private val appliedFilters = MutableStateFlow(setOf<Filter>())
+
+    val filters: StateFlow<List<ToggleableFilter>> = appliedFilters
+        .map { applied ->
+            Filter.entries.map { filter ->
+                ToggleableFilter(filter = filter, isApplied = filter in applied)
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = Filter.entries.map { ToggleableFilter(filter = it, isApplied = false) },
+        )
+
+    val viewModes: StateFlow<List<ViewMode>> = MutableStateFlow(ViewMode.entries).asStateFlow()
+
+    private val _currentViewMode = MutableStateFlow(ViewMode.MAP)
+    val currentViewMode: StateFlow<ViewMode> = _currentViewMode.asStateFlow()
 
     private val city: Flow<City?> = interactor.getUserCityFlow().map {
         it.getOrDefault(City.DEFAULT)
@@ -127,10 +144,11 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
         pickupPointsResult,
         pickupPointsRequester.loadingState,
         nameOrAddressFilterTextFieldState.textAsFlow(),
-    ) { result, loadingState, nameOrAddress ->
-        createPickupPointsState(result, loadingState, nameOrAddress)
+        appliedFilters,
+    ) { result, loadingState, nameOrAddress, filters ->
+        createPickupPointsState(result, loadingState, nameOrAddress, filters.toList())
     }.stateIn(
-        scope = viewModelScope,
+        scope = viewModelScope + Dispatchers.Default,
         started = SharingStarted.WhileUiSubscribed,
         initialValue = PickupPointsState.Loading,
     )
@@ -153,6 +171,12 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
         _currentViewMode.value = mode
     }
 
+    fun onFilterClicked(filter: ToggleableFilter) {
+        appliedFilters.update { applied ->
+            if (filter.filter in applied) applied - filter.filter else applied + filter.filter
+        }
+    }
+
     fun onPickupPointsErrorRefreshClicked() {
         pickupPointsRequester.request(PickupPointsRequest)
     }
@@ -167,17 +191,18 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
         pickupPointsResult: Result<List<PickupPoint>>?,
         loadingState: FlowRequester.LoadingState,
         nameOrAddress: CharSequence,
+        filters: List<Filter>,
     ): PickupPointsState {
         return if (pickupPointsResult == null || loadingState.isLoading()) {
             PickupPointsState.Loading
         } else {
             pickupPointsResult.fold(
                 onSuccess = { pickupPoints ->
-                    val filteredPickupPoints = pickupPoints
-                        .filter {
-                            it.title.contains(nameOrAddress, ignoreCase = true)
-                                    || it.address.contains(nameOrAddress, ignoreCase = true)
-                        }
+                    val filteredPickupPoints = filterPickupPoints(
+                        pickupPoints = pickupPoints,
+                        nameOrAddress = nameOrAddress,
+                        filters = filters,
+                    )
                     PickupPointsState.Success(filteredPickupPoints)
                 },
                 onFailure = {
@@ -188,9 +213,47 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
         }
     }
 
+    private fun filterPickupPoints(
+        pickupPoints: List<PickupPoint>,
+        nameOrAddress: CharSequence,
+        filters: List<Filter>,
+    ): List<PickupPoint> {
+        return pickupPoints.filter { pickupPoint ->
+            var matchFilters = true
+            filters.forEach { filter ->
+                when (filter) {
+                    Filter.PAYMENT_BY_CARD -> {
+                        if (!pickupPoint.isPaymentByCardAvailable) {
+                            matchFilters = false
+                            return@forEach
+                        }
+                    }
+
+                    Filter.FITTING -> {
+                        if (!pickupPoint.isFittingAvailable) {
+                            matchFilters = false
+                            return@forEach
+                        }
+                    }
+                }
+            }
+            if (!matchFilters) return@filter false
+
+            pickupPoint.title.contains(nameOrAddress, ignoreCase = true)
+                    || pickupPoint.address.contains(nameOrAddress, ignoreCase = true)
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutPickupPointDeliveryScreenAction) : SideEffect
     }
+
+    enum class Filter { PAYMENT_BY_CARD, FITTING }
+
+    data class ToggleableFilter(
+        val filter: Filter,
+        val isApplied: Boolean,
+    )
 
     enum class ViewMode { MAP, LIST }
 

@@ -1,7 +1,10 @@
 package ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery
 
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -11,17 +14,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,9 +53,12 @@ import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSke
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
+import ru.livetyping.zarina.presentation.common.component.tag.ZarinaTag
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
+import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.Filter
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.PickupPointsState
+import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.ToggleableFilter
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.ViewMode
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
@@ -59,6 +69,8 @@ object CheckoutPickupPointDeliveryComponents {
     @Composable
     fun FilterBlock(
         nameOrAddressFilterTextFieldState: TextFieldState,
+        filters: List<ToggleableFilter>,
+        onFilterClicked: (ToggleableFilter) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
@@ -94,6 +106,31 @@ object CheckoutPickupPointDeliveryComponents {
                     .padding(horizontal = 16.dp)
                     .onFocusChanged { focusState = it },
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+            ) {
+                Spacer(modifier = Modifier.width(8.dp))
+
+                filters.forEach { filter ->
+                    ZarinaTag(
+                        onClick = { onFilterClicked(filter) },
+                        isSelected = filter.isApplied,
+                    ) {
+                        val textResId = when (filter.filter) {
+                            Filter.PAYMENT_BY_CARD -> R.string.payment_by_card
+                            Filter.FITTING -> R.string.with_fitting
+                        }
+
+                        Text(text = stringResource(textResId))
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+            }
         }
     }
 
@@ -219,9 +256,14 @@ object CheckoutPickupPointDeliveryComponents {
         lazyListState: LazyListState,
         modifier: Modifier = Modifier,
     ) {
+        LaunchedEffect(pickupPointsState.pickupPoints, lazyListState) {
+            lazyListState.scrollToItem(0)
+        }
+
         val navigationBarHeight =
             WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
         val contentPadding = PaddingValues(bottom = 20.dp + navigationBarHeight)
+
         LazyColumn(
             state = lazyListState,
             contentPadding = contentPadding,
@@ -254,7 +296,7 @@ object CheckoutPickupPointDeliveryComponents {
         modifier: Modifier = Modifier,
     ) {
         val shimmer = rememberZarinaSkeletonShimmer(bounds = ShimmerBounds.Window)
-        Column {
+        Column(modifier = modifier.verticalScroll(rememberScrollState())) {
             repeat(PickupPointListSkeletonCount) { index ->
                 PickupPointSkeleton(shimmer = shimmer)
 
@@ -337,5 +379,5 @@ object CheckoutPickupPointDeliveryComponents {
     private const val PickupPointStateScaffoldContentKeySuccess =
         "PickupPointStateScaffoldContentKeySuccess"
 
-    private const val PickupPointListSkeletonCount = 8
+    private const val PickupPointListSkeletonCount = 10
 }

@@ -36,6 +36,7 @@ import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.Che
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryComponents.ViewModeTabRow
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.PickupPointsState
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.ToggleableFilter
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.ViewMode
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animateFastScrollToItem
@@ -48,6 +49,7 @@ fun CheckoutPickupPointDeliveryScreen(
 ) {
     val step by viewModel.step.collectAsStateWithLifecycle()
     val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()
+    val filters by viewModel.filters.collectAsStateWithLifecycle()
     val viewModes by viewModel.viewModes.collectAsStateWithLifecycle()
     val currentViewMode by viewModel.currentViewMode.collectAsStateWithLifecycle()
     val pickupPointsState by viewModel.pickupPointsState.collectAsStateWithLifecycle()
@@ -59,6 +61,8 @@ fun CheckoutPickupPointDeliveryScreen(
         currentViewMode = currentViewMode,
         onViewModeChanged = viewModel::onViewModeChanged,
         nameOrAddressTextFieldState = viewModel.nameOrAddressFilterTextFieldState,
+        filters = filters,
+        onFilterClicked = viewModel::onFilterClicked,
         pickupPointsState = pickupPointsState,
         onPickupPointClicked = viewModel::onPickupPointClicked,
         onPickupPointsErrorRefreshClicked = viewModel::onPickupPointsErrorRefreshClicked,
@@ -77,6 +81,8 @@ private fun ScreenContent(
     currentViewMode: ViewMode,
     onViewModeChanged: (ViewMode) -> Unit,
     nameOrAddressTextFieldState: TextFieldState,
+    filters: List<ToggleableFilter>,
+    onFilterClicked: (ToggleableFilter) -> Unit,
     pickupPointsState: PickupPointsState,
     onPickupPointClicked: (PickupPoint) -> Unit,
     onPickupPointsErrorRefreshClicked: () -> Unit,
@@ -113,6 +119,8 @@ private fun ScreenContent(
 
         FilterBlock(
             nameOrAddressFilterTextFieldState = nameOrAddressTextFieldState,
+            filters = filters,
+            onFilterClicked = onFilterClicked,
             modifier = Modifier.padding(vertical = 4.dp),
         )
 
