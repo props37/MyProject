@@ -86,6 +86,11 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
 
     val stepCount: StateFlow<Int> = MutableStateFlow(cartType.value.checkoutStepCount).asStateFlow()
 
+    val viewModes: StateFlow<List<ViewMode>> = MutableStateFlow(ViewMode.entries).asStateFlow()
+
+    private val _currentViewMode = MutableStateFlow(ViewMode.MAP)
+    val currentViewMode: StateFlow<ViewMode> = _currentViewMode.asStateFlow()
+
     private val city: Flow<City?> = interactor.getUserCityFlow().map {
         it.getOrDefault(City.DEFAULT)
     }
@@ -133,6 +138,10 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
         }
     }
 
+    fun onViewModeChanged(mode: ViewMode) {
+        _currentViewMode.value = mode
+    }
+
     private fun createPickupPointsState(
         pickupPointsResult: Result<List<PickupPoint>>?,
         loadingState: FlowRequester.LoadingState,
@@ -155,6 +164,8 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutPickupPointDeliveryScreenAction) : SideEffect
     }
+
+    enum class ViewMode { MAP, LIST }
 
     @Stable
     sealed class PickupPointsState {
