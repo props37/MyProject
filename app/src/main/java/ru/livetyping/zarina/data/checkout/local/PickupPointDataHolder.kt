@@ -17,7 +17,6 @@ class PickupPointDataHolder @Inject constructor() {
     @Volatile
     private var pickupPointsCityKladrId: KladrId? = null
 
-    @Synchronized
     fun getPickupPointsFlow(cityKladrId: KladrId): Flow<List<PickupPoint>?> {
         return pickupPoints.map { ref ->
             if (cityKladrId == pickupPointsCityKladrId) {
