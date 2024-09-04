@@ -1,10 +1,13 @@
 package ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
+import androidx.lifecycle.viewmodel.compose.saveable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -90,6 +93,12 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
 
     private val _currentViewMode = MutableStateFlow(ViewMode.MAP)
     val currentViewMode: StateFlow<ViewMode> = _currentViewMode.asStateFlow()
+
+    @OptIn(SavedStateHandleSaveableApi::class)
+    val nameOrAddressFilterTextFieldState by savedStateHandle.saveable(
+        saver = TextFieldState.Saver,
+        init = { TextFieldState() },
+    )
 
     private val city: Flow<City?> = interactor.getUserCityFlow().map {
         it.getOrDefault(City.DEFAULT)

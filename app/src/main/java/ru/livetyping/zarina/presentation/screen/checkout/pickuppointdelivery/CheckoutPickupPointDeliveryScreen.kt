@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -26,6 +27,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
+import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryComponents.FilterBlock
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryComponents.ViewModeHorizontalPager
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryComponents.ViewModeTabRow
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.PickupPointsState
@@ -51,6 +53,7 @@ fun CheckoutPickupPointDeliveryScreen(
         viewModes = viewModes,
         currentViewMode = currentViewMode,
         onViewModeChanged = viewModel::onViewModeChanged,
+        nameOrAddressTextFieldState = viewModel.nameOrAddressFilterTextFieldState,
         pickupPointsState = pickupPointsState,
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
@@ -66,6 +69,7 @@ private fun ScreenContent(
     viewModes: List<ViewMode>,
     currentViewMode: ViewMode,
     onViewModeChanged: (ViewMode) -> Unit,
+    nameOrAddressTextFieldState: TextFieldState,
     pickupPointsState: PickupPointsState,
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
@@ -94,6 +98,11 @@ private fun ScreenContent(
             isBackButtonVisible = true,
             onBackClicked = onBackClicked,
             onCloseClicked = onCloseClicked,
+        )
+
+        FilterBlock(
+            nameOrAddressFilterTextFieldState = nameOrAddressTextFieldState,
+            modifier = Modifier.padding(vertical = 4.dp),
         )
 
         val viewModePagerState = rememberPagerState { viewModes.size }
