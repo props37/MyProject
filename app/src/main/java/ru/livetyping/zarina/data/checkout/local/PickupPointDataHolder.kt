@@ -2,7 +2,6 @@ package ru.livetyping.zarina.data.checkout.local
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.geography.KladrId
@@ -20,10 +19,10 @@ class PickupPointDataHolder @Inject constructor() {
 
     @Synchronized
     fun getPickupPointsFlow(cityKladrId: KladrId): Flow<List<PickupPoint>?> {
-        return if (cityKladrId == pickupPointsCityKladrId) {
-            pickupPoints.map { it?.get() }
-        } else {
-            flowOf(null)
+        return pickupPoints.map { ref ->
+            if (cityKladrId == pickupPointsCityKladrId) {
+                ref?.get()
+            } else null
         }
     }
 
