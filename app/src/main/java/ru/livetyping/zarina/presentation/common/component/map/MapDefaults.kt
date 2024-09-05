@@ -59,6 +59,19 @@ object MapDefaults {
     }
 
     @Composable
+    fun ClusterIcon(
+        contentDescription: String,
+        modifier: Modifier = Modifier,
+    ) {
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.ic_map_store_marker_24),
+            contentDescription = contentDescription,
+            tint = UiKitTheme.colors.icon.regular.default,
+            modifier = modifier.size(36.dp),
+        )
+    }
+
+    @Composable
     fun MyLocationButton(
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
