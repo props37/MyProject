@@ -30,7 +30,7 @@ jetpack-espresso = "3.6.1"
 jetpack-benchmark = "1.3.0"
 
 jetpack-compose-bom = "2024.08.00"
-jetpack-compose = "1.7.0-rc01"
+jetpack-compose = "1.7.0"
 jetpack-compose-material-navigation = "1.7.0-beta01"
 jetpack-compose-material3 = "1.3.0-rc01"
 
