@@ -1,8 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.stores
 
 import android.Manifest
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -297,7 +294,7 @@ object StoresScreenComponents {
                         false
                     },
                     clusterContent = { cluster ->
-                        MapCluster(clusterSize = cluster.size)
+                        MapDefaults.Cluster(clusterSize = cluster.size)
                     },
                     clusterItemContent = {
                         Icon(
@@ -342,39 +339,6 @@ object StoresScreenComponents {
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(end = 16.dp, bottom = 16.dp),
-            )
-        }
-    }
-
-    @Composable
-    private fun MapCluster(
-        clusterSize: Int,
-        modifier: Modifier = Modifier,
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = modifier
-                .size(52.dp)
-                .background(
-                    color = UiKitTheme.colors.background.general.regular.default,
-                    shape = CircleShape,
-                )
-                .border(
-                    width = 1.dp,
-                    color = UiKitTheme.colors.border.general.active,
-                    shape = CircleShape,
-                ),
-        ) {
-            val text = if (clusterSize <= MapClusterMaxSize) {
-                clusterSize.toString()
-            } else {
-                "$MapClusterMaxSize+"
-            }
-            Text(
-                text = text,
-                style = UiKitTheme.typography.tertiary.regular,
-                color = UiKitTheme.colors.text.general.regular.default,
-                maxLines = 1,
             )
         }
     }
@@ -548,8 +512,6 @@ object StoresScreenComponents {
     }
 
     private const val StoreMapContentKeySuccess = "StoreMapContentKeySuccess"
-
-    private const val MapClusterMaxSize = 99
 
     private const val StoreListContentKeySuccess = "StoreListContentKeySuccess"
 

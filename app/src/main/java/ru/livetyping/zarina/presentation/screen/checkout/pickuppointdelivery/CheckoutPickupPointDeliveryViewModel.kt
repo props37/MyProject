@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery
 
+import android.Manifest
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
@@ -28,9 +30,11 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.location.Location
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
+import ru.livetyping.zarina.presentation.common.permissionmanager.isGranted
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
@@ -50,6 +54,8 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val interactor: CheckoutPickupPointDeliveryInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+
+    private val permissionManager = interactor.permissionManager
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -153,6 +159,20 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
         initialValue = PickupPointsState.Loading,
     )
 
+    private val currentLocationRequester = FlowRequester(LocationRequest) {
+        interactor.getCurrentLocationFlow()
+    }
+
+    val currentLocation: StateFlow<Location?> = currentLocationRequester.flow
+        .map { result ->
+            result.getOrNull()
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = null,
+        )
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = CheckoutPickupPointDeliveryScreenAction.ScreenClosed
@@ -184,6 +204,25 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
     fun onPickupPointClicked(pickupPoint: PickupPoint) {
         navigationThrottler.throttle {
             // TODO: [High] Implement
+        }
+    }
+
+    fun onMyLocationClicked() {
+        viewModelScope.launch {
+            val fineLocationPermissionState =
+                permissionManager.getPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+            if (fineLocationPermissionState.isGranted) {
+                currentLocationRequester.request(LocationRequest)
+            } else {
+                val newPermissionsState =
+                    permissionManager.requestMultiplePermissions(LOCATION_PERMISSIONS)
+                if (newPermissionsState.any { it.value.isGranted }) {
+                    currentLocationRequester.request(LocationRequest)
+                } else {
+                    val action = CheckoutPickupPointDeliveryScreenAction.LocationPermissionRequired
+                    emitSideEffect(SideEffect.Navigate(action))
+                }
+            }
         }
     }
 
@@ -269,4 +308,14 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
     }
 
     private data object PickupPointsRequest : FlowRequester.Request
+
+    private data object LocationRequest : FlowRequester.Request
+
+    companion object {
+        private val LOCATION_PERMISSIONS: List<String>
+            get() = listOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            )
+    }
 }

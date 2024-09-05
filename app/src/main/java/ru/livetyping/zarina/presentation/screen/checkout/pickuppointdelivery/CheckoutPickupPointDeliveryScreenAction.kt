@@ -4,4 +4,6 @@ sealed class CheckoutPickupPointDeliveryScreenAction {
     data object ScreenClosed : CheckoutPickupPointDeliveryScreenAction()
 
     data object CheckoutClosed : CheckoutPickupPointDeliveryScreenAction()
+
+    data object LocationPermissionRequired : CheckoutPickupPointDeliveryScreenAction()
 }

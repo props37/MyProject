@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.PickupPoint
+import ru.livetyping.zarina.domain.location.Location
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryComponents.FilterBlock
@@ -53,6 +54,7 @@ fun CheckoutPickupPointDeliveryScreen(
     val viewModes by viewModel.viewModes.collectAsStateWithLifecycle()
     val currentViewMode by viewModel.currentViewMode.collectAsStateWithLifecycle()
     val pickupPointsState by viewModel.pickupPointsState.collectAsStateWithLifecycle()
+    val currentLocation by viewModel.currentLocation.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = step,
@@ -66,6 +68,8 @@ fun CheckoutPickupPointDeliveryScreen(
         pickupPointsState = pickupPointsState,
         onPickupPointClicked = viewModel::onPickupPointClicked,
         onPickupPointsErrorRefreshClicked = viewModel::onPickupPointsErrorRefreshClicked,
+        currentLocation = currentLocation,
+        onMyLocationClicked = viewModel::onMyLocationClicked,
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
@@ -86,6 +90,8 @@ private fun ScreenContent(
     pickupPointsState: PickupPointsState,
     onPickupPointClicked: (PickupPoint) -> Unit,
     onPickupPointsErrorRefreshClicked: () -> Unit,
+    currentLocation: Location?,
+    onMyLocationClicked: () -> Unit,
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -159,6 +165,8 @@ private fun ScreenContent(
             onPickupPointClicked = onPickupPointClicked,
             pickupPointsListState = pickupPointsListState,
             onPickupPointsErrorRefreshClicked = onPickupPointsErrorRefreshClicked,
+            currentLocation = currentLocation,
+            onMyLocationClicked = onMyLocationClicked,
             modifier = Modifier.fillMaxSize(),
         )
     }
