@@ -289,7 +289,6 @@ object StoresScreenComponents {
             ) {
                 val clusterItems = remember(stores) {
                     stores.map { StoreClusterItem(it) }
-//                    emptyList<StoreClusterItem>()
                 }
                 Clustering(
                     items = clusterItems,
