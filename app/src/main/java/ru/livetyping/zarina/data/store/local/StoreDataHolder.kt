@@ -10,13 +10,17 @@ import javax.inject.Singleton
 
 @Singleton
 class StoreDataHolder @Inject constructor() {
-    private val stores = MutableStateFlow<SoftReference<List<Store>?>>(SoftReference(null))
+    private val stores = MutableStateFlow<SoftReference<List<Store>>?>(null)
 
     fun getStoresFlow(): Flow<List<Store>?> {
-        return stores.map { it.get() }
+        return stores.map { it?.get() }
     }
 
     fun setStores(stores: List<Store>) {
         this.stores.value = SoftReference(stores)
+    }
+
+    fun clear() {
+        stores.value = null
     }
 }

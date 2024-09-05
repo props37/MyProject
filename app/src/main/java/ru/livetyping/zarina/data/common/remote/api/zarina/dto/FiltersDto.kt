@@ -29,11 +29,11 @@ data class FiltersDto(
     @SerialName("colors")
     val colors: List<ColorItem>? = null,
 
-    @SerialName("available_for_shipping")
-    val deliveryAvailability: DeliveryAvailability? = null,
+    @SerialName("available")
+    val availability: List<Availability>? = null,
 
-    @SerialName("available_for_store_pickup")
-    val storePickupAvailability: StorePickupAvailability? = null,
+    @SerialName("shops")
+    val pickupStores: List<Store>? = null,
 ) {
     fun toFilters(): Filters {
         val price = price?.let { PriceFilter(min = null, max = null, limits = it.toPriceRange()) }
@@ -73,25 +73,18 @@ data class FiltersDto(
                 )
             } else null
         } else null
-        val deliveryAvailability = deliveryAvailability?.let {
-            if (it.isAvailable != false) {
-                ToggleFilter(
-                    isEnabled = deliveryAvailability.isApplied ?: false,
-                    type = Filter.Type.DELIVERY_AVAILABILITY,
-                )
-            } else null
+        val deliveryAvailability = availability?.let { list ->
+            list
+                .find { it.id == Availability.DELIVERY_AVAILABILITY_ID }
+                ?.toDeliveryAvailabilityFilter()
         }
-        val storePickupAvailability = storePickupAvailability?.let {
-            if (it.isAvailable != false) {
-                ToggleFilter(
-                    isEnabled = storePickupAvailability.isApplied ?: false,
-                    type = Filter.Type.STORE_PICKUP_AVAILABILITY,
-                )
-            } else null
+        val storePickupAvailability = availability?.let { list ->
+            list
+                .find { it.id == Availability.STORE_AVAILABILITY_PICKUP_ID }
+                ?.toStorePickupAvailabilityFilter()
         }
-        val pickupStores = if (this.storePickupAvailability?.stores != null) {
-            val items = this.storePickupAvailability.stores
-                .mapNotNull { it.toPickupStoreFilterItem() }
+        val pickupStores = pickupStores?.let { stores ->
+            val items = stores.mapNotNull { it.toPickupStoreFilterItem() }
             if (items.isNotEmpty()) {
                 ListFilter(
                     items = items,
@@ -99,7 +92,7 @@ data class FiltersDto(
                     type = Filter.Type.PICKUP_STORES,
                 )
             } else null
-        } else null
+        }
         return Filters(
             sorting = Filters.getDefaultSorting(),
             price = price,
@@ -187,50 +180,63 @@ data class FiltersDto(
             }
         }
     }
-    
+
     @Serializable
-    data class DeliveryAvailability(
+    data class Availability(
+        @SerialName("id")
+        val id: String? = null,
+
+        @SerialName("name")
+        val name: String? = null,
+
         @SerialName("is_applied")
         val isApplied: Boolean? = null,
 
         @SerialName("available")
         val isAvailable: Boolean? = null,
-    )
-
-    @Serializable
-    data class StorePickupAvailability(
-        @SerialName("is_applied")
-        val isApplied: Boolean? = null,
-
-        @SerialName("available")
-        val isAvailable: Boolean? = null,
-
-        @SerialName("shops")
-        val stores: List<Store>? = null,
     ) {
-        @Serializable
-        data class Store(
-            @SerialName("id")
-            val id: String? = null,
+        fun toStorePickupAvailabilityFilter(): ToggleFilter {
+            return ToggleFilter(
+                isEnabled = isApplied ?: false,
+                type = Filter.Type.STORE_PICKUP_AVAILABILITY,
+            )
+        }
 
-            @SerialName("name")
-            val name: String? = null,
+        fun toDeliveryAvailabilityFilter(): ToggleFilter {
+            return ToggleFilter(
+                isEnabled = isApplied ?: false,
+                type = Filter.Type.DELIVERY_AVAILABILITY,
+            )
+        }
 
-            @SerialName("available")
-            val isAvailable: Boolean? = null,
-        ) {
-            fun toPickupStoreFilterItem(): PickupStoreFilterItem? {
-                if (isAvailable == false) return null
-                return if (id != null && name != null) {
-                    PickupStoreFilterItem(
-                        id = ListFilterItem.Id(id),
-                        name = name,
-                        isSelected = false,
-                    )
-                } else {
-                    Timber.e("Drop PickupStoreFilterItem because its ID or name is null")
-                    null
-                }
+        companion object {
+            const val DELIVERY_AVAILABILITY_ID = "onlineAvailable"
+            const val STORE_AVAILABILITY_PICKUP_ID = "retailAvailable"
+        }
+    }
+
+    @Serializable
+    data class Store(
+        @SerialName("id")
+        val id: String? = null,
+
+        @SerialName("name")
+        val name: String? = null,
+
+        @SerialName("available")
+        val isAvailable: Boolean? = null,
+    ) {
+        fun toPickupStoreFilterItem(): PickupStoreFilterItem? {
+            if (isAvailable == false) return null
+            return if (id != null && name != null) {
+                PickupStoreFilterItem(
+                    id = ListFilterItem.Id(id),
+                    name = name,
+                    isSelected = false,
+                )
+            } else {
+                Timber.e("Drop PickupStoreFilterItem because its ID or name is null")
+                null
             }
         }
     }

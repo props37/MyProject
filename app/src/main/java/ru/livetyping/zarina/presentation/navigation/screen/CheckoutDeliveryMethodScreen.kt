@@ -47,7 +47,14 @@ fun NavGraphBuilder.checkoutDeliveryMethodScreen(navController: NavHostControlle
                                 )
                             }
 
-                            DeliveryMethodType.PICKUP -> Unit // TODO: [High] Implement
+                            DeliveryMethodType.PICKUP -> {
+                                navController.navigateToCheckoutPickupPointDeliveryScreen(
+                                    cartType = action.cartType,
+                                    step = action.step,
+                                    deliveryMethodType = action.method.type,
+                                )
+                            }
+
                             else -> Unit
                         }
                     }

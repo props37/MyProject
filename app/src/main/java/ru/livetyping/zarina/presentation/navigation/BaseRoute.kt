@@ -63,6 +63,7 @@ enum class BaseRoute {
     COURIER_DELIVERY,
     COURIER_DELIVERY_DATE_TIME_SELECTOR,
     POST_DELIVERY,
+    PICKUP_POINT_DELIVERY,
 
     // Unscoped destinations
     ONBOARDING,

@@ -1,8 +1,9 @@
 package ru.livetyping.zarina.data.geography
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.data.geography.local.GeographyLocalDataSource
 import ru.livetyping.zarina.data.geography.remote.GeographyRemoteDataSource
 import ru.livetyping.zarina.domain.geography.Building
@@ -10,7 +11,6 @@ import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.geography.KladrId
 import ru.livetyping.zarina.domain.geography.Street
 import ru.livetyping.zarina.domain.location.Location
-import timber.log.Timber
 import javax.inject.Inject
 
 class GeographyRepository @Inject constructor(
@@ -21,17 +21,16 @@ class GeographyRepository @Inject constructor(
         return remoteDataSource.getCityFlow(location)
     }
 
-    fun getCitiesFlow(nameQuery: String?): Flow<List<City>> = flow {
-        val cached = localDataSource.getCitiesFlow(nameQuery).firstOrNull()
-        if (cached != null) {
-            Timber.v("Get cached cities for name query $nameQuery")
-            emit(cached)
-        } else {
-            val cities = remoteDataSource.getCitiesFlow(nameQuery).firstOrNull()
-            checkNotNull(cities) { "Failed to fetch cities for query $nameQuery" }
-            localDataSource.setCities(nameQuery, cities)
-            emit(cities)
-        }
+    fun getCitiesFlow(nameQuery: String?): Flow<List<City>> {
+        return localDataSource.getCitiesFlow(nameQuery)
+            .onEach { cached ->
+                if (cached == null) {
+                    val cities = remoteDataSource.getCitiesFlow(nameQuery).firstOrNull()
+                    checkNotNull(cities) { "Failed to fetch cities for query $nameQuery" }
+                    localDataSource.setCities(nameQuery, cities)
+                }
+            }
+            .filterNotNull()
     }
 
     fun getCityStreetsFlow(cityKladrId: KladrId, nameQuery: String): Flow<List<Street>> {

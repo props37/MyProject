@@ -8,6 +8,7 @@ import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGr
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutCourierDeliveryDateTimeSelectorScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutCourierDeliveryScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutDeliveryMethodScreen
+import ru.livetyping.zarina.presentation.navigation.screen.checkoutPickupPointDeliveryScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutPostDeliveryScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutRecipientScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutSelectedStoreScreen
@@ -33,6 +34,7 @@ fun NavGraphBuilder.checkoutGraph(navController: NavHostController) {
         checkoutCourierDeliveryScreen(navController)
         checkoutCourierDeliveryDateTimeSelectorScreen(navController)
         checkoutPostDeliveryScreen(navController)
+        checkoutPickupPointDeliveryScreen(navController)
     }
 }
 

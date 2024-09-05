@@ -1,6 +1,6 @@
 [versions]
 # Plugins
-androidGradlePlugin = "8.5.2"
+androidGradlePlugin = "8.6.0"
 googlePlayServices-plugin = "4.4.2"
 firebase-crashlyticsPlugin = "3.0.2"
 androidGitVersion = "0.4.14"
@@ -9,14 +9,14 @@ checkDependencyUpdates = "1.5.0"
 kotlin = "2.0.20"
 kotlin-ksp = "2.0.20-1.0.24"
 kotlin-coroutines = "1.8.1"
-kotlin-serialization = "1.7.1"
+kotlin-serialization = "1.7.2"
 kotlin-immutableCollections = "0.3.7"
 
 jetpack-core = "1.13.1"
 jetpack-appcompat = "1.7.0"
-jetpack-lifecycle = "2.8.4"
+jetpack-lifecycle = "2.8.5"
 jetpack-activity = "1.9.1"
-jetpack-navigation = "2.7.7"
+jetpack-navigation = "2.8.0"
 jetpack-datastore = "1.1.1"
 jetpack-room = "2.6.1"
 jetpack-splashScreen = "1.0.1"
@@ -30,9 +30,9 @@ jetpack-espresso = "3.6.1"
 jetpack-benchmark = "1.3.0"
 
 jetpack-compose-bom = "2024.08.00"
-jetpack-compose = "1.7.0-rc01"
+jetpack-compose = "1.7.0"
 jetpack-compose-material-navigation = "1.7.0-beta01"
-jetpack-compose-material3 = "1.3.0-rc01"
+jetpack-compose-material3 = "1.3.0"
 
 ktor = "2.3.12"
 
@@ -52,7 +52,7 @@ leakCanary = "2.14"
 
 googlePlayServices-location = "21.3.0"
 googlePlayServices-maps = "19.0.0"
-googlePlayServices-maps-compose = "6.1.1"
+googlePlayServices-maps-compose = "6.1.2"
 googlePlayServices-auth-api-phone = "18.1.0"
 
 recaptcha = "18.6.0"
@@ -60,13 +60,13 @@ recaptcha = "18.6.0"
 firebase-bom = "33.2.0"
 
 firebase-performance = "1.4.2"
-mindbox = "2.10.1"
+mindbox = "2.11.0"
 
 junit = "4.13.2"
 
 lint-composeChecks = "1.3.1"
 
-coreLibraryDesugaring = "2.1.0"
+coreLibraryDesugaring = "2.1.2"
 
 
 [libraries]

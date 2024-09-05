@@ -7,6 +7,7 @@ import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryOptionsDtoType
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupStore
 import ru.livetyping.zarina.domain.geography.KladrId
 import javax.inject.Inject
@@ -14,7 +15,7 @@ import javax.inject.Inject
 class CheckoutRemoteDataSource @Inject constructor(
     private val api: CheckoutApi,
 ) {
-    fun getStoresFlow(cityKladrId: KladrId): Flow<List<PickupStore>> = flow {
+    fun getPickupStoresFlow(cityKladrId: KladrId): Flow<List<PickupStore>> = flow {
         val dto = api.getPickupStores(cityKladrId)
         val stores = dto.map { it.toStore() }
         emit(stores)
@@ -43,5 +44,11 @@ class CheckoutRemoteDataSource @Inject constructor(
         val dto = api.getPostDeliveryOptions(buildingKladrId)
         val options = dto.toDeliveryOptions(DeliveryOptionsDtoType.POST)
         emit(options)
+    }
+
+    fun getPickupPointsFlow(cityKladrId: KladrId): Flow<List<PickupPoint>> = flow {
+        val dto = api.getPickupPoints(cityKladrId)
+        val pickupPoints = dto.map { it.toPickupPoint() }
+        emit(pickupPoints)
     }
 }

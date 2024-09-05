@@ -34,7 +34,12 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
                 UnscopedDestinations.CitySelector.routeSchema,
                 UnscopedDestinations.Product.routeSchema,
                 CheckoutGraph.Recipient.routeSchema,
-                CheckoutGraph.StoreSelection.routeSchema -> slidePopEnterTransition()
+                CheckoutGraph.StoreSelection.routeSchema,
+                CheckoutGraph.DeliveryMethod.routeSchema,
+                CheckoutGraph.CourierDelivery.routeSchema,
+                CheckoutGraph.CourierDeliveryDateTimeSelector.routeSchema,
+                CheckoutGraph.PostDelivery.routeSchema,
+                CheckoutGraph.PickupPointDelivery.routeSchema -> slidePopEnterTransition()
 
                 else -> null
             }
