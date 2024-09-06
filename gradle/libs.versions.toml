@@ -10,7 +10,7 @@ kotlin = "2.0.20"
 kotlin-ksp = "2.0.20-1.0.24"
 kotlin-coroutines = "1.8.1"
 kotlin-serialization = "1.7.2"
-kotlin-immutableCollections = "0.3.7"
+kotlin-immutableCollections = "0.3.8"
 
 jetpack-core = "1.13.1"
 jetpack-appcompat = "1.7.0"
