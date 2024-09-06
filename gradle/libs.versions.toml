@@ -29,10 +29,8 @@ jetpack-uiAutomator = "2.3.0"
 jetpack-espresso = "3.6.1"
 jetpack-benchmark = "1.3.0"
 
-jetpack-compose-bom = "2024.08.00"
-jetpack-compose = "1.7.0"
+jetpack-compose-bom = "2024.09.00"
 jetpack-compose-material-navigation = "1.7.0-beta01"
-jetpack-compose-material3 = "1.3.0"
 
 ktor = "2.3.12"
 
@@ -93,14 +91,14 @@ jetpack-benchmark = { group = "androidx.benchmark", name = "benchmark-macro-juni
 
 # Jetpack Compose
 jetpack-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "jetpack-compose-bom" }
-jetpack-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "jetpack-compose" }
-jetpack-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "jetpack-compose" }
+jetpack-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+jetpack-compose-material = { group = "androidx.compose.material", name = "material" }
 jetpack-compose-material-navigation = { group = "androidx.compose.material", name = "material-navigation", version.ref = "jetpack-compose-material-navigation" }
-jetpack-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "jetpack-compose-material3" }
-jetpack-compose-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "jetpack-compose" }
-jetpack-compose-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "jetpack-compose" }
-jetpack-compose-testManifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "jetpack-compose" }
-jetpack-compose-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "jetpack-compose" }
+jetpack-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+jetpack-compose-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+jetpack-compose-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+jetpack-compose-testManifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+jetpack-compose-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 
 # Kotlin
 kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlin-coroutines" }
