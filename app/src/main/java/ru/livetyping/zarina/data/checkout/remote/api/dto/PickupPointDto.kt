@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.LocationDto
 import ru.livetyping.zarina.domain.checkout.PickupPoint
+import ru.livetyping.zarina.domain.checkout.PickupPointInfo
 
 @Serializable
 data class PickupPointDto(
@@ -33,7 +34,7 @@ data class PickupPointDto(
         checkNotNull(title) { "title is null" }
         checkNotNull(address) { "address is null" }
         checkNotNull(location) { "location is null" }
-        return PickupPoint(
+        return PickupPointInfo(
             id = PickupPoint.Id(id),
             title = title,
             address = address,
