@@ -7,10 +7,12 @@ import io.ktor.client.request.parameter
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartTypeDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryMethodDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryOptionsDto
+import ru.livetyping.zarina.data.checkout.remote.api.dto.PickupPointDetailsDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.PickupPointDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.StoreDto
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.geography.KladrId
 import javax.inject.Inject
 
@@ -50,6 +52,17 @@ class CheckoutApi @Inject constructor(
         return httpClient.get("/api/shipping-methods/pickup_points") {
             parameter("city_kladr_id", cityKladrId.value)
         }.body()
+    }
+
+    suspend fun getPickupPointDetails(
+        cityKladrId: KladrId,
+        pickupPointId: PickupPoint.Id,
+    ): PickupPointDetailsDto {
+        // TODO: [High] Always use payment_method=paytureinpay?
+        return httpClient.get(
+            "/api/shipping-methods/cities/${cityKladrId.value}/pickup_points/" +
+                    "${pickupPointId.value}/?payment_method=paytureinpay"
+        ).body()
     }
 
     /*
