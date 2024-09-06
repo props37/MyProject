@@ -9,7 +9,10 @@ sealed class PickupPoint(
     open val location: Location,
     open val isFittingAvailable: Boolean,
     open val isPaymentByCardAvailable: Boolean,
+    open val availablePaymentMethods: Set<PaymentMethod>,
 ) {
     @JvmInline
     value class Id(val value: Long)
+
+    enum class PaymentMethod { CASH, CARD }
 }

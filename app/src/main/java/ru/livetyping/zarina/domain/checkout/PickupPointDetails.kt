@@ -9,6 +9,7 @@ data class PickupPointDetails(
     override val location: Location,
     override val isFittingAvailable: Boolean,
     override val isPaymentByCardAvailable: Boolean,
+    override val availablePaymentMethods: Set<PaymentMethod>,
     val schedule: String,
     val expectedDeliveryDate: String,
 ) : PickupPoint(
@@ -18,4 +19,5 @@ data class PickupPointDetails(
     location = location,
     isFittingAvailable = isFittingAvailable,
     isPaymentByCardAvailable = isPaymentByCardAvailable,
+    availablePaymentMethods = availablePaymentMethods,
 )

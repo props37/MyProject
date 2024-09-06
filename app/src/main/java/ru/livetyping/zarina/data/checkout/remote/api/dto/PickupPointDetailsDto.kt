@@ -2,6 +2,7 @@ package ru.livetyping.zarina.data.checkout.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.data.checkout.remote.api.dto.PickupPointDto.Companion.getAvailablePaymentMethods
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.LocationDto
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupPointDetails
@@ -42,6 +43,7 @@ data class PickupPointDetailsDto(
         checkNotNull(location) { "location is null" }
         checkNotNull(schedule) { "schedule is null" }
         checkNotNull(expectedDeliveryDate) { "expectedDeliveryDate is null" }
+        checkNotNull(availablePaymentMethods) { "availablePaymentMethods is null" }
         return PickupPointDetails(
             id = PickupPoint.Id(id),
             title = title,
@@ -49,6 +51,7 @@ data class PickupPointDetailsDto(
             location = location.toLocation(),
             isFittingAvailable = isFittingAvailable ?: false,
             isPaymentByCardAvailable = isPaymentByCardAvailable ?: false,
+            availablePaymentMethods = getAvailablePaymentMethods(availablePaymentMethods),
             schedule = schedule,
             expectedDeliveryDate = expectedDeliveryDate,
         )
