@@ -35,6 +35,12 @@ data class PickupPointDetailsDto(
 
     @SerialName("estimated_delivery")
     val expectedDeliveryDate: String? = null,
+
+    @SerialName("shelf_life")
+    val storageTime: Int? = null,
+
+    @SerialName("levels")
+    val deliveryTypes: List<DeliveryType>? = null,
 ) {
     fun toPickupPointDetails(): PickupPointDetails {
         checkNotNull(id) { "id is null" }
@@ -44,6 +50,9 @@ data class PickupPointDetailsDto(
         checkNotNull(schedule) { "schedule is null" }
         checkNotNull(expectedDeliveryDate) { "expectedDeliveryDate is null" }
         checkNotNull(availablePaymentMethods) { "availablePaymentMethods is null" }
+        checkNotNull(storageTime) { "storageTime is null" }
+        checkNotNull(deliveryTypes) { "deliveryTypes is null" }
+        check(deliveryTypes.isNotEmpty()) { "deliveryTypes is empty" }
         return PickupPointDetails(
             id = PickupPoint.Id(id),
             title = title,
@@ -54,6 +63,55 @@ data class PickupPointDetailsDto(
             availablePaymentMethods = getAvailablePaymentMethods(availablePaymentMethods),
             schedule = schedule,
             expectedDeliveryDate = expectedDeliveryDate,
+            storageTime = storageTime,
+            deliveryTypes = deliveryTypes.map { it.toDeliveryType() },
         )
+    }
+
+    @Serializable
+    data class DeliveryType(
+        @SerialName("code")
+        val id: String? = null,
+
+        @SerialName("name")
+        val title: String? = null,
+
+        @SerialName("description")
+        val description: String? = null,
+
+        @SerialName("intervals")
+        val dateTimePeriods: List<DateTimePeriod>? = null,
+    ) {
+        fun toDeliveryType(): PickupPointDetails.DeliveryType {
+            checkNotNull(id) { "id is null" }
+            checkNotNull(title) { "title is null" }
+            checkNotNull(description) { "description is null" }
+            checkNotNull(dateTimePeriods) { "dateTimePeriods is null" }
+            check(dateTimePeriods.isNotEmpty()) { "dateTimePeriods is empty" }
+            return PickupPointDetails.DeliveryType(
+                id = PickupPointDetails.DeliveryType.Id(id),
+                title = title,
+                description = description,
+                dateTimePeriods = dateTimePeriods.map { it.toDateTimePeriod() },
+            )
+        }
+
+        @Serializable
+        data class DateTimePeriod(
+            @SerialName("id")
+            val id: Long? = null,
+
+            @SerialName("title")
+            val title: String? = null,
+        ) {
+            fun toDateTimePeriod(): PickupPointDetails.DeliveryType.DateTimePeriod {
+                checkNotNull(id) { "id is null" }
+                checkNotNull(title) { "title is null" }
+                return PickupPointDetails.DeliveryType.DateTimePeriod(
+                    id = PickupPointDetails.DeliveryType.DateTimePeriod.Id(id),
+                    title = title,
+                )
+            }
+        }
     }
 }

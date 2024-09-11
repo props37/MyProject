@@ -39,6 +39,15 @@ fun NavGraphBuilder.checkoutPickupPointDeliveryScreen(navController: NavHostCont
                             body = Text.Resource(R.string.it_will_help_us_to_detect_your_location),
                         )
                     }
+
+                    is CheckoutPickupPointDeliveryScreenAction.PickupPointSelected -> {
+                        navController.navigateToCheckoutSelectedPickupPointScreen(
+                            cartType = action.cartType,
+                            step = action.step,
+                            deliveryMethodType = action.deliveryMethodType,
+                            pickupPointId = action.pickupPoint.id,
+                        )
+                    }
                 }
             },
         )

@@ -203,7 +203,13 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
 
     fun onPickupPointClicked(pickupPoint: PickupPoint) {
         navigationThrottler.throttle {
-            // TODO: [High] Implement
+            val action = CheckoutPickupPointDeliveryScreenAction.PickupPointSelected(
+                pickupPoint = pickupPoint,
+                cartType = cartType.value,
+                step = step.value,
+                deliveryMethodType = deliveryMethodType.value,
+            )
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 

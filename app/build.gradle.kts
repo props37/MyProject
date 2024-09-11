@@ -53,7 +53,7 @@ android {
     }
 
     lint {
-        disable += "UsingMaterialAndMaterial3Libraries"
+        disable += listOf("UsingMaterialAndMaterial3Libraries", "ComposeUnstableCollections")
     }
 
     signingConfigs {

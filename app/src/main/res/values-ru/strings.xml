@@ -307,6 +307,15 @@
     <string name="payment_by_card">Оплата картой</string>
     <string name="with_fitting">С примеркой</string>
     <string name="map_pickup_point_content_description">Пункт самовывоза %1$s</string>
+    <string name="point_information">Информация о пункте</string>
+    <string name="working_hours">Время работы</string>
+    <string name="address">Адрес</string>
+    <string name="storage_time">Срок хранения</string>
+    <string name="tentative_delivery_date">Ориентировочная дата доставки</string>
+    <string name="s_or_s">%1$s или %2$s</string>
+    <string name="by_cash">Наличными</string>
+    <string name="by_card">Банковской картой</string>
+    <string name="choose_delivery_terms">Выбери условия доставки</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
@@ -454,6 +463,15 @@
         <item quantity="few">Доступны %1$d из %2$d товаров</item>
         <item quantity="many">Доступны %1$d из %2$d товаров</item>
         <item quantity="other">Доступны %1$d из %2$d товаров</item>
+    </plurals>
+
+    <plurals name="d_days">
+        <item quantity="zero">%1$d дней</item>
+        <item quantity="one">%1$d день</item>
+        <item quantity="two">%1$d дня</item>
+        <item quantity="few">%1$d дня</item>
+        <item quantity="many">%1$d дней</item>
+        <item quantity="other">%1$d дней</item>
     </plurals>
 
 </resources>
