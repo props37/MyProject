@@ -382,13 +382,17 @@ class CartViewModel @AssistedInject constructor(
         }
     }
 
-    fun onBonusCountToWriteOffChanged(bonusCount: Int) {
+    fun onBonusCountToWriteOffChanged(bonusCount: Int?) {
         if (bonusJob?.isActive == true) return
 
         val cartType = currentCartType.value
         val maxBonusCount = getCart(cartType)?.bonuses?.writeOff?.max ?: return
         bonusJob = viewModelScope.launch {
-            applyBonusWriteOff(cartType, bonusCount.coerceAtMost(maxBonusCount))
+            if (bonusCount != null) {
+                applyBonusWriteOff(cartType, bonusCount.coerceAtMost(maxBonusCount))
+            } else {
+                removeBonusWriteOff(cartType)
+            }
         }
     }
 
