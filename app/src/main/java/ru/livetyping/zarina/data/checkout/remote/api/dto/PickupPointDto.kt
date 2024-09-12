@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.LocationDto
 import ru.livetyping.zarina.domain.checkout.PickupPoint
+import ru.livetyping.zarina.domain.checkout.PickupPointInfo
 
 @Serializable
 data class PickupPointDto(
@@ -33,13 +34,30 @@ data class PickupPointDto(
         checkNotNull(title) { "title is null" }
         checkNotNull(address) { "address is null" }
         checkNotNull(location) { "location is null" }
-        return PickupPoint(
+        checkNotNull(availablePaymentMethods) { "availablePaymentMethods is null" }
+        return PickupPointInfo(
             id = PickupPoint.Id(id),
             title = title,
             address = address,
             location = location.toLocation(),
             isFittingAvailable = isFittingAvailable ?: false,
             isPaymentByCardAvailable = isPaymentByCardAvailable ?: false,
+            availablePaymentMethods = getAvailablePaymentMethods(availablePaymentMethods),
         )
+    }
+
+    companion object {
+        fun getAvailablePaymentMethods(methods: List<String>): Set<PickupPoint.PaymentMethod> {
+            return methods.mapTo(mutableSetOf()) {
+                when (it) {
+                    PAYMENT_METHOD_CASH -> PickupPoint.PaymentMethod.CASH
+                    PAYMENT_METHOD_CARD -> PickupPoint.PaymentMethod.CARD
+                    else -> throw IllegalArgumentException("Unknown payment method $it")
+                }
+            }
+        }
+
+        private const val PAYMENT_METHOD_CASH = "наличными"
+        private const val PAYMENT_METHOD_CARD = "банковской картой"
     }
 }

@@ -10,6 +10,7 @@ import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.checkout.DeliveryOptions
 import ru.livetyping.zarina.domain.checkout.PickupPoint
+import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.checkout.PickupStore
 import ru.livetyping.zarina.domain.geography.KladrId
 import javax.inject.Inject
@@ -52,6 +53,13 @@ class CheckoutRepository @Inject constructor(
                 }
             }
             .filterNotNull()
+    }
+
+    fun getPickupPointDetailsFlow(
+        cityKladrId: KladrId,
+        pickupPointId: PickupPoint.Id,
+    ): Flow<PickupPointDetails> {
+        return remoteDataSource.getPickupPointDetailsFlow(cityKladrId, pickupPointId)
     }
 
     fun clear() {
