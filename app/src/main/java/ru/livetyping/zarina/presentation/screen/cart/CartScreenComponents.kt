@@ -616,18 +616,9 @@ object CartScreenComponents {
                         onRemoveClicked = onRemovePromoCodeClicked,
                         isError = cartState.promoCodeState.isInvalid,
                         description = {
-                            AnimatedContent(
-                                targetState = cartState.promoCodeState.description,
-                                transitionSpec = {
-                                    AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
-                                },
-                                contentAlignment = Alignment.Center,
-                                label = "PromoCode description",
-                            ) { text ->
-                                if (text != null) {
-                                    Text(text = textString(text))
-                                }
-                            }
+                            PromoCodeDescription(
+                                text = cartState.promoCodeState.description?.let { textString(it) },
+                            )
                         },
                         onKeyboardAction = { onPromoCodeImeDoneClicked() },
                         modifier = Modifier
@@ -1218,6 +1209,26 @@ object CartScreenComponents {
                 isChecked = state.isApplied,
                 onCheckedChanged = onIsAppliedChanged,
             )
+        }
+    }
+
+    @Composable
+    private fun PromoCodeDescription(
+        text: String?,
+        modifier: Modifier = Modifier,
+    ) {
+        @Suppress("NAME_SHADOWING")
+        AnimatedContent(
+            targetState = text,
+            transitionSpec = {
+                AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
+            },
+            contentAlignment = Alignment.Center,
+            label = "PromoCode description",
+        ) { text ->
+            if (text != null) {
+                Text(text = text)
+            }
         }
     }
 
