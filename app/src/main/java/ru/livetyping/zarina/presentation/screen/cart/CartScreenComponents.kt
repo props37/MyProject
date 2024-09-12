@@ -1225,7 +1225,7 @@ object CartScreenComponents {
     }
 
     private fun getCartProductItemKey(productItem: CartViewModel.ProductItem): CartKey.Product {
-        return CartKey.Product(productItem.product.productId.value)
+        return CartKey.Product(productItem.product.id.value)
     }
 
     @Stable
@@ -1265,7 +1265,7 @@ object CartScreenComponents {
     @Stable
     @Parcelize
     private sealed class CartKey : Parcelable {
-        data class Product(val productId: String) : CartKey()
+        data class Product(val id: Long) : CartKey()
 
         data object BonusAccrual : CartKey()
 
