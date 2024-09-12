@@ -440,11 +440,11 @@
 
     <plurals name="you_have_s_bonuses">
         <item quantity="zero">У тебя нет бонусов</item>
-        <item quantity="one">У тебя %1$d бонус</item>
-        <item quantity="two">У тебя %1$d бонуса</item>
-        <item quantity="few">У тебя %1$d бонуса</item>
-        <item quantity="many">У тебя %1$d бонусов</item>
-        <item quantity="other">У тебя %1$d бонусов</item>
+        <item quantity="one">У тебя %1$s бонус</item>
+        <item quantity="two">У тебя %1$s бонуса</item>
+        <item quantity="few">У тебя %1$s бонуса</item>
+        <item quantity="many">У тебя %1$s бонусов</item>
+        <item quantity="other">У тебя %1$s бонусов</item>
     </plurals>
 
     <plurals name="you_can_write_off_s_bonuses">
