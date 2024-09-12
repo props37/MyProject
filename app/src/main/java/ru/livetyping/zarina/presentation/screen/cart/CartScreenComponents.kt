@@ -604,37 +604,39 @@ object CartScreenComponents {
                 }
             }
 
-            item(
-                key = CartKey.PromoCode,
-                contentType = CartContentType.PromoCode,
-            ) {
-                ZarinaPromoCodeTextField(
-                    state = cartState.promoCodeState.textFieldState,
-                    isApplied = cartState.promoCodeState.isApplied,
-                    onApplyClicked = onApplyPromoCodeClicked,
-                    onRemoveClicked = onRemovePromoCodeClicked,
-                    isError = cartState.promoCodeState.isInvalid,
-                    description = {
-                        AnimatedContent(
-                            targetState = cartState.promoCodeState.description,
-                            transitionSpec = {
-                                AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
-                            },
-                            contentAlignment = Alignment.Center,
-                            label = "PromoCode description",
-                        ) { text ->
-                            if (text != null) {
-                                Text(text = textString(text))
+            if (cartState.promoCodeState != null) {
+                item(
+                    key = CartKey.PromoCode,
+                    contentType = CartContentType.PromoCode,
+                ) {
+                    ZarinaPromoCodeTextField(
+                        state = cartState.promoCodeState.textFieldState,
+                        isApplied = cartState.promoCodeState.isApplied,
+                        onApplyClicked = onApplyPromoCodeClicked,
+                        onRemoveClicked = onRemovePromoCodeClicked,
+                        isError = cartState.promoCodeState.isInvalid,
+                        description = {
+                            AnimatedContent(
+                                targetState = cartState.promoCodeState.description,
+                                transitionSpec = {
+                                    AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
+                                },
+                                contentAlignment = Alignment.Center,
+                                label = "PromoCode description",
+                            ) { text ->
+                                if (text != null) {
+                                    Text(text = textString(text))
+                                }
                             }
-                        }
-                    },
-                    onKeyboardAction = { onPromoCodeImeDoneClicked() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 24.dp)
-                        .padding(horizontal = 16.dp)
-                        .animateItem(),
-                )
+                        },
+                        onKeyboardAction = { onPromoCodeImeDoneClicked() },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 24.dp)
+                            .padding(horizontal = 16.dp)
+                            .animateItem(),
+                    )
+                }
             }
 
             item(

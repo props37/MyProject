@@ -610,12 +610,14 @@ class CartViewModel @AssistedInject constructor(
                                 info = it.info,
                             )
                         }
-                        val promoCodeState = PromoCodeState(
-                            isApplied = cart.promoCode?.isApplied == true,
-                            isInvalid = isPromoCodeInvalid,
-                            description = promoCodeDescription,
-                            textFieldState = promoCodeTextFieldState,
-                        )
+                        val promoCodeState = if (cart.myCard?.isApplied != true) {
+                            PromoCodeState(
+                                isApplied = cart.promoCode?.isApplied == true,
+                                isInvalid = isPromoCodeInvalid,
+                                description = promoCodeDescription,
+                                textFieldState = promoCodeTextFieldState,
+                            )
+                        } else null
                         CartState.Cart(
                             productItems = productItems,
                             price = cart.price,
@@ -710,7 +712,7 @@ class CartViewModel @AssistedInject constructor(
             val price: CartPrice,
             val bonusState: BonusState,
             val myCardState: MyCardState?,
-            val promoCodeState: PromoCodeState,
+            val promoCodeState: PromoCodeState?,
             val productLimit: DomainCart.ProductLimit,
         ) : CartState()
 
