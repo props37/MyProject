@@ -77,7 +77,6 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.HorizontalAndBottom
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
-import ru.livetyping.zarina.util.compose.sizeIn
 import ru.livetyping.zarina.util.compose.text.unscalable
 
 @Composable
@@ -276,7 +275,6 @@ private fun ItemCounter(
             ZarinaCounter(
                 value = count.toString(),
                 textStyle = UiKitTheme.typography.caption2.bold.unscalable(LocalDensity.current),
-                modifier = Modifier.sizeIn(minSize = 16.dp),
             )
         }
     }
