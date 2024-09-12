@@ -119,7 +119,8 @@ class CartViewModel @AssistedInject constructor(
 
     private val isMyCardApplied = MutableStateFlow(false)
 
-    private val isBonusWriteOffApplied = MutableStateFlow(false)
+    private val isDeliveryBonusWriteOffApplied = MutableStateFlow(false)
+    private val isPickupBonusWriteOffApplied = MutableStateFlow(false)
 
     private val deliveryCartRequester = FlowRequester<Result<DomainCart>, CartRequest> {
         val params = GetCartFlowUseCase.Params(CartType.DELIVERY)
@@ -176,7 +177,7 @@ class CartViewModel @AssistedInject constructor(
     val deliveryCartState: StateFlow<CartState> = combineMore(
         deliveryCartResult,
         deliveryCartRequester.loadingState,
-        isBonusWriteOffApplied,
+        isDeliveryBonusWriteOffApplied,
         isMyCardApplied,
         isPromoCodeInvalid,
         promoCodeDescription,
@@ -199,7 +200,7 @@ class CartViewModel @AssistedInject constructor(
     val pickupCartState: StateFlow<CartState> = combineMore(
         pickupCartResult,
         pickupCartRequester.loadingState,
-        isBonusWriteOffApplied,
+        isPickupBonusWriteOffApplied,
         isMyCardApplied,
         isPromoCodeInvalid,
         promoCodeDescription,
@@ -369,9 +370,10 @@ class CartViewModel @AssistedInject constructor(
     fun onIsBonusWriteOffAppliedChanged(isApplied: Boolean) {
         if (bonusJob?.isActive == true) return
 
-        isBonusWriteOffApplied.value = isApplied
+        val cartType = currentCartType.value
+        val isBonusWriteOffAppliedState = getIsBonusWriteOffAppliedState(cartType)
+        isBonusWriteOffAppliedState.value = isApplied
         bonusJob = viewModelScope.launch {
-            val cartType = currentCartType.value
             if (isApplied) {
                 val cart = getCart(cartType)
                 val maxBonusCountToWriteOff = cart?.bonuses?.writeOff?.max ?: return@launch
@@ -511,11 +513,20 @@ class CartViewModel @AssistedInject constructor(
     }
 
     private suspend fun applyMyCardToCart(cartType: CartType, productsFirstPriceSum: Int) {
+        val isBonusWriteOffApplied = getIsBonusWriteOffAppliedState(cartType).value
         val params = ApplyMyCardToCartUseCase.Params(cartType, productsFirstPriceSum)
         interactor.applyMyCardToCart(params)
             .onSuccess {
-                // TODO: [High] Show toasts
                 requestCarts(CartRequest.REFRESHING)
+                if (isBonusWriteOffApplied) {
+                    val messageText = Text.Resource(R.string.my_card_cant_be_combined_with_bonuses)
+                    val message = ZarinaToastMessage(
+                        text = messageText,
+                        duration = ZarinaToastMessage.DURATION_LONG,
+                    )
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                }
+                // TODO: [High] Show toast when promo code is replaced
             }
             .onFailure {
                 isMyCardApplied.value = false
@@ -657,7 +668,8 @@ class CartViewModel @AssistedInject constructor(
     }
 
     private fun updateBonusWriteOffState(cart: Cart, cartType: CartType) {
-        isBonusWriteOffApplied.value = cart.bonuses.writeOff.isApplied
+        val isBonusWriteOffAppliedState = getIsBonusWriteOffAppliedState(cartType)
+        isBonusWriteOffAppliedState.value = cart.bonuses.writeOff.isApplied
         val textFieldState = when (cartType) {
             CartType.DELIVERY -> deliveryBonusWriteOffTextFieldState
             CartType.PICKUP -> pickupBonusWriteOffTextFieldState
@@ -699,6 +711,13 @@ class CartViewModel @AssistedInject constructor(
             CartType.DELIVERY -> deliveryCartResult.value
             CartType.PICKUP -> pickupCartResult.value
         }?.getOrNull()
+    }
+
+    private fun getIsBonusWriteOffAppliedState(cartType: CartType): MutableStateFlow<Boolean> {
+        return when (cartType) {
+            CartType.DELIVERY -> isDeliveryBonusWriteOffApplied
+            CartType.PICKUP -> isPickupBonusWriteOffApplied
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
