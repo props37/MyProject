@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.Spring
@@ -265,7 +266,7 @@ private fun ItemCounter(
     AnimatedContent(
         targetState = count,
         transitionSpec = {
-            AnimatedContentDefaultTransitionSpec.using(sizeTransform = null)
+            AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
         },
         contentAlignment = Alignment.TopEnd,
         label = "ItemCounter",
