@@ -657,6 +657,7 @@ class CartViewModel @AssistedInject constructor(
     }
 
     private fun updateBonusWriteOffState(cart: Cart, cartType: CartType) {
+        isBonusWriteOffApplied.value = cart.bonuses.writeOff.isApplied
         val textFieldState = when (cartType) {
             CartType.DELIVERY -> deliveryBonusWriteOffTextFieldState
             CartType.PICKUP -> pickupBonusWriteOffTextFieldState
