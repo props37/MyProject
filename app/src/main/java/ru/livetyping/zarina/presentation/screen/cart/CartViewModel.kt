@@ -377,18 +377,7 @@ class CartViewModel @AssistedInject constructor(
                 val maxBonusCountToWriteOff = cart?.bonuses?.writeOff?.max ?: return@launch
                 applyBonusWriteOff(cartType, maxBonusCountToWriteOff)
             } else {
-                val params = RemoveBonusWriteOffUseCase.Params(cartType)
-                interactor.removeBonusWriteOff(params)
-                    .onSuccess {
-                        // TODO: [High] Show toasts
-                        emitSideEffect(SideEffect.HideKeyboard)
-                        requestCarts(CartRequest.REFRESHING)
-                    }
-                    .onFailure {
-                        val messageText = Text.Resource(R.string.bonus_write_off_removing_error)
-                        val message = ZarinaToastMessage.error(messageText)
-                        emitSideEffect(SideEffect.ShowZarinaToast(message))
-                    }
+                removeBonusWriteOff(cartType)
             }
         }
     }
@@ -497,6 +486,21 @@ class CartViewModel @AssistedInject constructor(
             }
             .onFailure {
                 val messageText = Text.Resource(R.string.bonus_write_off_applying_error)
+                val message = ZarinaToastMessage.error(messageText)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+    }
+
+    private suspend fun removeBonusWriteOff(cartType: CartType) {
+        val params = RemoveBonusWriteOffUseCase.Params(cartType)
+        interactor.removeBonusWriteOff(params)
+            .onSuccess {
+                // TODO: [High] Show toasts
+                emitSideEffect(SideEffect.HideKeyboard)
+                requestCarts(CartRequest.REFRESHING)
+            }
+            .onFailure {
+                val messageText = Text.Resource(R.string.bonus_write_off_removing_error)
                 val message = ZarinaToastMessage.error(messageText)
                 emitSideEffect(SideEffect.ShowZarinaToast(message))
             }
