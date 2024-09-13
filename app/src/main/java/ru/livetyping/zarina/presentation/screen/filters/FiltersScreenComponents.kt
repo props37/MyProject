@@ -393,7 +393,6 @@ object FiltersScreenComponents {
                 ZarinaCounter(
                     value = selectedCount.toString(),
                     textStyle = UiKitTheme.typography.footnote.bold,
-                    modifier = Modifier.sizeIn(minSize = 24.dp),
                 )
             }
 

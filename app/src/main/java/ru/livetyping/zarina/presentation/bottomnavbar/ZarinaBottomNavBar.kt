@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.Spring
@@ -77,7 +78,6 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.HorizontalAndBottom
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
-import ru.livetyping.zarina.util.compose.sizeIn
 import ru.livetyping.zarina.util.compose.text.unscalable
 
 @Composable
@@ -266,7 +266,7 @@ private fun ItemCounter(
     AnimatedContent(
         targetState = count,
         transitionSpec = {
-            AnimatedContentDefaultTransitionSpec.using(sizeTransform = null)
+            AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
         },
         contentAlignment = Alignment.TopEnd,
         label = "ItemCounter",
@@ -276,7 +276,6 @@ private fun ItemCounter(
             ZarinaCounter(
                 value = count.toString(),
                 textStyle = UiKitTheme.typography.caption2.bold.unscalable(LocalDensity.current),
-                modifier = Modifier.sizeIn(minSize = 16.dp),
             )
         }
     }

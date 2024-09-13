@@ -122,6 +122,7 @@ fun ZarinaPromoCodeTextField(
 fun ZarinaPromoCodeTextField(
     state: TextFieldState,
     isApplied: Boolean,
+    appliedPromoCode: String?,
     onApplyClicked: () -> Unit,
     onRemoveClicked: () -> Unit,
     modifier: Modifier = Modifier,
@@ -142,8 +143,10 @@ fun ZarinaPromoCodeTextField(
         )
     },
     outerTrailingContent: (@Composable () -> Unit)? = {
+        val text = state.text.toString()
+        val isVisible = text.isNotBlank() && text != appliedPromoCode
         ZarinaPromoCodeTextFieldDefaults.ApplyButton(
-            isVisible = state.text.toString().isNotBlank() && !isApplied,
+            isVisible = isVisible,
             onClick = onApplyClicked,
         )
     },

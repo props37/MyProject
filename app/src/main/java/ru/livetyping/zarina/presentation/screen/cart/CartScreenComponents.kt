@@ -113,7 +113,6 @@ import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPromoCodeTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextField
-import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPrice
@@ -187,7 +186,7 @@ object CartScreenComponents {
         productCardActions: ProductCardActions,
         onBonusAccrualClicked: () -> Unit,
         onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
-        onBonusCountToWriteOffChanged: (Int) -> Unit,
+        onBonusCountToWriteOffChanged: (Int?) -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
@@ -395,7 +394,7 @@ object CartScreenComponents {
         productCardActions: ProductCardActions,
         onBonusAccrualClicked: () -> Unit,
         onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
-        onBonusCountToWriteOffChanged: (Int) -> Unit,
+        onBonusCountToWriteOffChanged: (Int?) -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
@@ -470,7 +469,7 @@ object CartScreenComponents {
         productCardActions: ProductCardActions,
         onBonusAccrualClicked: () -> Unit,
         onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
-        onBonusCountToWriteOffChanged: (Int) -> Unit,
+        onBonusCountToWriteOffChanged: (Int?) -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
@@ -520,7 +519,7 @@ object CartScreenComponents {
         lazyListState: LazyListState,
         onBonusAccrualClicked: () -> Unit,
         onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
-        onBonusCountToWriteOffChanged: (Int) -> Unit,
+        onBonusCountToWriteOffChanged: (Int?) -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
@@ -604,37 +603,31 @@ object CartScreenComponents {
                 }
             }
 
-            item(
-                key = CartKey.PromoCode,
-                contentType = CartContentType.PromoCode,
-            ) {
-                ZarinaPromoCodeTextField(
-                    state = cartState.promoCodeState.textFieldState,
-                    isApplied = cartState.promoCodeState.isApplied,
-                    onApplyClicked = onApplyPromoCodeClicked,
-                    onRemoveClicked = onRemovePromoCodeClicked,
-                    isError = cartState.promoCodeState.isInvalid,
-                    description = {
-                        AnimatedContent(
-                            targetState = cartState.promoCodeState.description,
-                            transitionSpec = {
-                                AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
-                            },
-                            contentAlignment = Alignment.Center,
-                            label = "PromoCode description",
-                        ) { text ->
-                            if (text != null) {
-                                Text(text = textString(text))
-                            }
-                        }
-                    },
-                    onKeyboardAction = { onPromoCodeImeDoneClicked() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 24.dp)
-                        .padding(horizontal = 16.dp)
-                        .animateItem(),
-                )
+            if (cartState.promoCodeState != null) {
+                item(
+                    key = CartKey.PromoCode,
+                    contentType = CartContentType.PromoCode,
+                ) {
+                    ZarinaPromoCodeTextField(
+                        state = cartState.promoCodeState.textFieldState,
+                        isApplied = cartState.promoCodeState.isApplied,
+                        appliedPromoCode = cartState.promoCodeState.appliedPromoCode,
+                        onApplyClicked = onApplyPromoCodeClicked,
+                        onRemoveClicked = onRemovePromoCodeClicked,
+                        isError = cartState.promoCodeState.isInvalid,
+                        description = {
+                            PromoCodeDescription(
+                                text = cartState.promoCodeState.description?.let { textString(it) },
+                            )
+                        },
+                        onKeyboardAction = { onPromoCodeImeDoneClicked() },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 24.dp)
+                            .padding(horizontal = 16.dp)
+                            .animateItem(),
+                    )
+                }
             }
 
             item(
@@ -1084,7 +1077,7 @@ object CartScreenComponents {
     private fun BonusWriteOff(
         state: BonusState,
         onIsAppliedChanged: (Boolean) -> Unit,
-        onBonusCountToWriteOffChanged: (Int) -> Unit,
+        onBonusCountToWriteOffChanged: (Int?) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
@@ -1136,21 +1129,13 @@ object CartScreenComponents {
                             if (!isImeVisible && isFocused) {
                                 val bonusCount =
                                     state.writeOffTextFieldState.text.toString().toIntOrNull()
-                                if (bonusCount != null) {
-                                    updatedOnBonusCountToWriteOffChanged(bonusCount)
-                                }
+                                updatedOnBonusCountToWriteOffChanged(bonusCount)
                             }
                         }
                     }
 
                     ZarinaTextField(
                         state = state.writeOffTextFieldState,
-                        innerTrailingContent = {
-                            ZarinaTextFieldDefaults.ClearButton(
-                                isVisible = state.writeOffTextFieldState.text.isNotBlank(),
-                                onClick = { /*TODO*/ },
-                            )
-                        },
                         description = {
                             val formattedMaxWriteOff = rememberFormattedPrice(state.bonuses.writeOff.max)
                             Text(
@@ -1216,6 +1201,27 @@ object CartScreenComponents {
                 isChecked = state.isApplied,
                 onCheckedChanged = onIsAppliedChanged,
             )
+        }
+    }
+
+    @Composable
+    private fun PromoCodeDescription(
+        text: String?,
+        modifier: Modifier = Modifier,
+    ) {
+        @Suppress("NAME_SHADOWING")
+        AnimatedContent(
+            targetState = text,
+            transitionSpec = {
+                AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
+            },
+            contentAlignment = Alignment.Center,
+            label = "PromoCode description",
+            modifier = modifier,
+        ) { text ->
+            if (text != null) {
+                Text(text = text)
+            }
         }
     }
 

@@ -135,7 +135,7 @@ private fun ScreenContent(
     productCardActions: ProductCardActions,
     isRefreshing: Boolean,
     onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
-    onBonusCountToWriteOffChanged: (Int) -> Unit,
+    onBonusCountToWriteOffChanged: (Int?) -> Unit,
     onIsMyCardAppliedChanged: (Boolean) -> Unit,
     onApplyPromoCodeClicked: () -> Unit,
     onRemovePromoCodeClicked: () -> Unit,

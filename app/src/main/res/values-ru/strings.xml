@@ -316,6 +316,8 @@
     <string name="by_cash">Наличными</string>
     <string name="by_card">Банковской картой</string>
     <string name="choose_delivery_terms">Выбери условия доставки</string>
+    <string name="my_card_cant_be_combined_with_bonuses">MyCard не суммируется с другими скидками, поэтому отменили списание баллов</string>
+    <string name="my_card_cant_be_combined_with_promo_code">MyCard не суммируется с другими скидками, поэтому отменили применение промокода</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
@@ -440,11 +442,11 @@
 
     <plurals name="you_have_s_bonuses">
         <item quantity="zero">У тебя нет бонусов</item>
-        <item quantity="one">У тебя %1$d бонус</item>
-        <item quantity="two">У тебя %1$d бонуса</item>
-        <item quantity="few">У тебя %1$d бонуса</item>
-        <item quantity="many">У тебя %1$d бонусов</item>
-        <item quantity="other">У тебя %1$d бонусов</item>
+        <item quantity="one">У тебя %1$s бонус</item>
+        <item quantity="two">У тебя %1$s бонуса</item>
+        <item quantity="few">У тебя %1$s бонуса</item>
+        <item quantity="many">У тебя %1$s бонусов</item>
+        <item quantity="other">У тебя %1$s бонусов</item>
     </plurals>
 
     <plurals name="you_can_write_off_s_bonuses">

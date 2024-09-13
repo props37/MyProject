@@ -119,7 +119,8 @@ class CartViewModel @AssistedInject constructor(
 
     private val isMyCardApplied = MutableStateFlow(false)
 
-    private val isBonusWriteOffApplied = MutableStateFlow(false)
+    private val isDeliveryBonusWriteOffApplied = MutableStateFlow(false)
+    private val isPickupBonusWriteOffApplied = MutableStateFlow(false)
 
     private val deliveryCartRequester = FlowRequester<Result<DomainCart>, CartRequest> {
         val params = GetCartFlowUseCase.Params(CartType.DELIVERY)
@@ -176,7 +177,7 @@ class CartViewModel @AssistedInject constructor(
     val deliveryCartState: StateFlow<CartState> = combineMore(
         deliveryCartResult,
         deliveryCartRequester.loadingState,
-        isBonusWriteOffApplied,
+        isDeliveryBonusWriteOffApplied,
         isMyCardApplied,
         isPromoCodeInvalid,
         promoCodeDescription,
@@ -199,7 +200,7 @@ class CartViewModel @AssistedInject constructor(
     val pickupCartState: StateFlow<CartState> = combineMore(
         pickupCartResult,
         pickupCartRequester.loadingState,
-        isBonusWriteOffApplied,
+        isPickupBonusWriteOffApplied,
         isMyCardApplied,
         isPromoCodeInvalid,
         promoCodeDescription,
@@ -369,37 +370,31 @@ class CartViewModel @AssistedInject constructor(
     fun onIsBonusWriteOffAppliedChanged(isApplied: Boolean) {
         if (bonusJob?.isActive == true) return
 
-        isBonusWriteOffApplied.value = isApplied
+        val cartType = currentCartType.value
+        val isBonusWriteOffAppliedState = getIsBonusWriteOffAppliedState(cartType)
+        isBonusWriteOffAppliedState.value = isApplied
         bonusJob = viewModelScope.launch {
-            val cartType = currentCartType.value
             if (isApplied) {
                 val cart = getCart(cartType)
                 val maxBonusCountToWriteOff = cart?.bonuses?.writeOff?.max ?: return@launch
                 applyBonusWriteOff(cartType, maxBonusCountToWriteOff)
             } else {
-                val params = RemoveBonusWriteOffUseCase.Params(cartType)
-                interactor.removeBonusWriteOff(params)
-                    .onSuccess {
-                        // TODO: [High] Show toasts
-                        emitSideEffect(SideEffect.HideKeyboard)
-                        requestCarts(CartRequest.REFRESHING)
-                    }
-                    .onFailure {
-                        val messageText = Text.Resource(R.string.bonus_write_off_removing_error)
-                        val message = ZarinaToastMessage.error(messageText)
-                        emitSideEffect(SideEffect.ShowZarinaToast(message))
-                    }
+                removeBonusWriteOff(cartType)
             }
         }
     }
 
-    fun onBonusCountToWriteOffChanged(bonusCount: Int) {
+    fun onBonusCountToWriteOffChanged(bonusCount: Int?) {
         if (bonusJob?.isActive == true) return
 
         val cartType = currentCartType.value
         val maxBonusCount = getCart(cartType)?.bonuses?.writeOff?.max ?: return
         bonusJob = viewModelScope.launch {
-            applyBonusWriteOff(cartType, bonusCount.coerceAtMost(maxBonusCount))
+            if (bonusCount != null) {
+                applyBonusWriteOff(cartType, bonusCount.coerceAtMost(maxBonusCount))
+            } else {
+                removeBonusWriteOff(cartType)
+            }
         }
     }
 
@@ -502,12 +497,34 @@ class CartViewModel @AssistedInject constructor(
             }
     }
 
+    private suspend fun removeBonusWriteOff(cartType: CartType) {
+        val params = RemoveBonusWriteOffUseCase.Params(cartType)
+        interactor.removeBonusWriteOff(params)
+            .onSuccess {
+                // TODO: [High] Show toasts
+                emitSideEffect(SideEffect.HideKeyboard)
+                requestCarts(CartRequest.REFRESHING)
+            }
+            .onFailure {
+                val messageText = Text.Resource(R.string.bonus_write_off_removing_error)
+                val message = ZarinaToastMessage.error(messageText)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+    }
+
     private suspend fun applyMyCardToCart(cartType: CartType, productsFirstPriceSum: Int) {
+        val cart = getCart(cartType)
+        val isBonusWriteOffApplied = getIsBonusWriteOffAppliedState(cartType).value
+        val isPromoCodeApplied = cart?.promoCode?.isApplied == true
+
         val params = ApplyMyCardToCartUseCase.Params(cartType, productsFirstPriceSum)
         interactor.applyMyCardToCart(params)
             .onSuccess {
-                // TODO: [High] Show toasts
                 requestCarts(CartRequest.REFRESHING)
+                showMyCardReplacedOtherBonusToast(
+                    isBonusWriteOffApplied = isBonusWriteOffApplied,
+                    isPromoCodeApplied = isPromoCodeApplied,
+                )
             }
             .onFailure {
                 isMyCardApplied.value = false
@@ -538,6 +555,28 @@ class CartViewModel @AssistedInject constructor(
                 promoCodeDescription.value = null
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun showMyCardReplacedOtherBonusToast(
+        isBonusWriteOffApplied: Boolean,
+        isPromoCodeApplied: Boolean,
+    ) {
+        val messageText = when {
+            isBonusWriteOffApplied -> {
+                Text.Resource(R.string.my_card_cant_be_combined_with_bonuses)
+            }
+
+            isPromoCodeApplied -> {
+                Text.Resource(R.string.my_card_cant_be_combined_with_promo_code)
+            }
+
+            else -> return
+        }
+        val message = ZarinaToastMessage(
+            text = messageText,
+            duration = ZarinaToastMessage.DURATION_LONG,
+        )
+        emitSideEffect(SideEffect.ShowZarinaToast(message))
     }
 
     private fun handleCitySelectorResult() {
@@ -597,7 +636,7 @@ class CartViewModel @AssistedInject constructor(
                             cart.bonuses.available > 0 && cart.myCard?.isApplied != true
                         val bonusState = BonusState(
                             bonuses = cart.bonuses,
-                            isWriteOffAvailable = isBonusWriteOffAvailable,
+                            isWriteOffAvailable = isBonusWriteOffAvailable && cart.promoCode?.isApplied != true,
                             isWriteOffApplied = isBonusWriteOffApplied || cart.bonuses.writeOff.isApplied,
                             writeOffTextFieldState = when (cartType) {
                                 CartType.DELIVERY -> deliveryBonusWriteOffTextFieldState
@@ -610,12 +649,15 @@ class CartViewModel @AssistedInject constructor(
                                 info = it.info,
                             )
                         }
-                        val promoCodeState = PromoCodeState(
-                            isApplied = cart.promoCode?.isApplied == true,
-                            isInvalid = isPromoCodeInvalid,
-                            description = promoCodeDescription,
-                            textFieldState = promoCodeTextFieldState,
-                        )
+                        val promoCodeState = if (cart.myCard?.isApplied != true) {
+                            PromoCodeState(
+                                isApplied = cart.promoCode?.isApplied == true,
+                                isInvalid = isPromoCodeInvalid,
+                                description = promoCodeDescription,
+                                textFieldState = promoCodeTextFieldState,
+                                appliedPromoCode = cart.promoCode?.value,
+                            )
+                        } else null
                         CartState.Cart(
                             productItems = productItems,
                             price = cart.price,
@@ -647,6 +689,8 @@ class CartViewModel @AssistedInject constructor(
     }
 
     private fun updateBonusWriteOffState(cart: Cart, cartType: CartType) {
+        val isBonusWriteOffAppliedState = getIsBonusWriteOffAppliedState(cartType)
+        isBonusWriteOffAppliedState.value = cart.bonuses.writeOff.isApplied
         val textFieldState = when (cartType) {
             CartType.DELIVERY -> deliveryBonusWriteOffTextFieldState
             CartType.PICKUP -> pickupBonusWriteOffTextFieldState
@@ -690,6 +734,13 @@ class CartViewModel @AssistedInject constructor(
         }?.getOrNull()
     }
 
+    private fun getIsBonusWriteOffAppliedState(cartType: CartType): MutableStateFlow<Boolean> {
+        return when (cartType) {
+            CartType.DELIVERY -> isDeliveryBonusWriteOffApplied
+            CartType.PICKUP -> isPickupBonusWriteOffApplied
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CartScreenAction) : SideEffect
 
@@ -710,7 +761,7 @@ class CartViewModel @AssistedInject constructor(
             val price: CartPrice,
             val bonusState: BonusState,
             val myCardState: MyCardState?,
-            val promoCodeState: PromoCodeState,
+            val promoCodeState: PromoCodeState?,
             val productLimit: DomainCart.ProductLimit,
         ) : CartState()
 
@@ -746,6 +797,7 @@ class CartViewModel @AssistedInject constructor(
         val isInvalid: Boolean,
         val description: Text?,
         val textFieldState: TextFieldState,
+        val appliedPromoCode: String?,
     )
 
     @AssistedFactory
