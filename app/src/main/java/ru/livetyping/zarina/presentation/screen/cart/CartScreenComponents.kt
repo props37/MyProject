@@ -94,6 +94,9 @@ import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.base.text.textString
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.CartPrice
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCard
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCardCountStyle
@@ -547,7 +550,11 @@ object CartScreenComponents {
                     onResetSwipeState = { lastDraggedProductId = null },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 )
             }
 
@@ -563,7 +570,11 @@ object CartScreenComponents {
                             .fillMaxWidth()
                             .padding(top = 32.dp)
                             .padding(start = 16.dp, end = 8.dp)
-                            .animateItem(),
+                            .animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
                     )
                 }
             }
@@ -581,7 +592,11 @@ object CartScreenComponents {
                             .fillMaxWidth()
                             .padding(top = 24.dp)
                             .padding(start = 16.dp, end = 8.dp)
-                            .animateItem(),
+                            .animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
                     )
                 }
             }
@@ -598,7 +613,11 @@ object CartScreenComponents {
                             .fillMaxWidth()
                             .padding(top = 24.dp)
                             .padding(start = 16.dp, end = 8.dp)
-                            .animateItem(),
+                            .animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
                     )
                 }
             }
@@ -625,7 +644,11 @@ object CartScreenComponents {
                             .fillMaxWidth()
                             .padding(top = 24.dp)
                             .padding(horizontal = 16.dp)
-                            .animateItem(),
+                            .animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
                     )
                 }
             }
@@ -641,7 +664,11 @@ object CartScreenComponents {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp)
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 )
             }
 
@@ -655,7 +682,11 @@ object CartScreenComponents {
                             .fillMaxWidth()
                             .padding(top = 16.dp)
                             .padding(horizontal = 16.dp)
-                            .animateItem(),
+                            .animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
                     ) {
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.ic_question_mark_shaped_24),
@@ -690,7 +721,11 @@ object CartScreenComponents {
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
                         .padding(top = 16.dp, bottom = 20.dp)
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 ) {
                     Text(text = stringResource(R.string.checkout).uppercase())
                 }

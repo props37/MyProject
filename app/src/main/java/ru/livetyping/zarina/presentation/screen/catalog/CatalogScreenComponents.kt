@@ -37,6 +37,9 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleton
@@ -213,7 +216,13 @@ object CatalogScreenComponents {
                         key = item.id.value,
                         contentType = getCategoryListItemContentType(item),
                     ) {
-                        Column(modifier = Modifier.animateItem()) {
+                        Column(
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
+                        ) {
                             when (item) {
                                 is CategoryListItem.CategoryItem -> {
                                     val isExpanded =
@@ -356,7 +365,13 @@ object CatalogScreenComponents {
                 count = CategoryListSkeletonItemCount,
                 key = { it },
             ) { index ->
-                Column(modifier = Modifier.animateItem()) {
+                Column(
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    ),
+                ) {
                     CategoryListSkeletonItem(
                         index = index,
                         shimmer = shimmer,

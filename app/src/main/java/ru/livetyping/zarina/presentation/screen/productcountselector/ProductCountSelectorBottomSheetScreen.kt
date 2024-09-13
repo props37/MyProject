@@ -28,6 +28,9 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaBottomSheet
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
@@ -87,7 +90,13 @@ private fun ScreenContent(
                     items = countItems,
                     key = { _, item -> item.count },
                 ) { index, item ->
-                    Column(modifier = Modifier.animateItem()) {
+                    Column(
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
+                    ) {
                         CountItem(
                             item = item,
                             onClick = onCountItemClicked,

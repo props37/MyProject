@@ -61,6 +61,9 @@ import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.base.text.textString
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
@@ -315,7 +318,11 @@ object ProductSearchScreenComponents {
                     ) { suggestion ->
                         ZarinaTag(
                             onClick = { onSuggestionClicked(suggestion) },
-                            modifier = Modifier.animateItem(),
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
                         ) {
                             Text(text = suggestion.text.capitalize())
                         }
@@ -354,7 +361,11 @@ object ProductSearchScreenComponents {
                     is SearchSuggestionItem.GenericTitle -> {
                         SearchSuggestionTitle(
                             text = textString(item.text),
-                            modifier = Modifier.animateItem(),
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
                         )
                     }
 
@@ -377,7 +388,11 @@ object ProductSearchScreenComponents {
                                 end = 8.dp,
                                 bottom = 8.dp,
                             ),
-                            modifier = Modifier.animateItem(),
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
                         )
                     }
 
@@ -392,7 +407,11 @@ object ProductSearchScreenComponents {
                             searchQuery = query,
                             leadingIconResId = R.drawable.ic_magnifying_glass_24,
                             isDividerVisible = isDividerVisible,
-                            modifier = Modifier.animateItem(),
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
                         )
                     }
 
@@ -431,7 +450,11 @@ object ProductSearchScreenComponents {
                                 end = 8.dp,
                                 bottom = 8.dp,
                             ),
-                            modifier = Modifier.animateItem(),
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
                         )
                     }
 
@@ -445,7 +468,11 @@ object ProductSearchScreenComponents {
                             onClick = onItemClicked,
                             query = query,
                             isDividerVisible = isDividerVisible,
-                            modifier = Modifier.animateItem(),
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
                         )
                     }
                 }

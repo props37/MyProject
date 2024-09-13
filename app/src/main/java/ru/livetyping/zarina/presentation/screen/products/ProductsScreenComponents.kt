@@ -27,6 +27,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.category.Category
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaFilterIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButton
@@ -156,7 +159,11 @@ object ProductsScreenComponents {
                             ZarinaTag(
                                 onClick = { onTagClicked(tag) },
                                 isSelected = tag.id == selectedTagId,
-                                modifier = Modifier.animateItem(),
+                                modifier = Modifier.animateItem(
+                                    fadeInSpec = LazyListFadeInSpec,
+                                    placementSpec = LazyListPlacementSpec,
+                                    fadeOutSpec = LazyListFadeOutSpec,
+                                ),
                             ) {
                                 Text(text = tag.name)
                             }
@@ -173,7 +180,11 @@ object ProductsScreenComponents {
                         items(count = 10) {
                             ZarinaTagSkeleton(
                                 shimmer = skeletonShimmer,
-                                modifier = Modifier.animateItem(),
+                                modifier = Modifier.animateItem(
+                                    fadeInSpec = LazyListFadeInSpec,
+                                    placementSpec = LazyListPlacementSpec,
+                                    fadeOutSpec = LazyListFadeOutSpec,
+                                ),
                             )
                         }
                     }

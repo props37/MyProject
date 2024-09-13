@@ -36,6 +36,9 @@ import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.location.Location
 import ru.livetyping.zarina.domain.store.Store
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
@@ -302,7 +305,13 @@ object StoresScreenComponents {
                 items = stores,
                 key = { _, store -> store.id.value },
             ) { index, store ->
-                Column(modifier = Modifier.animateItem()) {
+                Column(
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    ),
+                ) {
                     StoreListItem(store = store)
 
                     if (index < stores.lastIndex) {
@@ -328,7 +337,13 @@ object StoresScreenComponents {
             modifier = modifier,
         ) {
             items(count = StoreListSkeletonItemCount) { index ->
-                Column(modifier = Modifier.animateItem()) {
+                Column(
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    ),
+                ) {
                     StoreListItemSkeleton(shimmer = shimmer)
 
                     if (index < StoreListSkeletonItemCount - 1) {

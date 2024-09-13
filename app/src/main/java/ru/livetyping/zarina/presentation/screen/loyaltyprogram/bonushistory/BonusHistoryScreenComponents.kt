@@ -28,6 +28,9 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.user.LoyaltyProgramBonusAction
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
@@ -204,7 +207,13 @@ object BonusHistoryScreenComponents {
                     items(count = pagingItems.itemCount) { index ->
                         val action = pagingItems[index]
                         if (action != null) {
-                            Column(modifier = Modifier.animateItem()) {
+                            Column(
+                                modifier = Modifier.animateItem(
+                                    fadeInSpec = LazyListFadeInSpec,
+                                    placementSpec = LazyListPlacementSpec,
+                                    fadeOutSpec = LazyListFadeOutSpec,
+                                ),
+                            ) {
                                 BonusAction(action)
 
                                 if (index < pagingItems.itemCount - 1) {
