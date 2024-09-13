@@ -1216,6 +1216,7 @@ object CartScreenComponents {
             },
             contentAlignment = Alignment.Center,
             label = "PromoCode description",
+            modifier = modifier,
         ) { text ->
             if (text != null) {
                 Text(text = text)
