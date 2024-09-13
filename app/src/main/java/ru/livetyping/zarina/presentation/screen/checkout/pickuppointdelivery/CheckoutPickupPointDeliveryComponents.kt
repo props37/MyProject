@@ -56,6 +56,9 @@ import com.valentinilk.shimmer.ShimmerBounds
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.location.Location
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
@@ -359,7 +362,13 @@ object CheckoutPickupPointDeliveryComponents {
                 items = pickupPointsState.pickupPoints,
                 key = { _, pickupPoint -> pickupPoint.id.value },
             ) { index, pickupPoint ->
-                Column(modifier = Modifier.animateItem()) {
+                Column(
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    ),
+                ) {
                     PickupPoint(
                         pickupPoint = pickupPoint,
                         onClick = { onPickupPointClicked(pickupPoint) },

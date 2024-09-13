@@ -41,6 +41,9 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.base.text.textString
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
@@ -193,7 +196,13 @@ object CitySelectorScreenComponents {
                                 ) { index, item ->
                                     when (item) {
                                         is CityListItem.CityItem -> {
-                                            Column(modifier = Modifier.animateItem()) {
+                                            Column(
+                                                modifier = Modifier.animateItem(
+                                                    fadeInSpec = LazyListFadeInSpec,
+                                                    placementSpec = LazyListPlacementSpec,
+                                                    fadeOutSpec = LazyListFadeOutSpec,
+                                                )
+                                            ) {
                                                 City(
                                                     city = item.city,
                                                     onClick = onCityClicked,
@@ -215,7 +224,11 @@ object CitySelectorScreenComponents {
                                         is CityListItem.CityFirstLetterHeaderItem -> {
                                             CityFirstLetterHeader(
                                                 letter = item.letter,
-                                                modifier = Modifier.animateItem(),
+                                                modifier = Modifier.animateItem(
+                                                    fadeInSpec = LazyListFadeInSpec,
+                                                    placementSpec = LazyListPlacementSpec,
+                                                    fadeOutSpec = LazyListFadeOutSpec,
+                                                ),
                                             )
                                         }
                                     }

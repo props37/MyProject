@@ -32,6 +32,9 @@ import ru.livetyping.zarina.domain.filter.ListFilterItem
 import ru.livetyping.zarina.domain.filter.SortFilterItem
 import ru.livetyping.zarina.domain.filter.sorting
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
@@ -115,7 +118,13 @@ object ListFilterScreenComponents {
         ) {
             if (filter.type == Filter.Type.PICKUP_STORES && city != null) {
                 item(key = city.name) {
-                    ZarinaItem(modifier = Modifier.animateItem()) {
+                    ZarinaItem(
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
+                    ) {
                         Text(
                             text = city.name,
                             style = UiKitTheme.typography.secondary.bold,
@@ -128,7 +137,13 @@ object ListFilterScreenComponents {
                 items = filter.items,
                 key = { _, item -> item.id.value },
             ) { index, item ->
-                Column(modifier = Modifier.animateItem()) {
+                Column(
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    ),
+                ) {
                     FilterItem(
                         item = item,
                         onItemClicked = onItemClicked,

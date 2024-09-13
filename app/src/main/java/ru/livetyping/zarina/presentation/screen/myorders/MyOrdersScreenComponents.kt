@@ -23,6 +23,9 @@ import androidx.paging.compose.itemKey
 import com.valentinilk.shimmer.ShimmerBounds
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.order.OrderItem
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.OrderCard
 import ru.livetyping.zarina.presentation.common.component.OrderCardSkeleton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
@@ -139,7 +142,13 @@ object MyOrdersScreenComponents {
                             OrderListContentTypeOrderCard
                         },
                     ) { index ->
-                        Column(modifier = Modifier.animateItem()) {
+                        Column(
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
+                        ) {
                             val order = orderPagingItems[index]
                             if (order != null) {
                                 OrderCard(
@@ -194,7 +203,13 @@ object MyOrdersScreenComponents {
             modifier = modifier.fillMaxSize(),
         ) {
             items(count = OrderListSkeletonItemCount) { index ->
-                Column(modifier = Modifier.animateItem()) {
+                Column(
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    ),
+                ) {
                     OrderCardSkeleton(
                         shimmer = placeholderShimmer,
                         modifier = Modifier.fillMaxWidth(),

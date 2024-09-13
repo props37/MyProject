@@ -40,6 +40,9 @@ import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderContactInfo
 import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.order.OrderPaymentMethod
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.OrderPrice
 import ru.livetyping.zarina.presentation.common.component.OrderPriceSkeleton
 import ru.livetyping.zarina.presentation.common.component.OrderStatusLabel
@@ -191,7 +194,11 @@ object OrderScreenComponents {
                 ZarinaItem(
                     modifier = Modifier
                         .heightIn(min = 40.dp)
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 ) {
                     OrderStatusLabel(
                         status = order.status,
@@ -206,7 +213,11 @@ object OrderScreenComponents {
             ) {
                 OrderProductContentsItem(
                     productCount = order.productCount,
-                    modifier = Modifier.animateItem(),
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    ),
                 )
             }
 
@@ -215,7 +226,13 @@ object OrderScreenComponents {
                 key = { _, order -> order.id.value },
                 contentType = { _, _ -> OrderListContentTypeProduct },
             ) { index, product ->
-                Column(modifier = Modifier.animateItem()) {
+                Column(
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    ),
+                ) {
                     ProductOrderCard(
                         name = product.name,
                         imageUrl = product.imageUrl,
@@ -249,7 +266,11 @@ object OrderScreenComponents {
                     totalPrice = order.price.totalPrice,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 )
             }
 
@@ -262,7 +283,11 @@ object OrderScreenComponents {
                     deliveryAddress = order.deliveryAddress,
                     contactInfo = order.contactInfo,
                     paymentMethod = order.paymentMethod,
-                    modifier = Modifier.animateItem(),
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    ),
                 )
             }
 
@@ -277,7 +302,11 @@ object OrderScreenComponents {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
-                            .animateItem(),
+                            .animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
                     ) {
                         Text(text = stringResource(R.string.cancel_order).uppercase())
                     }
@@ -402,7 +431,11 @@ object OrderScreenComponents {
                 ZarinaItem(
                     modifier = Modifier
                         .heightIn(min = 40.dp)
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 ) {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.footnote.bold,
@@ -430,12 +463,22 @@ object OrderScreenComponents {
                     },
                     modifier = Modifier
                         .heightIn(min = 40.dp)
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 )
             }
 
             items(OrderSkeletonProductCount) { index ->
-                Column(modifier = Modifier.animateItem()) {
+                Column(
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    ),
+                ) {
                     ProductOrderCardSkeleton(
                         shimmer = shimmer,
                         modifier = Modifier.fillMaxWidth(),
@@ -456,14 +499,22 @@ object OrderScreenComponents {
                     shimmer = shimmer,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 )
             }
 
             item {
                 OrderInfoSkeleton(
                     shimmer = shimmer,
-                    modifier = Modifier.animateItem(),
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    ),
                 )
             }
 
@@ -474,7 +525,11 @@ object OrderScreenComponents {
                         .fillMaxWidth()
                         .padding(16.dp)
                         .height(56.dp)
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 )
             }
         }

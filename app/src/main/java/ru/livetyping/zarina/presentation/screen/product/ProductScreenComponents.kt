@@ -61,6 +61,9 @@ import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.domain.product.ProductItem
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.ProductCardSmall
 import ru.livetyping.zarina.presentation.common.component.ProductCardSmallSkeleton
 import ru.livetyping.zarina.presentation.common.component.ProductColorSelector
@@ -275,9 +278,9 @@ object ProductScreenComponents {
     ) {
         val animateItemModifier: LazyItemScope.() -> Modifier = {
             Modifier.animateItem(
-                fadeInSpec = spring(),
-                placementSpec = spring(),
-                fadeOutSpec = spring(),
+                fadeInSpec = LazyListFadeInSpec,
+                placementSpec = LazyListPlacementSpec,
+                fadeOutSpec = LazyListFadeOutSpec,
             )
         }
 
@@ -686,7 +689,11 @@ object ProductScreenComponents {
                     onClick = onProductClicked,
                     modifier = Modifier
                         .width(SuggestedProductCardWidth)
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 )
             }
         }
@@ -736,7 +743,11 @@ object ProductScreenComponents {
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(MediaPagerAspectRatio)
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 )
             }
 
@@ -746,7 +757,11 @@ object ProductScreenComponents {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp)
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 )
             }
 
@@ -756,7 +771,11 @@ object ProductScreenComponents {
                     modifier = Modifier
                         .heightIn(min = 56.dp)
                         .padding(horizontal = 16.dp)
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 ) {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.light,
@@ -777,7 +796,11 @@ object ProductScreenComponents {
                     modifier = Modifier
                         .heightIn(min = 56.dp)
                         .padding(horizontal = 16.dp)
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 ) {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.light,
@@ -796,7 +819,11 @@ object ProductScreenComponents {
                 Box(
                     modifier = Modifier
                         .padding(16.dp)
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 ) {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.bold,
@@ -812,7 +839,11 @@ object ProductScreenComponents {
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 )
             }
 
@@ -820,7 +851,11 @@ object ProductScreenComponents {
                 Box(
                     modifier = Modifier
                         .padding(16.dp)
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 ) {
                     ZarinaTextSkeleton(
                         textStyle = UiKitTheme.typography.secondary.bold,
@@ -836,7 +871,11 @@ object ProductScreenComponents {
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 )
             }
         }
@@ -917,7 +956,11 @@ object ProductScreenComponents {
                     shimmer = shimmer,
                     modifier = Modifier
                         .width(SuggestedProductCardWidth)
-                        .animateItem(),
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
                 )
             }
         }

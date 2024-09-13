@@ -28,6 +28,9 @@ import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.presentation.common.tooling.FakeDataGenerator
@@ -58,7 +61,11 @@ fun ProductColorSelector(
                 color = color,
                 isSelected = color.productId == productId,
                 onClick = onProductColorClicked,
-                modifier = Modifier.animateItem(),
+                modifier = Modifier.animateItem(
+                    fadeInSpec = LazyListFadeInSpec,
+                    placementSpec = LazyListPlacementSpec,
+                    fadeOutSpec = LazyListFadeOutSpec,
+                ),
             )
         }
     }

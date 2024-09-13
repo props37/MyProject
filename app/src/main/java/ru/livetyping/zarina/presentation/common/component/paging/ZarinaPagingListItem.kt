@@ -3,6 +3,9 @@ package ru.livetyping.zarina.presentation.common.component.paging
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.ui.Modifier
 import androidx.paging.LoadState
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.list.ZarinaListErrorItem
 import ru.livetyping.zarina.presentation.common.component.list.ZarinaListLoaderItem
 
@@ -18,7 +21,13 @@ fun LazyListScope.zarinaPagingPrependItem(
                 key = KeyPrependLoader,
                 contentType = ContentTypeLoader,
             ) {
-                val animateItemModifier = if (animateItem) Modifier.animateItem() else Modifier
+                val animateItemModifier = if (animateItem) {
+                    Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    )
+                } else Modifier
                 ZarinaListLoaderItem(modifier = animateItemModifier)
             }
         }
@@ -28,7 +37,13 @@ fun LazyListScope.zarinaPagingPrependItem(
                 key = KeyPrependError,
                 contentType = ContentTypeError,
             ) {
-                val animateItemModifier = if (animateItem) Modifier.animateItem() else Modifier
+                val animateItemModifier = if (animateItem) {
+                    Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    )
+                } else Modifier
                 ZarinaListErrorItem(
                     onRetryClicked = onRetryClicked,
                     modifier = animateItemModifier,
@@ -52,7 +67,13 @@ fun LazyListScope.zarinaPagingAppendItem(
                 key = KeyAppendLoader,
                 contentType = ContentTypeLoader,
             ) {
-                val animateItemModifier = if (animateItem) Modifier.animateItem() else Modifier
+                val animateItemModifier = if (animateItem) {
+                    Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    )
+                } else Modifier
                 ZarinaListLoaderItem(modifier = animateItemModifier)
             }
         }
@@ -62,7 +83,13 @@ fun LazyListScope.zarinaPagingAppendItem(
                 key = KeyAppendError,
                 contentType = ContentTypeError,
             ) {
-                val animateItemModifier = if (animateItem) Modifier.animateItem() else Modifier
+                val animateItemModifier = if (animateItem) {
+                    Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    )
+                } else Modifier
                 ZarinaListErrorItem(
                     onRetryClicked = onRetryClicked,
                     modifier = animateItemModifier,
