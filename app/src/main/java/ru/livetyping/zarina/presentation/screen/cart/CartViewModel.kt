@@ -655,6 +655,7 @@ class CartViewModel @AssistedInject constructor(
                                 isInvalid = isPromoCodeInvalid,
                                 description = promoCodeDescription,
                                 textFieldState = promoCodeTextFieldState,
+                                appliedPromoCode = cart.promoCode?.value,
                             )
                         } else null
                         CartState.Cart(
@@ -796,6 +797,7 @@ class CartViewModel @AssistedInject constructor(
         val isInvalid: Boolean,
         val description: Text?,
         val textFieldState: TextFieldState,
+        val appliedPromoCode: String?,
     )
 
     @AssistedFactory

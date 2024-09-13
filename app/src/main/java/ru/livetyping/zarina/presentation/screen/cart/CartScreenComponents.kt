@@ -611,6 +611,7 @@ object CartScreenComponents {
                     ZarinaPromoCodeTextField(
                         state = cartState.promoCodeState.textFieldState,
                         isApplied = cartState.promoCodeState.isApplied,
+                        appliedPromoCode = cartState.promoCodeState.appliedPromoCode,
                         onApplyClicked = onApplyPromoCodeClicked,
                         onRemoveClicked = onRemovePromoCodeClicked,
                         isError = cartState.promoCodeState.isInvalid,
