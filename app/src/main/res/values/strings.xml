@@ -323,6 +323,7 @@
     <string name="by_card">Банковской картой</string>
     <string name="choose_delivery_terms">Выбери условия доставки</string>
     <string name="my_card_cant_be_combined_with_bonuses">MyCard не суммируется с другими скидками, поэтому отменили списание баллов</string>
+    <string name="my_card_cant_be_combined_with_promo_code">MyCard не суммируется с другими скидками, поэтому отменили применение промокода</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

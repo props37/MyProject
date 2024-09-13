@@ -513,20 +513,18 @@ class CartViewModel @AssistedInject constructor(
     }
 
     private suspend fun applyMyCardToCart(cartType: CartType, productsFirstPriceSum: Int) {
+        val cart = getCart(cartType)
         val isBonusWriteOffApplied = getIsBonusWriteOffAppliedState(cartType).value
+        val isPromoCodeApplied = cart?.promoCode?.isApplied == true
+
         val params = ApplyMyCardToCartUseCase.Params(cartType, productsFirstPriceSum)
         interactor.applyMyCardToCart(params)
             .onSuccess {
                 requestCarts(CartRequest.REFRESHING)
-                if (isBonusWriteOffApplied) {
-                    val messageText = Text.Resource(R.string.my_card_cant_be_combined_with_bonuses)
-                    val message = ZarinaToastMessage(
-                        text = messageText,
-                        duration = ZarinaToastMessage.DURATION_LONG,
-                    )
-                    emitSideEffect(SideEffect.ShowZarinaToast(message))
-                }
-                // TODO: [High] Show toast when promo code is replaced
+                showMyCardReplacedOtherBonusToast(
+                    isBonusWriteOffApplied = isBonusWriteOffApplied,
+                    isPromoCodeApplied = isPromoCodeApplied,
+                )
             }
             .onFailure {
                 isMyCardApplied.value = false
@@ -557,6 +555,28 @@ class CartViewModel @AssistedInject constructor(
                 promoCodeDescription.value = null
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun showMyCardReplacedOtherBonusToast(
+        isBonusWriteOffApplied: Boolean,
+        isPromoCodeApplied: Boolean,
+    ) {
+        val messageText = when {
+            isBonusWriteOffApplied -> {
+                Text.Resource(R.string.my_card_cant_be_combined_with_bonuses)
+            }
+
+            isPromoCodeApplied -> {
+                Text.Resource(R.string.my_card_cant_be_combined_with_promo_code)
+            }
+
+            else -> return
+        }
+        val message = ZarinaToastMessage(
+            text = messageText,
+            duration = ZarinaToastMessage.DURATION_LONG,
+        )
+        emitSideEffect(SideEffect.ShowZarinaToast(message))
     }
 
     private fun handleCitySelectorResult() {
