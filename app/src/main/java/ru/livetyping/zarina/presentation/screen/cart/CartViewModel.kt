@@ -636,7 +636,7 @@ class CartViewModel @AssistedInject constructor(
                             cart.bonuses.available > 0 && cart.myCard?.isApplied != true
                         val bonusState = BonusState(
                             bonuses = cart.bonuses,
-                            isWriteOffAvailable = isBonusWriteOffAvailable,
+                            isWriteOffAvailable = isBonusWriteOffAvailable && cart.promoCode?.isApplied != true,
                             isWriteOffApplied = isBonusWriteOffApplied || cart.bonuses.writeOff.isApplied,
                             writeOffTextFieldState = when (cartType) {
                                 CartType.DELIVERY -> deliveryBonusWriteOffTextFieldState
