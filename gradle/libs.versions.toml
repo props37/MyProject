@@ -28,6 +28,7 @@ jetpack-junit = "1.2.1"
 jetpack-uiAutomator = "2.3.0"
 jetpack-espresso = "3.6.1"
 jetpack-benchmark = "1.3.0"
+jetpack-credentials = "1.5.0-alpha05"
 
 jetpack-compose-bom = "2024.09.01"
 jetpack-compose-material-navigation = "1.7.0-beta01"
@@ -88,6 +89,8 @@ jetpack-test-junit = { group = "androidx.test.ext", name = "junit", version.ref 
 jetpack-test-uiAutomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "jetpack-uiAutomator" }
 jetpack-espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "jetpack-espresso" }
 jetpack-benchmark = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "jetpack-benchmark" }
+jetpack-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "jetpack-credentials" }
+jetpack-credentials-compat = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "jetpack-credentials" }
 
 # Jetpack Compose
 jetpack-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "jetpack-compose-bom" }

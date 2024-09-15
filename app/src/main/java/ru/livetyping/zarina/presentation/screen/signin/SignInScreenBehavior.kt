@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
@@ -17,15 +18,23 @@ import ru.livetyping.zarina.util.domain.common.toUri
 
 @Composable
 fun SignInScreenBehavior(
+    onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (SignInScreenAction) -> Unit,
 ) {
     val updatedContext by rememberUpdatedState(LocalContext.current)
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
+    val updatedFocusManager by rememberUpdatedState(LocalFocusManager.current)
+    val updatedOnScreenOpened by rememberUpdatedState(onScreenOpened)
     val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = false)
+
+    LifecycleStartEffect(Unit) {
+        updatedOnScreenOpened()
+        onStopOrDispose {}
+    }
 
     LifecycleStartEffect(sideEffects) {
         val job = lifecycleScope.launch {
@@ -36,6 +45,7 @@ fun SignInScreenBehavior(
                         updatedKeyboardController?.hide()
                     }
 
+                    SideEffect.FreeFocus -> updatedFocusManager.clearFocus()
                     is SideEffect.OpenUrl -> {
                         val intent = CustomTabsIntent.Builder()
                             .setShowTitle(true)

@@ -221,17 +221,24 @@ class SignUpViewModel @Inject constructor(
                 val birthDate = birthDateMillis.value?.let {
                     LocalDateUtil.fromMillis(it)
                 }
+                val email = Email.create(email.value)
+                val password = password.value
                 val params = SignUpUseCase.Params(
                     firstName = firstName.value,
                     birthDate = birthDate,
-                    email = Email.create(email.value),
+                    email = email,
                     phone = phone,
-                    password = password.value,
+                    password = password,
                     receiveEmails = receiveEmails.value,
                     receiveSms = receiveSms.value,
                 )
                 interactor.signUp(params)
                     .onSuccess {
+                        interactor.credentialManager.createCredential(
+                            username = email.value,
+                            password = password,
+                        )
+
                         val action = SignUpScreenAction.UserCreated(phone)
                         emitSideEffect(SideEffect.Navigate(action))
                     }

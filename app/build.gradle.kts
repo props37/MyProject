@@ -27,7 +27,7 @@ android {
     val appId = "ru.livetyping.zarina"
 
     namespace = appId
-    compileSdk = 34
+    compileSdk = 35
 
     val generatedVersionCode = androidGitVersion.code()
     val generatedVersionName = androidGitVersion.name()
@@ -37,7 +37,7 @@ android {
     defaultConfig {
         applicationId = appId
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = generatedVersionCode
         versionName = generatedVersionName
 
@@ -148,6 +148,8 @@ dependencies {
     implementation(libs.jetpack.paging.compose)
     implementation(libs.jetpack.security.crypto)
     implementation(libs.jetpack.browser)
+    implementation(libs.jetpack.credentials)
+    implementation(libs.jetpack.credentials.compat)
 
     implementation(platform(libs.jetpack.compose.bom))
     implementation(libs.jetpack.compose.ui)
