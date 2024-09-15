@@ -34,6 +34,7 @@ import ru.livetyping.zarina.domain.user.exception.PasswordException
 import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
 import ru.livetyping.zarina.domain.user.exception.UserNotFoundException
 import ru.livetyping.zarina.presentation.base.text.Text
+import ru.livetyping.zarina.presentation.common.credentialmanager.CredentialFetchingResult
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.presentation.common.sms.SmsConstants
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
@@ -96,6 +97,8 @@ class SignInViewModel @Inject constructor(
     private val _isPhoneInvalid = MutableStateFlow(false)
     val isPhoneInvalid: StateFlow<Boolean> = _isPhoneInvalid.asStateFlow()
 
+    private var showSaveCredentialPrompt = true
+
     val isSignInButtonLoading: StateFlow<Boolean> = operationTracker
         .isOperationOngoing(Operation.SIGN_IN)
         .stateIn(
@@ -103,6 +106,22 @@ class SignInViewModel @Inject constructor(
             started = SharingStarted.WhileUiSubscribed,
             initialValue = false,
         )
+
+    fun onScreenOpened() {
+        if (signInJob?.isActive == true) return
+        signInJob = viewModelScope.launch {
+            operationTracker.track(Operation.SIGN_IN) {
+                val result = interactor.credentialManager.getCredential()
+                if (result is CredentialFetchingResult.Success) {
+                    showSaveCredentialPrompt = false
+                    emitSideEffect(SideEffect.FreeFocus)
+                    emailValueHolder.set(result.username)
+                    passwordValueHolder.set(result.password)
+                    signInByEmail()
+                }
+            }
+        }
+    }
 
     fun onBackClicked() {
         navigationThrottler.throttle {
@@ -168,6 +187,13 @@ class SignInViewModel @Inject constructor(
         val params = SignInByEmailUseCase.Params(email, password)
         interactor.signInByEmail(params)
             .onSuccess {
+                if (showSaveCredentialPrompt) {
+                    interactor.credentialManager.createCredential(
+                        username = email.value,
+                        password = password,
+                    )
+                }
+
                 val action = SignInScreenAction.UserSignedIn
                 emitSideEffect(SideEffect.Navigate(action))
             }
@@ -279,6 +305,8 @@ class SignInViewModel @Inject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: SignInScreenAction) : SideEffect
+
+        data object FreeFocus : SideEffect
 
         data class OpenUrl(val url: Url) : SideEffect
 

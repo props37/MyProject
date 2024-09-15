@@ -75,6 +75,7 @@ fun SignInScreen(
         onSignUpClicked = viewModel::onSignUpClicked,
         onUrlClicked = viewModel::onUrlClicked,
         onBackClicked = viewModel::onBackClicked,
+        onScreenOpened = viewModel::onScreenOpened,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -100,10 +101,12 @@ private fun ScreenContent(
     onSignUpClicked: () -> Unit,
     onUrlClicked: (Url) -> Unit,
     onBackClicked: () -> Unit,
+    onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (SignInScreenAction) -> Unit,
 ) {
     SignInScreenBehavior(
+        onScreenOpened = onScreenOpened,
         sideEffects = sideEffects,
         navigate = navigate,
     )
@@ -186,6 +189,7 @@ private fun Preview() {
             onSignUpClicked = {},
             onUrlClicked = {},
             onBackClicked = {},
+            onScreenOpened = {},
             sideEffects = remember { emptyFlow() },
             navigate = {},
         )
@@ -217,6 +221,7 @@ private fun PreviewPhone() {
             onSignUpClicked = {},
             onUrlClicked = {},
             onBackClicked = {},
+            onScreenOpened = {},
             sideEffects = remember { emptyFlow() },
             navigate = {},
         )
