@@ -40,6 +40,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${GOOGLE_MAPS_KEY}" />
 
+        <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
+
     </application>
 
     <queries>

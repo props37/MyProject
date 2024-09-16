@@ -96,6 +96,7 @@ android {
                 buildConfigStringField(Keys.MINDBOX_KEY, buildType.mindboxKey)
                 buildConfigStringField(Keys.RECAPTCHA_KEY, buildType.recaptchaKey)
                 buildConfigStringField(Keys.ANY_QUERY_KEY, buildType.anyQueryKey)
+                assetLink(buildType.backendUrl)
                 manifestPlaceholders[Keys.GOOGLE_MAPS_KEY] = buildType.googleMapsKey
             }
         }
@@ -225,4 +226,13 @@ fun VariantDimension.buildConfigBooleanField(name: String, value: Boolean) {
 
 fun VariantDimension.resStringValue(name: String, value: String) {
     resValue("string", name, value)
+}
+
+fun VariantDimension.assetLink(backendUrl: String) {
+    resStringValue(
+        name = Keys.ASSET_LINK,
+        value = "\n[{\n" +
+                "  \\\"include\\\": \\\"$backendUrl/.well-known/assetlinks.json\\\"\n" +
+                "}]\n",
+    )
 }
