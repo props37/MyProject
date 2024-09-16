@@ -7,4 +7,5 @@ object Keys {
     const val RECAPTCHA_KEY = "RECAPTCHA_KEY"
     const val ANY_QUERY_KEY = "ANY_QUERY_KEY"
     const val GOOGLE_MAPS_KEY = "GOOGLE_MAPS_KEY"
+    const val ASSET_LINK = "asset_statements"
 }
