@@ -64,26 +64,4 @@ class CheckoutApi @Inject constructor(
                     "${pickupPointId.value}/?payment_method=paytureinpay"
         ).body()
     }
-
-    /*
-    https://zarina.ru/api/cart
-    ?cart_type=delivery
-    &city_kladr_id=7800000000000
-    &shipping={
-        "shipping_method_type":"express",
-        "address":{
-            "city_name":"Санкт-Петербург",
-            "city_kladr_id":"7800000000000",
-            "street_name":"ул.+Ленина",
-            "street_kladr_id":"78000000000069000",
-            "building_number":"10+А",
-            "building_kladr_id":"780000000000690000013",
-            "flat":"123фывыфв"
-        },
-        "payload":{
-            "trying_type_level_name":"economy",
-            "period_id":2992371039
-        }
-    }
-     */
 }
