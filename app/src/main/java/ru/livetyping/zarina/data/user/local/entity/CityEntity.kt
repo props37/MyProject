@@ -8,8 +8,8 @@ import ru.livetyping.zarina.domain.geography.KladrId
 data class CityEntity(
     val name: String,
     val id: String,
-    val fullName: String,
-    val region: String,
+    val fullName: String?,
+    val region: String?,
 ) {
     fun toCity(): City = City(
         name = name,

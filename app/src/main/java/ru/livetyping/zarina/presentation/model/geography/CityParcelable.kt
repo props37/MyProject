@@ -11,8 +11,8 @@ import ru.livetyping.zarina.domain.geography.KladrId
 data class CityParcelable(
     val name: String,
     val id: String,
-    val fullName: String,
-    val region: String,
+    val fullName: String?,
+    val region: String?,
 ) : Parcelable {
     fun toCity(): City = City(
         name = name,

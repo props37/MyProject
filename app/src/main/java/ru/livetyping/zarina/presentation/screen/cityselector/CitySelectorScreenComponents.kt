@@ -299,7 +299,7 @@ object CitySelectorScreenComponents {
                     if (showFullName) {
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = city.fullName,
+                            text = city.fullName ?: city.name,
                             style = UiKitTheme.typography.footnote.light,
                             color = UiKitTheme.colors.text.general.regular.muted,
                         )
