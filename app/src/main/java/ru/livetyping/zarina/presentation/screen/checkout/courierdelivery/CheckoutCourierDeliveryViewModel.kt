@@ -20,15 +20,19 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.checkout.CourierDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.DeliveryOptions
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
+import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
@@ -241,7 +245,36 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
     }
 
     fun onContinueClicked() {
-        // TODO: [High] Implement
+        val address = addressComponent.getAddress()
+        val deliveryOption = deliveryOptionsState.value?.findSelectedOption()
+
+        if (address != null && deliveryOption != null) {
+            navigationThrottler.throttle {
+                val cartType = cartType.value
+                val checkoutParams = CourierDeliveryCheckoutParams(
+                    cartType = cartType,
+                    deliveryMethodType = deliveryMethodType.value,
+                    address = address,
+                    deliveryOptionId = deliveryOption.deliveryOption.id,
+                    dateTimePeriodId = deliveryOption.selectedDateTimePeriod.id,
+                )
+                val action = CheckoutCourierDeliveryScreenAction.ContinueClicked(
+                    cartType = cartType,
+                    step = step.value + 1,
+                    checkoutParams = checkoutParams,
+                )
+                emitSideEffect(SideEffect.Navigate(action))
+            }
+        } else {
+            @Suppress("KotlinConstantConditions")
+            val messageResId = when {
+                address == null -> R.string.you_should_enter_address_first
+                deliveryOption == null -> R.string.you_should_select_delivery_option_first
+                else -> R.string.something_went_wrong
+            }
+            val message = ZarinaToastMessage.error(Text.Resource(messageResId))
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
+        }
     }
 
     private fun handleDateTimePeriodSelectorResult() {
@@ -265,6 +298,8 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutCourierDeliveryScreenAction) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 
     private data object DeliveryOptionsRequest : FlowRequester.Request

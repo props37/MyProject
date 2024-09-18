@@ -30,28 +30,30 @@ fun NavGraphBuilder.checkoutDeliveryMethodScreen(navController: NavHostControlle
                     }
 
                     is CheckoutDeliveryMethodScreenAction.DeliveryMethodSelected -> {
-                        when (action.method.type) {
+                        val cartType = action.cartType
+                        val step = action.step
+                        when (val deliveryMethodType = action.method.type) {
                             DeliveryMethodType.EXPRESS -> {
                                 navController.navigateToCheckoutCourierDeliveryScreen(
-                                    cartType = action.cartType,
-                                    step = action.step,
-                                    deliveryMethodType = action.method.type,
+                                    cartType = cartType,
+                                    step = step,
+                                    deliveryMethodType = deliveryMethodType,
                                 )
                             }
 
                             DeliveryMethodType.POST -> {
                                 navController.navigateToCheckoutPostDeliveryScreen(
-                                    cartType = action.cartType,
-                                    step = action.step,
-                                    deliveryMethodType = action.method.type,
+                                    cartType = cartType,
+                                    step = step,
+                                    deliveryMethodType = deliveryMethodType,
                                 )
                             }
 
                             DeliveryMethodType.PICKUP -> {
                                 navController.navigateToCheckoutPickupPointDeliveryScreen(
-                                    cartType = action.cartType,
-                                    step = action.step,
-                                    deliveryMethodType = action.method.type,
+                                    cartType = cartType,
+                                    step = step,
+                                    deliveryMethodType = deliveryMethodType,
                                 )
                             }
 

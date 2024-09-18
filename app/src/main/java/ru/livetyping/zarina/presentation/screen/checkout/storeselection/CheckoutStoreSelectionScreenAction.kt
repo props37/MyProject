@@ -2,6 +2,7 @@ package ru.livetyping.zarina.presentation.screen.checkout.storeselection
 
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.store.Store
 
 sealed class CheckoutStoreSelectionScreenAction {
@@ -12,6 +13,7 @@ sealed class CheckoutStoreSelectionScreenAction {
     data class StoreClicked(
         val cartType: CartType,
         val step: Int,
+        val city: City,
         val store: Store,
         val availableProducts: List<CartProduct>,
     ) : CheckoutStoreSelectionScreenAction()

@@ -11,10 +11,14 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
+import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.cart.CartProductParcelable
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
+import ru.livetyping.zarina.presentation.model.geography.CityParcelable
 import ru.livetyping.zarina.presentation.model.store.StoreParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.selectedstore.CheckoutSelectedStoreViewModel.SideEffect
@@ -24,7 +28,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CheckoutSelectedStoreViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val interactor: CheckoutSelectedStoreInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -52,6 +55,19 @@ class CheckoutSelectedStoreViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
         ) {
             checkNotNull(it) { "step is null" }
+        }
+
+    private val city: StateFlow<City> = savedStateHandle
+        .getStateFlow<CityParcelable?>(
+            key = CheckoutGraph.SelectedStore.ARG_KEY_CITY,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) {
+            checkNotNull(it) { "city is null" }
+            it.toCity()
         }
 
     val store: StateFlow<Store> = savedStateHandle
@@ -89,7 +105,19 @@ class CheckoutSelectedStoreViewModel @Inject constructor(
 
     fun onContinueClicked() {
         navigationThrottler.throttle {
-            // TODO: [High] Implement
+            val cartType = cartType.value
+            val checkoutParams = StorePickupCheckoutParams(
+                cartType = cartType,
+                deliveryMethodType = DeliveryMethodType.RETAIL,
+                city = city.value,
+                storeId = store.value.id,
+            )
+            val action = CheckoutSelectedStoreScreenAction.ContinueClicked(
+                cartType = cartType,
+                step = step.value + 1,
+                checkoutParams = checkoutParams,
+            )
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 

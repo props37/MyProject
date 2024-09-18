@@ -13,11 +13,13 @@ import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.DeliveryOptions
 import ru.livetyping.zarina.domain.checkout.PickupPoint
+import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.model.cart.CartProductParcelable
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.checkout.DeliveryDateTimePeriodParcelable
+import ru.livetyping.zarina.presentation.model.geography.CityParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.model.store.StoreParcelable
 import ru.livetyping.zarina.presentation.navigation.BaseRoute
@@ -26,6 +28,7 @@ import ru.livetyping.zarina.presentation.navigation.base.Graph
 import ru.livetyping.zarina.presentation.navigation.base.RouteUtils
 import ru.livetyping.zarina.presentation.navigation.base.ScreenResult
 import ru.livetyping.zarina.presentation.navigation.navtype.CartProductParcelableArrayType
+import ru.livetyping.zarina.presentation.navigation.navtype.CityParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.DeliveryDateTimePeriodParcelableArrayType
 import ru.livetyping.zarina.presentation.navigation.navtype.StoreParcelableType
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
@@ -146,6 +149,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
     data object SelectedStore : Destination<SelectedStore.Args>() {
         const val ARG_KEY_CART_TYPE = "arg_cart_type"
         const val ARG_KEY_STEP = "arg_step"
+        const val ARG_KEY_CITY = "arg_city"
         const val ARG_KEY_STORE = "arg_store"
         const val ARG_KEY_AVAILABLE_PRODUCTS = "arg_available_products"
 
@@ -158,6 +162,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
                 argNames = arrayOf(
                     ARG_KEY_CART_TYPE,
                     ARG_KEY_STEP,
+                    ARG_KEY_CITY,
                     ARG_KEY_STORE,
                     ARG_KEY_AVAILABLE_PRODUCTS,
                 ),
@@ -165,6 +170,8 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
 
         override fun createRoute(args: Args): String {
             val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
+            val cityParcelable = CityParcelable.from(args.city)
+            val cityParcelableString = Uri.encode(Json.encodeToString(cityParcelable))
             val storeParcelable = StoreParcelable.from(args.store)
             val storeParcelableString = Uri.encode(Json.encodeToString(storeParcelable))
             val productsParcelable = args.availableProducts.map {
@@ -176,6 +183,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
                 args = arrayOf(
                     cartTypeParcelable,
                     args.step,
+                    cityParcelableString,
                     storeParcelableString,
                     productsParcelableString,
                 ),
@@ -188,6 +196,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
                     type = NavType.EnumType(CartTypeParcelable::class.java)
                 },
                 navArgument(ARG_KEY_STEP) { type = NavType.IntType },
+                navArgument(ARG_KEY_CITY) { type = NavType.CityParcelableType },
                 navArgument(ARG_KEY_STORE) { type = NavType.StoreParcelableType },
                 navArgument(ARG_KEY_AVAILABLE_PRODUCTS) {
                     type = NavType.CartProductParcelableArrayType
@@ -196,12 +205,14 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
 
         override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
             val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
+            val cityParcelable = CityParcelable.from(args.city)
             val storeParcelable = StoreParcelable.from(args.store)
             val productsParcelable = args.availableProducts.map {
                 CartProductParcelable.from(it)
             }
             putParcelable(ARG_KEY_CART_TYPE, cartTypeParcelable)
             putInt(ARG_KEY_STEP, args.step)
+            putParcelable(ARG_KEY_CITY, cityParcelable)
             putParcelable(ARG_KEY_STORE, storeParcelable)
             putParcelableArray(ARG_KEY_AVAILABLE_PRODUCTS, productsParcelable.toTypedArray())
         }
@@ -209,6 +220,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
         data class Args(
             val cartType: CartType,
             val step: Int,
+            val city: City,
             val store: Store,
             val availableProducts: List<CartProduct>,
         )

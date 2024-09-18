@@ -156,9 +156,11 @@ class CheckoutStoreSelectionViewModel @Inject constructor(
         }
 
         navigationThrottler.throttle {
+            val city = store.store.getCity() ?: city.value ?: City.DEFAULT
             val action = CheckoutStoreSelectionScreenAction.StoreClicked(
                 cartType = cartType.value,
                 step = step.value,
+                city = city,
                 store = store.store,
                 availableProducts = availableProducts,
             )

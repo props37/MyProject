@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
@@ -22,6 +23,10 @@ fun NavGraphBuilder.checkoutSelectedStoreScreen(navController: NavHostController
                             inclusive = true,
                         )
                     }
+
+                    is CheckoutSelectedStoreScreenAction.ContinueClicked -> {
+                        // TODO: [High] Implement
+                    }
                 }
             },
         )
@@ -31,12 +36,14 @@ fun NavGraphBuilder.checkoutSelectedStoreScreen(navController: NavHostController
 fun NavHostController.navigateToCheckoutSelectedStoreScreen(
     cartType: CartType,
     step: Int,
+    city: City,
     store: Store,
     availableProducts: List<CartProduct>,
 ) {
     val args = CheckoutGraph.SelectedStore.Args(
         cartType = cartType,
         step = step,
+        city = city,
         store = store,
         availableProducts = availableProducts,
     )
