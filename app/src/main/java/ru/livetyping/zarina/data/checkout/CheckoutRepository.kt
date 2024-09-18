@@ -8,7 +8,7 @@ import ru.livetyping.zarina.data.checkout.local.CheckoutLocalDataSource
 import ru.livetyping.zarina.data.checkout.remote.CheckoutRemoteDataSource
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.checkout.PickupStore
@@ -32,13 +32,13 @@ class CheckoutRepository @Inject constructor(
 
     fun getCourierDeliveryOptionsFlow(
         buildingKladrId: KladrId,
-    ): Flow<DeliveryOptions> {
+    ): Flow<List<DeliveryOption>> {
         return remoteDataSource.getCourierDeliveryOptionsFlow(buildingKladrId)
     }
 
     fun getPostDeliveryOptionsFlow(
         buildingKladrId: KladrId,
-    ): Flow<DeliveryOptions> {
+    ): Flow<List<DeliveryOption>> {
         return remoteDataSource.getPostDeliveryOptionsFlow(buildingKladrId)
     }
 

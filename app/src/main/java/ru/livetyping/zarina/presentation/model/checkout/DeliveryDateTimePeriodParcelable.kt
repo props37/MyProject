@@ -3,7 +3,7 @@ package ru.livetyping.zarina.presentation.model.checkout
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
 
 @Parcelize
 @Serializable
@@ -13,9 +13,9 @@ data class DeliveryDateTimePeriodParcelable(
     val time: String?,
 ) : Parcelable {
 
-    fun toDateTimePeriod(): DeliveryOptions.Option.DateTimePeriod {
-        return DeliveryOptions.Option.DateTimePeriod(
-            id = DeliveryOptions.Option.DateTimePeriod.Id(id),
+    fun toDateTimePeriod(): DeliveryOption.DateTimePeriod {
+        return DeliveryOption.DateTimePeriod(
+            id = DeliveryOption.DateTimePeriod.Id(id),
             date = date,
             time = time,
         )
@@ -23,7 +23,7 @@ data class DeliveryDateTimePeriodParcelable(
 
     companion object {
         fun from(
-            period: DeliveryOptions.Option.DateTimePeriod,
+            period: DeliveryOption.DateTimePeriod,
         ): DeliveryDateTimePeriodParcelable {
             return DeliveryDateTimePeriodParcelable(
                 id = period.id.value,

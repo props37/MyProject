@@ -19,7 +19,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
@@ -29,7 +29,6 @@ import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGr
 import ru.livetyping.zarina.presentation.screen.checkout.common.DeliveryOptionsState
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressViewModelComponent
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
-import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel.SideEffect
 import ru.livetyping.zarina.usecase.checkout.GetPostDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
@@ -119,7 +118,7 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
         }
     }
 
-    private val deliveryOptionsResult: StateFlow<Result<DeliveryOptions>?> =
+    private val deliveryOptionsResult: StateFlow<Result<List<DeliveryOption>>?> =
         deliveryOptionsRequester.flow
             .stateIn(
                 scope = viewModelScope,
@@ -127,7 +126,7 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
                 initialValue = null,
             )
 
-    private val selectedDeliveryOptionId = MutableStateFlow<DeliveryOptions.Option.Id?>(null)
+    private val selectedDeliveryOptionId = MutableStateFlow<DeliveryOption.Id?>(null)
 
     val deliveryOptionsState: StateFlow<DeliveryOptionsState?> = combine(
         deliveryOptionsResult,
@@ -191,7 +190,7 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
         addressComponent.onBuildingsErrorRefreshClicked()
     }
 
-    fun onDeliveryOptionClicked(option: DeliveryOptions.Option) {
+    fun onDeliveryOptionClicked(option: DeliveryOption) {
         selectedDeliveryOptionId.value = option.id
     }
 

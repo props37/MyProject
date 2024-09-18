@@ -40,7 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaModalBottomSheet
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
@@ -134,7 +134,7 @@ object CheckoutComponents {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun DeliveryOptionDetailsBottomSheet(
-        visibleDeliveryOptionDetails: DeliveryOptions.Option?,
+        visibleDeliveryOptionDetails: DeliveryOption?,
         onDismissRequest: () -> Unit,
         modifier: Modifier = Modifier,
         sheetState: SheetState = rememberModalBottomSheetState(),
@@ -180,10 +180,10 @@ object CheckoutComponents {
     @Composable
     fun DeliveryOptions(
         state: DeliveryOptionsState?,
-        onDeliveryOptionClicked: (DeliveryOptions.Option) -> Unit,
-        onDeliveryOptionDateClicked: ((DeliveryOptions.Option) -> Unit)?,
-        onDeliveryOptionTimeClicked: ((DeliveryOptions.Option) -> Unit)?,
-        onDeliveryOptionShowDetailsClicked: (DeliveryOptions.Option) -> Unit,
+        onDeliveryOptionClicked: (DeliveryOption) -> Unit,
+        onDeliveryOptionDateClicked: ((DeliveryOption) -> Unit)?,
+        onDeliveryOptionTimeClicked: ((DeliveryOption) -> Unit)?,
+        onDeliveryOptionShowDetailsClicked: (DeliveryOption) -> Unit,
         onDeliveryOptionsErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -247,10 +247,10 @@ object CheckoutComponents {
     @Composable
     private fun DeliveryOptionsImpl(
         state: DeliveryOptionsState.Success,
-        onDeliveryOptionClicked: (DeliveryOptions.Option) -> Unit,
-        onDeliveryOptionDateClicked: ((DeliveryOptions.Option) -> Unit)?,
-        onDeliveryOptionTimeClicked: ((DeliveryOptions.Option) -> Unit)?,
-        onDeliveryOptionShowDetailsClicked: (DeliveryOptions.Option) -> Unit,
+        onDeliveryOptionClicked: (DeliveryOption) -> Unit,
+        onDeliveryOptionDateClicked: ((DeliveryOption) -> Unit)?,
+        onDeliveryOptionTimeClicked: ((DeliveryOption) -> Unit)?,
+        onDeliveryOptionShowDetailsClicked: (DeliveryOption) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(

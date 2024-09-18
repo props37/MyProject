@@ -7,8 +7,8 @@ data class CourierDeliveryCheckoutParams(
     override val cartType: CartType,
     override val deliveryMethodType: DeliveryMethodType,
     val address: CheckoutAddress,
-    val deliveryOptionId: DeliveryOptions.Option.Id,
-    val dateTimePeriodId: DeliveryOptions.Option.DateTimePeriod.Id,
+    val deliveryOptionId: DeliveryOption.Id,
+    val dateTimePeriodId: DeliveryOption.DateTimePeriod.Id,
 ) : CheckoutParams(
     cartType = cartType,
     deliveryMethodType = deliveryMethodType,

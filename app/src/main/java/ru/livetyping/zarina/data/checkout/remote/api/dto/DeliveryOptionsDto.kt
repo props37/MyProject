@@ -2,19 +2,16 @@ package ru.livetyping.zarina.data.checkout.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
 
 @Serializable
 data class DeliveryOptionsDto(
     @SerialName("trying_types")
     val options: List<Option>? = null,
 ) {
-    fun toDeliveryOptions(type: DeliveryOptionsDtoType): DeliveryOptions {
+    fun toDeliveryOptions(type: DeliveryOptionsDtoType): List<DeliveryOption> {
         checkNotNull(options) { "options is null" }
-        val options = options.map { it.toOption(type) }
-        return DeliveryOptions(
-            options = options,
-        )
+        return options.map { it.toDeliveryOption(type) }
     }
 
     @Serializable
@@ -34,15 +31,15 @@ data class DeliveryOptionsDto(
         @SerialName("periods")
         val dateTimePeriods: List<DateTimePeriod>? = null,
     ) {
-        fun toOption(type: DeliveryOptionsDtoType): DeliveryOptions.Option {
+        fun toDeliveryOption(type: DeliveryOptionsDtoType): DeliveryOption {
             checkNotNull(id) { "id is null" }
             checkNotNull(title) { "title is null" }
             checkNotNull(description) { "description is null" }
             checkNotNull(price) { "price is null" }
             checkNotNull(dateTimePeriods) { "periods is null" }
             val dateTimePeriods = dateTimePeriods.map { it.toDateTimePeriod(type) }
-            return DeliveryOptions.Option(
-                id = DeliveryOptions.Option.Id(id),
+            return DeliveryOption(
+                id = DeliveryOption.Id(id),
                 title = title,
                 description = description,
                 price = price,
@@ -60,7 +57,7 @@ data class DeliveryOptionsDto(
         ) {
             fun toDateTimePeriod(
                 type: DeliveryOptionsDtoType,
-            ): DeliveryOptions.Option.DateTimePeriod {
+            ): DeliveryOption.DateTimePeriod {
                 checkNotNull(id) { "id is null" }
                 checkNotNull(text) { "text is null" }
                 val date = when (type) {
@@ -77,8 +74,8 @@ data class DeliveryOptionsDto(
 
                     DeliveryOptionsDtoType.POST -> null
                 }
-                return DeliveryOptions.Option.DateTimePeriod(
-                    id = DeliveryOptions.Option.DateTimePeriod.Id(id),
+                return DeliveryOption.DateTimePeriod(
+                    id = DeliveryOption.DateTimePeriod.Id(id),
                     date = date,
                     time = time,
                 )

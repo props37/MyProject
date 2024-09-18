@@ -2,7 +2,7 @@ package ru.livetyping.zarina.presentation.navigation.screen
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.presentation.model.checkout.DeliveryDateTimePeriodParcelable
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
@@ -48,8 +48,8 @@ fun NavGraphBuilder.checkoutCourierDeliveryDateTimeSelectorScreen(
 
 fun NavHostController.navigateToCheckoutCourierDeliveryDateTimeSelectorScreen(
     type: CourierDeliveryDateTimeSelectorType,
-    deliveryOptionId: DeliveryOptions.Option.Id,
-    dateTimePeriods: List<DeliveryOptions.Option.DateTimePeriod>,
+    deliveryOptionId: DeliveryOption.Id,
+    dateTimePeriods: List<DeliveryOption.DateTimePeriod>,
 ) {
     val args = CheckoutGraph.CourierDeliveryDateTimeSelector.Args(
         deliveryOptionId = deliveryOptionId,

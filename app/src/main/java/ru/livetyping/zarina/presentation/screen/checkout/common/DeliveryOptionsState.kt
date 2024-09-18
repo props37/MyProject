@@ -2,7 +2,7 @@ package ru.livetyping.zarina.presentation.screen.checkout.common
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
@@ -25,18 +25,18 @@ sealed class DeliveryOptionsState {
 
     companion object {
         fun create(
-            optionsResult: Result<DeliveryOptions>,
+            optionsResult: Result<List<DeliveryOption>>,
             loadingState: FlowRequester.LoadingState,
-            selectedOptionId: DeliveryOptions.Option.Id?,
-            deliveryOptionToSelectedDateTimePeriod: Map<DeliveryOptions.Option.Id, DeliveryOptions.Option.DateTimePeriod>,
-            getOptionDefaultDateTimePeriod: (option: DeliveryOptions.Option) -> DeliveryOptions.Option.DateTimePeriod,
+            selectedOptionId: DeliveryOption.Id?,
+            deliveryOptionToSelectedDateTimePeriod: Map<DeliveryOption.Id, DeliveryOption.DateTimePeriod>,
+            getOptionDefaultDateTimePeriod: (option: DeliveryOption) -> DeliveryOption.DateTimePeriod,
         ): DeliveryOptionsState {
             return when {
                 loadingState.isLoading() -> Loading
                 else -> {
                     optionsResult.fold(
                         onSuccess = { options ->
-                            val mappedOptions = options.options.mapIndexed { index, option ->
+                            val mappedOptions = options.mapIndexed { index, option ->
                                 val isSelected =
                                     selectedOptionId?.let { option.id == it } ?: (index == 0)
                                 val selectedDateTimePeriod =

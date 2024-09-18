@@ -39,7 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
@@ -113,7 +113,7 @@ private fun ScreenContent(
     onStreetsErrorRefreshClicked: () -> Unit,
     onBuildingsErrorRefreshClicked: () -> Unit,
     deliveryOptionsState: DeliveryOptionsState?,
-    onDeliveryOptionClicked: (DeliveryOptions.Option) -> Unit,
+    onDeliveryOptionClicked: (DeliveryOption) -> Unit,
     onDeliveryOptionsErrorRefreshClicked: () -> Unit,
     isContinueButtonVisible: Boolean,
     onBackClicked: () -> Unit,
@@ -156,9 +156,7 @@ private fun ScreenContent(
         modifier = Modifier.statusBarsPadding(),
     )
 
-    var visibleDeliveryOptionDetails by remember {
-        mutableStateOf<DeliveryOptions.Option?>(null)
-    }
+    var visibleDeliveryOptionDetails by remember { mutableStateOf<DeliveryOption?>(null) }
     CheckoutComponents.DeliveryOptionDetailsBottomSheet(
         visibleDeliveryOptionDetails = visibleDeliveryOptionDetails,
         onDismissRequest = { visibleDeliveryOptionDetails = null },

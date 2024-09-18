@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.checkout.DeliveryDateTimePeriodParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
@@ -41,7 +41,7 @@ class CheckoutCourierDeliveryDateTimeSelectorViewModel @Inject constructor(
             checkNotNull(it) { "selectorType is null" }
         }
 
-    private val deliveryOptionId: StateFlow<DeliveryOptions.Option.Id> =
+    private val deliveryOptionId: StateFlow<DeliveryOption.Id> =
         savedStateHandle
             .getStateFlow<String?>(
                 key = CheckoutGraph.CourierDeliveryDateTimeSelector.ARG_DELIVERY_OPTION_ID,
@@ -52,10 +52,10 @@ class CheckoutCourierDeliveryDateTimeSelectorViewModel @Inject constructor(
                 started = SharingStarted.Eagerly,
             ) {
                 checkNotNull(it) { "deliveryOptionId is null" }
-                DeliveryOptions.Option.Id(it)
+                DeliveryOption.Id(it)
             }
 
-    private val dateTimePeriods: StateFlow<List<DeliveryOptions.Option.DateTimePeriod>> =
+    private val dateTimePeriods: StateFlow<List<DeliveryOption.DateTimePeriod>> =
         savedStateHandle
             .getStateFlow<Array<DeliveryDateTimePeriodParcelable>?>(
                 key = CheckoutGraph.CourierDeliveryDateTimeSelector.ARG_DATE_TIME_PERIODS,
@@ -70,7 +70,7 @@ class CheckoutCourierDeliveryDateTimeSelectorViewModel @Inject constructor(
             }
 
     private val selectedDateTimePeriodId =
-        MutableStateFlow<DeliveryOptions.Option.DateTimePeriod.Id?>(null)
+        MutableStateFlow<DeliveryOption.DateTimePeriod.Id?>(null)
 
     val items: StateFlow<List<Item>> = combine(
         dateTimePeriods,
@@ -121,8 +121,8 @@ class CheckoutCourierDeliveryDateTimeSelectorViewModel @Inject constructor(
     }
 
     private fun createItems(
-        dateTimePeriods: List<DeliveryOptions.Option.DateTimePeriod>,
-        selectedDateTimePeriodId: DeliveryOptions.Option.DateTimePeriod.Id?,
+        dateTimePeriods: List<DeliveryOption.DateTimePeriod>,
+        selectedDateTimePeriodId: DeliveryOption.DateTimePeriod.Id?,
         selectorType: CourierDeliveryDateTimeSelectorType,
     ): List<Item> {
         return dateTimePeriods.map { period ->
@@ -144,7 +144,7 @@ class CheckoutCourierDeliveryDateTimeSelectorViewModel @Inject constructor(
 
     @Immutable
     data class Item(
-        val dateTimePeriodId: DeliveryOptions.Option.DateTimePeriod.Id,
+        val dateTimePeriodId: DeliveryOption.DateTimePeriod.Id,
         val text: String,
         val isSelected: Boolean,
     )

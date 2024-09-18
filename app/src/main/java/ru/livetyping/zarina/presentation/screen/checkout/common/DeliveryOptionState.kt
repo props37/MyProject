@@ -1,11 +1,11 @@
 package ru.livetyping.zarina.presentation.screen.checkout.common
 
 import androidx.compose.runtime.Immutable
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
 
 @Immutable
 data class DeliveryOptionState(
-    val deliveryOption: DeliveryOptions.Option,
+    val deliveryOption: DeliveryOption,
     val isSelected: Boolean,
-    val selectedDateTimePeriod: DeliveryOptions.Option.DateTimePeriod,
+    val selectedDateTimePeriod: DeliveryOption.DateTimePeriod,
 )

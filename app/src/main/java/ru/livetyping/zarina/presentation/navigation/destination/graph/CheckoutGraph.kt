@@ -11,7 +11,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
@@ -79,8 +79,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
 
         override fun createRoute(args: Args): String {
             val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
-            return RouteUtils.generateRoute(
-                routeBase = routeBase,
+            return RouteUtils.generateRoute(routeBase = routeBase,
                 args = arrayOf(cartTypeParcelable, args.step),
             )
         }
@@ -373,8 +372,8 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
 
         data class Args(
             val type: CourierDeliveryDateTimeSelectorType,
-            val deliveryOptionId: DeliveryOptions.Option.Id,
-            val dateTimePeriods: List<DeliveryOptions.Option.DateTimePeriod>,
+            val deliveryOptionId: DeliveryOption.Id,
+            val dateTimePeriods: List<DeliveryOption.DateTimePeriod>,
         )
 
         @Parcelize
