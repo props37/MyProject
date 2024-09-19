@@ -28,6 +28,10 @@ fun NavGraphBuilder.checkoutPostDeliveryScreen(navController: NavHostController)
                             inclusive = true,
                         )
                     }
+
+                    is CheckoutPostDeliveryScreenAction.ContinueClicked -> {
+                        // TODO: [High] Implement
+                    }
                 }
             },
         )

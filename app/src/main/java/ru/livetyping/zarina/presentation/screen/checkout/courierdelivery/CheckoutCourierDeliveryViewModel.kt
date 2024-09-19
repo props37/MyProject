@@ -246,17 +246,17 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
 
     fun onContinueClicked() {
         val address = addressComponent.getAddress()
-        val deliveryOption = deliveryOptionsState.value?.findSelectedOption()
+        val selectedDeliveryOption = deliveryOptionsState.value?.findSelectedOption()
 
-        if (address != null && deliveryOption != null) {
+        if (address != null && selectedDeliveryOption != null) {
             navigationThrottler.throttle {
                 val cartType = cartType.value
                 val checkoutParams = CourierDeliveryCheckoutParams(
                     cartType = cartType,
                     deliveryMethodType = deliveryMethodType.value,
                     address = address,
-                    deliveryOptionId = deliveryOption.deliveryOption.id,
-                    dateTimePeriodId = deliveryOption.selectedDateTimePeriod.id,
+                    deliveryOptionId = selectedDeliveryOption.deliveryOption.id,
+                    dateTimePeriodId = selectedDeliveryOption.selectedDateTimePeriod.id,
                 )
                 val action = CheckoutCourierDeliveryScreenAction.ContinueClicked(
                     cartType = cartType,
@@ -269,7 +269,7 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
             @Suppress("KotlinConstantConditions")
             val messageResId = when {
                 address == null -> R.string.you_should_enter_address_first
-                deliveryOption == null -> R.string.you_should_select_delivery_option_first
+                selectedDeliveryOption == null -> R.string.you_should_select_delivery_option_first
                 else -> R.string.something_went_wrong
             }
             val message = ZarinaToastMessage.error(Text.Resource(messageResId))

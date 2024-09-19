@@ -15,14 +15,18 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.checkout.CourierDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
+import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
@@ -198,8 +202,43 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
         deliveryOptionsRequester.request(DeliveryOptionsRequest)
     }
 
+    fun onContinueClicked() {
+        val address = addressComponent.getAddress()
+        val selectedDeliveryOption = deliveryOptionsState.value?.findSelectedOption()
+
+        if (address != null && selectedDeliveryOption != null) {
+            navigationThrottler.throttle {
+                val cartType = cartType.value
+                val checkoutParams = CourierDeliveryCheckoutParams(
+                    cartType = cartType,
+                    deliveryMethodType = deliveryMethodType.value,
+                    address = address,
+                    deliveryOptionId = selectedDeliveryOption.deliveryOption.id,
+                    dateTimePeriodId = selectedDeliveryOption.selectedDateTimePeriod.id,
+                )
+                val action = CheckoutPostDeliveryScreenAction.ContinueClicked(
+                    cartType = cartType,
+                    step = step.value + 1,
+                    checkoutParams = checkoutParams,
+                )
+                emitSideEffect(SideEffect.Navigate(action))
+            }
+        } else {
+            @Suppress("KotlinConstantConditions")
+            val messageResId = when {
+                address == null -> R.string.you_should_enter_address_first
+                selectedDeliveryOption == null -> R.string.you_should_select_delivery_option_first
+                else -> R.string.something_went_wrong
+            }
+            val message = ZarinaToastMessage.error(Text.Resource(messageResId))
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutPostDeliveryScreenAction) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 
     private data object DeliveryOptionsRequest : FlowRequester.Request
