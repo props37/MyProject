@@ -21,12 +21,12 @@ import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.geography.CityParcelable
 import ru.livetyping.zarina.presentation.model.store.StoreParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
-import ru.livetyping.zarina.presentation.screen.checkout.selectedstore.CheckoutSelectedStoreViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.selectedstore.CheckoutSelectedPickupStoreViewModel.SideEffect
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
 @HiltViewModel
-class CheckoutSelectedStoreViewModel @Inject constructor(
+class CheckoutSelectedPickupStoreViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
@@ -34,7 +34,7 @@ class CheckoutSelectedStoreViewModel @Inject constructor(
 
     private val cartType: StateFlow<CartType> = savedStateHandle
         .getStateFlow<CartTypeParcelable?>(
-            key = CheckoutGraph.SelectedStore.ARG_KEY_CART_TYPE,
+            key = CheckoutGraph.SelectedPickupStore.ARG_KEY_CART_TYPE,
             initialValue = null,
         )
         .mapState(
@@ -47,7 +47,7 @@ class CheckoutSelectedStoreViewModel @Inject constructor(
 
     private val step: StateFlow<Int> = savedStateHandle
         .getStateFlow<Int?>(
-            key = CheckoutGraph.SelectedStore.ARG_KEY_STEP,
+            key = CheckoutGraph.SelectedPickupStore.ARG_KEY_STEP,
             initialValue = null,
         )
         .mapState(
@@ -59,7 +59,7 @@ class CheckoutSelectedStoreViewModel @Inject constructor(
 
     private val city: StateFlow<City> = savedStateHandle
         .getStateFlow<CityParcelable?>(
-            key = CheckoutGraph.SelectedStore.ARG_KEY_CITY,
+            key = CheckoutGraph.SelectedPickupStore.ARG_KEY_CITY,
             initialValue = null,
         )
         .mapState(
@@ -72,7 +72,7 @@ class CheckoutSelectedStoreViewModel @Inject constructor(
 
     val store: StateFlow<Store> = savedStateHandle
         .getStateFlow<StoreParcelable?>(
-            key = CheckoutGraph.SelectedStore.ARG_KEY_STORE,
+            key = CheckoutGraph.SelectedPickupStore.ARG_KEY_STORE,
             initialValue = null,
         )
         .mapState(
@@ -85,7 +85,7 @@ class CheckoutSelectedStoreViewModel @Inject constructor(
 
     val availableProducts: StateFlow<List<CartProduct>> = savedStateHandle
         .getStateFlow<Array<CartProductParcelable>?>(
-            key = CheckoutGraph.SelectedStore.ARG_KEY_AVAILABLE_PRODUCTS,
+            key = CheckoutGraph.SelectedPickupStore.ARG_KEY_AVAILABLE_PRODUCTS,
             initialValue = null,
         )
         .mapState(
@@ -98,7 +98,7 @@ class CheckoutSelectedStoreViewModel @Inject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = CheckoutSelectedStoreScreenAction.ScreenClosed
+            val action = CheckoutSelectedPickupStoreScreenAction.ScreenClosed
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
@@ -112,7 +112,7 @@ class CheckoutSelectedStoreViewModel @Inject constructor(
                 city = city.value,
                 storeId = store.value.id,
             )
-            val action = CheckoutSelectedStoreScreenAction.ContinueClicked(
+            val action = CheckoutSelectedPickupStoreScreenAction.ContinueClicked(
                 cartType = cartType,
                 step = step.value + 1,
                 checkoutParams = checkoutParams,
@@ -122,6 +122,6 @@ class CheckoutSelectedStoreViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class Navigate(val action: CheckoutSelectedStoreScreenAction) : SideEffect
+        data class Navigate(val action: CheckoutSelectedPickupStoreScreenAction) : SideEffect
     }
 }

@@ -30,7 +30,7 @@ fun NavGraphBuilder.checkoutRecipientScreen(navController: NavHostController) {
                             }
 
                             CartType.PICKUP -> {
-                                navController.navigateToCheckoutStoreSelectionScreen(
+                                navController.navigateToCheckoutPickupStoreSelectionScreen(
                                     cartType = action.cartType,
                                     step = action.step,
                                 )

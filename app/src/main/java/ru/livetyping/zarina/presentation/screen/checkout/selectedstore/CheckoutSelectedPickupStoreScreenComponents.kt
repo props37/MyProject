@@ -11,7 +11,7 @@ import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 
-object CheckoutSelectedStoreScreenComponents {
+object CheckoutSelectedPickupStoreScreenComponents {
 
     @Composable
     fun TopBar(

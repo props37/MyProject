@@ -27,7 +27,7 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutStoreSelectionViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionViewModel.SideEffect
 import ru.livetyping.zarina.usecase.cart.GetCartFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.GetPickupStoresFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
@@ -38,16 +38,16 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class CheckoutStoreSelectionViewModel @Inject constructor(
+class CheckoutPickupStoreSelectionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val interactor: CheckoutStoreSelectionInteractor,
+    private val interactor: CheckoutPickupStoreSelectionInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val cartType = savedStateHandle
         .getStateFlow<CartTypeParcelable?>(
-            key = CheckoutGraph.StoreSelection.ARG_KEY_CART_TYPE,
+            key = CheckoutGraph.PickupStoreSelection.ARG_KEY_CART_TYPE,
             initialValue = null,
         )
         .mapState(
@@ -60,7 +60,7 @@ class CheckoutStoreSelectionViewModel @Inject constructor(
 
     val step: StateFlow<Int> = savedStateHandle
         .getStateFlow<Int?>(
-            key = CheckoutGraph.StoreSelection.ARG_KEY_STEP,
+            key = CheckoutGraph.PickupStoreSelection.ARG_KEY_STEP,
             initialValue = null,
         )
         .mapState(
@@ -123,14 +123,14 @@ class CheckoutStoreSelectionViewModel @Inject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = CheckoutStoreSelectionScreenAction.ScreenClosed
+            val action = CheckoutPickupStoreSelectionScreenAction.ScreenClosed
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
-            val action = CheckoutStoreSelectionScreenAction.CheckoutClosed
+            val action = CheckoutPickupStoreSelectionScreenAction.CheckoutClosed
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
@@ -157,7 +157,7 @@ class CheckoutStoreSelectionViewModel @Inject constructor(
 
         navigationThrottler.throttle {
             val city = store.store.getCity() ?: city.value ?: City.DEFAULT
-            val action = CheckoutStoreSelectionScreenAction.StoreClicked(
+            val action = CheckoutPickupStoreSelectionScreenAction.StoreClicked(
                 cartType = cartType.value,
                 step = step.value,
                 city = city,
@@ -192,7 +192,7 @@ class CheckoutStoreSelectionViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class Navigate(val action: CheckoutStoreSelectionScreenAction) : SideEffect
+        data class Navigate(val action: CheckoutPickupStoreSelectionScreenAction) : SideEffect
     }
 
     @Stable

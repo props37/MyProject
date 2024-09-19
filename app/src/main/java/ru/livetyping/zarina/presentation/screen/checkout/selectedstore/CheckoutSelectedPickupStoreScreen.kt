@@ -34,14 +34,14 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.presentation.screen.checkout.selectedstore.CheckoutSelectedStoreScreenComponents.TopBar
-import ru.livetyping.zarina.presentation.screen.checkout.selectedstore.CheckoutSelectedStoreViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.selectedstore.CheckoutSelectedPickupStoreScreenComponents.TopBar
+import ru.livetyping.zarina.presentation.screen.checkout.selectedstore.CheckoutSelectedPickupStoreViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable
-fun CheckoutSelectedStoreScreen(
-    navigate: (CheckoutSelectedStoreScreenAction) -> Unit,
-    viewModel: CheckoutSelectedStoreViewModel = hiltViewModel(),
+fun CheckoutSelectedPickupStoreScreen(
+    navigate: (CheckoutSelectedPickupStoreScreenAction) -> Unit,
+    viewModel: CheckoutSelectedPickupStoreViewModel = hiltViewModel(),
 ) {
     val store by viewModel.store.collectAsStateWithLifecycle()
     val availableProducts by viewModel.availableProducts.collectAsStateWithLifecycle()
@@ -63,9 +63,9 @@ private fun ScreenContent(
     onContinueClicked: () -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigate: (CheckoutSelectedStoreScreenAction) -> Unit,
+    navigate: (CheckoutSelectedPickupStoreScreenAction) -> Unit,
 ) {
-    CheckoutSelectedStoreScreenBehavior(
+    CheckoutSelectedPickupStoreScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
     )

@@ -23,16 +23,16 @@ import ru.livetyping.zarina.domain.checkout.PickupStore
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutStoreSelectionScreenComponents.City
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutStoreSelectionScreenComponents.Stores
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutStoreSelectionViewModel.SideEffect
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutStoreSelectionViewModel.State
+import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionScreenComponents.City
+import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionScreenComponents.Stores
+import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionViewModel.State
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable
-fun CheckoutStoreSelectionScreen(
-    navigate: (CheckoutStoreSelectionScreenAction) -> Unit,
-    viewModel: CheckoutStoreSelectionViewModel = hiltViewModel(),
+fun CheckoutPickupStoreSelectionScreen(
+    navigate: (CheckoutPickupStoreSelectionScreenAction) -> Unit,
+    viewModel: CheckoutPickupStoreSelectionViewModel = hiltViewModel(),
 ) {
     val step by viewModel.step.collectAsStateWithLifecycle()
     val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()
@@ -64,9 +64,9 @@ private fun ScreenContent(
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigate: (CheckoutStoreSelectionScreenAction) -> Unit,
+    navigate: (CheckoutPickupStoreSelectionScreenAction) -> Unit,
 ) {
-    CheckoutStoreSelectionScreenBehavior(
+    CheckoutPickupStoreSelectionScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
     )

@@ -104,12 +104,12 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
         )
     }
 
-    data object StoreSelection : Destination<StoreSelection.Args>() {
+    data object PickupStoreSelection : Destination<PickupStoreSelection.Args>() {
         const val ARG_KEY_CART_TYPE = "arg_cart_type"
         const val ARG_KEY_STEP = "arg_step"
 
         private val routeBase: String
-            get() = BaseRoute.STORE_SELECTION.route
+            get() = BaseRoute.PICKUP_STORE_SELECTION.route
 
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(
@@ -145,7 +145,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
         )
     }
 
-    data object SelectedStore : Destination<SelectedStore.Args>() {
+    data object SelectedPickupStore : Destination<SelectedPickupStore.Args>() {
         const val ARG_KEY_CART_TYPE = "arg_cart_type"
         const val ARG_KEY_STEP = "arg_step"
         const val ARG_KEY_CITY = "arg_city"
@@ -153,7 +153,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
         const val ARG_KEY_AVAILABLE_PRODUCTS = "arg_available_products"
 
         private val routeBase: String
-            get() = BaseRoute.SELECTED_STORE.route
+            get() = BaseRoute.SELECTED_PICKUP_STORE.route
 
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(

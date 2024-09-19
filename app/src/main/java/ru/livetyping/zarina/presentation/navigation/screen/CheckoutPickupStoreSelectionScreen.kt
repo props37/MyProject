@@ -5,31 +5,31 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutStoreSelectionScreen
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutStoreSelectionScreenAction
+import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionScreen
+import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionScreenAction
 import ru.livetyping.zarina.util.library.navigation.navigate
 
-fun NavGraphBuilder.checkoutStoreSelectionScreen(navController: NavHostController) {
-    composableDestination(CheckoutGraph.StoreSelection) {
-        CheckoutStoreSelectionScreen(
+fun NavGraphBuilder.checkoutPickupStoreSelectionScreen(navController: NavHostController) {
+    composableDestination(CheckoutGraph.PickupStoreSelection) {
+        CheckoutPickupStoreSelectionScreen(
             navigate = { action ->
                 when (action) {
-                    CheckoutStoreSelectionScreenAction.ScreenClosed -> {
+                    CheckoutPickupStoreSelectionScreenAction.ScreenClosed -> {
                         navController.popBackStack(
-                            route = CheckoutGraph.StoreSelection.routeSchema,
+                            route = CheckoutGraph.PickupStoreSelection.routeSchema,
                             inclusive = true,
                         )
                     }
 
-                    CheckoutStoreSelectionScreenAction.CheckoutClosed -> {
+                    CheckoutPickupStoreSelectionScreenAction.CheckoutClosed -> {
                         navController.popBackStack(
                             route = CheckoutGraph.routeSchema,
                             inclusive = true,
                         )
                     }
 
-                    is CheckoutStoreSelectionScreenAction.StoreClicked -> {
-                        navController.navigateToCheckoutSelectedStoreScreen(
+                    is CheckoutPickupStoreSelectionScreenAction.StoreClicked -> {
+                        navController.navigateToCheckoutPickupSelectedStoreScreen(
                             cartType = action.cartType,
                             step = action.step,
                             city = action.city,
@@ -43,10 +43,10 @@ fun NavGraphBuilder.checkoutStoreSelectionScreen(navController: NavHostControlle
     }
 }
 
-fun NavHostController.navigateToCheckoutStoreSelectionScreen(cartType: CartType, step: Int) {
-    val args = CheckoutGraph.StoreSelection.Args(cartType, step)
+fun NavHostController.navigateToCheckoutPickupStoreSelectionScreen(cartType: CartType, step: Int) {
+    val args = CheckoutGraph.PickupStoreSelection.Args(cartType, step)
     this.navigate(
-        route = CheckoutGraph.StoreSelection.routeSchema,
-        args = CheckoutGraph.StoreSelection.createArgsBundle(args),
+        route = CheckoutGraph.PickupStoreSelection.routeSchema,
+        args = CheckoutGraph.PickupStoreSelection.createArgsBundle(args),
     )
 }
