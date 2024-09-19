@@ -5,8 +5,8 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionScreen
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionScreenAction
+import ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection.CheckoutPickupStoreSelectionScreen
+import ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection.CheckoutPickupStoreSelectionScreenAction
 import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.checkoutPickupStoreSelectionScreen(navController: NavHostController) {

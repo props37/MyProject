@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.checkout.selectedstore
+package ru.livetyping.zarina.presentation.screen.checkout.selectedpickupstore
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -21,7 +21,7 @@ import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.geography.CityParcelable
 import ru.livetyping.zarina.presentation.model.store.StoreParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
-import ru.livetyping.zarina.presentation.screen.checkout.selectedstore.CheckoutSelectedPickupStoreViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.selectedpickupstore.CheckoutSelectedPickupStoreViewModel.SideEffect
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 

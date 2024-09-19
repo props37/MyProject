@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.checkout.storeselection
+package ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -23,10 +23,10 @@ import ru.livetyping.zarina.domain.checkout.PickupStore
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionScreenComponents.City
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionScreenComponents.Stores
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionViewModel.SideEffect
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionViewModel.State
+import ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection.CheckoutPickupStoreSelectionScreenComponents.City
+import ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection.CheckoutPickupStoreSelectionScreenComponents.Stores
+import ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection.CheckoutPickupStoreSelectionViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection.CheckoutPickupStoreSelectionViewModel.State
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable

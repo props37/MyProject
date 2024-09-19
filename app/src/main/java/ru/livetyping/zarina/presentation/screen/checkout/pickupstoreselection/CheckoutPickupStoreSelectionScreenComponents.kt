@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.checkout.storeselection
+package ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -40,7 +40,7 @@ import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionViewModel.State
+import ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection.CheckoutPickupStoreSelectionViewModel.State
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 

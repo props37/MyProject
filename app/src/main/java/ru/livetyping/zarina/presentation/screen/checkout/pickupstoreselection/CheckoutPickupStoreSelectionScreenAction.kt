@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.checkout.storeselection
+package ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection
 
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartType

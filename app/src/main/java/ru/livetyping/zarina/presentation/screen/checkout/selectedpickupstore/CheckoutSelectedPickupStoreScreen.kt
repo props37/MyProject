@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.checkout.selectedstore
+package ru.livetyping.zarina.presentation.screen.checkout.selectedpickupstore
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -34,8 +34,8 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.presentation.screen.checkout.selectedstore.CheckoutSelectedPickupStoreScreenComponents.TopBar
-import ru.livetyping.zarina.presentation.screen.checkout.selectedstore.CheckoutSelectedPickupStoreViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.selectedpickupstore.CheckoutSelectedPickupStoreScreenComponents.TopBar
+import ru.livetyping.zarina.presentation.screen.checkout.selectedpickupstore.CheckoutSelectedPickupStoreViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable

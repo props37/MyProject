@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.checkout.storeselection
+package ru.livetyping.zarina.presentation.screen.checkout.selectedpickupstore
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -8,12 +8,12 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.selectedpickupstore.CheckoutSelectedPickupStoreViewModel.SideEffect
 
 @Composable
-fun CheckoutPickupStoreSelectionScreenBehavior(
+fun CheckoutSelectedPickupStoreScreenBehavior(
     sideEffects: Flow<SideEffect>,
-    navigate: (CheckoutPickupStoreSelectionScreenAction) -> Unit,
+    navigate: (CheckoutSelectedPickupStoreScreenAction) -> Unit,
 ) {
     val updatedNavigate by rememberUpdatedState(navigate)
 

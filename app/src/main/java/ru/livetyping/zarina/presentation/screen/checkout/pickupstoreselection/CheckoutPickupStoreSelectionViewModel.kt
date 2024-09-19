@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.checkout.storeselection
+package ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -27,7 +27,7 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
-import ru.livetyping.zarina.presentation.screen.checkout.storeselection.CheckoutPickupStoreSelectionViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection.CheckoutPickupStoreSelectionViewModel.SideEffect
 import ru.livetyping.zarina.usecase.cart.GetCartFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.GetPickupStoresFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke

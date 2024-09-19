@@ -8,8 +8,8 @@ import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
-import ru.livetyping.zarina.presentation.screen.checkout.selectedstore.CheckoutSelectedPickupStoreScreen
-import ru.livetyping.zarina.presentation.screen.checkout.selectedstore.CheckoutSelectedPickupStoreScreenAction
+import ru.livetyping.zarina.presentation.screen.checkout.selectedpickupstore.CheckoutSelectedPickupStoreScreen
+import ru.livetyping.zarina.presentation.screen.checkout.selectedpickupstore.CheckoutSelectedPickupStoreScreenAction
 import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.checkoutSelectedPickupStoreScreen(navController: NavHostController) {

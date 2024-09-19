@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.checkout.selectedstore
+package ru.livetyping.zarina.presentation.screen.checkout.selectedpickupstore
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding

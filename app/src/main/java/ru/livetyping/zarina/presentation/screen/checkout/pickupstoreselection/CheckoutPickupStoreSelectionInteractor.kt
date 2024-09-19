@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.checkout.storeselection
+package ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection
 
 import ru.livetyping.zarina.usecase.cart.GetCartFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.GetPickupStoresFlowUseCase
