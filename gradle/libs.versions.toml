@@ -14,7 +14,7 @@ kotlin-immutableCollections = "0.3.8"
 
 jetpack-core = "1.13.1"
 jetpack-appcompat = "1.7.0"
-jetpack-lifecycle = "2.8.5"
+jetpack-lifecycle = "2.8.6"
 jetpack-activity = "1.9.2"
 jetpack-navigation = "2.8.1"
 jetpack-datastore = "1.1.1"
