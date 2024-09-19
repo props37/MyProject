@@ -21,10 +21,12 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.checkout.PickupStore
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
+import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
 import ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection.CheckoutPickupStoreSelectionViewModel.SideEffect
@@ -71,6 +73,19 @@ class CheckoutPickupStoreSelectionViewModel @Inject constructor(
         }
 
     val stepCount: StateFlow<Int> = MutableStateFlow(cartType.value.checkoutStepCount).asStateFlow()
+
+    private val deliveryMethodType: StateFlow<DeliveryMethodType> = savedStateHandle
+        .getStateFlow<DeliveryMethodTypeParcelable?>(
+            key = CheckoutGraph.PickupStoreSelection.ARG_DELIVERY_METHOD_TYPE,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) {
+            checkNotNull(it) { "deliveryMethodType is null" }
+            it.toDeliveryMethodType()
+        }
 
     val city: StateFlow<City?> = interactor.getUserCityFlow()
         .map { it.getOrDefault(City.DEFAULT) }
@@ -160,6 +175,7 @@ class CheckoutPickupStoreSelectionViewModel @Inject constructor(
             val action = CheckoutPickupStoreSelectionScreenAction.StoreClicked(
                 cartType = cartType.value,
                 step = step.value,
+                deliveryMethodType = deliveryMethodType.value,
                 city = city,
                 store = store.store,
                 availableProducts = availableProducts,

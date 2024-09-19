@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
@@ -36,6 +37,7 @@ fun NavGraphBuilder.checkoutSelectedPickupStoreScreen(navController: NavHostCont
 fun NavHostController.navigateToCheckoutPickupSelectedStoreScreen(
     cartType: CartType,
     step: Int,
+    deliveryMethodType: DeliveryMethodType,
     city: City,
     store: Store,
     availableProducts: List<CartProduct>,
@@ -43,6 +45,7 @@ fun NavHostController.navigateToCheckoutPickupSelectedStoreScreen(
     val args = CheckoutGraph.SelectedPickupStore.Args(
         cartType = cartType,
         step = step,
+        deliveryMethodType = deliveryMethodType,
         city = city,
         store = store,
         availableProducts = availableProducts,

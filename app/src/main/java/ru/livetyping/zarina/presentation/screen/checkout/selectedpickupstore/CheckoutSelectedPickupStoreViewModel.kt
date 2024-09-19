@@ -19,6 +19,7 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.cart.CartProductParcelable
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.geography.CityParcelable
+import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.model.store.StoreParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.selectedpickupstore.CheckoutSelectedPickupStoreViewModel.SideEffect
@@ -55,6 +56,19 @@ class CheckoutSelectedPickupStoreViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
         ) {
             checkNotNull(it) { "step is null" }
+        }
+
+    private val deliveryMethodType: StateFlow<DeliveryMethodType> = savedStateHandle
+        .getStateFlow<DeliveryMethodTypeParcelable?>(
+            key = CheckoutGraph.SelectedPickupStore.ARG_DELIVERY_METHOD_TYPE,
+            initialValue = null,
+        )
+        .mapState(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+        ) {
+            checkNotNull(it) { "deliveryMethodType is null" }
+            it.toDeliveryMethodType()
         }
 
     private val city: StateFlow<City> = savedStateHandle
