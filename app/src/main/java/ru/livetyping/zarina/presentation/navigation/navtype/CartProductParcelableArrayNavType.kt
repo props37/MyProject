@@ -9,7 +9,7 @@ val NavType.Companion.CartProductParcelableArrayType: CartProductParcelableArray
     get() = CartProductParcelableArrayNavType()
 
 class CartProductParcelableArrayNavType :
-    NavType<Array<CartProductParcelable>>(isNullableAllowed = true) {
+    NavType<Array<CartProductParcelable>?>(isNullableAllowed = true) {
 
     @Suppress("UNCHECKED_CAST", "DEPRECATION")
     override fun get(bundle: Bundle, key: String): Array<CartProductParcelable>? {
@@ -20,7 +20,7 @@ class CartProductParcelableArrayNavType :
         return Json.decodeFromString(value)
     }
 
-    override fun put(bundle: Bundle, key: String, value: Array<CartProductParcelable>) {
+    override fun put(bundle: Bundle, key: String, value: Array<CartProductParcelable>?) {
         bundle.putParcelableArray(key, value)
     }
 }

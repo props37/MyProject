@@ -9,7 +9,7 @@ val NavType.Companion.DeliveryDateTimePeriodParcelableArrayType: DeliveryDateTim
     get() = DeliveryDateTimePeriodParcelableArrayNavType()
 
 class DeliveryDateTimePeriodParcelableArrayNavType :
-    NavType<Array<DeliveryDateTimePeriodParcelable>>(isNullableAllowed = true) {
+    NavType<Array<DeliveryDateTimePeriodParcelable>?>(isNullableAllowed = true) {
 
     @Suppress("UNCHECKED_CAST", "DEPRECATION")
     override fun get(bundle: Bundle, key: String): Array<DeliveryDateTimePeriodParcelable>? {
@@ -23,7 +23,7 @@ class DeliveryDateTimePeriodParcelableArrayNavType :
     override fun put(
         bundle: Bundle,
         key: String,
-        value: Array<DeliveryDateTimePeriodParcelable>,
+        value: Array<DeliveryDateTimePeriodParcelable>?,
     ) {
         bundle.putParcelableArray(key, value)
     }
