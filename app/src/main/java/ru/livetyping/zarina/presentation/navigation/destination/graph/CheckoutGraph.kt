@@ -27,9 +27,9 @@ import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.base.Graph
 import ru.livetyping.zarina.presentation.navigation.base.RouteUtils
 import ru.livetyping.zarina.presentation.navigation.base.ScreenResult
-import ru.livetyping.zarina.presentation.navigation.navtype.CartProductParcelableArrayType
+import ru.livetyping.zarina.presentation.navigation.navtype.CartProductParcelableListType
 import ru.livetyping.zarina.presentation.navigation.navtype.CityParcelableType
-import ru.livetyping.zarina.presentation.navigation.navtype.DeliveryDateTimePeriodParcelableArrayType
+import ru.livetyping.zarina.presentation.navigation.navtype.DeliveryDateTimePeriodParcelableListType
 import ru.livetyping.zarina.presentation.navigation.navtype.StoreParcelableType
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
 import java.util.UUID
@@ -216,7 +216,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
                 navArgument(ARG_KEY_CITY) { type = NavType.CityParcelableType },
                 navArgument(ARG_KEY_STORE) { type = NavType.StoreParcelableType },
                 navArgument(ARG_KEY_AVAILABLE_PRODUCTS) {
-                    type = NavType.CartProductParcelableArrayType
+                    type = NavType.CartProductParcelableListType
                 },
             )
 
@@ -379,7 +379,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
                 },
                 navArgument(ARG_DELIVERY_OPTION_ID) { type = NavType.StringType },
                 navArgument(ARG_DATE_TIME_PERIODS) {
-                    type = NavType.DeliveryDateTimePeriodParcelableArrayType
+                    type = NavType.DeliveryDateTimePeriodParcelableListType
                 },
             )
 

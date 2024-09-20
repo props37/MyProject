@@ -1,24 +1,15 @@
 package ru.livetyping.zarina.presentation.navigation.navtype
 
-import android.os.Bundle
 import androidx.navigation.NavType
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.Json.Default.serializersModule
+import kotlinx.serialization.serializer
 import ru.livetyping.zarina.presentation.model.geography.CityParcelable
-import ru.livetyping.zarina.util.platform.BundleCompat
+import ru.livetyping.zarina.presentation.navigation.base.ParcelableNavType
 
 val NavType.Companion.CityParcelableType: CityParcelableNavType
     get() = CityParcelableNavType()
 
-class CityParcelableNavType : NavType<CityParcelable?>(isNullableAllowed = true) {
-    override fun get(bundle: Bundle, key: String): CityParcelable? {
-        return BundleCompat.getParcelable(bundle, key)
-    }
-
-    override fun parseValue(value: String): CityParcelable {
-        return Json.decodeFromString(value)
-    }
-
-    override fun put(bundle: Bundle, key: String, value: CityParcelable?) {
-        bundle.putParcelable(key, value)
-    }
-}
+class CityParcelableNavType : ParcelableNavType<CityParcelable?>(
+    isNullableAllowed = true,
+    serializer = serializersModule.serializer(),
+)

@@ -18,7 +18,7 @@ import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.base.Graph
 import ru.livetyping.zarina.presentation.navigation.base.RouteUtils
 import ru.livetyping.zarina.presentation.navigation.base.ScreenResult
-import ru.livetyping.zarina.presentation.navigation.navtype.ProductOfferParcelableArrayType
+import ru.livetyping.zarina.presentation.navigation.navtype.ProductOfferParcelableListType
 import ru.livetyping.zarina.presentation.navigation.navtype.ProductParcelableType
 import java.util.UUID
 
@@ -118,7 +118,7 @@ data object SizeSelectorGraph : Graph<SizeSelectorGraph.SizeSelector.Args>() {
         override val arguments: List<NamedNavArgument>
             get() = listOf(
                 navArgument(ARG_KEY_PRODUCT) { type = NavType.ProductParcelableType },
-                navArgument(ARG_KEY_OFFERS) { type = NavType.ProductOfferParcelableArrayType },
+                navArgument(ARG_KEY_OFFERS) { type = NavType.ProductOfferParcelableListType },
             )
 
         override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
