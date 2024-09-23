@@ -122,7 +122,7 @@ class CheckoutSelectedPickupStoreViewModel @Inject constructor(
             val cartType = cartType.value
             val checkoutParams = StorePickupCheckoutParams(
                 cartType = cartType,
-                deliveryMethodType = DeliveryMethodType.RETAIL,
+                deliveryMethodType = deliveryMethodType.value,
                 city = city.value,
                 storeId = store.value.id,
             )
