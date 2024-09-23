@@ -326,6 +326,7 @@
     <string name="my_card_cant_be_combined_with_promo_code">MyCard не суммируется с другими скидками, поэтому отменили применение промокода</string>
     <string name="you_should_enter_address_first">Сначала нужно указать адрес</string>
     <string name="you_should_select_delivery_option_first">Сначала нужно выбрать вариант доставки</string>
+    <string name="order_confirmation">Подтверждение заказа</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

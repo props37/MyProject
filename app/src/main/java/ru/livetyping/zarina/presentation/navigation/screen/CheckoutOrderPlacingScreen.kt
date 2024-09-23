@@ -1,0 +1,31 @@
+package ru.livetyping.zarina.presentation.navigation.screen
+
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.composable
+import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreen
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenAction
+
+fun NavGraphBuilder.checkoutOrderPlacingScreen(navController: NavHostController) {
+    composable<CheckoutGraph.OrderPlacing>(
+        typeMap = CheckoutGraph.OrderPlacing.typeMap(),
+    ) {
+        CheckoutOrderPlacingScreen(
+            navigate = { action ->
+                when (action) {
+                    CheckoutOrderPlacingScreenAction.ScreenClosed -> {
+                        navController.popBackStack<CheckoutGraph.OrderPlacing>(inclusive = true)
+                    }
+
+                    CheckoutOrderPlacingScreenAction.CheckoutClosed -> {
+                        navController.popBackStack(
+                            route = CheckoutGraph.routeSchema,
+                            inclusive = true,
+                        )
+                    }
+                }
+            },
+        )
+    }
+}

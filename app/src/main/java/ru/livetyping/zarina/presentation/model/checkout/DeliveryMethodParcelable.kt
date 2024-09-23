@@ -2,9 +2,11 @@ package ru.livetyping.zarina.presentation.model.checkout
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 
+@Serializable
 @Parcelize
 data class DeliveryMethodParcelable(
     val id: Int,

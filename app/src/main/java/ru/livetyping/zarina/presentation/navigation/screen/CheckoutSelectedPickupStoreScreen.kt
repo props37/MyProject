@@ -7,6 +7,8 @@ import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.domain.store.Store
+import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
+import ru.livetyping.zarina.presentation.model.checkout.CheckoutParamsParcelable
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.selectedpickupstore.CheckoutSelectedPickupStoreScreen
@@ -26,7 +28,12 @@ fun NavGraphBuilder.checkoutSelectedPickupStoreScreen(navController: NavHostCont
                     }
 
                     is CheckoutSelectedPickupStoreScreenAction.ContinueClicked -> {
-                        // TODO: [High] Implement
+                        val orderPlacing = CheckoutGraph.OrderPlacing(
+                            cartType = CartTypeParcelable.from(action.cartType),
+                            step = action.step,
+                            checkoutParams = CheckoutParamsParcelable.from(action.checkoutParams),
+                        )
+                        navController.navigate(orderPlacing)
                     }
                 }
             },

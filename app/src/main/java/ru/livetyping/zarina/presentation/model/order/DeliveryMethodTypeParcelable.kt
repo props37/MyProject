@@ -2,8 +2,10 @@ package ru.livetyping.zarina.presentation.model.order
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 
+@Serializable
 @Parcelize
 enum class DeliveryMethodTypeParcelable : Parcelable {
     DELIVERY_SERVICE,

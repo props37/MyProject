@@ -7,6 +7,7 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.domain.cart.CartProduct
@@ -18,6 +19,7 @@ import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.model.cart.CartProductParcelable
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
+import ru.livetyping.zarina.presentation.model.checkout.CheckoutParamsParcelable
 import ru.livetyping.zarina.presentation.model.checkout.DeliveryDateTimePeriodParcelable
 import ru.livetyping.zarina.presentation.model.geography.CityParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
@@ -28,11 +30,14 @@ import ru.livetyping.zarina.presentation.navigation.base.Graph
 import ru.livetyping.zarina.presentation.navigation.base.RouteUtils
 import ru.livetyping.zarina.presentation.navigation.base.ScreenResult
 import ru.livetyping.zarina.presentation.navigation.navtype.CartProductParcelableListType
+import ru.livetyping.zarina.presentation.navigation.navtype.CheckoutParamsParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.CityParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.DeliveryDateTimePeriodParcelableListType
 import ru.livetyping.zarina.presentation.navigation.navtype.StoreParcelableType
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
 import java.util.UUID
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
 
@@ -569,5 +574,21 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
             val deliveryMethodType: DeliveryMethodType,
             val pickupPointId: PickupPoint.Id,
         )
+    }
+
+    @Serializable
+    data class OrderPlacing(
+        val cartType: CartTypeParcelable,
+        val step: Int,
+        val checkoutParams: CheckoutParamsParcelable,
+    ) {
+        companion object {
+            fun typeMap(): Map<KType, NavType<*>> {
+                return mapOf(
+                    typeOf<CartTypeParcelable>() to NavType.EnumType(CartTypeParcelable::class.java),
+                    typeOf<CheckoutParamsParcelable>() to NavType.CheckoutParamsParcelableType,
+                )
+            }
+        }
     }
 }
