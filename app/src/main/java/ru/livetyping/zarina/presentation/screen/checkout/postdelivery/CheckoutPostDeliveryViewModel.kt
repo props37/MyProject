@@ -20,8 +20,8 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.checkout.CourierDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.DeliveryOption
+import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.base.text.Text
@@ -209,7 +209,7 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
         if (address != null && selectedDeliveryOption != null) {
             navigationThrottler.throttle {
                 val cartType = cartType.value
-                val checkoutParams = CourierDeliveryCheckoutParams(
+                val checkoutParams = PostDeliveryCheckoutParams(
                     cartType = cartType,
                     deliveryMethodType = deliveryMethodType.value,
                     address = address,

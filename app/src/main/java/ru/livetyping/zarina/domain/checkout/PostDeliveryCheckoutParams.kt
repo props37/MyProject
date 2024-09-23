@@ -3,7 +3,7 @@ package ru.livetyping.zarina.domain.checkout
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 
-data class CourierDeliveryCheckoutParams(
+data class PostDeliveryCheckoutParams(
     override val cartType: CartType,
     override val deliveryMethodType: DeliveryMethodType,
     val address: CheckoutAddress,
