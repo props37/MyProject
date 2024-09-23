@@ -22,6 +22,10 @@ fun NavGraphBuilder.checkoutSelectedPickupPointScreen(navController: NavHostCont
                             inclusive = true,
                         )
                     }
+
+                    is SelectedPickupPointScreenAction.ContinueClicked -> {
+                        // TODO: [High] Implement
+                    }
                 }
             },
         )

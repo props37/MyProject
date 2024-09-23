@@ -67,6 +67,7 @@ object SelectedPickupPointScreenComponents {
     fun PickupPoint(
         state: PickupPointState,
         onDeliveryTypeClicked: (PickupPointDetails.DeliveryType) -> Unit,
+        onContinueClicked: () -> Unit,
         onErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -87,6 +88,7 @@ object SelectedPickupPointScreenComponents {
                     PickupPointImpl(
                         state = state,
                         onDeliveryTypeClicked = onDeliveryTypeClicked,
+                        onContinueClicked = onContinueClicked,
                     )
                 }
 
@@ -119,6 +121,7 @@ object SelectedPickupPointScreenComponents {
     private fun PickupPointImpl(
         state: PickupPointState.Success,
         onDeliveryTypeClicked: (PickupPointDetails.DeliveryType) -> Unit,
+        onContinueClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
@@ -144,7 +147,7 @@ object SelectedPickupPointScreenComponents {
             Column {
                 ZarinaDivider(modifier = Modifier.fillMaxWidth())
                 ZarinaButton(
-                    onClick = {}, // TODO: [High] Implement
+                    onClick = onContinueClicked,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)

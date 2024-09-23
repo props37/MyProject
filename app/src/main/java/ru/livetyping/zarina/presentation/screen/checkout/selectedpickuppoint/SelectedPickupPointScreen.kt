@@ -36,6 +36,7 @@ fun SelectedPickupPointScreen(
         pickupPointState = pickupPointState,
         onPickupPointDeliveryTypeClicked = viewModel::onPickupPointDeliveryTypeClicked,
         onPickupPointErrorRefreshClicked = viewModel::onPickupPointErrorRefreshClicked,
+        onContinueClicked = viewModel::onContinueClicked,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
@@ -47,6 +48,7 @@ private fun ScreenContent(
     pickupPointState: PickupPointState,
     onPickupPointDeliveryTypeClicked: (PickupPointDetails.DeliveryType) -> Unit,
     onPickupPointErrorRefreshClicked: () -> Unit,
+    onContinueClicked: () -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (SelectedPickupPointScreenAction) -> Unit,
@@ -70,6 +72,7 @@ private fun ScreenContent(
         PickupPoint(
             state = pickupPointState,
             onDeliveryTypeClicked = onPickupPointDeliveryTypeClicked,
+            onContinueClicked = onContinueClicked,
             onErrorRefreshClicked = onPickupPointErrorRefreshClicked,
             modifier = Modifier.fillMaxSize(),
         )
