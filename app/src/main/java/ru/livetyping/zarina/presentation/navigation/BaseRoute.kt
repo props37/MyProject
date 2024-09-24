@@ -56,8 +56,7 @@ enum class BaseRoute {
 
     // Checkout graph
     CHECKOUT_GRAPH,
-    RECIPIENT,
-    PICKUP_STORE_SELECTION,
+    CUSTOMER,
     SELECTED_PICKUP_STORE,
     DELIVERY_METHOD,
     COURIER_DELIVERY,

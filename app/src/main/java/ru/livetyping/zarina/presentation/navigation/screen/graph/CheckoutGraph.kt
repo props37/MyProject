@@ -7,12 +7,12 @@ import ru.livetyping.zarina.presentation.navigation.base.navigationGraph
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutCourierDeliveryDateTimeSelectorScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutCourierDeliveryScreen
+import ru.livetyping.zarina.presentation.navigation.screen.checkoutCustomerScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutDeliveryMethodScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutOrderPlacingScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutPickupPointDeliveryScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutPickupStoreSelectionScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutPostDeliveryScreen
-import ru.livetyping.zarina.presentation.navigation.screen.checkoutRecipientScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutSelectedPickupPointScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutSelectedPickupStoreScreen
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
@@ -29,7 +29,7 @@ fun NavGraphBuilder.checkoutGraph(navController: NavHostController) {
         popEnterTransition = { slidePopEnterTransition() },
         popExitTransition = { slidePopExitTransition() },
     ) {
-        checkoutRecipientScreen(navController)
+        checkoutCustomerScreen(navController)
         checkoutPickupStoreSelectionScreen(navController)
         checkoutSelectedPickupStoreScreen(navController)
         checkoutDeliveryMethodScreen(navController)
@@ -43,7 +43,7 @@ fun NavGraphBuilder.checkoutGraph(navController: NavHostController) {
 }
 
 fun NavHostController.navigateToCheckoutGraph(cartType: CartType) {
-    val args = CheckoutGraph.Recipient.Args(cartType)
+    val args = CheckoutGraph.Customer.Args(cartType)
     this.navigate(
         route = CheckoutGraph.routeSchema,
         args = CheckoutGraph.createArgsBundle(args),

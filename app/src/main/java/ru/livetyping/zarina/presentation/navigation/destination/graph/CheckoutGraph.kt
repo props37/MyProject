@@ -41,7 +41,7 @@ import java.util.UUID
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
+data object CheckoutGraph : Graph<CheckoutGraph.Customer.Args>() {
 
     private val routeBase: String
         get() = BaseRoute.CHECKOUT_GRAPH.route
@@ -49,10 +49,10 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
     override val routeSchema: String
         get() = RouteUtils.generateRouteSchema(
             routeBase = routeBase,
-            argNames = arrayOf(Recipient.ARG_KEY_CART_TYPE, Recipient.ARG_KEY_STEP),
+            argNames = arrayOf(Customer.ARG_KEY_CART_TYPE, Customer.ARG_KEY_STEP),
         )
 
-    override fun createRoute(args: Recipient.Args): String {
+    override fun createRoute(args: Customer.Args): String {
         val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
         return RouteUtils.generateRoute(
             routeBase = routeBase,
@@ -61,22 +61,22 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
     }
 
     override val arguments: List<NamedNavArgument>
-        get() = Recipient.arguments
+        get() = Customer.arguments
 
-    override fun createArgsBundle(args: Recipient.Args): Bundle {
-        return Recipient.createArgsBundle(args)
+    override fun createArgsBundle(args: Customer.Args): Bundle {
+        return Customer.createArgsBundle(args)
     }
 
-    override val startDestination = Recipient
+    override val startDestination = Customer
 
 
 
-    data object Recipient : Destination<Recipient.Args>() {
+    data object Customer : Destination<Customer.Args>() {
         const val ARG_KEY_CART_TYPE = "arg_cart_type"
         const val ARG_KEY_STEP = "arg_step"
 
         private val routeBase: String
-            get() = BaseRoute.RECIPIENT.route
+            get() = BaseRoute.CUSTOMER.route
 
         override val routeSchema: String
             get() = RouteUtils.generateRouteSchema(

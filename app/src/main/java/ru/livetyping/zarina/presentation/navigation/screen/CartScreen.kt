@@ -25,7 +25,7 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
             when (targetState.destination.route) {
                 UnscopedDestinations.CitySelector.routeSchema,
                 UnscopedDestinations.Product.routeSchema,
-                CheckoutGraph.Recipient.routeSchema -> slideExitTransition()
+                CheckoutGraph.Customer.routeSchema -> slideExitTransition()
 
                 else -> null
             }
@@ -36,7 +36,7 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
             when {
                 route == UnscopedDestinations.CitySelector.routeSchema
                         || route == UnscopedDestinations.Product.routeSchema
-                        || route == CheckoutGraph.Recipient.routeSchema
+                        || route == CheckoutGraph.Customer.routeSchema
                         || destination.hasRoute<CheckoutGraph.PickupStoreSelection>()
                         || route == CheckoutGraph.DeliveryMethod.routeSchema
                         || route == CheckoutGraph.CourierDelivery.routeSchema

@@ -9,22 +9,22 @@ import ru.livetyping.zarina.presentation.model.checkout.CustomerParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
-import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutRecipientScreen
-import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutRecipientScreenAction
+import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutCustomerScreen
+import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutCustomerScreenAction
 
-fun NavGraphBuilder.checkoutRecipientScreen(navController: NavHostController) {
-    composableDestination(CheckoutGraph.Recipient) {
-        CheckoutRecipientScreen(
+fun NavGraphBuilder.checkoutCustomerScreen(navController: NavHostController) {
+    composableDestination(CheckoutGraph.Customer) {
+        CheckoutCustomerScreen(
             navigate = { action ->
                 when (action) {
-                    CheckoutRecipientScreenAction.CheckoutClosed -> {
+                    CheckoutCustomerScreenAction.CheckoutClosed -> {
                         navController.popBackStack(
                             route = CheckoutGraph.routeSchema,
                             inclusive = true,
                         )
                     }
 
-                    is CheckoutRecipientScreenAction.RecipientValidated -> {
+                    is CheckoutCustomerScreenAction.CustomerValidated -> {
                         when (action.cartType) {
                             CartType.DELIVERY -> {
                                 navController.navigateToCheckoutDeliveryMethodScreen(

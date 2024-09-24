@@ -40,8 +40,8 @@ import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
-import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutRecipientViewModel.SideEffect
-import ru.livetyping.zarina.usecase.checkout.ValidateRecipientUseCase
+import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutCustomerViewModel.SideEffect
+import ru.livetyping.zarina.usecase.checkout.ValidateCustomerUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.textAsFlow
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
@@ -49,18 +49,18 @@ import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
 @HiltViewModel
-class CheckoutRecipientViewModel @Inject constructor(
+class CheckoutCustomerViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val interactor: CheckoutRecipientInteractor,
+    private val interactor: CheckoutCustomerInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private var validateRecipientJob: Job? = null
+    private var validateCustomerJob: Job? = null
 
     private val cartType = savedStateHandle
         .getStateFlow<CartTypeParcelable?>(
-            key = CheckoutGraph.Recipient.ARG_KEY_CART_TYPE,
+            key = CheckoutGraph.Customer.ARG_KEY_CART_TYPE,
             initialValue = null,
         )
         .mapState(
@@ -73,7 +73,7 @@ class CheckoutRecipientViewModel @Inject constructor(
 
     val step: StateFlow<Int> = savedStateHandle
         .getStateFlow<Int?>(
-            key = CheckoutGraph.Recipient.ARG_KEY_STEP,
+            key = CheckoutGraph.Customer.ARG_KEY_STEP,
             initialValue = null,
         )
         .mapState(
@@ -130,7 +130,7 @@ class CheckoutRecipientViewModel @Inject constructor(
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
-            val action = CheckoutRecipientScreenAction.CheckoutClosed
+            val action = CheckoutCustomerScreenAction.CheckoutClosed
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
@@ -141,24 +141,24 @@ class CheckoutRecipientViewModel @Inject constructor(
     }
 
     fun onContinueClicked() {
-        if (validateRecipientJob?.isActive == true) return
+        if (validateCustomerJob?.isActive == true) return
 
-        validateRecipientJob = viewModelScope.launch {
+        validateCustomerJob = viewModelScope.launch {
             val customer = Customer(
                 firstName = firstNameTextFieldState.text.toString().trim(),
                 lastName = lastNameTextFieldState.text.toString().trim(),
                 phone = PhoneNumber.create(phone.value),
                 email = Email.create(emailTextFieldState.text.toString()),
             )
-            val params = ValidateRecipientUseCase.Params(customer)
-            interactor.validateRecipient(params)
-                .onSuccess { onValidateRecipientSuccess(customer) }
-                .onFailure(::onValidateRecipientFailure)
+            val params = ValidateCustomerUseCase.Params(customer)
+            interactor.validateCustomer(params)
+                .onSuccess { onValidateCustomerSuccess(customer) }
+                .onFailure(::onValidateCustomerFailure)
         }
     }
 
-    private fun onValidateRecipientSuccess(customer: Customer) {
-        val action = CheckoutRecipientScreenAction.RecipientValidated(
+    private fun onValidateCustomerSuccess(customer: Customer) {
+        val action = CheckoutCustomerScreenAction.CustomerValidated(
             cartType = cartType.value,
             step = step.value + 1,
             customer = customer,
@@ -166,7 +166,7 @@ class CheckoutRecipientViewModel @Inject constructor(
         emitSideEffect(SideEffect.Navigate(action))
     }
 
-    private fun onValidateRecipientFailure(t: Throwable) {
+    private fun onValidateCustomerFailure(t: Throwable) {
         when (t) {
             is ValidationException -> {
                 val exceptions = listOf(t) + t.suppressedExceptions
@@ -241,7 +241,7 @@ class CheckoutRecipientViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class Navigate(val action: CheckoutRecipientScreenAction) : SideEffect
+        data class Navigate(val action: CheckoutCustomerScreenAction) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }

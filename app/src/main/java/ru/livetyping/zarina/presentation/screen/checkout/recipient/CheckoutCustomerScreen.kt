@@ -49,14 +49,14 @@ import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFi
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
-import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutRecipientViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutCustomerViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.autofill.autofill
 
 @Composable
-fun CheckoutRecipientScreen(
-    navigate: (CheckoutRecipientScreenAction) -> Unit,
-    viewModel: CheckoutRecipientViewModel = hiltViewModel(),
+fun CheckoutCustomerScreen(
+    navigate: (CheckoutCustomerScreenAction) -> Unit,
+    viewModel: CheckoutCustomerViewModel = hiltViewModel(),
 ) {
     val step by viewModel.step.collectAsStateWithLifecycle()
     val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()
@@ -102,9 +102,9 @@ private fun ScreenContent(
     onContinueClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
-    navigate: (CheckoutRecipientScreenAction) -> Unit,
+    navigate: (CheckoutCustomerScreenAction) -> Unit,
 ) {
-    CheckoutRecipientScreenBehavior(
+    CheckoutCustomerScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
     )

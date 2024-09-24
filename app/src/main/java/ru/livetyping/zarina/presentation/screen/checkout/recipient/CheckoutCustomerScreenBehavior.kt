@@ -10,12 +10,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.livetyping.zarina.presentation.common.zarinatoast.controller.LocalZarinaToastController
-import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutRecipientViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutCustomerViewModel.SideEffect
 
 @Composable
-fun CheckoutRecipientScreenBehavior(
+fun CheckoutCustomerScreenBehavior(
     sideEffects: Flow<SideEffect>,
-    navigate: (CheckoutRecipientScreenAction) -> Unit,
+    navigate: (CheckoutCustomerScreenAction) -> Unit,
 ) {
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)

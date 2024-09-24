@@ -12,18 +12,18 @@ import ru.livetyping.zarina.usecase.user.ValidatePhoneNumberUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
-class ValidateRecipientUseCase @Inject constructor(
+class ValidateCustomerUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val validateFirstNameUseCase: ValidateFirstNameUseCase,
     private val validateLastNameUseCase: ValidateLastNameUseCase,
     private val validatePhoneNumberUseCase: ValidatePhoneNumberUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
-) : UseCase<ValidateRecipientUseCase.Params, Unit>(dispatcher) {
+) : UseCase<ValidateCustomerUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
         val customer = params.customer
-        Timber.v("Validate recipient: $customer")
+        Timber.v("Validate customer: $customer")
 
         val firstNameException =
             validateFirstNameUseCase(ValidateFirstNameUseCase.Params(customer.firstName)).exceptionOrNull()
