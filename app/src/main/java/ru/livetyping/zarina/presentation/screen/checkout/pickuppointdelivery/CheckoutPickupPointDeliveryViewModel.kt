@@ -45,6 +45,7 @@ import ru.livetyping.zarina.usecase.checkout.GetPickupPointsFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.textAsFlow
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
+import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
@@ -97,7 +98,7 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
             it.toDeliveryMethodType()
         }
 
-    val stepCount: StateFlow<Int> = MutableStateFlow(cartType.value.checkoutStepCount).asStateFlow()
+    val stepCount: StateFlow<Int> = ImmutableStateFlow(cartType.value.checkoutStepCount)
 
     @OptIn(SavedStateHandleSaveableApi::class)
     val nameOrAddressFilterTextFieldState by savedStateHandle.saveable(
@@ -119,7 +120,7 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
             initialValue = Filter.entries.map { ToggleableFilter(filter = it, isApplied = false) },
         )
 
-    val viewModes: StateFlow<List<ViewMode>> = MutableStateFlow(ViewMode.entries).asStateFlow()
+    val viewModes: StateFlow<List<ViewMode>> = ImmutableStateFlow(ViewMode.entries)
 
     private val _currentViewMode = MutableStateFlow(ViewMode.MAP)
     val currentViewMode: StateFlow<ViewMode> = _currentViewMode.asStateFlow()

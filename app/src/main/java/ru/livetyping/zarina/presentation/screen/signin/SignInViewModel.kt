@@ -42,6 +42,7 @@ import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.signin.SignInViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.usecase.user.SignInByPhoneUseCase
+import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
 
@@ -78,7 +79,7 @@ class SignInViewModel @Inject constructor(
     )
 
     val signInTypes: StateFlow<ImmutableList<SignInType>> =
-        MutableStateFlow(SignInType.entries.toImmutableList()).asStateFlow()
+        ImmutableStateFlow(SignInType.entries.toImmutableList())
 
     val currentSignInType: StateFlow<SignInType> = currentSignInTypeValueHolder.stateFlow
 

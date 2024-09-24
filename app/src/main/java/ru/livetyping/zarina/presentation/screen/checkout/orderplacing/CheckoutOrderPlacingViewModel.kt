@@ -4,9 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
@@ -14,6 +12,7 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.SideEffect
+import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,10 +28,9 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     )
     private val checkoutParams = params.checkoutParams.toCheckoutParams()
 
-    val step: StateFlow<Int> = MutableStateFlow(params.step).asStateFlow()
+    val step: StateFlow<Int> = ImmutableStateFlow(params.step)
 
-    val stepCount: StateFlow<Int> =
-        MutableStateFlow(checkoutParams.cartType.checkoutStepCount).asStateFlow()
+    val stepCount: StateFlow<Int> = ImmutableStateFlow(checkoutParams.cartType.checkoutStepCount)
 
     fun onBackClicked() {
         navigationThrottler.throttle {

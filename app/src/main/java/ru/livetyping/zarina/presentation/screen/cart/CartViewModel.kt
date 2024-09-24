@@ -61,6 +61,7 @@ import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.clear
 import ru.livetyping.zarina.util.compose.text.textAsFlow
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
+import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.combineMore
 import ru.livetyping.zarina.util.library.coroutines.mapState
@@ -112,7 +113,7 @@ class CartViewModel @AssistedInject constructor(
     )
 
     val cartTypes: StateFlow<ImmutableList<CartType>> =
-        MutableStateFlow(CartType.entries.toImmutableList()).asStateFlow()
+        ImmutableStateFlow(CartType.entries.toImmutableList())
 
     private val _currentCartType = MutableStateFlow(CartType.DELIVERY)
     val currentCartType: StateFlow<CartType> = _currentCartType.asStateFlow()

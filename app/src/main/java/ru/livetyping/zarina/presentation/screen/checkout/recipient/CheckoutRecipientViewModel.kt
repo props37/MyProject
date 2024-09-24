@@ -43,6 +43,7 @@ import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutRecip
 import ru.livetyping.zarina.usecase.checkout.ValidateRecipientUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.textAsFlow
+import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
@@ -81,8 +82,7 @@ class CheckoutRecipientViewModel @Inject constructor(
             checkNotNull(it) { "step is null" }
         }
 
-    val stepCount: StateFlow<Int> =
-        MutableStateFlow(cartType.value.checkoutStepCount).asStateFlow()
+    val stepCount: StateFlow<Int> = ImmutableStateFlow(cartType.value.checkoutStepCount)
 
     @OptIn(SavedStateHandleSaveableApi::class)
     val firstNameTextFieldState: TextFieldState by savedStateHandle.saveable(
