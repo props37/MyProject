@@ -5,6 +5,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.presentation.base.text.Text
+import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
+import ru.livetyping.zarina.presentation.model.checkout.CustomerParcelable
+import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryScreen
@@ -39,12 +42,14 @@ fun NavGraphBuilder.checkoutPickupPointDeliveryScreen(navController: NavHostCont
                     }
 
                     is CheckoutPickupPointDeliveryScreenAction.PickupPointSelected -> {
-                        navController.navigateToCheckoutSelectedPickupPointScreen(
-                            cartType = action.cartType,
+                        val selectedPickupPoint = CheckoutGraph.SelectedPickupPoint(
+                            cartType = CartTypeParcelable.from(action.cartType),
                             step = action.step,
-                            deliveryMethodType = action.deliveryMethodType,
-                            pickupPointId = action.pickupPoint.id,
+                            deliveryMethodType = DeliveryMethodTypeParcelable.from(action.deliveryMethodType),
+                            pickupPointId = action.pickupPoint.id.value,
+                            customer = CustomerParcelable.from(action.customer),
                         )
+                        navController.navigate(selectedPickupPoint)
                     }
                 }
             },

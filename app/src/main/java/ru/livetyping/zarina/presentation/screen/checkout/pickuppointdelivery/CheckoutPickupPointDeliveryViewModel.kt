@@ -175,6 +175,7 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
                 cartType = cartType,
                 step = step.value,
                 deliveryMethodType = params.deliveryMethodType.toDeliveryMethodType(),
+                customer = params.customer.toCustomer(),
             )
             emitSideEffect(SideEffect.Navigate(action))
         }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,26 +20,21 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
-import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.geography.City
-import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
-import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
-import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.selectedpickuppoint.SelectedPickupPointViewModel.SideEffect
 import ru.livetyping.zarina.usecase.checkout.GetPickupPointDetailsFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
-import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,56 +45,9 @@ class SelectedPickupPointViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val cartType: StateFlow<CartType> = savedStateHandle
-        .getStateFlow<CartTypeParcelable?>(
-            key = CheckoutGraph.SelectedPickupPoint.ARG_KEY_CART_TYPE,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "cartType is null" }
-            it.toCartType()
-        }
-
-    private val step: StateFlow<Int> = savedStateHandle
-        .getStateFlow<Int?>(
-            key = CheckoutGraph.SelectedPickupPoint.ARG_KEY_STEP,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "step is null" }
-        }
-
-    private val deliveryMethodType: StateFlow<DeliveryMethodType> = savedStateHandle
-        .getStateFlow<DeliveryMethodTypeParcelable?>(
-            key = CheckoutGraph.SelectedPickupPoint.ARG_DELIVERY_METHOD_TYPE,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "deliveryMethodType is null" }
-            it.toDeliveryMethodType()
-        }
-
-    private val pickupPointId: StateFlow<PickupPoint.Id> = savedStateHandle
-        .getStateFlow<Long?>(
-            key = CheckoutGraph.SelectedPickupPoint.ARG_PICKUP_POINT_ID,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "pickupPointId is null" }
-            PickupPoint.Id(it)
-        }
+    private val params = savedStateHandle.toRoute<CheckoutGraph.SelectedPickupPoint>(
+        typeMap = CheckoutGraph.SelectedPickupPoint.typeMap(),
+    )
 
     private val city: StateFlow<City?> = interactor.getUserCityFlow()
         .map { it.getOrDefault(City.DEFAULT) }
@@ -109,14 +58,13 @@ class SelectedPickupPointViewModel @Inject constructor(
         )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    @Suppress("NAME_SHADOWING")
     private val pickupPointRequester = FlowRequester(PickupPointRequest) {
-        combine(city, pickupPointId) { city, pickupPointId ->
-            val city = city ?: City.DEFAULT
+        city.flatMapLatest {
+            val city = it ?: City.DEFAULT
+            val pickupPointId = PickupPoint.Id(params.pickupPointId)
             val params = GetPickupPointDetailsFlowUseCase.Params(city.id, pickupPointId)
             interactor.getPickupPointDetailsFlow(params)
         }
-            .flatMapLatest { it }
     }
 
     private var pickupPoint: PickupPointDetails? = null
@@ -178,18 +126,16 @@ class SelectedPickupPointViewModel @Inject constructor(
 
         if (selectedDeliveryType != null) {
             navigationThrottler.throttle {
-                val cartType = cartType.value
                 val checkoutParams = PickupPointDeliveryCheckoutParams(
-                    cartType = cartType,
-                    deliveryMethodType = deliveryMethodType.value,
+                    cartType = params.cartType.toCartType(),
+                    deliveryMethodType = params.deliveryMethodType.toDeliveryMethodType(),
                     city = city.value ?: City.DEFAULT,
-                    pickupPointId = pickupPointId.value,
+                    pickupPointId = PickupPoint.Id(params.pickupPointId),
                     deliveryTypeId = selectedDeliveryType.id,
                     dateTimePeriodId = selectedDeliveryType.dateTimePeriods.first().id,
                 )
                 val action = SelectedPickupPointScreenAction.ContinueClicked(
-                    cartType = cartType,
-                    step = step.value + 1,
+                    step = params.step + 1,
                     checkoutParams = checkoutParams,
                 )
                 emitSideEffect(SideEffect.Navigate(action))

@@ -8,8 +8,6 @@ import androidx.navigation.navArgument
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.checkout.PickupPoint
-import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.model.cart.CartProductParcelable
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.checkout.CheckoutParamsParcelable
@@ -244,68 +242,23 @@ data object CheckoutGraph : Graph<CheckoutGraph.Customer.Args>() {
         }
     }
 
-    data object SelectedPickupPoint : Destination<SelectedPickupPoint.Args>() {
-        const val ARG_KEY_CART_TYPE = "arg_cart_type"
-        const val ARG_KEY_STEP = "arg_step"
-        const val ARG_DELIVERY_METHOD_TYPE = "arg_delivery_method_type"
-        const val ARG_PICKUP_POINT_ID = "arg_pickup_point_id"
-
-        private val routeBase: String
-            get() = BaseRoute.SELECTED_PICKUP_POINT.route
-
-        override val routeSchema: String
-            get() = RouteUtils.generateRouteSchema(
-                routeBase = routeBase,
-                argNames = arrayOf(
-                    ARG_KEY_CART_TYPE,
-                    ARG_KEY_STEP,
-                    ARG_DELIVERY_METHOD_TYPE,
-                    ARG_PICKUP_POINT_ID,
-                ),
-            )
-
-        override fun createRoute(args: Args): String {
-            val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
-            val deliveryMethodTypeParcelable =
-                DeliveryMethodTypeParcelable.from(args.deliveryMethodType)
-            return RouteUtils.generateRoute(
-                routeBase = routeBase,
-                args = arrayOf(
-                    cartTypeParcelable,
-                    args.step,
-                    deliveryMethodTypeParcelable,
-                    args.pickupPointId.value,
-                ),
-            )
+    @Serializable
+    data class SelectedPickupPoint(
+        val cartType: CartTypeParcelable,
+        val step: Int,
+        val deliveryMethodType: DeliveryMethodTypeParcelable,
+        val pickupPointId: Long,
+        val customer: CustomerParcelable,
+    ) {
+        companion object {
+            fun typeMap(): Map<KType, NavType<*>> {
+                return mapOf(
+                    getTypeMapEnumTypePair<CartTypeParcelable>(),
+                    getTypeMapEnumTypePair<DeliveryMethodTypeParcelable>(),
+                    typeOf<CustomerParcelable>() to NavType.CustomerParcelableType,
+                )
+            }
         }
-
-        override val arguments: List<NamedNavArgument>
-            get() = listOf(
-                navArgument(ARG_KEY_CART_TYPE) {
-                    type = NavType.EnumType(CartTypeParcelable::class.java)
-                },
-                navArgument(ARG_KEY_STEP) { type = NavType.IntType },
-                navArgument(ARG_DELIVERY_METHOD_TYPE) {
-                    type = NavType.EnumType(DeliveryMethodTypeParcelable::class.java)
-                },
-                navArgument(ARG_PICKUP_POINT_ID) { type = NavType.LongType },
-            )
-
-        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
-            val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
-            val deliveryTypeParcelable = DeliveryMethodTypeParcelable.from(args.deliveryMethodType)
-            putParcelable(ARG_KEY_CART_TYPE, cartTypeParcelable)
-            putInt(ARG_KEY_STEP, args.step)
-            putParcelable(ARG_DELIVERY_METHOD_TYPE, deliveryTypeParcelable)
-            putLong(ARG_PICKUP_POINT_ID, args.pickupPointId.value)
-        }
-
-        data class Args(
-            val cartType: CartType,
-            val step: Int,
-            val deliveryMethodType: DeliveryMethodType,
-            val pickupPointId: PickupPoint.Id,
-        )
     }
 
     @Serializable

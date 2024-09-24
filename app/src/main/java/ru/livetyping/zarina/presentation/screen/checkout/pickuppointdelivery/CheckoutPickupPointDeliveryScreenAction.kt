@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery
 
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 
@@ -16,5 +17,6 @@ sealed class CheckoutPickupPointDeliveryScreenAction {
         val cartType: CartType,
         val step: Int,
         val deliveryMethodType: DeliveryMethodType,
+        val customer: Customer,
     ) : CheckoutPickupPointDeliveryScreenAction()
 }
