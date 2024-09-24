@@ -39,7 +39,7 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
                         || route == CheckoutGraph.Customer.routeSchema
                         || destination.hasRoute<CheckoutGraph.PickupStoreSelection>()
                         || destination.hasRoute<CheckoutGraph.DeliveryMethod>()
-                        || route == CheckoutGraph.CourierDelivery.routeSchema
+                        || destination.hasRoute<CheckoutGraph.CourierDelivery>()
                         || route == CheckoutGraph.CourierDeliveryDateTimeSelector.routeSchema
                         || route == CheckoutGraph.PostDelivery.routeSchema
                         || route == CheckoutGraph.PickupPointDelivery.routeSchema -> {

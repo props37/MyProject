@@ -109,6 +109,7 @@ class CheckoutDeliveryMethodViewModel @Inject constructor(
                 cartType = cartType,
                 step = step.value + 1,
                 method = method,
+                customer = params.customer.toCustomer(),
             )
             emitSideEffect(SideEffect.Navigate(action))
         }
