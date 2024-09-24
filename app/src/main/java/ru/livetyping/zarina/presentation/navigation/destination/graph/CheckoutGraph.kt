@@ -109,55 +109,22 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
         )
     }
 
-    data object PickupStoreSelection : Destination<PickupStoreSelection.Args>() {
-        const val ARG_KEY_CART_TYPE = "arg_cart_type"
-        const val ARG_KEY_STEP = "arg_step"
-        const val ARG_DELIVERY_METHOD_TYPE = "arg_delivery_method_type"
-
-        private val routeBase: String
-            get() = BaseRoute.PICKUP_STORE_SELECTION.route
-
-        override val routeSchema: String
-            get() = RouteUtils.generateRouteSchema(
-                routeBase = routeBase,
-                argNames = arrayOf(ARG_KEY_CART_TYPE, ARG_KEY_STEP, ARG_DELIVERY_METHOD_TYPE),
-            )
-
-        override fun createRoute(args: Args): String {
-            val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
-            val deliveryMethodTypeParcelable =
-                DeliveryMethodTypeParcelable.from(args.deliveryMethodType)
-            return RouteUtils.generateRoute(
-                routeBase = routeBase,
-                args = arrayOf(cartTypeParcelable, args.step, deliveryMethodTypeParcelable),
-            )
+    @Serializable
+    data class PickupStoreSelection(
+        val cartType: CartTypeParcelable,
+        val step: Int,
+        val deliveryMethodType: DeliveryMethodTypeParcelable,
+    ) {
+        companion object {
+            fun typeMap(): Map<KType, NavType<*>> {
+                return mapOf(
+                    typeOf<CartTypeParcelable>() to NavType.EnumType(CartTypeParcelable::class.java),
+                    typeOf<DeliveryMethodTypeParcelable>() to NavType.EnumType(
+                        DeliveryMethodTypeParcelable::class.java
+                    ),
+                )
+            }
         }
-
-        override val arguments: List<NamedNavArgument>
-            get() = listOf(
-                navArgument(ARG_KEY_CART_TYPE) {
-                    type = NavType.EnumType(CartTypeParcelable::class.java)
-                },
-                navArgument(ARG_KEY_STEP) { type = NavType.IntType },
-                navArgument(ARG_DELIVERY_METHOD_TYPE) {
-                    type = NavType.EnumType(DeliveryMethodTypeParcelable::class.java)
-                },
-            )
-
-        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
-            val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
-            val deliveryMethodTypeParcelable =
-                DeliveryMethodTypeParcelable.from(args.deliveryMethodType)
-            putParcelable(ARG_KEY_CART_TYPE, cartTypeParcelable)
-            putInt(ARG_KEY_STEP, args.step)
-            putParcelable(ARG_DELIVERY_METHOD_TYPE, deliveryMethodTypeParcelable)
-        }
-
-        data class Args(
-            val cartType: CartType,
-            val step: Int,
-            val deliveryMethodType: DeliveryMethodType,
-        )
     }
 
     data object SelectedPickupStore : Destination<SelectedPickupStore.Args>() {

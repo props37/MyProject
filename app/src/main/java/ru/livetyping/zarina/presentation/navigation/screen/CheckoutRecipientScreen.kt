@@ -4,6 +4,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
+import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
+import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutRecipientScreen
@@ -31,11 +33,12 @@ fun NavGraphBuilder.checkoutRecipientScreen(navController: NavHostController) {
                             }
 
                             CartType.PICKUP -> {
-                                navController.navigateToCheckoutPickupStoreSelectionScreen(
-                                    cartType = action.cartType,
+                                val pickupStoreSelection = CheckoutGraph.PickupStoreSelection(
+                                    cartType = CartTypeParcelable.from(action.cartType),
                                     step = action.step,
-                                    deliveryMethodType = DeliveryMethodType.RETAIL,
+                                    deliveryMethodType = DeliveryMethodTypeParcelable.from(DeliveryMethodType.RETAIL),
                                 )
+                                navController.navigate(pickupStoreSelection)
                             }
                         }
                     }

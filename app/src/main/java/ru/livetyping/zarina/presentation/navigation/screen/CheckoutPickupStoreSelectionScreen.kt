@@ -2,22 +2,20 @@ package ru.livetyping.zarina.presentation.navigation.screen
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.order.DeliveryMethodType
-import ru.livetyping.zarina.presentation.navigation.base.composableDestination
+import androidx.navigation.compose.composable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection.CheckoutPickupStoreSelectionScreen
 import ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection.CheckoutPickupStoreSelectionScreenAction
-import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.checkoutPickupStoreSelectionScreen(navController: NavHostController) {
-    composableDestination(CheckoutGraph.PickupStoreSelection) {
+    composable<CheckoutGraph.PickupStoreSelection>(
+        typeMap = CheckoutGraph.PickupStoreSelection.typeMap(),
+    ) {
         CheckoutPickupStoreSelectionScreen(
             navigate = { action ->
                 when (action) {
                     CheckoutPickupStoreSelectionScreenAction.ScreenClosed -> {
-                        navController.popBackStack(
-                            route = CheckoutGraph.PickupStoreSelection.routeSchema,
+                        navController.popBackStack<CheckoutGraph.PickupStoreSelection>(
                             inclusive = true,
                         )
                     }
@@ -43,16 +41,4 @@ fun NavGraphBuilder.checkoutPickupStoreSelectionScreen(navController: NavHostCon
             },
         )
     }
-}
-
-fun NavHostController.navigateToCheckoutPickupStoreSelectionScreen(
-    cartType: CartType,
-    step: Int,
-    deliveryMethodType: DeliveryMethodType,
-) {
-    val args = CheckoutGraph.PickupStoreSelection.Args(cartType, step, deliveryMethodType)
-    this.navigate(
-        route = CheckoutGraph.PickupStoreSelection.routeSchema,
-        args = CheckoutGraph.PickupStoreSelection.createArgsBundle(args),
-    )
 }

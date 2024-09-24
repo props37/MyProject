@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.navigation.screen
 
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.R
@@ -30,16 +31,20 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
             }
         },
         popEnterTransition = {
-            when (initialState.destination.route) {
-                UnscopedDestinations.CitySelector.routeSchema,
-                UnscopedDestinations.Product.routeSchema,
-                CheckoutGraph.Recipient.routeSchema,
-                CheckoutGraph.PickupStoreSelection.routeSchema,
-                CheckoutGraph.DeliveryMethod.routeSchema,
-                CheckoutGraph.CourierDelivery.routeSchema,
-                CheckoutGraph.CourierDeliveryDateTimeSelector.routeSchema,
-                CheckoutGraph.PostDelivery.routeSchema,
-                CheckoutGraph.PickupPointDelivery.routeSchema -> slidePopEnterTransition()
+            val destination = initialState.destination
+            val route = destination.route
+            when {
+                route == UnscopedDestinations.CitySelector.routeSchema
+                        || route == UnscopedDestinations.Product.routeSchema
+                        || route == CheckoutGraph.Recipient.routeSchema
+                        || destination.hasRoute<CheckoutGraph.PickupStoreSelection>()
+                        || route == CheckoutGraph.DeliveryMethod.routeSchema
+                        || route == CheckoutGraph.CourierDelivery.routeSchema
+                        || route == CheckoutGraph.CourierDeliveryDateTimeSelector.routeSchema
+                        || route == CheckoutGraph.PostDelivery.routeSchema
+                        || route == CheckoutGraph.PickupPointDelivery.routeSchema -> {
+                    slidePopEnterTransition()
+                }
 
                 else -> null
             }
