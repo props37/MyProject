@@ -27,12 +27,12 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     private val params = savedStateHandle.toRoute<CheckoutGraph.OrderPlacing>(
         typeMap = CheckoutGraph.OrderPlacing.typeMap(),
     )
-    private val cartType = params.cartType.toCartType()
     private val checkoutParams = params.checkoutParams.toCheckoutParams()
 
     val step: StateFlow<Int> = MutableStateFlow(params.step).asStateFlow()
 
-    val stepCount: StateFlow<Int> = MutableStateFlow(cartType.checkoutStepCount).asStateFlow()
+    val stepCount: StateFlow<Int> =
+        MutableStateFlow(checkoutParams.cartType.checkoutStepCount).asStateFlow()
 
     fun onBackClicked() {
         navigationThrottler.throttle {

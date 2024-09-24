@@ -4,7 +4,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
-import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.checkout.CheckoutParamsParcelable
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
@@ -33,7 +32,6 @@ fun NavGraphBuilder.checkoutPostDeliveryScreen(navController: NavHostController)
 
                     is CheckoutPostDeliveryScreenAction.ContinueClicked -> {
                         val orderPlacing = CheckoutGraph.OrderPlacing(
-                            cartType = CartTypeParcelable.from(action.cartType),
                             step = action.step,
                             checkoutParams = CheckoutParamsParcelable.from(action.checkoutParams),
                         )

@@ -578,14 +578,12 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
 
     @Serializable
     data class OrderPlacing(
-        val cartType: CartTypeParcelable,
         val step: Int,
         val checkoutParams: CheckoutParamsParcelable,
     ) {
         companion object {
             fun typeMap(): Map<KType, NavType<*>> {
                 return mapOf(
-                    typeOf<CartTypeParcelable>() to NavType.EnumType(CartTypeParcelable::class.java),
                     typeOf<CheckoutParamsParcelable>() to NavType.CheckoutParamsParcelableType,
                 )
             }
