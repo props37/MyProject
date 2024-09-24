@@ -4,6 +4,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,16 +19,12 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
-import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.geography.City
-import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
-import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
-import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.common.DeliveryOptionsState
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressViewModelComponent
@@ -49,45 +46,15 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val cartType: StateFlow<CartType> = savedStateHandle
-        .getStateFlow<CartTypeParcelable?>(
-            key = CheckoutGraph.PostDelivery.ARG_KEY_CART_TYPE,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "cartType is null" }
-            it.toCartType()
-        }
+    private val params = savedStateHandle.toRoute<CheckoutGraph.PostDelivery>(
+        typeMap = CheckoutGraph.PostDelivery.typeMap(),
+    )
 
-    val step: StateFlow<Int> = savedStateHandle
-        .getStateFlow<Int?>(
-            key = CheckoutGraph.PostDelivery.ARG_KEY_STEP,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "step is null" }
-        }
+    val step: StateFlow<Int> = ImmutableStateFlow(params.step)
 
-    private val deliveryMethodType: StateFlow<DeliveryMethodType> = savedStateHandle
-        .getStateFlow<DeliveryMethodTypeParcelable?>(
-            key = CheckoutGraph.PostDelivery.ARG_DELIVERY_METHOD_TYPE,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "deliveryMethodType is null" }
-            it.toDeliveryMethodType()
-        }
+    private val cartType = params.cartType.toCartType()
 
-    val stepCount: StateFlow<Int> = ImmutableStateFlow(cartType.value.checkoutStepCount)
+    val stepCount: StateFlow<Int> = ImmutableStateFlow(cartType.checkoutStepCount)
 
     val city: StateFlow<City?> = interactor.getUserCityFlow()
         .map { it.getOrDefault(City.DEFAULT) }
@@ -208,17 +175,16 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
 
         if (address != null && selectedDeliveryOption != null) {
             navigationThrottler.throttle {
-                val cartType = cartType.value
                 val checkoutParams = PostDeliveryCheckoutParams(
                     cartType = cartType,
-                    deliveryMethodType = deliveryMethodType.value,
+                    deliveryMethodType = params.deliveryMethodType.toDeliveryMethodType(),
                     address = address,
                     deliveryOptionId = selectedDeliveryOption.deliveryOption.id,
                     dateTimePeriodId = selectedDeliveryOption.selectedDateTimePeriod.id,
                 )
                 val action = CheckoutPostDeliveryScreenAction.ContinueClicked(
                     cartType = cartType,
-                    step = step.value + 1,
+                    step = params.step + 1,
                     checkoutParams = checkoutParams,
                 )
                 emitSideEffect(SideEffect.Navigate(action))

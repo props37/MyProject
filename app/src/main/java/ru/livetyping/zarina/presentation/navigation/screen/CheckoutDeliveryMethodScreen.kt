@@ -46,11 +46,13 @@ fun NavGraphBuilder.checkoutDeliveryMethodScreen(navController: NavHostControlle
                             }
 
                             DeliveryMethodType.POST -> {
-                                navController.navigateToCheckoutPostDeliveryScreen(
-                                    cartType = cartType,
-                                    step = step,
-                                    deliveryMethodType = deliveryMethodType,
+                                val postDelivery = CheckoutGraph.PostDelivery(
+                                    cartType = CartTypeParcelable.from(action.cartType),
+                                    step = action.step,
+                                    deliveryMethodType = DeliveryMethodTypeParcelable.from(deliveryMethodType),
+                                    customer = CustomerParcelable.from(action.customer),
                                 )
+                                navController.navigate(postDelivery)
                             }
 
                             DeliveryMethodType.PICKUP -> {
