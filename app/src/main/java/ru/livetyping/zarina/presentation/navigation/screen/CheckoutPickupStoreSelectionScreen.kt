@@ -3,6 +3,12 @@ package ru.livetyping.zarina.presentation.navigation.screen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import ru.livetyping.zarina.presentation.model.cart.CartProductParcelable
+import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
+import ru.livetyping.zarina.presentation.model.checkout.CustomerParcelable
+import ru.livetyping.zarina.presentation.model.geography.CityParcelable
+import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
+import ru.livetyping.zarina.presentation.model.store.StoreParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection.CheckoutPickupStoreSelectionScreen
 import ru.livetyping.zarina.presentation.screen.checkout.pickupstoreselection.CheckoutPickupStoreSelectionScreenAction
@@ -28,14 +34,18 @@ fun NavGraphBuilder.checkoutPickupStoreSelectionScreen(navController: NavHostCon
                     }
 
                     is CheckoutPickupStoreSelectionScreenAction.StoreClicked -> {
-                        navController.navigateToCheckoutPickupSelectedStoreScreen(
-                            cartType = action.cartType,
+                        val selectedPickupStore = CheckoutGraph.SelectedPickupStore(
+                            cartType = CartTypeParcelable.from(action.cartType),
                             step = action.step,
-                            deliveryMethodType = action.deliveryMethodType,
-                            city = action.city,
-                            store = action.store,
-                            availableProducts = action.availableProducts,
+                            deliveryMethodType = DeliveryMethodTypeParcelable.from(action.deliveryMethodType),
+                            city = CityParcelable.from(action.city),
+                            store = StoreParcelable.from(action.store),
+                            availableProducts = action.availableProducts.map {
+                                CartProductParcelable.from(it)
+                            },
+                            customer = CustomerParcelable.from(action.customer),
                         )
+                        navController.navigate(selectedPickupStore)
                     }
                 }
             },

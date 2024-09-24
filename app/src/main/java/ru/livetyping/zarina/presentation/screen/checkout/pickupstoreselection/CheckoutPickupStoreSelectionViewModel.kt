@@ -150,6 +150,7 @@ class CheckoutPickupStoreSelectionViewModel @Inject constructor(
                 city = city,
                 store = store.store,
                 availableProducts = availableProducts,
+                customer = params.customer.toCustomer(),
             )
             emitSideEffect(SideEffect.Navigate(action))
         }
