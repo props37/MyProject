@@ -45,7 +45,9 @@ class CheckoutPickupStoreSelectionViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val params = savedStateHandle.toRoute<CheckoutGraph.PickupStoreSelection>()
+    private val params = savedStateHandle.toRoute<CheckoutGraph.PickupStoreSelection>(
+        typeMap = CheckoutGraph.PickupStoreSelection.typeMap(),
+    )
 
     private val cartType: StateFlow<CartType> = ImmutableStateFlow(params.cartType.toCartType())
 

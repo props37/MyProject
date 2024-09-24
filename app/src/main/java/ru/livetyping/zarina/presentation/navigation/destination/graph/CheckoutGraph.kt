@@ -20,6 +20,7 @@ import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.model.cart.CartProductParcelable
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.checkout.CheckoutParamsParcelable
+import ru.livetyping.zarina.presentation.model.checkout.CustomerParcelable
 import ru.livetyping.zarina.presentation.model.checkout.DeliveryDateTimePeriodParcelable
 import ru.livetyping.zarina.presentation.model.geography.CityParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
@@ -32,6 +33,7 @@ import ru.livetyping.zarina.presentation.navigation.base.ScreenResult
 import ru.livetyping.zarina.presentation.navigation.navtype.CartProductParcelableListType
 import ru.livetyping.zarina.presentation.navigation.navtype.CheckoutParamsParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.CityParcelableType
+import ru.livetyping.zarina.presentation.navigation.navtype.CustomerParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.DeliveryDateTimePeriodParcelableListType
 import ru.livetyping.zarina.presentation.navigation.navtype.StoreParcelableType
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
@@ -114,6 +116,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
         val cartType: CartTypeParcelable,
         val step: Int,
         val deliveryMethodType: DeliveryMethodTypeParcelable,
+        val customer: CustomerParcelable,
     ) {
         companion object {
             fun typeMap(): Map<KType, NavType<*>> {
@@ -122,6 +125,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Recipient.Args>() {
                     typeOf<DeliveryMethodTypeParcelable>() to NavType.EnumType(
                         DeliveryMethodTypeParcelable::class.java
                     ),
+                    typeOf<CustomerParcelable>() to NavType.CustomerParcelableType,
                 )
             }
         }

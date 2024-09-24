@@ -3,8 +3,7 @@ package ru.livetyping.zarina.usecase.checkout
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.livetyping.zarina.base.usecase.UseCase
 import ru.livetyping.zarina.di.Qualifiers
-import ru.livetyping.zarina.domain.common.Email
-import ru.livetyping.zarina.domain.common.PhoneNumber
+import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.domain.common.exception.ValidationException
 import ru.livetyping.zarina.usecase.user.ValidateEmailUseCase
 import ru.livetyping.zarina.usecase.user.ValidateFirstNameUseCase
@@ -23,20 +22,17 @@ class ValidateRecipientUseCase @Inject constructor(
 ) : UseCase<ValidateRecipientUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
-        val firstName = params.firstName
-        val lastName = params.lastName
-        val phone = params.phone
-        val email = params.email
-        Timber.v("Validate recipient. First name: $firstName, last name: $lastName, phone: $phone, email: $email")
+        val customer = params.customer
+        Timber.v("Validate recipient: $customer")
 
         val firstNameException =
-            validateFirstNameUseCase(ValidateFirstNameUseCase.Params(firstName)).exceptionOrNull()
+            validateFirstNameUseCase(ValidateFirstNameUseCase.Params(customer.firstName)).exceptionOrNull()
         val lastNameException =
-            validateLastNameUseCase(ValidateLastNameUseCase.Params(lastName)).exceptionOrNull()
+            validateLastNameUseCase(ValidateLastNameUseCase.Params(customer.lastName)).exceptionOrNull()
         val phoneException =
-            validatePhoneNumberUseCase(ValidatePhoneNumberUseCase.Params(phone)).exceptionOrNull()
+            validatePhoneNumberUseCase(ValidatePhoneNumberUseCase.Params(customer.phone)).exceptionOrNull()
         val emailException =
-            validateEmailUseCase(ValidateEmailUseCase.Params(email)).exceptionOrNull()
+            validateEmailUseCase(ValidateEmailUseCase.Params(customer.email)).exceptionOrNull()
 
         val validationException = ValidationException.from(
             firstNameException,
@@ -48,9 +44,6 @@ class ValidateRecipientUseCase @Inject constructor(
     }
 
     data class Params(
-        val firstName: String,
-        val lastName: String,
-        val phone: PhoneNumber,
-        val email: Email,
+        val customer: Customer,
     )
 }

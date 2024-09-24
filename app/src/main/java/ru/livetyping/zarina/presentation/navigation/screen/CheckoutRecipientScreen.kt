@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
+import ru.livetyping.zarina.presentation.model.checkout.CustomerParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
@@ -37,6 +38,7 @@ fun NavGraphBuilder.checkoutRecipientScreen(navController: NavHostController) {
                                     cartType = CartTypeParcelable.from(action.cartType),
                                     step = action.step,
                                     deliveryMethodType = DeliveryMethodTypeParcelable.from(DeliveryMethodType.RETAIL),
+                                    customer = CustomerParcelable.from(action.customer),
                                 )
                                 navController.navigate(pickupStoreSelection)
                             }

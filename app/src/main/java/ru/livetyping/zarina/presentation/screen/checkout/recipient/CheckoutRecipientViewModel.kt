@@ -21,6 +21,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.exception.ValidationException
@@ -143,22 +144,24 @@ class CheckoutRecipientViewModel @Inject constructor(
         if (validateRecipientJob?.isActive == true) return
 
         validateRecipientJob = viewModelScope.launch {
-            val params = ValidateRecipientUseCase.Params(
+            val customer = Customer(
                 firstName = firstNameTextFieldState.text.toString().trim(),
                 lastName = lastNameTextFieldState.text.toString().trim(),
                 phone = PhoneNumber.create(phone.value),
                 email = Email.create(emailTextFieldState.text.toString()),
             )
+            val params = ValidateRecipientUseCase.Params(customer)
             interactor.validateRecipient(params)
-                .onSuccess { onValidateRecipientSuccess() }
+                .onSuccess { onValidateRecipientSuccess(customer) }
                 .onFailure(::onValidateRecipientFailure)
         }
     }
 
-    private fun onValidateRecipientSuccess() {
+    private fun onValidateRecipientSuccess(customer: Customer) {
         val action = CheckoutRecipientScreenAction.RecipientValidated(
             cartType = cartType.value,
             step = step.value + 1,
+            customer = customer,
         )
         emitSideEffect(SideEffect.Navigate(action))
     }
