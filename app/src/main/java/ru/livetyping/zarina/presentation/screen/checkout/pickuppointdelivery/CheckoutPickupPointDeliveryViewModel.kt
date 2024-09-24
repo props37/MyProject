@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,17 +28,13 @@ import kotlinx.coroutines.plus
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
-import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.location.Location
-import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.permissionmanager.isGranted
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
-import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
-import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryViewModel.SideEffect
@@ -47,7 +44,6 @@ import ru.livetyping.zarina.util.compose.text.textAsFlow
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
-import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,45 +56,15 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val cartType: StateFlow<CartType> = savedStateHandle
-        .getStateFlow<CartTypeParcelable?>(
-            key = CheckoutGraph.PickupPointDelivery.ARG_KEY_CART_TYPE,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "cartType is null" }
-            it.toCartType()
-        }
+    private val params = savedStateHandle.toRoute<CheckoutGraph.PickupPointDelivery>(
+        typeMap = CheckoutGraph.PickupPointDelivery.typeMap(),
+    )
 
-    val step: StateFlow<Int> = savedStateHandle
-        .getStateFlow<Int?>(
-            key = CheckoutGraph.PickupPointDelivery.ARG_KEY_STEP,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "step is null" }
-        }
+    private val cartType = params.cartType.toCartType()
 
-    private val deliveryMethodType: StateFlow<DeliveryMethodType> = savedStateHandle
-        .getStateFlow<DeliveryMethodTypeParcelable?>(
-            key = CheckoutGraph.PickupPointDelivery.ARG_DELIVERY_METHOD_TYPE,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "deliveryMethodType is null" }
-            it.toDeliveryMethodType()
-        }
+    val step: StateFlow<Int> = ImmutableStateFlow(params.step)
 
-    val stepCount: StateFlow<Int> = ImmutableStateFlow(cartType.value.checkoutStepCount)
+    val stepCount: StateFlow<Int> = ImmutableStateFlow(cartType.checkoutStepCount)
 
     @OptIn(SavedStateHandleSaveableApi::class)
     val nameOrAddressFilterTextFieldState by savedStateHandle.saveable(
@@ -206,9 +172,9 @@ class CheckoutPickupPointDeliveryViewModel @Inject constructor(
         navigationThrottler.throttle {
             val action = CheckoutPickupPointDeliveryScreenAction.PickupPointSelected(
                 pickupPoint = pickupPoint,
-                cartType = cartType.value,
+                cartType = cartType,
                 step = step.value,
-                deliveryMethodType = deliveryMethodType.value,
+                deliveryMethodType = params.deliveryMethodType.toDeliveryMethodType(),
             )
             emitSideEffect(SideEffect.Navigate(action))
         }

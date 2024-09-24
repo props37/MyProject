@@ -2,25 +2,23 @@ package ru.livetyping.zarina.presentation.navigation.screen
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.composable
 import ru.livetyping.zarina.R
-import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.base.text.Text
-import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryScreen
 import ru.livetyping.zarina.presentation.screen.checkout.pickuppointdelivery.CheckoutPickupPointDeliveryScreenAction
-import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.checkoutPickupPointDeliveryScreen(navController: NavHostController) {
-    composableDestination(CheckoutGraph.PickupPointDelivery) {
+    composable<CheckoutGraph.PickupPointDelivery>(
+        typeMap = CheckoutGraph.PickupPointDelivery.typeMap(),
+    ) {
         CheckoutPickupPointDeliveryScreen(
             navigate = { action ->
                 when (action) {
                     CheckoutPickupPointDeliveryScreenAction.ScreenClosed -> {
-                        navController.popBackStack(
-                            route = CheckoutGraph.PickupPointDelivery.routeSchema,
+                        navController.popBackStack<CheckoutGraph.PickupPointDelivery>(
                             inclusive = true,
                         )
                     }
@@ -52,20 +50,4 @@ fun NavGraphBuilder.checkoutPickupPointDeliveryScreen(navController: NavHostCont
             },
         )
     }
-}
-
-fun NavHostController.navigateToCheckoutPickupPointDeliveryScreen(
-    cartType: CartType,
-    step: Int,
-    deliveryMethodType: DeliveryMethodType,
-) {
-    val args = CheckoutGraph.PickupPointDelivery.Args(
-        cartType = cartType,
-        step = step,
-        deliveryMethodType = deliveryMethodType,
-    )
-    this.navigate(
-        route = CheckoutGraph.PickupPointDelivery.routeSchema,
-        args = CheckoutGraph.PickupPointDelivery.createArgsBundle(args),
-    )
 }

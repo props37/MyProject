@@ -3,7 +3,6 @@ package ru.livetyping.zarina.presentation.navigation.screen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.checkout.CustomerParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
@@ -32,35 +31,39 @@ fun NavGraphBuilder.checkoutDeliveryMethodScreen(navController: NavHostControlle
                     }
 
                     is CheckoutDeliveryMethodScreenAction.DeliveryMethodSelected -> {
-                        val cartType = action.cartType
+                        val cartType = CartTypeParcelable.from(action.cartType)
                         val step = action.step
-                        when (val deliveryMethodType = action.method.type) {
-                            DeliveryMethodType.EXPRESS -> {
+                        val customer = CustomerParcelable.from(action.customer)
+                        val deliveryMethodType = DeliveryMethodTypeParcelable.from(action.method.type)
+                        when (deliveryMethodType) {
+                            DeliveryMethodTypeParcelable.EXPRESS -> {
                                 val courierDelivery = CheckoutGraph.CourierDelivery(
-                                    cartType = CartTypeParcelable.from(action.cartType),
-                                    step = action.step,
-                                    deliveryMethodType = DeliveryMethodTypeParcelable.from(deliveryMethodType),
-                                    customer = CustomerParcelable.from(action.customer),
+                                    cartType = cartType,
+                                    step = step,
+                                    deliveryMethodType = deliveryMethodType,
+                                    customer = customer,
                                 )
                                 navController.navigate(courierDelivery)
                             }
 
-                            DeliveryMethodType.POST -> {
+                            DeliveryMethodTypeParcelable.POST -> {
                                 val postDelivery = CheckoutGraph.PostDelivery(
-                                    cartType = CartTypeParcelable.from(action.cartType),
-                                    step = action.step,
-                                    deliveryMethodType = DeliveryMethodTypeParcelable.from(deliveryMethodType),
-                                    customer = CustomerParcelable.from(action.customer),
+                                    cartType = cartType,
+                                    step = step,
+                                    deliveryMethodType = deliveryMethodType,
+                                    customer = customer,
                                 )
                                 navController.navigate(postDelivery)
                             }
 
-                            DeliveryMethodType.PICKUP -> {
-                                navController.navigateToCheckoutPickupPointDeliveryScreen(
+                            DeliveryMethodTypeParcelable.PICKUP -> {
+                                val pickupPointDelivery = CheckoutGraph.PickupPointDelivery(
                                     cartType = cartType,
                                     step = step,
                                     deliveryMethodType = deliveryMethodType,
+                                    customer = customer,
                                 )
+                                navController.navigate(pickupPointDelivery)
                             }
 
                             else -> Unit
