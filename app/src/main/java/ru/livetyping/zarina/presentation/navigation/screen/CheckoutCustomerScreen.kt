@@ -27,10 +27,12 @@ fun NavGraphBuilder.checkoutCustomerScreen(navController: NavHostController) {
                     is CheckoutCustomerScreenAction.CustomerValidated -> {
                         when (action.cartType) {
                             CartType.DELIVERY -> {
-                                navController.navigateToCheckoutDeliveryMethodScreen(
-                                    cartType = action.cartType,
+                                val deliveryMethod = CheckoutGraph.DeliveryMethod(
+                                    cartType = CartTypeParcelable.from(action.cartType),
                                     step = action.step,
+                                    customer = CustomerParcelable.from(action.customer),
                                 )
+                                navController.navigate(deliveryMethod)
                             }
 
                             CartType.PICKUP -> {

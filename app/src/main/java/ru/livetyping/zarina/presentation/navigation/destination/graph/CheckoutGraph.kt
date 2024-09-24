@@ -151,45 +151,20 @@ data object CheckoutGraph : Graph<CheckoutGraph.Customer.Args>() {
         }
     }
 
-    data object DeliveryMethod : Destination<DeliveryMethod.Args>() {
-        const val ARG_KEY_CART_TYPE = "arg_cart_type"
-        const val ARG_KEY_STEP = "arg_step"
-
-        private val routeBase: String
-            get() = BaseRoute.DELIVERY_METHOD.route
-
-        override val routeSchema: String
-            get() = RouteUtils.generateRouteSchema(
-                routeBase = routeBase,
-                argNames = arrayOf(ARG_KEY_CART_TYPE, ARG_KEY_STEP),
-            )
-
-        override fun createRoute(args: Args): String {
-            val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
-            return RouteUtils.generateRoute(
-                routeBase = routeBase,
-                args = arrayOf(cartTypeParcelable, args.step),
-            )
+    @Serializable
+    data class DeliveryMethod(
+        val cartType: CartTypeParcelable,
+        val step: Int,
+        val customer: CustomerParcelable,
+    ) {
+        companion object {
+            fun typeMap(): Map<KType, NavType<*>> {
+                return mapOf(
+                    getTypeMapEnumTypePair<CartTypeParcelable>(),
+                    typeOf<CustomerParcelable>() to NavType.CustomerParcelableType,
+                )
+            }
         }
-
-        override val arguments: List<NamedNavArgument>
-            get() = listOf(
-                navArgument(ARG_KEY_CART_TYPE) {
-                    type = NavType.EnumType(CartTypeParcelable::class.java)
-                },
-                navArgument(ARG_KEY_STEP) { type = NavType.IntType },
-            )
-
-        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
-            val cartTypeParcelable = CartTypeParcelable.from(args.cartType)
-            putParcelable(ARG_KEY_CART_TYPE, cartTypeParcelable)
-            putInt(ARG_KEY_STEP, args.step)
-        }
-
-        data class Args(
-            val cartType: CartType,
-            val step: Int,
-        )
     }
 
     data object CourierDelivery : Destination<CourierDelivery.Args>() {
