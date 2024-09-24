@@ -183,7 +183,6 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
                     dateTimePeriodId = selectedDeliveryOption.selectedDateTimePeriod.id,
                 )
                 val action = CheckoutPostDeliveryScreenAction.ContinueClicked(
-                    cartType = cartType,
                     step = params.step + 1,
                     checkoutParams = checkoutParams,
                 )

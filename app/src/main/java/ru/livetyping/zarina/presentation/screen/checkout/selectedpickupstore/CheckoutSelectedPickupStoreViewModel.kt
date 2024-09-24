@@ -51,7 +51,6 @@ class CheckoutSelectedPickupStoreViewModel @Inject constructor(
                 storeId = store.value.id,
             )
             val action = CheckoutSelectedPickupStoreScreenAction.ContinueClicked(
-                cartType = cartType,
                 step = params.step + 1,
                 checkoutParams = checkoutParams,
             )
