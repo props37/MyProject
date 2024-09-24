@@ -9,7 +9,7 @@ import ru.livetyping.zarina.presentation.navigation.base.ParcelableNavType
 val NavType.Companion.CheckoutParamsParcelableType: CheckoutParamsParcelableNavType
     get() = CheckoutParamsParcelableNavType()
 
-class CheckoutParamsParcelableNavType : ParcelableNavType<CheckoutParamsParcelable>(
+class CheckoutParamsParcelableNavType : ParcelableNavType<CheckoutParamsParcelable?>(
     isNullableAllowed = true,
     serializer = Json.serializersModule.serializer(),
 )
