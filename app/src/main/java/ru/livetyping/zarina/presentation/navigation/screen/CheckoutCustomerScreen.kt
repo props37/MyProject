@@ -9,8 +9,8 @@ import ru.livetyping.zarina.presentation.model.checkout.CustomerParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
-import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutCustomerScreen
-import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutCustomerScreenAction
+import ru.livetyping.zarina.presentation.screen.checkout.customer.CheckoutCustomerScreen
+import ru.livetyping.zarina.presentation.screen.checkout.customer.CheckoutCustomerScreenAction
 
 fun NavGraphBuilder.checkoutCustomerScreen(navController: NavHostController) {
     composableDestination(CheckoutGraph.Customer) {

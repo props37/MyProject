@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.checkout.recipient
+package ru.livetyping.zarina.presentation.screen.checkout.customer
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
@@ -40,7 +40,7 @@ import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
-import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutCustomerViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.customer.CheckoutCustomerViewModel.SideEffect
 import ru.livetyping.zarina.usecase.checkout.ValidateCustomerUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.textAsFlow

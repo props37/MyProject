@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.checkout.recipient
+package ru.livetyping.zarina.presentation.screen.checkout.customer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -49,7 +49,7 @@ import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFi
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
-import ru.livetyping.zarina.presentation.screen.checkout.recipient.CheckoutCustomerViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.checkout.customer.CheckoutCustomerViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.autofill.autofill
 

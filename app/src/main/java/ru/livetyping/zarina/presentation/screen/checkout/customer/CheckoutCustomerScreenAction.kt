@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.checkout.recipient
+package ru.livetyping.zarina.presentation.screen.checkout.customer
 
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.Customer

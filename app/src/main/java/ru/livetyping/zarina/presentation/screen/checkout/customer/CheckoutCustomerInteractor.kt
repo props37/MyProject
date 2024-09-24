@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.screen.checkout.recipient
+package ru.livetyping.zarina.presentation.screen.checkout.customer
 
 import ru.livetyping.zarina.usecase.checkout.ValidateCustomerUseCase
 import ru.livetyping.zarina.usecase.user.GetUserFlowUseCase
