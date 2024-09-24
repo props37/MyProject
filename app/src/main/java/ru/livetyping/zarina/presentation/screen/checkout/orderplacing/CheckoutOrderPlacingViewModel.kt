@@ -41,7 +41,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
-            val action = CheckoutOrderPlacingScreenAction.ScreenClosed
+            val action = CheckoutOrderPlacingScreenAction.CheckoutClosed
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
