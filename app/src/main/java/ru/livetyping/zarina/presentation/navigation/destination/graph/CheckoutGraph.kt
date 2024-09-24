@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.presentation.navigation.destination.graph
 
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.navigation.NamedNavArgument
@@ -8,10 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.model.cart.CartProductParcelable
@@ -185,66 +181,12 @@ data object CheckoutGraph : Graph<CheckoutGraph.Customer.Args>() {
         }
     }
 
-    data object CourierDeliveryDateTimeSelector :
-        Destination<CourierDeliveryDateTimeSelector.Args>() {
-
-        const val ARG_SELECTOR_TYPE = "arg_selector_type"
-        const val ARG_DELIVERY_OPTION_ID = "arg_delivery_option_id"
-        const val ARG_DATE_TIME_PERIODS = "arg_date_time_periods"
-
-        const val RESULT_KEY = "courier_delivery_date_time_selector_result"
-
-        private val routeBase: String
-            get() = BaseRoute.COURIER_DELIVERY_DATE_TIME_SELECTOR.route
-
-        override val routeSchema: String
-            get() = RouteUtils.generateRouteSchema(
-                routeBase = routeBase,
-                argNames = arrayOf(ARG_SELECTOR_TYPE, ARG_DELIVERY_OPTION_ID, ARG_DATE_TIME_PERIODS),
-            )
-
-        override fun createRoute(args: Args): String {
-            val dateTimePeriodsParcelable = args.dateTimePeriods.map {
-                DeliveryDateTimePeriodParcelable.from(it)
-            }
-            val dateTimePeriodsParcelableString =
-                Uri.encode(Json.encodeToString(dateTimePeriodsParcelable))
-            return RouteUtils.generateRoute(
-                routeBase = routeBase,
-                args = arrayOf(
-                    args.type,
-                    args.deliveryOptionId.value,
-                    dateTimePeriodsParcelableString,
-                ),
-            )
-        }
-
-        override val arguments: List<NamedNavArgument>
-            get() = listOf(
-                navArgument(ARG_SELECTOR_TYPE) {
-                    type = NavType.EnumType(CourierDeliveryDateTimeSelectorType::class.java)
-                },
-                navArgument(ARG_DELIVERY_OPTION_ID) { type = NavType.StringType },
-                navArgument(ARG_DATE_TIME_PERIODS) {
-                    type = NavType.DeliveryDateTimePeriodParcelableListType
-                },
-            )
-
-        override fun createArgsBundle(args: Args): Bundle = Bundle().apply {
-            val dateTimePeriodsParcelable = args.dateTimePeriods.map {
-                DeliveryDateTimePeriodParcelable.from(it)
-            }
-            putParcelable(ARG_SELECTOR_TYPE, args.type)
-            putString(ARG_DELIVERY_OPTION_ID, args.deliveryOptionId.value)
-            putParcelableArray(ARG_DATE_TIME_PERIODS, dateTimePeriodsParcelable.toTypedArray())
-        }
-
-        data class Args(
-            val type: CourierDeliveryDateTimeSelectorType,
-            val deliveryOptionId: DeliveryOption.Id,
-            val dateTimePeriods: List<DeliveryOption.DateTimePeriod>,
-        )
-
+    @Serializable
+    data class CourierDeliveryDateTimeSelector(
+        val type: CourierDeliveryDateTimeSelectorType,
+        val deliveryOptionId: String,
+        val dateTimePeriods: List<DeliveryDateTimePeriodParcelable>,
+    ) {
         @Parcelize
         data class Result(
             val deliveryOptionId: String,
@@ -252,6 +194,18 @@ data object CheckoutGraph : Graph<CheckoutGraph.Customer.Args>() {
             val dateTimePeriod: DeliveryDateTimePeriodParcelable,
             override val id: String = UUID.randomUUID().toString(),
         ) : ScreenResult, Parcelable
+
+        companion object {
+            const val RESULT_KEY = "courier_delivery_date_time_selector_result"
+
+            fun typeMap(): Map<KType, NavType<*>> {
+                return mapOf(
+                    getTypeMapEnumTypePair<CourierDeliveryDateTimeSelectorType>(),
+                    typeOf<List<DeliveryDateTimePeriodParcelable>>() to
+                            NavType.DeliveryDateTimePeriodParcelableListType,
+                )
+            }
+        }
     }
 
     data object PostDelivery : Destination<PostDelivery.Args>() {

@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import ru.livetyping.zarina.presentation.model.checkout.CheckoutParamsParcelable
+import ru.livetyping.zarina.presentation.model.checkout.DeliveryDateTimePeriodParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryScreen
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryScreenAction
@@ -40,19 +41,25 @@ fun NavGraphBuilder.checkoutCourierDeliveryScreen(navController: NavHostControll
                     }
 
                     is CheckoutCourierDeliveryScreenAction.DeliveryDateClicked -> {
-                        navController.navigateToCheckoutCourierDeliveryDateTimeSelectorScreen(
-                            type = CourierDeliveryDateTimeSelectorType.DATE,
-                            deliveryOptionId = action.deliveryOptionId,
-                            dateTimePeriods = action.dateTimePeriods,
+                        val courierDeliveryDateTimeSelector = CheckoutGraph.CourierDeliveryDateTimeSelector(
+                            type = CourierDeliveryDateTimeSelectorType.TIME,
+                            deliveryOptionId = action.deliveryOptionId.value,
+                            dateTimePeriods = action.dateTimePeriods.map {
+                                DeliveryDateTimePeriodParcelable.from(it)
+                            },
                         )
+                        navController.navigate(courierDeliveryDateTimeSelector)
                     }
 
                     is CheckoutCourierDeliveryScreenAction.DeliveryTimeClicked -> {
-                        navController.navigateToCheckoutCourierDeliveryDateTimeSelectorScreen(
+                        val courierDeliveryDateTimeSelector = CheckoutGraph.CourierDeliveryDateTimeSelector(
                             type = CourierDeliveryDateTimeSelectorType.TIME,
-                            deliveryOptionId = action.deliveryOptionId,
-                            dateTimePeriods = action.dateTimePeriods,
+                            deliveryOptionId = action.deliveryOptionId.value,
+                            dateTimePeriods = action.dateTimePeriods.map {
+                                DeliveryDateTimePeriodParcelable.from(it)
+                            },
                         )
+                        navController.navigate(courierDeliveryDateTimeSelector)
                     }
 
                     is CheckoutCourierDeliveryScreenAction.ContinueClicked -> {

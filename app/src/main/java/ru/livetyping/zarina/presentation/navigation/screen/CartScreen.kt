@@ -40,7 +40,7 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
                         || destination.hasRoute<CheckoutGraph.PickupStoreSelection>()
                         || destination.hasRoute<CheckoutGraph.DeliveryMethod>()
                         || destination.hasRoute<CheckoutGraph.CourierDelivery>()
-                        || route == CheckoutGraph.CourierDeliveryDateTimeSelector.routeSchema
+                        || destination.hasRoute<CheckoutGraph.CourierDeliveryDateTimeSelector>()
                         || route == CheckoutGraph.PostDelivery.routeSchema
                         || route == CheckoutGraph.PickupPointDelivery.routeSchema -> {
                     slidePopEnterTransition()
