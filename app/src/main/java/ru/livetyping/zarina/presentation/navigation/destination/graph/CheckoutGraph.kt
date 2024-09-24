@@ -34,6 +34,7 @@ import ru.livetyping.zarina.presentation.navigation.navtype.CustomerParcelableTy
 import ru.livetyping.zarina.presentation.navigation.navtype.DeliveryDateTimePeriodParcelableListType
 import ru.livetyping.zarina.presentation.navigation.navtype.StoreParcelableType
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
+import ru.livetyping.zarina.util.library.navigation.getTypeMapEnumTypePair
 import java.util.UUID
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -118,10 +119,8 @@ data object CheckoutGraph : Graph<CheckoutGraph.Customer.Args>() {
         companion object {
             fun typeMap(): Map<KType, NavType<*>> {
                 return mapOf(
-                    typeOf<CartTypeParcelable>() to NavType.EnumType(CartTypeParcelable::class.java),
-                    typeOf<DeliveryMethodTypeParcelable>() to NavType.EnumType(
-                        DeliveryMethodTypeParcelable::class.java
-                    ),
+                    getTypeMapEnumTypePair<CartTypeParcelable>(),
+                    getTypeMapEnumTypePair<DeliveryMethodTypeParcelable>(),
                     typeOf<CustomerParcelable>() to NavType.CustomerParcelableType,
                 )
             }
@@ -141,10 +140,8 @@ data object CheckoutGraph : Graph<CheckoutGraph.Customer.Args>() {
         companion object {
             fun typeMap(): Map<KType, NavType<*>> {
                 return mapOf(
-                    typeOf<CartTypeParcelable>() to NavType.EnumType(CartTypeParcelable::class.java),
-                    typeOf<DeliveryMethodTypeParcelable>() to NavType.EnumType(
-                        DeliveryMethodTypeParcelable::class.java
-                    ),
+                    getTypeMapEnumTypePair<CartTypeParcelable>(),
+                    getTypeMapEnumTypePair<DeliveryMethodTypeParcelable>(),
                     typeOf<CityParcelable>() to NavType.CityParcelableType,
                     typeOf<StoreParcelable>() to NavType.StoreParcelableType,
                     typeOf<List<CartProductParcelable>>() to NavType.CartProductParcelableListType,
