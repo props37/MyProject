@@ -18,10 +18,8 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.cart.Cart
-import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.PickupStore
 import ru.livetyping.zarina.domain.geography.City
-import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
@@ -49,14 +47,13 @@ class CheckoutPickupStoreSelectionViewModel @Inject constructor(
         typeMap = CheckoutGraph.PickupStoreSelection.typeMap(),
     )
 
-    private val cartType: StateFlow<CartType> = ImmutableStateFlow(params.cartType.toCartType())
+    private val cartType = params.cartType.toCartType()
 
     val step: StateFlow<Int> = ImmutableStateFlow(params.step)
 
-    val stepCount: StateFlow<Int> = ImmutableStateFlow(cartType.value.checkoutStepCount)
+    val stepCount: StateFlow<Int> = ImmutableStateFlow(cartType.checkoutStepCount)
 
-    private val deliveryMethodType: StateFlow<DeliveryMethodType> =
-        ImmutableStateFlow(params.deliveryMethodType.toDeliveryMethodType())
+    private val deliveryMethodType = params.deliveryMethodType.toDeliveryMethodType()
 
     val city: StateFlow<City?> = interactor.getUserCityFlow()
         .map { it.getOrDefault(City.DEFAULT) }
@@ -67,7 +64,7 @@ class CheckoutPickupStoreSelectionViewModel @Inject constructor(
         )
 
     private val cartRequester = FlowRequester(CartRequest) {
-        val params = GetCartFlowUseCase.Params(cartType.value)
+        val params = GetCartFlowUseCase.Params(cartType)
         interactor.getCartFlow(params)
     }
 
@@ -144,9 +141,9 @@ class CheckoutPickupStoreSelectionViewModel @Inject constructor(
         navigationThrottler.throttle {
             val city = store.store.getCity() ?: city.value ?: City.DEFAULT
             val action = CheckoutPickupStoreSelectionScreenAction.StoreClicked(
-                cartType = cartType.value,
+                cartType = cartType,
                 step = step.value,
-                deliveryMethodType = deliveryMethodType.value,
+                deliveryMethodType = deliveryMethodType,
                 city = city,
                 store = store.store,
                 availableProducts = availableProducts,
