@@ -11,10 +11,10 @@ import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
-import ru.livetyping.zarina.domain.store.Store
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.geography.CityParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
+import ru.livetyping.zarina.presentation.model.store.StoreParcelable
 
 @Serializable
 @Parcelize
@@ -167,18 +167,18 @@ data class PostDeliveryCheckoutParamsParcelable(
 data class StorePickupCheckoutParamsParcelable(
     override val cartType: CartTypeParcelable,
     override val deliveryMethodType: DeliveryMethodTypeParcelable,
-    val city: CityParcelable,
-    val storeId: String,
-    override val cityKladrId: String = city.id,
     override val customer: CustomerParcelable,
+    val city: CityParcelable,
+    val store: StoreParcelable,
+    override val cityKladrId: String = city.id,
 ) : CheckoutParamsParcelable() {
     fun toStorePickupCheckoutParams(): StorePickupCheckoutParams {
         return StorePickupCheckoutParams(
             cartType = cartType.toCartType(),
             deliveryMethodType = deliveryMethodType.toDeliveryMethodType(),
-            city = city.toCity(),
-            storeId = Store.Id(storeId),
             customer = customer.toCustomer(),
+            city = city.toCity(),
+            store = store.toStore(),
         )
     }
 
@@ -187,9 +187,9 @@ data class StorePickupCheckoutParamsParcelable(
             return StorePickupCheckoutParamsParcelable(
                 cartType = CartTypeParcelable.from(params.cartType),
                 deliveryMethodType = DeliveryMethodTypeParcelable.from(params.deliveryMethodType),
-                city = CityParcelable.from(params.city),
-                storeId = params.storeId.value,
                 customer = CustomerParcelable.from(params.customer),
+                city = CityParcelable.from(params.city),
+                store = StoreParcelable.from(params.store),
             )
         }
     }

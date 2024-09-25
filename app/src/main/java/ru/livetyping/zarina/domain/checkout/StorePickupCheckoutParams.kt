@@ -10,7 +10,7 @@ data class StorePickupCheckoutParams(
     override val deliveryMethodType: DeliveryMethodType,
     override val customer: Customer,
     val city: City,
-    val storeId: Store.Id,
+    val store: Store,
 ) : CheckoutParams(
     cartType = cartType,
     deliveryMethodType = deliveryMethodType,
