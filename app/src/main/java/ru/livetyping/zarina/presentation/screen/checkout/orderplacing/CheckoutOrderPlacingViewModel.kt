@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
@@ -31,6 +32,8 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     val step: StateFlow<Int> = ImmutableStateFlow(params.step)
 
     val stepCount: StateFlow<Int> = ImmutableStateFlow(checkoutParams.cartType.checkoutStepCount)
+
+    val customer: StateFlow<Customer> = ImmutableStateFlow(checkoutParams.customer)
 
     fun onBackClicked() {
         navigationThrottler.throttle {

@@ -22,9 +22,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.OrderPlacing
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
@@ -35,12 +37,14 @@ fun CheckoutOrderPlacingScreen(
 ) {
     val state by viewModel.step.collectAsStateWithLifecycle()
     val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()
+    val customer by viewModel.customer.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = state,
         stepCount = stepCount,
         onBackClicked = viewModel::onBackClicked,
-        onClosesClicked = viewModel::onCloseClicked,
+        onCloseClicked = viewModel::onCloseClicked,
+        customer = customer,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -51,7 +55,8 @@ private fun ScreenContent(
     step: Int,
     stepCount: Int,
     onBackClicked: () -> Unit,
-    onClosesClicked: () -> Unit,
+    onCloseClicked: () -> Unit,
+    customer: Customer,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
 ) {
@@ -78,7 +83,11 @@ private fun ScreenContent(
                 stepCount = stepCount,
                 isBackButtonVisible = true,
                 onBackClicked = onBackClicked,
-                onCloseClicked = onClosesClicked,
+                onCloseClicked = onCloseClicked,
+            )
+
+            OrderPlacing(
+                customer = customer,
             )
         }
     }
