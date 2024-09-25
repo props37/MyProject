@@ -179,8 +179,8 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
                     cartType = cartType,
                     deliveryMethodType = params.deliveryMethodType.toDeliveryMethodType(),
                     address = address,
-                    deliveryOptionId = selectedDeliveryOption.deliveryOption.id,
-                    dateTimePeriodId = selectedDeliveryOption.selectedDateTimePeriod.id,
+                    deliveryOption = selectedDeliveryOption.deliveryOption,
+                    dateTimePeriod = selectedDeliveryOption.selectedDateTimePeriod,
                     customer = params.customer.toCustomer(),
                 )
                 val action = CheckoutPostDeliveryScreenAction.ContinueClicked(

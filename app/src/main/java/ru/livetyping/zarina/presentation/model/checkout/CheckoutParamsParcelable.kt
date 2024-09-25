@@ -5,7 +5,6 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.CourierDeliveryCheckoutParams
-import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PickupPointDetails
@@ -132,8 +131,8 @@ data class PostDeliveryCheckoutParamsParcelable(
     override val cartType: CartTypeParcelable,
     override val deliveryMethodType: DeliveryMethodTypeParcelable,
     val address: CheckoutAddressParcelable,
-    val deliveryOptionId: String,
-    val dateTimePeriodId: Long,
+    val deliveryOption: DeliveryOptionParcelable,
+    val dateTimePeriod: DeliveryOptionParcelable.DateTimePeriod,
     override val cityKladrId: String = address.city.id,
     override val customer: CustomerParcelable,
 ) : CheckoutParamsParcelable() {
@@ -142,8 +141,8 @@ data class PostDeliveryCheckoutParamsParcelable(
             cartType = cartType.toCartType(),
             deliveryMethodType = deliveryMethodType.toDeliveryMethodType(),
             address = address.toCheckoutAddress(),
-            deliveryOptionId = DeliveryOption.Id(deliveryOptionId),
-            dateTimePeriodId = DeliveryOption.DateTimePeriod.Id(dateTimePeriodId),
+            deliveryOption = deliveryOption.toDeliveryOption(),
+            dateTimePeriod = dateTimePeriod.toDateTimePeriod(),
             customer = customer.toCustomer(),
         )
     }
@@ -154,8 +153,8 @@ data class PostDeliveryCheckoutParamsParcelable(
                 cartType = CartTypeParcelable.from(params.cartType),
                 deliveryMethodType = DeliveryMethodTypeParcelable.from(params.deliveryMethodType),
                 address = CheckoutAddressParcelable.from(params.address),
-                deliveryOptionId = params.deliveryOptionId.value,
-                dateTimePeriodId = params.dateTimePeriodId.value,
+                deliveryOption = DeliveryOptionParcelable.from(params.deliveryOption),
+                dateTimePeriod = DeliveryOptionParcelable.DateTimePeriod.from(params.dateTimePeriod),
                 customer = CustomerParcelable.from(params.customer),
             )
         }
