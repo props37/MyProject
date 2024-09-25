@@ -8,4 +8,5 @@ sealed class CheckoutParams(
     open val cartType: CartType,
     open val deliveryMethodType: DeliveryMethodType,
     open val cityKladrId: KladrId,
+    open val customer: Customer,
 )

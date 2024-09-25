@@ -223,6 +223,7 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
                     address = address,
                     deliveryOptionId = selectedDeliveryOption.deliveryOption.id,
                     dateTimePeriodId = selectedDeliveryOption.selectedDateTimePeriod.id,
+                    customer = params.customer.toCustomer(),
                 )
                 val action = CheckoutCourierDeliveryScreenAction.ContinueClicked(
                     step = step.value + 1,

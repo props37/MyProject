@@ -7,6 +7,7 @@ import ru.livetyping.zarina.domain.order.DeliveryMethodType
 data class PickupPointDeliveryCheckoutParams(
     override val cartType: CartType,
     override val deliveryMethodType: DeliveryMethodType,
+    override val customer: Customer,
     val city: City,
     val pickupPointId: PickupPoint.Id,
     val deliveryTypeId: PickupPointDetails.DeliveryType.Id,
@@ -15,4 +16,5 @@ data class PickupPointDeliveryCheckoutParams(
     cartType = cartType,
     deliveryMethodType = deliveryMethodType,
     cityKladrId = city.id,
+    customer = customer,
 )

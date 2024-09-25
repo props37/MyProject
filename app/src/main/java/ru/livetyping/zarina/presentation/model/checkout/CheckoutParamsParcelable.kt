@@ -22,6 +22,7 @@ sealed class CheckoutParamsParcelable : Parcelable {
     abstract val cartType: CartTypeParcelable
     abstract val deliveryMethodType: DeliveryMethodTypeParcelable
     abstract val cityKladrId: String
+    abstract val customer: CustomerParcelable
 
     fun toCheckoutParams(): CheckoutParams {
         return when (this) {
@@ -59,6 +60,7 @@ data class CourierDeliveryCheckoutParamsParcelable(
     val deliveryOptionId: String,
     val dateTimePeriodId: Long,
     override val cityKladrId: String = address.city.id,
+    override val customer: CustomerParcelable,
 ) : CheckoutParamsParcelable() {
     fun toCourierDeliveryCheckoutParams(): CourierDeliveryCheckoutParams {
         return CourierDeliveryCheckoutParams(
@@ -67,6 +69,7 @@ data class CourierDeliveryCheckoutParamsParcelable(
             address = address.toCheckoutAddress(),
             deliveryOptionId = DeliveryOption.Id(deliveryOptionId),
             dateTimePeriodId = DeliveryOption.DateTimePeriod.Id(dateTimePeriodId),
+            customer = customer.toCustomer(),
         )
     }
 
@@ -78,6 +81,7 @@ data class CourierDeliveryCheckoutParamsParcelable(
                 address = CheckoutAddressParcelable.from(params.address),
                 deliveryOptionId = params.deliveryOptionId.value,
                 dateTimePeriodId = params.dateTimePeriodId.value,
+                customer = CustomerParcelable.from(params.customer),
             )
         }
     }
@@ -93,6 +97,7 @@ data class PickupPointDeliveryCheckoutParamsParcelable(
     val deliveryTypeId: String,
     val dateTimePeriodId: Long,
     override val cityKladrId: String = city.id,
+    override val customer: CustomerParcelable,
 ) : CheckoutParamsParcelable() {
     fun toPickupPointDeliveryCheckoutParams(): PickupPointDeliveryCheckoutParams {
         return PickupPointDeliveryCheckoutParams(
@@ -102,6 +107,7 @@ data class PickupPointDeliveryCheckoutParamsParcelable(
             pickupPointId = PickupPoint.Id(pickupPointId),
             deliveryTypeId = PickupPointDetails.DeliveryType.Id(deliveryTypeId),
             dateTimePeriodId = PickupPointDetails.DeliveryType.DateTimePeriod.Id(dateTimePeriodId),
+            customer = customer.toCustomer(),
         )
     }
 
@@ -114,6 +120,7 @@ data class PickupPointDeliveryCheckoutParamsParcelable(
                 pickupPointId = params.pickupPointId.value,
                 deliveryTypeId = params.deliveryTypeId.value,
                 dateTimePeriodId = params.dateTimePeriodId.value,
+                customer = CustomerParcelable.from(params.customer),
             )
         }
     }
@@ -128,6 +135,7 @@ data class PostDeliveryCheckoutParamsParcelable(
     val deliveryOptionId: String,
     val dateTimePeriodId: Long,
     override val cityKladrId: String = address.city.id,
+    override val customer: CustomerParcelable,
 ) : CheckoutParamsParcelable() {
     fun toPostDeliveryCheckoutParams(): PostDeliveryCheckoutParams {
         return PostDeliveryCheckoutParams(
@@ -136,6 +144,7 @@ data class PostDeliveryCheckoutParamsParcelable(
             address = address.toCheckoutAddress(),
             deliveryOptionId = DeliveryOption.Id(deliveryOptionId),
             dateTimePeriodId = DeliveryOption.DateTimePeriod.Id(dateTimePeriodId),
+            customer = customer.toCustomer(),
         )
     }
 
@@ -147,6 +156,7 @@ data class PostDeliveryCheckoutParamsParcelable(
                 address = CheckoutAddressParcelable.from(params.address),
                 deliveryOptionId = params.deliveryOptionId.value,
                 dateTimePeriodId = params.dateTimePeriodId.value,
+                customer = CustomerParcelable.from(params.customer),
             )
         }
     }
@@ -160,6 +170,7 @@ data class StorePickupCheckoutParamsParcelable(
     val city: CityParcelable,
     val storeId: String,
     override val cityKladrId: String = city.id,
+    override val customer: CustomerParcelable,
 ) : CheckoutParamsParcelable() {
     fun toStorePickupCheckoutParams(): StorePickupCheckoutParams {
         return StorePickupCheckoutParams(
@@ -167,6 +178,7 @@ data class StorePickupCheckoutParamsParcelable(
             deliveryMethodType = deliveryMethodType.toDeliveryMethodType(),
             city = city.toCity(),
             storeId = Store.Id(storeId),
+            customer = customer.toCustomer(),
         )
     }
 
@@ -177,6 +189,7 @@ data class StorePickupCheckoutParamsParcelable(
                 deliveryMethodType = DeliveryMethodTypeParcelable.from(params.deliveryMethodType),
                 city = CityParcelable.from(params.city),
                 storeId = params.storeId.value,
+                customer = CustomerParcelable.from(params.customer),
             )
         }
     }

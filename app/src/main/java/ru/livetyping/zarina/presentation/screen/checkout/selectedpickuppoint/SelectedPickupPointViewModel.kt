@@ -133,6 +133,7 @@ class SelectedPickupPointViewModel @Inject constructor(
                     pickupPointId = PickupPoint.Id(params.pickupPointId),
                     deliveryTypeId = selectedDeliveryType.id,
                     dateTimePeriodId = selectedDeliveryType.dateTimePeriods.first().id,
+                    customer = params.customer.toCustomer(),
                 )
                 val action = SelectedPickupPointScreenAction.ContinueClicked(
                     step = params.step + 1,

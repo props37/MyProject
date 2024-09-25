@@ -49,6 +49,7 @@ class CheckoutSelectedPickupStoreViewModel @Inject constructor(
                 deliveryMethodType = params.deliveryMethodType.toDeliveryMethodType(),
                 city = params.city.toCity(),
                 storeId = store.value.id,
+                customer = params.customer.toCustomer(),
             )
             val action = CheckoutSelectedPickupStoreScreenAction.ContinueClicked(
                 step = params.step + 1,

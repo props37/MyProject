@@ -8,10 +8,12 @@ import ru.livetyping.zarina.domain.store.Store
 data class StorePickupCheckoutParams(
     override val cartType: CartType,
     override val deliveryMethodType: DeliveryMethodType,
+    override val customer: Customer,
     val city: City,
     val storeId: Store.Id,
 ) : CheckoutParams(
     cartType = cartType,
     deliveryMethodType = deliveryMethodType,
     cityKladrId = city.id,
+    customer = customer,
 )
