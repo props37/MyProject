@@ -5,9 +5,7 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.CourierDeliveryCheckoutParams
-import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
-import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
@@ -91,22 +89,22 @@ data class CourierDeliveryCheckoutParamsParcelable(
 data class PickupPointDeliveryCheckoutParamsParcelable(
     override val cartType: CartTypeParcelable,
     override val deliveryMethodType: DeliveryMethodTypeParcelable,
-    val city: CityParcelable,
-    val pickupPointId: Long,
-    val deliveryTypeId: String,
-    val dateTimePeriodId: Long,
-    override val cityKladrId: String = city.id,
     override val customer: CustomerParcelable,
+    val city: CityParcelable,
+    val pickupPoint: PickupPointParcelable,
+    val deliveryType: PickupPointParcelable.DeliveryType,
+    val dateTimePeriod: PickupPointParcelable.DeliveryType.DateTimePeriod,
+    override val cityKladrId: String = city.id,
 ) : CheckoutParamsParcelable() {
     fun toPickupPointDeliveryCheckoutParams(): PickupPointDeliveryCheckoutParams {
         return PickupPointDeliveryCheckoutParams(
             cartType = cartType.toCartType(),
             deliveryMethodType = deliveryMethodType.toDeliveryMethodType(),
-            city = city.toCity(),
-            pickupPointId = PickupPoint.Id(pickupPointId),
-            deliveryTypeId = PickupPointDetails.DeliveryType.Id(deliveryTypeId),
-            dateTimePeriodId = PickupPointDetails.DeliveryType.DateTimePeriod.Id(dateTimePeriodId),
             customer = customer.toCustomer(),
+            city = city.toCity(),
+            pickupPoint = pickupPoint.toPickupPointDetails(),
+            deliveryType = deliveryType.toPickupPointDeliveryType(),
+            dateTimePeriod = dateTimePeriod.toPickupPointDateTimePeriod(),
         )
     }
 
@@ -115,11 +113,11 @@ data class PickupPointDeliveryCheckoutParamsParcelable(
             return PickupPointDeliveryCheckoutParamsParcelable(
                 cartType = CartTypeParcelable.from(params.cartType),
                 deliveryMethodType = DeliveryMethodTypeParcelable.from(params.deliveryMethodType),
-                city = CityParcelable.from(params.city),
-                pickupPointId = params.pickupPointId.value,
-                deliveryTypeId = params.deliveryTypeId.value,
-                dateTimePeriodId = params.dateTimePeriodId.value,
                 customer = CustomerParcelable.from(params.customer),
+                city = CityParcelable.from(params.city),
+                pickupPoint = PickupPointParcelable.from(params.pickupPoint),
+                deliveryType = PickupPointParcelable.DeliveryType.from(params.deliveryType),
+                dateTimePeriod = PickupPointParcelable.DeliveryType.DateTimePeriod.from(params.dateTimePeriod),
             )
         }
     }

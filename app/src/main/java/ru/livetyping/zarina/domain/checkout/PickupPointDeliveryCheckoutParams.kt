@@ -9,9 +9,9 @@ data class PickupPointDeliveryCheckoutParams(
     override val deliveryMethodType: DeliveryMethodType,
     override val customer: Customer,
     val city: City,
-    val pickupPointId: PickupPoint.Id,
-    val deliveryTypeId: PickupPointDetails.DeliveryType.Id,
-    val dateTimePeriodId: PickupPointDetails.DeliveryType.DateTimePeriod.Id,
+    val pickupPoint: PickupPointDetails,
+    val deliveryType: PickupPointDetails.DeliveryType,
+    val dateTimePeriod: PickupPointDetails.DeliveryType.DateTimePeriod,
 ) : CheckoutParams(
     cartType = cartType,
     deliveryMethodType = deliveryMethodType,

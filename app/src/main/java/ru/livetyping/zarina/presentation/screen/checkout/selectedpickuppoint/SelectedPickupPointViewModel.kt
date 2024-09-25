@@ -118,21 +118,22 @@ class SelectedPickupPointViewModel @Inject constructor(
 
     fun onContinueClicked() {
         val successPickupPointState = pickupPointState.value as? PickupPointState.Success
+        val pickupPoint = successPickupPointState?.pickupPoint
         val selectedDeliveryType = successPickupPointState?.let { state ->
             state.pickupPoint.deliveryTypes
                 .find { it.id == state.selectedDeliveryTypeId }
                 ?: state.pickupPoint.deliveryTypes.getDefault()
         }
 
-        if (selectedDeliveryType != null) {
+        if (pickupPoint != null && selectedDeliveryType != null) {
             navigationThrottler.throttle {
                 val checkoutParams = PickupPointDeliveryCheckoutParams(
                     cartType = params.cartType.toCartType(),
                     deliveryMethodType = params.deliveryMethodType.toDeliveryMethodType(),
                     city = city.value ?: City.DEFAULT,
-                    pickupPointId = PickupPoint.Id(params.pickupPointId),
-                    deliveryTypeId = selectedDeliveryType.id,
-                    dateTimePeriodId = selectedDeliveryType.dateTimePeriods.first().id,
+                    pickupPoint = pickupPoint,
+                    deliveryType = selectedDeliveryType,
+                    dateTimePeriod = selectedDeliveryType.dateTimePeriods.first(),
                     customer = params.customer.toCustomer(),
                 )
                 val action = SelectedPickupPointScreenAction.ContinueClicked(
