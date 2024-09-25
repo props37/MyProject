@@ -58,7 +58,7 @@ data class CourierDeliveryCheckoutParamsParcelable(
     override val deliveryMethodType: DeliveryMethodTypeParcelable,
     val address: CheckoutAddressParcelable,
     val deliveryOption: DeliveryOptionParcelable,
-    val dateTimePeriod: DeliveryDateTimePeriodParcelable,
+    val dateTimePeriod: DeliveryOptionParcelable.DateTimePeriod,
     override val cityKladrId: String = address.city.id,
     override val customer: CustomerParcelable,
 ) : CheckoutParamsParcelable() {
@@ -80,7 +80,7 @@ data class CourierDeliveryCheckoutParamsParcelable(
                 deliveryMethodType = DeliveryMethodTypeParcelable.from(params.deliveryMethodType),
                 address = CheckoutAddressParcelable.from(params.address),
                 deliveryOption = DeliveryOptionParcelable.from(params.deliveryOption),
-                dateTimePeriod = DeliveryDateTimePeriodParcelable.from(params.dateTimePeriod),
+                dateTimePeriod = DeliveryOptionParcelable.DateTimePeriod.from(params.dateTimePeriod),
                 customer = CustomerParcelable.from(params.customer),
             )
         }

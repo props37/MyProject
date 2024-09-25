@@ -23,7 +23,6 @@ data class PickupPointDetails(
     isPaymentByCardAvailable = isPaymentByCardAvailable,
     availablePaymentMethods = availablePaymentMethods,
 ) {
-
     data class DeliveryType(
         val id: Id,
         val title: String,

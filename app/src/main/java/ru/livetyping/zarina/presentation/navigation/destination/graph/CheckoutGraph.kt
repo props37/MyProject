@@ -12,7 +12,7 @@ import ru.livetyping.zarina.presentation.model.cart.CartProductParcelable
 import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.checkout.CheckoutParamsParcelable
 import ru.livetyping.zarina.presentation.model.checkout.CustomerParcelable
-import ru.livetyping.zarina.presentation.model.checkout.DeliveryDateTimePeriodParcelable
+import ru.livetyping.zarina.presentation.model.checkout.DeliveryOptionParcelable
 import ru.livetyping.zarina.presentation.model.geography.CityParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.presentation.model.store.StoreParcelable
@@ -25,7 +25,7 @@ import ru.livetyping.zarina.presentation.navigation.navtype.CartProductParcelabl
 import ru.livetyping.zarina.presentation.navigation.navtype.CheckoutParamsParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.CityParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.CustomerParcelableType
-import ru.livetyping.zarina.presentation.navigation.navtype.DeliveryDateTimePeriodParcelableListType
+import ru.livetyping.zarina.presentation.navigation.navtype.DeliveryOptionDateTimePeriodParcelableListType
 import ru.livetyping.zarina.presentation.navigation.navtype.StoreParcelableType
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
 import ru.livetyping.zarina.util.library.navigation.getTypeMapEnumTypePair
@@ -183,13 +183,13 @@ data object CheckoutGraph : Graph<CheckoutGraph.Customer.Args>() {
     data class CourierDeliveryDateTimeSelector(
         val type: CourierDeliveryDateTimeSelectorType,
         val deliveryOptionId: String,
-        val dateTimePeriods: List<DeliveryDateTimePeriodParcelable>,
+        val dateTimePeriods: List<DeliveryOptionParcelable.DateTimePeriod>,
     ) {
         @Parcelize
         data class Result(
             val deliveryOptionId: String,
             val selectorType: CourierDeliveryDateTimeSelectorType,
-            val dateTimePeriod: DeliveryDateTimePeriodParcelable,
+            val dateTimePeriod: DeliveryOptionParcelable.DateTimePeriod,
             override val id: String = UUID.randomUUID().toString(),
         ) : ScreenResult, Parcelable
 
@@ -199,8 +199,8 @@ data object CheckoutGraph : Graph<CheckoutGraph.Customer.Args>() {
             fun typeMap(): Map<KType, NavType<*>> {
                 return mapOf(
                     getTypeMapEnumTypePair<CourierDeliveryDateTimeSelectorType>(),
-                    typeOf<List<DeliveryDateTimePeriodParcelable>>() to
-                            NavType.DeliveryDateTimePeriodParcelableListType,
+                    typeOf<List<DeliveryOptionParcelable.DateTimePeriod>>() to
+                            NavType.DeliveryOptionDateTimePeriodParcelableListType,
                 )
             }
         }

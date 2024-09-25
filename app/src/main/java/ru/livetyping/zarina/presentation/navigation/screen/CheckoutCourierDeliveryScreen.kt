@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import ru.livetyping.zarina.presentation.model.checkout.CheckoutParamsParcelable
-import ru.livetyping.zarina.presentation.model.checkout.DeliveryDateTimePeriodParcelable
+import ru.livetyping.zarina.presentation.model.checkout.DeliveryOptionParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryScreen
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryScreenAction
@@ -45,7 +45,7 @@ fun NavGraphBuilder.checkoutCourierDeliveryScreen(navController: NavHostControll
                             type = CourierDeliveryDateTimeSelectorType.TIME,
                             deliveryOptionId = action.deliveryOptionId.value,
                             dateTimePeriods = action.dateTimePeriods.map {
-                                DeliveryDateTimePeriodParcelable.from(it)
+                                DeliveryOptionParcelable.DateTimePeriod.from(it)
                             },
                         )
                         navController.navigate(courierDeliveryDateTimeSelector)
@@ -56,7 +56,7 @@ fun NavGraphBuilder.checkoutCourierDeliveryScreen(navController: NavHostControll
                             type = CourierDeliveryDateTimeSelectorType.TIME,
                             deliveryOptionId = action.deliveryOptionId.value,
                             dateTimePeriods = action.dateTimePeriods.map {
-                                DeliveryDateTimePeriodParcelable.from(it)
+                                DeliveryOptionParcelable.DateTimePeriod.from(it)
                             },
                         )
                         navController.navigate(courierDeliveryDateTimeSelector)
