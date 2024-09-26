@@ -8,4 +8,8 @@ data class Customer(
     val lastName: String,
     val phone: PhoneNumber,
     val email: Email,
-)
+) {
+    fun getFullName(firstNameFirst: Boolean = true): String {
+        return if (firstNameFirst) "$firstName $lastName" else "$lastName $firstName"
+    }
+}

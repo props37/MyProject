@@ -27,6 +27,7 @@ import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.OrderPlacing
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
@@ -38,6 +39,7 @@ fun CheckoutOrderPlacingScreen(
     val state by viewModel.step.collectAsStateWithLifecycle()
     val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()
     val customer by viewModel.customer.collectAsStateWithLifecycle()
+    val deliveryInfo by viewModel.deliveryInfo.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = state,
@@ -45,6 +47,7 @@ fun CheckoutOrderPlacingScreen(
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
         customer = customer,
+        deliveryInfo = deliveryInfo,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -57,6 +60,7 @@ private fun ScreenContent(
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     customer: Customer,
+    deliveryInfo: DeliveryInfo,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
 ) {
@@ -88,6 +92,7 @@ private fun ScreenContent(
 
             OrderPlacing(
                 customer = customer,
+                deliveryInfo = deliveryInfo,
             )
         }
     }

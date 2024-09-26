@@ -3,7 +3,6 @@ package ru.livetyping.zarina.presentation.screen.checkout.orderplacing
 import android.os.Parcelable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,15 +17,19 @@ import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
+import ru.livetyping.zarina.presentation.common.util.domain.nameResId
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPhoneNumber
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
+@Suppress("ConstPropertyName")
 object CheckoutOrderPlacingScreenComponents {
 
     // TODO: [High] Add bottom bar padding
     @Composable
     fun OrderPlacing(
         customer: Customer,
+        deliveryInfo: DeliveryInfo,
         modifier: Modifier = Modifier,
     ) {
         LazyColumn(
@@ -36,7 +39,14 @@ object CheckoutOrderPlacingScreenComponents {
                 key = OrderPlacingKey.Customer,
                 contentType = OrderPlacingContentType.Customer,
             ) {
-                Customer(customer = customer)
+                Customer(customer)
+            }
+
+            item(
+                key = OrderPlacingKey.DeliveryInfo,
+                contentType = OrderPlacingContentType.DeliveryInfo,
+            ) {
+                DeliveryInfo(deliveryInfo)
             }
         }
     }
@@ -55,42 +65,71 @@ object CheckoutOrderPlacingScreenComponents {
                 )
             }
 
-            ZarinaItem(
-                contentPadding = PaddingValues(
-                    start = 16.dp,
-                    top = 0.dp,
-                    end = 16.dp,
-                    bottom = 8.dp,
-                ),
-            ) {
+            ZarinaItem(contentPadding = OrderPlacingListItemDescriptionContentPadding) {
                 Column {
-                    val name = remember(customer) {
-                        "${customer.firstName} ${customer.lastName}"
-                    }
+                    val fullName = remember(customer) { customer.getFullName() }
                     Text(
-                        text = name,
+                        text = fullName,
                         style = UiKitTheme.typography.secondary.light,
                         color = UiKitTheme.colors.text.general.regular.default,
                     )
 
                     Spacer(modifier = Modifier.height(2.dp))
 
-                    Row {
-                        val formattedPhone = rememberFormattedPhoneNumber(customer.phone.value)
-                        val contacts = remember(customer, formattedPhone) {
-                            buildString {
-                                append(customer.email.value)
-                                if (formattedPhone != null) {
-                                    append(", ")
-                                    append(formattedPhone)
-                                }
+                    val formattedPhone = rememberFormattedPhoneNumber(customer.phone.value)
+                    val contacts = remember(customer, formattedPhone) {
+                        buildString {
+                            append(customer.email.value)
+                            if (formattedPhone != null) {
+                                append(CommaSeparator)
+                                append(formattedPhone)
                             }
                         }
+                    }
+                    Text(
+                        text = contacts,
+                        style = UiKitTheme.typography.tertiary.light,
+                        color = UiKitTheme.colors.text.general.regular.muted,
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun DeliveryInfo(
+        deliveryInfo: DeliveryInfo,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            ZarinaItem {
+                Text(
+                    text = stringResource(R.string.delivery_method),
+                    style = UiKitTheme.typography.secondary.bold,
+                    color = UiKitTheme.colors.text.general.regular.default,
+                )
+            }
+
+            ZarinaItem(contentPadding = OrderPlacingListItemDescriptionContentPadding) {
+                Column {
+                    Text(
+                        text = stringResource(deliveryInfo.deliveryMethodType.nameResId),
+                        style = UiKitTheme.typography.secondary.light,
+                        color = UiKitTheme.colors.text.general.regular.default,
+                    )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    deliveryInfo.descriptions.forEachIndexed { index, description ->
                         Text(
-                            text = contacts,
+                            text = description,
                             style = UiKitTheme.typography.tertiary.light,
                             color = UiKitTheme.colors.text.general.regular.muted,
                         )
+
+                        if (index < deliveryInfo.descriptions.lastIndex) {
+                            Spacer(modifier = Modifier.height(2.dp))
+                        }
                     }
                 }
             }
@@ -101,9 +140,20 @@ object CheckoutOrderPlacingScreenComponents {
     @Stable
     private sealed class OrderPlacingKey : Parcelable {
         data object Customer : OrderPlacingKey()
+
+        data object DeliveryInfo : OrderPlacingKey()
     }
 
+    @Stable
     private sealed class OrderPlacingContentType {
         data object Customer : OrderPlacingContentType()
+
+        data object DeliveryInfo : OrderPlacingContentType()
     }
+
+    @Stable
+    private val OrderPlacingListItemDescriptionContentPadding: PaddingValues
+        get() = PaddingValues(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 8.dp)
+
+    private const val CommaSeparator = ", "
 }
