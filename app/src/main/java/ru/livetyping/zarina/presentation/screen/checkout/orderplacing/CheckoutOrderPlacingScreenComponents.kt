@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.Customer
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
@@ -47,6 +49,11 @@ object CheckoutOrderPlacingScreenComponents {
                 Customer(
                     customer = customer,
                     onChangeClicked = onChangeCustomerClicked,
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeInSpec,
+                    ),
                 )
             }
 
@@ -57,6 +64,24 @@ object CheckoutOrderPlacingScreenComponents {
                 DeliveryInfo(
                     deliveryInfo = deliveryInfo,
                     onChangeClicked = onChangeDeliveryClicked,
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeInSpec,
+                    ),
+                )
+            }
+
+            item(
+                key = OrderPlacingKey.YourOrder,
+                contentType = OrderPlacingContentType.YourOrder,
+            ) {
+                YourOrder(
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeInSpec,
+                    ),
                 )
             }
         }
@@ -162,6 +187,18 @@ object CheckoutOrderPlacingScreenComponents {
     }
 
     @Composable
+    private fun YourOrder(
+        modifier: Modifier = Modifier,
+    ) {
+        ZarinaItem(modifier = modifier) {
+            Text(
+                text = stringResource(R.string.your_order),
+                style = UiKitTheme.typography.secondary.bold,
+            )
+        }
+    }
+
+    @Composable
     private fun OrderListHeaderChangeButton(
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
@@ -182,6 +219,8 @@ object CheckoutOrderPlacingScreenComponents {
         data object Customer : OrderPlacingKey()
 
         data object DeliveryInfo : OrderPlacingKey()
+
+        data object YourOrder : OrderPlacingKey()
     }
 
     @Stable
@@ -189,6 +228,8 @@ object CheckoutOrderPlacingScreenComponents {
         data object Customer : OrderPlacingContentType()
 
         data object DeliveryInfo : OrderPlacingContentType()
+
+        data object YourOrder : OrderPlacingContentType()
     }
 
     @Stable
