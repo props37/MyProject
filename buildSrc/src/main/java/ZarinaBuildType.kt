@@ -25,13 +25,13 @@ sealed class ZarinaBuildType(val name: String) {
         override val isMinifyEnabled = false
         override val isShrinkResources = false
         override val signingVariant = ZarinaSigningVariant.INTERNAL
-        override val backendUrl = "https://test6.zarina.ru"
+        override val backendUrl = "https://test7.zarina.ru"
     }
 
     object Qa : ZarinaBuildType("qa") {
         override val signingVariant = ZarinaSigningVariant.INTERNAL
         override val isLoggingEnabled = true
-        override val backendUrl = "https://test6.zarina.ru"
+        override val backendUrl = "https://test7.zarina.ru"
     }
 
     object Release : ZarinaBuildType("release") {
