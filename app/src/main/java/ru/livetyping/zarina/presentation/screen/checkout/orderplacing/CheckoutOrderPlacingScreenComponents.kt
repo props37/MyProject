@@ -16,6 +16,9 @@ import androidx.compose.ui.unit.dp
 import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.Customer
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.util.domain.nameResId
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPhoneNumber
@@ -29,7 +32,9 @@ object CheckoutOrderPlacingScreenComponents {
     @Composable
     fun OrderPlacing(
         customer: Customer,
+        onChangeCustomerClicked: () -> Unit,
         deliveryInfo: DeliveryInfo,
+        onChangeDeliveryClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         LazyColumn(
@@ -39,14 +44,20 @@ object CheckoutOrderPlacingScreenComponents {
                 key = OrderPlacingKey.Customer,
                 contentType = OrderPlacingContentType.Customer,
             ) {
-                Customer(customer)
+                Customer(
+                    customer = customer,
+                    onChangeClicked = onChangeCustomerClicked,
+                )
             }
 
             item(
                 key = OrderPlacingKey.DeliveryInfo,
                 contentType = OrderPlacingContentType.DeliveryInfo,
             ) {
-                DeliveryInfo(deliveryInfo)
+                DeliveryInfo(
+                    deliveryInfo = deliveryInfo,
+                    onChangeClicked = onChangeDeliveryClicked,
+                )
             }
         }
     }
@@ -54,18 +65,25 @@ object CheckoutOrderPlacingScreenComponents {
     @Composable
     private fun Customer(
         customer: Customer,
+        onChangeClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
-            ZarinaItem {
-                Text(
-                    text = stringResource(R.string.customer),
-                    style = UiKitTheme.typography.secondary.bold,
-                    color = UiKitTheme.colors.text.general.regular.default,
-                )
-            }
+            ZarinaItem(
+                startContent = {
+                    Text(
+                        text = stringResource(R.string.customer),
+                        style = UiKitTheme.typography.secondary.bold,
+                        color = UiKitTheme.colors.text.general.regular.default,
+                    )
+                },
+                endContent = {
+                    OrderListHeaderChangeButton(onClick = onChangeClicked)
+                },
+                contentPadding = OrderPlacingListHeaderTitleContentPadding,
+            )
 
-            ZarinaItem(contentPadding = OrderPlacingListItemDescriptionContentPadding) {
+            ZarinaItem(contentPadding = OrderPlacingListHeaderDescriptionContentPadding) {
                 Column {
                     val fullName = remember(customer) { customer.getFullName() }
                     Text(
@@ -99,18 +117,25 @@ object CheckoutOrderPlacingScreenComponents {
     @Composable
     private fun DeliveryInfo(
         deliveryInfo: DeliveryInfo,
+        onChangeClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
-            ZarinaItem {
-                Text(
-                    text = stringResource(R.string.delivery_method),
-                    style = UiKitTheme.typography.secondary.bold,
-                    color = UiKitTheme.colors.text.general.regular.default,
-                )
-            }
+            ZarinaItem(
+                startContent = {
+                    Text(
+                        text = stringResource(R.string.delivery_method),
+                        style = UiKitTheme.typography.secondary.bold,
+                        color = UiKitTheme.colors.text.general.regular.default,
+                    )
+                },
+                endContent = {
+                    OrderListHeaderChangeButton(onClick = onChangeClicked)
+                },
+                contentPadding = OrderPlacingListHeaderTitleContentPadding,
+            )
 
-            ZarinaItem(contentPadding = OrderPlacingListItemDescriptionContentPadding) {
+            ZarinaItem(contentPadding = OrderPlacingListHeaderDescriptionContentPadding) {
                 Column {
                     Text(
                         text = stringResource(deliveryInfo.deliveryMethodType.nameResId),
@@ -136,6 +161,21 @@ object CheckoutOrderPlacingScreenComponents {
         }
     }
 
+    @Composable
+    private fun OrderListHeaderChangeButton(
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        ZarinaButton(
+            onClick = onClick,
+            size = ZarinaButtonSize.Medium,
+            colors = ZarinaButtonDefaults.backlessColors(),
+            modifier = modifier,
+        ) {
+            Text(text = stringResource(R.string.change).uppercase())
+        }
+    }
+
     @Parcelize
     @Stable
     private sealed class OrderPlacingKey : Parcelable {
@@ -152,7 +192,11 @@ object CheckoutOrderPlacingScreenComponents {
     }
 
     @Stable
-    private val OrderPlacingListItemDescriptionContentPadding: PaddingValues
+    private val OrderPlacingListHeaderTitleContentPadding: PaddingValues
+        get() = PaddingValues(start = 16.dp, top = 4.dp, end = 8.dp, bottom = 4.dp)
+
+    @Stable
+    private val OrderPlacingListHeaderDescriptionContentPadding: PaddingValues
         get() = PaddingValues(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 8.dp)
 
     private const val CommaSeparator = ", "

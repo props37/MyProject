@@ -4,4 +4,8 @@ sealed class CheckoutOrderPlacingScreenAction {
     data object ScreenClosed : CheckoutOrderPlacingScreenAction()
 
     data object CheckoutClosed : CheckoutOrderPlacingScreenAction()
+
+    data object ChangeCustomerClicked : CheckoutOrderPlacingScreenAction()
+
+    data object ChangeDeliveryClicked : CheckoutOrderPlacingScreenAction()
 }

@@ -24,6 +24,17 @@ fun NavGraphBuilder.checkoutOrderPlacingScreen(navController: NavHostController)
                             inclusive = true,
                         )
                     }
+
+                    CheckoutOrderPlacingScreenAction.ChangeCustomerClicked -> {
+                        navController.popBackStack(
+                            route = CheckoutGraph.Customer.routeSchema,
+                            inclusive = false,
+                        )
+                    }
+
+                    CheckoutOrderPlacingScreenAction.ChangeDeliveryClicked -> {
+                        navController.popBackStack<CheckoutGraph.DeliveryMethod>(inclusive = false)
+                    }
                 }
             },
         )

@@ -59,6 +59,20 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         }
     }
 
+    fun onChangeCustomerClicked() {
+        navigationThrottler.throttle {
+            val action = CheckoutOrderPlacingScreenAction.ChangeCustomerClicked
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
+    fun onChangeDeliveryClicked() {
+        navigationThrottler.throttle {
+            val action = CheckoutOrderPlacingScreenAction.ChangeDeliveryClicked
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
     private fun getDeliveryInfo(checkoutParams: CheckoutParams): DeliveryInfo {
         val descriptions = when (checkoutParams) {
             is CourierDeliveryCheckoutParams -> {

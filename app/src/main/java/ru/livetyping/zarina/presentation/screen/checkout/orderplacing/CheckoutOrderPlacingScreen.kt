@@ -47,7 +47,9 @@ fun CheckoutOrderPlacingScreen(
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
         customer = customer,
+        onChangeCustomerClicked = viewModel::onChangeCustomerClicked,
         deliveryInfo = deliveryInfo,
+        onChangeDeliveryClicked = viewModel::onChangeDeliveryClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -60,7 +62,9 @@ private fun ScreenContent(
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     customer: Customer,
+    onChangeCustomerClicked: () -> Unit,
     deliveryInfo: DeliveryInfo,
+    onChangeDeliveryClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
 ) {
@@ -92,7 +96,9 @@ private fun ScreenContent(
 
             OrderPlacing(
                 customer = customer,
+                onChangeCustomerClicked = onChangeCustomerClicked,
                 deliveryInfo = deliveryInfo,
+                onChangeDeliveryClicked = onChangeDeliveryClicked,
             )
         }
     }
