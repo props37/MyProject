@@ -151,7 +151,7 @@ data class FiltersDto(
     @Serializable
     data class ColorItem(
         @SerialName("id")
-        val id: Int? = null,
+        val id: String? = null,
 
         @SerialName("name")
         val name: String? = null,
@@ -169,7 +169,7 @@ data class FiltersDto(
             if (isAvailable == false) return null
             return if (id != null && name != null && code != null && isApplied != null) {
                 ColorFilterItem(
-                    id = ListFilterItem.Id(id.toString()),
+                    id = ListFilterItem.Id(id),
                     name = name,
                     isSelected = isApplied,
                     color = Color(code),
