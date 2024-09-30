@@ -3,12 +3,16 @@ package ru.livetyping.zarina.presentation.screen.checkout.orderplacing
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.checkout.CheckoutAddress
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.CourierDeliveryCheckoutParams
@@ -21,6 +25,8 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.SideEffect
+import ru.livetyping.zarina.usecase.checkout.GetCheckoutCartFlowUseCase
+import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import javax.inject.Inject
 
@@ -36,6 +42,18 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         typeMap = CheckoutGraph.OrderPlacing.typeMap(),
     )
     private val checkoutParams = params.checkoutParams.toCheckoutParams()
+
+    private val cartFlowRequester = FlowRequester(CartRequest.GENERAL) {
+        val params = GetCheckoutCartFlowUseCase.Params(checkoutParams)
+        interactor.getCheckoutCartFlow(params)
+    }
+
+    private val cartResult: StateFlow<Result<Cart>?> = cartFlowRequester.flow
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
 
     val step: StateFlow<Int> = ImmutableStateFlow(params.step)
 
@@ -130,6 +148,8 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         val deliveryMethodType: DeliveryMethodType,
         val descriptions: List<String>,
     )
+
+    private enum class CartRequest : FlowRequester.Request { GENERAL }
 
     companion object {
         private const val COMMA_SEPARATOR = ", "

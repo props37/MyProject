@@ -6,7 +6,9 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.data.checkout.local.CheckoutLocalDataSource
 import ru.livetyping.zarina.data.checkout.remote.CheckoutRemoteDataSource
+import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.domain.checkout.PickupPoint
@@ -60,6 +62,10 @@ class CheckoutRepository @Inject constructor(
         pickupPointId: PickupPoint.Id,
     ): Flow<PickupPointDetails> {
         return remoteDataSource.getPickupPointDetailsFlow(cityKladrId, pickupPointId)
+    }
+
+    fun getCartFlow(checkoutParams: CheckoutParams): Flow<Cart> {
+        return remoteDataSource.getCartFlow(checkoutParams)
     }
 
     fun clear() {
