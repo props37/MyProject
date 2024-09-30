@@ -3,7 +3,6 @@ package ru.livetyping.zarina.base.usecase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.retryWhen
 import timber.log.Timber
@@ -21,6 +20,7 @@ import timber.log.Timber
  * @see [UseCase]
  * @property dispatcher [CoroutineDispatcher] to run the operation on.
  */
+// TODO: [High] Remove dispatcher
 abstract class FlowUseCase<in P, out R>(private val dispatcher: CoroutineDispatcher) {
 
     private val className = if (Timber.treeCount != 0) this.javaClass.simpleName else TAG
@@ -48,7 +48,6 @@ abstract class FlowUseCase<in P, out R>(private val dispatcher: CoroutineDispatc
                 .e(e, "Exception occurred while executing $className with parameters $params")
             emit(Result.failure(e))
         }
-        .flowOn(dispatcher)
 
     protected abstract fun execute(params: P): Flow<R>
 
