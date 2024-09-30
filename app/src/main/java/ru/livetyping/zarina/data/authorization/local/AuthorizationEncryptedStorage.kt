@@ -39,11 +39,11 @@ class AuthorizationEncryptedStorage @Inject constructor(
         }
     }
         .buffer(capacity = Channel.CONFLATED)
-        .flowOn(Dispatchers.Main)
+        .flowOn(Dispatchers.IO)
 
     suspend fun setAuthorizationTokens(tokens: AuthorizationTokens?) {
         Timber.v("Set authorization tokens: $tokens")
-        withContext(Dispatchers.Main) {
+        withContext(Dispatchers.IO) {
             encryptedSharedPreferences.edit {
                 putString(KEY_ACCESS_TOKEN, tokens?.accessToken?.value)
                 putString(KEY_REFRESH_TOKEN, tokens?.refreshToken?.value)
