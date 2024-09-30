@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.cart
 
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.placeCursorAtEnd
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -57,7 +56,6 @@ import ru.livetyping.zarina.usecase.cart.RemoveProductFromCartUseCase
 import ru.livetyping.zarina.usecase.favorite.ToggleProductPresenceInFavoritesUseCase
 import ru.livetyping.zarina.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
-import ru.livetyping.zarina.util.compose.text.clear
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
@@ -139,9 +137,9 @@ class CartViewModel @AssistedInject constructor(
         .onEach { result ->
             val cart = result.getOrNull()
             if (cart != null) {
-                updatePromoCodeState(cart)
-                updateBonusWriteOffState(cart, CartType.DELIVERY)
-                updateMyCardState(cart)
+                deliveryBonusStateHolder.updateFromCart(cart)
+                myCardStateHolder.updateFromCart(cart)
+                promoCodeStateHolder.updateFromCart(cart)
             }
         }
         .stateIn(
@@ -154,9 +152,9 @@ class CartViewModel @AssistedInject constructor(
         .onEach { result ->
             val cart = result.getOrNull()
             if (cart != null) {
-                updatePromoCodeState(cart)
-                updateBonusWriteOffState(cart, CartType.PICKUP)
-                updateMyCardState(cart)
+                deliveryBonusStateHolder.updateFromCart(cart)
+                myCardStateHolder.updateFromCart(cart)
+                promoCodeStateHolder.updateFromCart(cart)
             }
         }
         .stateIn(
@@ -604,34 +602,6 @@ class CartViewModel @AssistedInject constructor(
                 }
             }
         }
-    }
-
-    private fun updatePromoCodeState(cart: Cart) {
-        promoCodeStateHolder.promoCodeTextFieldState.edit {
-            clear()
-            if (cart.promoCode != null) {
-                append(cart.promoCode.value)
-                placeCursorAtEnd()
-            }
-        }
-    }
-
-    private fun updateBonusWriteOffState(cart: Cart, cartType: CartType) {
-        val bonusStateHolder = getBonusStateHolder(cartType)
-        bonusStateHolder.setIsBonusWriteOffApplied(cart.bonuses.writeOff.isApplied)
-        val textFieldState = bonusStateHolder.bonusWriteOffTextFieldState
-        textFieldState.edit {
-            clear()
-            if (cart.bonuses.writeOff.isApplied) {
-                append(cart.bonuses.writeOff.value.toString())
-                placeCursorAtEnd()
-            }
-        }
-    }
-
-    private fun updateMyCardState(cart: Cart) {
-        val isApplied = cart.myCard?.isApplied == true
-        myCardStateHolder.setIsMyCardApplied(isApplied)
     }
 
     private fun requestCarts(request: CartRequest) {

@@ -2,6 +2,7 @@ package ru.livetyping.zarina.presentation.screen.cart.stateholder
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.placeCursorAtEnd
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
@@ -9,7 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.presentation.base.text.Text
+import ru.livetyping.zarina.util.compose.text.clear
 import ru.livetyping.zarina.util.compose.text.textAsFlow
 
 class CartPromoCodeStateHolder(savedStateHandle: SavedStateHandle) {
@@ -41,5 +44,15 @@ class CartPromoCodeStateHolder(savedStateHandle: SavedStateHandle) {
 
     fun clearPromoCode() {
         promoCodeTextFieldState.clearText()
+    }
+
+    fun updateFromCart(cart: Cart) {
+        promoCodeTextFieldState.edit {
+            clear()
+            if (cart.promoCode != null) {
+                append(cart.promoCode.value)
+                placeCursorAtEnd()
+            }
+        }
     }
 }
