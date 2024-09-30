@@ -56,8 +56,8 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.cart.CartScreenComponents.CartContent
 import ru.livetyping.zarina.presentation.screen.cart.CartScreenComponents.ProductCardActions
 import ru.livetyping.zarina.presentation.screen.cart.CartScreenComponents.TopBar
-import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.CartState
 import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 

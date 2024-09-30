@@ -119,9 +119,10 @@ import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFi
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPrice
-import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.BonusState
-import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.CartState
-import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.MyCardState
+import ru.livetyping.zarina.presentation.screen.cart.model.CartBonusState
+import ru.livetyping.zarina.presentation.screen.cart.model.CartMyCardState
+import ru.livetyping.zarina.presentation.screen.cart.model.CartProductItem
+import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
@@ -847,7 +848,7 @@ object CartScreenComponents {
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun SwipeableProductOrderCard(
-        productItem: CartViewModel.ProductItem,
+        productItem: CartProductItem,
         productCardActions: ProductCardActions,
         isDividerVisible: Boolean,
         onDragStarted: (CartProduct.Id) -> Unit,
@@ -1110,7 +1111,7 @@ object CartScreenComponents {
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
     private fun BonusWriteOff(
-        state: BonusState,
+        state: CartBonusState,
         onIsAppliedChanged: (Boolean) -> Unit,
         onBonusCountToWriteOffChanged: (Int?) -> Unit,
         modifier: Modifier = Modifier,
@@ -1205,7 +1206,7 @@ object CartScreenComponents {
 
     @Composable
     private fun MyCard(
-        state: MyCardState,
+        state: CartMyCardState,
         onIsAppliedChanged: (Boolean) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -1265,7 +1266,7 @@ object CartScreenComponents {
         CartState.EmptyCart, is CartState.Error, CartState.Loading -> cartState
     }
 
-    private fun getCartProductItemKey(productItem: CartViewModel.ProductItem): CartKey.Product {
+    private fun getCartProductItemKey(productItem: CartProductItem): CartKey.Product {
         return CartKey.Product(productItem.product.id.value)
     }
 
