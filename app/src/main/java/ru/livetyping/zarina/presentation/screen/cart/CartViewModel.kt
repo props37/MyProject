@@ -412,7 +412,6 @@ class CartViewModel @AssistedInject constructor(
             val params = ApplyPromoCodeUseCase.Params(promoCode)
             interactor.applyPromoCode(params)
                 .onSuccess {
-                    // TODO: [High] Show toasts
                     emitSideEffect(SideEffect.HideKeyboard)
                     requestCarts(CartRequest.REFRESHING)
                 }
@@ -439,7 +438,6 @@ class CartViewModel @AssistedInject constructor(
             promoCodeJob = viewModelScope.launch {
                 interactor.removePromoCode()
                     .onSuccess {
-                        // TODO: [High] Show toasts
                         requestCarts(CartRequest.REFRESHING)
                     }
                     .onFailure {
@@ -476,7 +474,6 @@ class CartViewModel @AssistedInject constructor(
         val params = ApplyBonusWriteOffUseCase.Params(cartType, bonusCount)
         interactor.applyBonusWriteOff(params)
             .onSuccess {
-                // TODO: [High] Show toasts
                 emitSideEffect(SideEffect.HideKeyboard)
                 requestCarts(CartRequest.REFRESHING)
             }
@@ -491,7 +488,6 @@ class CartViewModel @AssistedInject constructor(
         val params = RemoveBonusWriteOffUseCase.Params(cartType)
         interactor.removeBonusWriteOff(params)
             .onSuccess {
-                // TODO: [High] Show toasts
                 emitSideEffect(SideEffect.HideKeyboard)
                 requestCarts(CartRequest.REFRESHING)
             }
