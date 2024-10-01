@@ -1,5 +1,8 @@
 package ru.livetyping.zarina.presentation.screen.checkout.orderplacing
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.Customer
+import ru.livetyping.zarina.presentation.common.component.overlay.ZarinaRefreshingOverlay
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
@@ -40,6 +44,7 @@ fun CheckoutOrderPlacingScreen(
     val customer by viewModel.customer.collectAsStateWithLifecycle()
     val deliveryInfo by viewModel.deliveryInfo.collectAsStateWithLifecycle()
     val cartState by viewModel.cartState.collectAsStateWithLifecycle()
+    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = state,
@@ -51,6 +56,7 @@ fun CheckoutOrderPlacingScreen(
         deliveryInfo = deliveryInfo,
         onChangeDeliveryClicked = viewModel::onChangeDeliveryClicked,
         cartState = cartState,
+        isRefreshing = isRefreshing,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -67,6 +73,7 @@ private fun ScreenContent(
     deliveryInfo: DeliveryInfo,
     onChangeDeliveryClicked: () -> Unit,
     cartState: CartState,
+    isRefreshing: Boolean,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
 ) {
@@ -103,6 +110,15 @@ private fun ScreenContent(
                 cartState = cartState,
                 modifier = Modifier.fillMaxSize(),
             )
+        }
+
+        AnimatedVisibility(
+            visible = isRefreshing,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier.matchParentSize(),
+        ) {
+            ZarinaRefreshingOverlay(modifier = Modifier.fillMaxSize())
         }
     }
 }

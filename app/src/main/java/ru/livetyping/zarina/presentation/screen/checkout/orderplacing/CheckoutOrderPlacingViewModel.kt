@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
@@ -137,6 +138,16 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         started = SharingStarted.WhileUiSubscribed,
         initialValue = CartState.Loading,
     )
+
+    val isRefreshing: StateFlow<Boolean> = cartFlowRequester.loadingState
+        .map { loadingState ->
+            loadingState.loadingRequest == CartRequest.REFRESHING
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = false,
+        )
 
     fun onBackClicked() {
         navigationThrottler.throttle {
