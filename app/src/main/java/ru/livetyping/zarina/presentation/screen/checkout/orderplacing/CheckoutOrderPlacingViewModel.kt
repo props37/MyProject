@@ -6,8 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
@@ -18,6 +21,7 @@ import ru.livetyping.zarina.domain.checkout.CheckoutAddress
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.CourierDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.Customer
+import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
@@ -33,6 +37,7 @@ import ru.livetyping.zarina.presentation.screen.cart.stateholder.CartPromoCodeSt
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.SideEffect
 import ru.livetyping.zarina.usecase.checkout.GetCheckoutCartFlowUseCase
+import ru.livetyping.zarina.usecase.checkout.GetPaymentMethodsFlowUseCase
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
@@ -75,6 +80,26 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
             }
         }
         .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val paymentMethodsFlowRequester = FlowRequester(PaymentMethodsRequest.GENERAL) {
+        cartResult.flatMapLatest { result ->
+            val cart = result?.getOrNull()
+            if (cart != null) {
+                val params = GetPaymentMethodsFlowUseCase.Params(checkoutParams, cart)
+                interactor.getPaymentMethodsFlow(params)
+            } else {
+                flowOf(null)
+            }
+        }
+    }
+
+    private val paymentMethodsResult: StateFlow<Result<List<PaymentMethod>>?> =
+        paymentMethodsFlowRequester.flow.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
             initialValue = null,
@@ -198,6 +223,8 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         val deliveryMethodType: DeliveryMethodType,
         val descriptions: List<String>,
     )
+
+    private enum class PaymentMethodsRequest : FlowRequester.Request { GENERAL }
 
     companion object {
         private const val COMMA_SEPARATOR = ", "

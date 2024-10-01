@@ -4,10 +4,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.data.checkout.remote.api.CheckoutApi
 import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryOptionsDtoType
+import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.checkout.DeliveryOption
+import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.checkout.PickupStore
@@ -65,5 +67,14 @@ class CheckoutRemoteDataSource @Inject constructor(
     fun getCartFlow(checkoutParams: CheckoutParams) = flow {
         val dto = api.getCart(checkoutParams)
         emit(dto.toCart(checkoutParams.cartType))
+    }
+
+    fun getPaymentMethodsFlow(
+        checkoutParams: CheckoutParams,
+        cart: Cart,
+    ): Flow<List<PaymentMethod>> = flow {
+        val dtos = api.getPaymentMethods(checkoutParams, cart)
+        val methods = dtos.map { it.toPaymentMethod() }
+        emit(methods)
     }
 }

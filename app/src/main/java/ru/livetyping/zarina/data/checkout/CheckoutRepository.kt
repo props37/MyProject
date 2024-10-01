@@ -11,6 +11,7 @@ import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.checkout.DeliveryOption
+import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.checkout.PickupStore
@@ -66,6 +67,13 @@ class CheckoutRepository @Inject constructor(
 
     fun getCartFlow(checkoutParams: CheckoutParams): Flow<Cart> {
         return remoteDataSource.getCartFlow(checkoutParams)
+    }
+
+    fun getPaymentMethodsFlow(
+        checkoutParams: CheckoutParams,
+        cart: Cart,
+    ): Flow<List<PaymentMethod>> {
+        return remoteDataSource.getPaymentMethodsFlow(checkoutParams, cart)
     }
 
     fun clear() {
