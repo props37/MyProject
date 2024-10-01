@@ -39,7 +39,7 @@ import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderContactInfo
 import ru.livetyping.zarina.domain.order.OrderDetails
-import ru.livetyping.zarina.domain.order.OrderPaymentMethod
+import ru.livetyping.zarina.domain.order.PaymentMethodType
 import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
 import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
 import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
@@ -282,7 +282,7 @@ object OrderScreenComponents {
                     deliveryMethodType = order.deliveryInfo.type,
                     deliveryAddress = order.deliveryAddress,
                     contactInfo = order.contactInfo,
-                    paymentMethod = order.paymentMethod,
+                    paymentMethodType = order.paymentMethodType,
                     modifier = Modifier.animateItem(
                         fadeInSpec = LazyListFadeInSpec,
                         placementSpec = LazyListPlacementSpec,
@@ -342,7 +342,7 @@ object OrderScreenComponents {
         deliveryMethodType: DeliveryMethodType,
         deliveryAddress: String,
         contactInfo: OrderContactInfo,
-        paymentMethod: OrderPaymentMethod,
+        paymentMethodType: PaymentMethodType,
         modifier: Modifier = Modifier,
         contentPadding: PaddingValues = OrderInfoContentPadding,
     ) {
@@ -392,7 +392,7 @@ object OrderScreenComponents {
 
                 OrderInfoItem(
                     name = stringResource(R.string.payment),
-                    value = stringResource(paymentMethod.nameResId),
+                    value = stringResource(paymentMethodType.nameResId),
                 )
             }
         }

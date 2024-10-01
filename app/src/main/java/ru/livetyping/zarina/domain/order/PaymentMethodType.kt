@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.domain.order
 
-enum class OrderPaymentMethod {
+enum class PaymentMethodType {
     POSTPAID,
     PAYTURE_IN_PAY,
     PAYTURE_WALLET,

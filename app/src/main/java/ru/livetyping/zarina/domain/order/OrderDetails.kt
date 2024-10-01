@@ -14,7 +14,7 @@ data class OrderDetails(
     override val status: OrderStatus,
     val products: List<Product>,
     val price: OrderPrice,
-    val paymentMethod: OrderPaymentMethod,
+    val paymentMethodType: PaymentMethodType,
     val deliveryInfo: OrderDeliveryInfo,
     val contactInfo: OrderContactInfo,
     val deliveryAddress: String,

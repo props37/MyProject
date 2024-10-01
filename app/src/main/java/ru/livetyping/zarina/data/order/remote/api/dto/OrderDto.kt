@@ -65,7 +65,7 @@ data class OrderDto(
         checkNotNull(deliveryInfo) { "deliveryInfo is null" }
         checkNotNull(deliveryInfo.method) { "deliveryInfo method is null" }
         checkNotNull(paymentMethod) { "paymentMethod is null" }
-        checkNotNull(paymentMethod.method) { "paymentMethod method is null" }
+        checkNotNull(paymentMethod.type) { "paymentMethodType method is null" }
         checkNotNull(contactInfo) { "contactInfo is null" }
         checkNotNull(address) { "address is null" }
         // TODO: [Backend] Migrate to separate field when it is available
@@ -83,7 +83,7 @@ data class OrderDto(
             status = status.toOrderStatus(),
             products = products.map { it.toOrderProduct() },
             price = price,
-            paymentMethod = paymentMethod.method.toOrderPaymentMethod(),
+            paymentMethodType = paymentMethod.type.toPaymentMethodType(),
             deliveryInfo = deliveryInfo.toOrderDeliveryInfo(),
             contactInfo = contactInfo.toOrderContactInfo(),
             deliveryAddress = address,
@@ -182,7 +182,7 @@ data class OrderDto(
     @Serializable
     data class PaymentMethod(
         @SerialName("code")
-        val method: OrderPaymentMethodDto? = null,
+        val type: PaymentMethodTypeDto? = null,
     )
 
     @Serializable
