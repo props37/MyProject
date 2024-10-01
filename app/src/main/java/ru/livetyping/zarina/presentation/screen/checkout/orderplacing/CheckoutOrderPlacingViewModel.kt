@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -14,6 +15,8 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
@@ -27,7 +30,9 @@ import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
+import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.cart.model.CartRequest
 import ru.livetyping.zarina.presentation.screen.cart.model.CartState
@@ -37,8 +42,14 @@ import ru.livetyping.zarina.presentation.screen.cart.stateholder.CartMyCardState
 import ru.livetyping.zarina.presentation.screen.cart.stateholder.CartPromoCodeStateHolder
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.SideEffect
+import ru.livetyping.zarina.usecase.cart.ApplyBonusWriteOffUseCase
+import ru.livetyping.zarina.usecase.cart.ApplyMyCardToCartUseCase
+import ru.livetyping.zarina.usecase.cart.ApplyPromoCodeUseCase
+import ru.livetyping.zarina.usecase.cart.RemoveBonusWriteOffUseCase
+import ru.livetyping.zarina.usecase.cart.RemoveMyCardFromCartUseCase
 import ru.livetyping.zarina.usecase.checkout.GetCheckoutCartFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.GetPaymentMethodsFlowUseCase
+import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
@@ -55,10 +66,15 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     private val cartStateBuilder = CartStateBuilder()
 
+    private var bonusJob: Job? = null
+    private var myCardJob: Job? = null
+    private var promoCodeJob: Job? = null
+
     private val params = savedStateHandle.toRoute<CheckoutGraph.OrderPlacing>(
         typeMap = CheckoutGraph.OrderPlacing.typeMap(),
     )
     private val checkoutParams = params.checkoutParams.toCheckoutParams()
+    private val cartType = checkoutParams.cartType
 
     private val bonusStateHolder = CartBonusStateHolder(savedStateHandle)
 
@@ -108,7 +124,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     val step: StateFlow<Int> = ImmutableStateFlow(params.step)
 
-    val stepCount: StateFlow<Int> = ImmutableStateFlow(checkoutParams.cartType.checkoutStepCount)
+    val stepCount: StateFlow<Int> = ImmutableStateFlow(cartType.checkoutStepCount)
 
     val customer: StateFlow<Customer> = ImmutableStateFlow(checkoutParams.customer)
 
@@ -125,7 +141,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         cartStateBuilder.build(
             cartResult = result,
             cartLoadingState = loadingState,
-            cartType = checkoutParams.cartType,
+            cartType = cartType,
             isBonusWriteOffApplied = isBonusWriteOffApplied,
             bonusWriteOffTextFieldState = bonusStateHolder.bonusWriteOffTextFieldState,
             isMyCardApplied = isMyCardApplied,
@@ -175,6 +191,187 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
             val action = CheckoutOrderPlacingScreenAction.ChangeDeliveryClicked
             emitSideEffect(SideEffect.Navigate(action))
         }
+    }
+
+    fun onIsBonusWriteOffAppliedChanged(isApplied: Boolean) {
+        if (bonusJob?.isActive == true) return
+
+        bonusJob = viewModelScope.launch {
+            if (isApplied) {
+                val cart = cartResult.value?.getOrNull()
+                val maxBonusCountToWriteOff = cart?.bonuses?.writeOff?.max ?: return@launch
+                applyBonusWriteOff(maxBonusCountToWriteOff)
+            } else {
+                removeBonusWriteOff()
+            }
+        }
+    }
+
+    fun onBonusCountToWriteOffChanged(bonusCount: Int?) {
+        if (bonusJob?.isActive == true) return
+
+        val maxBonusCount = cartResult.value?.getOrNull()?.bonuses?.writeOff?.max ?: return
+        bonusJob = viewModelScope.launch {
+            if (bonusCount != null) {
+                applyBonusWriteOff(bonusCount.coerceAtMost(maxBonusCount))
+            } else {
+                removeBonusWriteOff()
+            }
+        }
+    }
+
+    fun onIsMyCardAppliedChanged(isApplied: Boolean) {
+        if (myCardJob?.isActive == true) return
+
+        myCardStateHolder.setIsMyCardApplied(isApplied)
+        myCardJob = viewModelScope.launch {
+            val cart = cartResult.value?.getOrNull()
+            if (isApplied) {
+                val productsFirstPriceSum = cart?.myCard?.productsFirstPriceSum ?: return@launch
+                applyMyCardToCart(productsFirstPriceSum)
+            } else {
+                removeMyCardFromCart()
+            }
+        }
+    }
+
+    fun onApplyPromoCodeClicked() {
+        if (promoCodeJob?.isActive == true) return
+
+        promoCodeJob = viewModelScope.launch {
+            val promoCode = promoCodeStateHolder.promoCode
+            val params = ApplyPromoCodeUseCase.Params(promoCode)
+            interactor.applyPromoCode(params)
+                .onSuccess {
+                    emitSideEffect(SideEffect.HideKeyboard)
+                    cartFlowRequester.request(CartRequest.REFRESHING)
+                }
+                .onFailure {
+                    val messageText = Text.Resource(R.string.promo_code_applying_error)
+                    val message = ZarinaToastMessage.error(messageText)
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+
+                    // TODO: [High] Do only if PromoCodeNotFoundException is caught
+                    promoCodeStateHolder.setIsPromoCodeInvalid(true)
+                    val promoCodeDescription = Text.Resource(R.string.promo_code_applying_error_description)
+                    promoCodeStateHolder.setPromoCodeDescription(promoCodeDescription)
+                }
+        }
+    }
+
+    fun onRemovePromoCodeClicked() {
+        if (promoCodeJob?.isActive == true) return
+
+        val isPromoCodeApplied =
+            (cartState.value as? CartState.Cart)?.promoCodeState?.isApplied == true
+        if (isPromoCodeApplied) {
+            emitSideEffect(SideEffect.HideKeyboard)
+            promoCodeJob = viewModelScope.launch {
+                interactor.removePromoCode()
+                    .onSuccess {
+                        cartFlowRequester.request(CartRequest.REFRESHING)
+                    }
+                    .onFailure {
+                        val messageText = Text.Resource(R.string.promo_code_removing_error)
+                        val message = ZarinaToastMessage.error(messageText)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
+                    }
+            }
+        } else {
+            promoCodeStateHolder.clearPromoCode()
+        }
+    }
+
+    fun onPromoCodeImeDoneClicked() {
+        if (promoCodeStateHolder.promoCode.isNotBlank()) {
+            onApplyPromoCodeClicked()
+        }
+    }
+
+    private suspend fun applyBonusWriteOff(bonusCount: Int) {
+        val params = ApplyBonusWriteOffUseCase.Params(cartType, bonusCount)
+        interactor.applyBonusWriteOff(params)
+            .onSuccess {
+                emitSideEffect(SideEffect.HideKeyboard)
+                cartFlowRequester.request(CartRequest.REFRESHING)
+            }
+            .onFailure {
+                val messageText = Text.Resource(R.string.bonus_write_off_applying_error)
+                val message = ZarinaToastMessage.error(messageText)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+    }
+
+    private suspend fun removeBonusWriteOff() {
+        val params = RemoveBonusWriteOffUseCase.Params(cartType)
+        interactor.removeBonusWriteOff(params)
+            .onSuccess {
+                emitSideEffect(SideEffect.HideKeyboard)
+                cartFlowRequester.request(CartRequest.REFRESHING)
+            }
+            .onFailure {
+                val messageText = Text.Resource(R.string.bonus_write_off_removing_error)
+                val message = ZarinaToastMessage.error(messageText)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+    }
+
+    private suspend fun applyMyCardToCart(productsFirstPriceSum: Int) {
+        val cart = cartResult.value?.getOrNull()
+        val isBonusWriteOffApplied = bonusStateHolder.isBonusWriteOffApplied.value
+        val isPromoCodeApplied = cart?.promoCode?.isApplied == true
+
+        val params = ApplyMyCardToCartUseCase.Params(cartType, productsFirstPriceSum)
+        interactor.applyMyCardToCart(params)
+            .onSuccess {
+                cartFlowRequester.request(CartRequest.REFRESHING)
+                showMyCardReplacedOtherBonusToast(
+                    isBonusWriteOffApplied = isBonusWriteOffApplied,
+                    isPromoCodeApplied = isPromoCodeApplied,
+                )
+            }
+            .onFailure {
+                myCardStateHolder.setIsMyCardApplied(false)
+                val messageText = Text.Resource(R.string.my_card_applying_error)
+                val message = ZarinaToastMessage.error(messageText)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+    }
+
+    private suspend fun removeMyCardFromCart() {
+        val params = RemoveMyCardFromCartUseCase.Params(cartType)
+        interactor.removeMyCardFromCart(params)
+            .onSuccess {
+                cartFlowRequester.request(CartRequest.REFRESHING)
+            }
+            .onFailure {
+                myCardStateHolder.setIsMyCardApplied(false)
+                val messageText = Text.Resource(R.string.my_card_canceling_error)
+                val message = ZarinaToastMessage.error(messageText)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+    }
+
+    private fun showMyCardReplacedOtherBonusToast(
+        isBonusWriteOffApplied: Boolean,
+        isPromoCodeApplied: Boolean,
+    ) {
+        val messageText = when {
+            isBonusWriteOffApplied -> {
+                Text.Resource(R.string.my_card_cant_be_combined_with_bonuses)
+            }
+
+            isPromoCodeApplied -> {
+                Text.Resource(R.string.my_card_cant_be_combined_with_promo_code)
+            }
+
+            else -> return
+        }
+        val message = ZarinaToastMessage(
+            text = messageText,
+            duration = ZarinaToastMessage.DURATION_LONG,
+        )
+        emitSideEffect(SideEffect.ShowZarinaToast(message))
     }
 
     private fun getDeliveryInfo(checkoutParams: CheckoutParams): DeliveryInfo {
@@ -227,6 +424,10 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutOrderPlacingScreenAction) : SideEffect
+
+        data object HideKeyboard : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 
     @Immutable

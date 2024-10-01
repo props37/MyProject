@@ -59,6 +59,12 @@ object CheckoutOrderPlacingScreenComponents {
         deliveryInfo: DeliveryInfo,
         onChangeDeliveryClicked: () -> Unit,
         cartState: CartState,
+        onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
+        onBonusCountToWriteOffChanged: (Int?) -> Unit,
+        onIsMyCardAppliedChanged: (Boolean) -> Unit,
+        onApplyPromoCodeClicked: () -> Unit,
+        onRemovePromoCodeClicked: () -> Unit,
+        onPromoCodeImeDoneClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val navigationBarHeight =
@@ -114,6 +120,12 @@ object CheckoutOrderPlacingScreenComponents {
 
             cartItems(
                 cartState = cartState,
+                onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
+                onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
+                onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
+                onApplyPromoCodeClicked = onApplyPromoCodeClicked,
+                onRemovePromoCodeClicked = onRemovePromoCodeClicked,
+                onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
             )
         }
     }
@@ -231,11 +243,23 @@ object CheckoutOrderPlacingScreenComponents {
 
     private fun LazyListScope.cartItems(
         cartState: CartState,
+        onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
+        onBonusCountToWriteOffChanged: (Int?) -> Unit,
+        onIsMyCardAppliedChanged: (Boolean) -> Unit,
+        onApplyPromoCodeClicked: () -> Unit,
+        onRemovePromoCodeClicked: () -> Unit,
+        onPromoCodeImeDoneClicked: () -> Unit,
     ) {
         when (cartState) {
             is CartState.Cart -> {
                 cartItemsImpl(
                     cartState = cartState,
+                    onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
+                    onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
+                    onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
+                    onApplyPromoCodeClicked = onApplyPromoCodeClicked,
+                    onRemovePromoCodeClicked = onRemovePromoCodeClicked,
+                    onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
                 )
             }
 
@@ -289,6 +313,12 @@ object CheckoutOrderPlacingScreenComponents {
 
     private fun LazyListScope.cartItemsImpl(
         cartState: CartState.Cart,
+        onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
+        onBonusCountToWriteOffChanged: (Int?) -> Unit,
+        onIsMyCardAppliedChanged: (Boolean) -> Unit,
+        onApplyPromoCodeClicked: () -> Unit,
+        onRemovePromoCodeClicked: () -> Unit,
+        onPromoCodeImeDoneClicked: () -> Unit,
     ) {
         itemsIndexed(
             items = cartState.productItems,
@@ -359,8 +389,8 @@ object CheckoutOrderPlacingScreenComponents {
             ) {
                 CartScreenComponents.BonusWriteOff(
                     state = cartState.bonusState,
-                    onIsAppliedChanged = {}, // TODO: [High] Implement
-                    onBonusCountToWriteOffChanged = {}, // TODO: [High] Implement
+                    onIsAppliedChanged = onIsBonusWriteOffAppliedChanged,
+                    onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp)
@@ -381,7 +411,7 @@ object CheckoutOrderPlacingScreenComponents {
             ) {
                 CartScreenComponents.MyCard(
                     state = cartState.myCardState,
-                    onIsAppliedChanged = {}, // TODO: [High] Implement
+                    onIsAppliedChanged = onIsMyCardAppliedChanged,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp)
@@ -404,15 +434,15 @@ object CheckoutOrderPlacingScreenComponents {
                     state = cartState.promoCodeState.textFieldState,
                     isApplied = cartState.promoCodeState.isApplied,
                     appliedPromoCode = cartState.promoCodeState.appliedPromoCode,
-                    onApplyClicked = {}, // TODO: [High] Implement
-                    onRemoveClicked = {}, // TODO: [High] Implement
+                    onApplyClicked = onApplyPromoCodeClicked,
+                    onRemoveClicked = onRemovePromoCodeClicked,
                     isError = cartState.promoCodeState.isInvalid,
                     description = {
                         CartScreenComponents.PromoCodeDescription(
                             text = cartState.promoCodeState.description?.let { textString(it) },
                         )
                     },
-                    onKeyboardAction = {}, // TODO: [High] Implement
+                    onKeyboardAction = { onPromoCodeImeDoneClicked() },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp)

@@ -57,6 +57,12 @@ fun CheckoutOrderPlacingScreen(
         onChangeDeliveryClicked = viewModel::onChangeDeliveryClicked,
         cartState = cartState,
         isRefreshing = isRefreshing,
+        onIsBonusWriteOffAppliedChanged = viewModel::onIsBonusWriteOffAppliedChanged,
+        onBonusCountToWriteOffChanged = viewModel::onBonusCountToWriteOffChanged,
+        onIsMyCardAppliedChanged = viewModel::onIsMyCardAppliedChanged,
+        onApplyPromoCodeClicked = viewModel::onApplyPromoCodeClicked,
+        onRemovePromoCodeClicked = viewModel::onRemovePromoCodeClicked,
+        onPromoCodeImeDoneClicked = viewModel::onPromoCodeImeDoneClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -74,6 +80,12 @@ private fun ScreenContent(
     onChangeDeliveryClicked: () -> Unit,
     cartState: CartState,
     isRefreshing: Boolean,
+    onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
+    onBonusCountToWriteOffChanged: (Int?) -> Unit,
+    onIsMyCardAppliedChanged: (Boolean) -> Unit,
+    onApplyPromoCodeClicked: () -> Unit,
+    onRemovePromoCodeClicked: () -> Unit,
+    onPromoCodeImeDoneClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
 ) {
@@ -108,6 +120,12 @@ private fun ScreenContent(
                 deliveryInfo = deliveryInfo,
                 onChangeDeliveryClicked = onChangeDeliveryClicked,
                 cartState = cartState,
+                onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
+                onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
+                onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
+                onApplyPromoCodeClicked = onApplyPromoCodeClicked,
+                onRemovePromoCodeClicked = onRemovePromoCodeClicked,
+                onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
                 modifier = Modifier.fillMaxSize(),
             )
         }
