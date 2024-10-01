@@ -51,7 +51,6 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 @Suppress("ConstPropertyName")
 object CheckoutOrderPlacingScreenComponents {
 
-    // TODO: [High] Add bottom bar padding
     @Composable
     fun OrderPlacing(
         customer: Customer,
