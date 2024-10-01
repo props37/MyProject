@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
@@ -23,8 +22,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.Customer
-import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.OrderPlacing
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
@@ -40,6 +39,7 @@ fun CheckoutOrderPlacingScreen(
     val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()
     val customer by viewModel.customer.collectAsStateWithLifecycle()
     val deliveryInfo by viewModel.deliveryInfo.collectAsStateWithLifecycle()
+    val cartState by viewModel.cartState.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = state,
@@ -50,6 +50,7 @@ fun CheckoutOrderPlacingScreen(
         onChangeCustomerClicked = viewModel::onChangeCustomerClicked,
         deliveryInfo = deliveryInfo,
         onChangeDeliveryClicked = viewModel::onChangeDeliveryClicked,
+        cartState = cartState,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -65,6 +66,7 @@ private fun ScreenContent(
     onChangeCustomerClicked: () -> Unit,
     deliveryInfo: DeliveryInfo,
     onChangeDeliveryClicked: () -> Unit,
+    cartState: CartState,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
 ) {
@@ -82,8 +84,7 @@ private fun ScreenContent(
                     WindowInsets.statusBars
                         .union(WindowInsets.displayCutout),
                 )
-                .imePadding()
-                .bottomNavBarPadding(WindowInsets.ime),
+                .imePadding(),
         ) {
             CheckoutComponents.TopBar(
                 title = stringResource(R.string.order_confirmation),
@@ -99,6 +100,8 @@ private fun ScreenContent(
                 onChangeCustomerClicked = onChangeCustomerClicked,
                 deliveryInfo = deliveryInfo,
                 onChangeDeliveryClicked = onChangeDeliveryClicked,
+                cartState = cartState,
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }

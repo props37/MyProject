@@ -8,6 +8,7 @@ import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
@@ -23,11 +24,19 @@ import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
+import ru.livetyping.zarina.presentation.screen.cart.model.CartRequest
+import ru.livetyping.zarina.presentation.screen.cart.model.CartState
+import ru.livetyping.zarina.presentation.screen.cart.model.CartStateBuilder
+import ru.livetyping.zarina.presentation.screen.cart.stateholder.CartBonusStateHolder
+import ru.livetyping.zarina.presentation.screen.cart.stateholder.CartMyCardStateHolder
+import ru.livetyping.zarina.presentation.screen.cart.stateholder.CartPromoCodeStateHolder
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.SideEffect
 import ru.livetyping.zarina.usecase.checkout.GetCheckoutCartFlowUseCase
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
+import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
+import ru.livetyping.zarina.util.library.coroutines.combineMore
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,17 +47,33 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
+    private val cartStateBuilder = CartStateBuilder()
+
     private val params = savedStateHandle.toRoute<CheckoutGraph.OrderPlacing>(
         typeMap = CheckoutGraph.OrderPlacing.typeMap(),
     )
     private val checkoutParams = params.checkoutParams.toCheckoutParams()
 
-    private val cartFlowRequester = FlowRequester(CartRequest.GENERAL) {
+    private val bonusStateHolder = CartBonusStateHolder(savedStateHandle)
+
+    private val myCardStateHolder = CartMyCardStateHolder()
+
+    private val promoCodeStateHolder = CartPromoCodeStateHolder(savedStateHandle)
+
+    private val cartFlowRequester = FlowRequester(CartRequest.LOADING) {
         val params = GetCheckoutCartFlowUseCase.Params(checkoutParams)
         interactor.getCheckoutCartFlow(params)
     }
 
     private val cartResult: StateFlow<Result<Cart>?> = cartFlowRequester.flow
+        .onEach { result ->
+            val cart = result.getOrNull()
+            if (cart != null) {
+                bonusStateHolder.updateFromCart(cart)
+                myCardStateHolder.updateFromCart(cart)
+                promoCodeStateHolder.updateFromCart(cart)
+            }
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
@@ -62,6 +87,31 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     val customer: StateFlow<Customer> = ImmutableStateFlow(checkoutParams.customer)
 
     val deliveryInfo: StateFlow<DeliveryInfo> = ImmutableStateFlow(getDeliveryInfo(checkoutParams))
+
+    val cartState: StateFlow<CartState> = combineMore(
+        cartResult,
+        cartFlowRequester.loadingState,
+        bonusStateHolder.isBonusWriteOffApplied,
+        myCardStateHolder.isMyCardApplied,
+        promoCodeStateHolder.isPromoCodeInvalid,
+        promoCodeStateHolder.promoCodeDescription,
+    ) { result, loadingState, isBonusWriteOffApplied, isMyCardApplied, isPromoCodeInvalid, promoCodeDescription ->
+        cartStateBuilder.build(
+            cartResult = result,
+            cartLoadingState = loadingState,
+            cartType = checkoutParams.cartType,
+            isBonusWriteOffApplied = isBonusWriteOffApplied,
+            bonusWriteOffTextFieldState = bonusStateHolder.bonusWriteOffTextFieldState,
+            isMyCardApplied = isMyCardApplied,
+            promoCodeTextFieldState = promoCodeStateHolder.promoCodeTextFieldState,
+            isPromoCodeInvalid = isPromoCodeInvalid,
+            promoCodeDescription = promoCodeDescription,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = CartState.Loading,
+    )
 
     fun onBackClicked() {
         navigationThrottler.throttle {
@@ -148,8 +198,6 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         val deliveryMethodType: DeliveryMethodType,
         val descriptions: List<String>,
     )
-
-    private enum class CartRequest : FlowRequester.Request { GENERAL }
 
     companion object {
         private const val COMMA_SEPARATOR = ", "

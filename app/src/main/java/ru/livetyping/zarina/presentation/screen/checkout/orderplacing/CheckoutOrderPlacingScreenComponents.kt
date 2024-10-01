@@ -4,8 +4,15 @@ import android.os.Parcelable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -13,17 +20,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
 import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
+import ru.livetyping.zarina.presentation.common.component.ProductOrderCard
+import ru.livetyping.zarina.presentation.common.component.ProductOrderCardCountStyle
+import ru.livetyping.zarina.presentation.common.component.ProductOrderCardSkeleton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
+import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
+import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
+import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.util.domain.nameResId
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPhoneNumber
+import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
@@ -37,9 +53,15 @@ object CheckoutOrderPlacingScreenComponents {
         onChangeCustomerClicked: () -> Unit,
         deliveryInfo: DeliveryInfo,
         onChangeDeliveryClicked: () -> Unit,
+        cartState: CartState,
         modifier: Modifier = Modifier,
     ) {
+        val navigationBarHeight =
+            WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        val contentPadding = PaddingValues(bottom = navigationBarHeight + 20.dp)
+
         LazyColumn(
+            contentPadding = contentPadding,
             modifier = modifier,
         ) {
             item(
@@ -84,6 +106,10 @@ object CheckoutOrderPlacingScreenComponents {
                     ),
                 )
             }
+
+            cartItems(
+                cartState = cartState,
+            )
         }
     }
 
@@ -198,6 +224,158 @@ object CheckoutOrderPlacingScreenComponents {
         }
     }
 
+    private fun LazyListScope.cartItems(
+        cartState: CartState,
+    ) {
+        when (cartState) {
+            is CartState.Cart -> {
+                cartItemsImpl(
+                    cartState = cartState,
+                )
+            }
+
+            CartState.Loading -> {
+                item(
+                    key = OrderPlacingKey.CartSkeleton,
+                    contentType = OrderPlacingContentType.CartSkeleton,
+                ) {
+                    CartSkeleton(
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeInSpec,
+                        ),
+                    )
+                }
+            }
+
+            is CartState.Error -> {
+                item(
+                    key = OrderPlacingKey.CartError,
+                    contentType = OrderPlacingContentType.CartError,
+                ) {
+                    CartError(
+                        cartState = cartState,
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeInSpec,
+                        ),
+                    )
+                }
+            }
+
+            CartState.EmptyCart -> {
+                item(
+                    key = OrderPlacingKey.EmptyCartError,
+                    contentType = OrderPlacingContentType.EmptyCartError,
+                ) {
+                    EmptyCartError(
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeInSpec,
+                        ),
+                    )
+                }
+            }
+        }
+    }
+
+    private fun LazyListScope.cartItemsImpl(
+        cartState: CartState.Cart,
+    ) {
+        itemsIndexed(
+            items = cartState.productItems,
+            key = { _, productItem ->
+                OrderPlacingKey.CartProduct(productItem.product.id.value)
+            },
+            contentType = { _, _ -> OrderPlacingContentType.CartProduct },
+        ) { index, productItem ->
+            Column(
+                modifier = Modifier.animateItem(
+                    fadeInSpec = LazyListFadeInSpec,
+                    placementSpec = LazyListPlacementSpec,
+                    fadeOutSpec = LazyListFadeInSpec,
+                )
+            ) {
+                val product = productItem.product
+                val countStyle = remember {
+                    ProductOrderCardCountStyle.Selector(isEditable = false, onClick = {})
+                }
+                ProductOrderCard(
+                    name = product.name,
+                    imageUrl = product.imageUrl,
+                    size = product.size,
+                    sizeRu = null,
+                    height = product.height,
+                    color = product.color,
+                    count = product.count,
+                    countStyle = countStyle,
+                    price = product.price,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                if (index < cartState.productItems.lastIndex) {
+                    ZarinaDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun CartSkeleton(
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier) {
+            val shimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
+
+            repeat(CartSkeletonItemCount) { index ->
+                ProductOrderCardSkeleton(shimmer = shimmer)
+
+                if (index < CartSkeletonItemCount - 1) {
+                    ZarinaDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun CartError(
+        cartState: CartState.Error,
+        modifier: Modifier = Modifier,
+    ) {
+        ZarinaErrorScreen(
+            state = cartState.state,
+            onButtonClicked = {}, // TODO: [High] Implement
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(CartErrorPadding),
+        )
+    }
+
+    @Composable
+    private fun EmptyCartError(
+        modifier: Modifier = Modifier,
+    ) {
+        val errorState = remember { ErrorState.GENERIC }
+        ZarinaErrorScreen(
+            state = errorState,
+            onButtonClicked = {}, // TODO: [High] Implement
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(CartErrorPadding),
+        )
+    }
+
     @Composable
     private fun OrderListHeaderChangeButton(
         onClick: () -> Unit,
@@ -221,15 +399,25 @@ object CheckoutOrderPlacingScreenComponents {
         data object DeliveryInfo : OrderPlacingKey()
 
         data object YourOrder : OrderPlacingKey()
+
+        data object CartError : OrderPlacingKey()
+
+        data object EmptyCartError : OrderPlacingKey()
+
+        data object CartSkeleton : OrderPlacingKey()
+
+        data class CartProduct(val id: Long) : OrderPlacingKey()
     }
 
     @Stable
-    private sealed class OrderPlacingContentType {
-        data object Customer : OrderPlacingContentType()
-
-        data object DeliveryInfo : OrderPlacingContentType()
-
-        data object YourOrder : OrderPlacingContentType()
+    private enum class OrderPlacingContentType {
+        Customer,
+        DeliveryInfo,
+        YourOrder,
+        CartError,
+        EmptyCartError,
+        CartSkeleton,
+        CartProduct,
     }
 
     @Stable
@@ -241,4 +429,9 @@ object CheckoutOrderPlacingScreenComponents {
         get() = PaddingValues(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 8.dp)
 
     private const val CommaSeparator = ", "
+
+    private const val CartSkeletonItemCount = 4
+
+    private val CartErrorPadding: PaddingValues
+        get() = PaddingValues(horizontal = 16.dp, vertical = 56.dp)
 }
