@@ -1054,7 +1054,7 @@ object CartScreenComponents {
 
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
-    private fun BonusAccrual(
+    fun BonusAccrual(
         bonusCount: Int,
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
@@ -1110,7 +1110,7 @@ object CartScreenComponents {
 
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
-    private fun BonusWriteOff(
+    fun BonusWriteOff(
         state: CartBonusState,
         onIsAppliedChanged: (Boolean) -> Unit,
         onBonusCountToWriteOffChanged: (Int?) -> Unit,
@@ -1205,7 +1205,7 @@ object CartScreenComponents {
     }
 
     @Composable
-    private fun MyCard(
+    fun MyCard(
         state: CartMyCardState,
         onIsAppliedChanged: (Boolean) -> Unit,
         modifier: Modifier = Modifier,
@@ -1241,7 +1241,7 @@ object CartScreenComponents {
     }
 
     @Composable
-    private fun PromoCodeDescription(
+    fun PromoCodeDescription(
         text: String?,
         modifier: Modifier = Modifier,
     ) {

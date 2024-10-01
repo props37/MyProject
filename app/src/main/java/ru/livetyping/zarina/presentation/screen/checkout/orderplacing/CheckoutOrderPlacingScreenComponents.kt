@@ -24,8 +24,11 @@ import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.Customer
+import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
+import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
 import ru.livetyping.zarina.presentation.common.animation.LazyListPlacementSpec
+import ru.livetyping.zarina.presentation.common.component.CartPrice
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCard
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCardCountStyle
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCardSkeleton
@@ -36,9 +39,11 @@ import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
+import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPromoCodeTextField
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.util.domain.nameResId
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPhoneNumber
+import ru.livetyping.zarina.presentation.screen.cart.CartScreenComponents
 import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -297,7 +302,7 @@ object CheckoutOrderPlacingScreenComponents {
                     fadeInSpec = LazyListFadeInSpec,
                     placementSpec = LazyListPlacementSpec,
                     fadeOutSpec = LazyListFadeInSpec,
-                )
+                ),
             ) {
                 val product = productItem.product
                 val countStyle = remember {
@@ -324,6 +329,120 @@ object CheckoutOrderPlacingScreenComponents {
                     )
                 }
             }
+        }
+
+        if (cartState.bonusState.bonuses.accrualForPurchase != 0) {
+            item(
+                key = OrderPlacingKey.BonusAccrual,
+                contentType = OrderPlacingContentType.BonusAccrual,
+            ) {
+                CartScreenComponents.BonusAccrual(
+                    bonusCount = cartState.bonusState.bonuses.accrualForPurchase,
+                    onClick = {}, // TODO: [High] Implement
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 32.dp)
+                        .padding(start = 16.dp, end = 8.dp)
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeInSpec,
+                        ),
+                )
+            }
+        }
+
+        if (cartState.bonusState.isWriteOffAvailable) {
+            item(
+                key = OrderPlacingKey.BonusWriteOff,
+                contentType = OrderPlacingContentType.BonusWriteOff,
+            ) {
+                CartScreenComponents.BonusWriteOff(
+                    state = cartState.bonusState,
+                    onIsAppliedChanged = {}, // TODO: [High] Implement
+                    onBonusCountToWriteOffChanged = {}, // TODO: [High] Implement
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp)
+                        .padding(start = 16.dp, end = 8.dp)
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeInSpec,
+                        ),
+                )
+            }
+        }
+
+        if (cartState.myCardState != null) {
+            item(
+                key = OrderPlacingKey.MyCard,
+                contentType = OrderPlacingContentType.MyCard,
+            ) {
+                CartScreenComponents.MyCard(
+                    state = cartState.myCardState,
+                    onIsAppliedChanged = {}, // TODO: [High] Implement
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp)
+                        .padding(start = 16.dp, end = 8.dp)
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeInSpec,
+                        ),
+                )
+            }
+        }
+
+        if (cartState.promoCodeState != null) {
+            item(
+                key = OrderPlacingKey.PromoCode,
+                contentType = OrderPlacingContentType.PromoCode,
+            ) {
+                ZarinaPromoCodeTextField(
+                    state = cartState.promoCodeState.textFieldState,
+                    isApplied = cartState.promoCodeState.isApplied,
+                    appliedPromoCode = cartState.promoCodeState.appliedPromoCode,
+                    onApplyClicked = {}, // TODO: [High] Implement
+                    onRemoveClicked = {}, // TODO: [High] Implement
+                    isError = cartState.promoCodeState.isInvalid,
+                    description = {
+                        CartScreenComponents.PromoCodeDescription(
+                            text = cartState.promoCodeState.description?.let { textString(it) },
+                        )
+                    },
+                    onKeyboardAction = {}, // TODO: [High] Implement
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp)
+                        .padding(horizontal = 16.dp)
+                        .animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeOutSpec,
+                        ),
+                )
+            }
+        }
+
+        item(
+            key = OrderPlacingKey.Price,
+            contentType = OrderPlacingContentType.Price,
+        ) {
+            CartPrice(
+                cartPrice = cartState.price.cartPrice,
+                discountSize = cartState.price.discountSize,
+                totalPrice = cartState.price.totalPrice,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp)
+                    .animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    ),
+            )
         }
     }
 
@@ -407,6 +526,16 @@ object CheckoutOrderPlacingScreenComponents {
         data object CartSkeleton : OrderPlacingKey()
 
         data class CartProduct(val id: Long) : OrderPlacingKey()
+
+        data object BonusAccrual : OrderPlacingKey()
+
+        data object BonusWriteOff : OrderPlacingKey()
+
+        data object MyCard : OrderPlacingKey()
+
+        data object PromoCode : OrderPlacingKey()
+
+        data object Price : OrderPlacingKey()
     }
 
     @Stable
@@ -418,6 +547,11 @@ object CheckoutOrderPlacingScreenComponents {
         EmptyCartError,
         CartSkeleton,
         CartProduct,
+        BonusAccrual,
+        BonusWriteOff,
+        MyCard,
+        PromoCode,
+        Price,
     }
 
     @Stable
