@@ -27,8 +27,8 @@ data class PaymentMethodDto(
         return PaymentMethod(
             id = PaymentMethod.Id(id),
             type = type.toPaymentMethodType(),
-            title = title,
-            description = description,
+            title = title.trim(),
+            description = description.trim(),
         )
     }
 }
