@@ -143,6 +143,6 @@ private fun ScreenContent(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        // Add preview
     }
 }

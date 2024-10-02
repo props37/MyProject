@@ -109,7 +109,6 @@ private fun ScreenContent(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
         ScreenContent(
             phone = remember { FakeDataGenerator.getPhoneNumber() },
             otp = "",
