@@ -169,11 +169,6 @@ class CheckoutAddressViewModelComponent @Inject constructor(
         init = { TextFieldState() },
     )
 
-    val searchApartmentTextFieldState: TextFieldState by savedStateHandle.saveable(
-        saver = TextFieldState.Saver,
-        init = { TextFieldState() },
-    )
-
     val isBuildingSelectionEnabled: StateFlow<Boolean> = selectedStreetValueHolder.stateFlow
         .mapState(
             scope = scope,

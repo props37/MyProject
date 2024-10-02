@@ -185,7 +185,6 @@ object CheckoutAddressComponents {
         onCloseClicked: () -> Unit,
         streetTextFieldState: TextFieldState,
         buildingTextFieldState: TextFieldState,
-        apartmentTextFieldState: TextFieldState,
         streetsState: CheckoutAddressViewModelComponent.State,
         buildingsState: CheckoutAddressViewModelComponent.State,
         onStreetSelected: (CheckoutAddressViewModelComponent.Item) -> Unit,

@@ -70,8 +70,6 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
     val apartmentTextFieldState: TextFieldState = addressComponent.apartmentTextFieldState
     val searchStreetTextFieldState: TextFieldState = addressComponent.searchStreetTextFieldState
     val searchBuildingTextFieldState: TextFieldState = addressComponent.searchBuildingTextFieldState
-    val searchApartmentTextFieldState: TextFieldState =
-        addressComponent.searchApartmentTextFieldState
 
     val streetsState: StateFlow<CheckoutAddressViewModelComponent.State> =
         addressComponent.streetsState
