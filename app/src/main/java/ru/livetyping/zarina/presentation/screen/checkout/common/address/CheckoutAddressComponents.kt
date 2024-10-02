@@ -298,7 +298,6 @@ object CheckoutAddressComponents {
                 addressSelectorState = addressSelectorState,
                 onAddressItemClicked = onAddressItemClicked,
                 onErrorRefreshClicked = onErrorRefreshClicked,
-                sheetState = sheetState,
             )
         }
     }
@@ -344,13 +343,11 @@ object CheckoutAddressComponents {
         )
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun AddressSelectorBottomSheetContentItems(
         addressSelectorState: CheckoutAddressViewModelComponent.State,
         onAddressItemClicked: (CheckoutAddressViewModelComponent.Item) -> Unit,
         onErrorRefreshClicked: () -> Unit,
-        sheetState: SheetState,
         modifier: Modifier = Modifier,
     ) {
         Crossfade(
@@ -391,7 +388,7 @@ object CheckoutAddressComponents {
                 is CheckoutAddressViewModelComponent.State.Error -> {
                     ZarinaErrorScreen(
                         state = state.state,
-                        onButtonClicked = { /*TODO*/ },
+                        onButtonClicked = onErrorRefreshClicked,
                         modifier = Modifier
                             .fillMaxSize()
                             .windowInsetsPadding(WindowInsets.navigationBarsOrIme)
