@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
+import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaClubModalBottomSheet
 import ru.livetyping.zarina.presentation.common.component.overlay.ZarinaRefreshingOverlay
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
@@ -78,6 +79,7 @@ fun CheckoutOrderPlacingScreen(
         paymentMethodsState = paymentMethodsState,
         onPaymentMethodSelected = viewModel::onPaymentMethodSelected,
         onPaymentMethodsErrorRefreshClicked = viewModel::onPaymentMethodsErrorRefreshClicked,
+        onUrlClicked = viewModel::onUrlClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -108,6 +110,7 @@ private fun ScreenContent(
     paymentMethodsState: PaymentMethodsState,
     onPaymentMethodSelected: (PaymentMethod) -> Unit,
     onPaymentMethodsErrorRefreshClicked: () -> Unit,
+    onUrlClicked: (Url) -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
 ) {
@@ -120,7 +123,7 @@ private fun ScreenContent(
     ZarinaClubModalBottomSheet(
         isVisible = isZarinaClubBottomSheetVisible,
         onDismissRequest = { isZarinaClubBottomSheetVisible = false },
-        onUrlClicked = {}, // TODO: [High] Implement
+        onUrlClicked = onUrlClicked,
     )
 
     var isPaymentMethodsBottomSheetVisible by remember { mutableStateOf(false) }

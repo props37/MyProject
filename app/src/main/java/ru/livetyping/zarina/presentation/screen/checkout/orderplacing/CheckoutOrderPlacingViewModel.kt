@@ -32,6 +32,7 @@ import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
+import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
@@ -323,6 +324,13 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         paymentMethodsFlowRequester.request(PaymentMethodsRequest.GENERAL)
     }
 
+    fun onUrlClicked(url: Url) {
+        navigationThrottler.throttle {
+            val action = SideEffect.OpenUrl(url)
+            emitSideEffect(action)
+        }
+    }
+
     private suspend fun applyBonusWriteOff(bonusCount: Int) {
         val params = ApplyBonusWriteOffUseCase.Params(cartType, bonusCount)
         interactor.applyBonusWriteOff(params)
@@ -489,6 +497,8 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         data object HideKeyboard : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
+
+        data class OpenUrl(val url: Url) : SideEffect
     }
 
     @Immutable
