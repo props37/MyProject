@@ -419,7 +419,7 @@ object CheckoutOrderPlacingScreenComponents {
             ) {
                 val product = productItem.product
                 val countStyle = remember {
-                    ProductOrderCardCountStyle.Selector(isEditable = false, onClick = {})
+                    ProductOrderCardCountStyle.Selector(isEditable = false, onClick = null)
                 }
                 ProductOrderCard(
                     name = product.name,
