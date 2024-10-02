@@ -170,6 +170,12 @@ object CheckoutOrderPlacingScreenComponents {
     ) {
         val coroutineScope = rememberCoroutineScope()
 
+        fun closeBottomSheet() {
+            coroutineScope
+                .launch { sheetState.hide() }
+                .invokeOnCompletion { onDismissRequest() }
+        }
+
         if (isVisible) {
             ZarinaModalBottomSheet(
                 onDismissRequest = onDismissRequest,
@@ -177,16 +183,15 @@ object CheckoutOrderPlacingScreenComponents {
                 modifier = modifier,
             ) {
                 PaymentMethodsBottomSheetTopBar(
-                    onCloseClicked = {
-                        coroutineScope
-                            .launch { sheetState.hide() }
-                            .invokeOnCompletion { onDismissRequest() }
-                    },
+                    onCloseClicked = { closeBottomSheet() },
                 )
 
                 PaymentMethodsBottomSheetContent(
                     paymentMethodsState = paymentMethodsState,
-                    onPaymentMethodSelected = onPaymentMethodSelected,
+                    onPaymentMethodSelected = {
+                        onPaymentMethodSelected(it)
+                        closeBottomSheet()
+                    },
                     onPaymentMethodsErrorRefreshClicked = onPaymentMethodsErrorRefreshClicked,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -443,7 +448,7 @@ object CheckoutOrderPlacingScreenComponents {
                 onClick = onPaymentMethodSelectorClicked,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 24.dp)
+                    .padding(top = 24.dp, bottom = 16.dp)
                     .animateItem(
                         fadeInSpec = LazyListFadeInSpec,
                         placementSpec = LazyListPlacementSpec,
@@ -647,6 +652,7 @@ object CheckoutOrderPlacingScreenComponents {
             },
             label = label,
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+            applyContentPaddingToDivider = true,
             content = content,
             modifier = modifier,
         )
@@ -743,9 +749,16 @@ object CheckoutOrderPlacingScreenComponents {
                         onClick = { onPaymentMethodSelected(paymentMethod) },
                     ) {
                         Column {
-                            Text(text = paymentMethod.title)
+                            Text(
+                                text = paymentMethod.title,
+                                style = UiKitTheme.typography.secondary.light,
+                            )
                             Spacer(modifier = Modifier.height(2.dp))
-                            Text(text = paymentMethod.description)
+                            Text(
+                                text = paymentMethod.description,
+                                style = UiKitTheme.typography.footnote.light,
+                                color = UiKitTheme.colors.text.general.regular.muted,
+                            )
                         }
                     }
 
