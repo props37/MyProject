@@ -31,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.Customer
+import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.presentation.common.component.overlay.ZarinaRefreshingOverlay
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.cart.model.CartState
@@ -65,6 +66,7 @@ fun CheckoutOrderPlacingScreen(
         deliveryInfo = deliveryInfo,
         onChangeDeliveryClicked = viewModel::onChangeDeliveryClicked,
         cartState = cartState,
+        onCartErrorRefreshClicked = viewModel::onCartErrorRefreshClicked,
         isRefreshing = isRefreshing,
         onIsBonusWriteOffAppliedChanged = viewModel::onIsBonusWriteOffAppliedChanged,
         onBonusCountToWriteOffChanged = viewModel::onBonusCountToWriteOffChanged,
@@ -73,6 +75,8 @@ fun CheckoutOrderPlacingScreen(
         onRemovePromoCodeClicked = viewModel::onRemovePromoCodeClicked,
         onPromoCodeImeDoneClicked = viewModel::onPromoCodeImeDoneClicked,
         paymentMethodsState = paymentMethodsState,
+        onPaymentMethodSelected = viewModel::onPaymentMethodSelected,
+        onPaymentMethodsErrorRefreshClicked = viewModel::onPaymentMethodsErrorRefreshClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -92,6 +96,7 @@ private fun ScreenContent(
     deliveryInfo: DeliveryInfo,
     onChangeDeliveryClicked: () -> Unit,
     cartState: CartState,
+    onCartErrorRefreshClicked: () -> Unit,
     isRefreshing: Boolean,
     onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
     onBonusCountToWriteOffChanged: (Int?) -> Unit,
@@ -100,6 +105,8 @@ private fun ScreenContent(
     onRemovePromoCodeClicked: () -> Unit,
     onPromoCodeImeDoneClicked: () -> Unit,
     paymentMethodsState: PaymentMethodsState,
+    onPaymentMethodSelected: (PaymentMethod) -> Unit,
+    onPaymentMethodsErrorRefreshClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
 ) {
@@ -111,8 +118,10 @@ private fun ScreenContent(
     var isPaymentMethodsBottomSheetVisible by remember { mutableStateOf(false) }
     PaymentMethodsBottomSheet(
         isVisible = isPaymentMethodsBottomSheetVisible,
-        paymentMethodsState = paymentMethodsState,
         onDismissRequest = { isPaymentMethodsBottomSheetVisible = false },
+        paymentMethodsState = paymentMethodsState,
+        onPaymentMethodSelected = onPaymentMethodSelected,
+        onPaymentMethodsErrorRefreshClicked = onPaymentMethodsErrorRefreshClicked,
         modifier = Modifier.statusBarsPadding(),
     )
 
@@ -142,6 +151,7 @@ private fun ScreenContent(
                 deliveryInfo = deliveryInfo,
                 onChangeDeliveryClicked = onChangeDeliveryClicked,
                 cartState = cartState,
+                onCartErrorRefreshClicked = onCartErrorRefreshClicked,
                 onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
                 onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
                 onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,

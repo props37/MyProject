@@ -311,6 +311,18 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         }
     }
 
+    fun onCartErrorRefreshClicked() {
+        cartFlowRequester.request(CartRequest.LOADING)
+    }
+
+    fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
+        selectedPaymentMethodId.value = paymentMethod.id
+    }
+
+    fun onPaymentMethodsErrorRefreshClicked() {
+        paymentMethodsFlowRequester.request(PaymentMethodsRequest.GENERAL)
+    }
+
     private suspend fun applyBonusWriteOff(bonusCount: Int) {
         val params = ApplyBonusWriteOffUseCase.Params(cartType, bonusCount)
         interactor.applyBonusWriteOff(params)
