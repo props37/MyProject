@@ -83,6 +83,7 @@ object CheckoutOrderPlacingScreenComponents {
         onCartErrorRefreshClicked: () -> Unit,
         onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
         onBonusCountToWriteOffChanged: (Int?) -> Unit,
+        onBonusAccrualClicked: () -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
@@ -147,6 +148,7 @@ object CheckoutOrderPlacingScreenComponents {
                 onCartErrorRefreshClicked = onCartErrorRefreshClicked,
                 onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
                 onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
+                onBonusAccrualClicked = onBonusAccrualClicked,
                 onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
                 onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                 onRemovePromoCodeClicked = onRemovePromoCodeClicked,
@@ -315,6 +317,7 @@ object CheckoutOrderPlacingScreenComponents {
         onCartErrorRefreshClicked: () -> Unit,
         onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
         onBonusCountToWriteOffChanged: (Int?) -> Unit,
+        onBonusAccrualClicked: () -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
@@ -328,6 +331,7 @@ object CheckoutOrderPlacingScreenComponents {
                     cartState = cartState,
                     onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
                     onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
+                    onBonusAccrualClicked = onBonusAccrualClicked,
                     onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
                     onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                     onRemovePromoCodeClicked = onRemovePromoCodeClicked,
@@ -391,6 +395,7 @@ object CheckoutOrderPlacingScreenComponents {
         cartState: CartState.Cart,
         onIsBonusWriteOffAppliedChanged: (Boolean) -> Unit,
         onBonusCountToWriteOffChanged: (Int?) -> Unit,
+        onBonusAccrualClicked: () -> Unit,
         onIsMyCardAppliedChanged: (Boolean) -> Unit,
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
@@ -464,7 +469,7 @@ object CheckoutOrderPlacingScreenComponents {
             ) {
                 CartScreenComponents.BonusAccrual(
                     bonusCount = cartState.bonusState.bonuses.accrualForPurchase,
-                    onClick = {}, // TODO: [High] Implement
+                    onClick = onBonusAccrualClicked,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp)

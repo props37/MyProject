@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
+import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaClubModalBottomSheet
 import ru.livetyping.zarina.presentation.common.component.overlay.ZarinaRefreshingOverlay
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.cart.model.CartState
@@ -115,6 +116,13 @@ private fun ScreenContent(
         navigate = navigate,
     )
 
+    var isZarinaClubBottomSheetVisible by remember { mutableStateOf(false) }
+    ZarinaClubModalBottomSheet(
+        isVisible = isZarinaClubBottomSheetVisible,
+        onDismissRequest = { isZarinaClubBottomSheetVisible = false },
+        onUrlClicked = {}, // TODO: [High] Implement
+    )
+
     var isPaymentMethodsBottomSheetVisible by remember { mutableStateOf(false) }
     PaymentMethodsBottomSheet(
         isVisible = isPaymentMethodsBottomSheetVisible,
@@ -154,6 +162,7 @@ private fun ScreenContent(
                 onCartErrorRefreshClicked = onCartErrorRefreshClicked,
                 onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
                 onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
+                onBonusAccrualClicked = { isZarinaClubBottomSheetVisible = true },
                 onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
                 onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                 onRemovePromoCodeClicked = onRemovePromoCodeClicked,
