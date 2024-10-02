@@ -9,7 +9,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
@@ -27,8 +32,36 @@ import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ZarinaClubBottomSheetContent(
+fun ZarinaClubModalBottomSheet(
+    isVisible: Boolean,
+    onDismissRequest: () -> Unit,
+    onUrlClicked: (Url) -> Unit,
+    modifier: Modifier = Modifier,
+    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    if (isVisible) {
+        ZarinaModalBottomSheet(
+            onDismissRequest = onDismissRequest,
+            sheetState = sheetState,
+        ) {
+            ZarinaClubModalBottomSheetContent(
+                onCloseClicked = {
+                    coroutineScope
+                        .launch { sheetState.hide() }
+                        .invokeOnCompletion { onDismissRequest() }
+                },
+                onLearnMoreClicked = onUrlClicked,
+            )
+        }
+    }
+}
+
+@Composable
+private fun ZarinaClubModalBottomSheetContent(
     onCloseClicked: () -> Unit,
     onLearnMoreClicked: (Url) -> Unit,
     modifier: Modifier = Modifier,
@@ -99,7 +132,7 @@ fun ZarinaClubBottomSheetContent(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        ZarinaClubBottomSheetContent(
+        ZarinaClubModalBottomSheetContent(
             onCloseClicked = {},
             onLearnMoreClicked = {},
         )
