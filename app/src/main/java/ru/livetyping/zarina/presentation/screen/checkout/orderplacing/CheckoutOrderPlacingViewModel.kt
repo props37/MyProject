@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.checkout.orderplacing
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,8 +9,10 @@ import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -31,6 +34,8 @@ import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.base.text.Text
+import ru.livetyping.zarina.presentation.common.error.ErrorState
+import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
@@ -121,6 +126,24 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(),
             initialValue = null,
         )
+
+    private val selectedPaymentMethodId = MutableStateFlow<PaymentMethod.Id?>(null)
+
+    val paymentMethodsState: StateFlow<PaymentMethodsState> = combine(
+        paymentMethodsResult,
+        paymentMethodsFlowRequester.loadingState,
+        selectedPaymentMethodId,
+    ) { paymentMethodsResult, paymentMethodsLoadingState, selectedPaymentMethodId ->
+        createPaymentMethodsState(
+            paymentMethodsResult = paymentMethodsResult,
+            paymentMethodsLoadingState = paymentMethodsLoadingState,
+            selectedPaymentMethodId = selectedPaymentMethodId,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = PaymentMethodsState.Loading,
+    )
 
     val step: StateFlow<Int> = ImmutableStateFlow(params.step)
 
@@ -422,6 +445,32 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         }
     }
 
+    private fun createPaymentMethodsState(
+        paymentMethodsResult: Result<List<PaymentMethod>>?,
+        paymentMethodsLoadingState: FlowRequester.LoadingState,
+        selectedPaymentMethodId: PaymentMethod.Id?,
+    ): PaymentMethodsState {
+        return if (paymentMethodsResult == null || paymentMethodsLoadingState.isLoading()) {
+            PaymentMethodsState.Loading
+        } else {
+            paymentMethodsResult.fold(
+                onSuccess = { paymentMethods ->
+                    val selectedPaymentMethod = selectedPaymentMethodId?.let { selectedId ->
+                        paymentMethods.find { it.id == selectedId }
+                    }
+                    PaymentMethodsState.Success(
+                        paymentMethods = paymentMethods,
+                        selectedPaymentMethod = selectedPaymentMethod,
+                    )
+                },
+                onFailure = { t ->
+                    val errorState = ErrorState.from(t)
+                    PaymentMethodsState.Error(errorState)
+                },
+            )
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutOrderPlacingScreenAction) : SideEffect
 
@@ -435,6 +484,25 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         val deliveryMethodType: DeliveryMethodType,
         val descriptions: List<String>,
     )
+
+    @Stable
+    sealed class PaymentMethodsState {
+        @Immutable
+        data class Success(
+            val paymentMethods: List<PaymentMethod>,
+            val selectedPaymentMethod: PaymentMethod?,
+        ) : PaymentMethodsState()
+
+        @Immutable
+        data object Loading : PaymentMethodsState()
+
+        @Immutable
+        data class Error(val errorState: ErrorState) : PaymentMethodsState()
+
+        fun findSelectedPaymentMethod(): PaymentMethod? {
+            return (this as? Success)?.selectedPaymentMethod
+        }
+    }
 
     private enum class PaymentMethodsRequest : FlowRequester.Request { GENERAL }
 

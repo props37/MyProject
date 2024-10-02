@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.checkout.orderplacing
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -11,10 +12,15 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,7 +36,9 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.OrderPlacing
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.PaymentMethodsBottomSheet
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.PaymentMethodsState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
@@ -45,6 +53,7 @@ fun CheckoutOrderPlacingScreen(
     val deliveryInfo by viewModel.deliveryInfo.collectAsStateWithLifecycle()
     val cartState by viewModel.cartState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val paymentMethodsState by viewModel.paymentMethodsState.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = state,
@@ -63,11 +72,15 @@ fun CheckoutOrderPlacingScreen(
         onApplyPromoCodeClicked = viewModel::onApplyPromoCodeClicked,
         onRemovePromoCodeClicked = viewModel::onRemovePromoCodeClicked,
         onPromoCodeImeDoneClicked = viewModel::onPromoCodeImeDoneClicked,
+        paymentMethodsState = paymentMethodsState,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
 }
 
+// Suppress false positive lint checks
+@SuppressLint("ComposeMultipleContentEmitters", "ComposeContentEmitterReturningValues")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
     step: Int,
@@ -86,12 +99,21 @@ private fun ScreenContent(
     onApplyPromoCodeClicked: () -> Unit,
     onRemovePromoCodeClicked: () -> Unit,
     onPromoCodeImeDoneClicked: () -> Unit,
+    paymentMethodsState: PaymentMethodsState,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
 ) {
     CheckoutOrderPlacingScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
+    )
+
+    var isPaymentMethodsBottomSheetVisible by remember { mutableStateOf(false) }
+    PaymentMethodsBottomSheet(
+        isVisible = isPaymentMethodsBottomSheetVisible,
+        paymentMethodsState = paymentMethodsState,
+        onDismissRequest = { isPaymentMethodsBottomSheetVisible = false },
+        modifier = Modifier.statusBarsPadding(),
     )
 
     Box {
@@ -126,6 +148,10 @@ private fun ScreenContent(
                 onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                 onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                 onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
+                selectedPaymentMethod = remember(paymentMethodsState) {
+                    paymentMethodsState.findSelectedPaymentMethod()
+                },
+                onPaymentMethodSelectorClicked = { isPaymentMethodsBottomSheetVisible = true },
                 modifier = Modifier.fillMaxSize(),
             )
         }

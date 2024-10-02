@@ -323,6 +323,8 @@
     <string name="order_confirmation">Подтверждение заказа</string>
     <string name="customer">Покупатель</string>
     <string name="your_order">Твой заказ</string>
+    <string name="payment_method">Способ оплаты</string>
+    <string name="select_payment_method">Выбери способ оплаты</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

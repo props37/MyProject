@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.checkout.orderplacing
 
 import android.os.Parcelable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -10,20 +11,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.Customer
+import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
 import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
@@ -32,21 +45,28 @@ import ru.livetyping.zarina.presentation.common.component.CartPrice
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCard
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCardCountStyle
 import ru.livetyping.zarina.presentation.common.component.ProductOrderCardSkeleton
+import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaModalBottomSheet
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
+import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaErrorScreen
+import ru.livetyping.zarina.presentation.common.component.selector.ZarinaButtonSelector
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPromoCodeTextField
+import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.util.domain.nameResId
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPhoneNumber
 import ru.livetyping.zarina.presentation.screen.cart.CartScreenComponents
 import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.PaymentMethodsState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.animation.Crossfade
 
 @Suppress("ConstPropertyName")
 object CheckoutOrderPlacingScreenComponents {
@@ -64,6 +84,8 @@ object CheckoutOrderPlacingScreenComponents {
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
+        selectedPaymentMethod: PaymentMethod?,
+        onPaymentMethodSelectorClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val navigationBarHeight =
@@ -125,7 +147,42 @@ object CheckoutOrderPlacingScreenComponents {
                 onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                 onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                 onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
+                selectedPaymentMethod = selectedPaymentMethod,
+                onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
             )
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun PaymentMethodsBottomSheet(
+        isVisible: Boolean,
+        paymentMethodsState: PaymentMethodsState,
+        onDismissRequest: () -> Unit,
+        modifier: Modifier = Modifier,
+        sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+    ) {
+        val coroutineScope = rememberCoroutineScope()
+
+        if (isVisible) {
+            ZarinaModalBottomSheet(
+                onDismissRequest = onDismissRequest,
+                sheetState = sheetState,
+                modifier = modifier,
+            ) {
+                PaymentMethodsBottomSheetTopBar(
+                    onCloseClicked = {
+                        coroutineScope
+                            .launch { sheetState.hide() }
+                            .invokeOnCompletion { onDismissRequest() }
+                    },
+                )
+
+                PaymentMethodsBottomSheetContent(
+                    paymentMethodsState = paymentMethodsState,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
         }
     }
 
@@ -248,6 +305,8 @@ object CheckoutOrderPlacingScreenComponents {
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
+        selectedPaymentMethod: PaymentMethod?,
+        onPaymentMethodSelectorClicked: () -> Unit,
     ) {
         when (cartState) {
             is CartState.Cart -> {
@@ -259,6 +318,8 @@ object CheckoutOrderPlacingScreenComponents {
                     onApplyPromoCodeClicked = onApplyPromoCodeClicked,
                     onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                     onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
+                    selectedPaymentMethod = selectedPaymentMethod,
+                    onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
                 )
             }
 
@@ -318,6 +379,8 @@ object CheckoutOrderPlacingScreenComponents {
         onApplyPromoCodeClicked: () -> Unit,
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
+        selectedPaymentMethod: PaymentMethod?,
+        onPaymentMethodSelectorClicked: () -> Unit,
     ) {
         itemsIndexed(
             items = cartState.productItems,
@@ -360,6 +423,24 @@ object CheckoutOrderPlacingScreenComponents {
             }
         }
 
+        item(
+            key = OrderPlacingKey.PaymentMethod,
+            contentType = OrderPlacingContentType.PaymentMethod,
+        ) {
+            PaymentMethodSelector(
+                selectedPaymentMethod = selectedPaymentMethod,
+                onClick = onPaymentMethodSelectorClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 24.dp)
+                    .animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeInSpec,
+                    ),
+            )
+        }
+
         if (cartState.bonusState.bonuses.accrualForPurchase != 0) {
             item(
                 key = OrderPlacingKey.BonusAccrual,
@@ -370,7 +451,7 @@ object CheckoutOrderPlacingScreenComponents {
                     onClick = {}, // TODO: [High] Implement
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 32.dp)
+                        .padding(top = 24.dp)
                         .padding(start = 16.dp, end = 8.dp)
                         .animateItem(
                             fadeInSpec = LazyListFadeInSpec,
@@ -525,6 +606,143 @@ object CheckoutOrderPlacingScreenComponents {
     }
 
     @Composable
+    private fun PaymentMethodSelector(
+        selectedPaymentMethod: PaymentMethod?,
+        onClick: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        val label = @Composable {
+            val text = selectedPaymentMethod?.let {
+                stringResource(R.string.payment_method)
+            }.orEmpty()
+            Text(text = text)
+        }
+
+        val content: (@Composable () -> Unit)? = selectedPaymentMethod?.let {
+            @Composable {
+                Text(text = selectedPaymentMethod.title)
+            }
+        }
+
+        ZarinaButtonSelector(
+            onClick = onClick,
+            placeholder = {
+                Text(
+                    text = stringResource(R.string.payment_method),
+                    maxLines = 1,
+                )
+            },
+            label = label,
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+            content = content,
+            modifier = modifier,
+        )
+    }
+
+    @Composable
+    private fun PaymentMethodsBottomSheetTopBar(
+        onCloseClicked: () -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        ZarinaTopBar(
+            centerContent = {
+                Text(text = stringResource(R.string.select_payment_method))
+            },
+            endContent = {
+                ZarinaCloseIconButton(
+                    onClick = onCloseClicked,
+                    iconSize = 20.dp,
+                    modifier = Modifier.padding(end = 2.dp),
+                )
+            },
+            contentPadding = PaddingValues(vertical = 4.dp),
+            modifier = modifier,
+        )
+    }
+
+    @Composable
+    private fun PaymentMethodsBottomSheetContent(
+        paymentMethodsState: PaymentMethodsState,
+        modifier: Modifier = Modifier,
+    ) {
+        Crossfade(
+            targetState = paymentMethodsState,
+            contentKey = {
+                when (it) {
+                    is PaymentMethodsState.Success -> PaymentMethodsBottomSheetContentKeySuccess
+                    PaymentMethodsState.Loading -> it
+                    is PaymentMethodsState.Error -> it
+                }
+            },
+            modifier = modifier,
+        ) { state ->
+            when (state) {
+                is PaymentMethodsState.Success -> {
+                    PaymentMethodsBottomSheetContentSuccess(
+                        paymentMethodsState = state,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+
+                PaymentMethodsState.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 48.dp),
+                    ) {
+                        ZarinaCircularLoader(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .size(40.dp),
+                        )
+                    }
+                }
+
+                is PaymentMethodsState.Error -> {
+                    ZarinaErrorScreen(
+                        state = state.errorState,
+                        onButtonClicked = {}, // TODO: [High] Implement
+                        fillWholeHeight = false,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 48.dp),
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun PaymentMethodsBottomSheetContentSuccess(
+        paymentMethodsState: PaymentMethodsState.Success,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+            paymentMethodsState.paymentMethods.forEachIndexed { index, paymentMethod ->
+                key(paymentMethod.id.value) {
+                    ZarinaItem(
+                        onClick = {}, // TODO: [High] Implement
+                    ) {
+                        Column {
+                            Text(text = paymentMethod.title)
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(text = paymentMethod.description)
+                        }
+                    }
+
+                    if (index < paymentMethodsState.paymentMethods.lastIndex) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
     private fun OrderListHeaderChangeButton(
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
@@ -556,6 +774,8 @@ object CheckoutOrderPlacingScreenComponents {
 
         data class CartProduct(val id: Long) : OrderPlacingKey()
 
+        data object PaymentMethod : OrderPlacingKey()
+
         data object BonusAccrual : OrderPlacingKey()
 
         data object BonusWriteOff : OrderPlacingKey()
@@ -576,6 +796,7 @@ object CheckoutOrderPlacingScreenComponents {
         EmptyCartError,
         CartSkeleton,
         CartProduct,
+        PaymentMethod,
         BonusAccrual,
         BonusWriteOff,
         MyCard,
@@ -597,4 +818,7 @@ object CheckoutOrderPlacingScreenComponents {
 
     private val CartErrorPadding: PaddingValues
         get() = PaddingValues(horizontal = 16.dp, vertical = 56.dp)
+
+    private const val PaymentMethodsBottomSheetContentKeySuccess =
+        "PaymentMethodsBottomSheetContentKeySuccess"
 }
