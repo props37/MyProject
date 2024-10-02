@@ -4,6 +4,8 @@ import android.os.Parcelable
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -742,10 +744,12 @@ object CartScreenComponents {
         onCheckoutClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        val animationSpec = remember { spring<IntOffset>(stiffness = Spring.StiffnessMedium) }
+
         AnimatedVisibility(
             visible = isVisible,
-            enter = slideInVertically { it },
-            exit = slideOutVertically { it },
+            enter = slideInVertically(animationSpec) { it },
+            exit = slideOutVertically(animationSpec) { it },
             modifier = modifier,
         ) {
             Row(
