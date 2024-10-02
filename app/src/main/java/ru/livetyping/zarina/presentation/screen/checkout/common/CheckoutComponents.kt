@@ -102,35 +102,6 @@ object CheckoutComponents {
         )
     }
 
-    @Composable
-    fun DeliveryOptionDetailsBottomSheetContent(
-        text: String,
-        onOkClicked: () -> Unit,
-        modifier: Modifier = Modifier,
-    ) {
-        Column(modifier = modifier) {
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(
-                text = text,
-                style = UiKitTheme.typography.secondary.regular,
-                color = UiKitTheme.colors.text.general.regular.default,
-                modifier = Modifier.padding(horizontal = 16.dp),
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-
-            ZarinaButton(
-                onClick = onOkClicked,
-                colors = ZarinaButtonDefaults.outlineColors(),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-            ) {
-                Text(text = stringResource(R.string.got_id).uppercase())
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-        }
-    }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun DeliveryOptionDetailsBottomSheet(
