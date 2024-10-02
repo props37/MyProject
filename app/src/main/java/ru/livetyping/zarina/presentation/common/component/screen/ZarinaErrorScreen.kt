@@ -33,12 +33,14 @@ fun ZarinaErrorScreen(
     state: ErrorState,
     onButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
+    fillWholeHeight: Boolean = true,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier,
     ) {
-        Spacer(modifier = Modifier.weight(1f))
+        val weightModifier = Modifier.weight(weight = 1f, fill = fillWholeHeight)
+        Spacer(modifier = weightModifier)
 
         Icon(
             painter = painterResource(state.iconResId),
@@ -63,7 +65,7 @@ fun ZarinaErrorScreen(
             modifier = Modifier.padding(horizontal = 8.dp),
         )
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = weightModifier)
         Spacer(modifier = Modifier.height(16.dp))
 
         AnimatedContent(
