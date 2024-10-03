@@ -11,6 +11,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -70,11 +71,13 @@ class CheckoutPickupStoreSelectionViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val storesRequester = FlowRequester(StoresRequest) {
-        city.flatMapLatest {
-            val city = it ?: City.DEFAULT
-            val params = GetPickupStoresFlowUseCase.Params(city)
-            interactor.getPickupStoresFlow(params)
-        }
+        city
+            .filterNotNull()
+            .flatMapLatest {
+                val city = it
+                val params = GetPickupStoresFlowUseCase.Params(city)
+                interactor.getPickupStoresFlow(params)
+            }
     }
 
     private val cartResult: StateFlow<Result<Cart>?> = cartRequester.flow

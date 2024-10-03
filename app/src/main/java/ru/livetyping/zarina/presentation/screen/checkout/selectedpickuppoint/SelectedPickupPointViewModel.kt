@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -59,12 +60,14 @@ class SelectedPickupPointViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val pickupPointRequester = FlowRequester(PickupPointRequest) {
-        city.flatMapLatest {
-            val city = it ?: City.DEFAULT
-            val pickupPointId = PickupPoint.Id(params.pickupPointId)
-            val params = GetPickupPointDetailsFlowUseCase.Params(city.id, pickupPointId)
-            interactor.getPickupPointDetailsFlow(params)
-        }
+        city
+            .filterNotNull()
+            .flatMapLatest {
+                val city = it
+                val pickupPointId = PickupPoint.Id(params.pickupPointId)
+                val params = GetPickupPointDetailsFlowUseCase.Params(city.id, pickupPointId)
+                interactor.getPickupPointDetailsFlow(params)
+            }
     }
 
     private var pickupPoint: PickupPointDetails? = null
