@@ -335,8 +335,15 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     }
 
     fun onPayClicked() {
-        // TODO: [High] Implement
-        // TODO: [High] Check if payment method is selected
+        if (selectedPaymentMethodId.value == null) {
+            val messageText = Text.Resource(R.string.payment_method_not_selected_error)
+            val message = ZarinaToastMessage(messageText)
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
+        }
+
+        navigationThrottler.throttle {
+            // TODO: [High] Implement
+        }
     }
 
     fun onPullRefreshTriggered() {
