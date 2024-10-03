@@ -88,12 +88,12 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     private val promoCodeStateHolder = CartPromoCodeStateHolder(savedStateHandle)
 
-    private val cartFlowRequester = FlowRequester(CartRequest.LOADING) {
+    private val cartRequester = FlowRequester(CartRequest.LOADING) {
         val params = GetCheckoutCartFlowUseCase.Params(checkoutParams)
         interactor.getCheckoutCartFlow(params)
     }
 
-    private val cartResult: StateFlow<Result<Cart>?> = cartFlowRequester.flow
+    private val cartResult: StateFlow<Result<Cart>?> = cartRequester.flow
         .onEach { result ->
             val cart = result.getOrNull()
             if (cart != null) {
@@ -156,7 +156,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     val cartState: StateFlow<CartState> = combineMore(
         cartResult,
-        cartFlowRequester.loadingState,
+        cartRequester.loadingState,
         bonusStateHolder.isBonusWriteOffApplied,
         myCardStateHolder.isMyCardApplied,
         promoCodeStateHolder.isPromoCodeInvalid,
@@ -179,9 +179,19 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         initialValue = CartState.Loading,
     )
 
-    val isRefreshing: StateFlow<Boolean> = cartFlowRequester.loadingState
+    val isRefreshing: StateFlow<Boolean> = cartRequester.loadingState
         .map { loadingState ->
             loadingState.loadingRequest == CartRequest.REFRESHING
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = false,
+        )
+
+    val isPullRefreshing: StateFlow<Boolean> = cartRequester.loadingState
+        .map { loadingState ->
+            loadingState.loadingRequest == CartRequest.PULL_REFRESHING
         }
         .stateIn(
             scope = viewModelScope,
@@ -268,7 +278,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
             interactor.applyPromoCode(params)
                 .onSuccess {
                     emitSideEffect(SideEffect.HideKeyboard)
-                    cartFlowRequester.request(CartRequest.REFRESHING)
+                    cartRequester.request(CartRequest.REFRESHING)
                 }
                 .onFailure {
                     val messageText = Text.Resource(R.string.promo_code_applying_error)
@@ -293,7 +303,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
             promoCodeJob = viewModelScope.launch {
                 interactor.removePromoCode()
                     .onSuccess {
-                        cartFlowRequester.request(CartRequest.REFRESHING)
+                        cartRequester.request(CartRequest.REFRESHING)
                     }
                     .onFailure {
                         val messageText = Text.Resource(R.string.promo_code_removing_error)
@@ -313,7 +323,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     }
 
     fun onCartErrorRefreshClicked() {
-        cartFlowRequester.request(CartRequest.LOADING)
+        cartRequester.request(CartRequest.LOADING)
     }
 
     fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
@@ -329,6 +339,12 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         // TODO: [High] Check if payment method is selected
     }
 
+    fun onPullRefreshTriggered() {
+        if (!cartRequester.loadingState.value.isLoading()) {
+            cartRequester.request(CartRequest.PULL_REFRESHING)
+        }
+    }
+
     fun onUrlClicked(url: Url) {
         navigationThrottler.throttle {
             val action = SideEffect.OpenUrl(url)
@@ -341,7 +357,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         interactor.applyBonusWriteOff(params)
             .onSuccess {
                 emitSideEffect(SideEffect.HideKeyboard)
-                cartFlowRequester.request(CartRequest.REFRESHING)
+                cartRequester.request(CartRequest.REFRESHING)
             }
             .onFailure {
                 val messageText = Text.Resource(R.string.bonus_write_off_applying_error)
@@ -355,7 +371,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         interactor.removeBonusWriteOff(params)
             .onSuccess {
                 emitSideEffect(SideEffect.HideKeyboard)
-                cartFlowRequester.request(CartRequest.REFRESHING)
+                cartRequester.request(CartRequest.REFRESHING)
             }
             .onFailure {
                 val messageText = Text.Resource(R.string.bonus_write_off_removing_error)
@@ -372,7 +388,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         val params = ApplyMyCardToCartUseCase.Params(cartType, productsFirstPriceSum)
         interactor.applyMyCardToCart(params)
             .onSuccess {
-                cartFlowRequester.request(CartRequest.REFRESHING)
+                cartRequester.request(CartRequest.REFRESHING)
                 showMyCardReplacedOtherBonusToast(
                     isBonusWriteOffApplied = isBonusWriteOffApplied,
                     isPromoCodeApplied = isPromoCodeApplied,
@@ -390,7 +406,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         val params = RemoveMyCardFromCartUseCase.Params(cartType)
         interactor.removeMyCardFromCart(params)
             .onSuccess {
-                cartFlowRequester.request(CartRequest.REFRESHING)
+                cartRequester.request(CartRequest.REFRESHING)
             }
             .onFailure {
                 myCardStateHolder.setIsMyCardApplied(false)
