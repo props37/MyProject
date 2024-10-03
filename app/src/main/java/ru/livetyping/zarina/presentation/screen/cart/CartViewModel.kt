@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.cart
 
+import android.os.SystemClock
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -61,6 +62,7 @@ import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.combineMore
 import ru.livetyping.zarina.util.library.coroutines.mapState
+import kotlin.time.Duration.Companion.minutes
 import ru.livetyping.zarina.domain.cart.Cart as DomainCart
 
 @HiltViewModel(assistedFactory = CartViewModel.Factory::class)
@@ -241,6 +243,9 @@ class CartViewModel @AssistedInject constructor(
         init = { TextFieldState() },
     )
 
+    private var deliveryCartLastUpdateTimestampMillis = 0L
+    private var pickupCartLastUpdateTimestampMillis = 0L
+
     init {
         resetPromoCodeErrorsOnChange()
         handleCitySelectorResult()
@@ -248,7 +253,7 @@ class CartViewModel @AssistedInject constructor(
     }
 
     fun onScreenOpened() {
-        requestCarts(CartRequest.LOADING)
+        updateCarts()
         viewModelScope.launch {
             interactor.fetchCartProductIds()
         }
@@ -600,9 +605,32 @@ class CartViewModel @AssistedInject constructor(
         }
     }
 
+    private fun updateCarts() {
+        val updateDeliveryCart = isCartUpdateNeeded(deliveryCartLastUpdateTimestampMillis)
+                || deliveryCartResult.value?.isFailure == true
+        val updatePickupCart = isCartUpdateNeeded(pickupCartLastUpdateTimestampMillis)
+                || pickupCartResult.value?.isFailure == true
+        if (updateDeliveryCart) {
+            requestDeliveryCart(CartRequest.LOADING)
+        }
+        if (updatePickupCart) {
+            requestPickupCart(CartRequest.LOADING)
+        }
+    }
+
     private fun requestCarts(request: CartRequest) {
+        requestDeliveryCart(request)
+        requestPickupCart(request)
+    }
+
+    private fun requestDeliveryCart(request: CartRequest) {
         deliveryCartRequester.request(request)
+        deliveryCartLastUpdateTimestampMillis = getCurrentTimestampMillis()
+    }
+
+    private fun requestPickupCart(request: CartRequest) {
         pickupCartRequester.request(request)
+        pickupCartLastUpdateTimestampMillis = getCurrentTimestampMillis()
     }
 
     private fun getCart(cartType: CartType): Cart? {
@@ -617,6 +645,15 @@ class CartViewModel @AssistedInject constructor(
             CartType.DELIVERY -> deliveryBonusStateHolder
             CartType.PICKUP -> pickupBonusStateHolder
         }
+    }
+
+    private fun isCartUpdateNeeded(lastUpdateTimestampMillis: Long): Boolean {
+        val currentTimestampMillis = getCurrentTimestampMillis()
+        return currentTimestampMillis - lastUpdateTimestampMillis > CART_UPDATE_THRESHOLD_MILLIS
+    }
+
+    private fun getCurrentTimestampMillis(): Long {
+        return SystemClock.elapsedRealtime()
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
@@ -640,5 +677,7 @@ class CartViewModel @AssistedInject constructor(
     companion object {
         private const val KEY_RESULT_CITY_SELECTOR_RESULT = "result_city_selector"
         private const val KEY_RESULT_PRODUCT_COUNT_SELECTOR = "result_product_count_selector"
+
+        private val CART_UPDATE_THRESHOLD_MILLIS = 5.minutes.inWholeMilliseconds
     }
 }
