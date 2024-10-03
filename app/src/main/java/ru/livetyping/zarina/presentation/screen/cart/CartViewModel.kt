@@ -359,7 +359,12 @@ class CartViewModel @AssistedInject constructor(
     }
 
     fun onCartErrorRefreshClicked() {
-        requestCarts(CartRequest.LOADING)
+        if (deliveryCartResult.value?.isFailure == true) {
+            requestDeliveryCart(CartRequest.LOADING)
+        }
+        if (pickupCartResult.value?.isFailure == true) {
+            requestPickupCart(CartRequest.LOADING)
+        }
     }
 
     fun onIsBonusWriteOffAppliedChanged(isApplied: Boolean) {
