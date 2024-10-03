@@ -237,6 +237,21 @@ class CartViewModel @AssistedInject constructor(
         initialValue = false,
     )
 
+    val isPullRefreshing: StateFlow<Boolean> = combine(
+        deliveryCartRequester.loadingState,
+        pickupCartRequester.loadingState,
+    ) { deliveryLoadingState, pickUpLoadingState ->
+        val isDeliveryCartRefreshing =
+            deliveryLoadingState.loadingRequest == CartRequest.PULL_REFRESHING
+        val isPickUpCartRefreshing =
+            pickUpLoadingState.loadingRequest == CartRequest.PULL_REFRESHING
+        isDeliveryCartRefreshing && isPickUpCartRefreshing
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = false,
+    )
+
     @OptIn(SavedStateHandleSaveableApi::class)
     private val pickupBonusWriteOffTextFieldState: TextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
@@ -477,6 +492,15 @@ class CartViewModel @AssistedInject constructor(
         navigationThrottler.throttle {
             val action = CartScreenAction.CheckoutClicked(currentCartType.value)
             emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
+    fun onPullRefreshTriggered() {
+        if (!deliveryCartRequester.loadingState.value.isLoading()) {
+            requestDeliveryCart(CartRequest.PULL_REFRESHING)
+        }
+        if (!pickupCartRequester.loadingState.value.isLoading()) {
+            requestPickupCart(CartRequest.PULL_REFRESHING)
         }
     }
 

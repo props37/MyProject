@@ -22,9 +22,9 @@ class CartStateBuilder {
         isPromoCodeInvalid: Boolean,
         promoCodeDescription: Text?,
     ): CartState {
-        val isLoading = cartLoadingState.isLoading()
-                && cartLoadingState.request == CartRequest.LOADING
-        return if (cartResult == null || isLoading) {
+        val isLoading = cartLoadingState.loadingRequest == CartRequest.LOADING
+        val isPullRefreshing = cartLoadingState.loadingRequest == CartRequest.PULL_REFRESHING
+        return if (cartResult == null || isLoading || isPullRefreshing) {
             CartState.Loading
         } else {
             cartResult.fold(
