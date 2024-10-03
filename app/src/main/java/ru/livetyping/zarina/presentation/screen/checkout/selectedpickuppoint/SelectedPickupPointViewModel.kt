@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
@@ -70,20 +69,13 @@ class SelectedPickupPointViewModel @Inject constructor(
             }
     }
 
-    private var pickupPoint: PickupPointDetails? = null
-
-    private val pickupPointResult: StateFlow<Result<PickupPointDetails>?> = pickupPointRequester.flow
-        .onEach { result ->
-            val pickupPoint = result.getOrNull()
-            if (pickupPoint != null) {
-                this.pickupPoint = pickupPoint
-            }
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null,
-        )
+    private val pickupPointResult: StateFlow<Result<PickupPointDetails>?> =
+        pickupPointRequester.flow
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = null,
+            )
 
     private val selectedDeliveryTypeId =
         MutableStateFlow<PickupPointDetails.DeliveryType.Id?>(null)
