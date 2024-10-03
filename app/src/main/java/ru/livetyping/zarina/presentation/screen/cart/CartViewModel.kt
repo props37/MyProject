@@ -165,13 +165,17 @@ class CartViewModel @AssistedInject constructor(
             initialValue = null,
         )
 
-    val cartSize: StateFlow<CartSize> = deliveryCartResult.mapState(
+    val cartSize: StateFlow<CartSize> = combine(
+        deliveryCartResult,
+        pickupCartResult,
+    ) { deliveryCartResult, pickupCartResult ->
+        val deliveryCart = deliveryCartResult?.getOrNull()
+        val pickupCart = pickupCartResult?.getOrNull()
+        deliveryCart?.size ?: pickupCart?.size ?: CartSize.EMPTY
+    }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
-        transform = { result ->
-            val cart = result?.getOrNull()
-            cart?.size ?: CartSize.EMPTY
-        },
+        initialValue = CartSize.EMPTY,
     )
 
     val deliveryCartState: StateFlow<CartState> = combineMore(
