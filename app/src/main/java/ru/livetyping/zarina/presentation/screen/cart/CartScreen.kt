@@ -60,8 +60,6 @@ import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 
-// TODO: [Medium] Add pull refresh
-
 @Composable
 fun CartScreen(
     navigate: (CartScreenAction) -> Unit,
