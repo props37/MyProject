@@ -61,8 +61,7 @@ class SelectedPickupPointViewModel @Inject constructor(
     private val pickupPointRequester = FlowRequester(PickupPointRequest) {
         city
             .filterNotNull()
-            .flatMapLatest {
-                val city = it
+            .flatMapLatest { city ->
                 val pickupPointId = PickupPoint.Id(params.pickupPointId)
                 val params = GetPickupPointDetailsFlowUseCase.Params(city.id, pickupPointId)
                 interactor.getPickupPointDetailsFlow(params)

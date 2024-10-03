@@ -73,8 +73,7 @@ class CheckoutPickupStoreSelectionViewModel @Inject constructor(
     private val storesRequester = FlowRequester(StoresRequest) {
         city
             .filterNotNull()
-            .flatMapLatest {
-                val city = it
+            .flatMapLatest { city ->
                 val params = GetPickupStoresFlowUseCase.Params(city)
                 interactor.getPickupStoresFlow(params)
             }
