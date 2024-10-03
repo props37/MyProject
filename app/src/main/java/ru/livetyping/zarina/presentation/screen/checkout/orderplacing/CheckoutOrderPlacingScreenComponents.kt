@@ -33,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.coroutines.launch
@@ -643,7 +644,11 @@ object CheckoutOrderPlacingScreenComponents {
 
         val content: (@Composable () -> Unit)? = selectedPaymentMethod?.let {
             @Composable {
-                Text(text = selectedPaymentMethod.title)
+                Text(
+                    text = selectedPaymentMethod.title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
         }
 
