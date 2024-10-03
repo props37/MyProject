@@ -324,6 +324,11 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         paymentMethodsFlowRequester.request(PaymentMethodsRequest.GENERAL)
     }
 
+    fun onPayClicked() {
+        // TODO: [High] Implement
+        // TODO: [High] Check if payment method is selected
+    }
+
     fun onUrlClicked(url: Url) {
         navigationThrottler.throttle {
             val action = SideEffect.OpenUrl(url)

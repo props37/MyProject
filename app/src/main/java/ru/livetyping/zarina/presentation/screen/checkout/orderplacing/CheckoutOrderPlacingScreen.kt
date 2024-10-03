@@ -79,6 +79,7 @@ fun CheckoutOrderPlacingScreen(
         paymentMethodsState = paymentMethodsState,
         onPaymentMethodSelected = viewModel::onPaymentMethodSelected,
         onPaymentMethodsErrorRefreshClicked = viewModel::onPaymentMethodsErrorRefreshClicked,
+        onPayClicked = viewModel::onPayClicked,
         onUrlClicked = viewModel::onUrlClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
@@ -110,6 +111,7 @@ private fun ScreenContent(
     paymentMethodsState: PaymentMethodsState,
     onPaymentMethodSelected: (PaymentMethod) -> Unit,
     onPaymentMethodsErrorRefreshClicked: () -> Unit,
+    onPayClicked: () -> Unit,
     onUrlClicked: (Url) -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
@@ -174,6 +176,7 @@ private fun ScreenContent(
                     paymentMethodsState.findSelectedPaymentMethod()
                 },
                 onPaymentMethodSelectorClicked = { isPaymentMethodsBottomSheetVisible = true },
+                onPayClicked = onPayClicked,
                 modifier = Modifier.fillMaxSize(),
             )
         }

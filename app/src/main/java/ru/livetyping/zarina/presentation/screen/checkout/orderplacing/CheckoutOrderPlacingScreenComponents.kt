@@ -7,18 +7,21 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
@@ -27,6 +30,8 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -74,6 +79,7 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 @Suppress("ConstPropertyName")
 object CheckoutOrderPlacingScreenComponents {
 
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     fun OrderPlacing(
         customer: Customer,
@@ -91,72 +97,96 @@ object CheckoutOrderPlacingScreenComponents {
         onPromoCodeImeDoneClicked: () -> Unit,
         selectedPaymentMethod: PaymentMethod?,
         onPaymentMethodSelectorClicked: () -> Unit,
+        onPayClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
+        val listState = rememberLazyListState()
         val navigationBarHeight =
             WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
         val contentPadding = PaddingValues(bottom = navigationBarHeight + 20.dp)
 
-        LazyColumn(
-            contentPadding = contentPadding,
-            modifier = modifier,
-        ) {
-            item(
-                key = OrderPlacingKey.Customer,
-                contentType = OrderPlacingContentType.Customer,
+        Box(modifier = modifier) {
+            LazyColumn(
+                state = listState,
+                contentPadding = contentPadding,
             ) {
-                Customer(
-                    customer = customer,
-                    onChangeClicked = onChangeCustomerClicked,
-                    modifier = Modifier.animateItem(
-                        fadeInSpec = LazyListFadeInSpec,
-                        placementSpec = LazyListPlacementSpec,
-                        fadeOutSpec = LazyListFadeInSpec,
-                    ),
+                item(
+                    key = OrderPlacingKey.Customer,
+                    contentType = OrderPlacingContentType.Customer,
+                ) {
+                    Customer(
+                        customer = customer,
+                        onChangeClicked = onChangeCustomerClicked,
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeInSpec,
+                        ),
+                    )
+                }
+
+                item(
+                    key = OrderPlacingKey.DeliveryInfo,
+                    contentType = OrderPlacingContentType.DeliveryInfo,
+                ) {
+                    DeliveryInfo(
+                        deliveryInfo = deliveryInfo,
+                        onChangeClicked = onChangeDeliveryClicked,
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeInSpec,
+                        ),
+                    )
+                }
+
+                item(
+                    key = OrderPlacingKey.YourOrder,
+                    contentType = OrderPlacingContentType.YourOrder,
+                ) {
+                    YourOrder(
+                        modifier = Modifier.animateItem(
+                            fadeInSpec = LazyListFadeInSpec,
+                            placementSpec = LazyListPlacementSpec,
+                            fadeOutSpec = LazyListFadeInSpec,
+                        ),
+                    )
+                }
+
+                cartItems(
+                    cartState = cartState,
+                    onCartErrorRefreshClicked = onCartErrorRefreshClicked,
+                    onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
+                    onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
+                    onBonusAccrualClicked = onBonusAccrualClicked,
+                    onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
+                    onApplyPromoCodeClicked = onApplyPromoCodeClicked,
+                    onRemovePromoCodeClicked = onRemovePromoCodeClicked,
+                    onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
+                    selectedPaymentMethod = selectedPaymentMethod,
+                    onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
+                    onPayClicked = onPayClicked,
                 )
             }
 
-            item(
-                key = OrderPlacingKey.DeliveryInfo,
-                contentType = OrderPlacingContentType.DeliveryInfo,
-            ) {
-                DeliveryInfo(
-                    deliveryInfo = deliveryInfo,
-                    onChangeClicked = onChangeDeliveryClicked,
-                    modifier = Modifier.animateItem(
-                        fadeInSpec = LazyListFadeInSpec,
-                        placementSpec = LazyListPlacementSpec,
-                        fadeOutSpec = LazyListFadeInSpec,
-                    ),
+            if (cartState is CartState.Cart) {
+                val isPayItemVisible by remember {
+                    derivedStateOf {
+                        val visibleItems = listState.layoutInfo.visibleItemsInfo
+                        visibleItems.any { it.contentType == OrderPlacingContentType.Pay }
+                    }
+                }
+
+                CartScreenComponents.CartBottomFloatingBlock(
+                    isVisible = !isPayItemVisible && !WindowInsets.isImeVisible,
+                    totalPrice = cartState.price.totalPrice,
+                    buttonText = stringResource(R.string.pay).uppercase(),
+                    isButtonEnabled = true,
+                    onButtonClicked = onPayClicked,
+                    windowInsets = WindowInsets.navigationBars,
+                    modifier = Modifier.align(Alignment.BottomCenter),
                 )
             }
-
-            item(
-                key = OrderPlacingKey.YourOrder,
-                contentType = OrderPlacingContentType.YourOrder,
-            ) {
-                YourOrder(
-                    modifier = Modifier.animateItem(
-                        fadeInSpec = LazyListFadeInSpec,
-                        placementSpec = LazyListPlacementSpec,
-                        fadeOutSpec = LazyListFadeInSpec,
-                    ),
-                )
-            }
-
-            cartItems(
-                cartState = cartState,
-                onCartErrorRefreshClicked = onCartErrorRefreshClicked,
-                onIsBonusWriteOffAppliedChanged = onIsBonusWriteOffAppliedChanged,
-                onBonusCountToWriteOffChanged = onBonusCountToWriteOffChanged,
-                onBonusAccrualClicked = onBonusAccrualClicked,
-                onIsMyCardAppliedChanged = onIsMyCardAppliedChanged,
-                onApplyPromoCodeClicked = onApplyPromoCodeClicked,
-                onRemovePromoCodeClicked = onRemovePromoCodeClicked,
-                onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
-                selectedPaymentMethod = selectedPaymentMethod,
-                onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
-            )
         }
     }
 
@@ -325,6 +355,7 @@ object CheckoutOrderPlacingScreenComponents {
         onPromoCodeImeDoneClicked: () -> Unit,
         selectedPaymentMethod: PaymentMethod?,
         onPaymentMethodSelectorClicked: () -> Unit,
+        onPayClicked: () -> Unit,
     ) {
         when (cartState) {
             is CartState.Cart -> {
@@ -339,6 +370,7 @@ object CheckoutOrderPlacingScreenComponents {
                     onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
                     selectedPaymentMethod = selectedPaymentMethod,
                     onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
+                    onPayClicked = onPayClicked,
                 )
             }
 
@@ -403,6 +435,7 @@ object CheckoutOrderPlacingScreenComponents {
         onPromoCodeImeDoneClicked: () -> Unit,
         selectedPaymentMethod: PaymentMethod?,
         onPaymentMethodSelectorClicked: () -> Unit,
+        onPayClicked: () -> Unit,
     ) {
         itemsIndexed(
             items = cartState.productItems,
@@ -575,6 +608,26 @@ object CheckoutOrderPlacingScreenComponents {
                         fadeOutSpec = LazyListFadeOutSpec,
                     ),
             )
+        }
+
+        item(
+            key = OrderPlacingKey.Pay,
+            contentType = OrderPlacingContentType.Pay,
+        ) {
+            ZarinaButton(
+                onClick = onPayClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 16.dp, bottom = 20.dp)
+                    .animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    ),
+            ) {
+                Text(text = stringResource(R.string.pay).uppercase())
+            }
         }
     }
 
@@ -827,6 +880,8 @@ object CheckoutOrderPlacingScreenComponents {
         data object PromoCode : OrderPlacingKey()
 
         data object Price : OrderPlacingKey()
+
+        data object Pay : OrderPlacingKey()
     }
 
     @Stable
@@ -844,6 +899,7 @@ object CheckoutOrderPlacingScreenComponents {
         MyCard,
         PromoCode,
         Price,
+        Pay,
     }
 
     @Stable
