@@ -3,18 +3,19 @@ package ru.livetyping.zarina.presentation.navigation.screen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.order.DeliveryMethodType
-import ru.livetyping.zarina.presentation.navigation.base.composableDestination
+import androidx.navigation.compose.composable
+import ru.livetyping.zarina.presentation.model.checkout.CheckoutParamsParcelable
+import ru.livetyping.zarina.presentation.model.checkout.DeliveryOptionParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryScreen
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryScreenAction
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.CheckoutCourierDeliveryViewModel
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
-import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.checkoutCourierDeliveryScreen(navController: NavHostController) {
-    composableDestination(CheckoutGraph.CourierDelivery) {
+    composable<CheckoutGraph.CourierDelivery>(
+        typeMap = CheckoutGraph.CourierDelivery.typeMap(),
+    ) {
         CheckoutCourierDeliveryScreen(
             viewModel = hiltViewModel { factory: CheckoutCourierDeliveryViewModel.Factory ->
                 val dateTimePeriodSelectorResultFlow = it.savedStateHandle
@@ -27,8 +28,7 @@ fun NavGraphBuilder.checkoutCourierDeliveryScreen(navController: NavHostControll
             navigate = { action ->
                 when (action) {
                     CheckoutCourierDeliveryScreenAction.ScreenClosed -> {
-                        navController.popBackStack(
-                            route = CheckoutGraph.CourierDelivery.routeSchema,
+                        navController.popBackStack<CheckoutGraph.CourierDelivery>(
                             inclusive = true,
                         )
                     }
@@ -41,38 +41,36 @@ fun NavGraphBuilder.checkoutCourierDeliveryScreen(navController: NavHostControll
                     }
 
                     is CheckoutCourierDeliveryScreenAction.DeliveryDateClicked -> {
-                        navController.navigateToCheckoutCourierDeliveryDateTimeSelectorScreen(
-                            type = CourierDeliveryDateTimeSelectorType.DATE,
-                            deliveryOptionId = action.deliveryOptionId,
-                            dateTimePeriods = action.dateTimePeriods,
+                        val courierDeliveryDateTimeSelector = CheckoutGraph.CourierDeliveryDateTimeSelector(
+                            type = CourierDeliveryDateTimeSelectorType.TIME,
+                            deliveryOptionId = action.deliveryOptionId.value,
+                            dateTimePeriods = action.dateTimePeriods.map {
+                                DeliveryOptionParcelable.DateTimePeriod.from(it)
+                            },
                         )
+                        navController.navigate(courierDeliveryDateTimeSelector)
                     }
 
                     is CheckoutCourierDeliveryScreenAction.DeliveryTimeClicked -> {
-                        navController.navigateToCheckoutCourierDeliveryDateTimeSelectorScreen(
+                        val courierDeliveryDateTimeSelector = CheckoutGraph.CourierDeliveryDateTimeSelector(
                             type = CourierDeliveryDateTimeSelectorType.TIME,
-                            deliveryOptionId = action.deliveryOptionId,
-                            dateTimePeriods = action.dateTimePeriods,
+                            deliveryOptionId = action.deliveryOptionId.value,
+                            dateTimePeriods = action.dateTimePeriods.map {
+                                DeliveryOptionParcelable.DateTimePeriod.from(it)
+                            },
                         )
+                        navController.navigate(courierDeliveryDateTimeSelector)
+                    }
+
+                    is CheckoutCourierDeliveryScreenAction.ContinueClicked -> {
+                        val orderPlacing = CheckoutGraph.OrderPlacing(
+                            step = action.step,
+                            checkoutParams = CheckoutParamsParcelable.from(action.checkoutParams),
+                        )
+                        navController.navigate(orderPlacing)
                     }
                 }
             },
         )
     }
-}
-
-fun NavHostController.navigateToCheckoutCourierDeliveryScreen(
-    cartType: CartType,
-    step: Int,
-    deliveryMethodType: DeliveryMethodType,
-) {
-    val args = CheckoutGraph.CourierDelivery.Args(
-        cartType = cartType,
-        step = step,
-        deliveryMethodType = deliveryMethodType,
-    )
-    this.navigate(
-        route = CheckoutGraph.CourierDelivery.routeSchema,
-        args = CheckoutGraph.CourierDelivery.createArgsBundle(args),
-    )
 }

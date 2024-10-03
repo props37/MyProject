@@ -7,13 +7,14 @@ import ru.livetyping.zarina.presentation.navigation.base.navigationGraph
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutCourierDeliveryDateTimeSelectorScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutCourierDeliveryScreen
+import ru.livetyping.zarina.presentation.navigation.screen.checkoutCustomerScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutDeliveryMethodScreen
+import ru.livetyping.zarina.presentation.navigation.screen.checkoutOrderPlacingScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutPickupPointDeliveryScreen
+import ru.livetyping.zarina.presentation.navigation.screen.checkoutPickupStoreSelectionScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutPostDeliveryScreen
-import ru.livetyping.zarina.presentation.navigation.screen.checkoutRecipientScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutSelectedPickupPointScreen
-import ru.livetyping.zarina.presentation.navigation.screen.checkoutSelectedStoreScreen
-import ru.livetyping.zarina.presentation.navigation.screen.checkoutStoreSelectionScreen
+import ru.livetyping.zarina.presentation.navigation.screen.checkoutSelectedPickupStoreScreen
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
@@ -28,20 +29,21 @@ fun NavGraphBuilder.checkoutGraph(navController: NavHostController) {
         popEnterTransition = { slidePopEnterTransition() },
         popExitTransition = { slidePopExitTransition() },
     ) {
-        checkoutRecipientScreen(navController)
-        checkoutStoreSelectionScreen(navController)
-        checkoutSelectedStoreScreen(navController)
+        checkoutCustomerScreen(navController)
+        checkoutPickupStoreSelectionScreen(navController)
+        checkoutSelectedPickupStoreScreen(navController)
         checkoutDeliveryMethodScreen(navController)
         checkoutCourierDeliveryScreen(navController)
         checkoutCourierDeliveryDateTimeSelectorScreen(navController)
         checkoutPostDeliveryScreen(navController)
         checkoutPickupPointDeliveryScreen(navController)
         checkoutSelectedPickupPointScreen(navController)
+        checkoutOrderPlacingScreen(navController)
     }
 }
 
 fun NavHostController.navigateToCheckoutGraph(cartType: CartType) {
-    val args = CheckoutGraph.Recipient.Args(cartType)
+    val args = CheckoutGraph.Customer.Args(cartType)
     this.navigate(
         route = CheckoutGraph.routeSchema,
         args = CheckoutGraph.createArgsBundle(args),

@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.navigation.screen
 
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.R
@@ -24,22 +25,27 @@ fun NavGraphBuilder.cartScreen(navController: NavHostController) {
             when (targetState.destination.route) {
                 UnscopedDestinations.CitySelector.routeSchema,
                 UnscopedDestinations.Product.routeSchema,
-                CheckoutGraph.Recipient.routeSchema -> slideExitTransition()
+                CheckoutGraph.Customer.routeSchema -> slideExitTransition()
 
                 else -> null
             }
         },
         popEnterTransition = {
-            when (initialState.destination.route) {
-                UnscopedDestinations.CitySelector.routeSchema,
-                UnscopedDestinations.Product.routeSchema,
-                CheckoutGraph.Recipient.routeSchema,
-                CheckoutGraph.StoreSelection.routeSchema,
-                CheckoutGraph.DeliveryMethod.routeSchema,
-                CheckoutGraph.CourierDelivery.routeSchema,
-                CheckoutGraph.CourierDeliveryDateTimeSelector.routeSchema,
-                CheckoutGraph.PostDelivery.routeSchema,
-                CheckoutGraph.PickupPointDelivery.routeSchema -> slidePopEnterTransition()
+            val destination = initialState.destination
+            val route = destination.route
+            when {
+                route == UnscopedDestinations.CitySelector.routeSchema
+                        || route == UnscopedDestinations.Product.routeSchema
+                        || route == CheckoutGraph.Customer.routeSchema
+                        || destination.hasRoute<CheckoutGraph.PickupStoreSelection>()
+                        || destination.hasRoute<CheckoutGraph.DeliveryMethod>()
+                        || destination.hasRoute<CheckoutGraph.CourierDelivery>()
+                        || destination.hasRoute<CheckoutGraph.CourierDeliveryDateTimeSelector>()
+                        || destination.hasRoute<CheckoutGraph.PostDelivery>()
+                        || destination.hasRoute<CheckoutGraph.PickupPointDelivery>()
+                        || destination.hasRoute<CheckoutGraph.OrderPlacing>()-> {
+                    slidePopEnterTransition()
+                }
 
                 else -> null
             }

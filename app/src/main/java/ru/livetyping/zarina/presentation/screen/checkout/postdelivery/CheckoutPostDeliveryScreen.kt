@@ -1,5 +1,8 @@
 package ru.livetyping.zarina.presentation.screen.checkout.postdelivery
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,9 +10,11 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -39,8 +44,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.domain.geography.City
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
+import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
@@ -74,7 +81,6 @@ fun CheckoutPostDeliveryScreen(
         apartmentTextFieldState = viewModel.apartmentTextFieldState,
         searchStreetTextFieldState = viewModel.searchStreetTextFieldState,
         searchBuildingTextFieldState = viewModel.searchBuildingTextFieldState,
-        searchApartmentTextFieldState = viewModel.searchApartmentTextFieldState,
         isBuildingSelectionEnabled = isBuildingSelectionEnabled,
         streetsState = streetsState,
         buildingsState = buildingsState,
@@ -84,8 +90,9 @@ fun CheckoutPostDeliveryScreen(
         onBuildingsErrorRefreshClicked = viewModel::onBuildingsErrorRefreshClicked,
         deliveryOptionsState = deliveryOptionsState,
         onDeliveryOptionClicked = viewModel::onDeliveryOptionClicked,
-        isContinueButtonVisible = isContinueButtonVisible,
         onDeliveryOptionsErrorRefreshClicked = viewModel::onDeliveryOptionsErrorRefreshClicked,
+        isContinueButtonVisible = isContinueButtonVisible,
+        onContinueClicked = viewModel::onContinueClicked,
         onBackClicked = viewModel::onBackClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
@@ -104,7 +111,6 @@ private fun ScreenContent(
     apartmentTextFieldState: TextFieldState,
     searchStreetTextFieldState: TextFieldState,
     searchBuildingTextFieldState: TextFieldState,
-    searchApartmentTextFieldState: TextFieldState,
     isBuildingSelectionEnabled: Boolean,
     streetsState: CheckoutAddressViewModelComponent.State,
     buildingsState: CheckoutAddressViewModelComponent.State,
@@ -113,9 +119,10 @@ private fun ScreenContent(
     onStreetsErrorRefreshClicked: () -> Unit,
     onBuildingsErrorRefreshClicked: () -> Unit,
     deliveryOptionsState: DeliveryOptionsState?,
-    onDeliveryOptionClicked: (DeliveryOptions.Option) -> Unit,
+    onDeliveryOptionClicked: (DeliveryOption) -> Unit,
     onDeliveryOptionsErrorRefreshClicked: () -> Unit,
     isContinueButtonVisible: Boolean,
+    onContinueClicked: () -> Unit,
     onBackClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -146,7 +153,6 @@ private fun ScreenContent(
         },
         streetTextFieldState = searchStreetTextFieldState,
         buildingTextFieldState = searchBuildingTextFieldState,
-        apartmentTextFieldState = searchApartmentTextFieldState,
         streetsState = streetsState,
         buildingsState = buildingsState,
         onStreetSelected = onStreetSelected,
@@ -156,9 +162,7 @@ private fun ScreenContent(
         modifier = Modifier.statusBarsPadding(),
     )
 
-    var visibleDeliveryOptionDetails by remember {
-        mutableStateOf<DeliveryOptions.Option?>(null)
-    }
+    var visibleDeliveryOptionDetails by remember { mutableStateOf<DeliveryOption?>(null) }
     CheckoutComponents.DeliveryOptionDetailsBottomSheet(
         visibleDeliveryOptionDetails = visibleDeliveryOptionDetails,
         onDismissRequest = { visibleDeliveryOptionDetails = null },
@@ -228,6 +232,25 @@ private fun ScreenContent(
             }
             Spacer(modifier = Modifier.height(20.dp + navigationBarHeight))
         }
+
+        AnimatedVisibility(
+            visible = isContinueButtonVisible,
+            enter = slideInVertically { it },
+            exit = slideOutVertically { it },
+        ) {
+            Column {
+                ZarinaDivider(modifier = Modifier.fillMaxWidth())
+                ZarinaButton(
+                    onClick = onContinueClicked,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .navigationBarsPadding(),
+                ) {
+                    Text(text = stringResource(R.string.continue_).uppercase())
+                }
+            }
+        }
     }
 }
 
@@ -237,6 +260,6 @@ private fun ScreenContent(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        // Add preview
     }
 }

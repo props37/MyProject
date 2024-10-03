@@ -1,24 +1,15 @@
 package ru.livetyping.zarina.presentation.navigation.navtype
 
-import android.os.Bundle
 import androidx.navigation.NavType
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 import ru.livetyping.zarina.presentation.model.filter.ListFilterParcelable
-import ru.livetyping.zarina.util.platform.BundleCompat
+import ru.livetyping.zarina.presentation.navigation.base.ParcelableNavType
 
 val NavType.Companion.ListFilterParcelableType: ListFilterParcelableNavType
     get() = ListFilterParcelableNavType()
 
-class ListFilterParcelableNavType : NavType<ListFilterParcelable?>(isNullableAllowed = true) {
-    override fun get(bundle: Bundle, key: String): ListFilterParcelable? {
-        return BundleCompat.getParcelable(bundle, key)
-    }
-
-    override fun parseValue(value: String): ListFilterParcelable {
-        return Json.decodeFromString(value)
-    }
-
-    override fun put(bundle: Bundle, key: String, value: ListFilterParcelable?) {
-        bundle.putParcelable(key, value)
-    }
-}
+class ListFilterParcelableNavType : ParcelableNavType<ListFilterParcelable?>(
+    isNullableAllowed = true,
+    serializer = Json.serializersModule.serializer(),
+)

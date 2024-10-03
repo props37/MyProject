@@ -43,7 +43,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
@@ -80,7 +80,6 @@ fun CheckoutCourierDeliveryScreen(
         apartmentTextFieldState = viewModel.apartmentTextFieldState,
         searchStreetTextFieldState = viewModel.searchStreetTextFieldState,
         searchBuildingTextFieldState = viewModel.searchBuildingTextFieldState,
-        searchApartmentTextFieldState = viewModel.searchApartmentTextFieldState,
         isBuildingSelectionEnabled = isBuildingSelectionEnabled,
         streetsState = streetsState,
         buildingsState = buildingsState,
@@ -113,7 +112,6 @@ private fun ScreenContent(
     apartmentTextFieldState: TextFieldState,
     searchStreetTextFieldState: TextFieldState,
     searchBuildingTextFieldState: TextFieldState,
-    searchApartmentTextFieldState: TextFieldState,
     isBuildingSelectionEnabled: Boolean,
     streetsState: CheckoutAddressViewModelComponent.State,
     buildingsState: CheckoutAddressViewModelComponent.State,
@@ -122,9 +120,9 @@ private fun ScreenContent(
     onStreetsErrorRefreshClicked: () -> Unit,
     onBuildingsErrorRefreshClicked: () -> Unit,
     deliveryOptionsState: DeliveryOptionsState?,
-    onDeliveryOptionClicked: (DeliveryOptions.Option) -> Unit,
-    onDeliveryOptionDateClicked: (DeliveryOptions.Option) -> Unit,
-    onDeliveryOptionTimeClicked: (DeliveryOptions.Option) -> Unit,
+    onDeliveryOptionClicked: (DeliveryOption) -> Unit,
+    onDeliveryOptionDateClicked: (DeliveryOption) -> Unit,
+    onDeliveryOptionTimeClicked: (DeliveryOption) -> Unit,
     onDeliveryOptionsErrorRefreshClicked: () -> Unit,
     isContinueButtonVisible: Boolean,
     onContinueClicked: () -> Unit,
@@ -158,7 +156,6 @@ private fun ScreenContent(
         },
         streetTextFieldState = searchStreetTextFieldState,
         buildingTextFieldState = searchBuildingTextFieldState,
-        apartmentTextFieldState = searchApartmentTextFieldState,
         streetsState = streetsState,
         buildingsState = buildingsState,
         onStreetSelected = onStreetSelected,
@@ -168,9 +165,7 @@ private fun ScreenContent(
         modifier = Modifier.statusBarsPadding(),
     )
 
-    var visibleDeliveryOptionDetails by remember {
-        mutableStateOf<DeliveryOptions.Option?>(null)
-    }
+    var visibleDeliveryOptionDetails by remember { mutableStateOf<DeliveryOption?>(null) }
     CheckoutComponents.DeliveryOptionDetailsBottomSheet(
         visibleDeliveryOptionDetails = visibleDeliveryOptionDetails,
         onDismissRequest = { visibleDeliveryOptionDetails = null },
@@ -268,6 +263,6 @@ private fun ScreenContent(
 @Composable
 private fun Preview() {
     ZarinaPreview {
-        // TODO: [Low] Add preview
+        // Add preview
     }
 }

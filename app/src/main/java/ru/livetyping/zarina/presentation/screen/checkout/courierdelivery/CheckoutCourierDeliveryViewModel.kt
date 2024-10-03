@@ -4,6 +4,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -12,7 +13,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -20,17 +20,17 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
-import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.CourierDeliveryCheckoutParams
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.domain.geography.City
-import ru.livetyping.zarina.domain.order.DeliveryMethodType
+import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
-import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
-import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
+import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.common.DeliveryOptionsState
 import ru.livetyping.zarina.presentation.screen.checkout.common.address.CheckoutAddressViewModelComponent
@@ -39,6 +39,7 @@ import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.Checkou
 import ru.livetyping.zarina.usecase.checkout.GetCourierDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
+import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 
@@ -55,45 +56,15 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
 
     private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
-    private val cartType: StateFlow<CartType> = savedStateHandle
-        .getStateFlow<CartTypeParcelable?>(
-            key = CheckoutGraph.CourierDelivery.ARG_KEY_CART_TYPE,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "cartType is null" }
-            it.toCartType()
-        }
+    private val params = savedStateHandle.toRoute<CheckoutGraph.CourierDelivery>(
+        typeMap = CheckoutGraph.CourierDelivery.typeMap(),
+    )
 
-    val step: StateFlow<Int> = savedStateHandle
-        .getStateFlow<Int?>(
-            key = CheckoutGraph.CourierDelivery.ARG_KEY_STEP,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "step is null" }
-        }
+    private val cartType = params.cartType.toCartType()
 
-    private val deliveryMethodType: StateFlow<DeliveryMethodType> = savedStateHandle
-        .getStateFlow<DeliveryMethodTypeParcelable?>(
-            key = CheckoutGraph.CourierDelivery.ARG_DELIVERY_METHOD_TYPE,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "deliveryMethodType is null" }
-            it.toDeliveryMethodType()
-        }
+    val step: StateFlow<Int> = ImmutableStateFlow(params.step)
 
-    val stepCount: StateFlow<Int> = MutableStateFlow(cartType.value.checkoutStepCount).asStateFlow()
+    val stepCount: StateFlow<Int> = ImmutableStateFlow(cartType.checkoutStepCount)
 
     val city: StateFlow<City?> = interactor.getUserCityFlow()
         .map { it.getOrDefault(City.DEFAULT) }
@@ -109,8 +80,6 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
     val apartmentTextFieldState: TextFieldState = addressComponent.apartmentTextFieldState
     val searchStreetTextFieldState: TextFieldState = addressComponent.searchStreetTextFieldState
     val searchBuildingTextFieldState: TextFieldState = addressComponent.searchBuildingTextFieldState
-    val searchApartmentTextFieldState: TextFieldState =
-        addressComponent.searchApartmentTextFieldState
 
     val streetsState: StateFlow<CheckoutAddressViewModelComponent.State> =
         addressComponent.streetsState
@@ -128,7 +97,7 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
         }
     }
 
-    private val deliveryOptionsResult: StateFlow<Result<DeliveryOptions>?> =
+    private val deliveryOptionsResult: StateFlow<Result<List<DeliveryOption>>?> =
         deliveryOptionsRequester.flow
             .stateIn(
                 scope = viewModelScope,
@@ -136,10 +105,10 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
                 initialValue = null,
             )
 
-    private val selectedDeliveryOptionId = MutableStateFlow<DeliveryOptions.Option.Id?>(null)
+    private val selectedDeliveryOptionId = MutableStateFlow<DeliveryOption.Id?>(null)
 
     private val deliveryOptionToSelectedDateTimePeriod =
-        MutableStateFlow<Map<DeliveryOptions.Option.Id, DeliveryOptions.Option.DateTimePeriod>>(
+        MutableStateFlow<Map<DeliveryOption.Id, DeliveryOption.DateTimePeriod>>(
             emptyMap()
         )
 
@@ -210,11 +179,11 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
         addressComponent.onBuildingsErrorRefreshClicked()
     }
 
-    fun onDeliveryOptionClicked(option: DeliveryOptions.Option) {
+    fun onDeliveryOptionClicked(option: DeliveryOption) {
         selectedDeliveryOptionId.value = option.id
     }
 
-    fun onDeliveryOptionDateClicked(option: DeliveryOptions.Option) {
+    fun onDeliveryOptionDateClicked(option: DeliveryOption) {
         navigationThrottler.throttle {
             val datePeriods = option.dateTimePeriods.distinctBy { it.date }
             val action =
@@ -223,7 +192,7 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
         }
     }
 
-    fun onDeliveryOptionTimeClicked(option: DeliveryOptions.Option) {
+    fun onDeliveryOptionTimeClicked(option: DeliveryOption) {
         navigationThrottler.throttle {
             val selectedDateTimePeriod =
                 deliveryOptionToSelectedDateTimePeriod.value[option.id] ?: option.dateTimePeriods.getDefault()
@@ -241,7 +210,35 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
     }
 
     fun onContinueClicked() {
-        // TODO: [High] Implement
+        val address = addressComponent.getAddress()
+        val selectedDeliveryOption = deliveryOptionsState.value?.findSelectedOption()
+
+        if (address != null && selectedDeliveryOption != null) {
+            navigationThrottler.throttle {
+                val checkoutParams = CourierDeliveryCheckoutParams(
+                    cartType = cartType,
+                    deliveryMethodType = params.deliveryMethodType.toDeliveryMethodType(),
+                    address = address,
+                    deliveryOption = selectedDeliveryOption.deliveryOption,
+                    dateTimePeriod = selectedDeliveryOption.selectedDateTimePeriod,
+                    customer = params.customer.toCustomer(),
+                )
+                val action = CheckoutCourierDeliveryScreenAction.ContinueClicked(
+                    step = step.value + 1,
+                    checkoutParams = checkoutParams,
+                )
+                emitSideEffect(SideEffect.Navigate(action))
+            }
+        } else {
+            @Suppress("KotlinConstantConditions")
+            val messageResId = when {
+                address == null -> R.string.you_should_enter_address_first
+                selectedDeliveryOption == null -> R.string.you_should_select_delivery_option_first
+                else -> R.string.something_went_wrong
+            }
+            val message = ZarinaToastMessage.error(Text.Resource(messageResId))
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
+        }
     }
 
     private fun handleDateTimePeriodSelectorResult() {
@@ -250,7 +247,7 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
                 resultFlow = dateTimePeriodSelectorResultFlow,
                 key = KEY_RESULT_DATE_TIME_PERIOD_SELECTOR_RESULT,
             ) { result ->
-                val deliveryOptionId = DeliveryOptions.Option.Id(result.deliveryOptionId)
+                val deliveryOptionId = DeliveryOption.Id(result.deliveryOptionId)
                 deliveryOptionToSelectedDateTimePeriod.update {
                     it + (deliveryOptionId to result.dateTimePeriod.toDateTimePeriod())
                 }
@@ -259,12 +256,14 @@ class CheckoutCourierDeliveryViewModel @AssistedInject constructor(
     }
 
     @Suppress("MaxLineLength")
-    private fun List<DeliveryOptions.Option.DateTimePeriod>.getDefault(): DeliveryOptions.Option.DateTimePeriod {
+    private fun List<DeliveryOption.DateTimePeriod>.getDefault(): DeliveryOption.DateTimePeriod {
         return this.first()
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutCourierDeliveryScreenAction) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 
     private data object DeliveryOptionsRequest : FlowRequester.Request

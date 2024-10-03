@@ -5,32 +5,29 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
-import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
-import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.common.checkoutStepCount
 import ru.livetyping.zarina.presentation.screen.checkout.deliverymethod.CheckoutDeliveryMethodViewModel.SideEffect
 import ru.livetyping.zarina.usecase.checkout.GetDeliveryMethodsFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
+import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
-import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,38 +38,21 @@ class CheckoutDeliveryMethodViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val cartType: StateFlow<CartType> = savedStateHandle
-        .getStateFlow<CartTypeParcelable?>(
-            key = CheckoutGraph.DeliveryMethod.ARG_KEY_CART_TYPE,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "cartType is null" }
-            it.toCartType()
-        }
+    private val params = savedStateHandle.toRoute<CheckoutGraph.DeliveryMethod>(
+        typeMap = CheckoutGraph.DeliveryMethod.typeMap(),
+    )
+
+    private val cartType = params.cartType.toCartType()
 
     private val deliveryMethodsRequester = FlowRequester(DeliveryMethodsRequest) {
         val city = interactor.getUserCityFlow().firstOrNull()?.getOrNull() ?: City.DEFAULT
-        val params = GetDeliveryMethodsFlowUseCase.Params(cartType.value, city.id)
+        val params = GetDeliveryMethodsFlowUseCase.Params(cartType, city.id)
         interactor.getDeliveryMethodsFlow(params)
     }
 
-    val step: StateFlow<Int> = savedStateHandle
-        .getStateFlow<Int?>(
-            key = CheckoutGraph.DeliveryMethod.ARG_KEY_STEP,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) {
-            checkNotNull(it) { "step is null" }
-        }
+    val step: StateFlow<Int> = ImmutableStateFlow(params.step)
 
-    val stepCount: StateFlow<Int> = MutableStateFlow(cartType.value.checkoutStepCount).asStateFlow()
+    val stepCount: StateFlow<Int> = ImmutableStateFlow(cartType.checkoutStepCount)
 
     private val deliveryMethodsResult: StateFlow<Result<List<DeliveryMethod>>?> =
         deliveryMethodsRequester.flow
@@ -126,9 +106,10 @@ class CheckoutDeliveryMethodViewModel @Inject constructor(
     fun onDeliveryMethodClicked(method: DeliveryMethod) {
         navigationThrottler.throttle {
             val action = CheckoutDeliveryMethodScreenAction.DeliveryMethodSelected(
-                cartType = cartType.value,
+                cartType = cartType,
                 step = step.value + 1,
                 method = method,
+                customer = params.customer.toCustomer(),
             )
             emitSideEffect(SideEffect.Navigate(action))
         }

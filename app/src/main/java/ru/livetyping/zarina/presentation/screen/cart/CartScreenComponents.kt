@@ -4,6 +4,8 @@ import android.os.Parcelable
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -34,6 +36,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -119,9 +122,10 @@ import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFi
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.error.rememberErrorState
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPrice
-import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.BonusState
-import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.CartState
-import ru.livetyping.zarina.presentation.screen.cart.CartViewModel.MyCardState
+import ru.livetyping.zarina.presentation.screen.cart.model.CartBonusState
+import ru.livetyping.zarina.presentation.screen.cart.model.CartMyCardState
+import ru.livetyping.zarina.presentation.screen.cart.model.CartProductItem
+import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
@@ -130,6 +134,7 @@ import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.coercedOffset
 import ru.livetyping.zarina.util.compose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.util.compose.collapsingtopbar.CollapsingTopBarLayout
+import ru.livetyping.zarina.util.compose.none
 import ru.livetyping.zarina.util.compose.pager.PagerTabRowIntegration
 import ru.livetyping.zarina.util.compose.rememberAnchoredDraggableState
 import ru.livetyping.zarina.util.kotlin.removePrefix
@@ -505,11 +510,12 @@ object CartScreenComponents {
                 }
             }
 
-            FloatingCheckoutBlock(
+            CartBottomFloatingBlock(
                 isVisible = !isCheckoutBlockVisible && !WindowInsets.isImeVisible,
                 totalPrice = cartState.price.totalPrice,
-                isCheckoutButtonEnabled = !cartState.productLimit.isExceeded,
-                onCheckoutClicked = onCheckoutClicked,
+                buttonText = stringResource(R.string.checkout).uppercase(),
+                isButtonEnabled = !cartState.productLimit.isExceeded,
+                onButtonClicked = onCheckoutClicked,
                 modifier = Modifier.align(Alignment.BottomCenter),
             )
         }
@@ -734,17 +740,21 @@ object CartScreenComponents {
     }
 
     @Composable
-    private fun FloatingCheckoutBlock(
+    fun CartBottomFloatingBlock(
         isVisible: Boolean,
         totalPrice: Int,
-        isCheckoutButtonEnabled: Boolean,
-        onCheckoutClicked: () -> Unit,
+        buttonText: String,
+        isButtonEnabled: Boolean,
+        onButtonClicked: () -> Unit,
         modifier: Modifier = Modifier,
+        windowInsets: WindowInsets = WindowInsets.none,
     ) {
+        val animationSpec = remember { spring<IntOffset>(stiffness = Spring.StiffnessMedium) }
+
         AnimatedVisibility(
             visible = isVisible,
-            enter = slideInVertically { it },
-            exit = slideOutVertically { it },
+            enter = slideInVertically(animationSpec) { it },
+            exit = slideOutVertically(animationSpec) { it },
             modifier = modifier,
         ) {
             Row(
@@ -752,6 +762,7 @@ object CartScreenComponents {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(UiKitTheme.colors.background.general.regular.default)
+                    .windowInsetsPadding(windowInsets)
                     .padding(horizontal = 16.dp, vertical = 12.dp),
             ) {
                 Column(Modifier.weight(1f)) {
@@ -775,11 +786,11 @@ object CartScreenComponents {
                 Spacer(modifier = Modifier.width(12.dp))
 
                 ZarinaButton(
-                    onClick = onCheckoutClicked,
-                    isEnabled = isCheckoutButtonEnabled,
+                    onClick = onButtonClicked,
+                    isEnabled = isButtonEnabled,
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(text = stringResource(R.string.checkout).uppercase())
+                    Text(text = buttonText)
                 }
             }
         }
@@ -847,7 +858,7 @@ object CartScreenComponents {
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun SwipeableProductOrderCard(
-        productItem: CartViewModel.ProductItem,
+        productItem: CartProductItem,
         productCardActions: ProductCardActions,
         isDividerVisible: Boolean,
         onDragStarted: (CartProduct.Id) -> Unit,
@@ -1053,7 +1064,7 @@ object CartScreenComponents {
 
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
-    private fun BonusAccrual(
+    fun BonusAccrual(
         bonusCount: Int,
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
@@ -1109,8 +1120,8 @@ object CartScreenComponents {
 
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
-    private fun BonusWriteOff(
-        state: BonusState,
+    fun BonusWriteOff(
+        state: CartBonusState,
         onIsAppliedChanged: (Boolean) -> Unit,
         onBonusCountToWriteOffChanged: (Int?) -> Unit,
         modifier: Modifier = Modifier,
@@ -1204,8 +1215,8 @@ object CartScreenComponents {
     }
 
     @Composable
-    private fun MyCard(
-        state: MyCardState,
+    fun MyCard(
+        state: CartMyCardState,
         onIsAppliedChanged: (Boolean) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -1240,7 +1251,7 @@ object CartScreenComponents {
     }
 
     @Composable
-    private fun PromoCodeDescription(
+    fun PromoCodeDescription(
         text: String?,
         modifier: Modifier = Modifier,
     ) {
@@ -1265,7 +1276,7 @@ object CartScreenComponents {
         CartState.EmptyCart, is CartState.Error, CartState.Loading -> cartState
     }
 
-    private fun getCartProductItemKey(productItem: CartViewModel.ProductItem): CartKey.Product {
+    private fun getCartProductItemKey(productItem: CartProductItem): CartKey.Product {
         return CartKey.Product(productItem.product.id.value)
     }
 

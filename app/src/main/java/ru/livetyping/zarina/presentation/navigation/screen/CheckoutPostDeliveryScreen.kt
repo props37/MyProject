@@ -2,22 +2,21 @@ package ru.livetyping.zarina.presentation.navigation.screen
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.order.DeliveryMethodType
-import ru.livetyping.zarina.presentation.navigation.base.composableDestination
+import androidx.navigation.compose.composable
+import ru.livetyping.zarina.presentation.model.checkout.CheckoutParamsParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.postdelivery.CheckoutPostDeliveryScreen
 import ru.livetyping.zarina.presentation.screen.checkout.postdelivery.CheckoutPostDeliveryScreenAction
-import ru.livetyping.zarina.util.library.navigation.navigate
 
 fun NavGraphBuilder.checkoutPostDeliveryScreen(navController: NavHostController) {
-    composableDestination(CheckoutGraph.PostDelivery) {
+    composable<CheckoutGraph.PostDelivery>(
+        typeMap = CheckoutGraph.PostDelivery.typeMap(),
+    ) {
         CheckoutPostDeliveryScreen(
             navigate = { action ->
                 when (action) {
                     CheckoutPostDeliveryScreenAction.ScreenClosed -> {
-                        navController.popBackStack(
-                            route = CheckoutGraph.PostDelivery.routeSchema,
+                        navController.popBackStack<CheckoutGraph.PostDelivery>(
                             inclusive = true,
                         )
                     }
@@ -28,24 +27,16 @@ fun NavGraphBuilder.checkoutPostDeliveryScreen(navController: NavHostController)
                             inclusive = true,
                         )
                     }
+
+                    is CheckoutPostDeliveryScreenAction.ContinueClicked -> {
+                        val orderPlacing = CheckoutGraph.OrderPlacing(
+                            step = action.step,
+                            checkoutParams = CheckoutParamsParcelable.from(action.checkoutParams),
+                        )
+                        navController.navigate(orderPlacing)
+                    }
                 }
             },
         )
     }
-}
-
-fun NavHostController.navigateToCheckoutPostDeliveryScreen(
-    cartType: CartType,
-    step: Int,
-    deliveryMethodType: DeliveryMethodType,
-) {
-    val args = CheckoutGraph.PostDelivery.Args(
-        cartType = cartType,
-        step = step,
-        deliveryMethodType = deliveryMethodType,
-    )
-    this.navigate(
-        route = CheckoutGraph.PostDelivery.routeSchema,
-        args = CheckoutGraph.PostDelivery.createArgsBundle(args),
-    )
 }

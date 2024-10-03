@@ -2,7 +2,6 @@ package ru.livetyping.zarina.base.usecase
 
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import kotlin.system.measureTimeMillis
 import kotlin.time.Duration.Companion.milliseconds
@@ -17,6 +16,7 @@ import kotlin.time.Duration.Companion.milliseconds
  * @see [FlowUseCase]
  * @property dispatcher [CoroutineDispatcher] to run the operation on.
  */
+// TODO: [Low] Remove dispatcher
 abstract class UseCase<in P, out R>(private val dispatcher: CoroutineDispatcher) {
 
     private val className = if (Timber.treeCount != 0) this.javaClass.simpleName else TAG
@@ -34,10 +34,8 @@ abstract class UseCase<in P, out R>(private val dispatcher: CoroutineDispatcher)
         return try {
             val result: Result<R>
             val executionDuration = measureTimeMillis {
-                withContext(dispatcher) {
-                    execute(params).let {
-                        result = Result.success(it)
-                    }
+                execute(params).let {
+                    result = Result.success(it)
                 }
             }.milliseconds
             Timber.tag(className).v("Execution of $className took $executionDuration")

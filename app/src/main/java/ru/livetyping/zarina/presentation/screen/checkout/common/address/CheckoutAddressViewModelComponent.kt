@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import ru.livetyping.zarina.domain.checkout.CheckoutAddress
 import ru.livetyping.zarina.domain.common.exception.EmptySearchQueryException
 import ru.livetyping.zarina.domain.geography.AddressPart
 import ru.livetyping.zarina.domain.geography.Building
@@ -168,11 +169,6 @@ class CheckoutAddressViewModelComponent @Inject constructor(
         init = { TextFieldState() },
     )
 
-    val searchApartmentTextFieldState: TextFieldState by savedStateHandle.saveable(
-        saver = TextFieldState.Saver,
-        init = { TextFieldState() },
-    )
-
     val isBuildingSelectionEnabled: StateFlow<Boolean> = selectedStreetValueHolder.stateFlow
         .mapState(
             scope = scope,
@@ -202,6 +198,20 @@ class CheckoutAddressViewModelComponent @Inject constructor(
             started = SharingStarted.Eagerly,
             initialValue = null,
         )
+
+    fun getAddress(): CheckoutAddress? {
+        val city = city.value
+        val street = selectedStreet.value
+        val building = selectedBuilding.value
+        return if (city != null && street != null && building != null) {
+            CheckoutAddress(
+                city = city,
+                street = street,
+                building = building,
+                apartment = selectedApartment.value,
+            )
+        } else null
+    }
 
     fun onStreetSelected(street: Item) {
         if (street.addressPart.id != selectedStreet.value?.id) {

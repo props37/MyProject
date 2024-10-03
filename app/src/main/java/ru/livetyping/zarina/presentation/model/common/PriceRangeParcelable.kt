@@ -5,8 +5,8 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.common.PriceRange
 
-@Parcelize
 @Serializable
+@Parcelize
 data class PriceRangeParcelable(
     val min: Int,
     val max: Int,

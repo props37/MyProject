@@ -4,9 +4,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.data.checkout.remote.api.CheckoutApi
 import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryOptionsDtoType
+import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
-import ru.livetyping.zarina.domain.checkout.DeliveryOptions
+import ru.livetyping.zarina.domain.checkout.DeliveryOption
+import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.checkout.PickupStore
@@ -33,7 +36,7 @@ class CheckoutRemoteDataSource @Inject constructor(
 
     fun getCourierDeliveryOptionsFlow(
         buildingKladrId: KladrId,
-    ): Flow<DeliveryOptions> = flow {
+    ): Flow<List<DeliveryOption>> = flow {
         val dto = api.getCourierDeliveryOptions(buildingKladrId)
         val options = dto.toDeliveryOptions(DeliveryOptionsDtoType.COURIER)
         emit(options)
@@ -41,7 +44,7 @@ class CheckoutRemoteDataSource @Inject constructor(
 
     fun getPostDeliveryOptionsFlow(
         buildingKladrId: KladrId,
-    ): Flow<DeliveryOptions> = flow {
+    ): Flow<List<DeliveryOption>> = flow {
         val dto = api.getPostDeliveryOptions(buildingKladrId)
         val options = dto.toDeliveryOptions(DeliveryOptionsDtoType.POST)
         emit(options)
@@ -59,5 +62,20 @@ class CheckoutRemoteDataSource @Inject constructor(
     ): Flow<PickupPointDetails> = flow {
         val dto = api.getPickupPointDetails(cityKladrId, pickupPointId)
         emit(dto.toPickupPointDetails())
+    }
+
+    fun getCartFlow(checkoutParams: CheckoutParams) = flow {
+        val dto = api.getCart(checkoutParams)
+        emit(dto.toCart(checkoutParams.cartType))
+    }
+
+    fun getPaymentMethodsFlow(
+        checkoutParams: CheckoutParams,
+        cart: Cart,
+    ): Flow<List<PaymentMethod>> = flow {
+        val dtos = api.getPaymentMethods(checkoutParams, cart)
+        val paymentMethods = dtos.map { it.toPaymentMethod() }
+        check(paymentMethods.isNotEmpty()) { "PaymentMethod list is empty" }
+        emit(paymentMethods)
     }
 }

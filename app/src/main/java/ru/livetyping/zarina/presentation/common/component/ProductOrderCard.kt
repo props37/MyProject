@@ -121,7 +121,7 @@ fun ProductOrderCard(
             Row(verticalAlignment = Alignment.Bottom) {
                 if (count != null && countStyle is ProductOrderCardCountStyle.Selector) {
                     ZarinaButtonSelector(
-                        onClick = countStyle.onClick,
+                        onClick = { countStyle.onClick?.invoke() },
                         size = ZarinaButtonSelectorSize.Medium,
                         isEnabled = countStyle.isEnabled,
                         isEditable = countStyle.isEditable,
@@ -424,7 +424,7 @@ sealed class ProductOrderCardCountStyle {
     data class Selector(
         val isEnabled: Boolean = true,
         val isEditable: Boolean = true,
-        val onClick: () -> Unit,
+        val onClick: (() -> Unit)?,
     ) : ProductOrderCardCountStyle()
 }
 

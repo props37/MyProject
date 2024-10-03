@@ -1,24 +1,15 @@
 package ru.livetyping.zarina.presentation.navigation.navtype
 
-import android.os.Bundle
 import androidx.navigation.NavType
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 import ru.livetyping.zarina.presentation.base.text.Text
-import ru.livetyping.zarina.util.platform.BundleCompat
+import ru.livetyping.zarina.presentation.navigation.base.ParcelableNavType
 
 val NavType.Companion.TextType: TextNavType
     get() = TextNavType()
 
-class TextNavType : NavType<Text?>(isNullableAllowed = true) {
-    override fun get(bundle: Bundle, key: String): Text? {
-        return BundleCompat.getParcelable(bundle, key)
-    }
-
-    override fun parseValue(value: String): Text? {
-        return Json.decodeFromString(value)
-    }
-
-    override fun put(bundle: Bundle, key: String, value: Text?) {
-        bundle.putParcelable(key, value)
-    }
-}
+class TextNavType : ParcelableNavType<Text?>(
+    isNullableAllowed = true,
+    serializer = Json.serializersModule.serializer(),
+)

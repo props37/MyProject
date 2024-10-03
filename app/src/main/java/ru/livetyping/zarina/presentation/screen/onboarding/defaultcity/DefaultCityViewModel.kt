@@ -2,14 +2,13 @@ package ru.livetyping.zarina.presentation.screen.onboarding.defaultcity
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.screen.onboarding.defaultcity.DefaultCityViewModel.SideEffect
+import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,7 +17,7 @@ class DefaultCityViewModel @Inject constructor() : ViewModel(),
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    val defaultCity = MutableStateFlow(City.DEFAULT).asStateFlow()
+    val defaultCity = ImmutableStateFlow(City.DEFAULT)
 
     fun onCloseClicked() {
         navigationThrottler.throttle {

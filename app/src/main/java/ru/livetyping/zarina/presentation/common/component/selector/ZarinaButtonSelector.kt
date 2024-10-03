@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -31,6 +33,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
@@ -59,25 +62,16 @@ fun ZarinaButtonSelector(
     },
     textStyle: TextStyle = ZarinaButtonSelectorDefaults.textStyleFromSize(size),
     contentPadding: PaddingValues = ZarinaButtonSelectorDefaults.ContentPadding,
+    applyContentPaddingToDivider: Boolean = false,
     content: (@Composable () -> Unit)?,
 ) {
     Column(modifier = modifier.width(IntrinsicSize.Min)) {
-        label?.let { content ->
-            CompositionLocalProvider(
-                LocalTextStyle provides UiKitTheme.typography.footnote.light,
-                LocalContentColor provides UiKitTheme.colors.text.general.regular.muted,
-            ) {
-                content()
-            }
-        }
-
         val minHeight = when (size) {
             ZarinaButtonSelectorSize.Large -> ZarinaButtonSelectorDefaults.ButtonHeightLarge
             ZarinaButtonSelectorSize.Medium -> ZarinaButtonSelectorDefaults.ButtonHeightMedium
         }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
             modifier = Modifier
                 .heightIn(min = minHeight)
                 .clip(ZarinaButtonSelectorDefaults.ButtonShape)
@@ -88,27 +82,52 @@ fun ZarinaButtonSelector(
                 )
                 .padding(contentPadding),
         ) {
-            val contentColor = if (content != null) {
-                UiKitTheme.colors.text.general.regular.default
-            } else {
-                UiKitTheme.colors.text.general.regular.muted
+            label?.let { content ->
+                CompositionLocalProvider(
+                    LocalTextStyle provides UiKitTheme.typography.footnote.light,
+                    LocalContentColor provides UiKitTheme.colors.text.general.regular.muted,
+                ) {
+                    content()
+                }
             }
 
-            CompositionLocalProvider(
-                LocalTextStyle provides textStyle,
-                LocalContentColor provides contentColor,
-            ) {
-                content?.invoke() ?: placeholder?.invoke()
-            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                val contentColor = if (content != null) {
+                    UiKitTheme.colors.text.general.regular.default
+                } else {
+                    UiKitTheme.colors.text.general.regular.muted
+                }
 
-            trailingContent?.let { content ->
-                Spacer(modifier = Modifier.weight(1f))
-                Spacer(modifier = Modifier.width(8.dp))
-                content()
+                CompositionLocalProvider(
+                    LocalTextStyle provides textStyle,
+                    LocalContentColor provides contentColor,
+                ) {
+                    content?.invoke() ?: placeholder?.invoke()
+                }
+
+                trailingContent?.let { content ->
+                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    content()
+                }
             }
         }
 
-        ZarinaDivider(modifier = Modifier.fillMaxWidth())
+        val contentPaddingModifier = if (applyContentPaddingToDivider) {
+            val ld = LocalLayoutDirection.current
+            Modifier.padding(
+                start = contentPadding.calculateStartPadding(ld),
+                end = contentPadding.calculateEndPadding(ld),
+            )
+        } else {
+            Modifier
+        }
+
+        ZarinaDivider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(contentPaddingModifier),
+        )
     }
 }
 

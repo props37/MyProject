@@ -29,6 +29,7 @@ import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.stores.StoresViewModel.SideEffect
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
+import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
 
@@ -42,7 +43,7 @@ class StoresViewModel @Inject constructor(
     private val permissionManager = interactor.permissionManager
 
     val viewModes: StateFlow<ImmutableList<ViewMode>> =
-        MutableStateFlow(ViewMode.entries.toImmutableList()).asStateFlow()
+        ImmutableStateFlow(ViewMode.entries.toImmutableList())
 
     private val _currentViewMode = MutableStateFlow(ViewMode.MAP)
     val currentViewMode: StateFlow<ViewMode> = _currentViewMode.asStateFlow()

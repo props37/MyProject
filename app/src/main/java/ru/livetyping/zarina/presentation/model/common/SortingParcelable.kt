@@ -2,8 +2,10 @@ package ru.livetyping.zarina.presentation.model.common
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.common.Sorting
 
+@Serializable
 @Parcelize
 enum class SortingParcelable : Parcelable {
     NEW,

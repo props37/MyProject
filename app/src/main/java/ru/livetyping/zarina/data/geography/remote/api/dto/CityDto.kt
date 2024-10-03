@@ -21,7 +21,7 @@ data class CityDto(
     val region: String? = null,
 ) {
     fun toCity(): City? {
-        return if (name != null && fullName != null && region != null && kladrId != null) {
+        return if (name != null && kladrId != null) {
             return City(
                 name = name,
                 id = KladrId(kladrId),
@@ -29,7 +29,7 @@ data class CityDto(
                 region = region,
             )
         } else {
-            Timber.e("Drop City because its name, fullName, region or kladrId is null")
+            Timber.e("Drop City because its name or kladrId is null")
             null
         }
     }

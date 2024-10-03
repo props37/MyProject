@@ -39,7 +39,7 @@ data class FiltersRequestDto(
                 if (filter.isApplied) filter.selectedItems.map { it.id.value } else null
             }
             val colors = filters.colors?.let { filter ->
-                if (filter.isApplied) filter.selectedItems.map { it.id.value } else null
+                if (filter.isApplied) filter.selectedItems.map { it.name } else null
             }
             val isAvailableForDelivery = filters.deliveryAvailability?.let { filter ->
                 if (filter.isEnabled) true else null

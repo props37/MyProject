@@ -3,8 +3,8 @@ package ru.livetyping.zarina.domain.geography
 data class City(
     override val name: String,
     override val id: KladrId,
-    val fullName: String,
-    val region: String,
+    val fullName: String?,
+    val region: String?,
 ) : AddressPart {
     companion object {
         val DEFAULT: City
