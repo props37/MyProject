@@ -1,14 +1,13 @@
 package ru.livetyping.zarina.data.checkout.remote.api
 
-import android.net.Uri
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import ru.livetyping.zarina.data.cart.remote.api.dto.CartDto
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartTypeDto
+import ru.livetyping.zarina.data.checkout.remote.api.dto.CheckoutCartDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.CheckoutCartRequestBody
 import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryMethodDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryOptionsDto
@@ -75,7 +74,7 @@ class CheckoutApi @Inject constructor(
         ).body()
     }
 
-    suspend fun getCart(checkoutParams: CheckoutParams): CartDto {
+    suspend fun getCart(checkoutParams: CheckoutParams): CheckoutCartDto {
         val body = CheckoutCartRequestBody.from(checkoutParams)
         return httpClient.get("/api/cart") {
             parameter("cart_type", CartTypeDto.from(checkoutParams.cartType).value)
@@ -83,7 +82,7 @@ class CheckoutApi @Inject constructor(
             if (checkoutParams is StorePickupCheckoutParams) {
                 parameter("store_id", checkoutParams.store.id.value)
             }
-            parameter("shipping", Uri.encode(Json.encodeToString(body)))
+            parameter("shipping", Json.encodeToString(body))
         }.body()
     }
 
