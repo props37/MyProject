@@ -42,7 +42,7 @@ fun NavGraphBuilder.checkoutCourierDeliveryScreen(navController: NavHostControll
 
                     is CheckoutCourierDeliveryScreenAction.DeliveryDateClicked -> {
                         val courierDeliveryDateTimeSelector = CheckoutGraph.CourierDeliveryDateTimeSelector(
-                            type = CourierDeliveryDateTimeSelectorType.TIME,
+                            type = CourierDeliveryDateTimeSelectorType.DATE,
                             deliveryOptionId = action.deliveryOptionId.value,
                             dateTimePeriods = action.dateTimePeriods.map {
                                 DeliveryOptionParcelable.DateTimePeriod.from(it)
