@@ -109,7 +109,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val paymentMethodsFlowRequester = FlowRequester(PaymentMethodsRequest.GENERAL) {
+    private val paymentMethodsFlowRequester = FlowRequester(PaymentMethodsRequest) {
         cartResult.flatMapLatest { result ->
             val cart = result?.getOrNull()
             if (cart != null) {
@@ -331,7 +331,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     }
 
     fun onPaymentMethodsErrorRefreshClicked() {
-        paymentMethodsFlowRequester.request(PaymentMethodsRequest.GENERAL)
+        paymentMethodsFlowRequester.request(PaymentMethodsRequest)
     }
 
     fun onPayClicked() {
@@ -554,7 +554,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         }
     }
 
-    private enum class PaymentMethodsRequest : FlowRequester.Request { GENERAL }
+    private data object PaymentMethodsRequest : FlowRequester.Request
 
     companion object {
         private const val COMMA_SEPARATOR = ", "
