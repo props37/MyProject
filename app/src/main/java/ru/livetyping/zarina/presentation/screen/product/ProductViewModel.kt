@@ -15,6 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -75,24 +76,27 @@ class ProductViewModel @AssistedInject constructor(
     private val productId = MutableStateFlow(initialProductId.value)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val productRequester = FlowRequester(ProductRequest) {
+    private val productRequester = FlowRequester(ProductRequest) { request ->
         productId.flatMapLatest { productId ->
+            markAsLoading(request)
             val params = GetProductFlowUseCase.Params(productId)
             interactor.getProductFlow(params)
         }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val productTotalLookRequester = FlowRequester(ProductRequest) {
+    private val productTotalLookRequester = FlowRequester(ProductRequest) { request ->
         productId.flatMapLatest { productId ->
+            markAsLoading(request)
             val params = GetProductTotalLookFlowUseCase.Params(productId)
             interactor.getProductTotalLookFlow(params)
         }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val productSimilarRequester = FlowRequester(ProductRequest) {
+    private val productSimilarRequester = FlowRequester(ProductRequest) { request ->
         productId.flatMapLatest { productId ->
+            markAsLoading(request)
             val params = GetProductSimilarFlowUseCase.Params(productId)
             interactor.getProductSimilarFlow(params)
         }
@@ -121,52 +125,38 @@ class ProductViewModel @AssistedInject constructor(
                 initialValue = null,
             )
 
-    val productState: StateFlow<ProductState> = productResult.mapState(
+    val productState: StateFlow<ProductState> = combine(
+        productResult,
+        productRequester.loadingState,
+    ) { productResult, productLoadingState ->
+        createProductState(productResult, productLoadingState)
+    }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
-    ) { result ->
-        result?.fold(
-            onSuccess = { product ->
-                ProductState.Success(product)
-            },
-            onFailure = {
-                val state = ErrorState.from(it)
-                ProductState.Error(state)
-            },
-        ) ?: ProductState.Loading
-    }
+        initialValue = ProductState.Loading,
+    )
 
-    val productTotalLookState: StateFlow<SuggestedProductListState> = productTotalLookResult.mapState(
+    val productTotalLookState: StateFlow<SuggestedProductListState> = combine(
+        productTotalLookResult,
+        productTotalLookRequester.loadingState,
+    ) { result, loadingState ->
+        createSuggestedProductListState(result, loadingState)
+    }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
-    ) { result ->
-        result?.fold(
-            onSuccess = { totalLook ->
-                if (totalLook.isNotEmpty()) {
-                    SuggestedProductListState.Success(totalLook.toImmutableList())
-                } else {
-                    SuggestedProductListState.Empty
-                }
-            },
-            onFailure = { SuggestedProductListState.Error },
-        ) ?: SuggestedProductListState.Loading
-    }
+        initialValue = SuggestedProductListState.Loading,
+    )
 
-    val productSimilarState: StateFlow<SuggestedProductListState> = productSimilarResult.mapState(
+    val productSimilarState: StateFlow<SuggestedProductListState> = combine(
+        productSimilarResult,
+        productSimilarRequester.loadingState,
+    ) { result, loadingState ->
+        createSuggestedProductListState(result, loadingState)
+    }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
-    ) { result ->
-        result?.fold(
-            onSuccess = { totalLook ->
-                if (totalLook.isNotEmpty()) {
-                    SuggestedProductListState.Success(totalLook.toImmutableList())
-                } else {
-                    SuggestedProductListState.Empty
-                }
-            },
-            onFailure = { SuggestedProductListState.Error },
-        ) ?: SuggestedProductListState.Loading
-    }
+        initialValue = SuggestedProductListState.Loading,
+    )
 
     init {
         handleSizeSelectorResult()
@@ -298,6 +288,45 @@ class ProductViewModel @AssistedInject constructor(
                     barcode = result.offer.toProductOffer().barcode,
                 )
             }
+        }
+    }
+
+    private fun createProductState(
+        productResult: Result<ProductDetails>?,
+        productLoadingState: FlowRequester.LoadingState,
+    ): ProductState {
+        return if (productResult == null || productLoadingState.isLoading()) {
+            ProductState.Loading
+        } else {
+            productResult.fold(
+                onSuccess = { product ->
+                    ProductState.Success(product)
+                },
+                onFailure = {
+                    val state = ErrorState.from(it)
+                    ProductState.Error(state)
+                },
+            )
+        }
+    }
+
+    private fun createSuggestedProductListState(
+        productListResult: Result<List<ProductItem>>?,
+        productListLoadingState: FlowRequester.LoadingState,
+    ): SuggestedProductListState {
+        return if (productListResult == null || productListLoadingState.isLoading()) {
+            SuggestedProductListState.Loading
+        } else {
+            productListResult.fold(
+                onSuccess = { products ->
+                    if (products.isNotEmpty()) {
+                        SuggestedProductListState.Success(products.toImmutableList())
+                    } else {
+                        SuggestedProductListState.Empty
+                    }
+                },
+                onFailure = { SuggestedProductListState.Error },
+            )
         }
     }
 
