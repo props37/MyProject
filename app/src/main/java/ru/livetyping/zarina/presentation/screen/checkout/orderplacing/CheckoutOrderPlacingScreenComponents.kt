@@ -598,6 +598,7 @@ object CheckoutOrderPlacingScreenComponents {
             CartPrice(
                 cartPrice = cartState.price.cartPrice,
                 discountSize = cartState.price.discountSize,
+                deliveryPrice = cartState.price.deliveryPrice,
                 totalPrice = cartState.price.totalPrice,
                 modifier = Modifier
                     .fillMaxWidth()

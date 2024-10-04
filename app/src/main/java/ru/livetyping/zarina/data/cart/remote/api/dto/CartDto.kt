@@ -42,6 +42,9 @@ data class CartDto(
 
     @SerialName("myCard")
     val myCard: MyCard? = null,
+    
+    @SerialName("deliveryPrice") 
+    val deliveryPrice: Int? = null,
 
     @SerialName("is_promocode_applied")
     val isPromoCodeApplied: Boolean? = null,
@@ -82,6 +85,7 @@ data class CartDto(
             cartPrice = cartPrice,
             discountSize = discountSize,
             totalPrice = totalPrice,
+            deliveryPrice = deliveryPrice,
         )
     }
 
