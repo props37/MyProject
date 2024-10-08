@@ -78,7 +78,7 @@ class ProductViewModel @AssistedInject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val productRequester = FlowRequester(ProductRequest) { request ->
         productId.flatMapLatest { productId ->
-            markAsLoading(request)
+            markAsLoading(ProductRequest)
             val params = GetProductFlowUseCase.Params(productId)
             interactor.getProductFlow(params)
         }
@@ -87,7 +87,7 @@ class ProductViewModel @AssistedInject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val productTotalLookRequester = FlowRequester(ProductRequest) { request ->
         productId.flatMapLatest { productId ->
-            markAsLoading(request)
+            markAsLoading(ProductRequest)
             val params = GetProductTotalLookFlowUseCase.Params(productId)
             interactor.getProductTotalLookFlow(params)
         }
@@ -96,7 +96,7 @@ class ProductViewModel @AssistedInject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val productSimilarRequester = FlowRequester(ProductRequest) { request ->
         productId.flatMapLatest { productId ->
-            markAsLoading(request)
+            markAsLoading(ProductRequest)
             val params = GetProductSimilarFlowUseCase.Params(productId)
             interactor.getProductSimilarFlow(params)
         }
