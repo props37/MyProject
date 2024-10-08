@@ -63,7 +63,7 @@ mindbox = "2.11.0"
 
 junit = "4.13.2"
 
-lint-composeChecks = "1.4.0"
+lint-composeChecks = "1.4.1"
 
 coreLibraryDesugaring = "2.1.2"
 
