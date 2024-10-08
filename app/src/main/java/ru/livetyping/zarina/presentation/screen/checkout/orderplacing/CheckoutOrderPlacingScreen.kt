@@ -45,7 +45,7 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.OrderPlacing
-import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.PaymentMethodsBottomSheet
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.PaymentMethodSelectorBottomSheet
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.PaymentMethodsState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.SideEffect
@@ -63,6 +63,7 @@ fun CheckoutOrderPlacingScreen(
     val cartState by viewModel.cartState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val isPullRefreshing by viewModel.isPullRefreshing.collectAsStateWithLifecycle()
+    val isPaymentMethodSelectorBottomSheetVisible by viewModel.isPaymentMethodSelectorBottomSheetVisible.collectAsStateWithLifecycle()
     val paymentMethodsState by viewModel.paymentMethodsState.collectAsStateWithLifecycle()
 
     ScreenContent(
@@ -85,6 +86,9 @@ fun CheckoutOrderPlacingScreen(
         onApplyPromoCodeClicked = viewModel::onApplyPromoCodeClicked,
         onRemovePromoCodeClicked = viewModel::onRemovePromoCodeClicked,
         onPromoCodeImeDoneClicked = viewModel::onPromoCodeImeDoneClicked,
+        isPaymentMethodSelectorBottomSheetVisible = isPaymentMethodSelectorBottomSheetVisible,
+        onPaymentMethodSelectorClicked = viewModel::onPaymentMethodSelectorClicked,
+        onPaymentMethodSelectorDismissRequested = viewModel::onPaymentMethodSelectorDismissRequested,
         paymentMethodsState = paymentMethodsState,
         onPaymentMethodSelected = viewModel::onPaymentMethodSelected,
         onPaymentMethodsErrorRefreshClicked = viewModel::onPaymentMethodsErrorRefreshClicked,
@@ -119,6 +123,9 @@ private fun ScreenContent(
     onApplyPromoCodeClicked: () -> Unit,
     onRemovePromoCodeClicked: () -> Unit,
     onPromoCodeImeDoneClicked: () -> Unit,
+    isPaymentMethodSelectorBottomSheetVisible: Boolean,
+    onPaymentMethodSelectorClicked: () -> Unit,
+    onPaymentMethodSelectorDismissRequested: () -> Unit,
     paymentMethodsState: PaymentMethodsState,
     onPaymentMethodSelected: (PaymentMethod) -> Unit,
     onPaymentMethodsErrorRefreshClicked: () -> Unit,
@@ -139,10 +146,9 @@ private fun ScreenContent(
         onUrlClicked = onUrlClicked,
     )
 
-    var isPaymentMethodsBottomSheetVisible by remember { mutableStateOf(false) }
-    PaymentMethodsBottomSheet(
-        isVisible = isPaymentMethodsBottomSheetVisible,
-        onDismissRequest = { isPaymentMethodsBottomSheetVisible = false },
+    PaymentMethodSelectorBottomSheet(
+        isVisible = isPaymentMethodSelectorBottomSheetVisible,
+        onDismissRequest = onPaymentMethodSelectorDismissRequested,
         paymentMethodsState = paymentMethodsState,
         onPaymentMethodSelected = onPaymentMethodSelected,
         onPaymentMethodsErrorRefreshClicked = onPaymentMethodsErrorRefreshClicked,
@@ -200,7 +206,7 @@ private fun ScreenContent(
                     selectedPaymentMethod = remember(paymentMethodsState) {
                         paymentMethodsState.findSelectedPaymentMethod()
                     },
-                    onPaymentMethodSelectorClicked = { isPaymentMethodsBottomSheetVisible = true },
+                    onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
                     onPayClicked = onPayClicked,
                     modifier = Modifier
                         .fillMaxSize()

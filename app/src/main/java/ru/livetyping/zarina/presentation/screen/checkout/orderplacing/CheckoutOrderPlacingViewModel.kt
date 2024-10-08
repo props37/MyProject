@@ -12,6 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -199,6 +200,10 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
             initialValue = false,
         )
 
+    private val _isPaymentMethodSelectorBottomSheetVisible = MutableStateFlow(false)
+    val isPaymentMethodSelectorBottomSheetVisible: StateFlow<Boolean> =
+        _isPaymentMethodSelectorBottomSheetVisible.asStateFlow()
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = CheckoutOrderPlacingScreenAction.ScreenClosed
@@ -326,6 +331,14 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         cartRequester.request(CartRequest.LOADING)
     }
 
+    fun onPaymentMethodSelectorClicked() {
+        _isPaymentMethodSelectorBottomSheetVisible.value = true
+    }
+
+    fun onPaymentMethodSelectorDismissRequested() {
+        _isPaymentMethodSelectorBottomSheetVisible.value = false
+    }
+
     fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
         selectedPaymentMethodId.value = paymentMethod.id
     }
@@ -336,9 +349,8 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     fun onPayClicked() {
         if (selectedPaymentMethodId.value == null) {
-            val messageText = Text.Resource(R.string.payment_method_not_selected_error)
-            val message = ZarinaToastMessage(messageText)
-            emitSideEffect(SideEffect.ShowZarinaToast(message))
+            _isPaymentMethodSelectorBottomSheetVisible.value = true
+            return
         }
 
         navigationThrottler.throttle {

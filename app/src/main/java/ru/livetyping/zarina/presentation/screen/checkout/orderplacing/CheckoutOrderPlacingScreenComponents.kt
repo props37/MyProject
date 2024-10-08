@@ -192,7 +192,7 @@ object CheckoutOrderPlacingScreenComponents {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun PaymentMethodsBottomSheet(
+    fun PaymentMethodSelectorBottomSheet(
         isVisible: Boolean,
         onDismissRequest: () -> Unit,
         paymentMethodsState: PaymentMethodsState,
