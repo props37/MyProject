@@ -341,6 +341,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
         selectedPaymentMethodId.value = paymentMethod.id
+        cartRequester.request(CartRequest.REFRESHING)
     }
 
     fun onPaymentMethodsErrorRefreshClicked() {
