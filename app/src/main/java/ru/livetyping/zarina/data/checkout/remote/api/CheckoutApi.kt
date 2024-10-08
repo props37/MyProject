@@ -16,10 +16,12 @@ import ru.livetyping.zarina.data.checkout.remote.api.dto.PickupPointDetailsDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.PickupPointDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.StoreDto
 import ru.livetyping.zarina.data.order.remote.api.dto.DeliveryMethodTypeDto
+import ru.livetyping.zarina.data.order.remote.api.dto.PaymentMethodTypeDto
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
+import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
 import ru.livetyping.zarina.domain.geography.KladrId
@@ -74,7 +76,10 @@ class CheckoutApi @Inject constructor(
         ).body()
     }
 
-    suspend fun getCart(checkoutParams: CheckoutParams): CheckoutCartDto {
+    suspend fun getCart(
+        checkoutParams: CheckoutParams,
+        paymentMethod: PaymentMethod?,
+    ): CheckoutCartDto {
         val body = CheckoutCartRequestBody.from(checkoutParams)
         return httpClient.get("/api/cart") {
             parameter("cart_type", CartTypeDto.from(checkoutParams.cartType).value)
@@ -83,6 +88,9 @@ class CheckoutApi @Inject constructor(
                 parameter("store_id", checkoutParams.store.id.value)
             }
             parameter("shipping", Json.encodeToString(body))
+            if (paymentMethod != null) {
+                parameter("payment_method", PaymentMethodTypeDto.from(paymentMethod.type).value)
+            }
         }.body()
     }
 

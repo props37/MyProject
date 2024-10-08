@@ -64,8 +64,8 @@ class CheckoutRemoteDataSource @Inject constructor(
         emit(dto.toPickupPointDetails())
     }
 
-    fun getCartFlow(checkoutParams: CheckoutParams) = flow {
-        val dto = api.getCart(checkoutParams)
+    fun getCartFlow(checkoutParams: CheckoutParams, paymentMethod: PaymentMethod?) = flow {
+        val dto = api.getCart(checkoutParams, paymentMethod)
         emit(dto.toCart(checkoutParams.cartType))
     }
 

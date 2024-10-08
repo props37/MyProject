@@ -65,8 +65,8 @@ class CheckoutRepository @Inject constructor(
         return remoteDataSource.getPickupPointDetailsFlow(cityKladrId, pickupPointId)
     }
 
-    fun getCartFlow(checkoutParams: CheckoutParams): Flow<Cart> {
-        return remoteDataSource.getCartFlow(checkoutParams)
+    fun getCartFlow(checkoutParams: CheckoutParams, paymentMethod: PaymentMethod?): Flow<Cart> {
+        return remoteDataSource.getCartFlow(checkoutParams, paymentMethod)
     }
 
     fun getPaymentMethodsFlow(

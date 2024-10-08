@@ -89,9 +89,15 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     private val promoCodeStateHolder = CartPromoCodeStateHolder(savedStateHandle)
 
-    private val cartRequester = FlowRequester(CartRequest.LOADING) {
-        val params = GetCheckoutCartFlowUseCase.Params(checkoutParams)
-        interactor.getCheckoutCartFlow(params)
+    private val selectedPaymentMethod = MutableStateFlow<PaymentMethod?>(null)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val cartRequester = FlowRequester(CartRequest.LOADING) { request ->
+        selectedPaymentMethod.flatMapLatest { paymentMethod ->
+            markAsLoading(CartRequest.REFRESHING)
+            val params = GetCheckoutCartFlowUseCase.Params(checkoutParams, paymentMethod)
+            interactor.getCheckoutCartFlow(params)
+        }
     }
 
     private val cartResult: StateFlow<Result<Cart>?> = cartRequester.flow
@@ -129,17 +135,15 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
             initialValue = null,
         )
 
-    private val selectedPaymentMethodId = MutableStateFlow<PaymentMethod.Id?>(null)
-
     val paymentMethodsState: StateFlow<PaymentMethodsState> = combine(
         paymentMethodsResult,
         paymentMethodsFlowRequester.loadingState,
-        selectedPaymentMethodId,
-    ) { paymentMethodsResult, paymentMethodsLoadingState, selectedPaymentMethodId ->
+        selectedPaymentMethod,
+    ) { paymentMethodsResult, paymentMethodsLoadingState, selectedPaymentMethod ->
         createPaymentMethodsState(
             paymentMethodsResult = paymentMethodsResult,
             paymentMethodsLoadingState = paymentMethodsLoadingState,
-            selectedPaymentMethodId = selectedPaymentMethodId,
+            selectedPaymentMethod = selectedPaymentMethod,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -340,8 +344,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     }
 
     fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
-        selectedPaymentMethodId.value = paymentMethod.id
-        cartRequester.request(CartRequest.REFRESHING)
+        selectedPaymentMethod.value = paymentMethod
     }
 
     fun onPaymentMethodsErrorRefreshClicked() {
@@ -349,7 +352,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     }
 
     fun onPayClicked() {
-        if (selectedPaymentMethodId.value == null) {
+        if (selectedPaymentMethod.value == null) {
             _isPaymentMethodSelectorBottomSheetVisible.value = true
             return
         }
@@ -509,15 +512,16 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     private fun createPaymentMethodsState(
         paymentMethodsResult: Result<List<PaymentMethod>>?,
         paymentMethodsLoadingState: FlowRequester.LoadingState,
-        selectedPaymentMethodId: PaymentMethod.Id?,
+        selectedPaymentMethod: PaymentMethod?,
     ): PaymentMethodsState {
         return if (paymentMethodsResult == null || paymentMethodsLoadingState.isLoading()) {
             PaymentMethodsState.Loading
         } else {
             paymentMethodsResult.fold(
                 onSuccess = { paymentMethods ->
-                    val selectedPaymentMethod = selectedPaymentMethodId?.let { selectedId ->
-                        paymentMethods.find { it.id == selectedId }
+                    @Suppress("NAME_SHADOWING")
+                    val selectedPaymentMethod = selectedPaymentMethod?.let { paymentMethod ->
+                        paymentMethods.find { it.type == paymentMethod.type }
                     }
                     PaymentMethodsState.Success(
                         paymentMethods = paymentMethods,
