@@ -30,6 +30,7 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 fun CartPrice(
     cartPrice: Int,
     discountSize: Int,
+    isDeliveryPriceIncluded: Boolean,
     deliveryPrice: Int?,
     totalPrice: Int,
     modifier: Modifier = Modifier,
@@ -59,7 +60,7 @@ fun CartPrice(
                 modifier = Modifier.padding(vertical = 4.dp),
             )
 
-            if (deliveryPrice != null) {
+            if (isDeliveryPriceIncluded && deliveryPrice != null) {
                 PriceItem(
                     name = stringResource(R.string.delivery),
                     price = deliveryPrice,
@@ -76,12 +77,14 @@ fun CartPrice(
                 priceTextStyle = TotalPriceTextStyle,
                 modifier = Modifier.padding(vertical = 8.dp),
             )
-            
-            Text(
-                text = stringResource(R.string.excluding_delivery),
-                style = UiKitTheme.typography.tertiary.light,
-                color = UiKitTheme.colors.text.general.regular.muted,
-            )
+
+            if (!isDeliveryPriceIncluded) {
+                Text(
+                    text = stringResource(R.string.excluding_delivery),
+                    style = UiKitTheme.typography.tertiary.light,
+                    color = UiKitTheme.colors.text.general.regular.muted,
+                )
+            }
         }
     }
 }
@@ -125,6 +128,7 @@ private fun Preview() {
         CartPrice(
             cartPrice = 25739,
             discountSize = 4050,
+            isDeliveryPriceIncluded = true,
             deliveryPrice = 550,
             totalPrice = 21743,
         )
