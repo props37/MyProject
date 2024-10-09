@@ -11,3 +11,7 @@ java {
 kotlin {
     explicitApi()
 }
+
+dependencies {
+    implementation(project(":core:domain"))
+}
