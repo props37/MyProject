@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 android {
@@ -39,6 +40,25 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":feature:home:ui:api"))
+
+    implementation(libs.jetpack.lifecycle.runtime.compose)
+    implementation(libs.jetpack.lifecycle.viewModel.compose)
+    implementation(libs.jetpack.navigation.compose)
+
+    implementation(platform(libs.jetpack.compose.bom))
+    implementation(libs.jetpack.compose.ui)
+    implementation(libs.jetpack.compose.material)
+    implementation(libs.jetpack.compose.material.navigation)
+    implementation(libs.jetpack.compose.material3)
+    implementation(libs.jetpack.compose.toolingPreview)
+    debugImplementation(libs.jetpack.compose.tooling)
+    debugImplementation(libs.jetpack.compose.testManifest)
+
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigationCompose)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
     androidTestImplementation(libs.jetpack.espresso)

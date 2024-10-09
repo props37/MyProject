@@ -41,7 +41,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":core:feature"))
+    api(project(":core:feature"))
 
     implementation(libs.kotlin.serialization.json)
 
