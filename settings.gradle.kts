@@ -16,3 +16,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Zarina"
 include(":app")
+
+include(":core:domain")
