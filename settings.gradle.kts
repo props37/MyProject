@@ -18,3 +18,4 @@ rootProject.name = "Zarina"
 include(":app")
 
 include(":core:domain")
+include(":core:navigation")
