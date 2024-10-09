@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.home.domain
+package ru.livetyping.zarina.feature.home.domain.model
 
 import ru.livetyping.zarina.core.domain.category.Category
 

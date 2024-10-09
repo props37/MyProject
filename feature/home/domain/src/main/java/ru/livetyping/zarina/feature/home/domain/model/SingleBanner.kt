@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.home.domain
+package ru.livetyping.zarina.feature.home.domain.model
 
 public data class SingleBanner(val banner: Banner) :
     BannerContainer(id = banner.createBannerContainerId())

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.home.domain
+package ru.livetyping.zarina.feature.home.domain.model
 
 public sealed class BannerContainer(public open val id: Id) {
     @JvmInline
