@@ -19,3 +19,4 @@ include(":app")
 
 include(":core:domain")
 include(":core:navigation")
+include(":core:feature")
