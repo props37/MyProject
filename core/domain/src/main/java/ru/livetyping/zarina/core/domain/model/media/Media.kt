@@ -1,6 +1,6 @@
-package ru.livetyping.zarina.core.domain.media
+package ru.livetyping.zarina.core.domain.model.media
 
-import ru.livetyping.zarina.core.domain.common.Url
+import ru.livetyping.zarina.core.domain.model.common.Url
 
 public data class Media(
     val originalUrl: Url,

@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.feature.home.domain.model
 
-import ru.livetyping.zarina.core.domain.media.Media
+import ru.livetyping.zarina.core.domain.model.media.Media
 
 public data class Banner(
     val id: Id,

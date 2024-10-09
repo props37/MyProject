@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.domain.common
+package ru.livetyping.zarina.core.domain.model.common
 
 @JvmInline
 public value class Url private constructor(public val value: String) {

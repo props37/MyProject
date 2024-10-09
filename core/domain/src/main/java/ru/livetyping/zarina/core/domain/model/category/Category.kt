@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.domain.category
+package ru.livetyping.zarina.core.domain.model.category
 
 public data class Category(
     val id: Id,
