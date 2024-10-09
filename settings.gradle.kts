@@ -18,6 +18,7 @@ rootProject.name = "Zarina"
 include(":app")
 
 include(":feature:home:ui:api")
+include(":feature:home:ui:impl")
 
 include(":core:domain")
 include(":core:navigation")
