@@ -35,6 +35,10 @@ android {
 }
 
 dependencies {
+    api(project(":core:navigation"))
+
+    implementation(libs.jetpack.navigation)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
     androidTestImplementation(libs.jetpack.espresso)
