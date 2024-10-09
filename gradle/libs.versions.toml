@@ -75,7 +75,6 @@ jetpack-appcompat = { group = "androidx.appcompat", name = "appcompat", version.
 jetpack-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "jetpack-activity" }
 jetpack-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "jetpack-lifecycle" }
 jetpack-lifecycle-viewModel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "jetpack-lifecycle" }
-jetpack-navigation = { group = "androidx.navigation", name = "navigation", version.ref = "jetpack-navigation" }
 jetpack-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "jetpack-navigation" }
 jetpack-dataStore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "jetpack-datastore" }
 jetpack-room = { group = "androidx.room", name = "room-ktx", version.ref = "jetpack-room" }

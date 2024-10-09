@@ -41,7 +41,7 @@ kotlin {
 dependencies {
     api(project(":core:navigation"))
 
-    implementation(libs.jetpack.navigation)
+    implementation(libs.jetpack.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
