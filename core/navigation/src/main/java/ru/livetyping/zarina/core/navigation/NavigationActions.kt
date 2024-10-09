@@ -1,3 +1,3 @@
 package ru.livetyping.zarina.core.navigation
 
-interface NavigationActions
+public interface NavigationActions

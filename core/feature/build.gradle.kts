@@ -34,6 +34,10 @@ android {
     }
 }
 
+kotlin {
+    explicitApi()
+}
+
 dependencies {
     api(project(":core:navigation"))
 
