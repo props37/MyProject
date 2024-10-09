@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -39,6 +41,10 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":core:feature"))
+
+    implementation(libs.kotlin.serialization.json)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
     androidTestImplementation(libs.jetpack.espresso)
