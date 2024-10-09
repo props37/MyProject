@@ -17,6 +17,8 @@ dependencyResolutionManagement {
 rootProject.name = "Zarina"
 include(":app")
 
+include(":feature:home:ui:api")
+
 include(":core:domain")
 include(":core:navigation")
 include(":core:feature")
