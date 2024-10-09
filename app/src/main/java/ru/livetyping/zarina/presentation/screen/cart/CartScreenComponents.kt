@@ -750,6 +750,7 @@ object CartScreenComponents {
         onButtonClicked: () -> Unit,
         modifier: Modifier = Modifier,
         windowInsets: WindowInsets = WindowInsets.none,
+        isButtonLoading: Boolean = false,
     ) {
         val animationSpec = remember { spring<IntOffset>(stiffness = Spring.StiffnessMedium) }
 
@@ -790,6 +791,7 @@ object CartScreenComponents {
                 ZarinaButton(
                     onClick = onButtonClicked,
                     isEnabled = isButtonEnabled,
+                    isLoading = isButtonLoading,
                     modifier = Modifier.weight(1f),
                 ) {
                     Text(text = buttonText)

@@ -98,6 +98,7 @@ object CheckoutOrderPlacingScreenComponents {
         selectedPaymentMethod: PaymentMethod?,
         onPaymentMethodSelectorClicked: () -> Unit,
         onPayClicked: () -> Unit,
+        isPayButtonLoading: Boolean,
         modifier: Modifier = Modifier,
     ) {
         val listState = rememberLazyListState()
@@ -166,6 +167,7 @@ object CheckoutOrderPlacingScreenComponents {
                     selectedPaymentMethod = selectedPaymentMethod,
                     onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
                     onPayClicked = onPayClicked,
+                    isPayButtonLoading = isPayButtonLoading,
                 )
             }
 
@@ -183,6 +185,7 @@ object CheckoutOrderPlacingScreenComponents {
                     buttonText = stringResource(R.string.pay).uppercase(),
                     isButtonEnabled = true,
                     onButtonClicked = onPayClicked,
+                    isButtonLoading = isPayButtonLoading,
                     windowInsets = WindowInsets.navigationBars,
                     modifier = Modifier.align(Alignment.BottomCenter),
                 )
@@ -356,6 +359,7 @@ object CheckoutOrderPlacingScreenComponents {
         selectedPaymentMethod: PaymentMethod?,
         onPaymentMethodSelectorClicked: () -> Unit,
         onPayClicked: () -> Unit,
+        isPayButtonLoading: Boolean,
     ) {
         when (cartState) {
             is CartState.Cart -> {
@@ -371,6 +375,7 @@ object CheckoutOrderPlacingScreenComponents {
                     selectedPaymentMethod = selectedPaymentMethod,
                     onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
                     onPayClicked = onPayClicked,
+                    isPayButtonLoading = isPayButtonLoading,
                 )
             }
 
@@ -436,6 +441,7 @@ object CheckoutOrderPlacingScreenComponents {
         selectedPaymentMethod: PaymentMethod?,
         onPaymentMethodSelectorClicked: () -> Unit,
         onPayClicked: () -> Unit,
+        isPayButtonLoading: Boolean,
     ) {
         itemsIndexed(
             items = cartState.productItems,
@@ -618,6 +624,7 @@ object CheckoutOrderPlacingScreenComponents {
         ) {
             ZarinaButton(
                 onClick = onPayClicked,
+                isLoading = isPayButtonLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)

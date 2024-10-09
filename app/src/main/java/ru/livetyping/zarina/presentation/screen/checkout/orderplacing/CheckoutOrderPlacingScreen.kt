@@ -65,6 +65,7 @@ fun CheckoutOrderPlacingScreen(
     val isPullRefreshing by viewModel.isPullRefreshing.collectAsStateWithLifecycle()
     val isPaymentMethodSelectorBottomSheetVisible by viewModel.isPaymentMethodSelectorBottomSheetVisible.collectAsStateWithLifecycle()
     val paymentMethodsState by viewModel.paymentMethodsState.collectAsStateWithLifecycle()
+    val isPayButtonLoading by viewModel.isPayButtonLoading.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = state,
@@ -93,6 +94,7 @@ fun CheckoutOrderPlacingScreen(
         onPaymentMethodSelected = viewModel::onPaymentMethodSelected,
         onPaymentMethodsErrorRefreshClicked = viewModel::onPaymentMethodsErrorRefreshClicked,
         onPayClicked = viewModel::onPayClicked,
+        isPayButtonLoading = isPayButtonLoading,
         onUrlClicked = viewModel::onUrlClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
@@ -130,6 +132,7 @@ private fun ScreenContent(
     onPaymentMethodSelected: (PaymentMethod) -> Unit,
     onPaymentMethodsErrorRefreshClicked: () -> Unit,
     onPayClicked: () -> Unit,
+    isPayButtonLoading: Boolean,
     onUrlClicked: (Url) -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
@@ -208,6 +211,7 @@ private fun ScreenContent(
                     },
                     onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
                     onPayClicked = onPayClicked,
+                    isPayButtonLoading = isPayButtonLoading,
                     modifier = Modifier
                         .fillMaxSize()
                         .pullRefresh(pullRefreshState),

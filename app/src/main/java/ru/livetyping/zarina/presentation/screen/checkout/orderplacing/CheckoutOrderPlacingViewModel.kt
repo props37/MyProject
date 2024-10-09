@@ -21,6 +21,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.base.operationtracker.OperationKey
+import ru.livetyping.zarina.base.operationtracker.OperationTracker
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
@@ -33,6 +35,7 @@ import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
+import ru.livetyping.zarina.domain.checkout.exception.CartChangedException
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.presentation.base.text.Text
@@ -54,6 +57,7 @@ import ru.livetyping.zarina.usecase.cart.ApplyMyCardToCartUseCase
 import ru.livetyping.zarina.usecase.cart.ApplyPromoCodeUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveBonusWriteOffUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveMyCardFromCartUseCase
+import ru.livetyping.zarina.usecase.checkout.CheckCartBeforePaymentUseCase
 import ru.livetyping.zarina.usecase.checkout.GetCheckoutCartFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.GetPaymentMethodsFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
@@ -62,6 +66,7 @@ import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.combineMore
 import javax.inject.Inject
+import kotlin.time.Duration
 
 @HiltViewModel
 class CheckoutOrderPlacingViewModel @Inject constructor(
@@ -71,11 +76,14 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
+    private val operationTracker = OperationTracker()
+
     private val cartStateBuilder = CartStateBuilder()
 
     private var bonusJob: Job? = null
     private var myCardJob: Job? = null
     private var promoCodeJob: Job? = null
+    private var paymentJob: Job? = null
 
     private val params = savedStateHandle.toRoute<CheckoutGraph.OrderPlacing>(
         typeMap = CheckoutGraph.OrderPlacing.typeMap(),
@@ -94,7 +102,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val cartRequester = FlowRequester(CartRequest.LOADING) { request ->
         selectedPaymentMethod.flatMapLatest { paymentMethod ->
-            markAsLoading(CartRequest.REFRESHING)
+            markAsLoading(request)
             val params = GetCheckoutCartFlowUseCase.Params(checkoutParams, paymentMethod)
             interactor.getCheckoutCartFlow(params)
         }
@@ -114,6 +122,9 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(),
             initialValue = null,
         )
+
+    private val cart: Cart?
+        get() = cartResult.value?.getOrNull()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val paymentMethodsFlowRequester = FlowRequester(PaymentMethodsRequest) {
@@ -207,6 +218,14 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     private val _isPaymentMethodSelectorBottomSheetVisible = MutableStateFlow(false)
     val isPaymentMethodSelectorBottomSheetVisible: StateFlow<Boolean> =
         _isPaymentMethodSelectorBottomSheetVisible.asStateFlow()
+
+    val isPayButtonLoading: StateFlow<Boolean> = operationTracker
+        .isOperationOngoing(Operation.PAYMENT)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = false,
+        )
 
     fun onBackClicked() {
         navigationThrottler.throttle {
@@ -352,14 +371,21 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     }
 
     fun onPayClicked() {
-        if (selectedPaymentMethod.value == null) {
+        val paymentMethod = selectedPaymentMethod.value
+        if (paymentMethod == null) {
             _isPaymentMethodSelectorBottomSheetVisible.value = true
             return
         }
 
-        navigationThrottler.throttle {
-            // TODO: [High] Implement
+        val cart = cart
+        if (cart == null) {
+            val messageText = Text.Resource(R.string.something_went_wrong)
+            val message = ZarinaToastMessage.error(messageText)
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
+            return
         }
+
+        startPayment(cart, paymentMethod)
     }
 
     fun onPullRefreshTriggered() {
@@ -459,6 +485,59 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
             duration = ZarinaToastMessage.DURATION_LONG,
         )
         emitSideEffect(SideEffect.ShowZarinaToast(message))
+    }
+
+    private fun startPayment(
+        cart: Cart,
+        paymentMethod: PaymentMethod,
+    ) {
+        if (paymentJob?.isActive == true) return
+
+        paymentJob = viewModelScope.launch {
+            operationTracker.track(Operation.PAYMENT) {
+                checkCartBeforePayment(cart, paymentMethod)
+                    .onSuccess(::onCheckCartBeforePaymentSuccess)
+                    .onFailure(::onCheckCartBeforePaymentFailure)
+            }
+        }
+    }
+
+    private suspend fun checkCartBeforePayment(
+        cart: Cart,
+        paymentMethod: PaymentMethod,
+    ): Result<Cart> {
+        val params = CheckCartBeforePaymentUseCase.Params(
+            cart = cart,
+            paymentMethod = paymentMethod,
+            checkoutParams = checkoutParams,
+        )
+        return interactor.checkCartBeforePayment(params)
+    }
+
+    private fun onCheckCartBeforePaymentSuccess(cart: Cart) {
+        // TODO: [High] Implement
+    }
+
+    private fun onCheckCartBeforePaymentFailure(throwable: Throwable) {
+        val messageText: Text
+        val messageDuration: Duration
+        when (throwable) {
+            is CartChangedException -> {
+                messageText = Text.Resource(R.string.cart_has_changed_error)
+                messageDuration = ZarinaToastMessage.DURATION_LONG
+            }
+
+            else -> {
+                messageText = Text.Resource(R.string.something_went_wrong)
+                messageDuration = ZarinaToastMessage.DURATION_SHORT
+            }
+        }
+        val message = ZarinaToastMessage.error(messageText, messageDuration)
+        emitSideEffect(SideEffect.ShowZarinaToast(message))
+
+        if (throwable is CartChangedException) {
+            cartRequester.request(CartRequest.REFRESHING)
+        }
     }
 
     private fun getDeliveryInfo(checkoutParams: CheckoutParams): DeliveryInfo {
@@ -572,6 +651,8 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     }
 
     private data object PaymentMethodsRequest : FlowRequester.Request
+
+    private enum class Operation : OperationKey { PAYMENT }
 
     companion object {
         private const val COMMA_SEPARATOR = ", "
