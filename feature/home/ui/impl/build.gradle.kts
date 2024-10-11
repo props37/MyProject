@@ -40,7 +40,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":feature:home:ui:api"))
+    implementation(projects.feature.home.ui.api)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)

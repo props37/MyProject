@@ -13,8 +13,8 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":core:domain"))
-    implementation(project(":core:usecase"))
+    implementation(projects.core.domain)
+    implementation(projects.core.usecase)
 
     implementation(libs.kotlin.coroutines)
 }
