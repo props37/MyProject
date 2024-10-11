@@ -12,7 +12,15 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal class NetworkModule {
+internal object NetworkModule {
+    private val json by lazy {
+        Json {
+            isLenient = true
+            ignoreUnknownKeys = true
+            encodeDefaults = true
+            explicitNulls = false
+        }
+    }
 
     // TODO: [Top] Provide AUTHORIZED HttpClient
 
@@ -21,7 +29,7 @@ internal class NetworkModule {
     @ZarinaApiQualifier(ZarinaApi.UNAUTHORIZED)
     fun provideZarinaUnauthorizedHttpClient(): HttpClient {
         return getZarinaUnauthorizedHttpClient(
-            json = Json, // TODO: [Top] Provide
+            json = json,
             baseUrl = "", // TODO: [Top] Provide
             headerProvider = ZarinaApiHeaderProvider(),
         )
