@@ -19,6 +19,7 @@ include(":app")
 
 include(":feature:home:ui:api")
 include(":feature:home:ui:impl")
+include(":feature:home:data")
 include(":feature:home:domain")
 
 include(":core:domain")
