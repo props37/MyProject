@@ -5,7 +5,7 @@ import ru.livetyping.zarina.feature.home.domain.model.HomeContent
 import ru.livetyping.zarina.feature.home.domain.repository.HomeContentRepository
 import javax.inject.Inject
 
-public class HomeContentRepositoryImpl @Inject constructor() : HomeContentRepository {
+internal class HomeContentRepositoryImpl @Inject constructor() : HomeContentRepository {
     override fun getHomeContentFlow(): Flow<HomeContent> {
         TODO("Not yet implemented")
     }

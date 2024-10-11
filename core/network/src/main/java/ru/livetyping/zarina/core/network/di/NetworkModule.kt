@@ -12,14 +12,14 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-public class NetworkModule {
+internal class NetworkModule {
 
     // TODO: [Top] Provide AUTHORIZED HttpClient
 
     @Provides
     @Singleton
     @ZarinaApiQualifier(ZarinaApi.UNAUTHORIZED)
-    public fun provideZarinaUnauthorizedHttpClient(): HttpClient {
+    fun provideZarinaUnauthorizedHttpClient(): HttpClient {
         return getZarinaUnauthorizedHttpClient(
             json = Json, // TODO: [Top] Provide
             baseUrl = "", // TODO: [Top] Provide

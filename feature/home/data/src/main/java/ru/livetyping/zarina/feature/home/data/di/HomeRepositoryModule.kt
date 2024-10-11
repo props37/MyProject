@@ -9,10 +9,10 @@ import ru.livetyping.zarina.feature.home.domain.repository.HomeContentRepository
 
 @Module
 @InstallIn(SingletonComponent::class)
-public abstract class HomeRepositoryModule {
+internal abstract class HomeRepositoryModule {
 
     @Binds
-    public abstract fun bindHomeContentRepository(
+    abstract fun bindHomeContentRepository(
         impl: HomeContentRepositoryImpl,
     ): HomeContentRepository
 }
