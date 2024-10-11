@@ -42,11 +42,14 @@ kotlin {
 
 dependencies {
     implementation(projects.feature.home.domain)
+    implementation(projects.core.network)
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
 
     implementation(libs.kotlin.coroutines)
+
+    implementation(libs.ktor.client.core)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
