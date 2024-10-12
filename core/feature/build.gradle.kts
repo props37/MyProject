@@ -39,7 +39,7 @@ kotlin {
 }
 
 dependencies {
-    api(project(":core:navigation"))
+    api(projects.core.navigation)
 
     implementation(libs.jetpack.navigation.compose)
 
