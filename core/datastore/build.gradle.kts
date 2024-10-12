@@ -41,7 +41,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(libs.jetpack.dataStore.preferences)
+    api(libs.jetpack.dataStore.preferences)
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
