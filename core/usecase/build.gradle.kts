@@ -13,5 +13,5 @@ kotlin {
 }
 
 dependencies {
-    implementation(libs.kotlin.coroutines)
+    api(libs.kotlin.coroutines)
 }
