@@ -48,7 +48,7 @@ dependencies {
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
 
-    implementation(libs.kotlin.coroutines)
+    implementation(libs.kotlin.coroutines.android)
 
     implementation(libs.timber)
 

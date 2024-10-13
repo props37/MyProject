@@ -47,7 +47,7 @@ dependencies {
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
 
-    api(libs.kotlin.coroutines)
+    api(libs.kotlin.coroutines.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)

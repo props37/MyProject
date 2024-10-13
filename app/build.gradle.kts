@@ -161,7 +161,7 @@ dependencies {
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
 
-    implementation(libs.kotlin.coroutines)
+    implementation(libs.kotlin.coroutines.android)
     implementation(libs.kotlin.serialization.json)
     implementation(libs.kotlin.immutableCollections)
 
