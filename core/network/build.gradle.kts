@@ -42,6 +42,8 @@ kotlin {
 }
 
 dependencies {
+    implementation(projects.core.domain)
+
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
 

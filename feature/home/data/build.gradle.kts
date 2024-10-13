@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
 }
 
@@ -49,7 +50,7 @@ dependencies {
 
     implementation(libs.kotlin.coroutines)
 
-    implementation(libs.ktor.client.core)
+    implementation(libs.timber)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
