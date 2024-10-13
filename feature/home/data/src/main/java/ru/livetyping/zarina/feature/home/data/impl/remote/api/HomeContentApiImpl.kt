@@ -3,7 +3,6 @@ package ru.livetyping.zarina.feature.home.data.impl.remote.api
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiQualifier
 import ru.livetyping.zarina.feature.home.data.impl.remote.api.dto.HomeContentDto
@@ -12,12 +11,7 @@ import javax.inject.Inject
 internal class HomeContentApiImpl @Inject constructor(
     @ZarinaApiQualifier(ZarinaApi.AUTHORIZED)
     private val httpClient: HttpClient,
-    private val baseUrl: String, // TODO: [Top] Provide
 ) : HomeContentApi {
-    override fun getOnboardingBannerUrl(): Url {
-        return Url.create("$baseUrl/api/v1/main/splash/")
-    }
-
     override suspend fun getHomeContent(): HomeContentDto {
         return httpClient.get("/api/v1/main/banners").body()
     }
