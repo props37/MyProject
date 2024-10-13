@@ -72,6 +72,7 @@ coreLibraryDesugaring = "2.1.2"
 # Jetpack
 jetpack-core = { group = "androidx.core", name = "core-ktx", version.ref = "jetpack-core" }
 jetpack-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "jetpack-appcompat" }
+jetpack-activity = { group = "androidx.activity", name = "activity-ktx", version.ref = "jetpack-activity" }
 jetpack-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "jetpack-activity" }
 jetpack-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "jetpack-lifecycle" }
 jetpack-lifecycle-viewModel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "jetpack-lifecycle" }
