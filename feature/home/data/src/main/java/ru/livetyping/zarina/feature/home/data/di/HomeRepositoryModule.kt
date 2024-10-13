@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.livetyping.zarina.feature.home.data.impl.remote.HomeContentRemoteDataSource
+import ru.livetyping.zarina.feature.home.data.impl.remote.HomeContentRemoteDataSourceImpl
 import ru.livetyping.zarina.feature.home.data.repository.HomeContentRepositoryImpl
 import ru.livetyping.zarina.feature.home.domain.repository.HomeContentRepository
 
@@ -15,4 +17,9 @@ internal abstract class HomeRepositoryModule {
     abstract fun bindHomeContentRepository(
         impl: HomeContentRepositoryImpl,
     ): HomeContentRepository
+
+    @Binds
+    abstract fun bindHomeContentRemoteDataSource(
+        impl: HomeContentRemoteDataSourceImpl,
+    ): HomeContentRemoteDataSource
 }
