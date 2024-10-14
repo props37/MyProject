@@ -19,8 +19,7 @@ import io.ktor.client.request.headers
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import ru.livetyping.zarina.core.network.auth.BearerTokenLoader
-import ru.livetyping.zarina.core.network.auth.BearerTokenRefresher
+import ru.livetyping.zarina.core.network.auth.BearerTokenService
 import ru.livetyping.zarina.core.network.auth.BearerTokens
 import timber.log.Timber
 
@@ -37,22 +36,21 @@ internal fun getZarinaAuthorizedHttpClient(
     json: Json,
     baseUrl: String,
     headerProvider: ZarinaApiHeaderProvider,
-    bearerTokenLoader: BearerTokenLoader,
-    bearerTokenRefresher: BearerTokenRefresher,
+    bearerTokenService: BearerTokenService,
 ): HttpClient = HttpClient(OkHttp) {
     applyBaseConfig(json)
     applyZarinaConfig(baseUrl, headerProvider)
     install(Auth) {
         bearer {
             loadTokens {
-                val tokens = bearerTokenLoader.load()
+                val tokens = bearerTokenService.loadTokens()
                 Timber.tag(HTTP_CLIENT_TAG).v("Bearer tokens loaded: $tokens")
                 tokens?.toBearerTokens()
             }
 
             refreshTokens {
                 val oldTokens = this.oldTokens?.let { BearerTokens.from(it) }
-                val newTokens = bearerTokenRefresher.refresh(oldTokens)
+                val newTokens = bearerTokenService.refreshTokens(oldTokens)
                 Timber.tag(HTTP_CLIENT_TAG).v("Bearer tokens refreshed: $newTokens")
                 newTokens?.toBearerTokens()
             }
