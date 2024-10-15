@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.ui.compose.Crossfade
 import ru.livetyping.zarina.core.ui.kit.error.ZarinaErrorScreen
+import ru.livetyping.zarina.core.ui.kit.screen.ZarinaLoadingScreen
 import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentEvent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentState
 
@@ -38,7 +39,7 @@ internal fun HomeContent(
             }
 
             HomeContentState.Loading -> {
-                // TODO: [Top] Implement
+                ZarinaLoadingScreen(modifier = Modifier.fillMaxSize())
             }
 
             is HomeContentState.Error -> {

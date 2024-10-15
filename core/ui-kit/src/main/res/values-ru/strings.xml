@@ -5,4 +5,5 @@
     <string name="check_internet_connection_and_refresh_page">Проверь соединение с интернетом или отключи VPN. Затем обнови страницу</string>
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="refresh_page_or_come_back_later">Обнови страницу или зайди позже</string>
+    <string name="loading">Загрузка</string>
 </resources>
