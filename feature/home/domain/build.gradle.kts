@@ -14,5 +14,4 @@ kotlin {
 
 dependencies {
     api(projects.core.domain)
-    implementation(projects.core.usecase)
 }

@@ -11,3 +11,7 @@ java {
 kotlin {
     explicitApi()
 }
+
+dependencies {
+    api(projects.core.usecase)
+}
