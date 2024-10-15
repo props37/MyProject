@@ -1,0 +1,11 @@
+package ru.livetyping.zarina.core.ui.compose.systembars
+
+import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.staticCompositionLocalOf
+import ru.livetyping.zarina.core.ui.common.behavior.BehaviorController
+import ru.livetyping.zarina.core.ui.common.behavior.NoOpBehaviorController
+
+public typealias SystemBarsBehaviorController = BehaviorController<SystemBarsBehavior>
+
+public val LocalSystemBarsBehaviorController: ProvidableCompositionLocal<BehaviorController<SystemBarsBehavior>> =
+    staticCompositionLocalOf { NoOpBehaviorController() }

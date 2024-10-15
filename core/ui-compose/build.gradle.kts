@@ -40,6 +40,7 @@ kotlin {
 
 dependencies {
     api(projects.core.text)
+    api(projects.core.uiCommon)
 
     api(platform(libs.jetpack.compose.bom))
     api(libs.jetpack.compose.ui)
