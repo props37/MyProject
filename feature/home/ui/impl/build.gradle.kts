@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.kotlin.compose.compiler)
 }
 
 android {
@@ -33,14 +34,22 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 kotlin {
     explicitApi()
 }
 
+// TODO: [High] Specify Compose reports destination and Compose stability config
+
 dependencies {
     implementation(projects.feature.home.ui.api)
+    implementation(projects.feature.home.domain)
+    implementation(projects.core.coroutinesUtil)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
@@ -58,6 +67,8 @@ dependencies {
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigationCompose)
+
+    implementation(libs.kotlin.immutableCollections)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)

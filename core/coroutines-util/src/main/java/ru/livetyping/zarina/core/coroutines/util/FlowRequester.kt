@@ -57,12 +57,19 @@ public class FlowRequester<T, R : FlowRequest>(
             return this is Loading
         }
 
-        public val loadingRequest: FlowRequest?
+        public open val loadingRequest: FlowRequest?
             get() = if (this is Loading) this.request else null
 
         public data object NotLoading : LoadingState()
 
-        public data class Loading(val request: FlowRequest) : LoadingState()
+        public data class Loading(val request: FlowRequest) : LoadingState() {
+            @Deprecated(
+                message = "Consider using request instead",
+                level = DeprecationLevel.HIDDEN,
+            )
+            override val loadingRequest: FlowRequest
+                get() = request
+        }
     }
 
     public interface FlowBuilderScope<R : FlowRequest> {
