@@ -56,6 +56,13 @@ private fun ScreenContent(
             .fillMaxSize()
             .background(UiKitTheme.colors.background.general.regular.default),
     ) {
-        // TODO: [Top] Implement
+        HomeContent(
+            homeContentState = homeContentState,
+            onHomeContentEvent = onHomeContentEvent,
+            genderSelectorState = genderSelectorState,
+            onGenderSelectorEvent = onGenderSelectorEvent,
+            isRefreshing = isRefreshing,
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }
