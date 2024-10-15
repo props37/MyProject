@@ -2,12 +2,15 @@ package ru.livetyping.zarina.feature.home.ui.impl.impl
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -24,6 +27,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import ru.livetyping.zarina.core.ui.compose.Crossfade
@@ -106,6 +112,8 @@ private fun HomeContentSuccess(
     isRefreshing: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val density = LocalDensity.current
+
     Box(modifier = modifier) {
         ForcedSystemBarsBehavior(isStatusBarContentLight = true)
 
@@ -139,7 +147,22 @@ private fun HomeContentSuccess(
                 .zIndex(2f),
         )
 
-        // TODO: [Top] Add top bar
+        TopBar(
+            genderSelectorState = genderSelectorState,
+            onGenderSelectorEvent = onGenderSelectorEvent,
+            modifier = Modifier
+                .zIndex(1f)
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .background(rememberTopBarScrimBrush())
+                .onSizeChanged { size ->
+                    with(density) {
+                        pullRefreshOffset = size.height.toDp() - TopBarBottomPadding
+                    }
+                }
+                .statusBarsPadding()
+                .padding(top = 12.dp, bottom = TopBarBottomPadding),
+        )
 
         GenderContentPager(
             genderSelectorState = genderSelectorState,
@@ -177,5 +200,7 @@ private fun GenderContentPager(
         }
     }
 }
+
+private val TopBarBottomPadding: Dp get() = 80.dp
 
 private enum class HomeContentKey { Success }
