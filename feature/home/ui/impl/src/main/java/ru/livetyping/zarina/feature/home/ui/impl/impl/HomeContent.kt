@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.ui.compose.Crossfade
+import ru.livetyping.zarina.core.ui.kit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.ui.kit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.ui.kit.screen.ZarinaLoadingScreen
 import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentEvent
@@ -54,7 +55,7 @@ internal fun HomeContent(
                             WindowInsets.statusBars
                                 .union(WindowInsets.displayCutout)
                         )
-                        // TODO: [Top] Add bottom nav bar padding
+                        .bottomNavBarPadding()
                         .padding(16.dp),
                 )
             }
