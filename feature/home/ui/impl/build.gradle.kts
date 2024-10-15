@@ -57,7 +57,6 @@ dependencies {
     implementation(projects.feature.home.ui.api)
     implementation(projects.feature.home.domain)
     implementation(projects.core.uiKit)
-    implementation(projects.core.uiCompose)
     implementation(projects.core.coroutinesUtil)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
