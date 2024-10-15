@@ -23,6 +23,8 @@ include(":feature:home:ui:impl")
 include(":feature:home:data")
 include(":feature:home:domain")
 
+include(":data:content")
+
 include(":core:domain")
 include(":core:navigation")
 include(":core:feature")
