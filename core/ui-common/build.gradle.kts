@@ -39,6 +39,8 @@ kotlin {
 }
 
 dependencies {
+    api(libs.kotlin.coroutines.core)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
     androidTestImplementation(libs.jetpack.espresso)

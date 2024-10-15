@@ -1,7 +1,7 @@
 package ru.livetyping.zarina.core.ui.kit.bottomnavbar.behavior
 
 import androidx.compose.runtime.Stable
-import ru.livetyping.zarina.core.ui.compose.behavior.Behavior
+import ru.livetyping.zarina.core.ui.common.behavior.Behavior
 
 @Stable
 public sealed class BottomNavBarBehavior : Behavior {

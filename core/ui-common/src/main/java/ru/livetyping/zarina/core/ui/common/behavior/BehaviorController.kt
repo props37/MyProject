@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.ui.compose.behavior
+package ru.livetyping.zarina.core.ui.common.behavior
 
 import kotlinx.coroutines.flow.StateFlow
 
