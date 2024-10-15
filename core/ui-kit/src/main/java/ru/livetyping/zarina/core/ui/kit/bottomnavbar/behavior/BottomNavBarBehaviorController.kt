@@ -1,0 +1,33 @@
+package ru.livetyping.zarina.core.ui.kit.bottomnavbar.behavior
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
+import ru.livetyping.zarina.core.ui.compose.behavior.BehaviorController
+import ru.livetyping.zarina.core.ui.compose.behavior.DefaultBehaviorController
+import ru.livetyping.zarina.core.ui.compose.behavior.NoOpBehaviorController
+
+public typealias BottomNavBarBehaviorController = BehaviorController<BottomNavBarBehavior>
+
+@Suppress("ComposeCompositionLocalUsage")
+public val LocalBottomNavBarBehaviorController: ProvidableCompositionLocal<BottomNavBarBehaviorController> =
+    staticCompositionLocalOf { NoOpBehaviorController() }
+
+@Composable
+public fun rememberBottomNavBarBehaviorController(
+    defaultBehavior: BottomNavBarBehavior = DefaultBehavior,
+): BehaviorController<BottomNavBarBehavior> {
+    val controller = remember {
+        DefaultBehaviorController(defaultBehavior)
+    }
+    DisposableEffect(defaultBehavior) {
+        controller.setDefaultBehavior(defaultBehavior)
+        onDispose {}
+    }
+    return controller
+}
+
+internal val DefaultBehavior: BottomNavBarBehavior
+    get() = BottomNavBarBehavior.Hidden(isAnimated = false)
