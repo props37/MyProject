@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.home.data.repository
+package ru.livetyping.zarina.feature.home.data.impl
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.feature.home.data.impl.remote.HomeContentRemoteDataSource
