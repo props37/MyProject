@@ -19,6 +19,9 @@ import ru.livetyping.zarina.core.coroutines.util.mapState
 import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
+import ru.livetyping.zarina.core.ui.common.sideeffect.SideEffectSource
+import ru.livetyping.zarina.core.ui.common.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.ui.common.throttler.Throttler
 import ru.livetyping.zarina.core.ui.kit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.feature.home.domain.model.HomeContent
 import ru.livetyping.zarina.feature.home.domain.usecase.GetHomeContentFlowUseCase
@@ -34,7 +37,9 @@ internal class HomeViewModel @Inject constructor(
     private val getLastContentGenderFlow: GetLastContentGenderFlowUseCase,
     private val setLastContentGender: SetLastContentGenderUseCase,
     private val getHomeContentFlow: GetHomeContentFlowUseCase,
-) : ViewModel() {
+) : ViewModel(), SideEffectSource<HomeScreenSideEffect> by SideEffectSourceImpl() {
+
+    private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val currentGender = MutableStateFlow(getCurrentGenderInitialValue())
 
@@ -92,7 +97,10 @@ internal class HomeViewModel @Inject constructor(
     fun onHomeContentEvent(event: HomeContentEvent) {
         when (event) {
             is HomeContentEvent.BannerClicked -> {
-                // TODO: [Top] Perform navigation
+                navigationThrottler.throttle {
+                    val action = HomeScreenAction.BannerClicked(event.banner)
+                    emitSideEffect(HomeScreenSideEffect.Navigate(action))
+                }
             }
 
             HomeContentEvent.RefreshTriggered -> {

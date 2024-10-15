@@ -41,6 +41,7 @@ kotlin {
 }
 
 dependencies {
+    api(projects.feature.home.domain)
     api(projects.core.feature)
 
     implementation(libs.kotlin.serialization.json)

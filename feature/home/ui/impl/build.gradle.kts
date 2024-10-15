@@ -55,7 +55,6 @@ composeCompiler {
 
 dependencies {
     implementation(projects.feature.home.ui.api)
-    implementation(projects.feature.home.domain)
     implementation(projects.core.uiKit)
     implementation(projects.core.coroutinesUtil)
 

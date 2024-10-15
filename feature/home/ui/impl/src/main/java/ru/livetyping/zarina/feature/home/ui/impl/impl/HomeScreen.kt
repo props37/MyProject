@@ -8,7 +8,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.ui.kit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.home.ui.HomeNavActions
 import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorEvent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorState
 import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentEvent
@@ -16,6 +18,7 @@ import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentSta
 
 @Composable
 internal fun HomeScreen(
+    navActions: HomeNavActions,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val genderSelectorState by viewModel.genderSelectorState.collectAsStateWithLifecycle()
@@ -28,6 +31,8 @@ internal fun HomeScreen(
         homeContentState = homeContentState,
         onHomeContentEvent = viewModel::onHomeContentEvent,
         isRefreshing = isRefreshing,
+        sideEffects = viewModel.sideEffects,
+        navActions = navActions,
     )
 }
 
@@ -38,8 +43,13 @@ private fun ScreenContent(
     homeContentState: HomeContentState,
     onHomeContentEvent: (HomeContentEvent) -> Unit,
     isRefreshing: Boolean,
+    sideEffects: Flow<HomeScreenSideEffect>,
+    navActions: HomeNavActions,
 ) {
-    HomeScreenBehavior()
+    HomeScreenBehavior(
+        sideEffects = sideEffects,
+        navActions = navActions,
+    )
 
     Box(
         modifier = Modifier
