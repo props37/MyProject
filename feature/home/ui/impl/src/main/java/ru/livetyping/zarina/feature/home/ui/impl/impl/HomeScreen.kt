@@ -1,9 +1,14 @@
 package ru.livetyping.zarina.feature.home.ui.impl.impl
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ru.livetyping.zarina.core.ui.kit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorEvent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorState
 import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentEvent
@@ -34,5 +39,13 @@ private fun ScreenContent(
     onHomeContentEvent: (HomeContentEvent) -> Unit,
     isRefreshing: Boolean,
 ) {
-    // TODO: [Top] Implement
+    HomeScreenBehavior()
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme.colors.background.general.regular.default),
+    ) {
+        // TODO: [Top] Implement
+    }
 }

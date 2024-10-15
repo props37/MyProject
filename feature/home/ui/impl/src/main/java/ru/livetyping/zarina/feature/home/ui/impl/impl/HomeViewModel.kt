@@ -13,6 +13,7 @@ import ru.livetyping.zarina.core.coroutines.util.FlowRequest
 import ru.livetyping.zarina.core.coroutines.util.FlowRequester
 import ru.livetyping.zarina.core.coroutines.util.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutines.util.mapState
+import ru.livetyping.zarina.core.ui.kit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.feature.home.domain.model.HomeContent
 import ru.livetyping.zarina.feature.home.domain.usecase.GetHomeContentFlowUseCase
 import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorEvent
@@ -112,8 +113,8 @@ internal class HomeViewModel @Inject constructor(
                     HomeContentState.Success(homeContent)
                 },
                 onFailure = { t ->
-                    // TODO: [Top] Implement
-                    TODO()
+                    val errorState = ZarinaErrorScreenState.from(t)
+                    HomeContentState.Error(errorState)
                 },
             )
         }
