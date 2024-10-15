@@ -44,7 +44,10 @@ kotlin {
     explicitApi()
 }
 
-// TODO: [High] Specify Compose reports destination and Compose stability config
+composeCompiler {
+    reportsDestination = layout.buildDirectory.dir("compose_compiler")
+    stabilityConfigurationFile = rootProject.layout.projectDirectory.file("config/compose/stability_config.txt")
+}
 
 dependencies {
     implementation(projects.feature.home.ui.api)
