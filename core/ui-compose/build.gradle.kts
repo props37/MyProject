@@ -39,6 +39,8 @@ kotlin {
 }
 
 dependencies {
+    api(projects.core.text)
+
     api(platform(libs.jetpack.compose.bom))
     api(libs.jetpack.compose.ui)
     api(libs.jetpack.compose.material)
@@ -46,7 +48,7 @@ dependencies {
     api(libs.jetpack.compose.toolingPreview)
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
-    
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
     androidTestImplementation(libs.jetpack.espresso)

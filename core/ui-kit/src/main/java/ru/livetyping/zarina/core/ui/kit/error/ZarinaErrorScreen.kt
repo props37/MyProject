@@ -17,8 +17,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.ui.compose.AnimatedContentDefaultTransitionSpec
+import ru.livetyping.zarina.core.ui.compose.textString
 import ru.livetyping.zarina.core.ui.kit.button.ZarinaButton
-import ru.livetyping.zarina.core.ui.kit.text.textString
 import ru.livetyping.zarina.core.ui.kit.theme.UiKitTheme
 
 @Composable

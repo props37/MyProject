@@ -53,7 +53,6 @@ composeCompiler {
 }
 
 dependencies {
-    api(projects.core.text)
     api(projects.core.uiCompose)
     api(projects.core.uiCommon)
 
