@@ -10,7 +10,7 @@ import ru.livetyping.zarina.feature.home.ui.impl.impl.HomeScreen
 public class HomeFeatureEntryImpl : HomeFeatureEntry {
     override fun NavGraphBuilder.composable(actions: HomeNavActions) {
         composable<HomeNavEntry> {
-            HomeScreen()
+            HomeScreen(navActions = actions)
         }
     }
 }
