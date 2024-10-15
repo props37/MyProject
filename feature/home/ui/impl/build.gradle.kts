@@ -73,6 +73,8 @@ dependencies {
 
     implementation(libs.kotlin.immutableCollections)
 
+    lintChecks(libs.lint.composeChecks)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
     androidTestImplementation(libs.jetpack.espresso)
