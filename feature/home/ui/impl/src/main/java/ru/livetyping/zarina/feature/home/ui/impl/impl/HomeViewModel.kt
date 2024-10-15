@@ -8,11 +8,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import ru.livetyping.zarina.core.coroutines.util.FlowRequest
 import ru.livetyping.zarina.core.coroutines.util.FlowRequester
 import ru.livetyping.zarina.core.coroutines.util.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutines.util.mapState
+import ru.livetyping.zarina.core.domain.model.gender.Gender
+import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
 import ru.livetyping.zarina.core.ui.kit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.feature.home.domain.model.HomeContent
 import ru.livetyping.zarina.feature.home.domain.usecase.GetHomeContentFlowUseCase
@@ -25,6 +31,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
+    private val getLastContentGenderFlow: GetLastContentGenderFlowUseCase,
+    private val setLastContentGender: SetLastContentGenderUseCase,
     private val getHomeContentFlow: GetHomeContentFlowUseCase,
 ) : ViewModel() {
 
@@ -72,8 +80,11 @@ internal class HomeViewModel @Inject constructor(
     fun onGenderSelectorEvent(event: GenderSelectorEvent) {
         when (event) {
             is GenderSelectorEvent.GenderChanged -> {
-                currentGender.value = event.gender
-                // TODO: [Top] Save gender as last user's selected gender
+                val genderTab = event.gender
+                currentGender.value = genderTab
+                viewModelScope.launch {
+                    setLastContentGender(genderTab.toGender())
+                }
             }
         }
     }
@@ -95,8 +106,11 @@ internal class HomeViewModel @Inject constructor(
     }
 
     private fun getCurrentGenderInitialValue(): GenderTab {
-        // TODO: [Top] Return last user's selected gender
-        return GenderTab.WOMEN
+        return runBlocking {
+            val genderResult = getLastContentGenderFlow().firstOrNull()
+            val gender = genderResult?.getOrNull() ?: Gender.getDefault()
+            GenderTab.from(gender)
+        }
     }
 
     private fun createHomeContentState(

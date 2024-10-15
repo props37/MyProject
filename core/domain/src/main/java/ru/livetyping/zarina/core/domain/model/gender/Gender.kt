@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.domain.model.common
+package ru.livetyping.zarina.core.domain.model.gender
 
 public enum class Gender {
     FEMALE,
