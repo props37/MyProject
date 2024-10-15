@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.home.ui.impl.impl
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,7 +37,7 @@ internal fun HomeContent(
     ) { state ->
         when (state) {
             is HomeContentState.Success -> {
-                // TODO: [Top] Implement
+                HomeContentSuccess(modifier = Modifier.fillMaxSize())
             }
 
             HomeContentState.Loading -> {
@@ -60,6 +61,15 @@ internal fun HomeContent(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun HomeContentSuccess(
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier) {
+        // TODO: [Top] Implement
     }
 }
 
