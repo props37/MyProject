@@ -1,5 +1,7 @@
 package ru.livetyping.zarina.feature.home.ui.impl.impl
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
@@ -8,11 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshDefaults
+import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,13 +27,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import ru.livetyping.zarina.core.ui.compose.Crossfade
+import ru.livetyping.zarina.core.ui.compose.pager.rememberPagerConnectedToTabRowState
 import ru.livetyping.zarina.core.ui.compose.systembars.ForcedSystemBarsBehavior
 import ru.livetyping.zarina.core.ui.kit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.ui.kit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.ui.kit.pullrefresh.ZarinaPullRefreshIndicator
 import ru.livetyping.zarina.core.ui.kit.screen.ZarinaLoadingScreen
+import ru.livetyping.zarina.feature.home.domain.model.HomeContent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorEvent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorState
+import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderTab
 import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentEvent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentState
 
@@ -55,6 +63,7 @@ internal fun HomeContent(
         when (state) {
             is HomeContentState.Success -> {
                 HomeContentSuccess(
+                    homeContentState = state,
                     onHomeContentEvent = onHomeContentEvent,
                     genderSelectorState = genderSelectorState,
                     onGenderSelectorEvent = onGenderSelectorEvent,
@@ -90,6 +99,7 @@ internal fun HomeContent(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun HomeContentSuccess(
+    homeContentState: HomeContentState.Success,
     onHomeContentEvent: (HomeContentEvent) -> Unit,
     genderSelectorState: GenderSelectorState,
     onGenderSelectorEvent: (GenderSelectorEvent) -> Unit,
@@ -109,7 +119,12 @@ private fun HomeContentSuccess(
             refreshingOffset = pullRefreshOffset,
         )
 
-        val pagerState = rememberPagerState(
+        val pagerState = rememberPagerConnectedToTabRowState(
+            tabs = genderSelectorState.genders,
+            currentTab = genderSelectorState.currentGender,
+            onTabChanged = {
+                onGenderSelectorEvent(GenderSelectorEvent.GenderChanged(it))
+            },
             initialPage = remember {
                 genderSelectorState.genders.indexOf(genderSelectorState.currentGender)
             },
@@ -124,7 +139,42 @@ private fun HomeContentSuccess(
                 .zIndex(2f),
         )
 
-        // TODO: [Top] Implement
+        // TODO: [Top] Add top bar
+
+        GenderContentPager(
+            genderSelectorState = genderSelectorState,
+            homeContent = homeContentState.content,
+            onHomeContentEvent = onHomeContentEvent,
+            pagerState = pagerState,
+            modifier = Modifier
+                .fillMaxSize()
+                .bottomNavBarPadding()
+                .pullRefresh(pullRefreshState),
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun GenderContentPager(
+    genderSelectorState: GenderSelectorState,
+    homeContent: HomeContent,
+    onHomeContentEvent: (HomeContentEvent) -> Unit,
+    pagerState: PagerState,
+    modifier: Modifier = Modifier,
+) {
+    CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
+        HorizontalPager(
+            state = pagerState,
+            modifier = modifier,
+        ) { page ->
+            val banners = when (genderSelectorState.genders[page]) {
+                GenderTab.WOMEN -> homeContent.womenBanners
+                GenderTab.MEN -> homeContent.menBanners
+            }
+
+            // TODO: [Top] Implement
+        }
     }
 }
 
