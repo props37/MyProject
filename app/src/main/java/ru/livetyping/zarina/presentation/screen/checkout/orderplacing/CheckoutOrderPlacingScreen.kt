@@ -1,6 +1,8 @@
 package ru.livetyping.zarina.presentation.screen.checkout.orderplacing
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.union
@@ -45,8 +48,10 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.OrderPlacing
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.PaymentForm
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.PaymentMethodSelectorBottomSheet
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.PaymentFormState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.PaymentMethodsState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -66,6 +71,7 @@ fun CheckoutOrderPlacingScreen(
     val isPaymentMethodSelectorBottomSheetVisible by viewModel.isPaymentMethodSelectorBottomSheetVisible.collectAsStateWithLifecycle()
     val paymentMethodsState by viewModel.paymentMethodsState.collectAsStateWithLifecycle()
     val isPayButtonLoading by viewModel.isPayButtonLoading.collectAsStateWithLifecycle()
+    val paymentFormState by viewModel.paymentFormState.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = state,
@@ -95,6 +101,7 @@ fun CheckoutOrderPlacingScreen(
         onPaymentMethodsErrorRefreshClicked = viewModel::onPaymentMethodsErrorRefreshClicked,
         onPayClicked = viewModel::onPayClicked,
         isPayButtonLoading = isPayButtonLoading,
+        paymentFormState = paymentFormState,
         onUrlClicked = viewModel::onUrlClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
@@ -133,6 +140,7 @@ private fun ScreenContent(
     onPaymentMethodsErrorRefreshClicked: () -> Unit,
     onPayClicked: () -> Unit,
     isPayButtonLoading: Boolean,
+    paymentFormState: PaymentFormState?,
     onUrlClicked: (Url) -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
@@ -141,6 +149,8 @@ private fun ScreenContent(
         sideEffects = sideEffects,
         navigate = navigate,
     )
+
+    BackHandler(onBack = onBackClicked)
 
     var isZarinaClubBottomSheetVisible by remember { mutableStateOf(false) }
     ZarinaClubModalBottomSheet(
@@ -226,6 +236,20 @@ private fun ScreenContent(
             modifier = Modifier.matchParentSize(),
         ) {
             ZarinaRefreshingOverlay(modifier = Modifier.fillMaxSize())
+        }
+
+        AnimatedContent(
+            targetState = paymentFormState,
+            contentKey = { it != null },
+            contentAlignment = Alignment.Center,
+            label = "Payment form",
+            modifier = Modifier
+                .fillMaxSize()
+                .safeDrawingPadding(),
+        ) { state ->
+            if (state != null) {
+                PaymentForm(paymentUrl = state.paymentUrl)
+            }
         }
     }
 }

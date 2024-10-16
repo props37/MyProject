@@ -1,10 +1,13 @@
 package ru.livetyping.zarina.presentation.screen.checkout.orderplacing
 
 import android.os.Parcelable
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -12,6 +15,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.isImeVisible
@@ -40,12 +44,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.webkit.WebViewClientCompat
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
+import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.animation.LazyListFadeInSpec
 import ru.livetyping.zarina.presentation.common.animation.LazyListFadeOutSpec
@@ -75,6 +82,7 @@ import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.PaymentMethodsState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.modifier.disabledGestures
 
 @Suppress("ConstPropertyName")
 object CheckoutOrderPlacingScreenComponents {
@@ -233,6 +241,37 @@ object CheckoutOrderPlacingScreenComponents {
                 )
             }
         }
+    }
+
+    @Composable
+    fun PaymentForm(
+        paymentUrl: Url,
+        modifier: Modifier = Modifier,
+    ) {
+        AndroidView(
+            factory = { context ->
+                WebView(context).apply {
+                    loadUrl(paymentUrl.value)
+                    settings.apply {
+                        javaScriptEnabled = true
+                    }
+                    webViewClient = object : WebViewClientCompat() {
+                        // Disable auto routing
+                        // TODO: [High] Check with "СБП"
+                        override fun shouldOverrideUrlLoading(
+                            view: WebView,
+                            request: WebResourceRequest
+                        ): Boolean {
+                            return true
+                        }
+                    }
+                }
+            },
+            modifier = modifier
+                .fillMaxSize()
+                .disabledGestures()
+                .background(UiKitTheme.colors.background.general.regular.default),
+        )
     }
 
     @Composable
