@@ -2,7 +2,7 @@ package ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import ru.livetyping.zarina.core.ui.kit.error.ZarinaErrorScreenState
+import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.feature.home.domain.model.HomeContent
 
 @Stable

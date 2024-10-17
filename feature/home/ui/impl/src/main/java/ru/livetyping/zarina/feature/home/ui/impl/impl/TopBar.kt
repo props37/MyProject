@@ -12,10 +12,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.ui.kit.logo.ZarinaLogo
-import ru.livetyping.zarina.core.ui.kit.tab.ZarinaLooseTabRow
-import ru.livetyping.zarina.core.ui.kit.tab.ZarinaTab
-import ru.livetyping.zarina.core.ui.kit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.logo.ZarinaLogo
+import ru.livetyping.zarina.core.uikit.tab.ZarinaLooseTabRow
+import ru.livetyping.zarina.core.uikit.tab.ZarinaTab
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.home.ui.impl.R
 import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorEvent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorState

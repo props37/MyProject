@@ -19,10 +19,10 @@ import ru.livetyping.zarina.core.coroutines.util.mapState
 import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
-import ru.livetyping.zarina.core.ui.kit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
+import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.feature.home.domain.model.HomeContent
 import ru.livetyping.zarina.feature.home.domain.usecase.GetHomeContentFlowUseCase
 import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorEvent
