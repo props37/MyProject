@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.ui.common.sideeffect
+package ru.livetyping.zarina.core.uicommon.sideeffect
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
