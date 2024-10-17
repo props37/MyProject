@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import ru.livetyping.zarina.core.coroutines.util.FlowRequest
-import ru.livetyping.zarina.core.coroutines.util.FlowRequester
-import ru.livetyping.zarina.core.coroutines.util.WhileAndroidUiSubscribed
-import ru.livetyping.zarina.core.coroutines.util.mapState
+import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
+import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
+import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase

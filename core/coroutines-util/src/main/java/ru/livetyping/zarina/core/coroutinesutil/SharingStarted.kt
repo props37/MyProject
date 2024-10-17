@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.coroutines.util
+package ru.livetyping.zarina.core.coroutinesutil
 
 import kotlinx.coroutines.flow.SharingStarted
 
