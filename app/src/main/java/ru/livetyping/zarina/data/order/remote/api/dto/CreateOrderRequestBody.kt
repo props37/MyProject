@@ -165,7 +165,15 @@ data class CreateOrderRequestBody(
                             )
                         }
 
-                        is PostDeliveryCheckoutParams -> TODO()
+                        is PostDeliveryCheckoutParams -> {
+                            Payload(
+                                pickupStoreId = null,
+                                pickupPointId = null,
+                                tryingTypeLevelName = checkoutParams.deliveryOption.id.value,
+                                periodId = checkoutParams.dateTimePeriod.id.value,
+                            )
+                        }
+
                         is PickupPointDeliveryCheckoutParams -> {
                             Payload(
                                 pickupStoreId = null,
