@@ -82,7 +82,6 @@ import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.PaymentMethodsState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
-import ru.livetyping.zarina.util.compose.modifier.disabledGestures
 
 @Suppress("ConstPropertyName")
 object CheckoutOrderPlacingScreenComponents {
