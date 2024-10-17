@@ -45,6 +45,9 @@ data class OrderDto(
 
     @SerialName("payment_method")
     val paymentMethod: PaymentMethod? = null,
+    
+    @SerialName("payment_tool")
+    val paymentTool: PaymentTool? = null,
 
     @SerialName("contact_info")
     val contactInfo: ContactInfo? = null,
@@ -92,6 +95,7 @@ data class OrderDto(
             products = products.map { it.toOrderProduct() },
             price = price,
             paymentMethodType = paymentMethod.type.toPaymentMethodType(),
+            paymentUrl = paymentTool?.link?.let { Url(it) },
             deliveryInfo = deliveryInfo.toOrderDeliveryInfo(),
             contactInfo = contactInfo.toOrderContactInfo(),
             deliveryAddress = address.orEmpty(),
@@ -191,6 +195,12 @@ data class OrderDto(
     data class PaymentMethod(
         @SerialName("code")
         val type: PaymentMethodTypeDto? = null,
+    )
+
+    @Serializable
+    data class PaymentTool(
+        @SerialName("link") 
+        val link: String? = null,
     )
 
     @Serializable
