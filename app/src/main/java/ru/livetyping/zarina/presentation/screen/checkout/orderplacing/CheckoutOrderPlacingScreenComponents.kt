@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.checkout.orderplacing
 
 import android.os.Parcelable
-import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
@@ -45,7 +44,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.webkit.WebViewClientCompat
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -254,16 +252,6 @@ object CheckoutOrderPlacingScreenComponents {
                     loadUrl(paymentUrl.value)
                     settings.apply {
                         javaScriptEnabled = true
-                    }
-                    webViewClient = object : WebViewClientCompat() {
-                        // Disable auto routing
-                        // TODO: [High] Check with "СБП"
-                        override fun shouldOverrideUrlLoading(
-                            view: WebView,
-                            request: WebResourceRequest
-                        ): Boolean {
-                            return true
-                        }
                     }
                 }
             },
