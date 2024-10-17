@@ -11,6 +11,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.home.ui.HomeNavActions
+import ru.livetyping.zarina.feature.home.ui.impl.impl.component.HomeContent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorEvent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorState
 import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentEvent

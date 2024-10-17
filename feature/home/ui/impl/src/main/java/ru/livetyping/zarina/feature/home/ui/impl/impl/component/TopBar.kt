@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.home.ui.impl.impl
+package ru.livetyping.zarina.feature.home.ui.impl.impl.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
