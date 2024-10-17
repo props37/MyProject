@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
@@ -37,6 +38,7 @@ import ru.livetyping.zarina.domain.checkout.PaytureInPayPaymentData
 import ru.livetyping.zarina.domain.checkout.PaytureWalletPaymentData
 import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
+import ru.livetyping.zarina.domain.checkout.QrPaymentData
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
 import ru.livetyping.zarina.domain.checkout.exception.CartChangedException
 import ru.livetyping.zarina.domain.common.Url
@@ -233,6 +235,12 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     private val _paymentFormState: MutableStateFlow<PaymentFormState?> = MutableStateFlow(null)
     val paymentFormState: StateFlow<PaymentFormState?> = _paymentFormState.asStateFlow()
+
+    private var isCheckoutCompletedAndWaitingUntilPaymentFormClosed = false
+
+    init {
+        finishCheckoutWhenCompletedAndPaymentFormClosed()
+    }
 
     fun onBackClicked() {
         if (checkoutJob?.isActive == true || paymentFormState.value != null) {
@@ -530,6 +538,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
                 val paymentUrl = when (val data = stage.paymentData) {
                     is PaytureInPayPaymentData -> data.data.paymentUrl
                     is PaytureWalletPaymentData -> data.data.paymentUrl
+                    is QrPaymentData -> data.paymentUrl
                 }
                 _paymentFormState.value = PaymentFormState(paymentUrl)
             }
@@ -538,10 +547,14 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
                 _paymentFormState.value = null
             }
 
-            CheckoutStage.Completed -> {
-                // TODO: [High] Implement
-                val action = CheckoutOrderPlacingScreenAction.CheckoutClosed
-                emitSideEffect(SideEffect.Navigate(action))
+            is CheckoutStage.Completed -> {
+                if (!stage.waitUntilPaymentClosed) {
+                    // TODO: [High] Implement
+                    val action = CheckoutOrderPlacingScreenAction.CheckoutClosed
+                    emitSideEffect(SideEffect.Navigate(action))
+                } else {
+                    isCheckoutCompletedAndWaitingUntilPaymentFormClosed = true
+                }
             }
         }
     }
@@ -554,6 +567,18 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         }
         val message = ZarinaToastMessage.error(messageText)
         emitSideEffect(SideEffect.ShowZarinaToast(message))
+    }
+
+    private fun finishCheckoutWhenCompletedAndPaymentFormClosed() {
+        paymentFormState
+            .onEach { state ->
+                if (state == null && isCheckoutCompletedAndWaitingUntilPaymentFormClosed) {
+                    // TODO: [High] Implement
+                    val action = CheckoutOrderPlacingScreenAction.CheckoutClosed
+                    emitSideEffect(SideEffect.Navigate(action))
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun getDeliveryInfo(checkoutParams: CheckoutParams): DeliveryInfo {

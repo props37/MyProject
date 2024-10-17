@@ -19,6 +19,7 @@ import ru.livetyping.zarina.domain.checkout.PaytureWalletPaymentData
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.checkout.PickupStore
+import ru.livetyping.zarina.domain.checkout.QrPaymentData
 import ru.livetyping.zarina.domain.geography.KladrId
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.PaymentMethodType
@@ -137,6 +138,8 @@ class CheckoutRemoteDataSource @Inject constructor(
                     pollingDelay = pollingDelay,
                 )
             }
+
+            is QrPaymentData -> Unit
         }
     }
 

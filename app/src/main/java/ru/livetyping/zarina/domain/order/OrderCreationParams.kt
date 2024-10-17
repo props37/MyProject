@@ -8,5 +8,5 @@ data class OrderCreationParams(
     val cart: Cart,
     val paymentMethodType: PaymentMethodType,
     val checkoutParams: CheckoutParams,
-    val paymentData: PaymentData,
+    val paymentData: PaymentData?,
 )

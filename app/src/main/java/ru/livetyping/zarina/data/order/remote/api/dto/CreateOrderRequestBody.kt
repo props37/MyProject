@@ -144,6 +144,9 @@ data class CreateOrderRequestBody(
             @SerialName("shop_id")
             val pickupStoreId: String?,
 
+            @SerialName("pickup_station_id") 
+            val pickupPointId: Long?,
+
             @SerialName("trying_type_level_name")
             val tryingTypeLevelName: String?,
 
@@ -156,16 +159,26 @@ data class CreateOrderRequestBody(
                         is CourierDeliveryCheckoutParams -> {
                             Payload(
                                 pickupStoreId = null,
+                                pickupPointId = null,
                                 tryingTypeLevelName = checkoutParams.deliveryOption.id.value,
                                 periodId = checkoutParams.dateTimePeriod.id.value,
                             )
                         }
 
                         is PostDeliveryCheckoutParams -> TODO()
-                        is PickupPointDeliveryCheckoutParams -> TODO()
+                        is PickupPointDeliveryCheckoutParams -> {
+                            Payload(
+                                pickupStoreId = null,
+                                pickupPointId = checkoutParams.pickupPoint.id.value,
+                                tryingTypeLevelName = checkoutParams.deliveryType.id.value,
+                                periodId = checkoutParams.dateTimePeriod.id.value,
+                            )
+                        }
+
                         is StorePickupCheckoutParams -> {
                             Payload(
                                 pickupStoreId = checkoutParams.store.id.value,
+                                pickupPointId = null,
                                 tryingTypeLevelName = null,
                                 periodId = null,
                             )

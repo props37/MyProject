@@ -5,5 +5,5 @@ sealed interface CheckoutStage {
 
     data object PaymentCompleted : CheckoutStage
 
-    data object Completed : CheckoutStage
+    data class Completed(val waitUntilPaymentClosed: Boolean) : CheckoutStage
 }

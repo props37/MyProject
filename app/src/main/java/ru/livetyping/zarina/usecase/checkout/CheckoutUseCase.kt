@@ -12,10 +12,12 @@ import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.CheckoutStage
 import ru.livetyping.zarina.domain.checkout.PaymentData
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
+import ru.livetyping.zarina.domain.checkout.QrPaymentData
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
 import ru.livetyping.zarina.domain.checkout.exception.CartChangedException
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderCreationParams
+import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.order.PaymentMethodType
 import ru.livetyping.zarina.domain.user.User
 import timber.log.Timber
@@ -65,8 +67,22 @@ class CheckoutUseCase @Inject constructor(
                         paymentData = paymentData,
                     )
                     updateOrderPaymentStatus(order, paymentMethod)
-                    emit(CheckoutStage.Completed)
+                    emit(CheckoutStage.Completed(waitUntilPaymentClosed = false))
                 }
+
+                PaymentMethodType.QR -> {
+                    val order = createOrder(
+                        cart = cart,
+                        paymentMethod = paymentMethod,
+                        checkoutParams = checkoutParams,
+                        paymentData = null,
+                    )
+                    checkNotNull(order.paymentUrl) { "Payment URL is null" }
+                    val paymentData = QrPaymentData(order.paymentUrl)
+                    emit(CheckoutStage.Payment(paymentData))
+                    emit(CheckoutStage.Completed(waitUntilPaymentClosed = true))
+                }
+
                 else -> error("Unsupported payment method type ${paymentMethod.type}")
             }
         }
@@ -102,8 +118,8 @@ class CheckoutUseCase @Inject constructor(
         cart: Cart,
         paymentMethod: PaymentMethod,
         checkoutParams: CheckoutParams,
-        paymentData: PaymentData,
-    ): Order {
+        paymentData: PaymentData?,
+    ): OrderDetails {
         val orderCreationParams = OrderCreationParams(
             cart = cart,
             paymentMethodType = paymentMethod.type,
