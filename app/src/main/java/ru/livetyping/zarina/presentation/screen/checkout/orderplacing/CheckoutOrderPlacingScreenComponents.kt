@@ -20,7 +20,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -245,6 +247,7 @@ object CheckoutOrderPlacingScreenComponents {
     fun PaymentForm(
         paymentUrl: Url,
         modifier: Modifier = Modifier,
+        windowInsets: WindowInsets = WindowInsets.safeDrawing,
     ) {
         AndroidView(
             factory = { context ->
@@ -257,8 +260,8 @@ object CheckoutOrderPlacingScreenComponents {
             },
             modifier = modifier
                 .fillMaxSize()
-                .disabledGestures()
-                .background(UiKitTheme.colors.background.general.regular.default),
+                .background(UiKitTheme.colors.background.general.regular.default)
+                .windowInsetsPadding(windowInsets),
         )
     }
 

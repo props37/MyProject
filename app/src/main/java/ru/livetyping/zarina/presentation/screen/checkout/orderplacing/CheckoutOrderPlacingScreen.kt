@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.union
@@ -243,9 +242,7 @@ private fun ScreenContent(
             contentKey = { it != null },
             contentAlignment = Alignment.Center,
             label = "Payment form",
-            modifier = Modifier
-                .fillMaxSize()
-                .safeDrawingPadding(),
+            modifier = Modifier.fillMaxSize(),
         ) { state ->
             if (state != null) {
                 PaymentForm(paymentUrl = state.paymentUrl)
