@@ -235,7 +235,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     val paymentFormState: StateFlow<PaymentFormState?> = _paymentFormState.asStateFlow()
 
     fun onBackClicked() {
-        if (checkoutJob?.isActive == true) {
+        if (checkoutJob?.isActive == true || paymentFormState.value != null) {
             // TODO: [High] Show confirmation dialog?
             checkoutJob?.cancel()
             if (paymentFormState.value != null) {
