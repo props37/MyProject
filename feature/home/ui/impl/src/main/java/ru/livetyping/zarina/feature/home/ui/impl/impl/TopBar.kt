@@ -49,7 +49,8 @@ internal fun TopBar(
             backgroundColor = Color.Unspecified,
             contentColor = UiKitTheme.colors.background.general.regular.default,
         ) {
-            genderSelectorState.genders.forEach { gender ->
+            for (i in genderSelectorState.genders.indices) {
+                val gender = genderSelectorState.genders[i]
                 val textResId = when (gender) {
                     GenderTab.WOMEN -> R.string.for_women
                     GenderTab.MEN -> R.string.for_men
