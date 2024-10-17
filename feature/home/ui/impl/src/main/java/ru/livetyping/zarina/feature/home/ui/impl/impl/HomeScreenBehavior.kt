@@ -12,7 +12,7 @@ import ru.livetyping.zarina.feature.home.ui.HomeNavActions
 
 @Composable
 internal fun HomeScreenBehavior(
-    sideEffects: Flow<HomeScreenSideEffect>,
+    sideEffects: Flow<HomeSideEffect>,
     navActions: HomeNavActions,
 ) {
     val updatedNavActions by rememberUpdatedState(navActions)
@@ -23,7 +23,7 @@ internal fun HomeScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is HomeScreenSideEffect.Navigate -> {
+                    is HomeSideEffect.Navigate -> {
                         navigate(updatedNavActions, sideEffect.action)
                     }
                 }

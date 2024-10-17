@@ -37,7 +37,7 @@ internal class HomeViewModel @Inject constructor(
     private val getLastContentGenderFlow: GetLastContentGenderFlowUseCase,
     private val setLastContentGender: SetLastContentGenderUseCase,
     private val getHomeContentFlow: GetHomeContentFlowUseCase,
-) : ViewModel(), SideEffectSource<HomeScreenSideEffect> by SideEffectSourceImpl() {
+) : ViewModel(), SideEffectSource<HomeSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -99,7 +99,7 @@ internal class HomeViewModel @Inject constructor(
             is HomeContentEvent.BannerClicked -> {
                 navigationThrottler.throttle {
                     val action = HomeScreenAction.BannerClicked(event.banner)
-                    emitSideEffect(HomeScreenSideEffect.Navigate(action))
+                    emitSideEffect(HomeSideEffect.Navigate(action))
                 }
             }
 

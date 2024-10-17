@@ -43,7 +43,7 @@ private fun ScreenContent(
     homeContentState: HomeContentState,
     onHomeContentEvent: (HomeContentEvent) -> Unit,
     isRefreshing: Boolean,
-    sideEffects: Flow<HomeScreenSideEffect>,
+    sideEffects: Flow<HomeSideEffect>,
     navActions: HomeNavActions,
 ) {
     HomeScreenBehavior(
