@@ -27,6 +27,7 @@ include(":data:content")
 
 include(":core:domain")
 include(":core:navigation")
+include(":core:navigation-util")
 include(":core:feature")
 include(":core:usecase")
 include(":core:network")
