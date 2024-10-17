@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.ui.compose
+package ru.livetyping.zarina.core.uicompose
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi

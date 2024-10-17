@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.ui.compose.pager
+package ru.livetyping.zarina.core.uicompose.pager
 
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.pager.PagerState

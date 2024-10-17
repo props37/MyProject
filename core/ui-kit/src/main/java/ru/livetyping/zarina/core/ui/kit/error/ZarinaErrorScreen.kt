@@ -16,10 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.ui.compose.AnimatedContentDefaultTransitionSpec
-import ru.livetyping.zarina.core.ui.compose.textString
 import ru.livetyping.zarina.core.ui.kit.button.ZarinaButton
 import ru.livetyping.zarina.core.ui.kit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
+import ru.livetyping.zarina.core.uicompose.textString
 
 @Composable
 public fun ZarinaErrorScreen(

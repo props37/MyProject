@@ -32,13 +32,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import ru.livetyping.zarina.core.ui.compose.Crossfade
-import ru.livetyping.zarina.core.ui.compose.pager.rememberPagerConnectedToTabRowState
-import ru.livetyping.zarina.core.ui.compose.systembars.ForcedSystemBarsBehavior
 import ru.livetyping.zarina.core.ui.kit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.ui.kit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.ui.kit.pullrefresh.ZarinaPullRefreshIndicator
 import ru.livetyping.zarina.core.ui.kit.screen.ZarinaLoadingScreen
+import ru.livetyping.zarina.core.uicompose.Crossfade
+import ru.livetyping.zarina.core.uicompose.pager.rememberPagerConnectedToTabRowState
+import ru.livetyping.zarina.core.uicompose.systembars.ForcedSystemBarsBehavior
 import ru.livetyping.zarina.feature.home.domain.model.HomeContent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorEvent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorState

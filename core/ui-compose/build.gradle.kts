@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "ru.livetyping.zarina.core.ui.compose"
+    namespace = "ru.livetyping.zarina.core.uicompose"
     compileSdk = 35
 
     defaultConfig {

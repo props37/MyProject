@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.ui.compose.systembars
+package ru.livetyping.zarina.core.uicompose.systembars
 
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf

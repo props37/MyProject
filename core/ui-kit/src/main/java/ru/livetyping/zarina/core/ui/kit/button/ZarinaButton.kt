@@ -33,11 +33,11 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.ui.compose.AnimatedContentDefaultTransitionSpec
-import ru.livetyping.zarina.core.ui.compose.DarkRipple
-import ru.livetyping.zarina.core.ui.compose.LightRipple
 import ru.livetyping.zarina.core.ui.kit.loader.ZarinaCircularLoader
 import ru.livetyping.zarina.core.ui.kit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
+import ru.livetyping.zarina.core.uicompose.DarkRipple
+import ru.livetyping.zarina.core.uicompose.LightRipple
 
 @Composable
 public fun ZarinaButton(

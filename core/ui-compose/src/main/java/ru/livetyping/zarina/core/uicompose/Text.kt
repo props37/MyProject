@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.ui.compose
+package ru.livetyping.zarina.core.uicompose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration

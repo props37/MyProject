@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.ui.compose.systembars
+package ru.livetyping.zarina.core.uicompose.systembars
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
