@@ -134,6 +134,8 @@ composeCompiler {
 }
 
 dependencies {
+    implementation(projects.core.usecase)
+
     implementation(libs.jetpack.core)
     implementation(libs.jetpack.appcompat)
     implementation(libs.jetpack.activity.compose)
