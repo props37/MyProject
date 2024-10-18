@@ -60,6 +60,7 @@ dependencies {
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
 
+    api(libs.jetpack.media3.exoplayer)
     implementation(libs.jetpack.media3.ui)
 
     implementation(libs.timber)

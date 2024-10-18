@@ -14,4 +14,6 @@ kotlin {
 
 dependencies {
     api(projects.core.usecase)
+
+    api(libs.kotlin.coroutines.core)
 }

@@ -49,6 +49,7 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     implementation(libs.kotlin.coroutines.android)
+    implementation(libs.kotlin.serialization.json)
 
     implementation(libs.timber)
 

@@ -47,7 +47,7 @@ dependencies {
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
 
-    api(libs.kotlin.serialization.json)
+    implementation(libs.kotlin.serialization.json)
 
     api(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
