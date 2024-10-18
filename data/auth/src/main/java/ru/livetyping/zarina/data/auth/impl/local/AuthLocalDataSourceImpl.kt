@@ -10,4 +10,8 @@ internal class AuthLocalDataSourceImpl @Inject constructor(
     override fun getBearerTokensFlow(): Flow<BearerTokens?> {
         return authEncryptedStorage.getBearerTokensFlow()
     }
+
+    override suspend fun setBearerTokens(tokens: BearerTokens?) {
+        authEncryptedStorage.setBearerTokens(tokens)
+    }
 }

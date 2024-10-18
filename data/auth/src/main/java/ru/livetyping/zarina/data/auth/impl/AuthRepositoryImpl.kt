@@ -10,7 +10,11 @@ internal class AuthRepositoryImpl @Inject constructor(
     private val localDataSource: AuthLocalDataSource,
 ) : AuthRepository {
     override fun getBearerTokensFlow(): Flow<BearerTokens?> {
-        TODO("Not yet implemented")
+        return localDataSource.getBearerTokensFlow()
+    }
+
+    override suspend fun setBearerTokens(tokens: BearerTokens?) {
+        localDataSource.setBearerTokens(tokens)
     }
 
     override suspend fun refreshBearerTokens(oldTokens: BearerTokens?): BearerTokens {
