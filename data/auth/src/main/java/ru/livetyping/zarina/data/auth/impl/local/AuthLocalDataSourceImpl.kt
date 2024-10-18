@@ -2,6 +2,7 @@ package ru.livetyping.zarina.data.auth.impl.local
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
+import ru.livetyping.zarina.data.auth.impl.local.storage.AuthEncryptedStorage
 import javax.inject.Inject
 
 internal class AuthLocalDataSourceImpl @Inject constructor(

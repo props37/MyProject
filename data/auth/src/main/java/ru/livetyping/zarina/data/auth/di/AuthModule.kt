@@ -6,19 +6,21 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.data.auth.impl.AuthRepositoryImpl
-import ru.livetyping.zarina.data.auth.impl.local.AuthEncryptedStorage
-import ru.livetyping.zarina.data.auth.impl.local.AuthEncryptedStorageImpl
 import ru.livetyping.zarina.data.auth.impl.local.AuthLocalDataSource
 import ru.livetyping.zarina.data.auth.impl.local.AuthLocalDataSourceImpl
+import ru.livetyping.zarina.data.auth.impl.local.storage.AuthEncryptedStorage
+import ru.livetyping.zarina.data.auth.impl.local.storage.AuthEncryptedStorageImpl
+import ru.livetyping.zarina.data.auth.impl.remote.AuthRemoteDataSource
+import ru.livetyping.zarina.data.auth.impl.remote.AuthRemoteDataSourceImpl
+import ru.livetyping.zarina.data.auth.impl.remote.api.AuthApi
+import ru.livetyping.zarina.data.auth.impl.remote.api.AuthApiImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class AuthModule {
 
     @Binds
-    abstract fun bindAuthRepository(
-        impl: AuthRepositoryImpl,
-    ): AuthRepository
+    abstract fun bindAuthRepository(impl: AuthRepositoryImpl): AuthRepository
 
     @Binds
     abstract fun bindAuthLocalDataSource(
@@ -26,7 +28,15 @@ internal abstract class AuthModule {
     ): AuthLocalDataSource
 
     @Binds
+    abstract fun bindAuthRemoteDataSource(
+        impl: AuthRemoteDataSourceImpl,
+    ): AuthRemoteDataSource
+
+    @Binds
     abstract fun bindAuthEncryptedStorage(
-        impl: AuthEncryptedStorageImpl
+        impl: AuthEncryptedStorageImpl,
     ): AuthEncryptedStorage
+
+    @Binds
+    abstract fun bindAuthApi(impl: AuthApiImpl): AuthApi
 }

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.auth.impl.local
+package ru.livetyping.zarina.data.auth.impl.local.storage
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
