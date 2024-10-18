@@ -45,14 +45,14 @@ internal fun getZarinaAuthorizedHttpClient(
             loadTokens {
                 val tokens = bearerTokenService.loadTokens()
                 Timber.tag(HTTP_CLIENT_TAG).v("Bearer tokens loaded: $tokens")
-                tokens?.toBearerTokens()
+                tokens?.toKtorBearerTokens()
             }
 
             refreshTokens {
                 val oldTokens = this.oldTokens?.let { BearerTokens.from(it) }
                 val newTokens = bearerTokenService.refreshTokens(oldTokens)
                 Timber.tag(HTTP_CLIENT_TAG).v("Bearer tokens refreshed: $newTokens")
-                newTokens?.toBearerTokens()
+                newTokens?.toKtorBearerTokens()
             }
         }
     }

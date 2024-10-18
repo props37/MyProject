@@ -1,23 +1,39 @@
 package ru.livetyping.zarina.core.network.auth
 
+import ru.livetyping.zarina.core.domain.model.common.Token
 import io.ktor.client.plugins.auth.providers.BearerTokens as KtorBearerTokens
+import ru.livetyping.zarina.core.domain.model.auth.BearerTokens as DomainBearerTokens
 
 public data class BearerTokens(
     public val accessToken: String,
     public val refreshToken: String,
 ) {
-    internal fun toBearerTokens(): KtorBearerTokens {
+    internal fun toKtorBearerTokens(): KtorBearerTokens {
         return KtorBearerTokens(
             accessToken = accessToken,
             refreshToken = refreshToken,
         )
     }
 
-    internal companion object {
-        fun from(tokens: KtorBearerTokens): BearerTokens {
+    public fun toBearerTokens(): DomainBearerTokens {
+        return DomainBearerTokens(
+            accessToken = Token(accessToken),
+            refreshToken = Token(refreshToken),
+        )
+    }
+
+    public companion object {
+        internal fun from(tokens: KtorBearerTokens): BearerTokens {
             return BearerTokens(
                 accessToken = tokens.accessToken,
                 refreshToken = tokens.refreshToken,
+            )
+        }
+
+        public fun from(tokens: DomainBearerTokens): BearerTokens {
+            return BearerTokens(
+                accessToken = tokens.accessToken.value,
+                refreshToken = tokens.refreshToken.value,
             )
         }
     }
