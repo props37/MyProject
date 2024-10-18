@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.build
+package ru.livetyping.zarina.core.buildutil
 
 import javax.inject.Qualifier
 

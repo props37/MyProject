@@ -1,3 +1,3 @@
-package ru.livetyping.zarina.core.build
+package ru.livetyping.zarina.core.buildutil
 
 public enum class BuildType { DEBUG, QA, RELEASE }
