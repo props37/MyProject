@@ -22,4 +22,8 @@ internal class AuthRepositoryImpl @Inject constructor(
     override suspend fun refreshBearerTokens(oldTokens: BearerTokens): BearerTokens {
         return remoteDataSource.refreshBearerTokens(oldTokens)
     }
+
+    override suspend fun getNewUnauthorizedUserBearerTokens(): BearerTokens {
+        return remoteDataSource.getNewUnauthorizedUserBearerTokens()
+    }
 }

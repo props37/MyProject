@@ -22,6 +22,10 @@ internal class AuthApiImpl @Inject constructor(
         }.body()
     }
 
+    override suspend fun getNewUnauthorizedUserAuthorizationTokens(): BearerTokensDto {
+        return httpClient.get("/api/auth/jwt").body()
+    }
+
     private companion object {
         private const val HEADER_REFRESH_TOKEN = "x-refresh-token"
     }

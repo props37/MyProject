@@ -11,4 +11,9 @@ internal class AuthRemoteDataSourceImpl @Inject constructor(
         val dto = api.refreshBearerTokens(oldTokens)
         return dto.toBearerTokens()
     }
+
+    override suspend fun getNewUnauthorizedUserBearerTokens(): BearerTokens {
+        val dto = api.getNewUnauthorizedUserAuthorizationTokens()
+        return dto.toBearerTokens()
+    }
 }
