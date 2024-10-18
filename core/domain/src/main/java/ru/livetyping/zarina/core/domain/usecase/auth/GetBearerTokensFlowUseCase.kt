@@ -8,8 +8,8 @@ import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
 public class GetBearerTokensFlowUseCase(
     private val authRepository: AuthRepository,
-    userCaseLogger: UseCaseLogger?,
-) : FlowUseCase<Unit, BearerTokens?>(userCaseLogger) {
+    logger: UseCaseLogger?,
+) : FlowUseCase<Unit, BearerTokens?>(logger) {
 
     override fun execute(params: Unit): Flow<BearerTokens?> {
         return authRepository.getBearerTokensFlow()
