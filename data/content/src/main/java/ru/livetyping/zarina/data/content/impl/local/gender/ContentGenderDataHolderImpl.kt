@@ -25,7 +25,7 @@ internal class ContentGenderDataHolderImpl @Inject constructor(
             }
             .distinctUntilChanged()
             .onEach { gender ->
-                Timber.tag(TAG).v("Last content gender retrieved: $gender")
+                Timber.tag(TAG).v("Last content gender: $gender")
             }
     }
 
@@ -33,7 +33,7 @@ internal class ContentGenderDataHolderImpl @Inject constructor(
         preferencesDataStore.edit { data ->
             data[KEY_LAST_CONTENT_GENDER] = gender.name
         }
-        Timber.v("Last content gender set: $gender")
+        Timber.tag(TAG).v("Content gender set: $gender")
     }
 
     // TODO: [High] Extract to :core:kotlin-util module
