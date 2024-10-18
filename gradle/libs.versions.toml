@@ -154,6 +154,8 @@ firebase-performance = { group = "com.google.firebase", name = "firebase-perf-kt
 
 mindbox = { group = "cloud.mindbox", name = "mobile-sdk", version.ref = "mindbox" }
 
+java-inject = { module = "javax.inject:javax.inject", version = "1" }
+
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 lint-composeChecks = { group = "com.slack.lint.compose", name = "compose-lint-checks", version.ref = "lint-composeChecks" }
