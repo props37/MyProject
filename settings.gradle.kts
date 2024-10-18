@@ -24,6 +24,7 @@ include(":feature:home:data")
 include(":feature:home:domain")
 
 include(":data:content")
+include(":data:auth")
 
 include(":core:domain")
 include(":core:navigation")
