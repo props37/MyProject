@@ -65,7 +65,7 @@ private fun HttpClientConfig<*>.applyBaseConfig(json: Json) {
     install(ContentNegotiation) {
         json(json)
     }
-    // TODO: [Top] Do not install if there is no need in logging
+    // TODO: [Low] Do not install if there is no need in logging
     install(Logging) {
         level = LogLevel.ALL
         logger = object : Logger {
