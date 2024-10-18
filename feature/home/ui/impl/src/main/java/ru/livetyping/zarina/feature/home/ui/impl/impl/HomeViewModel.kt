@@ -88,7 +88,8 @@ internal class HomeViewModel @Inject constructor(
                 val genderTab = event.gender
                 currentGender.value = genderTab
                 viewModelScope.launch {
-                    setLastContentGender(genderTab.toGender())
+                    val params = SetLastContentGenderUseCase.Params(genderTab.toGender())
+                    setLastContentGender(params)
                 }
             }
         }
@@ -115,7 +116,7 @@ internal class HomeViewModel @Inject constructor(
 
     private fun getCurrentGenderInitialValue(): GenderTab {
         return runBlocking {
-            val genderResult = getLastContentGenderFlow().firstOrNull()
+            val genderResult = getLastContentGenderFlow(Unit).firstOrNull()
             val gender = genderResult?.getOrNull() ?: Gender.getDefault()
             GenderTab.from(gender)
         }
