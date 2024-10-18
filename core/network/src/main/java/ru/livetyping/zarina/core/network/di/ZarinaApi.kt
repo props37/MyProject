@@ -4,6 +4,6 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-public annotation class ZarinaApiQualifier(val api: ZarinaApi)
+public annotation class ZarinaApi(val api: ZarinaApiType)
 
-public enum class ZarinaApi { AUTHORIZED, UNAUTHORIZED }
+public enum class ZarinaApiType { AUTHORIZED, UNAUTHORIZED }

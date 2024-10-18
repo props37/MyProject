@@ -26,7 +26,7 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
-    @ZarinaApiQualifier(ZarinaApi.AUTHORIZED)
+    @ZarinaApi(ZarinaApiType.AUTHORIZED)
     fun provideZarinaUnauthorizedHttpClient(
         bearerTokenService: BearerTokenService,
     ): HttpClient {
@@ -40,7 +40,7 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
-    @ZarinaApiQualifier(ZarinaApi.UNAUTHORIZED)
+    @ZarinaApi(ZarinaApiType.UNAUTHORIZED)
     fun provideZarinaUnauthorizedHttpClient(): HttpClient {
         return getZarinaUnauthorizedHttpClient(
             json = json,
