@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.retryWhen
 public abstract class FlowUseCase<in P, out R>(private val logger: UseCaseLogger?) {
     private val className by lazy { this.javaClass.simpleName ?: TAG }
 
-    public operator fun invoke(params: P): Flow<Result<R>> = execute(params)
+    public fun call(params: P): Flow<Result<R>> = execute(params)
         .map { Result.success(it) }
         .retryWhen { t, attempt ->
             logError(t, params)

@@ -10,11 +10,12 @@ internal class GetHomeContentFlowUseCaseImpl(
     private val homeContentRepository: HomeContentRepository,
     logger: UseCaseLogger?,
 ) : FlowUseCase<Unit, HomeContent>(logger), GetHomeContentFlowUseCase {
+
     override fun execute(params: Unit): Flow<HomeContent> {
         return homeContentRepository.getHomeContentFlow()
     }
 
     override fun invoke(): Flow<Result<HomeContent>> {
-        return invoke(Unit)
+        return call(Unit)
     }
 }

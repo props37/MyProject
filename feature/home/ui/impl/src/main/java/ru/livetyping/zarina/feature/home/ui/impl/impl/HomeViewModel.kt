@@ -116,7 +116,7 @@ internal class HomeViewModel @Inject constructor(
 
     private fun getCurrentGenderInitialValue(): GenderTab {
         return runBlocking {
-            val genderResult = getLastContentGenderFlow(Unit).firstOrNull()
+            val genderResult = getLastContentGenderFlow().firstOrNull()
             val gender = genderResult?.getOrNull() ?: Gender.getDefault()
             GenderTab.from(gender)
         }

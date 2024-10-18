@@ -5,7 +5,7 @@ import kotlin.coroutines.cancellation.CancellationException
 public abstract class UseCase<in P, out R>(private val logger: UseCaseLogger?) {
     private val className by lazy { this.javaClass.simpleName ?: TAG }
 
-    public suspend operator fun invoke(params: P): Result<R> {
+    public suspend fun call(params: P): Result<R> {
         return try {
             val executionResult = execute(params)
             Result.success(executionResult)

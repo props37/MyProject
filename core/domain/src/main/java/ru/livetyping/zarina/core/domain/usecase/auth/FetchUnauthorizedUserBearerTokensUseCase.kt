@@ -1,30 +1,21 @@
 package ru.livetyping.zarina.core.domain.usecase.auth
 
-import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
-import ru.livetyping.zarina.core.usecase.UseCase
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
-public class FetchUnauthorizedUserBearerTokensUseCase(
-    private val authRepository: AuthRepository,
-    private val logger: UseCaseLogger?,
-) : UseCase<Unit, BearerTokens>(logger) {
+public interface FetchUnauthorizedUserBearerTokensUseCase {
+    public suspend operator fun invoke(): Result<BearerTokens>
 
-    override suspend fun execute(params: Unit): BearerTokens {
-        val currentTokens = authRepository.getBearerTokensFlow().firstOrNull()
-        return if (currentTokens != null) {
-            logger?.v(TAG, "Bearer tokens are already present, skip fetching new tokens")
-            currentTokens
-        } else {
-            val newTokens = authRepository.getNewUnauthorizedUserBearerTokens()
-            authRepository.setBearerTokens(newTokens)
-            logger?.v(TAG, "New Bearer tokens fetched: $newTokens")
-            newTokens
+    public companion object {
+        public fun getInstance(
+            authRepository: AuthRepository,
+            logger: UseCaseLogger?,
+        ): FetchUnauthorizedUserBearerTokensUseCase {
+            return FetchUnauthorizedUserBearerTokensUseCaseImpl(
+                authRepository = authRepository,
+                logger = logger,
+            )
         }
-    }
-
-    private companion object {
-        private const val TAG = "FetchUnauthorizedUserBearerTokensUseCase"
     }
 }

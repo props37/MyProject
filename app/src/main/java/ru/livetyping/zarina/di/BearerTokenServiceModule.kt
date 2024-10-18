@@ -38,13 +38,13 @@ internal class BearerTokenServiceModule {
     ): BearerTokenService {
         return object : BearerTokenService {
             override suspend fun loadTokens(): BearerTokens? {
-                var tokens = getBearerTokensFlow(Unit).firstOrNull()?.getOrNull()
+                var tokens = getBearerTokensFlow().firstOrNull()?.getOrNull()
                 Timber.tag(BEARER_TOKEN_SERVICE_TAG).v("Current Bearer tokens loaded: $tokens")
                 if (tokens == null) {
                     Timber
                         .tag(BEARER_TOKEN_SERVICE_TAG)
                         .v("Loaded Bearer tokens are null, trying to fetch new tokens")
-                    tokens = fetchUnauthorizedUserBearerTokens(Unit).getOrNull()
+                    tokens = fetchUnauthorizedUserBearerTokens().getOrNull()
                     Timber
                         .tag(BEARER_TOKEN_SERVICE_TAG)
                         .v("New Bearer tokens fetched: $tokens")
