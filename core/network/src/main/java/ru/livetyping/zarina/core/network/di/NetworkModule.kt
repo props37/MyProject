@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
+import ru.livetyping.zarina.core.buildutil.ZarinaBaseUrl
 import ru.livetyping.zarina.core.network.auth.BearerTokenService
 import ru.livetyping.zarina.core.network.impl.ZarinaApiHeaderProvider
 import ru.livetyping.zarina.core.network.impl.getZarinaAuthorizedHttpClient
@@ -28,11 +29,13 @@ internal object NetworkModule {
     @Singleton
     @ZarinaApi(ZarinaApiType.AUTHORIZED)
     fun provideZarinaUnauthorizedHttpClient(
+        @ZarinaBaseUrl
+        baseUrl: String,
         bearerTokenService: BearerTokenService,
     ): HttpClient {
         return getZarinaAuthorizedHttpClient(
             json = json,
-            baseUrl = "", // TODO: [Top] Provide
+            baseUrl = baseUrl,
             headerProvider = ZarinaApiHeaderProvider(),
             bearerTokenService = bearerTokenService,
         )
@@ -41,10 +44,13 @@ internal object NetworkModule {
     @Provides
     @Singleton
     @ZarinaApi(ZarinaApiType.UNAUTHORIZED)
-    fun provideZarinaUnauthorizedHttpClient(): HttpClient {
+    fun provideZarinaUnauthorizedHttpClient(
+        @ZarinaBaseUrl
+        baseUrl: String,
+    ): HttpClient {
         return getZarinaUnauthorizedHttpClient(
             json = json,
-            baseUrl = "", // TODO: [Top] Provide
+            baseUrl = baseUrl,
             headerProvider = ZarinaApiHeaderProvider(),
         )
     }
