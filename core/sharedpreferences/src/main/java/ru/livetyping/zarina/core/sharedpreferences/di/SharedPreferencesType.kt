@@ -4,6 +4,6 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-public annotation class SharedPreferencesQualifier(val type: SharedPreferencesType)
+public annotation class SharedPreferencesType(val type: SharedPrefType)
 
-public enum class SharedPreferencesType { ENCRYPTED }
+public enum class SharedPrefType { ENCRYPTED }

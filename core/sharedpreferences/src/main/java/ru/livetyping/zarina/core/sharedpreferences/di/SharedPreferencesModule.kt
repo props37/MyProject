@@ -16,7 +16,7 @@ internal class SharedPreferencesModule {
 
     @Provides
     @Singleton
-    @SharedPreferencesQualifier(SharedPreferencesType.ENCRYPTED)
+    @SharedPreferencesType(SharedPrefType.ENCRYPTED)
     fun provideEncryptedSharedPreferences(
         @ApplicationContext
         context: Context,

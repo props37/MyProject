@@ -12,13 +12,13 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.model.common.Token
-import ru.livetyping.zarina.core.sharedpreferences.di.SharedPreferencesQualifier
+import ru.livetyping.zarina.core.sharedpreferences.di.SharedPrefType
 import ru.livetyping.zarina.core.sharedpreferences.di.SharedPreferencesType
 import timber.log.Timber
 import javax.inject.Inject
 
 internal class AuthEncryptedStorageImpl @Inject constructor(
-    @SharedPreferencesQualifier(SharedPreferencesType.ENCRYPTED)
+    @SharedPreferencesType(SharedPrefType.ENCRYPTED)
     private val encryptedSharedPreferences: SharedPreferences,
 ) : AuthEncryptedStorage {
     override fun getBearerTokensFlow(): Flow<BearerTokens?> {
