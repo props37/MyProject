@@ -137,6 +137,7 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.network)
     implementation(projects.core.usecase)
+    implementation(projects.core.buildUtil)
 
     implementation(libs.jetpack.core)
     implementation(libs.jetpack.appcompat)
