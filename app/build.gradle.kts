@@ -134,6 +134,8 @@ composeCompiler {
 }
 
 dependencies {
+    implementation(projects.feature.home.domain)
+
     implementation(projects.core.domain)
     implementation(projects.core.network)
     implementation(projects.core.usecase)
