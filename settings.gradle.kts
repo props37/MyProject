@@ -23,6 +23,8 @@ include(":feature:home:ui:impl")
 include(":feature:home:data")
 include(":feature:home:domain")
 
+include(":feature:catalog:ui:api")
+
 include(":data:content")
 include(":data:auth")
 
