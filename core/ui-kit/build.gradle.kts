@@ -64,6 +64,8 @@ dependencies {
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
 
+    api(libs.composeShimmer)
+
     lintChecks(libs.lint.composeChecks)
 
     testImplementation(libs.junit)
