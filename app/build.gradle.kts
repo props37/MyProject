@@ -134,8 +134,11 @@ composeCompiler {
 }
 
 dependencies {
+    implementation(projects.feature.home.ui.api)
+    implementation(projects.feature.home.ui.impl)
     implementation(projects.feature.home.domain)
 
+    implementation(projects.core.feature)
     implementation(projects.core.domain)
     implementation(projects.core.network)
     implementation(projects.core.usecase)
