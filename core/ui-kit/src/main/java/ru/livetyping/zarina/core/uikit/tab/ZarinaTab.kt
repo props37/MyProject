@@ -58,11 +58,11 @@ public fun ZarinaTab(
 }
 
 public object ZarinaTabDefaults {
-    internal val SelectedTextStyle: TextStyle
+    public val SelectedTextStyle: TextStyle
         @Composable
         get() = UiKitTheme.typography.secondary.regular
 
-    internal val UnselectedTextStyle: TextStyle
+    public val UnselectedTextStyle: TextStyle
         @Composable
         get() = UiKitTheme.typography.secondary.light
 }

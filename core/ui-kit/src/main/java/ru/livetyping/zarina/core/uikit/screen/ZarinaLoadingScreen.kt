@@ -36,9 +36,9 @@ public fun ZarinaLoadingScreen(
 
 public object ZarinaLoadingScreenDefaults {
     // Splash screen logo size according to https://developer.android.com/develop/ui/views/launch/splash-screen
-    internal val LogoWidth = 192.dp
+    public val LogoWidth: Dp get() = 192.dp
 
-    internal val LogoColor: Color
+    public val LogoColor: Color
         @Composable
         get() = UiKitTheme.colors.icon.regular.default
 }

@@ -29,11 +29,11 @@ public fun ZarinaPullRefreshIndicator(
 }
 
 public object ZarinaPullRefreshIndicatorDefaults {
-    internal val BackgroundColor: Color
+    public val BackgroundColor: Color
         @Composable
         get() = UiKitTheme.colors.background.general.regular.default
 
-    internal val ContentColor: Color
+    public val ContentColor: Color
         @Composable
         get() = UiKitTheme.colors.icon.regular.default
 }

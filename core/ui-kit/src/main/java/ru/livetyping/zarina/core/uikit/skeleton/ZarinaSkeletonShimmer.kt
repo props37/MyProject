@@ -18,12 +18,12 @@ import com.valentinilk.shimmer.rememberShimmer
 @Composable
 public fun rememberZarinaSkeletonShimmer(
     bounds: ShimmerBounds = ShimmerBounds.View,
-    durationMillis: Int = DurationMillis,
-    delayMillis: Int = DelayMillis,
+    durationMillis: Int = ZarinaSkeletonShimmerDefaults.DurationMillis,
+    delayMillis: Int = ZarinaSkeletonShimmerDefaults.DelayMillis,
     rotation: Float = 0f,
     blendMode: BlendMode = BlendMode.Overlay,
-    shaderColors: List<Color> = remember { ShaderColors },
-    width: Dp = Width,
+    shaderColors: List<Color> = remember { ZarinaSkeletonShimmerDefaults.ShaderColors },
+    width: Dp = ZarinaSkeletonShimmerDefaults.Width,
 ): Shimmer {
     val theme = rememberZarinaSkeletonShimmerTheme(
         durationMillis = durationMillis,
@@ -67,13 +67,15 @@ public fun rememberZarinaSkeletonShimmerTheme(
     }
 }
 
-private const val DurationMillis = 1500
-private const val DelayMillis = 500
+public object ZarinaSkeletonShimmerDefaults {
+    public const val DurationMillis: Int = 1500
+    public const val DelayMillis: Int = 500
 
-private val ShaderColors: List<Color> = listOf(
-    Color.White.copy(alpha = 0.01f),
-    Color.White.copy(alpha = 0.6f),
-    Color.White.copy(alpha = 0.01f),
-)
+    public val ShaderColors: List<Color> = listOf(
+        Color.White.copy(alpha = 0.01f),
+        Color.White.copy(alpha = 0.6f),
+        Color.White.copy(alpha = 0.01f),
+    )
 
-private val Width: Dp get() = 200.dp
+    public val Width: Dp = 200.dp
+}

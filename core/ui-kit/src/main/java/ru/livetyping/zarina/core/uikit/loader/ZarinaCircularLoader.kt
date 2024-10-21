@@ -25,7 +25,7 @@ public fun ZarinaCircularLoader(
 }
 
 public object ZarinaCircularLoaderDefaults {
-    internal val Color: Color
+    public val Color: Color
         @Composable
         get() = UiKitTheme.colors.icon.regular.default
 }

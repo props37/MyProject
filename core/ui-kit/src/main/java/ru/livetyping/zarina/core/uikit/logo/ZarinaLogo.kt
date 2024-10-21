@@ -46,10 +46,10 @@ public fun ZarinaLogo(
 }
 
 public object ZarinaLogoDefaults {
-    internal val Color: Color
+    public val Color: Color
         @Composable
         get() = UiKitTheme.colors.icon.regular.default
 
     // According to R.drawable.zarina_logo size
-    internal const val ZarinaLogoAspectRatio = 100f / 10
+    public const val ZarinaLogoAspectRatio: Float = 100f / 10
 }

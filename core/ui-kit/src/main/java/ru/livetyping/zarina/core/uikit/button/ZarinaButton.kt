@@ -297,8 +297,8 @@ public object ZarinaButtonDefaults {
             DarkRipple
         }
     }
-}
 
-private const val MaxBackgroundColorLuminanceForLightRipple = 0.5f
+    private const val MaxBackgroundColorLuminanceForLightRipple = 0.5f
+}
 
 private const val Tag = "ZarinaButton"
