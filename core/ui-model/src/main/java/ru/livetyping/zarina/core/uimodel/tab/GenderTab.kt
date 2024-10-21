@@ -1,24 +1,24 @@
-package ru.livetyping.zarina.feature.home.ui.impl.impl.gender
+package ru.livetyping.zarina.core.uimodel.tab
 
 import ru.livetyping.zarina.core.domain.model.gender.Gender
 
-internal enum class GenderTab {
+public enum class GenderTab {
     WOMEN,
     MEN;
 
-    fun toGender(): Gender {
+    public fun toGender(): Gender {
         return when (this) {
             WOMEN -> Gender.FEMALE
             MEN -> Gender.MALE
         }
     }
 
-    companion object {
-        fun getTabs(): List<GenderTab> {
+    public companion object {
+        public fun getTabs(): List<GenderTab> {
             return entries.toList()
         }
 
-        fun from(gender: Gender): GenderTab {
+        public fun from(gender: Gender): GenderTab {
             return when (gender) {
                 Gender.FEMALE -> WOMEN
                 Gender.MALE -> MEN

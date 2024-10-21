@@ -39,6 +39,10 @@ kotlin {
 }
 
 dependencies {
+    api(projects.core.domain)
+
+    implementation(libs.kotlin.immutableCollections)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
     androidTestImplementation(libs.jetpack.espresso)

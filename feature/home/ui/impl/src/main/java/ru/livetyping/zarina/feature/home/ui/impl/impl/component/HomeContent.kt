@@ -49,12 +49,12 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.uikit.pullrefresh.ZarinaPullRefreshIndicator
 import ru.livetyping.zarina.core.uikit.screen.ZarinaLoadingScreen
+import ru.livetyping.zarina.core.uimodel.tab.GenderTab
+import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
+import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.home.domain.model.Banner
 import ru.livetyping.zarina.feature.home.domain.model.BannerContainer
 import ru.livetyping.zarina.feature.home.domain.model.HomeContent
-import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorEvent
-import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorState
-import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderTab
 import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentEvent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentState
 import kotlin.time.Duration.Companion.seconds
@@ -63,8 +63,8 @@ import kotlin.time.Duration.Companion.seconds
 internal fun HomeContent(
     homeContentState: HomeContentState,
     onHomeContentEvent: (HomeContentEvent) -> Unit,
-    genderSelectorState: GenderSelectorState,
-    onGenderSelectorEvent: (GenderSelectorEvent) -> Unit,
+    genderSelectorState: TabRowState<GenderTab>,
+    onGenderSelectorEvent: (TabRowEvent<GenderTab>) -> Unit,
     isRefreshing: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -120,8 +120,8 @@ internal fun HomeContent(
 private fun HomeContentSuccess(
     homeContentState: HomeContentState.Success,
     onHomeContentEvent: (HomeContentEvent) -> Unit,
-    genderSelectorState: GenderSelectorState,
-    onGenderSelectorEvent: (GenderSelectorEvent) -> Unit,
+    genderSelectorState: TabRowState<GenderTab>,
+    onGenderSelectorEvent: (TabRowEvent<GenderTab>) -> Unit,
     isRefreshing: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -141,15 +141,11 @@ private fun HomeContentSuccess(
         )
 
         val pagerState = rememberPagerConnectedToTabRowState(
-            tabs = genderSelectorState.genders,
-            currentTab = genderSelectorState.currentGender,
-            onTabChanged = {
-                onGenderSelectorEvent(GenderSelectorEvent.GenderChanged(it))
-            },
-            initialPage = remember {
-                genderSelectorState.genders.indexOf(genderSelectorState.currentGender)
-            },
-            pageCount = { genderSelectorState.genders.size },
+            tabs = genderSelectorState.tabs,
+            currentTab = genderSelectorState.currentTab,
+            onTabChanged = { onGenderSelectorEvent(TabRowEvent.TabChanged(it)) },
+            initialPage = remember { genderSelectorState.currentTabIndex },
+            pageCount = { genderSelectorState.tabs.size },
         )
 
         ZarinaPullRefreshIndicator(
@@ -193,7 +189,7 @@ private fun HomeContentSuccess(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun GenderContentPager(
-    genderSelectorState: GenderSelectorState,
+    genderSelectorState: TabRowState<GenderTab>,
     homeContent: HomeContent,
     onHomeContentEvent: (HomeContentEvent) -> Unit,
     pagerState: PagerState,
@@ -204,7 +200,7 @@ private fun GenderContentPager(
             state = pagerState,
             modifier = modifier,
         ) { page ->
-            val banners = when (genderSelectorState.genders[page]) {
+            val banners = when (genderSelectorState.tabs[page]) {
                 GenderTab.WOMEN -> homeContent.womenBanners
                 GenderTab.MEN -> homeContent.menBanners
             }

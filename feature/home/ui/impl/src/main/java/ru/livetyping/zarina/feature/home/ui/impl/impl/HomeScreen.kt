@@ -10,10 +10,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uimodel.tab.GenderTab
+import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
+import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.home.ui.HomeNavActions
 import ru.livetyping.zarina.feature.home.ui.impl.impl.component.HomeContent
-import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorEvent
-import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorState
 import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentEvent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentState
 
@@ -39,8 +40,8 @@ internal fun HomeScreen(
 
 @Composable
 private fun ScreenContent(
-    genderSelectorState: GenderSelectorState,
-    onGenderSelectorEvent: (GenderSelectorEvent) -> Unit,
+    genderSelectorState: TabRowState<GenderTab>,
+    onGenderSelectorEvent: (TabRowEvent<GenderTab>) -> Unit,
     homeContentState: HomeContentState,
     onHomeContentEvent: (HomeContentEvent) -> Unit,
     isRefreshing: Boolean,

@@ -23,11 +23,11 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
+import ru.livetyping.zarina.core.uimodel.tab.GenderTab
+import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
+import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.home.domain.model.HomeContent
 import ru.livetyping.zarina.feature.home.domain.usecase.GetHomeContentFlowUseCase
-import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorEvent
-import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorState
-import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderTab
 import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentEvent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentState
 import javax.inject.Inject
@@ -43,13 +43,13 @@ internal class HomeViewModel @Inject constructor(
 
     private val currentGender = MutableStateFlow(getCurrentGenderInitialValue())
 
-    val genderSelectorState: StateFlow<GenderSelectorState> = currentGender.mapState(
+    val genderSelectorState: StateFlow<TabRowState<GenderTab>> = currentGender.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
     ) { currentGender ->
-        GenderSelectorState(
-            genders = GenderTab.getTabs().toImmutableList(),
-            currentGender = currentGender,
+        TabRowState(
+            tabs = GenderTab.getTabs().toImmutableList(),
+            currentTab = currentGender,
         )
     }
 
@@ -82,16 +82,19 @@ internal class HomeViewModel @Inject constructor(
         loadingState.isLoading() && loadingState.request == HomeContentRequest.REFRESHING
     }
 
-    fun onGenderSelectorEvent(event: GenderSelectorEvent) {
+    fun onGenderSelectorEvent(event: TabRowEvent<GenderTab>) {
         when (event) {
-            is GenderSelectorEvent.GenderChanged -> {
-                val genderTab = event.gender
+            is TabRowEvent.TabChanged -> {
+                val genderTab = event.tab
                 currentGender.value = genderTab
                 viewModelScope.launch {
                     val params = SetLastContentGenderUseCase.Params(genderTab.toGender())
                     setLastContentGender(params)
                 }
             }
+
+            // TODO: [Low] Implement
+            is TabRowEvent.TabReselected -> Unit
         }
     }
 

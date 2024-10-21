@@ -16,15 +16,15 @@ import ru.livetyping.zarina.core.uikit.logo.ZarinaLogo
 import ru.livetyping.zarina.core.uikit.tab.ZarinaLooseTabRow
 import ru.livetyping.zarina.core.uikit.tab.ZarinaTab
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uimodel.tab.GenderTab
+import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
+import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.home.ui.impl.R
-import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorEvent
-import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderSelectorState
-import ru.livetyping.zarina.feature.home.ui.impl.impl.gender.GenderTab
 
 @Composable
 internal fun TopBar(
-    genderSelectorState: GenderSelectorState,
-    onGenderSelectorEvent: (GenderSelectorEvent) -> Unit,
+    genderSelectorState: TabRowState<GenderTab>,
+    onGenderSelectorEvent: (TabRowEvent<GenderTab>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val contentColor = UiKitTheme.colors.text.general.inversed.default
@@ -41,7 +41,7 @@ internal fun TopBar(
         Spacer(modifier = Modifier.height(12.dp))
 
         val selectedTabIndex = remember(genderSelectorState) {
-            genderSelectorState.genders.indexOf(genderSelectorState.currentGender)
+            genderSelectorState.currentTabIndex
         }
 
         ZarinaLooseTabRow(
@@ -49,19 +49,24 @@ internal fun TopBar(
             backgroundColor = Color.Unspecified,
             contentColor = UiKitTheme.colors.background.general.regular.default,
         ) {
-            for (i in genderSelectorState.genders.indices) {
-                val gender = genderSelectorState.genders[i]
+            for (i in genderSelectorState.tabs.indices) {
+                val gender = genderSelectorState.tabs[i]
                 val textResId = when (gender) {
                     GenderTab.WOMEN -> R.string.for_women
                     GenderTab.MEN -> R.string.for_men
                 }
 
+                val isSelected = gender == genderSelectorState.currentTab
                 ZarinaTab(
                     text = stringResource(textResId),
                     onClick = {
-                        onGenderSelectorEvent(GenderSelectorEvent.GenderChanged(gender))
+                        if (!isSelected) {
+                            onGenderSelectorEvent(TabRowEvent.TabChanged(gender))
+                        } else {
+                            onGenderSelectorEvent(TabRowEvent.TabReselected(gender))
+                        }
                     },
-                    isSelected = gender == genderSelectorState.currentGender,
+                    isSelected = isSelected,
                 )
             }
         }
