@@ -57,6 +57,7 @@ dependencies {
     implementation(projects.feature.catalog.ui.api)
     implementation(projects.core.domain)
     implementation(projects.core.uiKit)
+    implementation(projects.core.uiModel)
     implementation(projects.core.coroutinesUtil)
     implementation(projects.core.mediaCompose)
     implementation(projects.core.navigationUtil)
