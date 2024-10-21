@@ -140,7 +140,7 @@ private fun HomeContentSuccess(
             refreshingOffset = pullRefreshOffset,
         )
 
-        val pagerState = rememberPagerConnectedToTabRowState(
+        val genderSelectorPagerState = rememberPagerConnectedToTabRowState(
             tabs = genderSelectorState.tabs,
             currentTab = genderSelectorState.currentTab,
             onTabChanged = { onGenderSelectorEvent(TabRowEvent.TabChanged(it)) },
@@ -177,7 +177,7 @@ private fun HomeContentSuccess(
             genderSelectorState = genderSelectorState,
             homeContent = homeContentState.content,
             onHomeContentEvent = onHomeContentEvent,
-            pagerState = pagerState,
+            pagerState = genderSelectorPagerState,
             modifier = Modifier
                 .fillMaxSize()
                 .bottomNavBarPadding()
