@@ -28,6 +28,7 @@ include(":feature:catalog:ui:impl")
 
 include(":data:content")
 include(":data:auth")
+include(":data:category")
 
 include(":core:domain")
 include(":core:navigation")

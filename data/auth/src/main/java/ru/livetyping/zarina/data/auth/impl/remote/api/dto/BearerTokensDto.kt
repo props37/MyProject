@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.model.common.Token
 import ru.livetyping.zarina.core.network.util.checkNotNull
-import kotlin.properties.Delegates
 
 @Serializable
 internal data class BearerTokensDto(
@@ -16,8 +15,8 @@ internal data class BearerTokensDto(
     val refreshToken: String? = null,
 ) {
     fun toBearerTokens(): BearerTokens {
-        val accessToken by Delegates.checkNotNull(token)
-        val refreshToken by Delegates.checkNotNull(refreshToken)
+        val accessToken = checkNotNull(token) { ::token }
+        val refreshToken = checkNotNull(refreshToken) { ::refreshToken }
         return BearerTokens(
             accessToken = Token(accessToken),
             refreshToken = Token(refreshToken),

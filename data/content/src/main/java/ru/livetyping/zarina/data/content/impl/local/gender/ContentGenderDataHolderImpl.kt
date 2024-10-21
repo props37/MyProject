@@ -48,6 +48,6 @@ internal class ContentGenderDataHolderImpl @Inject constructor(
     companion object {
         private val KEY_LAST_CONTENT_GENDER = stringPreferencesKey("last_content_gender")
 
-        private const val TAG = "ContentGenderDataHolder"
+        private const val TAG = "ContentGenderDataHolderImpl"
     }
 }

@@ -5,10 +5,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
+import ru.livetyping.zarina.core.domain.repository.CategoryRepository
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
 import ru.livetyping.zarina.core.domain.usecase.auth.FetchUnauthorizedUserBearerTokensUseCase
 import ru.livetyping.zarina.core.domain.usecase.auth.GetBearerTokensFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.auth.RefreshBearerTokensUseCase
+import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
@@ -81,6 +83,17 @@ internal class UseCaseModule {
     ): GetHomeContentFlowUseCase {
         return GetHomeContentFlowUseCase.getInstance(
             homeContentRepository = homeContentRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCategoriesFlowUseCase(
+        categoryRepository: CategoryRepository,
+        logger: UseCaseLogger,
+    ): GetCategoriesFlowUseCase {
+        return GetCategoriesFlowUseCase.getInstance(
+            categoryRepository = categoryRepository,
             logger = logger,
         )
     }
