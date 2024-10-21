@@ -22,7 +22,7 @@ import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.home.ui.impl.R
 
 @Composable
-internal fun TopBar(
+internal fun GenderSelector(
     genderSelectorState: TabRowState<GenderTab>,
     onGenderSelectorEvent: (TabRowEvent<GenderTab>) -> Unit,
     modifier: Modifier = Modifier,

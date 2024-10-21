@@ -156,7 +156,7 @@ private fun HomeContentSuccess(
                 .zIndex(2f),
         )
 
-        TopBar(
+        GenderSelector(
             genderSelectorState = genderSelectorState,
             onGenderSelectorEvent = onGenderSelectorEvent,
             modifier = Modifier
