@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl
+package ru.livetyping.zarina.feature.catalog.ui.impl.impl.category
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
