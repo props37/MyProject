@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,23 +52,25 @@ internal fun GenderSelector(
         ) {
             for (i in genderSelectorState.tabs.indices) {
                 val gender = genderSelectorState.tabs[i]
-                val textResId = when (gender) {
-                    GenderTab.WOMEN -> R.string.for_women
-                    GenderTab.MEN -> R.string.for_men
-                }
+                key(gender) {
+                    val textResId = when (gender) {
+                        GenderTab.WOMEN -> R.string.for_women
+                        GenderTab.MEN -> R.string.for_men
+                    }
 
-                val isSelected = gender == genderSelectorState.currentTab
-                ZarinaTab(
-                    text = stringResource(textResId),
-                    onClick = {
-                        if (!isSelected) {
-                            onGenderSelectorEvent(TabRowEvent.TabChanged(gender))
-                        } else {
-                            onGenderSelectorEvent(TabRowEvent.TabReselected(gender))
-                        }
-                    },
-                    isSelected = isSelected,
-                )
+                    val isSelected = gender == genderSelectorState.currentTab
+                    ZarinaTab(
+                        text = stringResource(textResId),
+                        onClick = {
+                            if (!isSelected) {
+                                onGenderSelectorEvent(TabRowEvent.TabChanged(gender))
+                            } else {
+                                onGenderSelectorEvent(TabRowEvent.TabReselected(gender))
+                            }
+                        },
+                        isSelected = isSelected,
+                    )
+                }
             }
         }
     }
