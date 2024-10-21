@@ -26,14 +26,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uikit.tab.LooseTabRowDefaults.looseTabIndicatorOffset
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
 @Composable
 public fun ZarinaLooseTabRow(
     selectedTabIndex: Int,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
-    contentColor: Color = UiKitTheme.colors.background.general.inversed.default,
+    backgroundColor: Color = ZarinaTabRowDefaults.BackgroundColor,
+    contentColor: Color = ZarinaTabRowDefaults.ContentColor,
     indicator: @Composable (tabPositions: List<LooseTabPosition>) -> Unit = { tabPositions ->
         ZarinaTabIndicator(
             modifier = Modifier.looseTabIndicatorOffset(tabPositions[selectedTabIndex]),
