@@ -32,6 +32,7 @@ include(":feature:wishlist:ui:impl")
 include(":data:content")
 include(":data:auth")
 include(":data:category")
+include(":data:wishlist")
 
 include(":core:domain")
 include(":core:navigation")
