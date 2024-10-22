@@ -8,6 +8,7 @@ public class DefaultBehaviorController<T : Behavior>(
     private var defaultBehavior: T,
 ) : BehaviorController<T> {
     private val behaviorStack = ArrayDeque<T>()
+    private val behaviorStackLock = Any()
 
     private val _currentBehavior = MutableStateFlow(defaultBehavior)
     override val currentBehavior: StateFlow<T> = _currentBehavior.asStateFlow()
@@ -18,16 +19,19 @@ public class DefaultBehaviorController<T : Behavior>(
     }
 
     override fun push(behavior: T) {
-        behaviorStack.addFirst(behavior)
+        synchronized(behaviorStackLock) {
+            behaviorStack.addFirst(behavior)
+        }
         updateCurrentBehavior()
     }
 
     override fun pop(behavior: T) {
-        behaviorStack.remove(behavior)
+        synchronized(behaviorStackLock) {
+            behaviorStack.remove(behavior)
+        }
         updateCurrentBehavior()
     }
 
-    @Synchronized
     private fun updateCurrentBehavior() {
         _currentBehavior.value = behaviorStack.firstOrNull() ?: defaultBehavior
     }
