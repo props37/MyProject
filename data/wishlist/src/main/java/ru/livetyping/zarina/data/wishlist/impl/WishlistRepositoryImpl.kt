@@ -20,4 +20,14 @@ internal class WishlistRepositoryImpl @Inject constructor(
         localDataSource.setWishlistProductIds(productIds)
         localDataSource.setIsWishlistProductIdsFetched(true)
     }
+
+    override suspend fun addProductToWishlist(productId: Product.Id) {
+        remoteDataSource.addProductToWishlist(productId)
+        localDataSource.addProductToWishlist(productId)
+    }
+
+    override suspend fun removeProductFromWishlist(productId: Product.Id) {
+        remoteDataSource.removeProductFromWishlist(productId)
+        localDataSource.removeProductFromWishlist(productId)
+    }
 }

@@ -11,4 +11,8 @@ internal interface WishlistDataHolder {
     fun isWishlistProductIdsFetched(): Boolean
 
     fun setIsWishlistProductIdsFetched(isFetched: Boolean)
+
+    fun addProductToWishlist(productId: Product.Id)
+
+    fun removeProductFromWishlist(productId: Product.Id)
 }

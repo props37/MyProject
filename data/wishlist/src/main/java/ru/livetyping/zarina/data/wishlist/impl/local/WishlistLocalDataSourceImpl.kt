@@ -22,4 +22,12 @@ internal class WishlistLocalDataSourceImpl @Inject constructor(
     override fun setIsWishlistProductIdsFetched(isFetched: Boolean) {
         dataHolder.setIsWishlistProductIdsFetched(isFetched)
     }
+
+    override fun addProductToWishlist(productId: Product.Id) {
+        dataHolder.addProductToWishlist(productId)
+    }
+
+    override fun removeProductFromWishlist(productId: Product.Id) {
+        dataHolder.removeProductFromWishlist(productId)
+    }
 }

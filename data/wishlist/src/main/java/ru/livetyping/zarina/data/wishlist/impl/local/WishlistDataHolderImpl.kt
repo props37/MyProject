@@ -2,6 +2,7 @@ package ru.livetyping.zarina.data.wishlist.impl.local
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import ru.livetyping.zarina.core.domain.model.product.Product
 import timber.log.Timber
 import javax.inject.Inject
@@ -27,6 +28,16 @@ internal class WishlistDataHolderImpl @Inject constructor() : WishlistDataHolder
     override fun setIsWishlistProductIdsFetched(isFetched: Boolean) {
         isWishlistProductIdsFetched = isFetched
         Timber.tag(TAG).v("Wishlist product IDs fetched set to $isFetched")
+    }
+
+    override fun addProductToWishlist(productId: Product.Id) {
+        wishlistProductIds.update { it + productId }
+        Timber.tag(TAG).v("Product $productId added to wishlist")
+    }
+
+    override fun removeProductFromWishlist(productId: Product.Id) {
+        wishlistProductIds.update { it - productId }
+        Timber.tag(TAG).v("Product $productId removed from wishlist")
     }
 
     private companion object {

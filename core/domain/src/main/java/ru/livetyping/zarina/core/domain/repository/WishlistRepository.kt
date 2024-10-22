@@ -7,4 +7,8 @@ public interface WishlistRepository {
     public fun getWishlistProductIdsFlow(): Flow<Set<Product.Id>>
 
     public suspend fun fetchWishlistProductIds()
+
+    public suspend fun addProductToWishlist(productId: Product.Id)
+
+    public suspend fun removeProductFromWishlist(productId: Product.Id)
 }
