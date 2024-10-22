@@ -23,7 +23,7 @@ internal data class BannerDto(
     val title: String? = null,
 
     @SerialName("click")
-    val clickAction: ClickActionDto? = null,
+    val click: ClickActionDto? = null,
 ) {
     fun toBanner(): Banner? {
         val mediaType = mediaType?.toMediaType()
@@ -33,11 +33,13 @@ internal data class BannerDto(
                 id = Banner.Id(id.toString()),
                 media = media,
                 title = title,
-                clickAction = clickAction?.toClickAction(),
+                clickAction = click?.toClickAction(),
             )
         } else {
-            Timber.e("Drop Banner because its ID, mediaType or mediaUrl is null")
+            Timber.tag(TAG).e("Drop BannerDto because its id, mediaType or mediaUrl is null")
             null
         }
     }
 }
+
+private const val TAG = "BannerDto"

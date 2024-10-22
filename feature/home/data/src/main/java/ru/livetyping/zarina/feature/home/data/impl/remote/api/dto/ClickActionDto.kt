@@ -25,7 +25,7 @@ internal data class ClickActionDto(
         return when (type) {
             TYPE_PRODUCT_LIST -> toClickActionProducts()
             else -> {
-                Timber.w("Unknown type $type")
+                Timber.tag(TAG).w("Unknown type $type")
                 null
             }
         }
@@ -42,3 +42,5 @@ internal data class ClickActionDto(
         private const val TYPE_PRODUCT_LIST = "products-list"
     }
 }
+
+private const val TAG = "ClickActionDto"

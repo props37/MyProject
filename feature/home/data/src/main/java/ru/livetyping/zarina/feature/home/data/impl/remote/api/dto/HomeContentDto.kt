@@ -7,15 +7,15 @@ import ru.livetyping.zarina.feature.home.domain.model.HomeContent
 @Serializable
 internal data class HomeContentDto(
     @SerialName("woman")
-    val womenBanners: List<BannerContainerDto>? = null,
+    val woman: List<BannerContainerDto>? = null,
 
     @SerialName("man")
-    val menBanners: List<BannerContainerDto>? = null,
+    val man: List<BannerContainerDto>? = null,
 ) {
     fun toHomeContent(): HomeContent {
         return HomeContent(
-            womenBanners = womenBanners?.mapNotNull { it.toBannerContainer() } ?: emptyList(),
-            menBanners = menBanners?.mapNotNull { it.toBannerContainer() } ?: emptyList(),
+            womenBanners = woman?.mapNotNull { it.toBannerContainer() } ?: emptyList(),
+            menBanners = man?.mapNotNull { it.toBannerContainer() } ?: emptyList(),
         )
     }
 }
