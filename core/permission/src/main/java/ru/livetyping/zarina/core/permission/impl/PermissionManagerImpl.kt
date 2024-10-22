@@ -20,6 +20,7 @@ internal class PermissionManagerImpl @Inject constructor(
 ) : PermissionManager {
     // TODO: [Low] Make volatile?
     private var activityRef: WeakReference<ComponentActivity>? = null
+    private val activityRefLock = Any()
 
     override fun isPermissionGranted(permission: String): Boolean {
         val activity = requireActivity()
@@ -124,22 +125,25 @@ internal class PermissionManagerImpl @Inject constructor(
         return storage.haveMultiplePermissionsRequiredRequestRationale(permissions)
     }
 
-    @Synchronized
     override fun setActivity(activity: ComponentActivity) {
-        activityRef = WeakReference(activity)
-    }
-
-    @Synchronized
-    override fun unsetActivity(activity: ComponentActivity) {
-        val currentActivity = activityRef?.get()
-        if (activity == currentActivity) {
-            activityRef = null
+        synchronized(activityRefLock) {
+            activityRef = WeakReference(activity)
         }
     }
 
-    @Synchronized
+    override fun unsetActivity(activity: ComponentActivity) {
+        synchronized(activityRefLock) {
+            val currentActivity = activityRef?.get()
+            if (activity == currentActivity) {
+                activityRef = null
+            }
+        }
+    }
+
     override fun release() {
-        activityRef = null
+        synchronized(activityRefLock) {
+            activityRef = null
+        }
     }
 
     private fun shouldShowRequestPermissionRationale(permission: String): Boolean {
