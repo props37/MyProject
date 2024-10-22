@@ -26,7 +26,7 @@ internal fun SeeWholeCategoryItem(
             item.nestingLevel * CategoryItemDefaults.NestingStartPaddingPerLevel
 
         Text(
-            text = stringResource(R.string.see_all).uppercase(),
+            text = stringResource(R.string.see_whole_category).uppercase(),
             style = UiKitTheme.typography.tertiary.light,
             color = UiKitTheme.colors.text.general.regular.default,
             maxLines = 1,
