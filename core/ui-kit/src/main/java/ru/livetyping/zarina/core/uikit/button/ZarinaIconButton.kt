@@ -77,13 +77,17 @@ public fun ZarinaIconButton(
 }
 
 public object ZarinaIconButtonDefaults {
-    public val LoaderSize: Dp get() = DefaultIconSize
+    public val IconSize: Dp get() = 24.dp
+
+    public val IconColor: Color
+        @Composable
+        get() = UiKitTheme.colors.icon.regular.default
+
+    public val LoaderSize: Dp get() = IconSize
 
     public val LoaderColor: Color
         @Composable
         get() = UiKitTheme.colors.icon.regular.default
 
-    public val IndicationRadius: Dp get() = DefaultIconSize
-
-    private val DefaultIconSize: Dp get() = 24.dp
+    public val IndicationRadius: Dp get() = IconSize
 }
