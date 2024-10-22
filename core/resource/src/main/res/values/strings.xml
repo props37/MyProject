@@ -16,4 +16,6 @@
     <string name="cancel">Отменить</string>
     <string name="clear">Очистить</string>
     <string name="back">Назад</string>
+    <string name="checkmark_checked">Выбрано</string>
+    <string name="checkmark_unchecked">Не выбрано</string>
 </resources>
