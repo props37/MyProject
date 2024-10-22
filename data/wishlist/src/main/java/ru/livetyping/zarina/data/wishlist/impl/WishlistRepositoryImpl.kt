@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.data.wishlist.impl
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.core.domain.model.common.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
@@ -18,7 +19,8 @@ internal class WishlistRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchWishlistProductIds() {
-        val productIds = remoteDataSource.getWishlistProductIds()
+        val productIds = remoteDataSource.getWishlistProductIdsFlow().firstOrNull()
+        checkNotNull(productIds) { "Failed to fetch wishlist product IDs" }
         localDataSource.setWishlistProductIds(productIds)
         localDataSource.setIsWishlistProductIdsFetched(true)
     }

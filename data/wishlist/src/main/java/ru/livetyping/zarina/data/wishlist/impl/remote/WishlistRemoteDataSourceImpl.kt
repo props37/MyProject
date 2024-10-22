@@ -11,8 +11,10 @@ import javax.inject.Inject
 internal class WishlistRemoteDataSourceImpl @Inject constructor(
     private val api: WishlistApi,
 ) : WishlistRemoteDataSource {
-    override suspend fun getWishlistProductIds(): Set<Product.Id> {
-        return api.getWishlistProductIds().toProductIds()
+    override suspend fun getWishlistProductIdsFlow(): Flow<Set<Product.Id>> = flow {
+        val dto = api.getWishlistProductIds()
+        val productIds = dto.toProductIds()
+        emit(productIds)
     }
 
     override fun getFavoriteProductPageFlow(page: Int): Flow<Page<List<ProductShort>>> = flow {
