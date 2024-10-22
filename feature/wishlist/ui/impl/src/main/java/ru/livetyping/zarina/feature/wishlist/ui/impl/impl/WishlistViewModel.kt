@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
@@ -17,6 +18,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.paging.WishlistProductPager
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.paging.updateProducts
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,9 +36,15 @@ internal class WishlistViewModel @Inject constructor(
         wishlistProductPager.getWishlistProductPagingDataFlow()
     }
 
-    // TODO: [Top] Update product state
     val productPagingDataFlow: Flow<PagingData<ProductShort>> = wishlistProductsRequester.flow
         .cachedIn(viewModelScopeDefault)
+        .updateProducts(
+            wishlistProductIdsFlow = emptyFlow(), // TODO: [Top] Implement
+            cartProductIdsFlow = emptyFlow(), // TODO: [Top] Implement
+        )
+        .cachedIn(viewModelScopeDefault)
+
+    // TODO: [Top] Fetch wishlist product IDs
 
     private data object WishlistProductsRequest : FlowRequest
 }
