@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl
+package ru.livetyping.zarina.feature.wishlist.ui.impl.impl
 
 import android.os.SystemClock
 import androidx.compose.runtime.Composable
@@ -10,12 +10,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.navigationutil.safeNavigate
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
-import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
+import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
 
 @Composable
-internal fun CatalogScreenBehavior(
-    sideEffects: Flow<CatalogSideEffect>,
-    navActions: CatalogNavActions,
+internal fun WishlistScreenBehavior(
+    sideEffects: Flow<WishlistSideEffect>,
+    navActions: WishlistNavActions,
 ) {
     val updatedNavActions by rememberUpdatedState(navActions)
 
@@ -26,7 +26,7 @@ internal fun CatalogScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is CatalogSideEffect.Navigate -> {
+                    is WishlistSideEffect.Navigate -> {
                         safeNavigate(startedElapsedRealtime) {
                             navigate(updatedNavActions, sideEffect.action)
                         }
@@ -41,7 +41,7 @@ internal fun CatalogScreenBehavior(
     }
 }
 
-private fun navigate(navActions: CatalogNavActions, action: CatalogScreenAction) {
+private fun navigate(navActions: WishlistNavActions, action: WishlistScreenAction) {
     // TODO: [Top] Implement
     TODO()
 }
