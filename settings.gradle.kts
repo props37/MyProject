@@ -26,6 +26,8 @@ include(":feature:home:domain")
 include(":feature:catalog:ui:api")
 include(":feature:catalog:ui:impl")
 
+include(":feature:wishlist:ui:api")
+
 include(":data:content")
 include(":data:auth")
 include(":data:category")
