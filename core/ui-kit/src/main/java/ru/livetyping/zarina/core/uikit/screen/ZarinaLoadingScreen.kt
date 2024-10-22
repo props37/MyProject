@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.ui.kit.R
+import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.uikit.logo.ZarinaLogo
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 

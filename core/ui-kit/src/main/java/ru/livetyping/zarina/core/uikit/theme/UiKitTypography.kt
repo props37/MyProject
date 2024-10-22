@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
-import ru.livetyping.zarina.core.ui.kit.R
+import ru.livetyping.zarina.core.uikit.R
 import ru.livetyping.zarina.core.uikit.impl.theme.W350
 
 private val CirceBold: Font

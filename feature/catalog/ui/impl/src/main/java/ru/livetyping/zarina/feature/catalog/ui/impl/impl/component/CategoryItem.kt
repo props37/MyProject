@@ -22,13 +22,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.valentinilk.shimmer.Shimmer
+import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.uicompose.toComposeColor
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.category.CategoryListItem
-import ru.livetyping.zarina.core.uikit.R as RUiKit
 
 @Composable
 internal fun CategoryItem(
@@ -78,10 +78,10 @@ internal fun CategoryItem(
                     label = "CategoryItem Expand icon rotation",
                 )
                 val contentDescriptionResId =
-                    if (isExpanded) RUiKit.string.collapse else RUiKit.string.expand
+                    if (isExpanded) R.string.collapse else R.string.expand
 
                 Icon(
-                    imageVector = ImageVector.vectorResource(RUiKit.drawable.ic_small_arrow_up_24),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
                     contentDescription = stringResource(contentDescriptionResId),
                     modifier = Modifier
                         .size(16.dp)

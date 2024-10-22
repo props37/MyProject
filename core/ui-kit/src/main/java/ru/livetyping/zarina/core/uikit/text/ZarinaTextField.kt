@@ -62,7 +62,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import ru.livetyping.zarina.core.ui.kit.R
+import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec

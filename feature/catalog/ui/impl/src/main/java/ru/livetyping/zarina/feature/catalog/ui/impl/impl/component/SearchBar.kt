@@ -14,11 +14,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldSize
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarDefaults
-import ru.livetyping.zarina.core.uikit.R as RUiKit
 
 @Composable
 internal fun SearchBar(
@@ -38,11 +38,11 @@ internal fun SearchBar(
             isEnabled = false,
             size = ZarinaTextFieldSize.Small,
             placeholder = {
-                Text(text = stringResource(RUiKit.string.find_products))
+                Text(text = stringResource(R.string.find_products))
             },
             leadingContent = {
                 Icon(
-                    imageVector = ImageVector.vectorResource(RUiKit.drawable.ic_magnifying_glass_24),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_magnifying_glass_24),
                     contentDescription = null,
                     modifier = Modifier.size(16.dp),
                 )

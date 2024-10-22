@@ -55,6 +55,7 @@ composeCompiler {
 dependencies {
     api(projects.core.uiCompose)
     api(projects.core.uiCommon)
+    implementation(projects.core.resource)
 
     api(platform(libs.jetpack.compose.bom))
     api(libs.jetpack.compose.ui)

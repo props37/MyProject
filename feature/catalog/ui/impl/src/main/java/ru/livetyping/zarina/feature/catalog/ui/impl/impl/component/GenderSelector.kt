@@ -5,13 +5,13 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.uikit.tab.ZarinaTab
 import ru.livetyping.zarina.core.uikit.tab.ZarinaTabRow
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
-import ru.livetyping.zarina.core.uikit.R as RUiKit
 
 @Composable
 internal fun GenderSelector(
@@ -31,8 +31,8 @@ internal fun GenderSelector(
             val gender = genderSelectorState.tabs[i]
             key(gender) {
                 val textResId = when (gender) {
-                    GenderTab.WOMEN -> RUiKit.string.for_women
-                    GenderTab.MEN -> RUiKit.string.for_men
+                    GenderTab.WOMEN -> R.string.for_women
+                    GenderTab.MEN -> R.string.for_men
                 }
 
                 val isSelected = gender == genderSelectorState.currentTab

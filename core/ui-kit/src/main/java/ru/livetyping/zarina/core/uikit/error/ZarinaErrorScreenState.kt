@@ -4,8 +4,8 @@ import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
+import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.text.Text
-import ru.livetyping.zarina.core.ui.kit.R
 import java.io.IOException
 
 @Immutable
