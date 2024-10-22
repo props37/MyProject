@@ -39,7 +39,7 @@ kotlin {
 }
 
 dependencies {
-    api(projects.core.domain)
+    implementation(projects.core.domain)
     api(projects.core.text)
     api(projects.core.uiCommon)
 
