@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="zarina" translatable="false">Zarina</string>
+
     <string name="refresh">Обновить</string>
     <string name="internet_connection_error">Проблемы с интернетом</string>
     <string name="check_internet_connection_and_refresh_page">Проверь соединение с интернетом или отключи VPN. Затем обнови страницу</string>
