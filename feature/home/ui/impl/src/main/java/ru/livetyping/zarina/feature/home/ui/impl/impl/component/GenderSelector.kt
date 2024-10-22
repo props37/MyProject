@@ -20,7 +20,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
-import ru.livetyping.zarina.core.ui.kit.R as RUiKit
+import ru.livetyping.zarina.core.uikit.R as RUiKit
 
 @Composable
 internal fun GenderSelector(

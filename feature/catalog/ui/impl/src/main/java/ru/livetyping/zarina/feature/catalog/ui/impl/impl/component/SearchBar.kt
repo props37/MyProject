@@ -18,7 +18,7 @@ import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldSize
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarDefaults
-import ru.livetyping.zarina.core.ui.kit.R as RUiKit
+import ru.livetyping.zarina.core.uikit.R as RUiKit
 
 @Composable
 internal fun SearchBar(

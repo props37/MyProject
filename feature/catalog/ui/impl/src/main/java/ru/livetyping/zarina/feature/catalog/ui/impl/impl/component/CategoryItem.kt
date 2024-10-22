@@ -28,7 +28,7 @@ import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.category.CategoryListItem
-import ru.livetyping.zarina.core.ui.kit.R as RUiKit
+import ru.livetyping.zarina.core.uikit.R as RUiKit
 
 @Composable
 internal fun CategoryItem(
