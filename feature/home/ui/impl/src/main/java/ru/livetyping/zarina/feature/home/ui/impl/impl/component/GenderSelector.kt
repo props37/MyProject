@@ -20,7 +20,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
-import ru.livetyping.zarina.feature.home.ui.impl.R
+import ru.livetyping.zarina.core.ui.kit.R as RUiKit
 
 @Composable
 internal fun GenderSelector(
@@ -54,8 +54,8 @@ internal fun GenderSelector(
                 val gender = genderSelectorState.tabs[i]
                 key(gender) {
                     val textResId = when (gender) {
-                        GenderTab.WOMEN -> R.string.for_women
-                        GenderTab.MEN -> R.string.for_men
+                        GenderTab.WOMEN -> RUiKit.string.for_women
+                        GenderTab.MEN -> RUiKit.string.for_men
                     }
 
                     val isSelected = gender == genderSelectorState.currentTab

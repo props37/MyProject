@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
@@ -13,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
@@ -28,6 +30,7 @@ import ru.livetyping.zarina.feature.catalog.ui.impl.impl.category.CategoryListEv
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.category.CategoryListItemsState
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.category.CategoryListState
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.CatalogContent
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.SearchBar
 
 @Composable
 internal fun CatalogScreen(
@@ -44,6 +47,7 @@ internal fun CatalogScreen(
         categoryListState = categoryListState,
         onCategoryListEvent = viewModel::onCategoryListEvent,
         categoryListItemsState = categoryListItemsState,
+        onSearchBarClicked = viewModel::onSearchBarClicked,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -56,6 +60,7 @@ private fun ScreenContent(
     categoryListState: CategoryListState,
     onCategoryListEvent: (CategoryListEvent) -> Unit,
     categoryListItemsState: CategoryListItemsState,
+    onSearchBarClicked: () -> Unit,
     sideEffects: Flow<CatalogSideEffect>,
     navActions: CatalogNavActions,
 ) {
@@ -67,7 +72,12 @@ private fun ScreenContent(
     val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior()
     CollapsingTopBarLayout(
         topBar = {
-            // TODO: [Top] Implement
+            SearchBar(
+                onClick = onSearchBarClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 4.dp),
+            )
         },
         scrollBehavior = topBarScrollBehavior,
         modifier = Modifier

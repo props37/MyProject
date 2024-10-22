@@ -39,6 +39,7 @@ kotlin {
 }
 
 dependencies {
+    api(projects.core.domain)
     api(projects.core.text)
     api(projects.core.uiCommon)
 
@@ -49,6 +50,8 @@ dependencies {
     api(libs.jetpack.compose.toolingPreview)
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
+
+    implementation(libs.timber)
 
     lintChecks(libs.lint.composeChecks)
 

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
-import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,12 +22,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.valentinilk.shimmer.Shimmer
+import ru.livetyping.zarina.core.uicompose.toComposeColor
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.catalog.ui.impl.R
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.category.CategoryListItem
+import ru.livetyping.zarina.core.ui.kit.R as RUiKit
 
 @Composable
 internal fun CategoryItem(
@@ -40,10 +40,8 @@ internal fun CategoryItem(
     ZarinaItem(
         onClick = { onItemClicked(item) },
         startContent = {
-            val color = LocalContentColor.current
-            // TODO: [Top] Implement toComposeColor() function
-//            val color = item.category.color?.toComposeColor()
-//                ?: UiKitTheme.colors.text.general.regular.default
+            val color = item.category.color?.toComposeColor()
+                ?: UiKitTheme.colors.text.general.regular.default
 
             val nestingStartPadding =
                 item.nestingLevel * CategoryItemDefaults.NestingStartPaddingPerLevel
@@ -80,10 +78,10 @@ internal fun CategoryItem(
                     label = "CategoryItem Expand icon rotation",
                 )
                 val contentDescriptionResId =
-                    if (isExpanded) R.string.collapse else R.string.expand
+                    if (isExpanded) RUiKit.string.collapse else RUiKit.string.expand
 
                 Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
+                    imageVector = ImageVector.vectorResource(RUiKit.drawable.ic_small_arrow_up_24),
                     contentDescription = stringResource(contentDescriptionResId),
                     modifier = Modifier
                         .size(16.dp)
