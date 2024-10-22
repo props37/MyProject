@@ -8,11 +8,12 @@ import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
 internal class ToggleProductInWishlistUseCaseImpl(
     private val wishlistRepository: WishlistRepository,
-    logger: UseCaseLogger?,
+    private val logger: UseCaseLogger?,
 ) : UseCase<Params, Boolean>(logger), ToggleProductInWishlistUseCase {
 
     override suspend fun execute(params: Params): Boolean {
         val productId = params.productId
+
         val wishlistProductIds =
             wishlistRepository.getWishlistProductIdsFlow().firstOrNull() ?: emptySet()
         val isProductInWishlist = if (productId in wishlistProductIds) {
@@ -22,10 +23,27 @@ internal class ToggleProductInWishlistUseCaseImpl(
             wishlistRepository.addProductToWishlist(productId)
             true
         }
+
+        if (!wishlistRepository.isWishlistProductIdsFetched()) {
+            fetchWishlistProductIds()
+        }
+
         return isProductInWishlist
     }
 
     override suspend fun invoke(params: Params): Result<Boolean> {
         return call(params)
+    }
+
+    private suspend fun fetchWishlistProductIds() {
+        try {
+            wishlistRepository.fetchWishlistProductIds()
+        } catch (e: Exception) {
+            logger?.e(TAG, e, "Failed to fetch wishlist product IDs")
+        }
+    }
+
+    private companion object {
+        private const val TAG = "ToggleProductInWishlistUseCaseImpl"
     }
 }

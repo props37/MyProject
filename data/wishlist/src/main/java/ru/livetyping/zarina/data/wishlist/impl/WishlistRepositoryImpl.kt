@@ -21,6 +21,10 @@ internal class WishlistRepositoryImpl @Inject constructor(
         localDataSource.setIsWishlistProductIdsFetched(true)
     }
 
+    override fun isWishlistProductIdsFetched(): Boolean {
+        return localDataSource.isWishlistProductIdsFetched()
+    }
+
     override suspend fun addProductToWishlist(productId: Product.Id) {
         remoteDataSource.addProductToWishlist(productId)
         localDataSource.addProductToWishlist(productId)

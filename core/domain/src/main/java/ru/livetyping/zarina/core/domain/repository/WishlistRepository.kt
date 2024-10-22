@@ -8,6 +8,8 @@ public interface WishlistRepository {
 
     public suspend fun fetchWishlistProductIds()
 
+    public fun isWishlistProductIdsFetched(): Boolean
+
     public suspend fun addProductToWishlist(productId: Product.Id)
 
     public suspend fun removeProductFromWishlist(productId: Product.Id)
