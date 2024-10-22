@@ -1,0 +1,30 @@
+package ru.livetyping.zarina.core.network.zarina.dto
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.core.domain.model.product.ProductPrice
+import ru.livetyping.zarina.core.network.util.checkNotNull
+
+@Serializable
+public data class ProductPriceDto(
+    @SerialName("common_price")
+    val commonPrice: Int? = null,
+
+    @SerialName("has_discount")
+    val hasDiscount: Boolean? = null,
+
+    @SerialName("discount")
+    val discount: Int? = null,
+
+    @SerialName("discount_price")
+    val discountPrice: Int? = null,
+) {
+    public fun toProductPrice(): ProductPrice {
+        return ProductPrice(
+            originalPrice = checkNotNull(commonPrice) { ::commonPrice },
+            hasDiscount = checkNotNull(hasDiscount) { ::hasDiscount },
+            discountPrice = checkNotNull(discountPrice) { ::discountPrice },
+            discountPercent = checkNotNull(discount) { ::discount },
+        )
+    }
+}

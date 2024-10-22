@@ -37,8 +37,10 @@ internal data class CategoryDto(
                 children = children?.mapNotNull { it.toCategory() },
             )
         } else {
-            Timber.e("Drop Category because its ID or name is null")
+            Timber.tag(TAG).e("Drop CategoryDto because its id or name is null")
             null
         }
     }
 }
+
+private const val TAG = "CategoryDto"

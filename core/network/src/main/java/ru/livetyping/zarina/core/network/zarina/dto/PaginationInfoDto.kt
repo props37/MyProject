@@ -1,0 +1,27 @@
+package ru.livetyping.zarina.core.network.zarina.dto
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.core.domain.model.common.pagination.PaginationInfo
+import ru.livetyping.zarina.core.network.util.checkNotNull
+
+@Serializable
+public data class PaginationInfoDto(
+    @SerialName("current_page")
+    val currentPage: Int? = null,
+
+    @SerialName("total_pages")
+    val totalPages: Int? = null,
+
+    @SerialName("page_size")
+    val pageSize: Int? = null,
+) {
+    public fun toPaginationInfo(itemTotalCount: Int): PaginationInfo {
+        return PaginationInfo(
+            currentPage = checkNotNull(currentPage) { ::currentPage },
+            pageCount = checkNotNull(totalPages) { ::totalPages },
+            pageSize = checkNotNull(pageSize) { ::pageSize },
+            itemTotalCount = itemTotalCount,
+        )
+    }
+}

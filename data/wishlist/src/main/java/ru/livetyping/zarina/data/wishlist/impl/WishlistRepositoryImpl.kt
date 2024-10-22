@@ -1,7 +1,9 @@
 package ru.livetyping.zarina.data.wishlist.impl
 
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.common.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.data.wishlist.impl.local.WishlistLocalDataSource
 import ru.livetyping.zarina.data.wishlist.impl.remote.WishlistRemoteDataSource
@@ -23,6 +25,10 @@ internal class WishlistRepositoryImpl @Inject constructor(
 
     override fun isWishlistProductIdsFetched(): Boolean {
         return localDataSource.isWishlistProductIdsFetched()
+    }
+
+    override fun getWishlistProductPageFlow(page: Int): Flow<Page<List<ProductShort>>> {
+        return remoteDataSource.getFavoriteProductPageFlow(page)
     }
 
     override suspend fun addProductToWishlist(productId: Product.Id) {
