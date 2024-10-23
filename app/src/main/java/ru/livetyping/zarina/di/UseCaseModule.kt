@@ -7,12 +7,18 @@ import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.CategoryRepository
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
+import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.core.domain.usecase.auth.FetchUnauthorizedUserBearerTokensUseCase
 import ru.livetyping.zarina.core.domain.usecase.auth.GetBearerTokensFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.auth.RefreshBearerTokensUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.FetchWishlistProductIdsUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 import ru.livetyping.zarina.feature.home.domain.repository.HomeContentRepository
 import ru.livetyping.zarina.feature.home.domain.usecase.GetHomeContentFlowUseCase
@@ -94,6 +100,61 @@ internal class UseCaseModule {
     ): GetCategoriesFlowUseCase {
         return GetCategoriesFlowUseCase.getInstance(
             categoryRepository = categoryRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideClearWishlistUseCase(
+        wishlistRepository: WishlistRepository,
+        logger: UseCaseLogger,
+    ): ClearWishlistUseCase {
+        return ClearWishlistUseCase.getInstance(
+            wishlistRepository = wishlistRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideFetchWishlistProductIdsUseCase(
+        wishlistRepository: WishlistRepository,
+        logger: UseCaseLogger,
+    ): FetchWishlistProductIdsUseCase {
+        return FetchWishlistProductIdsUseCase.getInstance(
+            wishlistRepository = wishlistRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetWishlistProductIdsFlowUseCase(
+        wishlistRepository: WishlistRepository,
+        logger: UseCaseLogger,
+    ): GetWishlistProductIdsFlowUseCase {
+        return GetWishlistProductIdsFlowUseCase.getInstance(
+            wishlistRepository = wishlistRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetWishlistProductPageFlowUseCase(
+        wishlistRepository: WishlistRepository,
+        logger: UseCaseLogger,
+    ): GetWishlistProductPageFlowUseCase {
+        return GetWishlistProductPageFlowUseCase.getInstance(
+            wishlistRepository = wishlistRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideToggleProductInWishlistUseCase(
+        wishlistRepository: WishlistRepository,
+        logger: UseCaseLogger,
+    ): ToggleProductInWishlistUseCase {
+        return ToggleProductInWishlistUseCase.getInstance(
+            wishlistRepository = wishlistRepository,
             logger = logger,
         )
     }
