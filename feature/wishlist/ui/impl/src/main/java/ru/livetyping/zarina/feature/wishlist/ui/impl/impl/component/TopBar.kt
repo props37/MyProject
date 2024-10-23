@@ -41,6 +41,7 @@ internal fun TopBar(
             ) {
                 ZarinaButton(
                     onClick = { onEvent(TopBarEvent.ClearClicked) },
+                    isLoading = state.isClearButtonLoading,
                     size = ZarinaButtonSize.Small,
                     colors = ZarinaButtonDefaults.backlessColors(),
                     textStyle = UiKitTheme.typography.caption1.regular,
