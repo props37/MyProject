@@ -69,13 +69,8 @@ internal class WishlistViewModel @Inject constructor(
 
     fun onLifecycleEvent(event: LifecycleEvent) {
         when (event) {
-            LifecycleEvent.ON_CREATE -> wishlistProductsRequester.request(WishlistProductsRequest)
-            LifecycleEvent.ON_START -> {
-                viewModelScope.launch {
-                    fetchWishlistProductIds()
-                }
-            }
-
+            LifecycleEvent.ON_CREATE -> onScreenOpened()
+            LifecycleEvent.ON_START -> onScreenStarted()
             LifecycleEvent.ON_RESUME -> Unit
         }
     }
@@ -83,6 +78,16 @@ internal class WishlistViewModel @Inject constructor(
     fun onTopBarEvent(event: TopBarEvent) {
         when (event) {
             TopBarEvent.ClearClicked -> clearWishlist()
+        }
+    }
+
+    private fun onScreenOpened() {
+        wishlistProductsRequester.request(WishlistProductsRequest)
+    }
+
+    private fun onScreenStarted() {
+        viewModelScope.launch {
+            fetchWishlistProductIds()
         }
     }
 
