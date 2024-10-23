@@ -30,4 +30,8 @@ internal class WishlistRemoteDataSourceImpl @Inject constructor(
     override suspend fun removeProductFromWishlist(productId: Product.Id) {
         api.removeProductFromWishlist(productId)
     }
+
+    override suspend fun clearWishlist() {
+        api.clearWishlist()
+    }
 }

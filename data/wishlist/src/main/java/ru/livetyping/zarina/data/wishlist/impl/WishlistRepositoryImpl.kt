@@ -42,4 +42,10 @@ internal class WishlistRepositoryImpl @Inject constructor(
         remoteDataSource.removeProductFromWishlist(productId)
         localDataSource.removeProductFromWishlist(productId)
     }
+
+    override suspend fun clearWishlist() {
+        remoteDataSource.clearWishlist()
+        localDataSource.setWishlistProductIds(emptySet())
+        localDataSource.setIsWishlistProductIdsFetched(false)
+    }
 }

@@ -2,6 +2,7 @@ package ru.livetyping.zarina.data.wishlist.impl.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
@@ -32,5 +33,9 @@ internal class WishlistApiImpl @Inject constructor(
 
     override suspend fun removeProductFromWishlist(productId: Product.Id) {
         httpClient.get("/api/favorites/product/${productId.value}/remove")
+    }
+
+    override suspend fun clearWishlist() {
+        httpClient.delete("/api/v1/favorites")
     }
 }

@@ -13,4 +13,6 @@ internal interface WishlistRemoteDataSource {
     suspend fun addProductToWishlist(productId: Product.Id)
 
     suspend fun removeProductFromWishlist(productId: Product.Id)
+
+    suspend fun clearWishlist()
 }

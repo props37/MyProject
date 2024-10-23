@@ -17,4 +17,6 @@ public interface WishlistRepository {
     public suspend fun addProductToWishlist(productId: Product.Id)
 
     public suspend fun removeProductFromWishlist(productId: Product.Id)
+
+    public suspend fun clearWishlist()
 }
