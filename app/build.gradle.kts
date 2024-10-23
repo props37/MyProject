@@ -137,12 +137,34 @@ dependencies {
     implementation(projects.feature.home.ui.api)
     implementation(projects.feature.home.ui.impl)
     implementation(projects.feature.home.domain)
+    implementation(projects.feature.home.data)
 
-    implementation(projects.core.feature)
+    implementation(projects.feature.onboarding.ui.api)
+    implementation(projects.feature.onboarding.ui.impl)
+
+    implementation(projects.feature.catalog.ui.api)
+    implementation(projects.feature.catalog.ui.impl)
+
+    implementation(projects.feature.wishlist.ui.api)
+    implementation(projects.feature.wishlist.ui.impl)
+
+    implementation(projects.data.auth)
+    implementation(projects.data.category)
+    implementation(projects.data.content)
+    implementation(projects.data.wishlist)
+
+    implementation(projects.core.database)
+    implementation(projects.core.datastore)
     implementation(projects.core.domain)
+    implementation(projects.core.feature)
+    implementation(projects.core.media)
+    implementation(projects.core.navigation)
     implementation(projects.core.network)
+    implementation(projects.core.permission)
+    implementation(projects.core.resource)
+    implementation(projects.core.sharedpreferences)
+    implementation(projects.core.uiKit)
     implementation(projects.core.usecase)
-    implementation(projects.core.buildUtil)
 
     implementation(libs.jetpack.core)
     implementation(libs.jetpack.appcompat)
