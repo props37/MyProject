@@ -61,6 +61,7 @@ dependencies {
     implementation(projects.core.coroutinesUtil)
     implementation(projects.core.mediaCompose)
     implementation(projects.core.navigationUtil)
+    implementation(projects.core.resource)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
