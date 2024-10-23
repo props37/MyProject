@@ -22,6 +22,7 @@ import ru.livetyping.zarina.core.domain.usecase.wishlist.FetchWishlistProductIds
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.paging.updateProducts
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
@@ -54,7 +55,7 @@ internal class WishlistViewModel @Inject constructor(
             initialValue = TopBarState(isClearButtonVisible = false),
         )
 
-    private val wishlistProductsRequester = FlowRequester(WishlistProductsRequest) {
+    private val wishlistProductsRequester = FlowRequester<PagingData<ProductShort>, WishlistProductsRequest> {
         wishlistProductPager.getWishlistProductPagingDataFlow()
     }
 
@@ -66,9 +67,16 @@ internal class WishlistViewModel @Inject constructor(
         )
         .cachedIn(viewModelScopeDefault)
 
-    fun onScreenOpened() {
-        viewModelScope.launch {
-            fetchWishlistProductIds()
+    fun onLifecycleEvent(event: LifecycleEvent) {
+        when (event) {
+            LifecycleEvent.ON_CREATE -> wishlistProductsRequester.request(WishlistProductsRequest)
+            LifecycleEvent.ON_START -> {
+                viewModelScope.launch {
+                    fetchWishlistProductIds()
+                }
+            }
+
+            LifecycleEvent.ON_RESUME -> Unit
         }
     }
 

@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
@@ -31,7 +32,7 @@ internal fun WishlistScreen(
     ScreenContent(
         topBarState = topBarState,
         onTopBarEvent = viewModel::onTopBarEvent,
-        onScreenOpened = viewModel::onScreenOpened,
+        onLifecycleEvent = viewModel::onLifecycleEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -41,12 +42,12 @@ internal fun WishlistScreen(
 private fun ScreenContent(
     topBarState: TopBarState,
     onTopBarEvent: (TopBarEvent) -> Unit,
-    onScreenOpened: () -> Unit,
+    onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<WishlistSideEffect>,
     navActions: WishlistNavActions,
 ) {
     WishlistScreenBehavior(
-        onScreenOpened = onScreenOpened,
+        onLifecycleEvent = onLifecycleEvent,
         sideEffects = sideEffects,
         navActions = navActions,
     )
