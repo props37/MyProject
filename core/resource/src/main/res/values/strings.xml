@@ -20,4 +20,6 @@
     <string name="checkmark_unchecked">Не выбрано</string>
     <string name="wishlist">Избранное</string>
     <string name="close">Закрыть</string>
+    <string name="remove_from_wishlist">Удалить из избранное</string>
+    <string name="add_to_wishlist">Добавить в избранное</string>
 </resources>
