@@ -19,4 +19,5 @@
     <string name="checkmark_checked">Выбрано</string>
     <string name="checkmark_unchecked">Не выбрано</string>
     <string name="wishlist">Избранное</string>
+    <string name="close">Закрыть</string>
 </resources>
