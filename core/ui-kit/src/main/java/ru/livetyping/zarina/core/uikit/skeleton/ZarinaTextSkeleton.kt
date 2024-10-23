@@ -1,11 +1,11 @@
 package ru.livetyping.zarina.core.uikit.skeleton
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
@@ -26,7 +26,7 @@ public fun ZarinaTextSkeleton(
         modifier = modifier
             .clip(shape)
             .shimmerToggleable(shimmer = shimmer, isEnabled = isShimmerEnabled)
-            .background(color),
+            .drawBehind { drawRect(color) },
     ) {
         // Use default font family as theme font family has huge top and bottom paddings
         Text(

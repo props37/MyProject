@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.core.uikit.item
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -61,7 +61,7 @@ public fun ZarinaItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .defaultMinSize(minHeight = ZarinaItemDefaults.MinHeight)
-                .background(backgroundColor)
+                .drawBehind { drawRect(backgroundColor) }
                 .padding(contentPadding),
         ) {
             Row(

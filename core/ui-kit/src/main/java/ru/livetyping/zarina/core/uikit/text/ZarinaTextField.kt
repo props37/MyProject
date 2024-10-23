@@ -6,7 +6,6 @@ import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -113,7 +112,7 @@ public fun ZarinaTextField(
     BasicTextField(
         state = state,
         modifier = modifier
-            .background(colors.backgroundColor)
+            .drawBehind { drawRect(colors.backgroundColor) }
             .onFocusChanged { focusState = it },
         enabled = isEnabled,
         readOnly = isReadOnly,
@@ -181,7 +180,7 @@ public fun ZarinaTextField(
         value = textFieldValue,
         onValueChange = onValueChanged,
         modifier = modifier
-            .background(colors.backgroundColor)
+            .drawBehind { drawRect(colors.backgroundColor) }
             .onFocusChanged { focusState = it },
         enabled = isEnabled,
         readOnly = isReadOnly,
@@ -249,7 +248,7 @@ public fun ZarinaTextField(
         value = value,
         onValueChange = onValueChanged,
         modifier = modifier
-            .background(colors.backgroundColor)
+            .drawBehind { drawRect(colors.backgroundColor) }
             .onFocusChanged { focusState = it },
         enabled = isEnabled,
         readOnly = isReadOnly,

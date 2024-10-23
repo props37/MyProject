@@ -1,11 +1,11 @@
 package ru.livetyping.zarina.core.uikit.skeleton
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
@@ -25,7 +25,7 @@ public fun ZarinaSkeleton(
         modifier = modifier
             .clip(shape)
             .shimmerToggleable(shimmer = shimmer, isEnabled = isShimmerEnabled)
-            .background(color),
+            .drawBehind { drawRect(color) },
     )
 }
 
