@@ -1,21 +1,37 @@
 package ru.livetyping.zarina.feature.wishlist.ui.impl.impl
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.TopBar
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.TopBarEvent
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.TopBarState
 
 @Composable
 internal fun WishlistScreen(
     navActions: WishlistNavActions,
     viewModel: WishlistViewModel = hiltViewModel(),
 ) {
+    val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
+
     ScreenContent(
+        topBarState = topBarState,
+        onTopBarEvent = viewModel::onTopBarEvent,
+        onScreenOpened = viewModel::onScreenOpened,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -23,19 +39,31 @@ internal fun WishlistScreen(
 
 @Composable
 private fun ScreenContent(
+    topBarState: TopBarState,
+    onTopBarEvent: (TopBarEvent) -> Unit,
+    onScreenOpened: () -> Unit,
     sideEffects: Flow<WishlistSideEffect>,
     navActions: WishlistNavActions,
 ) {
     WishlistScreenBehavior(
+        onScreenOpened = onScreenOpened,
         sideEffects = sideEffects,
         navActions = navActions,
     )
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default),
+            .background(UiKitTheme.colors.background.general.regular.default)
+            .windowInsetsPadding(
+                WindowInsets.statusBars
+                    .union(WindowInsets.displayCutout),
+            )
+            .bottomNavBarPadding(),
     ) {
-
+        TopBar(
+            state = topBarState,
+            onEvent = onTopBarEvent,
+        )
     }
 }

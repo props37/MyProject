@@ -14,12 +14,19 @@ import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
 
 @Composable
 internal fun WishlistScreenBehavior(
+    onScreenOpened: () -> Unit,
     sideEffects: Flow<WishlistSideEffect>,
     navActions: WishlistNavActions,
 ) {
+    val updatedOnScreenOpened by rememberUpdatedState(onScreenOpened)
     val updatedNavActions by rememberUpdatedState(navActions)
 
     BottomNavBarBehavior(isVisible = true)
+
+    LifecycleStartEffect(Unit) {
+        updatedOnScreenOpened()
+        onStopOrDispose {}
+    }
 
     LifecycleStartEffect(sideEffects) {
         val startedElapsedRealtime = SystemClock.elapsedRealtime()
