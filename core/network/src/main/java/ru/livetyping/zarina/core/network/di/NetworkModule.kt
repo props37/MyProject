@@ -29,7 +29,7 @@ internal object NetworkModule {
     @Provides
     @Singleton
     @ZarinaApi(ZarinaApiType.AUTHORIZED)
-    fun provideZarinaUnauthorizedHttpClient(
+    fun provideZarinaAuthorizedHttpClient(
         @ZarinaBaseUrl
         baseUrl: String,
         bearerTokenService: BearerTokenService,
