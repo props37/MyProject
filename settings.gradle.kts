@@ -18,6 +18,8 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "Zarina"
 include(":app")
 
+include(":feature:onboarding:ui:api")
+
 include(":feature:home:ui:api")
 include(":feature:home:ui:impl")
 include(":feature:home:data")
