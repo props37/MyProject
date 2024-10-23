@@ -7,5 +7,5 @@ import ru.livetyping.zarina.core.uicommon.behavior.NoOpBehaviorController
 
 public typealias SystemBarsBehaviorController = BehaviorController<SystemBarsBehavior>
 
-public val LocalSystemBarsBehaviorController: ProvidableCompositionLocal<BehaviorController<SystemBarsBehavior>> =
+public val LocalSystemBarsBehaviorController: ProvidableCompositionLocal<SystemBarsBehaviorController> =
     staticCompositionLocalOf { NoOpBehaviorController() }
