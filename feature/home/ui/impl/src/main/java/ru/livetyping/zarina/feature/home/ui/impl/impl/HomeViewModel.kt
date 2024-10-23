@@ -79,7 +79,7 @@ internal class HomeViewModel @Inject constructor(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
     ) { loadingState ->
-        loadingState.isLoading() && loadingState.request == HomeContentRequest.REFRESHING
+        loadingState.isLoading() && loadingState.loadingRequest == HomeContentRequest.REFRESHING
     }
 
     fun onGenderSelectorEvent(event: TabRowEvent<GenderTab>) {
@@ -130,7 +130,7 @@ internal class HomeViewModel @Inject constructor(
         result: Result<HomeContent>?,
     ): HomeContentState {
         val isLoading =
-            loadingState.isLoading() && loadingState.request == HomeContentRequest.LOADING
+            loadingState.isLoading() && loadingState.loadingRequest == HomeContentRequest.LOADING
         return if (isLoading || result == null) {
             HomeContentState.Loading
         } else {
