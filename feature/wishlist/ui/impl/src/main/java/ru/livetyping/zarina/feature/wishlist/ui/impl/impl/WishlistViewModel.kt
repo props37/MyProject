@@ -14,11 +14,11 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.usecase.wishlist.FetchWishlistProductIdsUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
+import ru.livetyping.zarina.core.paging.updateProducts
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.paging.WishlistProductPager
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.paging.updateProducts
 import javax.inject.Inject
 
 @HiltViewModel

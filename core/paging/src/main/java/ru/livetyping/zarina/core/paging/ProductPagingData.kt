@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.wishlist.ui.impl.impl.paging
+package ru.livetyping.zarina.core.paging
 
 import androidx.paging.PagingData
 import androidx.paging.map
@@ -7,9 +7,7 @@ import kotlinx.coroutines.flow.combine
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 
-// TODO: [Medium] Extract to separate module
-
-internal fun Flow<PagingData<ProductShort>>.updateProducts(
+public fun Flow<PagingData<ProductShort>>.updateProducts(
     wishlistProductIdsFlow: Flow<Set<Product.Id>>,
     cartProductIdsFlow: Flow<Set<Product.Id>>,
 ): Flow<PagingData<ProductShort>> {
