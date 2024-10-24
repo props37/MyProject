@@ -14,12 +14,9 @@ import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.domain.checkout.PaymentData
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
-import ru.livetyping.zarina.domain.checkout.PaytureInPayPaymentData
-import ru.livetyping.zarina.domain.checkout.PaytureWalletPaymentData
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.checkout.PickupStore
-import ru.livetyping.zarina.domain.checkout.QrPaymentData
 import ru.livetyping.zarina.domain.geography.KladrId
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.PaymentMethodType
@@ -101,18 +98,15 @@ class CheckoutRemoteDataSource @Inject constructor(
     ): PaymentData {
         return when (paymentMethodType) {
             PaymentMethodType.PAYTURE_WALLET, PaymentMethodType.PAYTURE_IN_PAY -> {
-                val cardPaymentData = api.getCardPaymentData(
+                val dto = api.getCardPaymentData(
                     cart = cart,
                     paymentMethodType = paymentMethodType,
                     userId = userId,
                     pickupStoreId = pickupStoreId,
-                ).toCardPaymentData()
-                when (paymentMethodType) {
-                    PaymentMethodType.PAYTURE_WALLET -> PaytureWalletPaymentData(cardPaymentData)
-                    PaymentMethodType.PAYTURE_IN_PAY -> PaytureInPayPaymentData(cardPaymentData)
-                    else -> error("Unsupported payment method type $paymentMethodType")
-                }
+                )
+                dto.toCardPaymentData()
             }
+
             else -> error("Unsupported payment method type $paymentMethodType")
         }
     }
@@ -122,24 +116,17 @@ class CheckoutRemoteDataSource @Inject constructor(
         paymentMethodType: PaymentMethodType,
         pollingDelay: Duration,
     ) {
-        when (paymentData) {
-            is PaytureInPayPaymentData -> {
+        when (paymentMethodType) {
+            PaymentMethodType.PAYTURE_WALLET, PaymentMethodType.PAYTURE_IN_PAY -> {
+                check(paymentData is CardPaymentData) { "Payment data is not CardPaymentData" }
                 awaitCardPaymentCompleted(
-                    paymentData = paymentData.data,
+                    paymentData = paymentData,
                     paymentMethodType = paymentMethodType,
                     pollingDelay = pollingDelay,
                 )
             }
 
-            is PaytureWalletPaymentData -> {
-                awaitCardPaymentCompleted(
-                    paymentData = paymentData.data,
-                    paymentMethodType = paymentMethodType,
-                    pollingDelay = pollingDelay,
-                )
-            }
-
-            is QrPaymentData -> Unit
+            else -> Unit
         }
     }
 

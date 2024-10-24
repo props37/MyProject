@@ -13,8 +13,8 @@ import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.CheckoutStage
 import ru.livetyping.zarina.domain.checkout.PaymentData
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
-import ru.livetyping.zarina.domain.checkout.QrPaymentData
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
+import ru.livetyping.zarina.domain.checkout.UrlPaymentData
 import ru.livetyping.zarina.domain.checkout.exception.CartChangedException
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderCreationParams
@@ -56,8 +56,8 @@ class CheckoutUseCase @Inject constructor(
                     )
                 }
 
-                PaymentMethodType.QR -> {
-                    checkoutWithQrPayment(
+                PaymentMethodType.QR, PaymentMethodType.PODELI -> {
+                    checkoutWithOptionalPayment(
                         cart = cart,
                         paymentMethod = paymentMethod,
                         checkoutParams = checkoutParams,
@@ -105,7 +105,7 @@ class CheckoutUseCase @Inject constructor(
         emit(completed)
     }
 
-    private suspend fun FlowCollector<CheckoutStage>.checkoutWithQrPayment(
+    private suspend fun FlowCollector<CheckoutStage>.checkoutWithOptionalPayment(
         cart: Cart,
         paymentMethod: PaymentMethod,
         checkoutParams: CheckoutParams,
@@ -117,7 +117,7 @@ class CheckoutUseCase @Inject constructor(
             paymentData = null,
         )
         checkNotNull(order.paymentUrl) { "Payment URL is null" }
-        val paymentData = QrPaymentData(order.paymentUrl)
+        val paymentData = UrlPaymentData(order.paymentUrl)
         emit(CheckoutStage.Payment(paymentData))
 
         val completed = CheckoutStage.Completed(

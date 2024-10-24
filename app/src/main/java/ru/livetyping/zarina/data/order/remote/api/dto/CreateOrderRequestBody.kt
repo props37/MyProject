@@ -3,16 +3,16 @@ package ru.livetyping.zarina.data.order.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.cart.Cart
+import ru.livetyping.zarina.domain.checkout.CardPaymentData
 import ru.livetyping.zarina.domain.checkout.CheckoutAddress
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.CourierDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.Customer
-import ru.livetyping.zarina.domain.checkout.PaytureInPayPaymentData
-import ru.livetyping.zarina.domain.checkout.PaytureWalletPaymentData
 import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
 import ru.livetyping.zarina.domain.order.OrderCreationParams
+import ru.livetyping.zarina.domain.order.PaymentMethodType
 
 @Serializable
 data class CreateOrderRequestBody(
@@ -236,10 +236,13 @@ data class CreateOrderRequestBody(
     companion object {
         fun from(params: OrderCreationParams): CreateOrderRequestBody {
             val checkoutParams = params.checkoutParams
-            val paytureWalletPaymentId =
-                (params.paymentData as? PaytureWalletPaymentData)?.data?.paymentId?.value
-            val paytureInPayPaymentId =
-                (params.paymentData as? PaytureInPayPaymentData)?.data?.paymentId?.value
+            val cardPaymentData = params.paymentData as? CardPaymentData
+            val paytureWalletPaymentId = cardPaymentData?.paymentId?.value?.takeIf {
+                params.paymentMethodType == PaymentMethodType.PAYTURE_WALLET
+            }
+            val paytureInPayPaymentId = cardPaymentData?.paymentId?.value?.takeIf {
+                params.paymentMethodType == PaymentMethodType.PAYTURE_IN_PAY
+            }
             return CreateOrderRequestBody(
                 contactInfo = ContactInfo.from(checkoutParams.customer),
                 delivery = Delivery.from(checkoutParams),

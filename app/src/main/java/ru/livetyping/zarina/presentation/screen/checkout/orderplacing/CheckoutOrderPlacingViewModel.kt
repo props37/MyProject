@@ -27,18 +27,17 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.cart.Cart
+import ru.livetyping.zarina.domain.checkout.CardPaymentData
 import ru.livetyping.zarina.domain.checkout.CheckoutAddress
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.CheckoutStage
 import ru.livetyping.zarina.domain.checkout.CourierDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
-import ru.livetyping.zarina.domain.checkout.PaytureInPayPaymentData
-import ru.livetyping.zarina.domain.checkout.PaytureWalletPaymentData
 import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
-import ru.livetyping.zarina.domain.checkout.QrPaymentData
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
+import ru.livetyping.zarina.domain.checkout.UrlPaymentData
 import ru.livetyping.zarina.domain.checkout.exception.CartChangedException
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
@@ -548,9 +547,8 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         when (stage) {
             is CheckoutStage.Payment -> {
                 val paymentUrl = when (val data = stage.paymentData) {
-                    is PaytureInPayPaymentData -> data.data.paymentUrl
-                    is PaytureWalletPaymentData -> data.data.paymentUrl
-                    is QrPaymentData -> data.paymentUrl
+                    is CardPaymentData -> data.paymentUrl
+                    is UrlPaymentData -> data.paymentUrl
                 }
                 val action = CheckoutOrderPlacingScreenAction.PaymentStarted(paymentUrl)
                 emitSideEffect(SideEffect.Navigate(action))
