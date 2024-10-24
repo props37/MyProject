@@ -194,7 +194,7 @@ object CheckoutDeliveryMethodScreenComponents {
                         textStyle = UiKitTheme.typography.secondary.light,
                         modifier = Modifier.width(200.dp),
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
                     ZarinaTextSkeleton(
                         shimmer = shimmer,
                         textStyle = UiKitTheme.typography.footnote.light,
