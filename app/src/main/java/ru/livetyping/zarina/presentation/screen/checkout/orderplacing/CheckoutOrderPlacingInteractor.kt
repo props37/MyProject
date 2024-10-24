@@ -9,6 +9,7 @@ import ru.livetyping.zarina.usecase.cart.RemovePromoCodeUseCase
 import ru.livetyping.zarina.usecase.checkout.CheckoutUseCase
 import ru.livetyping.zarina.usecase.checkout.GetCheckoutCartFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.GetPaymentMethodsFlowUseCase
+import ru.livetyping.zarina.usecase.checkout.UpdateOrderPaymentStatusUseCase
 import javax.inject.Inject
 
 class CheckoutOrderPlacingInteractor @Inject constructor(
@@ -21,4 +22,5 @@ class CheckoutOrderPlacingInteractor @Inject constructor(
     val applyPromoCode: ApplyPromoCodeUseCase,
     val removePromoCode: RemovePromoCodeUseCase,
     val checkout: CheckoutUseCase,
+    val updateOrderPaymentStatus: UpdateOrderPaymentStatusUseCase,
 )

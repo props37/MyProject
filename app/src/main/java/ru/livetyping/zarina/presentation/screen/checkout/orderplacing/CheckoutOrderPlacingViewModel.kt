@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
@@ -65,6 +64,7 @@ import ru.livetyping.zarina.usecase.cart.RemoveMyCardFromCartUseCase
 import ru.livetyping.zarina.usecase.checkout.CheckoutUseCase
 import ru.livetyping.zarina.usecase.checkout.GetCheckoutCartFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.GetPaymentMethodsFlowUseCase
+import ru.livetyping.zarina.usecase.checkout.UpdateOrderPaymentStatusUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
@@ -88,6 +88,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     private var myCardJob: Job? = null
     private var promoCodeJob: Job? = null
     private var checkoutJob: Job? = null
+    private var updateOrderPaymentStatusJob: Job? = null
 
     private val params = savedStateHandle.toRoute<CheckoutGraph.OrderPlacing>(
         typeMap = CheckoutGraph.OrderPlacing.typeMap(),
@@ -201,7 +202,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     val isRefreshing: StateFlow<Boolean> = combine(
         cartRequester.loadingState,
-        operationTracker.isOperationOngoing(Operation.CHECKOUT),
+        operationTracker.isOperationOngoing(Operation.CHECKOUT, Operation.UPDATE_ORDER_PAYMENT_STATUS),
     ) { cartLoadingState, isCheckoutOngoing ->
         val isCartLoading = cartLoadingState.loadingRequest == CartRequest.REFRESHING
         isCartLoading || isCheckoutOngoing
@@ -226,34 +227,44 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         _isPaymentMethodSelectorBottomSheetVisible.asStateFlow()
 
     val isPayButtonLoading: StateFlow<Boolean> = operationTracker
-        .isOperationOngoing(Operation.CHECKOUT)
+        .isOperationOngoing(Operation.CHECKOUT, Operation.UPDATE_ORDER_PAYMENT_STATUS)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileUiSubscribed,
             initialValue = false,
         )
 
-    private val _paymentFormState: MutableStateFlow<PaymentFormState?> = MutableStateFlow(null)
-    val paymentFormState: StateFlow<PaymentFormState?> = _paymentFormState.asStateFlow()
+    private var currentCheckoutStage: CheckoutStage? = null
 
-    private var isCheckoutCompletedAndWaitingUntilPaymentFormClosed = false
+    fun onScreenOpened() {
+        if (updateOrderPaymentStatusJob?.isActive == true) return
 
-    init {
-        finishCheckoutWhenCompletedAndPaymentFormClosed()
+        val currentCheckoutStage = currentCheckoutStage
+        if (currentCheckoutStage is CheckoutStage.Completed) {
+            if (currentCheckoutStage.shouldUpdateOrderStatus) {
+                updateOrderPaymentStatusJob = viewModelScope.launch {
+                    operationTracker.track(Operation.UPDATE_ORDER_PAYMENT_STATUS) {
+                        val params = UpdateOrderPaymentStatusUseCase.Params(
+                            orderId = currentCheckoutStage.order.id,
+                            paymentMethodType = currentCheckoutStage.paymentMethodType,
+                        )
+                        interactor.updateOrderPaymentStatus(params)
+                        val action = CheckoutOrderPlacingScreenAction.CheckoutClosed
+                        emitSideEffect(SideEffect.Navigate(action))
+                    }
+                }
+            } else {
+                val action = CheckoutOrderPlacingScreenAction.CheckoutClosed
+                emitSideEffect(SideEffect.Navigate(action))
+            }
+        }
     }
 
     fun onBackClicked() {
-        if (checkoutJob?.isActive == true || paymentFormState.value != null) {
-            // TODO: [High] Show confirmation dialog?
-            checkoutJob?.cancel()
-            if (paymentFormState.value != null) {
-                _paymentFormState.value = null
-            }
-        } else {
-            navigationThrottler.throttle {
-                val action = CheckoutOrderPlacingScreenAction.ScreenClosed
-                emitSideEffect(SideEffect.Navigate(action))
-            }
+        // TODO: [High] Show confirmation dialog?
+        navigationThrottler.throttle {
+            val action = CheckoutOrderPlacingScreenAction.ScreenClosed
+            emitSideEffect(SideEffect.Navigate(action))
         }
     }
 
@@ -533,6 +544,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     }
 
     private fun onCheckoutStage(stage: CheckoutStage) {
+        currentCheckoutStage = stage
         when (stage) {
             is CheckoutStage.Payment -> {
                 val paymentUrl = when (val data = stage.paymentData) {
@@ -540,45 +552,22 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
                     is PaytureWalletPaymentData -> data.data.paymentUrl
                     is QrPaymentData -> data.paymentUrl
                 }
-                _paymentFormState.value = PaymentFormState(paymentUrl)
+                val action = CheckoutOrderPlacingScreenAction.PaymentStarted(paymentUrl)
+                emitSideEffect(SideEffect.Navigate(action))
             }
 
-            CheckoutStage.PaymentCompleted -> {
-                _paymentFormState.value = null
-            }
-
-            is CheckoutStage.Completed -> {
-                if (!stage.waitUntilPaymentClosed) {
-                    // TODO: [High] Implement
-                    val action = CheckoutOrderPlacingScreenAction.CheckoutClosed
-                    emitSideEffect(SideEffect.Navigate(action))
-                } else {
-                    isCheckoutCompletedAndWaitingUntilPaymentFormClosed = true
-                }
-            }
+            CheckoutStage.PaymentCompleted -> Unit
+            is CheckoutStage.Completed -> Unit
         }
     }
 
     private fun onCheckoutFailure(t: Throwable) {
-        _paymentFormState.value = null
         val messageText = when (t) {
             is CartChangedException -> Text.Resource(R.string.cart_has_changed_error)
             else -> Text.Resource(R.string.something_went_wrong)
         }
         val message = ZarinaToastMessage.error(messageText)
         emitSideEffect(SideEffect.ShowZarinaToast(message))
-    }
-
-    private fun finishCheckoutWhenCompletedAndPaymentFormClosed() {
-        paymentFormState
-            .onEach { state ->
-                if (state == null && isCheckoutCompletedAndWaitingUntilPaymentFormClosed) {
-                    // TODO: [High] Implement
-                    val action = CheckoutOrderPlacingScreenAction.CheckoutClosed
-                    emitSideEffect(SideEffect.Navigate(action))
-                }
-            }
-            .launchIn(viewModelScope)
     }
 
     private fun getDeliveryInfo(checkoutParams: CheckoutParams): DeliveryInfo {
@@ -691,12 +680,9 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         }
     }
 
-    @Stable
-    data class PaymentFormState(val paymentUrl: Url)
-
     private data object PaymentMethodsRequest : FlowRequester.Request
 
-    private enum class Operation : OperationKey { CHECKOUT }
+    private enum class Operation : OperationKey { CHECKOUT, UPDATE_ORDER_PAYMENT_STATUS }
 
     companion object {
         private const val COMMA_SEPARATOR = ", "

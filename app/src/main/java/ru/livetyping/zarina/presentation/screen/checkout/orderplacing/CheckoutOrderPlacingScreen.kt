@@ -2,7 +2,6 @@ package ru.livetyping.zarina.presentation.screen.checkout.orderplacing
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -47,10 +46,8 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.OrderPlacing
-import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.PaymentForm
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.PaymentMethodSelectorBottomSheet
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
-import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.PaymentFormState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.PaymentMethodsState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -70,7 +67,6 @@ fun CheckoutOrderPlacingScreen(
     val isPaymentMethodSelectorBottomSheetVisible by viewModel.isPaymentMethodSelectorBottomSheetVisible.collectAsStateWithLifecycle()
     val paymentMethodsState by viewModel.paymentMethodsState.collectAsStateWithLifecycle()
     val isPayButtonLoading by viewModel.isPayButtonLoading.collectAsStateWithLifecycle()
-    val paymentFormState by viewModel.paymentFormState.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = state,
@@ -100,8 +96,8 @@ fun CheckoutOrderPlacingScreen(
         onPaymentMethodsErrorRefreshClicked = viewModel::onPaymentMethodsErrorRefreshClicked,
         onPayClicked = viewModel::onPayClicked,
         isPayButtonLoading = isPayButtonLoading,
-        paymentFormState = paymentFormState,
         onUrlClicked = viewModel::onUrlClicked,
+        onScreenOpened = viewModel::onScreenOpened,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -139,12 +135,13 @@ private fun ScreenContent(
     onPaymentMethodsErrorRefreshClicked: () -> Unit,
     onPayClicked: () -> Unit,
     isPayButtonLoading: Boolean,
-    paymentFormState: PaymentFormState?,
     onUrlClicked: (Url) -> Unit,
+    onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
 ) {
     CheckoutOrderPlacingScreenBehavior(
+        onScreenOpened = onScreenOpened,
         sideEffects = sideEffects,
         navigate = navigate,
     )
@@ -235,18 +232,6 @@ private fun ScreenContent(
             modifier = Modifier.matchParentSize(),
         ) {
             ZarinaRefreshingOverlay(modifier = Modifier.fillMaxSize())
-        }
-
-        AnimatedContent(
-            targetState = paymentFormState,
-            contentKey = { it != null },
-            contentAlignment = Alignment.Center,
-            label = "Payment form",
-            modifier = Modifier.fillMaxSize(),
-        ) { state ->
-            if (state != null) {
-                PaymentForm(paymentUrl = state.paymentUrl)
-            }
         }
     }
 }

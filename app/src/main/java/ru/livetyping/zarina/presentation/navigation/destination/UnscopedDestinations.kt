@@ -7,6 +7,7 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.domain.category.Category
@@ -476,4 +477,7 @@ object UnscopedDestinations {
             val body: Text,
         )
     }
+
+    @Serializable
+    data class Payment(val paymentUrl: String)
 }

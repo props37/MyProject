@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.usecase.checkout
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.base.usecase.FlowUseCase
@@ -28,6 +29,7 @@ class CheckoutUseCase @Inject constructor(
     private val checkoutRepository: CheckoutRepository,
     private val userRepository: UserRepository,
     private val orderRepository: OrderRepository,
+    private val updateOrderPaymentStatusUseCase: UpdateOrderPaymentStatusUseCase,
 ) : FlowUseCase<CheckoutUseCase.Params, CheckoutStage>() {
 
     override fun execute(params: Params): Flow<CheckoutStage> {
@@ -46,46 +48,84 @@ class CheckoutUseCase @Inject constructor(
 
             when (paymentMethod.type) {
                 PaymentMethodType.PAYTURE_WALLET, PaymentMethodType.PAYTURE_IN_PAY -> {
-                    val paymentData = getPaymentData(
+                    checkoutWithCardPayment(
                         cart = cart,
                         paymentMethod = paymentMethod,
                         checkoutParams = checkoutParams,
                         user = user,
                     )
-                    emit(CheckoutStage.Payment(paymentData))
-
-                    awaitPaymentCompleted(
-                        paymentData = paymentData,
-                        paymentMethod = paymentMethod,
-                    )
-                    emit(CheckoutStage.PaymentCompleted)
-
-                    val order = createOrder(
-                        cart = cart,
-                        paymentMethod = paymentMethod,
-                        checkoutParams = checkoutParams,
-                        paymentData = paymentData,
-                    )
-                    updateOrderPaymentStatus(order, paymentMethod)
-                    emit(CheckoutStage.Completed(waitUntilPaymentClosed = false))
                 }
 
                 PaymentMethodType.QR -> {
-                    val order = createOrder(
+                    checkoutWithQrPayment(
                         cart = cart,
                         paymentMethod = paymentMethod,
                         checkoutParams = checkoutParams,
-                        paymentData = null,
                     )
-                    checkNotNull(order.paymentUrl) { "Payment URL is null" }
-                    val paymentData = QrPaymentData(order.paymentUrl)
-                    emit(CheckoutStage.Payment(paymentData))
-                    emit(CheckoutStage.Completed(waitUntilPaymentClosed = true))
                 }
 
                 else -> error("Unsupported payment method type ${paymentMethod.type}")
             }
         }
+    }
+
+    private suspend fun FlowCollector<CheckoutStage>.checkoutWithCardPayment(
+        cart: Cart,
+        paymentMethod: PaymentMethod,
+        checkoutParams: CheckoutParams,
+        user: User?
+    ) {
+        val paymentData = getPaymentData(
+            cart = cart,
+            paymentMethod = paymentMethod,
+            checkoutParams = checkoutParams,
+            user = user,
+        )
+        emit(CheckoutStage.Payment(paymentData))
+
+        awaitPaymentCompleted(
+            paymentData = paymentData,
+            paymentMethod = paymentMethod,
+        )
+        emit(CheckoutStage.PaymentCompleted)
+
+        val order = createOrder(
+            cart = cart,
+            paymentMethod = paymentMethod,
+            checkoutParams = checkoutParams,
+            paymentData = paymentData,
+        )
+        updateOrderPaymentStatus(order, paymentMethod)
+
+        val completed = CheckoutStage.Completed(
+            order = order,
+            paymentMethodType = paymentMethod.type,
+            shouldUpdateOrderStatus = false,
+        )
+        emit(completed)
+    }
+
+    private suspend fun FlowCollector<CheckoutStage>.checkoutWithQrPayment(
+        cart: Cart,
+        paymentMethod: PaymentMethod,
+        checkoutParams: CheckoutParams,
+    ) {
+        val order = createOrder(
+            cart = cart,
+            paymentMethod = paymentMethod,
+            checkoutParams = checkoutParams,
+            paymentData = null,
+        )
+        checkNotNull(order.paymentUrl) { "Payment URL is null" }
+        val paymentData = QrPaymentData(order.paymentUrl)
+        emit(CheckoutStage.Payment(paymentData))
+
+        val completed = CheckoutStage.Completed(
+            order = order,
+            paymentMethodType = paymentMethod.type,
+            shouldUpdateOrderStatus = true,
+        )
+        emit(completed)
     }
 
     private suspend fun getPaymentData(
@@ -133,14 +173,14 @@ class CheckoutUseCase @Inject constructor(
         order: Order,
         paymentMethod: PaymentMethod,
     ) {
-        try {
-            checkoutRepository.updateOrderPaymentStatus(
-                orderId = order.id,
-                paymentMethodType = paymentMethod.type,
-            )
-        } catch (e: Exception) {
-            Timber.e(e, "Failed to update order payment status")
-        }
+        val params = UpdateOrderPaymentStatusUseCase.Params(
+            orderId = order.id,
+            paymentMethodType = paymentMethod.type,
+        )
+        updateOrderPaymentStatusUseCase(params)
+            .onFailure { t ->
+                Timber.e(t, "Failed to update order payment status")
+            }
     }
 
     private suspend fun checkCartChanges(

@@ -3,6 +3,7 @@ package ru.livetyping.zarina.presentation.navigation.screen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreen
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenAction
@@ -34,6 +35,11 @@ fun NavGraphBuilder.checkoutOrderPlacingScreen(navController: NavHostController)
 
                     CheckoutOrderPlacingScreenAction.ChangeDeliveryClicked -> {
                         navController.popBackStack<CheckoutGraph.DeliveryMethod>(inclusive = false)
+                    }
+
+                    is CheckoutOrderPlacingScreenAction.PaymentStarted -> {
+                        val payment = UnscopedDestinations.Payment(action.paymentUrl.value)
+                        navController.navigate(payment)
                     }
                 }
             },

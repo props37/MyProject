@@ -19,15 +19,22 @@ import ru.livetyping.zarina.util.domain.common.toUri
 
 @Composable
 fun CheckoutOrderPlacingScreenBehavior(
+    onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
 ) {
+    val updatedOnScreenOpened by rememberUpdatedState(onScreenOpened)
     val updatedNavigate by rememberUpdatedState(navigate)
     val updatedFocusManager by rememberUpdatedState(LocalFocusManager.current)
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedContext by rememberUpdatedState(LocalContext.current)
 
     ForcedBottomNavBarBehavior(isVisible = false)
+
+    LifecycleStartEffect(Unit) {
+        updatedOnScreenOpened()
+        onStopOrDispose {}
+    }
 
     LifecycleStartEffect(sideEffects) {
         val startedElapsedRealtime = SystemClock.elapsedRealtime()
