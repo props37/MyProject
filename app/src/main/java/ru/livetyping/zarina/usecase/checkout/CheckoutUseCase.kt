@@ -64,6 +64,14 @@ class CheckoutUseCase @Inject constructor(
                     )
                 }
 
+                PaymentMethodType.POSTPAID -> {
+                    checkoutWithPaymentUponReceipt(
+                        cart = cart,
+                        paymentMethod = paymentMethod,
+                        checkoutParams = checkoutParams,
+                    )
+                }
+
                 else -> error("Unsupported payment method type ${paymentMethod.type}")
             }
         }
@@ -101,6 +109,7 @@ class CheckoutUseCase @Inject constructor(
             order = order,
             paymentMethodType = paymentMethod.type,
             shouldUpdateOrderStatus = false,
+            shouldAwaitPaymentCompleted = true,
         )
         emit(completed)
     }
@@ -116,14 +125,40 @@ class CheckoutUseCase @Inject constructor(
             checkoutParams = checkoutParams,
             paymentData = null,
         )
-        checkNotNull(order.paymentUrl) { "Payment URL is null" }
-        val paymentData = UrlPaymentData(order.paymentUrl)
-        emit(CheckoutStage.Payment(paymentData))
+
+        if (order.paymentUrl != null) {
+            val paymentData = UrlPaymentData(order.paymentUrl)
+            emit(CheckoutStage.Payment(paymentData))
+        } else {
+            Timber.v("Order payment URL is not provided")
+        }
 
         val completed = CheckoutStage.Completed(
             order = order,
             paymentMethodType = paymentMethod.type,
             shouldUpdateOrderStatus = true,
+            shouldAwaitPaymentCompleted = true,
+        )
+        emit(completed)
+    }
+
+    private suspend fun FlowCollector<CheckoutStage>.checkoutWithPaymentUponReceipt(
+        cart: Cart,
+        paymentMethod: PaymentMethod,
+        checkoutParams: CheckoutParams,
+    ) {
+        val order = createOrder(
+            cart = cart,
+            paymentMethod = paymentMethod,
+            checkoutParams = checkoutParams,
+            paymentData = null,
+        )
+
+        val completed = CheckoutStage.Completed(
+            order = order,
+            paymentMethodType = paymentMethod.type,
+            shouldUpdateOrderStatus = false,
+            shouldAwaitPaymentCompleted = false,
         )
         emit(completed)
     }

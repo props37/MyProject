@@ -236,26 +236,9 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     private var currentCheckoutStage: CheckoutStage? = null
 
     fun onScreenOpened() {
-        if (updateOrderPaymentStatusJob?.isActive == true) return
-
         val currentCheckoutStage = currentCheckoutStage
         if (currentCheckoutStage is CheckoutStage.Completed) {
-            if (currentCheckoutStage.shouldUpdateOrderStatus) {
-                updateOrderPaymentStatusJob = viewModelScope.launch {
-                    operationTracker.track(Operation.UPDATE_ORDER_PAYMENT_STATUS) {
-                        val params = UpdateOrderPaymentStatusUseCase.Params(
-                            orderId = currentCheckoutStage.order.id,
-                            paymentMethodType = currentCheckoutStage.paymentMethodType,
-                        )
-                        interactor.updateOrderPaymentStatus(params)
-                        val action = CheckoutOrderPlacingScreenAction.CheckoutClosed
-                        emitSideEffect(SideEffect.Navigate(action))
-                    }
-                }
-            } else {
-                val action = CheckoutOrderPlacingScreenAction.CheckoutClosed
-                emitSideEffect(SideEffect.Navigate(action))
-            }
+            completeCheckout(currentCheckoutStage)
         }
     }
 
@@ -555,7 +538,12 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
             }
 
             CheckoutStage.PaymentCompleted -> Unit
-            is CheckoutStage.Completed -> Unit
+
+            is CheckoutStage.Completed -> {
+                if (!stage.shouldAwaitPaymentCompleted) {
+                    completeCheckout(stage)
+                }
+            }
         }
     }
 
@@ -566,6 +554,28 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         }
         val message = ZarinaToastMessage.error(messageText)
         emitSideEffect(SideEffect.ShowZarinaToast(message))
+    }
+
+    private fun completeCheckout(completedCheckoutStage: CheckoutStage.Completed) {
+        if (completedCheckoutStage.shouldUpdateOrderStatus) {
+            if (updateOrderPaymentStatusJob?.isActive == true) return
+            updateOrderPaymentStatusJob = viewModelScope.launch {
+                operationTracker.track(Operation.UPDATE_ORDER_PAYMENT_STATUS) {
+                    val params = UpdateOrderPaymentStatusUseCase.Params(
+                        orderId = completedCheckoutStage.order.id,
+                        paymentMethodType = completedCheckoutStage.paymentMethodType,
+                    )
+                    interactor.updateOrderPaymentStatus(params)
+                    // TODO: [High] Implement
+                    val action = CheckoutOrderPlacingScreenAction.CheckoutClosed
+                    emitSideEffect(SideEffect.Navigate(action))
+                }
+            }
+        } else {
+            // TODO: [High] Implement
+            val action = CheckoutOrderPlacingScreenAction.CheckoutClosed
+            emitSideEffect(SideEffect.Navigate(action))
+        }
     }
 
     private fun getDeliveryInfo(checkoutParams: CheckoutParams): DeliveryInfo {

@@ -12,5 +12,6 @@ sealed interface CheckoutStage {
         val order: Order,
         val paymentMethodType: PaymentMethodType,
         val shouldUpdateOrderStatus: Boolean,
+        val shouldAwaitPaymentCompleted: Boolean,
     ) : CheckoutStage
 }
