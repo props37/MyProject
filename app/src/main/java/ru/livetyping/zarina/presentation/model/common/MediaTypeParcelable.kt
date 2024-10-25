@@ -1,8 +1,13 @@
 package ru.livetyping.zarina.presentation.model.common
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.common.MediaType
 
-enum class MediaTypeParcelable {
+@Serializable
+@Parcelize
+enum class MediaTypeParcelable : Parcelable {
     IMAGE,
     VIDEO;
 
