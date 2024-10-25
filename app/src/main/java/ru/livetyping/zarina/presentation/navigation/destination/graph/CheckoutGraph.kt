@@ -15,6 +15,7 @@ import ru.livetyping.zarina.presentation.model.checkout.CustomerParcelable
 import ru.livetyping.zarina.presentation.model.checkout.DeliveryOptionParcelable
 import ru.livetyping.zarina.presentation.model.geography.CityParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
+import ru.livetyping.zarina.presentation.model.order.OrderDetailsParcelable
 import ru.livetyping.zarina.presentation.model.store.StoreParcelable
 import ru.livetyping.zarina.presentation.navigation.BaseRoute
 import ru.livetyping.zarina.presentation.navigation.base.Destination
@@ -26,6 +27,7 @@ import ru.livetyping.zarina.presentation.navigation.navtype.CheckoutParamsParcel
 import ru.livetyping.zarina.presentation.navigation.navtype.CityParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.CustomerParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.DeliveryOptionDateTimePeriodParcelableListType
+import ru.livetyping.zarina.presentation.navigation.navtype.OrderDetailsParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.StoreParcelableType
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
 import ru.livetyping.zarina.util.library.navigation.getTypeMapEnumTypePair
@@ -270,6 +272,19 @@ data object CheckoutGraph : Graph<CheckoutGraph.Customer.Args>() {
             fun typeMap(): Map<KType, NavType<*>> {
                 return mapOf(
                     typeOf<CheckoutParamsParcelable>() to NavType.CheckoutParamsParcelableType,
+                )
+            }
+        }
+    }
+
+    @Serializable
+    data class OrderConfirmed(
+        val order: OrderDetailsParcelable,
+    ) {
+        companion object {
+            fun typeMap(): Map<KType, NavType<*>> {
+                return mapOf(
+                    typeOf<OrderDetailsParcelable>() to NavType.OrderDetailsParcelableType,
                 )
             }
         }

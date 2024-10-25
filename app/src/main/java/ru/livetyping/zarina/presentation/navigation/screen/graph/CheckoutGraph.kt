@@ -15,6 +15,7 @@ import ru.livetyping.zarina.presentation.navigation.screen.checkoutPickupStoreSe
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutPostDeliveryScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutSelectedPickupPointScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutSelectedPickupStoreScreen
+import ru.livetyping.zarina.presentation.navigation.screen.checkoutOrderConfirmedScreen
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
@@ -39,6 +40,7 @@ fun NavGraphBuilder.checkoutGraph(navController: NavHostController) {
         checkoutPickupPointDeliveryScreen(navController)
         checkoutSelectedPickupPointScreen(navController)
         checkoutOrderPlacingScreen(navController)
+        checkoutOrderConfirmedScreen(navController)
     }
 }
 
