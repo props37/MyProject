@@ -18,7 +18,7 @@ import kotlin.coroutines.resume
 internal class PermissionManagerImpl @Inject constructor(
     private val storage: PermissionManagerStorage,
 ) : PermissionManager {
-    // TODO: [Low] Make volatile?
+    // TODO: [Top] Migrate to AtomicRef?
     private var activityRef: WeakReference<ComponentActivity>? = null
     private val activityRefLock = Any()
 

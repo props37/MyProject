@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 public class DefaultBehaviorController<T : Behavior>(
     private var defaultBehavior: T,
 ) : BehaviorController<T> {
+    // TODO: [High] Migrate to concurrent collection
     private val behaviorStack = ArrayDeque<T>()
     private val behaviorStackLock = Any()
 
