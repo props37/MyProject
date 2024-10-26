@@ -10,7 +10,9 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.common.Url
@@ -19,6 +21,7 @@ import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
+import ru.livetyping.zarina.feature.onboarding.domain.usecase.GetOnboardingBannerUrlFlowUseCase
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingEvent
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingStep
@@ -29,6 +32,7 @@ import javax.inject.Inject
 internal class OnboardingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     onboardingStepsBuilder: OnboardingStepsBuilder,
+    getOnboardingBannerUrlFlow: GetOnboardingBannerUrlFlowUseCase,
     private val permissionManager: PermissionManager,
 ) : ViewModel(), SideEffectSource<OnboardingSideEffect> by SideEffectSourceImpl() {
 
@@ -65,8 +69,8 @@ internal class OnboardingViewModel @Inject constructor(
     )
 
     val bannerUrl: StateFlow<Url?> = flow {
-        // TODO: [Top] Implement
-        emit(Url.create(""))
+        val urlFlow = getOnboardingBannerUrlFlow().map { it.getOrNull() }
+        emitAll(urlFlow)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
