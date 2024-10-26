@@ -20,6 +20,7 @@ include(":app")
 
 include(":feature:onboarding:ui:api")
 include(":feature:onboarding:ui:impl")
+include(":feature:onboarding:domain")
 
 include(":feature:home:ui:api")
 include(":feature:home:ui:impl")
