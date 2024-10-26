@@ -129,10 +129,10 @@ internal class PermissionManagerImpl @Inject constructor(
     }
 
     override fun unsetActivity(activity: ComponentActivity) {
-        val currentActivity = activityRef.get()?.get()
-        if (activity == currentActivity) {
-            activityRef.set(null)
-        }
+        activityRef.compareAndSet(
+            /* expectedValue = */ WeakReference(activity),
+            /* newValue = */ null,
+        )
     }
 
     override fun release() {
