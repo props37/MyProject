@@ -41,9 +41,7 @@ internal fun GenderSelector(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        val selectedTabIndex = remember(genderSelectorState) {
-            genderSelectorState.currentTabIndex
-        }
+        val selectedTabIndex = genderSelectorState.currentTabIndex
 
         ZarinaLooseTabRow(
             selectedTabIndex = selectedTabIndex,

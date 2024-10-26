@@ -2,7 +2,6 @@ package ru.livetyping.zarina.feature.catalog.ui.impl.impl.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import ru.livetyping.zarina.core.resource.R
@@ -19,9 +18,7 @@ internal fun GenderSelector(
     onGenderSelectorEvent: (TabRowEvent<GenderTab>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val selectedTabIndex = remember(genderSelectorState) {
-        genderSelectorState.currentTabIndex
-    }
+    val selectedTabIndex = genderSelectorState.currentTabIndex
 
     ZarinaTabRow(
         selectedTabIndex = selectedTabIndex,
