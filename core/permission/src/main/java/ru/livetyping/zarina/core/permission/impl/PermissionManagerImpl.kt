@@ -12,15 +12,14 @@ import ru.livetyping.zarina.core.permission.PermissionManager
 import ru.livetyping.zarina.core.permission.PermissionState
 import java.lang.ref.WeakReference
 import java.util.UUID
+import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
 internal class PermissionManagerImpl @Inject constructor(
     private val storage: PermissionManagerStorage,
 ) : PermissionManager {
-    // TODO: [Top] Migrate to AtomicRef?
-    private var activityRef: WeakReference<ComponentActivity>? = null
-    private val activityRefLock = Any()
+    private var activityRef = AtomicReference<WeakReference<ComponentActivity>?>(null)
 
     override fun isPermissionGranted(permission: String): Boolean {
         val activity = requireActivity()
@@ -126,24 +125,18 @@ internal class PermissionManagerImpl @Inject constructor(
     }
 
     override fun setActivity(activity: ComponentActivity) {
-        synchronized(activityRefLock) {
-            activityRef = WeakReference(activity)
-        }
+        activityRef.set(WeakReference(activity))
     }
 
     override fun unsetActivity(activity: ComponentActivity) {
-        synchronized(activityRefLock) {
-            val currentActivity = activityRef?.get()
-            if (activity == currentActivity) {
-                activityRef = null
-            }
+        val currentActivity = activityRef.get()?.get()
+        if (activity == currentActivity) {
+            activityRef.set(null)
         }
     }
 
     override fun release() {
-        synchronized(activityRefLock) {
-            activityRef = null
-        }
+        activityRef.set(null)
     }
 
     private fun shouldShowRequestPermissionRationale(permission: String): Boolean {
@@ -152,7 +145,7 @@ internal class PermissionManagerImpl @Inject constructor(
     }
 
     private fun requireActivity(): ComponentActivity {
-        val activity = activityRef?.get()
+        val activity = activityRef.get()?.get()
         checkNotNull(activity) { "Activity can not be null. Did you forget to call setActivity?" }
         return activity
     }
