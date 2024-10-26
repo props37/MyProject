@@ -39,6 +39,8 @@ kotlin {
 }
 
 dependencies {
+    api(libs.jetpack.lifecycle.viewModel.savedstate)
+
     api(libs.kotlin.coroutines.core)
 
     testImplementation(libs.junit)

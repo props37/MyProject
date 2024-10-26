@@ -20,4 +20,5 @@
     <string name="close">Закрыть</string>
     <string name="remove_from_wishlist">Удалить из избранное</string>
     <string name="add_to_wishlist">Добавить в избранное</string>
+    <string name="step">Шаг</string>
 </resources>

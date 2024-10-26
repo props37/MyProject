@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.compose.compiler)
 }
@@ -56,6 +57,7 @@ dependencies {
     implementation(projects.core.resource)
     implementation(projects.core.coroutinesUtil)
     implementation(projects.core.navigationUtil)
+    implementation(projects.core.permission)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
