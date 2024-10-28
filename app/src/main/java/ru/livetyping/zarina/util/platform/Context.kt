@@ -23,3 +23,16 @@ fun Context.dialPhoneNumber(phoneNumber: String) {
         startActivity(intent)
     }
 }
+
+fun Context.shareText(text: String) {
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        putExtra(Intent.EXTRA_TEXT, text)
+        type = MIME_TYPE_TEXT_PLAIN
+    }
+    val shareIntent = Intent.createChooser(intent, null)
+    if (shareIntent.resolveActivity(packageManager) != null) {
+        startActivity(shareIntent)
+    }
+}
+
+private const val MIME_TYPE_TEXT_PLAIN = "text/plain"

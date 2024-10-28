@@ -11,7 +11,9 @@ fun Context.openSettings(
     flags: Int = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK,
 ) {
     val intent = getSettingsIntent(settings = settings, context = this, flags = flags)
-    this.startActivity(intent)
+    if (intent.resolveActivity(packageManager) != null) {
+        startActivity(intent)
+    }
 }
 
 private fun getSettingsIntent(settings: SystemSettings, context: Context, flags: Int): Intent {
