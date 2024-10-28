@@ -4,12 +4,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.StateFlow
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.common.PhoneNumber
+import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.orderconfirmed.CheckoutOrderConfirmedViewModel.SideEffect
+import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,14 +27,29 @@ class CheckoutOrderConfirmedViewModel @Inject constructor(
         typeMap = CheckoutGraph.OrderConfirmed.typeMap(),
     )
 
-    fun onCloseClicked() {
+    val order: StateFlow<OrderDetails> = ImmutableStateFlow(orderConfirmed.order.toOrderDetails())
+
+    fun onReturnToHomeScreenClicked() {
         navigationThrottler.throttle {
-            val action = CheckoutOrderConfirmedScreenAction.ScreenClosed
+            val action = CheckoutOrderConfirmedScreenAction.ReturnToHomeScreen
             emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
+    fun onPayForOrderClicked() {
+        // TODO: [High] Implement
+    }
+
+    fun onPhoneNumberClicked(phone: PhoneNumber) {
+        navigationThrottler.throttle {
+            val sideEffect = SideEffect.DialPhoneNumber(phone)
+            emitSideEffect(sideEffect)
         }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutOrderConfirmedScreenAction) : SideEffect
+
+        data class DialPhoneNumber(val phoneNumber: PhoneNumber) : SideEffect
     }
 }

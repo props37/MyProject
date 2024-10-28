@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -41,6 +42,9 @@ import ru.livetyping.zarina.domain.checkout.UrlPaymentData
 import ru.livetyping.zarina.domain.checkout.exception.CartChangedException
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
+import ru.livetyping.zarina.domain.order.Order
+import ru.livetyping.zarina.domain.order.OrderDetails
+import ru.livetyping.zarina.domain.order.PaymentMethodType
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
@@ -64,6 +68,7 @@ import ru.livetyping.zarina.usecase.checkout.CheckoutUseCase
 import ru.livetyping.zarina.usecase.checkout.GetCheckoutCartFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.GetPaymentMethodsFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.UpdateOrderPaymentStatusUseCase
+import ru.livetyping.zarina.usecase.order.GetOrderFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
@@ -87,7 +92,6 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     private var myCardJob: Job? = null
     private var promoCodeJob: Job? = null
     private var checkoutJob: Job? = null
-    private var updateOrderPaymentStatusJob: Job? = null
 
     private val params = savedStateHandle.toRoute<CheckoutGraph.OrderPlacing>(
         typeMap = CheckoutGraph.OrderPlacing.typeMap(),
@@ -201,7 +205,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     val isRefreshing: StateFlow<Boolean> = combine(
         cartRequester.loadingState,
-        operationTracker.isOperationOngoing(Operation.CHECKOUT, Operation.UPDATE_ORDER_PAYMENT_STATUS),
+        operationTracker.isOperationOngoing(Operation.CHECKOUT),
     ) { cartLoadingState, isCheckoutOngoing ->
         val isCartLoading = cartLoadingState.loadingRequest == CartRequest.REFRESHING
         isCartLoading || isCheckoutOngoing
@@ -226,7 +230,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         _isPaymentMethodSelectorBottomSheetVisible.asStateFlow()
 
     val isPayButtonLoading: StateFlow<Boolean> = operationTracker
-        .isOperationOngoing(Operation.CHECKOUT, Operation.UPDATE_ORDER_PAYMENT_STATUS)
+        .isOperationOngoing(Operation.CHECKOUT)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileUiSubscribed,
@@ -238,7 +242,9 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     fun onScreenOpened() {
         val currentCheckoutStage = currentCheckoutStage
         if (currentCheckoutStage is CheckoutStage.Completed) {
-            completeCheckout(currentCheckoutStage)
+            viewModelScope.launch {
+                completeCheckout(currentCheckoutStage)
+            }
         }
     }
 
@@ -518,14 +524,14 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
                 )
                 interactor.checkout(params).collect { checkoutStageResult ->
                     checkoutStageResult
-                        .onSuccess(::onCheckoutStage)
+                        .onSuccess { onCheckoutStage(it) }
                         .onFailure(::onCheckoutFailure)
                 }
             }
         }
     }
 
-    private fun onCheckoutStage(stage: CheckoutStage) {
+    private suspend fun onCheckoutStage(stage: CheckoutStage) {
         currentCheckoutStage = stage
         when (stage) {
             is CheckoutStage.Payment -> {
@@ -556,26 +562,30 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         emitSideEffect(SideEffect.ShowZarinaToast(message))
     }
 
-    private fun completeCheckout(completedCheckoutStage: CheckoutStage.Completed) {
-        if (completedCheckoutStage.shouldUpdateOrderStatus) {
-            if (updateOrderPaymentStatusJob?.isActive == true) return
-            updateOrderPaymentStatusJob = viewModelScope.launch {
-                operationTracker.track(Operation.UPDATE_ORDER_PAYMENT_STATUS) {
-                    val params = UpdateOrderPaymentStatusUseCase.Params(
-                        orderId = completedCheckoutStage.order.id,
-                        paymentMethodType = completedCheckoutStage.paymentMethodType,
-                    )
-                    interactor.updateOrderPaymentStatus(params)
-                    // TODO: [High] Implement
-                    val action = CheckoutOrderPlacingScreenAction.CheckoutClosed
-                    emitSideEffect(SideEffect.Navigate(action))
-                }
+    private suspend fun completeCheckout(completedCheckoutStage: CheckoutStage.Completed) {
+        val order = completedCheckoutStage.order
+        operationTracker.track(Operation.CHECKOUT) {
+            if (completedCheckoutStage.shouldUpdateOrderStatus) {
+                updateOrderPaymentStatus(order.id, order.paymentMethodType)
             }
-        } else {
-            // TODO: [High] Implement
-            val action = CheckoutOrderPlacingScreenAction.CheckoutClosed
+            val updatedOrder = getOrder(order.id)
+            val resultOrder = updatedOrder ?: order
+            val action = CheckoutOrderPlacingScreenAction.OrderConfirmed(resultOrder)
             emitSideEffect(SideEffect.Navigate(action))
         }
+    }
+
+    private suspend fun updateOrderPaymentStatus(
+        orderId: Order.Id,
+        paymentMethodType: PaymentMethodType,
+    ) {
+        val params = UpdateOrderPaymentStatusUseCase.Params(orderId, paymentMethodType)
+        interactor.updateOrderPaymentStatus(params)
+    }
+
+    private suspend fun getOrder(orderId: Order.Id): OrderDetails? {
+        val params = GetOrderFlowUseCase.Params(orderId)
+        return interactor.getOrderFlow(params).firstOrNull()?.getOrNull()
     }
 
     private fun getDeliveryInfo(checkoutParams: CheckoutParams): DeliveryInfo {
@@ -690,7 +700,7 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     private data object PaymentMethodsRequest : FlowRequester.Request
 
-    private enum class Operation : OperationKey { CHECKOUT, UPDATE_ORDER_PAYMENT_STATUS }
+    private enum class Operation : OperationKey { CHECKOUT }
 
     companion object {
         private const val COMMA_SEPARATOR = ", "

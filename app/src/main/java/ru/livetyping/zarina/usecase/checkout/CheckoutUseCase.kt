@@ -109,7 +109,7 @@ class CheckoutUseCase @Inject constructor(
             order = order,
             paymentMethodType = paymentMethod.type,
             shouldUpdateOrderStatus = false,
-            shouldAwaitPaymentCompleted = true,
+            shouldAwaitPaymentCompleted = false,
         )
         emit(completed)
     }

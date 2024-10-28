@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.domain.checkout
 
-import ru.livetyping.zarina.domain.order.Order
+import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.order.PaymentMethodType
 
 sealed interface CheckoutStage {
@@ -9,7 +9,7 @@ sealed interface CheckoutStage {
     data object PaymentCompleted : CheckoutStage
 
     data class Completed(
-        val order: Order,
+        val order: OrderDetails,
         val paymentMethodType: PaymentMethodType,
         val shouldUpdateOrderStatus: Boolean,
         val shouldAwaitPaymentCompleted: Boolean,

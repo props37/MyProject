@@ -14,7 +14,7 @@ fun NavGraphBuilder.checkoutOrderConfirmedScreen(navController: NavHostControlle
         CheckoutOrderConfirmedScreen(
             navigate = { action ->
                 when (action) {
-                    CheckoutOrderConfirmedScreenAction.ScreenClosed -> {
+                    CheckoutOrderConfirmedScreenAction.ReturnToHomeScreen -> {
                         navController.popBackStack<CheckoutGraph.OrderConfirmed>(inclusive = true)
                     }
                 }
