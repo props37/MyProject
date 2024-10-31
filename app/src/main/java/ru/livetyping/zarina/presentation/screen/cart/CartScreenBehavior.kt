@@ -7,6 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -19,21 +21,20 @@ import ru.livetyping.zarina.util.domain.common.toUri
 
 @Composable
 fun CartScreenBehavior(
-    onScreenOpened: () -> Unit,
+    onScreenCreated: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CartScreenAction) -> Unit,
 ) {
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedContext by rememberUpdatedState(LocalContext.current)
     val updatedFocusManager by rememberUpdatedState(LocalFocusManager.current)
-    val updatedOnScreenOpened by rememberUpdatedState(onScreenOpened)
+    val updatedOnScreenCreated by rememberUpdatedState(onScreenCreated)
     val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = true)
 
-    LifecycleStartEffect(Unit) {
-        updatedOnScreenOpened()
-        onStopOrDispose {}
+    LifecycleEventEffect(Lifecycle.Event.ON_CREATE) {
+        updatedOnScreenCreated()
     }
 
     LifecycleStartEffect(sideEffects) {

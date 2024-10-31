@@ -110,7 +110,7 @@ fun CartScreen(
         onPromoCodeImeDoneClicked = viewModel::onPromoCodeImeDoneClicked,
         onUrlClicked = viewModel::onUrlClicked,
         onCheckoutClicked = viewModel::onCheckoutClicked,
-        onScreenOpened = viewModel::onScreenOpened,
+        onScreenCreated = viewModel::onScreenCreated,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -144,12 +144,12 @@ private fun ScreenContent(
     onPromoCodeImeDoneClicked: () -> Unit,
     onUrlClicked: (Url) -> Unit,
     onCheckoutClicked: () -> Unit,
-    onScreenOpened: () -> Unit,
+    onScreenCreated: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CartScreenAction) -> Unit,
 ) {
     CartScreenBehavior(
-        onScreenOpened = onScreenOpened,
+        onScreenCreated = onScreenCreated,
         sideEffects = sideEffects,
         navigate = navigate,
     )
