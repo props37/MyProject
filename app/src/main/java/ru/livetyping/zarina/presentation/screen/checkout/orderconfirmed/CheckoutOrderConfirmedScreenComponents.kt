@@ -17,6 +17,7 @@ import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPhoneNumber
+import ru.livetyping.zarina.presentation.screen.checkout.orderconfirmed.CheckoutOrderConfirmedViewModel.DescriptionType
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.text.addStyle
 import ru.livetyping.zarina.util.kotlin.findSubstringBounds
@@ -44,14 +45,20 @@ object CheckoutOrderConfirmedScreenComponents {
     @Composable
     fun Description(
         order: OrderDetails,
+        descriptionType: DescriptionType,
         onPhoneClicked: (PhoneNumber) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         Column(modifier = modifier) {
-            val descriptionRawTextResId = if (order.isPaid) {
-                R.string.order_confirmed_description_paid
-            } else {
-                R.string.order_confirmed_description_not_paid
+            val descriptionRawTextResId = when (descriptionType) {
+                DescriptionType.ORDER_PAID -> R.string.order_confirmed_description_paid
+                DescriptionType.ORDER_SHOULD_BE_PAID -> {
+                    R.string.order_confirmed_description_should_be_paid
+                }
+
+                DescriptionType.ORDER_SHOULD_BE_PAID_UPON_RECEIPT -> {
+                    R.string.order_confirmed_description_should_be_paid_upon_receipt
+                }
             }
             val boldTextStyle = UiKitTheme.typography.secondary.bold
             val orderNumber = remember(order.number) {

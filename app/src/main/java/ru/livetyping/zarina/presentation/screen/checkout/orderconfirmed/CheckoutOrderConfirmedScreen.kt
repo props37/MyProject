@@ -38,6 +38,8 @@ import ru.livetyping.zarina.presentation.common.util.domain.color
 import ru.livetyping.zarina.presentation.common.util.domain.nameResId
 import ru.livetyping.zarina.presentation.screen.checkout.orderconfirmed.CheckoutOrderConfirmedScreenComponents.Description
 import ru.livetyping.zarina.presentation.screen.checkout.orderconfirmed.CheckoutOrderConfirmedScreenComponents.TopBar
+import ru.livetyping.zarina.presentation.screen.checkout.orderconfirmed.CheckoutOrderConfirmedViewModel.ButtonType
+import ru.livetyping.zarina.presentation.screen.checkout.orderconfirmed.CheckoutOrderConfirmedViewModel.DescriptionType
 import ru.livetyping.zarina.presentation.screen.checkout.orderconfirmed.CheckoutOrderConfirmedViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
@@ -47,9 +49,13 @@ fun CheckoutOrderConfirmedScreen(
     viewModel: CheckoutOrderConfirmedViewModel = hiltViewModel(),
 ) {
     val order by viewModel.order.collectAsStateWithLifecycle()
+    val descriptionType by viewModel.descriptionType.collectAsStateWithLifecycle()
+    val buttonType by viewModel.buttonType.collectAsStateWithLifecycle()
 
     ScreenContent(
         order = order,
+        descriptionType = descriptionType,
+        buttonType = buttonType,
         onPayForOrderClicked = viewModel::onPayForOrderClicked,
         onReturnToHomeScreenClicked = viewModel::onReturnToHomeScreenClicked,
         onPhoneClicked = viewModel::onPhoneNumberClicked,
@@ -61,6 +67,8 @@ fun CheckoutOrderConfirmedScreen(
 @Composable
 private fun ScreenContent(
     order: OrderDetails,
+    descriptionType: DescriptionType,
+    buttonType: ButtonType,
     onPayForOrderClicked: () -> Unit,
     onReturnToHomeScreenClicked: () -> Unit,
     onPhoneClicked: (PhoneNumber) -> Unit,
@@ -98,6 +106,7 @@ private fun ScreenContent(
 
             Description(
                 order = order,
+                descriptionType = descriptionType,
                 onPhoneClicked = onPhoneClicked,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -121,10 +130,9 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.height(16.dp))
 
-            val onClick = if (order.isPaid) {
-                onReturnToHomeScreenClicked
-            } else {
-                onPayForOrderClicked
+            val onClick = when (buttonType) {
+                ButtonType.RETURN_TO_HOME_SCREEN -> onReturnToHomeScreenClicked
+                ButtonType.PAY_FOR_ORDER -> onPayForOrderClicked
             }
             ZarinaButton(
                 onClick = onClick,
@@ -133,7 +141,10 @@ private fun ScreenContent(
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 20.dp),
             ) {
-                val textResId = if (order.isPaid) R.string.to_home_screen else R.string.pay
+                val textResId = when (buttonType) {
+                    ButtonType.RETURN_TO_HOME_SCREEN -> R.string.to_home_screen
+                    ButtonType.PAY_FOR_ORDER -> R.string.pay
+                }
                 Text(text = stringResource(textResId).uppercase())
             }
         }

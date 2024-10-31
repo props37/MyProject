@@ -11,6 +11,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.order.OrderDetails
+import ru.livetyping.zarina.domain.order.PaymentMethodType
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
@@ -32,6 +33,12 @@ class CheckoutOrderConfirmedViewModel @Inject constructor(
     )
 
     val order: StateFlow<OrderDetails> = ImmutableStateFlow(orderConfirmed.order.toOrderDetails())
+
+    val descriptionType: StateFlow<DescriptionType> = ImmutableStateFlow(
+        value = getDescriptionType(order.value),
+    )
+
+    val buttonType: StateFlow<ButtonType> = ImmutableStateFlow(getButtonType(order.value))
 
     fun onReturnToHomeScreenClicked() {
         navigationThrottler.throttle {
@@ -62,6 +69,28 @@ class CheckoutOrderConfirmedViewModel @Inject constructor(
         }
     }
 
+    private fun getDescriptionType(order: OrderDetails): DescriptionType {
+        return when {
+            order.isPaid -> DescriptionType.ORDER_PAID
+            order.paymentMethodType == PaymentMethodType.POSTPAID -> {
+                DescriptionType.ORDER_SHOULD_BE_PAID_UPON_RECEIPT
+            }
+
+            else -> DescriptionType.ORDER_SHOULD_BE_PAID
+        }
+    }
+
+    private fun getButtonType(order: OrderDetails): ButtonType {
+        return when {
+            order.isPaid -> ButtonType.RETURN_TO_HOME_SCREEN
+            order.paymentMethodType == PaymentMethodType.POSTPAID -> {
+                ButtonType.RETURN_TO_HOME_SCREEN
+            }
+
+            else -> ButtonType.PAY_FOR_ORDER
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutOrderConfirmedScreenAction) : SideEffect
 
@@ -69,4 +98,12 @@ class CheckoutOrderConfirmedViewModel @Inject constructor(
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
+
+    enum class DescriptionType {
+        ORDER_PAID,
+        ORDER_SHOULD_BE_PAID,
+        ORDER_SHOULD_BE_PAID_UPON_RECEIPT,
+    }
+
+    enum class ButtonType { RETURN_TO_HOME_SCREEN, PAY_FOR_ORDER }
 }
