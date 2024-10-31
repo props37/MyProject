@@ -249,7 +249,8 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     }
 
     fun onBackClicked() {
-        // TODO: [High] Show confirmation dialog?
+        if (checkoutJob?.isActive == true) return
+
         navigationThrottler.throttle {
             val action = CheckoutOrderPlacingScreenAction.ScreenClosed
             emitSideEffect(SideEffect.Navigate(action))
