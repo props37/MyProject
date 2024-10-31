@@ -48,7 +48,7 @@ fun NavGraphBuilder.checkoutOrderPlacingScreen(navController: NavHostController)
                         val orderParcelable = OrderDetailsParcelable.from(action.order)
                         val orderConfirmed = CheckoutGraph.OrderConfirmed(orderParcelable)
                         val navOptions = navOptions {
-                            this.popUpTo(CheckoutGraph.routeSchema) { inclusive = true }
+                            popUpTo(CheckoutGraph.routeSchema) { inclusive = true }
                         }
                         navController.navigate(orderConfirmed, navOptions)
                     }

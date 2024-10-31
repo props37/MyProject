@@ -17,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,9 +30,12 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.order.OrderDetails
+import ru.livetyping.zarina.presentation.common.component.OrderCard
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.presentation.common.util.domain.color
+import ru.livetyping.zarina.presentation.common.util.domain.nameResId
 import ru.livetyping.zarina.presentation.screen.checkout.orderconfirmed.CheckoutOrderConfirmedScreenComponents.Description
 import ru.livetyping.zarina.presentation.screen.checkout.orderconfirmed.CheckoutOrderConfirmedScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.checkout.orderconfirmed.CheckoutOrderConfirmedViewModel.SideEffect
@@ -95,6 +99,22 @@ private fun ScreenContent(
             Description(
                 order = order,
                 onPhoneClicked = onPhoneClicked,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            val orderProductImageUrls = remember(order.products) {
+                order.products.map { it.imageUrl.value }
+            }
+            OrderCard(
+                orderNumber = order.number.value,
+                orderStatusName = stringResource(order.status.nameResId),
+                orderStatusColor = order.status.color,
+                orderTotalPrice = order.totalPrice,
+                orderDate = order.date,
+                orderProductCount = order.productCount,
+                orderProductImageUrls = orderProductImageUrls,
+                onClick = null,
                 modifier = Modifier.fillMaxWidth(),
             )
 

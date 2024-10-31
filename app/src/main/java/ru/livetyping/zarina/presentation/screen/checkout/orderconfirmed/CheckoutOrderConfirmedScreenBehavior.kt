@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.livetyping.zarina.presentation.common.navigation.safeNavigate
+import ru.livetyping.zarina.presentation.common.zarinatoast.controller.LocalZarinaToastController
 import ru.livetyping.zarina.presentation.screen.checkout.orderconfirmed.CheckoutOrderConfirmedViewModel.SideEffect
 import ru.livetyping.zarina.util.platform.dialPhoneNumber
 
@@ -21,6 +22,7 @@ fun CheckoutOrderConfirmedScreenBehavior(
 ) {
     val updatedNavigate by rememberUpdatedState(navigate)
     val updatedContext by rememberUpdatedState(LocalContext.current)
+    val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
 
     ForcedBottomNavBarBehavior(isVisible = false)
 
@@ -37,6 +39,10 @@ fun CheckoutOrderConfirmedScreenBehavior(
 
                     is SideEffect.DialPhoneNumber -> {
                         updatedContext.dialPhoneNumber(sideEffect.phoneNumber.value)
+                    }
+
+                    is SideEffect.ShowZarinaToast -> {
+                        updatedZarinaToastController.show(sideEffect.message)
                     }
                 }
             }

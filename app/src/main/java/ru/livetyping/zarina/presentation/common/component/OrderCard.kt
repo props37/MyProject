@@ -44,15 +44,55 @@ import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSke
 import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.presentation.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.presentation.common.util.domain.color
+import ru.livetyping.zarina.presentation.common.util.domain.nameResId
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedLocalDate
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPrice
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.library.shimmer.shimmerToggleable
+import java.time.LocalDate
 
 @Composable
 fun OrderCard(
     order: OrderItem,
-    onClick: (OrderItem) -> Unit,
+    onClick: ((OrderItem) -> Unit)?,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = BackgroundColor,
+    contentPadding: PaddingValues = ContentPadding,
+) {
+    val orderProductImageUrls = remember {
+        order.products.map { it.imageUrl.value }
+    }
+
+    OrderCard(
+        orderNumber = order.number.value,
+        orderStatusName = stringResource(order.status.nameResId),
+        orderStatusColor = order.status.color,
+        orderTotalPrice = order.totalPrice,
+        orderDate = order.date,
+        orderProductCount = order.productCount,
+        orderProductImageUrls = orderProductImageUrls,
+        onClick = if (onClick != null) {
+            { onClick(order) }
+        } else {
+            null
+        },
+        backgroundColor = backgroundColor,
+        contentPadding = contentPadding,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun OrderCard(
+    orderNumber: String,
+    orderStatusName: String,
+    orderStatusColor: Color,
+    orderTotalPrice: Int,
+    orderDate: LocalDate,
+    orderProductCount: Int,
+    orderProductImageUrls: List<String>,
+    onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
     backgroundColor: Color = BackgroundColor,
     contentPadding: PaddingValues = ContentPadding,
@@ -60,7 +100,10 @@ fun OrderCard(
     Column(
         modifier = modifier
             .background(backgroundColor)
-            .clickable { onClick(order) }
+            .clickable(
+                enabled = onClick != null,
+                onClick = { onClick?.invoke() },
+            )
             .padding(contentPadding),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -68,21 +111,22 @@ fun OrderCard(
             val color = UiKitTheme.colors.text.general.regular.default
 
             Text(
-                text = stringResource(R.string.number_symbol, order.number.value),
+                text = stringResource(R.string.number_symbol, orderNumber),
                 style = textStyle,
                 color = color,
             )
 
             Spacer(modifier = Modifier.width(10.dp))
             OrderStatusLabel(
-                status = order.status,
+                statusName = orderStatusName,
+                statusColor = orderStatusColor,
                 size = ZarinaLabelSize.Small,
                 modifier = Modifier.weight(1f),
             )
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            val formattedPrice = rememberFormattedPrice(order.totalPrice)
+            val formattedPrice = rememberFormattedPrice(orderTotalPrice)
             Text(
                 text = stringResource(R.string.price_in_rubles_string, formattedPrice),
                 style = textStyle,
@@ -95,7 +139,7 @@ fun OrderCard(
             val color = UiKitTheme.colors.text.general.regular.muted
 
             val formattedDate = rememberFormattedLocalDate(
-                localDate = order.date,
+                localDate = orderDate,
                 formatterPattern = DateFormatterPattern,
             )
             Text(
@@ -108,7 +152,7 @@ fun OrderCard(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = pluralStringResource(R.plurals.d_products, order.productCount, order.productCount),
+                text = pluralStringResource(R.plurals.d_products, orderProductCount, orderProductCount),
                 style = textStyle,
                 color = color,
             )
@@ -117,7 +161,7 @@ fun OrderCard(
         Spacer(modifier = Modifier.height(8.dp))
 
         Products(
-            products = order.products,
+            productImageUrls = orderProductImageUrls,
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -185,7 +229,7 @@ fun OrderCardSkeleton(
 
 @Composable
 private fun Products(
-    products: List<OrderItem.Product>,
+    productImageUrls: List<String>,
     modifier: Modifier = Modifier,
 ) {
     BoxWithConstraints(modifier = modifier) {
@@ -194,13 +238,12 @@ private fun Products(
             horizontalArrangement = Arrangement.spacedBy(ProductImageSpaceBetween),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            repeat(minOf(products.size, maxImageCount)) { i ->
-                val product = products[i]
-                val imageUrl = product.imageUrl
+            repeat(minOf(productImageUrls.size, maxImageCount)) { i ->
+                val imageUrl = productImageUrls[i]
                 var isImageShimmerEnabled by remember(imageUrl) { mutableStateOf(true) }
-                key(imageUrl.value) {
+                key(imageUrl) {
                     AsyncImage(
-                        model = product.imageUrl.value,
+                        model = imageUrl,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         onSuccess = { isImageShimmerEnabled = false },
