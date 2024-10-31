@@ -21,13 +21,14 @@ fun FavoritesScreenBehavior(
     sideEffects: Flow<SideEffect>,
     navigate: (FavoritesScreenAction) -> Unit,
 ) {
+    val updatedOnScreenCreated by rememberUpdatedState(onScreenCreated)
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = true)
 
     LifecycleEventEffect(Lifecycle.Event.ON_CREATE) {
-        onScreenCreated()
+        updatedOnScreenCreated()
     }
 
     LifecycleStartEffect(sideEffects) {
