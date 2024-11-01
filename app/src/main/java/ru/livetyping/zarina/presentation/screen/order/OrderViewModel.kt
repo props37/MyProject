@@ -16,15 +16,18 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderDetails
+import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.presentation.screen.order.OrderViewModel.SideEffect
 import ru.livetyping.zarina.usecase.order.GetOrderFlowUseCase
@@ -123,6 +126,20 @@ class OrderViewModel @AssistedInject constructor(
         orderRequester.request(OrderRequest.LOADING)
     }
 
+    fun onPayForOrderClicked() {
+        val orderPaymentUrl = orderResult.value?.getOrNull()?.paymentUrl
+        if (orderPaymentUrl != null) {
+            navigationThrottler.throttle {
+                val action = OrderScreenAction.PayForOrderClicked(orderPaymentUrl)
+                emitSideEffect(SideEffect.Navigate(action))
+            }
+        } else {
+            val messageText = Text.Resource(R.string.something_went_wrong)
+            val message = ZarinaToastMessage.error(messageText)
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
+        }
+    }
+
     fun onCancelOrderClicked() {
         navigationThrottler.throttle {
             val action = OrderScreenAction.CancelOrderClicked(orderId.value)
@@ -143,6 +160,8 @@ class OrderViewModel @AssistedInject constructor(
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: OrderScreenAction) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 
     @Stable
