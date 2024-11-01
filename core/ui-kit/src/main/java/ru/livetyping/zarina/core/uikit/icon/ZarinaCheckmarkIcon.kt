@@ -16,26 +16,31 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
-import ru.livetyping.zarina.core.resource.R
+import ru.livetyping.zarina.core.uikit.R
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButtonDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
 public fun ZarinaCheckmarkIcon(
     isVisible: Boolean,
     modifier: Modifier = Modifier,
     @Suppress("NAME_SHADOWING")
-    contentDescriptionResId: (Boolean) -> Int? = { isVisible ->
-        if (isVisible) R.string.checkmark_checked else R.string.checkmark_unchecked
+    contentDescriptionResId: (Boolean) -> Int = { isVisible ->
+        if (isVisible) {
+            R.string.checkmark_checked_content_description
+        } else {
+            R.string.checkmark_unchecked_content_description
+        }
     },
     color: Color = ZarinaIconButtonDefaults.IconColor,
     maskColor: Color = UiKitTheme.colors.background.general.regular.default,
     iconSize: Dp = ZarinaIconButtonDefaults.IconSize,
 ) {
     Box(modifier = modifier) {
-        val contentDescription = contentDescriptionResId(isVisible)?.let { stringResource(it) }
+        val contentDescription = stringResource(contentDescriptionResId(isVisible))
         Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark_24),
+            imageVector = ImageVector.vectorResource(RCommon.drawable.ic_checkmark_24),
             contentDescription = contentDescription,
             tint = color,
             modifier = Modifier.size(iconSize),

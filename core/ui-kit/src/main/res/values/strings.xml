@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="checkmark_checked_content_description">Выбрано</string>
+    <string name="checkmark_unchecked_content_description">Не выбрано</string>
+</resources>
