@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.feature.wishlist.ui.impl.impl
 
-import android.os.SystemClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -8,7 +7,7 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import ru.livetyping.zarina.core.navigationutil.safeNavigate
+import ru.livetyping.zarina.core.navigationutil.LifecycleSafeNavigator
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
@@ -28,12 +27,12 @@ internal fun WishlistScreenBehavior(
     LifecycleEventEffect(onLifecycleEvent = updatedOnLifecycleEvent)
 
     LifecycleStartEffect(sideEffects) {
-        val startedElapsedRealtime = SystemClock.elapsedRealtime()
+        val lifecycleSafeNavigator = LifecycleSafeNavigator()
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
                     is WishlistSideEffect.Navigate -> {
-                        safeNavigate(startedElapsedRealtime) {
+                        lifecycleSafeNavigator.safeNavigate {
                             navigate(updatedNavActions, sideEffect.action)
                         }
                     }
