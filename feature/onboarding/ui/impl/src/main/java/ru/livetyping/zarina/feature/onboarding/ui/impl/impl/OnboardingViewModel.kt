@@ -2,6 +2,7 @@ package ru.livetyping.zarina.feature.onboarding.ui.impl.impl
 
 import android.Manifest
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,12 +12,15 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.permission.PermissionManager
+import ru.livetyping.zarina.core.permission.shouldShowRequestRationale
 import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
@@ -26,6 +30,7 @@ import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingEven
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingStep
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingStepsBuilder
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,7 +52,7 @@ internal class OnboardingViewModel @Inject constructor(
 
     private val currentOnboardingStep = savedStateHandle.createValueHolder(
         key = Keys.CURRENT_ONBOARDING_STEP.key,
-        initialValue = onboardingStepsValueHolder.get()?.firstOrNull()
+        initialValue = onboardingStepsValueHolder.get().firstOrNull()
             ?: OnboardingStep.CITY_DETECTION,
     )
 
@@ -78,7 +83,55 @@ internal class OnboardingViewModel @Inject constructor(
     )
 
     fun onOnboardingEvent(event: OnboardingEvent) {
-        // TODO: [Top] Implement
+        when (event) {
+            OnboardingEvent.RequestNotificationsPermissionClicked -> {
+                onRequestNotificationsPermissionClicked()
+            }
+        }
+    }
+
+    private fun onRequestNotificationsPermissionClicked() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            onRequestNotificationsPermissionClickedApi33()
+        } else {
+            showOnboardingStep(OnboardingStep.CITY_DETECTION)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun onRequestNotificationsPermissionClickedApi33() {
+        val permission = Manifest.permission.POST_NOTIFICATIONS
+        viewModelScope.launch {
+            val currentPermissionState = permissionManager.getPermissionState(permission)
+            if (currentPermissionState.isGranted) {
+                showOnboardingStep(OnboardingStep.CITY_DETECTION)
+            } else {
+                val newPermissionState = permissionManager.requestPermission(permission)
+                if (newPermissionState != currentPermissionState) {
+                    // User has either granted or denied the permission
+                    showOnboardingStep(OnboardingStep.CITY_DETECTION)
+                } else if (
+                    newPermissionState.isDenied && !newPermissionState.shouldShowRequestRationale
+                ) {
+                    val hasPermissionRequiredRequestRationale =
+                        permissionManager.hasPermissionRequiredRequestRationale(permission)
+                            .firstOrNull() ?: false
+                    if (hasPermissionRequiredRequestRationale) {
+                        // User has denied the permission permanently
+                        showOnboardingStep(OnboardingStep.CITY_DETECTION)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showOnboardingStep(step: OnboardingStep) {
+        val steps = onboardingStepsValueHolder.get()
+        if (step in steps) {
+            currentOnboardingStep.set(step)
+        } else {
+            Timber.e("There is no step $step in the onboarding steps")
+        }
     }
 
     private fun isNotificationsPermissionGranted(): Boolean {
