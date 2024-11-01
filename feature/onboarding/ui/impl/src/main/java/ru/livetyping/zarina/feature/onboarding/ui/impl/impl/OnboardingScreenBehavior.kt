@@ -16,7 +16,7 @@ internal fun OnboardingScreenBehavior(
     sideEffects: Flow<OnboardingSideEffect>,
     navActions: OnboardingNavActions,
 ) {
-    val updatedNavActions by rememberUpdatedState(navActions)
+    val currentNavActions by rememberUpdatedState(navActions)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -27,7 +27,7 @@ internal fun OnboardingScreenBehavior(
                 when (sideEffect) {
                     is OnboardingSideEffect.Navigate -> {
                         lifecycleSafeNavigator.safeNavigate {
-                            navigate(updatedNavActions, sideEffect.action)
+                            navigate(currentNavActions, sideEffect.action)
                         }
                     }
                 }

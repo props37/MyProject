@@ -257,9 +257,9 @@ private fun BannerPager(
         key = { page -> banners[page].id.value },
         modifier = modifier,
     ) { page ->
-        val updatedPage by rememberUpdatedState(page)
+        val currentPage by rememberUpdatedState(page)
         val isOnScreen by remember(visibleBannerPagesState) {
-            derivedStateOf { updatedPage in visibleBannerPagesState.value }
+            derivedStateOf { currentPage in visibleBannerPagesState.value }
         }
 
         val banner = banners[page]

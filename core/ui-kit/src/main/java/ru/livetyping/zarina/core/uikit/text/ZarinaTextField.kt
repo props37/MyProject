@@ -100,10 +100,10 @@ public fun ZarinaTextField(
     outputTransformation: OutputTransformation? = null,
     scrollState: ScrollState = rememberScrollState(),
 ) {
-    val updatedOnTextChanged by rememberUpdatedState(onTextChanged)
+    val currentOnTextChanged by rememberUpdatedState(onTextChanged)
     LaunchedEffect(state) {
         state.textAsFlow()
-            .onEach { updatedOnTextChanged?.invoke(it.toString()) }
+            .onEach { currentOnTextChanged?.invoke(it.toString()) }
             .launchIn(this)
     }
 

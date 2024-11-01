@@ -54,10 +54,10 @@ public fun ZarinaExpandableItem(
     @Suppress("NAME_SHADOWING")
     var isExpanded by rememberSaveable(isExpanded) { mutableStateOf(isExpanded) }
 
-    val updatedOnExpandedChanged by rememberUpdatedState(onExpandedChanged)
+    val currentOnExpandedChanged by rememberUpdatedState(onExpandedChanged)
     LaunchedEffect(Unit) {
         snapshotFlow { isExpanded }.collect {
-            updatedOnExpandedChanged?.invoke(it)
+            currentOnExpandedChanged?.invoke(it)
         }
     }
 

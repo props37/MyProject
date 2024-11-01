@@ -20,8 +20,8 @@ public fun <T> rememberPagerConnectedToTabRowState(
     initialPageOffsetFraction: Float = 0f,
     pageCount: () -> Int
 ): PagerState {
-    val updatedCurrentTab by rememberUpdatedState(currentTab)
-    val updatedOnTabChanged by rememberUpdatedState(onTabChanged)
+    val currentCurrentTab by rememberUpdatedState(currentTab)
+    val currentOnTabChanged by rememberUpdatedState(onTabChanged)
 
     val pagerState = rememberPagerState(
         initialPage = initialPage,
@@ -34,13 +34,13 @@ public fun <T> rememberPagerConnectedToTabRowState(
             .collect { currentPage ->
                 val newCurrentTab = tabs.getOrNull(currentPage)
                 if (newCurrentTab != null) {
-                    updatedOnTabChanged(newCurrentTab)
+                    currentOnTabChanged(newCurrentTab)
                 }
             }
     }
 
     LaunchedEffect(tabs) {
-        snapshotFlow { updatedCurrentTab }
+        snapshotFlow { currentCurrentTab }
             .collectLatest { currentTab ->
                 val currentPage = tabs.indexOf(currentTab)
                 if (currentPage != -1) {

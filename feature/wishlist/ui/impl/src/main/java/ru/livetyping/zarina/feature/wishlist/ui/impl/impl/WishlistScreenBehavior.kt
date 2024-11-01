@@ -19,12 +19,12 @@ internal fun WishlistScreenBehavior(
     sideEffects: Flow<WishlistSideEffect>,
     navActions: WishlistNavActions,
 ) {
-    val updatedOnLifecycleEvent by rememberUpdatedState(onLifecycleEvent)
-    val updatedNavActions by rememberUpdatedState(navActions)
+    val currentOnLifecycleEvent by rememberUpdatedState(onLifecycleEvent)
+    val currentNavActions by rememberUpdatedState(navActions)
 
     BottomNavBarBehavior(isVisible = true)
 
-    LifecycleEventEffect(onLifecycleEvent = updatedOnLifecycleEvent)
+    LifecycleEventEffect(onLifecycleEvent = currentOnLifecycleEvent)
 
     LifecycleStartEffect(sideEffects) {
         val lifecycleSafeNavigator = LifecycleSafeNavigator()
@@ -33,7 +33,7 @@ internal fun WishlistScreenBehavior(
                 when (sideEffect) {
                     is WishlistSideEffect.Navigate -> {
                         lifecycleSafeNavigator.safeNavigate {
-                            navigate(updatedNavActions, sideEffect.action)
+                            navigate(currentNavActions, sideEffect.action)
                         }
                     }
                 }

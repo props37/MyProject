@@ -14,15 +14,15 @@ public fun LifecycleEventEffect(
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     onLifecycleEvent: (LifecycleEvent) -> Unit,
 ) {
-    val updatedOnLifecycleEvent by rememberUpdatedState(onLifecycleEvent)
+    val currentOnLifecycleEvent by rememberUpdatedState(onLifecycleEvent)
 
     LifecycleEventEffect(Lifecycle.Event.ON_CREATE, lifecycleOwner) {
-        updatedOnLifecycleEvent(LifecycleEvent.ON_CREATE)
+        currentOnLifecycleEvent(LifecycleEvent.ON_CREATE)
     }
     LifecycleEventEffect(Lifecycle.Event.ON_START, lifecycleOwner) {
-        updatedOnLifecycleEvent(LifecycleEvent.ON_START)
+        currentOnLifecycleEvent(LifecycleEvent.ON_START)
     }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME, lifecycleOwner) {
-        updatedOnLifecycleEvent(LifecycleEvent.ON_RESUME)
+        currentOnLifecycleEvent(LifecycleEvent.ON_RESUME)
     }
 }

@@ -16,7 +16,7 @@ internal fun CatalogScreenBehavior(
     sideEffects: Flow<CatalogSideEffect>,
     navActions: CatalogNavActions,
 ) {
-    val updatedNavActions by rememberUpdatedState(navActions)
+    val currentNavActions by rememberUpdatedState(navActions)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -27,7 +27,7 @@ internal fun CatalogScreenBehavior(
                 when (sideEffect) {
                     is CatalogSideEffect.Navigate -> {
                         lifecycleSafeNavigator.safeNavigate {
-                            navigate(updatedNavActions, sideEffect.action)
+                            navigate(currentNavActions, sideEffect.action)
                         }
                     }
                 }

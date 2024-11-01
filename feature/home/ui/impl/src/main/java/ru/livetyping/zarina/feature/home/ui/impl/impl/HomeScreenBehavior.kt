@@ -16,7 +16,7 @@ internal fun HomeScreenBehavior(
     sideEffects: Flow<HomeSideEffect>,
     navActions: HomeNavActions,
 ) {
-    val updatedNavActions by rememberUpdatedState(navActions)
+    val currentNavActions by rememberUpdatedState(navActions)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -27,7 +27,7 @@ internal fun HomeScreenBehavior(
                 when (sideEffect) {
                     is HomeSideEffect.Navigate -> {
                         lifecycleSafeNavigator.safeNavigate {
-                            navigate(updatedNavActions, sideEffect.action)
+                            navigate(currentNavActions, sideEffect.action)
                         }
                     }
                 }
