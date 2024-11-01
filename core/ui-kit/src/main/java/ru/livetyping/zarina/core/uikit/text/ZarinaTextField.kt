@@ -488,6 +488,20 @@ public object ZarinaTextFieldDefaults {
     public val IconSizeSmall: Dp get() = 16.dp
 
     @Composable
+    public fun AppearingLabel(
+        textFieldValue: String,
+        label: String,
+        modifier: Modifier = Modifier,
+    ) {
+        val labelValue = if (textFieldValue.isNotBlank()) label else ""
+
+        Text(
+            text = labelValue,
+            modifier = modifier,
+        )
+    }
+
+    @Composable
     public fun ClearButton(
         isVisible: Boolean,
         onClick: () -> Unit,
