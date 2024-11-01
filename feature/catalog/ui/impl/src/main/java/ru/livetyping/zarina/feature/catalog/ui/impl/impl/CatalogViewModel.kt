@@ -122,7 +122,7 @@ internal class CatalogViewModel @Inject constructor(
             }
 
             // TODO: [Low] Implement
-            is TabRowEvent.TabReselected -> TODO()
+            is TabRowEvent.TabReselected -> Unit
         }
     }
 
