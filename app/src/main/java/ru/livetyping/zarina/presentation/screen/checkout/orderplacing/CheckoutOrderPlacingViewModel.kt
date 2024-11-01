@@ -386,7 +386,12 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     }
 
     fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
-        selectedPaymentMethod.value = paymentMethod
+        if (paymentMethod.type == PaymentMethodType.GIFT_CARD) {
+            val action = CheckoutOrderPlacingScreenAction.GiftCertificateSelected
+            emitSideEffect(SideEffect.Navigate(action))
+        } else {
+            selectedPaymentMethod.value = paymentMethod
+        }
     }
 
     fun onPaymentMethodsErrorRefreshClicked() {

@@ -12,6 +12,8 @@ sealed class CheckoutOrderPlacingScreenAction {
 
     data object ChangeDeliveryClicked : CheckoutOrderPlacingScreenAction()
 
+    data object GiftCertificateSelected : CheckoutOrderPlacingScreenAction()
+
     data class PaymentStarted(val paymentUrl: Url) : CheckoutOrderPlacingScreenAction()
 
     data class OrderConfirmed(val order: OrderDetails) : CheckoutOrderPlacingScreenAction()

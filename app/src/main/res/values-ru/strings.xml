@@ -330,6 +330,9 @@
     <string name="cart_has_changed_error">Состав заказ изменился. Проверь его и попробуй снова</string>
     <string name="thanks_for_order">Спасибо за заказ!</string>
     <string name="to_home_screen">На главную</string>
+    <string name="gift_certificate">Подарочный сертификат</string>
+    <string name="certificate_number">Номер сертификата</string>
+    <string name="verification_code">Проверочный код</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
@@ -419,6 +422,8 @@
     <string name="order_confirmed_description_paid">Твой заказ %1$s оплачен. Ты будешь получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у тебя возникли вопросы, позвони на нашу горячую линию %3$s. Звонок бесплатный</string>
     <string name="order_confirmed_description_should_be_paid">Твой заказ %1$s принят. В течение часа тебе необходимо оплатить заказ. После оплаты ты будешь получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у тебя возникли вопросы, позвони на нашу горячую линию %3$s. Звонок бесплатный.</string>
     <string name="order_confirmed_description_should_be_paid_upon_receipt">Твой заказ %1$s принят. Ты будешь получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у тебя возникли вопросы, позвони на нашу горячую линию %3$s. Звонок бесплатный.</string>
+
+    <string name="gift_certificate_description">Воспользуйся электронным или пластиковым подарочным сертификатом. Проверочный код указан в письме, которое пришло после покупки сертификата</string>
 
     <plurals name="show_products">
         <item quantity="zero">Показать %1$d товаров</item>

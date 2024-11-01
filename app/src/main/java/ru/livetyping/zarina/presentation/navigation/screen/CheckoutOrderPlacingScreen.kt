@@ -39,6 +39,10 @@ fun NavGraphBuilder.checkoutOrderPlacingScreen(navController: NavHostController)
                         navController.popBackStack<CheckoutGraph.DeliveryMethod>(inclusive = false)
                     }
 
+                    CheckoutOrderPlacingScreenAction.GiftCertificateSelected -> {
+                        navController.navigate(CheckoutGraph.GiftCertificate)
+                    }
+
                     is CheckoutOrderPlacingScreenAction.PaymentStarted -> {
                         val payment = UnscopedDestinations.Payment(action.paymentUrl.value)
                         navController.navigate(payment)

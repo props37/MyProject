@@ -9,13 +9,14 @@ import ru.livetyping.zarina.presentation.navigation.screen.checkoutCourierDelive
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutCourierDeliveryScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutCustomerScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutDeliveryMethodScreen
+import ru.livetyping.zarina.presentation.navigation.screen.checkoutGiftCertificateScreen
+import ru.livetyping.zarina.presentation.navigation.screen.checkoutOrderConfirmedScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutOrderPlacingScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutPickupPointDeliveryScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutPickupStoreSelectionScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutPostDeliveryScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutSelectedPickupPointScreen
 import ru.livetyping.zarina.presentation.navigation.screen.checkoutSelectedPickupStoreScreen
-import ru.livetyping.zarina.presentation.navigation.screen.checkoutOrderConfirmedScreen
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
@@ -41,6 +42,7 @@ fun NavGraphBuilder.checkoutGraph(navController: NavHostController) {
         checkoutSelectedPickupPointScreen(navController)
         checkoutOrderPlacingScreen(navController)
         checkoutOrderConfirmedScreen(navController)
+        checkoutGiftCertificateScreen(navController)
     }
 }
 

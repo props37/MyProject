@@ -289,4 +289,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Customer.Args>() {
             }
         }
     }
+
+    @Serializable
+    data object GiftCertificate
 }
