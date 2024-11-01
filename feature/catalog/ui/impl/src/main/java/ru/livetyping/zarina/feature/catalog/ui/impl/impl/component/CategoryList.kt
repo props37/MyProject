@@ -92,7 +92,7 @@ private fun CategoryListSuccess(
     }
 
     LazyColumn(
-        contentPadding = PaddingValues(bottom = ZarinaScrollableDefaults.ListBottomPadding),
+        contentPadding = PaddingValues(bottom = ZarinaScrollableDefaults.ScrollableBottomPadding),
         modifier = modifier,
     ) {
         for (index in categoryListItems.indices) {
@@ -166,7 +166,7 @@ private fun CategoryListSkeleton(
             }
         }
 
-        Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ListBottomPadding))
+        Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
     }
 }
 
