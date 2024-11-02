@@ -43,6 +43,7 @@ kotlin {
 dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.datastore)
+    implementation(projects.core.buildUtil)
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)

@@ -51,8 +51,6 @@ kotlin {
 }
 
 dependencies {
-    implementation(projects.feature.onboarding.domain)
-
     implementation(projects.feature.onboarding.ui.api)
     implementation(projects.core.domain)
     implementation(projects.core.uiKit)

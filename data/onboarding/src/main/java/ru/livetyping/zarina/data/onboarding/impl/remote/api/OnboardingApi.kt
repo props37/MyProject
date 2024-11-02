@@ -1,7 +1,7 @@
-package ru.livetyping.zarina.data.content.impl.remote.api
+package ru.livetyping.zarina.data.onboarding.impl.remote.api
 
 import ru.livetyping.zarina.core.domain.model.common.Url
 
-internal interface ContentApi {
+internal interface OnboardingApi {
     fun getOnboardingBannerUrl(): Url
 }

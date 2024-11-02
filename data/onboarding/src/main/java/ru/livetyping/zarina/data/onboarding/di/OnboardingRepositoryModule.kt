@@ -10,6 +10,10 @@ import ru.livetyping.zarina.data.onboarding.impl.local.OnboardingDataHolder
 import ru.livetyping.zarina.data.onboarding.impl.local.OnboardingDataHolderImpl
 import ru.livetyping.zarina.data.onboarding.impl.local.OnboardingLocalDataSource
 import ru.livetyping.zarina.data.onboarding.impl.local.OnboardingLocalDataSourceImpl
+import ru.livetyping.zarina.data.onboarding.impl.remote.OnboardingRemoteDataSource
+import ru.livetyping.zarina.data.onboarding.impl.remote.OnboardingRemoteDataSourceImpl
+import ru.livetyping.zarina.data.onboarding.impl.remote.api.OnboardingApi
+import ru.livetyping.zarina.data.onboarding.impl.remote.api.OnboardingApiImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -27,4 +31,12 @@ internal abstract class OnboardingRepositoryModule {
     abstract fun bindsOnboardingDataHolder(
         impl: OnboardingDataHolderImpl,
     ): OnboardingDataHolder
+
+    @Binds
+    abstract fun bindsOnboardingRemoteDataSource(
+        impl: OnboardingRemoteDataSourceImpl,
+    ): OnboardingRemoteDataSource
+
+    @Binds
+    abstract fun bindsOnboardingApi(impl: OnboardingApiImpl): OnboardingApi
 }
