@@ -1,12 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
-    namespace = "ru.livetyping.zarina.core.uimodel"
+    namespace = "ru.livetyping.zarina.data.onboarding"
     compileSdk = 35
 
     defaultConfig {
@@ -41,10 +41,13 @@ kotlin {
 }
 
 dependencies {
-    api(projects.core.domain)
+    implementation(projects.core.domain)
+    implementation(projects.core.datastore)
 
-    implementation(libs.kotlin.immutableCollections)
-    implementation(libs.ktor.serialization.json)
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
+
+    implementation(libs.timber)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)

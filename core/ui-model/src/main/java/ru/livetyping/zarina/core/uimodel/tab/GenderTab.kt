@@ -1,8 +1,13 @@
 package ru.livetyping.zarina.core.uimodel.tab
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.gender.Gender
 
-public enum class GenderTab {
+@Serializable
+@Parcelize
+public enum class GenderTab : Parcelable {
     WOMEN,
     MEN;
 

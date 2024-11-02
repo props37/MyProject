@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -19,12 +21,18 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.common.Url
+import ru.livetyping.zarina.core.domain.model.geo.City
+import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
 import ru.livetyping.zarina.core.permission.PermissionManager
 import ru.livetyping.zarina.core.permission.shouldShowRequestRationale
 import ru.livetyping.zarina.core.uicommon.createValueHolder
+import ru.livetyping.zarina.core.uicommon.operation.OperationKey
+import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
+import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
 import ru.livetyping.zarina.feature.onboarding.domain.usecase.GetOnboardingBannerUrlFlowUseCase
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingEvent
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState
@@ -36,12 +44,19 @@ import javax.inject.Inject
 @HiltViewModel
 internal class OnboardingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val permissionManager: PermissionManager,
     onboardingStepsBuilder: OnboardingStepsBuilder,
     getOnboardingBannerUrlFlow: GetOnboardingBannerUrlFlowUseCase,
-    private val permissionManager: PermissionManager,
+    private val getCurrentCityByLocationFlow: GetCurrentCityByLocationFlowUseCase,
+    private val setIsOnboardingCompleted: SetIsOnboardingCompletedUseCase,
 ) : ViewModel(), SideEffectSource<OnboardingSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val operationTracker = OperationTracker()
+
+    private var detectCityJob: Job? = null
+    private var completeOnboardingJob: Job? = null
 
     private val onboardingStepsValueHolder = savedStateHandle.createValueHolder(
         key = Keys.ONBOARDING_STEPS.key,
@@ -50,15 +65,22 @@ internal class OnboardingViewModel @Inject constructor(
         ),
     )
 
-    private val currentOnboardingStep = savedStateHandle.createValueHolder(
+    private val currentOnboardingStepValueHolder = savedStateHandle.createValueHolder(
         key = Keys.CURRENT_ONBOARDING_STEP.key,
         initialValue = onboardingStepsValueHolder.get().firstOrNull()
             ?: OnboardingStep.CITY_DETECTION,
     )
 
+    private val cityValueHolder = savedStateHandle.createValueHolder<CityParcelable?>(
+        key = Keys.CITY.key,
+        initialValue = null,
+    )
+
+    private val onboardingCompletionTrigger = MutableStateFlow<OnboardingCompletionTrigger?>(null)
+
     val onboardingState: StateFlow<OnboardingState> = combine(
         onboardingStepsValueHolder.stateFlow,
-        currentOnboardingStep.stateFlow,
+        currentOnboardingStepValueHolder.stateFlow,
     ) { onboardingSteps, currentStep ->
         OnboardingState(
             onboardingSteps = onboardingSteps.toImmutableList(),
@@ -69,7 +91,7 @@ internal class OnboardingViewModel @Inject constructor(
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = OnboardingState(
             onboardingSteps = onboardingStepsValueHolder.stateFlow.value.toImmutableList(),
-            currentOnboardingStep = currentOnboardingStep.stateFlow.value,
+            currentOnboardingStep = currentOnboardingStepValueHolder.stateFlow.value,
         ),
     )
 
@@ -87,6 +109,9 @@ internal class OnboardingViewModel @Inject constructor(
             OnboardingEvent.RequestNotificationsPermissionClicked -> {
                 onRequestNotificationsPermissionClicked()
             }
+
+            OnboardingEvent.DetectCityClicked -> onDetectCityClicked()
+            OnboardingEvent.SkipCityDetectionClicked -> onSkipCityDetectionClicked()
         }
     }
 
@@ -96,6 +121,46 @@ internal class OnboardingViewModel @Inject constructor(
         } else {
             showOnboardingStep(OnboardingStep.CITY_DETECTION)
         }
+    }
+
+    private fun onDetectCityClicked() {
+        if (detectCityJob?.isActive == true) return
+
+        detectCityJob = viewModelScope.launch {
+            val currentPermissionsState =
+                permissionManager.getMultiplePermissionsState(LOCATION_PERMISSIONS)
+            if (currentPermissionsState.any { it.value.isGranted }) {
+                detectCity()
+            } else {
+                val newPermissionsState =
+                    permissionManager.requestMultiplePermissions(LOCATION_PERMISSIONS)
+                if (newPermissionsState != currentPermissionsState) {
+                    // User has either granted or denied the permission
+                    if (newPermissionsState.any { it.value.isGranted }) {
+                        detectCity()
+                    } else {
+                        skipCityDetection()
+                    }
+                } else if (
+                    newPermissionsState.all { it.value.isDenied }
+                    && newPermissionsState.any { !it.value.shouldShowRequestRationale }
+                ) {
+                    val havePermissionsRequiredRequestRationale =
+                        permissionManager
+                            .haveMultiplePermissionsRequiredRequestRationale(LOCATION_PERMISSIONS)
+                            .firstOrNull() ?: emptyMap()
+                    if (havePermissionsRequiredRequestRationale.any { it.value == true }) {
+                        // User has denied the permission permanently
+                        cityValueHolder.set(CityParcelable.from(City.DEFAULT))
+                        showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun onSkipCityDetectionClicked() {
+        skipCityDetection()
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -125,10 +190,55 @@ internal class OnboardingViewModel @Inject constructor(
         }
     }
 
+    private suspend fun detectCity() {
+        operationTracker.track(Operation.DETECT_CITY) {
+            getCurrentCityByLocationFlow().firstOrNull()
+                ?.onSuccess { city ->
+                    val cityParcelable = city?.let { CityParcelable.from(it) }
+                    cityValueHolder.set(cityParcelable)
+                    showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
+                }
+                ?.onFailure { onDetectCityFailure() }
+                ?.let { onDetectCityFailure() }
+        }
+    }
+
+    private fun onDetectCityFailure() {
+        cityValueHolder.set(CityParcelable.from(City.DEFAULT))
+        showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
+    }
+
+    private fun skipCityDetection() {
+        if (completeOnboardingJob?.isActive == true) return
+
+        detectCityJob?.cancel()
+        onboardingCompletionTrigger.value = OnboardingCompletionTrigger.CITY_DETECTION_SKIPPED
+        completeOnboardingJob = viewModelScope.launch {
+            completeOnboarding(userCity = null)
+            val action = OnboardingScreenAction.OnboardingCompleted(selectedCity = null)
+            emitSideEffect(OnboardingSideEffect.Navigate(action))
+        }
+    }
+
+    private suspend fun completeOnboarding(userCity: City?) {
+        // TODO: [Top] Implement
+//        return operationTracker.track(Operation.COMPLETE_ONBOARDING) {
+//            val setIsOnboardingCompletedParams =
+//                SetIsOnboardingCompletedUseCase.Params(isCompleted = true)
+//            setIsOnboardingCompleted(setIsOnboardingCompletedParams)
+//
+//            val setUserCityParams = SetUserCityUseCase.Params(userCity ?: City.DEFAULT)
+//            val result = interactor.setUserCity(setUserCityParams)
+//            result.onFailure { interactor.setDefaultUserCity() }
+//            coroutineContext.ensureActive()
+//            result
+//        }
+    }
+
     private fun showOnboardingStep(step: OnboardingStep) {
         val steps = onboardingStepsValueHolder.get()
         if (step in steps) {
-            currentOnboardingStep.set(step)
+            currentOnboardingStepValueHolder.set(step)
         } else {
             Timber.e("There is no step $step in the onboarding steps")
         }
@@ -142,10 +252,26 @@ internal class OnboardingViewModel @Inject constructor(
         }
     }
 
+    private enum class OnboardingCompletionTrigger {
+        CITY_DETECTION_SKIPPED,
+        CITY_CONFIRMED,
+    }
+
+    private enum class Operation : OperationKey { DETECT_CITY, COMPLETE_ONBOARDING }
+
     private enum class Keys {
         ONBOARDING_STEPS,
-        CURRENT_ONBOARDING_STEP;
+        CURRENT_ONBOARDING_STEP,
+        CITY;
 
         val key: String get() = name
+    }
+
+    private companion object {
+        private val LOCATION_PERMISSIONS: List<String>
+            get() = listOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            )
     }
 }

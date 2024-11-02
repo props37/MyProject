@@ -56,6 +56,7 @@ dependencies {
     implementation(projects.feature.onboarding.ui.api)
     implementation(projects.core.domain)
     implementation(projects.core.uiKit)
+    implementation(projects.core.uiModel)
     implementation(projects.core.resource)
     implementation(projects.core.coroutinesUtil)
     implementation(projects.core.navigationUtil)
