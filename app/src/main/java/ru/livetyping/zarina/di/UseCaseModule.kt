@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.CategoryRepository
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
+import ru.livetyping.zarina.core.domain.repository.LocationRepository
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.core.domain.usecase.auth.FetchUnauthorizedUserBearerTokensUseCase
 import ru.livetyping.zarina.core.domain.usecase.auth.GetBearerTokensFlowUseCase
@@ -14,6 +15,7 @@ import ru.livetyping.zarina.core.domain.usecase.auth.RefreshBearerTokensUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
+import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.FetchWishlistProductIdsUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
@@ -155,6 +157,17 @@ internal class UseCaseModule {
     ): ToggleProductInWishlistUseCase {
         return ToggleProductInWishlistUseCase.getInstance(
             wishlistRepository = wishlistRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCurrentLocationFlowUseCase(
+        locationRepository: LocationRepository,
+        logger: UseCaseLogger,
+    ): GetCurrentLocationFlowUseCase {
+        return GetCurrentLocationFlowUseCase.getInstance(
+            locationRepository = locationRepository,
             logger = logger,
         )
     }
