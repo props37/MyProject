@@ -29,6 +29,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.permission.PermissionManager
 import ru.livetyping.zarina.core.permission.shouldShowRequestRationale
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
@@ -42,6 +43,7 @@ import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingStep
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingStepsBuilder
 import timber.log.Timber
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class OnboardingViewModel @Inject constructor(
@@ -116,6 +118,8 @@ internal class OnboardingViewModel @Inject constructor(
 
             OnboardingEvent.DetectCityClicked -> onDetectCityClicked()
             OnboardingEvent.SkipCityDetectionClicked -> onSkipCityDetectionClicked()
+            OnboardingEvent.ConfirmCityClicked -> onConfirmCityClicked()
+            OnboardingEvent.SelectCityClicked -> onSelectCityClicked()
         }
     }
 
@@ -165,6 +169,39 @@ internal class OnboardingViewModel @Inject constructor(
 
     private fun onSkipCityDetectionClicked() {
         skipCityDetection()
+    }
+
+    private fun onConfirmCityClicked() {
+        if (completeOnboardingJob?.isActive == true) return
+
+        onboardingCompletionTrigger.value = OnboardingCompletionTrigger.CITY_CONFIRMED
+        completeOnboardingJob = viewModelScope.launch {
+            val city = cityValueHolder.get()?.toCity() ?: run {
+                Timber.e("User city is null, proceeding with default")
+                City.DEFAULT
+            }
+            completeOnboarding(city)
+                .onSuccess {
+                    val action = OnboardingScreenAction.OnboardingCompleted(city)
+                    emitSideEffect(OnboardingSideEffect.Navigate(action))
+                }
+                .onFailure {
+                    val text = Text.Resource(RCommon.string.something_went_wrong)
+                    emitSideEffect(OnboardingSideEffect.ShowToast(text))
+
+                    val action = OnboardingScreenAction.OnboardingCompleted(selectedCity = null)
+                    emitSideEffect(OnboardingSideEffect.Navigate(action))
+                }
+        }
+    }
+
+    private fun onSelectCityClicked() {
+        if (completeOnboardingJob?.isActive == true) return
+
+        navigationThrottler.throttle {
+            val action = OnboardingScreenAction.SelectCityClicked(cityValueHolder.get()?.toCity())
+            emitSideEffect(OnboardingSideEffect.Navigate(action))
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -218,19 +255,19 @@ internal class OnboardingViewModel @Inject constructor(
         detectCityJob?.cancel()
         onboardingCompletionTrigger.value = OnboardingCompletionTrigger.CITY_DETECTION_SKIPPED
         completeOnboardingJob = viewModelScope.launch {
-            completeOnboarding(userCity = null)
+            completeOnboarding(selectedCity = null)
             val action = OnboardingScreenAction.OnboardingCompleted(selectedCity = null)
             emitSideEffect(OnboardingSideEffect.Navigate(action))
         }
     }
 
-    private suspend fun completeOnboarding(userCity: City?) {
+    private suspend fun completeOnboarding(selectedCity: City?): Result<Unit> {
         return operationTracker.track(Operation.COMPLETE_ONBOARDING) {
             val setIsOnboardingCompletedParams =
                 SetIsOnboardingCompletedUseCase.Params(isCompleted = true)
             setIsOnboardingCompleted(setIsOnboardingCompletedParams)
 
-            val setUserCityParams = SetUserCityUseCase.Params(userCity ?: City.DEFAULT)
+            val setUserCityParams = SetUserCityUseCase.Params(selectedCity ?: City.DEFAULT)
             setUserCity(setUserCityParams)
                 .onFailure {
                     setLocalUserCity(SetLocalUserCityUseCase.Params(City.DEFAULT))

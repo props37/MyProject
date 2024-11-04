@@ -6,4 +6,8 @@ internal sealed interface OnboardingEvent {
     data object DetectCityClicked : OnboardingEvent
 
     data object SkipCityDetectionClicked : OnboardingEvent
+
+    data object ConfirmCityClicked : OnboardingEvent
+
+    data object SelectCityClicked : OnboardingEvent
 }
