@@ -45,6 +45,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 
+// TODO: [Low] Refactor
 @HiltViewModel
 internal class OnboardingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
