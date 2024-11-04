@@ -25,6 +25,7 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.permission.PermissionManager
 import ru.livetyping.zarina.core.permission.shouldShowRequestRationale
 import ru.livetyping.zarina.core.uicommon.createValueHolder
@@ -49,6 +50,7 @@ internal class OnboardingViewModel @Inject constructor(
     getOnboardingBannerUrlFlow: GetOnboardingBannerUrlFlowUseCase,
     private val getCurrentCityByLocationFlow: GetCurrentCityByLocationFlowUseCase,
     private val setIsOnboardingCompleted: SetIsOnboardingCompletedUseCase,
+    private val setUserCity: SetUserCityUseCase,
 ) : ViewModel(), SideEffectSource<OnboardingSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -221,18 +223,18 @@ internal class OnboardingViewModel @Inject constructor(
     }
 
     private suspend fun completeOnboarding(userCity: City?) {
-        // TODO: [Top] Implement
-//        return operationTracker.track(Operation.COMPLETE_ONBOARDING) {
-//            val setIsOnboardingCompletedParams =
-//                SetIsOnboardingCompletedUseCase.Params(isCompleted = true)
-//            setIsOnboardingCompleted(setIsOnboardingCompletedParams)
-//
-//            val setUserCityParams = SetUserCityUseCase.Params(userCity ?: City.DEFAULT)
-//            val result = interactor.setUserCity(setUserCityParams)
+        return operationTracker.track(Operation.COMPLETE_ONBOARDING) {
+            val setIsOnboardingCompletedParams =
+                SetIsOnboardingCompletedUseCase.Params(isCompleted = true)
+            setIsOnboardingCompleted(setIsOnboardingCompletedParams)
+
+            val setUserCityParams = SetUserCityUseCase.Params(userCity ?: City.DEFAULT)
+            val result = setUserCity(setUserCityParams)
+            // TODO: [Top] Implement
 //            result.onFailure { interactor.setDefaultUserCity() }
 //            coroutineContext.ensureActive()
 //            result
-//        }
+        }
     }
 
     private fun showOnboardingStep(step: OnboardingStep) {
