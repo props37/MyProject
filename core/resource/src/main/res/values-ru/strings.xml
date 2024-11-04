@@ -19,4 +19,6 @@
     <string name="remove_from_wishlist">Удалить из избранное</string>
     <string name="add_to_wishlist">Добавить в избранное</string>
     <string name="step">Шаг</string>
+    <string name="continue_">Продолжить</string>
+    <string name="skip">Пропустить</string>
 </resources>

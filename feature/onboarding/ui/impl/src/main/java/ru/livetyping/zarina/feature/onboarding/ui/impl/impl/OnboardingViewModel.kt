@@ -88,10 +88,22 @@ internal class OnboardingViewModel @Inject constructor(
     val onboardingState: StateFlow<OnboardingState> = combine(
         onboardingStepsValueHolder.stateFlow,
         currentOnboardingStepValueHolder.stateFlow,
-    ) { onboardingSteps, currentStep ->
+        cityValueHolder.stateFlow,
+        operationTracker.ongoingOperationKeys,
+        onboardingCompletionTrigger,
+    ) { onboardingSteps, currentStep, city, ongoingOperations, onboardingCompletionTrigger ->
+        val isOnboardingBeingCompleted = Operation.COMPLETE_ONBOARDING in ongoingOperations
+        val isSkipCityDetectionButtonLoading = isOnboardingBeingCompleted
+                && onboardingCompletionTrigger == OnboardingCompletionTrigger.CITY_DETECTION_SKIPPED
+        val isConfirmCityButtonLoading = isOnboardingBeingCompleted
+                && onboardingCompletionTrigger == OnboardingCompletionTrigger.CITY_CONFIRMED
         OnboardingState(
             onboardingSteps = onboardingSteps.toImmutableList(),
             currentOnboardingStep = currentStep,
+            city = city?.toCity() ?: City.DEFAULT,
+            isSkipCityDetectionButtonLoading = isSkipCityDetectionButtonLoading,
+            isDetectCityButtonLoading = Operation.DETECT_CITY in ongoingOperations,
+            isConfirmCityButtonLoading = isConfirmCityButtonLoading,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -99,6 +111,10 @@ internal class OnboardingViewModel @Inject constructor(
         initialValue = OnboardingState(
             onboardingSteps = onboardingStepsValueHolder.stateFlow.value.toImmutableList(),
             currentOnboardingStep = currentOnboardingStepValueHolder.stateFlow.value,
+            city = cityValueHolder.get()?.toCity() ?: City.DEFAULT,
+            isSkipCityDetectionButtonLoading = false,
+            isDetectCityButtonLoading = false,
+            isConfirmCityButtonLoading = false,
         ),
     )
 

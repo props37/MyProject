@@ -28,6 +28,7 @@ import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaBottomSheet
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.component.Banner
+import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.component.Onboarding
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.component.ProgressIndicator
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingEvent
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState
@@ -91,7 +92,11 @@ private fun ScreenContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // TODO: [Top] Implement
+                Onboarding(
+                    state = onboardingState,
+                    onEvent = onOnboardingEvent,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
         }
     }

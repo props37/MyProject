@@ -1,8 +1,10 @@
 package ru.livetyping.zarina.feature.onboarding.ui.impl.impl
 
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +19,7 @@ internal fun OnboardingScreenBehavior(
     navActions: OnboardingNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
+    val currentContext by rememberUpdatedState(LocalContext.current)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -29,6 +32,14 @@ internal fun OnboardingScreenBehavior(
                         lifecycleSafeNavigator.safeNavigate {
                             navigate(currentNavActions, sideEffect.action)
                         }
+                    }
+
+                    is OnboardingSideEffect.ShowToast -> {
+                        Toast.makeText(
+                            /* context = */ currentContext,
+                            /* text = */ sideEffect.text.getString(currentContext),
+                            /* duration = */ Toast.LENGTH_SHORT,
+                        ).show()
                     }
                 }
             }
