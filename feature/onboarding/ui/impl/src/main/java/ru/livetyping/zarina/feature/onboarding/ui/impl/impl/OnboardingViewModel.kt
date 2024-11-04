@@ -25,6 +25,7 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.permission.PermissionManager
 import ru.livetyping.zarina.core.permission.shouldShowRequestRationale
@@ -51,6 +52,7 @@ internal class OnboardingViewModel @Inject constructor(
     private val getCurrentCityByLocationFlow: GetCurrentCityByLocationFlowUseCase,
     private val setIsOnboardingCompleted: SetIsOnboardingCompletedUseCase,
     private val setUserCity: SetUserCityUseCase,
+    private val setLocalUserCity: SetLocalUserCityUseCase,
 ) : ViewModel(), SideEffectSource<OnboardingSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -229,11 +231,10 @@ internal class OnboardingViewModel @Inject constructor(
             setIsOnboardingCompleted(setIsOnboardingCompletedParams)
 
             val setUserCityParams = SetUserCityUseCase.Params(userCity ?: City.DEFAULT)
-            val result = setUserCity(setUserCityParams)
-            // TODO: [Top] Implement
-//            result.onFailure { interactor.setDefaultUserCity() }
-//            coroutineContext.ensureActive()
-//            result
+            setUserCity(setUserCityParams)
+                .onFailure {
+                    setLocalUserCity(SetLocalUserCityUseCase.Params(City.DEFAULT))
+                }
         }
     }
 

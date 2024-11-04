@@ -14,4 +14,8 @@ internal class UserRepositoryImpl @Inject constructor(
         remoteDataSource.setUserCity(city)
         localDataSource.setUserCity(city)
     }
+
+    override suspend fun setLocalUserCity(city: City) {
+        localDataSource.setUserCity(city)
+    }
 }
