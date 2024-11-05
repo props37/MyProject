@@ -55,11 +55,15 @@ fun CheckoutGiftCertificateScreen(
     viewModel: CheckoutGiftCertificateViewModel = hiltViewModel(),
 ) {
     val isApplyButtonLoading by viewModel.isApplyButtonLoading.collectAsStateWithLifecycle()
+    val isGiftCertificateNumberInvalid by viewModel.isGiftCertificateNumberInvalid.collectAsStateWithLifecycle()
+    val isGiftCertificateVerificationCodeInvalid by viewModel.isGiftCertificateVerificationCodeInvalid.collectAsStateWithLifecycle()
 
     ScreenContent(
         isApplyButtonLoading = isApplyButtonLoading,
         giftCertificateNumberTextFieldState = viewModel.giftCertificateNumberTextFieldState,
         giftCertificateVerificationCodeTextFieldState = viewModel.giftCertificateVerificationCodeTextFieldState,
+        isGiftCertificateNumberInvalid = isGiftCertificateNumberInvalid,
+        isGiftCertificateVerificationCodeInvalid = isGiftCertificateVerificationCodeInvalid,
         onApplyClicked = viewModel::onApplyClicked,
         onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
@@ -72,6 +76,8 @@ private fun ScreenContent(
     isApplyButtonLoading: Boolean,
     giftCertificateNumberTextFieldState: TextFieldState,
     giftCertificateVerificationCodeTextFieldState: TextFieldState,
+    isGiftCertificateNumberInvalid: Boolean,
+    isGiftCertificateVerificationCodeInvalid: Boolean,
     onApplyClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -109,6 +115,7 @@ private fun ScreenContent(
 
             ZarinaTextField(
                 state = giftCertificateNumberTextFieldState,
+                isError = isGiftCertificateNumberInvalid,
                 label = {
                     ZarinaTextFieldDefaults.AppearingLabel(
                         textFieldValue = giftCertificateNumberTextFieldState.text,
@@ -148,6 +155,7 @@ private fun ScreenContent(
 
             ZarinaTextField(
                 state = giftCertificateVerificationCodeTextFieldState,
+                isError = isGiftCertificateVerificationCodeInvalid,
                 label = {
                     ZarinaTextFieldDefaults.AppearingLabel(
                         textFieldValue = giftCertificateVerificationCodeTextFieldState.text,
