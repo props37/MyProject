@@ -6,6 +6,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -48,6 +51,7 @@ import ru.livetyping.zarina.domain.order.PaymentMethodType
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
+import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
@@ -63,6 +67,7 @@ import ru.livetyping.zarina.usecase.cart.ApplyBonusWriteOffUseCase
 import ru.livetyping.zarina.usecase.cart.ApplyMyCardToCartUseCase
 import ru.livetyping.zarina.usecase.cart.ApplyPromoCodeUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveBonusWriteOffUseCase
+import ru.livetyping.zarina.usecase.cart.RemoveGiftCertificateUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveMyCardFromCartUseCase
 import ru.livetyping.zarina.usecase.checkout.CheckoutUseCase
 import ru.livetyping.zarina.usecase.checkout.GetCheckoutCartFlowUseCase
@@ -74,10 +79,11 @@ import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.combineMore
-import javax.inject.Inject
 
-@HiltViewModel
-class CheckoutOrderPlacingViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = CheckoutOrderPlacingViewModel.Factory::class)
+class CheckoutOrderPlacingViewModel @AssistedInject constructor(
+    @Assisted
+    private val giftCertificateResultFlow: StateFlow<CheckoutGraph.GiftCertificate.Result?>,
     savedStateHandle: SavedStateHandle,
     private val interactor: CheckoutOrderPlacingInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
@@ -85,6 +91,8 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val operationTracker = OperationTracker()
+
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val cartStateBuilder = CartStateBuilder()
 
@@ -239,6 +247,10 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     private var currentCheckoutStage: CheckoutStage? = null
 
+    init {
+        handleGiftCertificateResult()
+    }
+
     fun onScreenOpened() {
         val currentCheckoutStage = currentCheckoutStage
         if (currentCheckoutStage is CheckoutStage.Completed) {
@@ -386,17 +398,39 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     }
 
     fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
-        if (paymentMethod.type == PaymentMethodType.GIFT_CARD) {
-            val cart = cart ?: return
-            navigationThrottler.throttle {
-                val action = CheckoutOrderPlacingScreenAction.GiftCertificateSelected(
-                    cartType = checkoutParams.cartType,
-                    cart = cart,
-                )
-                emitSideEffect(SideEffect.Navigate(action))
+        val currentPaymentMethod = selectedPaymentMethod.value
+        when {
+            paymentMethod.type == PaymentMethodType.GIFT_CARD
+                    && currentPaymentMethod?.type != PaymentMethodType.GIFT_CARD -> {
+                val cart = cart ?: return
+                navigationThrottler.throttle {
+                    val action = CheckoutOrderPlacingScreenAction.GiftCertificateSelected(
+                        cartType = checkoutParams.cartType,
+                        cart = cart,
+                    )
+                    emitSideEffect(SideEffect.Navigate(action))
+                }
             }
-        } else {
-            selectedPaymentMethod.value = paymentMethod
+
+            paymentMethod.type != PaymentMethodType.GIFT_CARD
+                    && currentPaymentMethod?.type == PaymentMethodType.GIFT_CARD -> {
+                viewModelScope.launch {
+                    val params = RemoveGiftCertificateUseCase.Params(
+                        paymentMethodType = paymentMethod.type,
+                    )
+                    interactor.removeGiftCertificate(params)
+                        .onSuccess {
+                            selectedPaymentMethod.value = paymentMethod
+                        }
+                        .onFailure {
+                            val messageText = Text.Resource(R.string.gift_certificate_removing_error)
+                            val message = ZarinaToastMessage.error(messageText)
+                            emitSideEffect(SideEffect.ShowZarinaToast(message))
+                        }
+                }
+            }
+
+            else -> selectedPaymentMethod.value = paymentMethod
         }
     }
 
@@ -675,6 +709,31 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         }
     }
 
+    private fun handleGiftCertificateResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<CheckoutGraph.GiftCertificate.Result>(
+                resultFlow = giftCertificateResultFlow,
+                key = KEY_RESULT_GIFT_CERTIFICATE_RESULT,
+            ) { result ->
+                if (result.isGiftCertificateApplied) {
+                    val paymentMethods = paymentMethodsResult.value?.getOrNull()
+                    val giftCertificatePaymentMethod = paymentMethods?.find {
+                        it.type == PaymentMethodType.GIFT_CARD
+                    }
+                    if (giftCertificatePaymentMethod != null) {
+                        selectedPaymentMethod.value = giftCertificatePaymentMethod
+                        cartRequester.request(CartRequest.REFRESHING)
+                    } else {
+                        val messageText = Text.Resource(R.string.gift_certificate_applying_error)
+                        val message = ZarinaToastMessage.error(messageText)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
+                        paymentMethodsFlowRequester.request(PaymentMethodsRequest)
+                    }
+                }
+            }
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutOrderPlacingScreenAction) : SideEffect
 
@@ -714,7 +773,16 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     private enum class Operation : OperationKey { CHECKOUT }
 
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            giftCertificateResultFlow: StateFlow<CheckoutGraph.GiftCertificate.Result?>,
+        ): CheckoutOrderPlacingViewModel
+    }
+
     companion object {
         private const val COMMA_SEPARATOR = ", "
+
+        private const val KEY_RESULT_GIFT_CERTIFICATE_RESULT = "result_gift_certificate"
     }
 }

@@ -14,10 +14,13 @@ fun NavGraphBuilder.checkoutGiftCertificateScreen(navController: NavHostControll
                 when (action) {
                     is CheckoutGiftCertificateScreenAction.ScreenClosed -> {
                         navController.popBackStack<CheckoutGraph.GiftCertificate>(inclusive = true)
+                        val result = CheckoutGraph.GiftCertificate.Result(
+                            isGiftCertificateApplied = action.isGiftCertificateApplied,
+                        )
                         navController.currentBackStackEntry?.savedStateHandle
                             ?.set(
                                 key = CheckoutGraph.GiftCertificate.RESULT_KEY,
-                                value = action.isGiftCertificateApplied,
+                                value = result,
                             )
                     }
                 }

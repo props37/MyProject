@@ -333,6 +333,8 @@
     <string name="gift_certificate">Подарочный сертификат</string>
     <string name="certificate_number">Номер сертификата</string>
     <string name="verification_code">Проверочный код</string>
+    <string name="gift_certificate_applying_error">Не удалось применить подарочный сертификат. Попробуйте снова</string>
+    <string name="gift_certificate_removing_error">Не удалось отменить действие подарочного сертификата. Попробуйте снова</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

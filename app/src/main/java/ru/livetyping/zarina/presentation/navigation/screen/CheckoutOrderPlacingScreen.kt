@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.navigation.screen
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -10,12 +11,23 @@ import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinat
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreen
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenAction
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel
 
 fun NavGraphBuilder.checkoutOrderPlacingScreen(navController: NavHostController) {
     composable<CheckoutGraph.OrderPlacing>(
         typeMap = CheckoutGraph.OrderPlacing.typeMap(),
     ) {
         CheckoutOrderPlacingScreen(
+            viewModel = hiltViewModel { factory: CheckoutOrderPlacingViewModel.Factory ->
+                val giftCertificateResultFlow = it.savedStateHandle
+                    .getStateFlow<CheckoutGraph.GiftCertificate.Result?>(
+                        key = CheckoutGraph.GiftCertificate.RESULT_KEY,
+                        initialValue = null,
+                    )
+                factory.create(
+                    giftCertificateResultFlow = giftCertificateResultFlow,
+                )
+            },
             navigate = { action ->
                 when (action) {
                     CheckoutOrderPlacingScreenAction.ScreenClosed -> {

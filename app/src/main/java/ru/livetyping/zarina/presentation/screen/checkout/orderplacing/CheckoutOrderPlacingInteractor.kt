@@ -4,6 +4,7 @@ import ru.livetyping.zarina.usecase.cart.ApplyBonusWriteOffUseCase
 import ru.livetyping.zarina.usecase.cart.ApplyMyCardToCartUseCase
 import ru.livetyping.zarina.usecase.cart.ApplyPromoCodeUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveBonusWriteOffUseCase
+import ru.livetyping.zarina.usecase.cart.RemoveGiftCertificateUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveMyCardFromCartUseCase
 import ru.livetyping.zarina.usecase.cart.RemovePromoCodeUseCase
 import ru.livetyping.zarina.usecase.checkout.CheckoutUseCase
@@ -25,4 +26,5 @@ class CheckoutOrderPlacingInteractor @Inject constructor(
     val checkout: CheckoutUseCase,
     val updateOrderPaymentStatus: UpdateOrderPaymentStatusUseCase,
     val getOrderFlow: GetOrderFlowUseCase,
+    val removeGiftCertificate: RemoveGiftCertificateUseCase,
 )
