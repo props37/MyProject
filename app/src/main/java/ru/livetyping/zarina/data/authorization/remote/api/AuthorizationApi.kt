@@ -2,7 +2,7 @@ package ru.livetyping.zarina.data.authorization.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.AuthCircuitBreaker
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.header
@@ -27,7 +27,7 @@ class AuthorizationApi @Inject constructor(
     }
 
     private fun HttpRequestBuilder.markAsRefreshTokenRequest() {
-        attributes.put(Auth.AuthCircuitBreaker, Unit)
+        attributes.put(AuthCircuitBreaker, Unit)
     }
 
     companion object {
