@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.usecase.cart
+package ru.livetyping.zarina.usecase.giftcert
 
 import ru.livetyping.zarina.base.usecase.UseCase
 import ru.livetyping.zarina.data.checkout.CheckoutRepository

@@ -4,13 +4,13 @@ import ru.livetyping.zarina.usecase.cart.ApplyBonusWriteOffUseCase
 import ru.livetyping.zarina.usecase.cart.ApplyMyCardToCartUseCase
 import ru.livetyping.zarina.usecase.cart.ApplyPromoCodeUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveBonusWriteOffUseCase
-import ru.livetyping.zarina.usecase.cart.RemoveGiftCertificateUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveMyCardFromCartUseCase
 import ru.livetyping.zarina.usecase.cart.RemovePromoCodeUseCase
 import ru.livetyping.zarina.usecase.checkout.CheckoutUseCase
 import ru.livetyping.zarina.usecase.checkout.GetCheckoutCartFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.GetPaymentMethodsFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.UpdateOrderPaymentStatusUseCase
+import ru.livetyping.zarina.usecase.giftcert.RemoveGiftCertificateUseCase
 import ru.livetyping.zarina.usecase.order.GetOrderFlowUseCase
 import javax.inject.Inject
 
