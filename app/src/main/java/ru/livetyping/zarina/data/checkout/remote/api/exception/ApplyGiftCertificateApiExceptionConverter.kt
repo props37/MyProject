@@ -6,7 +6,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import ru.livetyping.zarina.data.common.remote.api.exception.KtorApiExceptionConverter
-import ru.livetyping.zarina.domain.checkout.exception.GiftCertificateReservedException
+import ru.livetyping.zarina.domain.giftcert.exception.GiftCertificateReservedException
 import javax.inject.Inject
 
 class ApplyGiftCertificateApiExceptionConverter @Inject constructor(
