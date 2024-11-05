@@ -25,8 +25,8 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.giftcert.exception.EmptyGiftCertificateNumberException
 import ru.livetyping.zarina.domain.giftcert.exception.EmptyGiftCertificateVerificationCodeException
-import ru.livetyping.zarina.domain.giftcert.exception.GiftCertificateException
 import ru.livetyping.zarina.domain.giftcert.exception.GiftCertificateReservedException
+import ru.livetyping.zarina.domain.giftcert.exception.GiftCertificateValidationException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
@@ -125,12 +125,7 @@ class CheckoutGiftCertificateViewModel @Inject constructor(
 
     private fun onApplyFailure(t: Throwable) {
         when (t) {
-            is GiftCertificateException -> handleGiftCertificateException(t)
-            is GiftCertificateReservedException -> {
-                val messageText = Text.Resource(R.string.gift_certificate_reserved_error)
-                val message = ZarinaToastMessage.error(messageText)
-                emitSideEffect(SideEffect.ShowZarinaToast(message))
-            }
+            is GiftCertificateValidationException -> handleGiftCertificateException(t)
 
             !is IOException -> {
                 _isGiftCertificateNumberInvalid.value = true
@@ -148,8 +143,8 @@ class CheckoutGiftCertificateViewModel @Inject constructor(
         }
     }
 
-    private fun handleGiftCertificateException(t: GiftCertificateException) {
-        val exceptions = listOf(t) + t.suppressedExceptions
+    private fun handleGiftCertificateException(e: GiftCertificateValidationException) {
+        val exceptions = listOf(e) + e.suppressedExceptions
         val isNumberEmpty = exceptions.any { it is EmptyGiftCertificateNumberException }
         val isVerificationCodeEmpty =
             exceptions.any { it is EmptyGiftCertificateVerificationCodeException }
@@ -161,6 +156,7 @@ class CheckoutGiftCertificateViewModel @Inject constructor(
         }
 
         val messageTextResId = when {
+            e is GiftCertificateReservedException -> R.string.gift_certificate_reserved_error
             isNumberEmpty && isVerificationCodeEmpty -> R.string.gift_certificate_fields_empty_error
             isNumberEmpty -> R.string.gift_certificate_number_empty_error
             isVerificationCodeEmpty -> R.string.gift_certificate_verification_code_empty_error

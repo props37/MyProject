@@ -18,7 +18,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Email
-import ru.livetyping.zarina.domain.user.exception.EmailException
+import ru.livetyping.zarina.domain.user.exception.EmailValidationException
 import ru.livetyping.zarina.domain.user.exception.EmptyEmailException
 import ru.livetyping.zarina.domain.user.exception.UserNotFoundException
 import ru.livetyping.zarina.presentation.base.text.Text
@@ -100,7 +100,7 @@ class PasswordRecoveryViewModel @Inject constructor(
                 emitSideEffect(SideEffect.ShowZarinaToast(message))
             }
 
-            is EmailException -> {
+            is EmailValidationException -> {
                 val text = Text.Resource(R.string.incorrect_data_entered)
                 val message = ZarinaToastMessage.error(text)
                 emitSideEffect(SideEffect.ShowZarinaToast(message))
@@ -119,7 +119,7 @@ class PasswordRecoveryViewModel @Inject constructor(
             }
         }
 
-        if (e is EmailException) {
+        if (e is EmailValidationException) {
             _isEmailInvalid.value = true
         }
     }
