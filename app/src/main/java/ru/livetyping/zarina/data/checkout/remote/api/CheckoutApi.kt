@@ -8,6 +8,7 @@ import io.ktor.client.request.post
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartTypeDto
+import ru.livetyping.zarina.data.checkout.remote.api.dto.ApplyGiftCertificateRequestBody
 import ru.livetyping.zarina.data.checkout.remote.api.dto.CardPaymentDataDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.CardPaymentDataRequestBody
 import ru.livetyping.zarina.data.checkout.remote.api.dto.CardPaymentResultDto
@@ -18,6 +19,7 @@ import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryOptionsDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.PaymentMethodDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.PickupPointDetailsDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.PickupPointDto
+import ru.livetyping.zarina.data.checkout.remote.api.dto.RemoveGiftCertificateRequestBody
 import ru.livetyping.zarina.data.checkout.remote.api.dto.StoreDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.UpdateOrderPodeliPaymentStatusRequestBody
 import ru.livetyping.zarina.data.order.remote.api.dto.DeliveryMethodTypeDto
@@ -161,6 +163,32 @@ class CheckoutApi @Inject constructor(
             PaymentMethodType.QR -> updateOrderQrPaymentState(orderId)
             PaymentMethodType.PODELI -> updateOrderPodeliPaymentState(orderId)
             else -> error("Unsupported payment method type $paymentMethodType")
+        }
+    }
+
+    suspend fun applyGiftCertificate(
+        certificateNumber: String,
+        certificateVerificationCode: String,
+        cartTotalPrice: Int,
+        cartType: CartType,
+    ) {
+        val body = ApplyGiftCertificateRequestBody(
+            certificateNumber = certificateNumber,
+            certificateVerificationCode = certificateVerificationCode,
+            cartTotalPrice = cartTotalPrice,
+            cartType = CartTypeDto.from(cartType),
+        )
+        httpClient.post("/api/gift-card/apply") {
+            setJsonBody(body)
+        }
+    }
+
+    suspend fun removeGiftCertificate(paymentMethodType: PaymentMethodType) {
+        val body = RemoveGiftCertificateRequestBody(
+            paymentMethodType = PaymentMethodTypeDto.from(paymentMethodType),
+        )
+        httpClient.post("/api/gift-card/cancel") {
+            setJsonBody(body)
         }
     }
 

@@ -137,6 +137,24 @@ class CheckoutRemoteDataSource @Inject constructor(
         api.updateOrderPaymentStatus(orderId, paymentMethodType)
     }
 
+    suspend fun applyGiftCertificate(
+        certificateNumber: String,
+        certificateVerificationCode: String,
+        cartTotalPrice: Int,
+        cartType: CartType,
+    ) {
+        api.applyGiftCertificate(
+            certificateNumber = certificateNumber,
+            certificateVerificationCode = certificateVerificationCode,
+            cartTotalPrice = cartTotalPrice,
+            cartType = cartType,
+        )
+    }
+
+    suspend fun removeGiftCertificate(paymentMethodType: PaymentMethodType) {
+        api.removeGiftCertificate(paymentMethodType)
+    }
+
     private suspend fun awaitCardPaymentCompleted(
         paymentData: CardPaymentData,
         paymentMethodType: PaymentMethodType,

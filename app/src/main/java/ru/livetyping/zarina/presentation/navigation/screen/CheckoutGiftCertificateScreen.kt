@@ -8,12 +8,17 @@ import ru.livetyping.zarina.presentation.screen.checkout.giftcert.CheckoutGiftCe
 import ru.livetyping.zarina.presentation.screen.checkout.giftcert.CheckoutGiftCertificateScreenAction
 
 fun NavGraphBuilder.checkoutGiftCertificateScreen(navController: NavHostController) {
-    composable<CheckoutGraph.GiftCertificate> {
+    composable<CheckoutGraph.GiftCertificate>(typeMap = CheckoutGraph.GiftCertificate.typeMap()) {
         CheckoutGiftCertificateScreen(
             navigate = { action ->
                 when (action) {
-                    CheckoutGiftCertificateScreenAction.ScreenClosed -> {
+                    is CheckoutGiftCertificateScreenAction.ScreenClosed -> {
                         navController.popBackStack<CheckoutGraph.GiftCertificate>(inclusive = true)
+                        navController.currentBackStackEntry?.savedStateHandle
+                            ?.set(
+                                key = CheckoutGraph.GiftCertificate.RESULT_KEY,
+                                value = action.isGiftCertificateApplied,
+                            )
                     }
                 }
             },

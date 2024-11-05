@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,18 +19,25 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.giftcert.CheckoutGiftCertificateViewModel.SideEffect
+import ru.livetyping.zarina.usecase.cart.ApplyGiftCertificateUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
 
 @HiltViewModel
 class CheckoutGiftCertificateViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val interactor: CheckoutGiftCertificateInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val operationTracker = OperationTracker()
+
+    private val giftCertificateParams = savedStateHandle.toRoute<CheckoutGraph.GiftCertificate>(
+        typeMap = CheckoutGraph.GiftCertificate.typeMap(),
+    )
 
     private var applyGiftCertificateJob: Job? = null
 
@@ -55,7 +63,9 @@ class CheckoutGiftCertificateViewModel @Inject constructor(
 
     fun onCloseClicked() {
         navigationThrottler.throttle {
-            val action = CheckoutGiftCertificateScreenAction.ScreenClosed
+            val action = CheckoutGiftCertificateScreenAction.ScreenClosed(
+                isGiftCertificateApplied = false,
+            )
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
@@ -64,7 +74,22 @@ class CheckoutGiftCertificateViewModel @Inject constructor(
         if (applyGiftCertificateJob?.isActive == true) return
         applyGiftCertificateJob = viewModelScope.launch {
             operationTracker.track(ApplyGiftCertificateOperation) {
-                // TODO: [High] Implement
+                val params = ApplyGiftCertificateUseCase.Params(
+                    certificateNumber = giftCertificateNumberTextFieldState.text.toString(),
+                    certificateVerificationCode = giftCertificateVerificationCodeTextFieldState.text.toString(),
+                    cartTotalPrice = giftCertificateParams.cartTotalPrice,
+                    cartType = giftCertificateParams.cartType.toCartType(),
+                )
+                interactor.applyGiftCertificate(params)
+                    .onSuccess {
+                        val action = CheckoutGiftCertificateScreenAction.ScreenClosed(
+                            isGiftCertificateApplied = true,
+                        )
+                        emitSideEffect(SideEffect.Navigate(action))
+                    }
+                    .onFailure {
+                        // TODO: [High] Implement
+                    }
             }
         }
     }

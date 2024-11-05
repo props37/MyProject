@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
+import ru.livetyping.zarina.presentation.model.cart.CartTypeParcelable
 import ru.livetyping.zarina.presentation.model.order.OrderDetailsParcelable
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
@@ -39,8 +40,12 @@ fun NavGraphBuilder.checkoutOrderPlacingScreen(navController: NavHostController)
                         navController.popBackStack<CheckoutGraph.DeliveryMethod>(inclusive = false)
                     }
 
-                    CheckoutOrderPlacingScreenAction.GiftCertificateSelected -> {
-                        navController.navigate(CheckoutGraph.GiftCertificate)
+                    is CheckoutOrderPlacingScreenAction.GiftCertificateSelected -> {
+                        val giftCertificate = CheckoutGraph.GiftCertificate(
+                            cartType = CartTypeParcelable.from(action.cartType),
+                            cartTotalPrice = action.cart.price.totalPrice,
+                        )
+                        navController.navigate(giftCertificate)
                     }
 
                     is CheckoutOrderPlacingScreenAction.PaymentStarted -> {

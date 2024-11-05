@@ -115,6 +115,24 @@ class CheckoutRepository @Inject constructor(
         remoteDataSource.updateOrderPaymentStatus(orderId, paymentMethodType)
     }
 
+    suspend fun applyGiftCertificate(
+        certificateNumber: String,
+        certificateVerificationCode: String,
+        cartTotalPrice: Int,
+        cartType: CartType,
+    ) {
+        remoteDataSource.applyGiftCertificate(
+            certificateNumber = certificateNumber,
+            certificateVerificationCode = certificateVerificationCode,
+            cartTotalPrice = cartTotalPrice,
+            cartType = cartType,
+        )
+    }
+
+    suspend fun removeGiftCertificate(paymentMethodType: PaymentMethodType) {
+        remoteDataSource.removeGiftCertificate(paymentMethodType)
+    }
+
     fun clear() {
         localDataSource.clear()
     }

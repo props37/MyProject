@@ -23,6 +23,7 @@ import ru.livetyping.zarina.presentation.navigation.base.Graph
 import ru.livetyping.zarina.presentation.navigation.base.RouteUtils
 import ru.livetyping.zarina.presentation.navigation.base.ScreenResult
 import ru.livetyping.zarina.presentation.navigation.navtype.CartProductParcelableListType
+import ru.livetyping.zarina.presentation.navigation.navtype.CartTypeParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.CheckoutParamsParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.CityParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.CustomerParcelableType
@@ -291,5 +292,24 @@ data object CheckoutGraph : Graph<CheckoutGraph.Customer.Args>() {
     }
 
     @Serializable
-    data object GiftCertificate
+    data class GiftCertificate(
+        val cartType: CartTypeParcelable,
+        val cartTotalPrice: Int,
+    ) {
+        @Parcelize
+        data class Result(
+            val isGiftCertificateApplied: Boolean,
+            override val id: String = UUID.randomUUID().toString(),
+        ) : ScreenResult, Parcelable
+
+        companion object {
+            const val RESULT_KEY = "gift_certificate_result"
+
+            fun typeMap(): Map<KType, NavType<*>> {
+                return mapOf(
+                    typeOf<CartTypeParcelable>() to NavType.CartTypeParcelableType,
+                )
+            }
+        }
+    }
 }
