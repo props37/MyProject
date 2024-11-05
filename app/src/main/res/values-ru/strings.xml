@@ -335,6 +335,7 @@
     <string name="verification_code">Проверочный код</string>
     <string name="gift_certificate_applying_error">Не удалось применить подарочный сертификат. Попробуйте снова</string>
     <string name="gift_certificate_removing_error">Не удалось отменить действие подарочного сертификата. Попробуйте снова</string>
+    <string name="gift_certificate_reserved_error">Подарочный сертификат зарезервирован другим заказом и будет разблокирован в течение часа</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

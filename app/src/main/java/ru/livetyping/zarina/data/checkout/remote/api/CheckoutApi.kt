@@ -23,6 +23,7 @@ import ru.livetyping.zarina.data.checkout.remote.api.dto.PickupPointDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.RemoveGiftCertificateRequestBody
 import ru.livetyping.zarina.data.checkout.remote.api.dto.StoreDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.UpdateOrderPodeliPaymentStatusRequestBody
+import ru.livetyping.zarina.data.checkout.remote.api.exception.ApplyGiftCertificateApiExceptionConverter
 import ru.livetyping.zarina.data.order.remote.api.dto.DeliveryMethodTypeDto
 import ru.livetyping.zarina.data.order.remote.api.dto.PaymentMethodTypeDto
 import ru.livetyping.zarina.di.Qualifiers
@@ -44,6 +45,7 @@ import javax.inject.Inject
 class CheckoutApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
+    private val applyGiftCertificateApiExceptionConverter: ApplyGiftCertificateApiExceptionConverter,
 ) {
     suspend fun getPickupStores(cityKladrId: KladrId): List<StoreDto> {
         return httpClient.get("/api/v1/shipping-methods/shops") {
@@ -179,8 +181,10 @@ class CheckoutApi @Inject constructor(
             cartTotalPrice = cartTotalPrice,
             cartType = CartTypeDto.from(cartType),
         )
-        httpClient.post("/api/gift-card/apply") {
-            setJsonBody(body)
+        applyGiftCertificateApiExceptionConverter {
+            httpClient.post("/api/gift-card/apply") {
+                setJsonBody(body)
+            }
         }
     }
 

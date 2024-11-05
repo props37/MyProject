@@ -13,12 +13,16 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.operationtracker.OperationKey
 import ru.livetyping.zarina.base.operationtracker.OperationTracker
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.checkout.exception.GiftCertificateReservedException
+import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.giftcert.CheckoutGiftCertificateViewModel.SideEffect
 import ru.livetyping.zarina.usecase.cart.ApplyGiftCertificateUseCase
@@ -87,15 +91,24 @@ class CheckoutGiftCertificateViewModel @Inject constructor(
                         )
                         emitSideEffect(SideEffect.Navigate(action))
                     }
-                    .onFailure {
-                        // TODO: [High] Implement
-                    }
+                    .onFailure(::onApplyFailure)
             }
         }
     }
 
+    private fun onApplyFailure(t: Throwable) {
+        val messageTextResId = when (t) {
+            is GiftCertificateReservedException -> R.string.gift_certificate_reserved_error
+            else -> R.string.something_went_wrong_try_again
+        }
+        val message = ZarinaToastMessage.error(Text.Resource(messageTextResId))
+        emitSideEffect(SideEffect.ShowZarinaToast(message))
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutGiftCertificateScreenAction) : SideEffect
+
+        data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
 
     private object ApplyGiftCertificateOperation : OperationKey
